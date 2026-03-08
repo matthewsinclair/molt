@@ -16,6 +16,19 @@ All work done in Claude Code sessions on kovacs, with config committed to molt-m
 8. **Desktop**: GNOME Super bindings stripped via gsettings
 9. **Intent**: Initialized in both molt and molt-matts, skills installed
 
+### Phase 2: Framework (In Progress)
+
+MOLT framework built out in the molt repo with working CLI and test suite.
+
+1. **CLI** (`bin/molt`): Thin coordinator dispatching to lib functions
+2. **Core lib** (`lib/molt.sh`): Logging, platform detection, symlinks, manifest parsing, CLI commands (doctor, test, list, version)
+3. **Constants** (`lib/constants.sh`): Single source of truth for all configurable paths
+4. **Liberator framework** (`lib/liberator.sh`): Load, check, install, verify lifecycle with batch operations and discovery
+5. **12 liberators** (`liberators/*.sh`): system, local-bin, zsh, git, tmux, editors, terminal, keys, desktop, dev-tools, ssh, utilz
+6. **Manifest** (`molt.toml`): Declarative enabled/disabled/OS-filtered liberator list
+7. **Test suite** (`test/`): 42 bats tests across 6 files — CLI, constants, liberator framework, manifest parsing, exemplar liberator
+8. **Doctor** (`molt doctor`): 7-step diagnostic checking structure, repos, manifest, liberators, dependencies
+
 ### Key file locations on kovacs
 
 | Config    | Source (molt-matts)           | Symlink target          |

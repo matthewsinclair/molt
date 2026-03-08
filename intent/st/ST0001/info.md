@@ -44,11 +44,28 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Intent skills installed (all 12 /in-\* skills)
 - Commits pushed to GitHub
 
+### What's Done (Phase 2 — Framework)
+
+- MOLT framework scaffolded: CLI (`bin/molt`), core lib, 12 liberators, manifest support
+- CLI commands: `resleeve`, `status`, `list`, `doctor`, `test`, `version`, `help`
+- Liberator framework: load, check, install, verify lifecycle
+- Manifest-first (`molt.toml`) with enabled/disabled/OS filtering
+- `constants.sh` for configurable paths (Highlander Rule)
+- Bats test suite: 42 tests across 6 files (all passing)
+  - `test/test_helper.bash` — shared infrastructure, HOME-sandboxed for safety
+  - `test/molt.bats` — CLI tests
+  - `test/constants.bats` — constants tests
+  - `test/liberator.bats` — framework tests
+  - `test/manifest.bats` — manifest parsing tests
+  - `test/liberators/zsh.bats` — exemplar liberator test
+- `molt doctor` — 7-step diagnostic (structure, manifest, liberators, deps)
+- Highlander & Thin Coordinator audit (WP-06) completed and applied
+- Module registry (`MODULES.md`) tracking all framework and liberator modules
+
 ### What's Remaining (Phase 2)
 
-- Fix Cmd key passthrough (Parallels not sending leftmeta to VM)
+- Fix Cmd key passthrough (Parallels not sending leftmeta to VM) — PARKED
 - Set up kovacs SSH for direct GitHub access
-- Begin MOLT framework development (templates, scripts, automation)
 - Nerd fonts installation
 
 ## Related Steel Threads

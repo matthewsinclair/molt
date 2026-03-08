@@ -31,6 +31,12 @@
 | local-bin | `liberators/local-bin.sh` | ~/bin directory, molt CLI symlink                    |
 | utilz     | `liberators/utilz.sh`     | Utilz framework, bats-core, ~/bin symlinks           |
 
+## Testing
+
+| Module      | File                    | Concern                         |
+| ----------- | ----------------------- | ------------------------------- |
+| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure |
+
 ## Templates
 
 | Module    | File                          | Concern                |

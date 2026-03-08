@@ -36,12 +36,26 @@ Close remaining gaps from Phase 1 (Cmd key, SSH, fonts), then begin laying groun
 - Maps Cmd (leftmeta) to a custom layer for CUA-style shortcuts
 - Rationale: Works at evdev level, compositor-agnostic, survives Wayland
 
-## Architecture
+## Architecture (As-Built)
 
 ```
 molt (framework repo)
-├── templates/          # Config templates with variable substitution
-├── scripts/            # Bootstrap and management scripts
+├── bin/
+│   └── molt            # CLI entry point — thin coordinator
+├── lib/
+│   ├── constants.sh    # All configurable paths (Highlander Rule)
+│   ├── molt.sh         # Core: logging, platform, symlinks, commands
+│   └── liberator.sh    # Liberator lifecycle: load/check/install/verify
+├── liberators/         # 12 liberator modules (one per concern)
+├── test/
+│   ├── test_helper.bash  # Shared BATS infrastructure
+│   ├── molt.bats         # CLI tests
+│   ├── constants.bats    # Constants tests
+│   ├── liberator.bats    # Framework tests
+│   ├── manifest.bats     # Manifest parsing tests
+│   └── liberators/
+│       └── zsh.bats      # Exemplar liberator test
+├── templates/          # Config templates (molt.toml.example)
 └── docs/               # Framework documentation
 
 molt-matts (personal repo)
