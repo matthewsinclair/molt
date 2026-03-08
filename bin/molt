@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# molt — My Opinionated Local Terminal
+# Thin coordinator: parse args, delegate to lib functions.
+
+set -euo pipefail
+
+MOLT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Source core libraries
+# shellcheck source=../lib/molt.sh
+source "${MOLT_ROOT}/lib/molt.sh"
+# shellcheck source=../lib/liberator.sh
+source "${MOLT_ROOT}/lib/liberator.sh"
+
+# --- Commands ---
+
+cmd_help() {
+  cat <<EOF
+${MOLT_NAME} v${MOLT_VERSION} — My Opinionated Local Terminal
+Your shell config is your identity. Every new machine is just a new body.
+
+Usage: molt <command> [args]
+
+Commands:
+  resleeve    Bootstrap the current machine from your stack
+  status      Show current sleeve state and liberator status
+  help        Show this help message
+
+EOF
+}
+
+cmd_status() {
+  echo "${MOLT_NAME} v${MOLT_VERSION}"
+  echo ""
+  echo "Sleeve: $(hostname)"
+  echo "Platform: $(molt_platform)"
+  echo "Distro: $(molt_distro)"
+  echo "Arch: $(molt_arch)"
+  echo ""
+
+  local user_repo
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  if [[ -n "$user_repo" ]]; then
+    echo "Stack: $user_repo"
+  else
+    echo "Stack: not found"
+  fi
+
+  echo ""
+  echo "Liberators:"
+  liberator_status_all $(liberator_list)
+}
+
+cmd_resleeve() {
+  echo "${MOLT_NAME} v${MOLT_VERSION} — My Opinionated Local Terminal"
+  echo "Needlecasting stack to new sleeve..."
+  echo ""
+
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || {
+    molt_error "Cannot resleeve without a user config repo."
+    molt_error "Expected: molt-\$(whoami) in ~/Devel/prj/ or ~/"
+    exit 1
+  }
+
+  molt_info "Stack found: $user_repo"
+  molt_info "Loading liberators..."
+
+  local available
+  available="$(liberator_list)"
+
+  for lib in $available; do
+    liberator_load "$lib"
+    if ! liberator_check "$lib" 2>/dev/null; then
+      liberator_run "$lib" install
+    else
+      molt_info "Liberator already installed: $lib"
+    fi
+  done
+
+  echo ""
+  molt_info "Sleeve ready. Welcome back."
+}
+
+# --- Main ---
+
+case "${1:-help}" in
+  resleeve) cmd_resleeve ;;
+  status)   cmd_status ;;
+  help)     cmd_help ;;
+  *)
+    molt_error "Unknown command: $1"
+    cmd_help
+    exit 1
+    ;;
+esac

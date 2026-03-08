@@ -57,7 +57,7 @@ The central metaphor from _Altered Carbon_: your configuration is your conscious
 | -------------- | ---------------------------------------------------------------------------------- |
 | **Zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
 | **liberators** | Config modules. Each one frees you from a default.                                 |
-| **orac.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
+| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
 
 ## CLI
 
@@ -84,7 +84,7 @@ A stack is a collection of **liberators** — config modules that each handle on
 
 Each liberator declares what OS it supports, what it depends on, and how to install/update itself.
 
-### orac.toml
+### molt.toml
 
 The manifest lives at the root of your stack:
 
@@ -120,9 +120,29 @@ MOLT has opinions and says so. The tone is dry, terse, and functional. Output du
 - Linux (Debian/Ubuntu, Fedora/RHEL, Arch)
 - WSL2
 
+## Project structure
+
+```
+bin/
+  molt                 # CLI entry point
+lib/
+  molt.sh              # Core functions (logging, platform detection, symlinks)
+  liberator.sh         # Liberator loading and execution framework
+liberators/
+  zsh.sh               # Shell + Starship prompt
+templates/
+  molt.toml.example    # Example stack manifest
+docs/
+  bootstrap-runbook.md # Phase 1 manual resleeve steps
+```
+
+Each liberator implements three functions: `{name}_check`, `{name}_install`, and
+`{name}_verify`. The framework discovers and runs them automatically.
+
 ## Status
 
-Early development. The exoskeleton is still forming.
+Early development. The exoskeleton is still forming. The framework has a working
+CLI (`bin/molt`), core library, liberator runner, and one exemplar liberator (zsh).
 
 ## License
 

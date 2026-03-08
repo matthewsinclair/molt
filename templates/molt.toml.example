@@ -1,0 +1,59 @@
+# molt.toml — Stack manifest for MOLT
+# The authoritative source of truth for what your stack contains.
+
+[stack]
+name = "my-stack"                    # Your stack name (typically molt-{userid})
+version = "0.1.0"
+user_repo = "molt-matts"             # GitHub repo: {user}/{user_repo}
+
+[sleeve]
+# Machine-specific overrides (optional)
+# hostname = "kovacs"
+# instance_dir = "instances/kovacs"
+
+# Each liberator is a config module that handles one concern.
+# os: which platforms this liberator runs on
+# depends: other liberators that must run first
+
+[[liberator]]
+name = "system"
+os = ["linux"]
+
+[[liberator]]
+name = "zsh"
+os = ["linux", "macos"]
+depends = ["system"]
+
+[[liberator]]
+name = "git"
+os = ["linux", "macos"]
+
+[[liberator]]
+name = "tmux"
+os = ["linux", "macos"]
+
+[[liberator]]
+name = "editors"
+os = ["linux", "macos"]
+depends = ["zsh", "git"]
+
+[[liberator]]
+name = "terminal"
+os = ["linux"]
+
+[[liberator]]
+name = "keys"
+os = ["linux"]
+
+[[liberator]]
+name = "desktop"
+os = ["linux"]
+
+[[liberator]]
+name = "dev-tools"
+os = ["linux", "macos"]
+depends = ["zsh"]
+
+[[liberator]]
+name = "ssh"
+os = ["linux", "macos"]
