@@ -72,6 +72,20 @@ molt-matts (personal repo)
 └── intent/             # Intent project artifacts
 ```
 
+### External dependencies: PATH-based, not package-manager-bound
+
+Molt must never mandate a specific package manager or dev environment tool. No hard dependency on Homebrew, mise, asdf, nix, or any other provider.
+
+**Principle**: Molt depends on *commands on PATH*, not on how they got there.
+
+- When Molt needs a tool (e.g. `bats`, `prettier`, `jq`), it checks `command -v` on PATH
+- If the tool is missing, Molt fails gracefully with a clear message telling the user what's needed
+- It's the user's choice how to satisfy that dependency — brew, apt, mise, asdf, nix, cargo, manual install, whatever
+- Liberators that install tools should be opinionated about *what* to install, not *how* — platform-appropriate package managers (apt on Ubuntu, etc.) are a sensible default, but the user can always disable the liberator and manage their own tooling
+- Dev environment version managers (mise, asdf, nvm, rbenv, etc.) are user preference — Molt should be resilient to whichever one is in play, or none at all
+
+**Rationale**: Devs are particular about their toolchain. Mandating brew (or anything) would be a deal-breaker for adoption. PATH is the universal interface.
+
 ## Alternatives Considered
 
 ### GNU Stow
