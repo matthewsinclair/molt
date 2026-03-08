@@ -66,17 +66,29 @@ cmd_resleeve() {
   molt_info "Stack found: $user_repo"
   molt_info "Loading liberators..."
 
-  local available
-  available="$(liberator_list)"
+  # Use manifest if available, otherwise fall back to directory scan
+  local liberators
+  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
+    local manifest
+    manifest="$(molt_find_manifest)"
+    molt_info "Manifest: $manifest"
+  else
+    liberators="$(liberator_list)"
+    molt_info "No manifest found, using all available liberators"
+  fi
 
-  for lib in $available; do
-    liberator_load "$lib"
+  while IFS= read -r lib; do
+    [[ -z "$lib" ]] && continue
+    if ! liberator_load "$lib" 2>/dev/null; then
+      molt_warn "Skipping unknown liberator: $lib"
+      continue
+    fi
     if ! liberator_check "$lib" 2>/dev/null; then
       liberator_run "$lib" install
     else
       molt_info "Liberator already installed: $lib"
     fi
-  done
+  done <<< "$liberators"
 
   echo ""
   molt_info "Sleeve ready. Welcome back."

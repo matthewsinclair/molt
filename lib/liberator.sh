@@ -91,8 +91,26 @@ liberator_run_all() {
 liberator_status_all() {
   local liberators=("$@")
 
+  # Get enabled list from manifest (if available)
+  local -A enabled_map
+  local manifest_liberators
+  if manifest_liberators="$(molt_enabled_liberators 2>/dev/null)"; then
+    while IFS= read -r lib; do
+      [[ -n "$lib" ]] && enabled_map["$lib"]=1
+    done <<< "$manifest_liberators"
+  fi
+
   for lib in "${liberators[@]}"; do
     liberator_load "$lib" 2>/dev/null || continue
+
+    # If manifest exists, show enabled/disabled status
+    if [[ ${#enabled_map[@]} -gt 0 ]]; then
+      if [[ -z "${enabled_map[$lib]:-}" ]]; then
+        echo "  $lib: disabled"
+        continue
+      fi
+    fi
+
     if liberator_check "$lib" 2>/dev/null; then
       echo "  $lib: installed"
     else

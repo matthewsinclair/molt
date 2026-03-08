@@ -1,5 +1,8 @@
 # molt.toml — Stack manifest for MOLT
 # The authoritative source of truth for what your stack contains.
+#
+# Each liberator has an "enabled" flag. Set to false to skip it.
+# This is the Doom Emacs pattern: everything is listed, toggle what you want.
 
 [stack]
 name = "my-stack"                    # Your stack name (typically molt-{userid})
@@ -11,49 +14,73 @@ user_repo = "molt-matts"             # GitHub repo: {user}/{user_repo}
 # hostname = "kovacs"
 # instance_dir = "instances/kovacs"
 
-# Each liberator is a config module that handles one concern.
-# os: which platforms this liberator runs on
-# depends: other liberators that must run first
+# --- Core liberators ---
+# These handle the base environment.
 
 [[liberator]]
 name = "system"
+enabled = true
 os = ["linux"]
 
 [[liberator]]
+name = "local-bin"
+enabled = true
+os = ["linux", "macos"]
+depends = ["system"]
+
+[[liberator]]
 name = "zsh"
+enabled = true
 os = ["linux", "macos"]
 depends = ["system"]
 
 [[liberator]]
 name = "git"
+enabled = true
 os = ["linux", "macos"]
 
 [[liberator]]
 name = "tmux"
+enabled = true
 os = ["linux", "macos"]
 
 [[liberator]]
 name = "editors"
+enabled = true
 os = ["linux", "macos"]
 depends = ["zsh", "git"]
 
 [[liberator]]
 name = "terminal"
+enabled = true
 os = ["linux"]
 
 [[liberator]]
 name = "keys"
+enabled = false                      # parked — Cmd key passthrough issue
 os = ["linux"]
 
 [[liberator]]
 name = "desktop"
+enabled = true
 os = ["linux"]
 
 [[liberator]]
 name = "dev-tools"
+enabled = true
 os = ["linux", "macos"]
 depends = ["zsh"]
 
 [[liberator]]
 name = "ssh"
+enabled = true
 os = ["linux", "macos"]
+
+# --- Tool liberators ---
+# These install dev tools from their repos into ~/bin.
+
+[[liberator]]
+name = "utilz"
+enabled = true
+os = ["linux", "macos"]
+depends = ["local-bin"]
