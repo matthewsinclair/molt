@@ -192,6 +192,230 @@ molt_enabled_liberators() {
   ' "$manifest"
 }
 
+# --- CLI Commands ---
+
+cmd_version() {
+  echo "${MOLT_NAME} v${MOLT_VERSION}"
+}
+
+cmd_list() {
+  echo "${MOLT_NAME} v${MOLT_VERSION} — Liberators"
+  echo ""
+
+  # Get enabled list from manifest (if available)
+  local enabled_list=" "
+  local disabled_list=" "
+  local has_manifest=0
+  local manifest_liberators
+  if manifest_liberators="$(molt_enabled_liberators 2>/dev/null)"; then
+    has_manifest=1
+    while IFS= read -r lib; do
+      [[ -n "$lib" ]] && enabled_list="${enabled_list}${lib} "
+    done <<< "$manifest_liberators"
+  fi
+
+  # Also parse disabled liberators from manifest directly
+  if [[ "$has_manifest" -eq 1 ]]; then
+    local manifest
+    manifest="$(molt_find_manifest 2>/dev/null || echo "")"
+    if [[ -n "$manifest" ]]; then
+      local all_names
+      all_names="$(awk '/^name[[:space:]]*=/ { gsub(/^name[[:space:]]*=[[:space:]]*"/, ""); gsub(/".*/, ""); print }' "$manifest")"
+      while IFS= read -r lib; do
+        [[ -z "$lib" ]] && continue
+        if [[ "$enabled_list" != *" ${lib} "* ]]; then
+          disabled_list="${disabled_list}${lib} "
+        fi
+      done <<< "$all_names"
+    fi
+  fi
+
+  for lib in $(liberator_list); do
+    local status_str
+    if [[ "$has_manifest" -eq 1 ]]; then
+      if [[ "$disabled_list" == *" ${lib} "* ]]; then
+        status_str="disabled"
+      elif [[ "$enabled_list" == *" ${lib} "* ]]; then
+        if liberator_load "$lib" 2>/dev/null && liberator_check "$lib" 2>/dev/null; then
+          status_str="installed"
+        else
+          status_str="not installed"
+        fi
+      else
+        status_str="not in manifest"
+      fi
+    else
+      if liberator_load "$lib" 2>/dev/null && liberator_check "$lib" 2>/dev/null; then
+        status_str="installed"
+      else
+        status_str="not installed"
+      fi
+    fi
+    echo "  $lib: $status_str"
+  done
+}
+
+cmd_doctor() {
+  echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
+  echo ""
+
+  local total=7
+  local step=0
+  local warnings=0
+
+  # 1. MOLT_HOME is valid
+  step=$((step + 1))
+  if [[ -x "${MOLT_ROOT:-}/bin/molt" && -d "${MOLT_ROOT:-}/lib" ]]; then
+    echo "[$step/$total] Checking MOLT_ROOT... ✓ $MOLT_ROOT"
+  else
+    echo "[$step/$total] Checking MOLT_ROOT... ✗ invalid or not found"
+    warnings=$((warnings + 1))
+  fi
+
+  # 2. Directory structure
+  step=$((step + 1))
+  local dirs_ok=1
+  for dir in lib liberators test; do
+    if [[ ! -d "${MOLT_ROOT}/$dir" ]]; then
+      dirs_ok=0
+    fi
+  done
+  if [[ "$dirs_ok" -eq 1 ]]; then
+    echo "[$step/$total] Checking directory structure... ✓ lib/ liberators/ test/"
+  else
+    echo "[$step/$total] Checking directory structure... ⚠ missing directories"
+    warnings=$((warnings + 1))
+  fi
+
+  # 3. User stack repo
+  step=$((step + 1))
+  local user_repo
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  if [[ -n "$user_repo" && -d "$user_repo" ]]; then
+    echo "[$step/$total] Checking user stack repo... ✓ $user_repo"
+  else
+    echo "[$step/$total] Checking user stack repo... ✗ not found"
+    warnings=$((warnings + 1))
+  fi
+
+  # 4. Manifest
+  step=$((step + 1))
+  local manifest
+  manifest="$(molt_find_manifest 2>/dev/null || echo "")"
+  if [[ -n "$manifest" && -f "$manifest" ]]; then
+    echo "[$step/$total] Checking manifest... ✓ $manifest"
+  else
+    echo "[$step/$total] Checking manifest... ⚠ no molt.toml found"
+    warnings=$((warnings + 1))
+  fi
+
+  # 5. Liberators: each .sh is executable, has _check function
+  step=$((step + 1))
+  local lib_errors=0
+  local lib_count=0
+  for lib in $(liberator_list); do
+    lib_count=$((lib_count + 1))
+    local script="${MOLT_LIBERATORS_DIR}/${lib}.sh"
+    if [[ ! -f "$script" ]]; then
+      lib_errors=$((lib_errors + 1))
+      continue
+    fi
+    # Check for _check function (source and test)
+    if ! grep -q "^${lib}_check()" "$script" 2>/dev/null; then
+      lib_errors=$((lib_errors + 1))
+    fi
+  done
+  if [[ "$lib_errors" -eq 0 ]]; then
+    echo "[$step/$total] Checking liberators... ✓ $lib_count liberators, all have _check"
+  else
+    echo "[$step/$total] Checking liberators... ⚠ $lib_errors of $lib_count have issues"
+    warnings=$((warnings + 1))
+  fi
+
+  # 6. Enabled liberator status
+  step=$((step + 1))
+  if [[ -n "$manifest" ]]; then
+    local enabled
+    enabled="$(molt_enabled_liberators 2>/dev/null || echo "")"
+    local enabled_count=0
+    local installed_count=0
+    while IFS= read -r lib; do
+      [[ -z "$lib" ]] && continue
+      enabled_count=$((enabled_count + 1))
+      if liberator_load "$lib" 2>/dev/null && liberator_check "$lib" 2>/dev/null; then
+        installed_count=$((installed_count + 1))
+      fi
+    done <<< "$enabled"
+    echo "[$step/$total] Checking enabled liberators... ✓ $installed_count/$enabled_count installed"
+  else
+    echo "[$step/$total] Checking enabled liberators... ⚠ no manifest (skipped)"
+    warnings=$((warnings + 1))
+  fi
+
+  # 7. External dependencies
+  step=$((step + 1))
+  local deps_ok=1
+  local missing_deps=""
+  for dep in bats; do
+    if ! command -v "$dep" &>/dev/null; then
+      deps_ok=0
+      missing_deps="$missing_deps $dep"
+    fi
+  done
+  if [[ "$deps_ok" -eq 1 ]]; then
+    echo "[$step/$total] Checking external dependencies... ✓ bats"
+  else
+    echo "[$step/$total] Checking external dependencies... ⚠ missing:$missing_deps"
+    warnings=$((warnings + 1))
+  fi
+
+  echo ""
+  if [[ "$warnings" -eq 0 ]]; then
+    echo "All checks passed."
+  else
+    echo "$warnings warning(s). Review above for details."
+  fi
+}
+
+cmd_test() {
+  local target="${1:-}"
+
+  if ! command -v bats &>/dev/null; then
+    molt_error "bats is required to run tests. Install via: utilz or apt install bats"
+    return 1
+  fi
+
+  local test_dir="${MOLT_ROOT}/test"
+  if [[ ! -d "$test_dir" ]]; then
+    molt_error "Test directory not found: $test_dir"
+    return 1
+  fi
+
+  if [[ -n "$target" ]]; then
+    # Run specific liberator test
+    local target_file="$test_dir/liberators/${target}.bats"
+    if [[ ! -f "$target_file" ]]; then
+      molt_error "Test not found: $target_file"
+      return 1
+    fi
+    bats "$target_file"
+  else
+    # Run all tests
+    local test_files=()
+    for f in "$test_dir"/*.bats; do
+      [[ -f "$f" ]] && test_files+=("$f")
+    done
+    for f in "$test_dir"/liberators/*.bats; do
+      [[ -f "$f" ]] && test_files+=("$f")
+    done
+    if [[ ${#test_files[@]} -eq 0 ]]; then
+      molt_error "No test files found"
+      return 1
+    fi
+    bats "${test_files[@]}"
+  fi
+}
+
 # --- Stack Discovery ---
 
 molt_find_user_repo() {

@@ -5,8 +5,8 @@
 # Directory containing liberator scripts
 MOLT_LIBERATORS_DIR="${MOLT_LIBERATORS_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../liberators" && pwd)}"
 
-# Track loaded liberators
-declare -A _MOLT_LOADED_LIBERATORS 2>/dev/null || true
+# Track loaded liberators (space-delimited string for bash 3.2 compat)
+_MOLT_LOADED_LIBERATORS=" "
 
 # --- Liberator Lifecycle ---
 
@@ -21,14 +21,14 @@ liberator_load() {
 
   # shellcheck source=/dev/null
   source "$script"
-  _MOLT_LOADED_LIBERATORS["$name"]=1
+  _MOLT_LOADED_LIBERATORS="${_MOLT_LOADED_LIBERATORS}${name} "
   molt_debug "Loaded liberator: $name"
 }
 
 liberator_check() {
   local name="$1"
 
-  if [[ -z "${_MOLT_LOADED_LIBERATORS[$name]:-}" ]]; then
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
     liberator_load "$name" || return 1
   fi
 
@@ -45,7 +45,7 @@ liberator_run() {
   local name="$1"
   local action="${2:-install}"
 
-  if [[ -z "${_MOLT_LOADED_LIBERATORS[$name]:-}" ]]; then
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
     liberator_load "$name" || return 1
   fi
 
@@ -92,11 +92,13 @@ liberator_status_all() {
   local liberators=("$@")
 
   # Get enabled list from manifest (if available)
-  local -A enabled_map
+  local enabled_list=" "
+  local has_manifest=0
   local manifest_liberators
   if manifest_liberators="$(molt_enabled_liberators 2>/dev/null)"; then
+    has_manifest=1
     while IFS= read -r lib; do
-      [[ -n "$lib" ]] && enabled_map["$lib"]=1
+      [[ -n "$lib" ]] && enabled_list="${enabled_list}${lib} "
     done <<< "$manifest_liberators"
   fi
 
@@ -104,8 +106,8 @@ liberator_status_all() {
     liberator_load "$lib" 2>/dev/null || continue
 
     # If manifest exists, show enabled/disabled status
-    if [[ ${#enabled_map[@]} -gt 0 ]]; then
-      if [[ -z "${enabled_map[$lib]:-}" ]]; then
+    if [[ "$has_manifest" -eq 1 ]]; then
+      if [[ "$enabled_list" != *" ${lib} "* ]]; then
         echo "  $lib: disabled"
         continue
       fi

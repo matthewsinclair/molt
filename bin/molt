@@ -24,6 +24,10 @@ Usage: molt <command> [args]
 Commands:
   resleeve    Bootstrap the current machine from your stack
   status      Show current sleeve state and liberator status
+  list        List liberators with enabled/disabled/installed status
+  doctor      System diagnostics and health checks
+  test        Run bats test suite (molt test [liberator])
+  version     Show version
   help        Show this help message
 
 EOF
@@ -99,6 +103,10 @@ cmd_resleeve() {
 case "${1:-help}" in
   resleeve) cmd_resleeve ;;
   status)   cmd_status ;;
+  list)     cmd_list ;;
+  doctor)   cmd_doctor ;;
+  test)     shift; cmd_test "$@" ;;
+  version)  cmd_version ;;
   help)     cmd_help ;;
   *)
     molt_error "Unknown command: $1"
