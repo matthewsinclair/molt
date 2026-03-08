@@ -39,6 +39,7 @@ Framework has been substantially built out. The molt repo now has a working CLI,
 ## As-Built Summary (08 Mar 2026)
 
 ### Framework structure
+
 ```
 bin/molt            — CLI entry point (thin coordinator)
 lib/constants.sh    — Configurable paths (Highlander Rule)
@@ -50,6 +51,7 @@ templates/          — molt.toml.example
 ```
 
 ### Test suite
+
 - `test/test_helper.bash` — shared infrastructure adapted from Utilz
 - `test/molt.bats` — 11 CLI tests
 - `test/constants.bats` — 10 constants tests
@@ -58,6 +60,7 @@ templates/          — molt.toml.example
 - `test/liberators/zsh.bats` — 6 exemplar liberator tests
 
 ### CLI commands added this session
+
 - `molt doctor` — 7-step system diagnostics with ✓/✗/⚠ output
 - `molt test [liberator]` — run bats test suite (all or per-liberator)
 - `molt list` — list liberators with enabled/disabled/installed status
