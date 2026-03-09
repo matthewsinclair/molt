@@ -4,7 +4,13 @@
 
 set -euo pipefail
 
-MOLT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Resolve symlinks so MOLT_ROOT works when invoked via ~/bin/molt symlink
+_molt_self="${BASH_SOURCE[0]}"
+while [[ -L "$_molt_self" ]]; do
+  _molt_self="$(readlink "$_molt_self")"
+done
+MOLT_ROOT="$(cd "$(dirname "$_molt_self")/.." && pwd)"
+unset _molt_self
 
 # Source core libraries
 # shellcheck source=../lib/molt.sh
@@ -103,7 +109,7 @@ cmd_resleeve() {
     if ! liberator_check "$lib" 2>/dev/null; then
       if $dry_run; then
         echo "  $lib: WOULD INSTALL"
-        ((would_install++))
+        would_install=$((would_install + 1))
       else
         if liberator_run "$lib" install; then
           echo "  $lib: ✓ installed"

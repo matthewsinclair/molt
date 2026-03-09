@@ -41,6 +41,14 @@ git_install() {
   user_repo="$(molt_find_user_repo)" || return 1
   molt_link "$user_repo/config/git/gitconfig" "$HOME/.gitconfig"
 
+  if [[ -f "$user_repo/config/git/gitignore_global" ]]; then
+    molt_link "$user_repo/config/git/gitignore_global" "$HOME/.gitignore_global"
+  fi
+
+  if [[ -f "$user_repo/config/git/gitconfig_matthewsinclair" ]]; then
+    molt_link "$user_repo/config/git/gitconfig_matthewsinclair" "$HOME/.gitconfig_matthewsinclair"
+  fi
+
   molt_info "Liberator complete: git"
 }
 

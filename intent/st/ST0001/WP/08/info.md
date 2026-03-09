@@ -34,13 +34,13 @@ See `intent/st/ST0001/design-templates.md` for full design. Key points:
 
 ## Acceptance Criteria
 
-- [ ] `molt_render` renders templates with envsubst, sources vars.sh
-- [ ] `molt_install_config` picks symlink for static files, render for `.tmpl` files
-- [ ] SSH config renders correctly on both kovacs and rhadamanth
-- [ ] SSH liberator uses concatenation approach (template + config.d fragments)
-- [ ] Bats tests cover: basic render, missing template, missing vars.sh fallback, idempotent re-render
-- [ ] `molt doctor` reports rendered files and secrets presence
-- [ ] Existing liberators and tests unaffected (no regressions)
+- [x] `molt_render` renders templates with envsubst, sources vars.sh
+- [x] `molt_install_config` picks symlink for static files, render for `.tmpl` files
+- [x] SSH config renders correctly on both kovacs and rhadamanth
+- [x] SSH liberator uses concatenation approach (template + config.d fragments)
+- [x] Bats tests cover: basic render, missing template, missing vars.sh fallback, idempotent re-render
+- [x] `molt doctor` reports rendered files and secrets presence
+- [x] Existing liberators and tests unaffected (no regressions)
 
 ## Dependencies
 

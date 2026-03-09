@@ -2,6 +2,30 @@
 # zsh.sh — Liberator: shell + prompt
 # Frees you from the default shell.
 
+# Detect current default shell (pipefail-safe)
+_zsh_current_shell() {
+  # macOS: dscl
+  if command -v dscl &>/dev/null; then
+    local dscl_out
+    dscl_out="$(dscl . -read /Users/"$(whoami)" UserShell 2>/dev/null || true)"
+    if [[ -n "$dscl_out" ]]; then
+      echo "$dscl_out" | awk '{print $2}'
+      return 0
+    fi
+  fi
+  # Linux: getent
+  if command -v getent &>/dev/null; then
+    local getent_out
+    getent_out="$(getent passwd "$(whoami)" 2>/dev/null || true)"
+    if [[ -n "$getent_out" ]]; then
+      echo "$getent_out" | cut -d: -f7
+      return 0
+    fi
+  fi
+  # Fallback
+  echo "$SHELL"
+}
+
 zsh_check() {
   local ok=0
 
@@ -13,7 +37,7 @@ zsh_check() {
 
   # Is zsh the default shell?
   local current_shell
-  current_shell="$(dscl . -read /Users/"$(whoami)" UserShell 2>/dev/null | awk '{print $2}' || getent passwd "$(whoami)" 2>/dev/null | cut -d: -f7 || echo "$SHELL")"
+  current_shell="$(_zsh_current_shell)"
   if [[ "$current_shell" != *"zsh"* ]]; then
     molt_info "zsh: installed but not default shell (current: $current_shell)"
     ok=1
@@ -49,7 +73,7 @@ zsh_install() {
   local zsh_path
   zsh_path="$(which zsh)"
   local current_shell
-  current_shell="$(dscl . -read /Users/"$(whoami)" UserShell 2>/dev/null | awk '{print $2}' || getent passwd "$(whoami)" 2>/dev/null | cut -d: -f7 || echo "$SHELL")"
+  current_shell="$(_zsh_current_shell)"
   if [[ "$current_shell" != *"zsh"* ]]; then
     molt_info "Setting zsh as default shell..."
     chsh -s "$zsh_path"

@@ -4,27 +4,28 @@
 
 ### What Was Done
 
-- Stripped package manager calls from 7 liberators (system, zsh, git, tmux, editors, dev-tools, utilz)
-- Added `molt resleeve --dry-run`
-- Created `rhadamanth/molt.toml` manifest and `bin/bootstrap.sh`
-- Forensic review: fixed SSH key detection, config.d idempotency, errexit resilience, editors guards, molt_render backups, zsh macOS compat
-- Removed hardcoded `MOLT_PROJECTS_DIR` default -- must be set via env var
-- Added `MOLT_PROJECTS_DIR` to zshenv, zshrc, instance vars.sh, sleeve manifests
-- Updated README with all changes
-- Fixed `hostname -s` across entire codebase for macOS compat
-- All tests passing on kovacs
+- WP-08 (Template system): `molt_render`, `molt_install_config`, 9 bats tests, SSH liberator updated, doctor checks 8-9
+- WP-10 (chezmoi migration): rhadamanth fully resleeved, chezmoi retired
+  - `.zprofile` updated with Homebrew `brew shellenv` init
+  - Git config merged with `gitignore_global`, identity include
+  - Git liberator links additional files
+  - Fixed `bin/molt` symlink resolution and arithmetic crash
+  - All 9 enabled liberators installed on rhadamanth
+- 52 tests passing across both sleeves
 
 ### What's Next
 
-- Commit and push changes from both repos (molt + molt-matts)
-- First resleeve dry-run then resleeve on rhadamanth
+- Verify WP-10 changes on kovacs (no regressions)
 - Export iTerm2 + Terminal.app profiles from rhadamanth
 - Fix Cmd key passthrough (PARKED)
+- Reproducible VM build (WP-07, future)
 
 ### Key Context
 
-- `MOLT_PROJECTS_DIR` is now required -- set in `.zshenv` which is symlinked from molt-matts
-- Running molt from a non-zsh context (e.g. bash, cron) needs `MOLT_PROJECTS_DIR` set explicitly
+- `MOLT_PROJECTS_DIR` is required — set in `.zshenv` which is symlinked from molt-matts
 - 15 liberators, no package installs, two sleeves (kovacs + rhadamanth)
 - rhadamanth manifest: tmux disabled, iterm2 enabled, alacritty/gnome-terminal/keys/desktop disabled
 - `hostname -s` used for all instance lookups (macOS returns rhadamanth.lan)
+- chezmoi retired from rhadamanth — safety net at `github.com-matthewsinclair:matthewsinclair/cfg-dotfiles.git`
+- `bin/molt` resolves symlinks before computing `MOLT_ROOT` (works via `~/bin/molt`)
+- Doctor check 8 (SSH key) gives false warning on rhadamanth — key is named `personalid`, not `id_ed25519`
