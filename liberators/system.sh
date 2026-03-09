@@ -28,14 +28,15 @@ system_install() {
 
   case "$platform" in
     linux)
-      molt_info "Updating package lists..."
-      sudo apt update 2>/dev/null || sudo dnf check-update 2>/dev/null || true
+      if ! command -v sudo &>/dev/null; then
+        molt_error "sudo not found. Install it then re-run."
+        return 1
+      fi
       ;;
     macos)
-      # Ensure Homebrew is installed
       if ! command -v brew &>/dev/null; then
-        molt_info "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        molt_error "Homebrew not found. Install it (https://brew.sh) then re-run."
+        return 1
       fi
       ;;
   esac

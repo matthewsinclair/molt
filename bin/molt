@@ -22,7 +22,7 @@ Your shell config is your identity. Every new machine is just a new body.
 Usage: molt <command> [args]
 
 Commands:
-  resleeve    Bootstrap the current machine from your stack
+  resleeve [--dry-run]  Bootstrap the current machine from your stack
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   doctor      System diagnostics and health checks
@@ -36,7 +36,7 @@ EOF
 cmd_status() {
   echo "${MOLT_NAME} v${MOLT_VERSION}"
   echo ""
-  echo "Sleeve: $(hostname)"
+  echo "Sleeve: $(hostname -s 2>/dev/null || hostname)"
   echo "Platform: $(molt_platform)"
   echo "Distro: $(molt_distro)"
   echo "Arch: $(molt_arch)"
@@ -56,8 +56,18 @@ cmd_status() {
 }
 
 cmd_resleeve() {
-  echo "${MOLT_NAME} v${MOLT_VERSION} — My Opinionated Local Terminal"
-  echo "Needlecasting stack to new sleeve..."
+  local dry_run=false
+  if [[ "${1:-}" == "--dry-run" ]]; then
+    dry_run=true
+  fi
+
+  if $dry_run; then
+    echo "${MOLT_NAME} v${MOLT_VERSION} — Dry Run"
+  else
+    echo "${MOLT_NAME} v${MOLT_VERSION} — My Opinionated Local Terminal"
+    echo "Needlecasting stack to new sleeve..."
+  fi
+  echo "Sleeve: $(hostname -s 2>/dev/null || hostname) | Platform: $(molt_platform)"
   echo ""
 
   local user_repo
@@ -81,6 +91,9 @@ cmd_resleeve() {
     molt_info "No manifest found, using all available liberators"
   fi
 
+  local would_install=0
+  echo ""
+
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
     if ! liberator_load "$lib" 2>/dev/null; then
@@ -88,20 +101,33 @@ cmd_resleeve() {
       continue
     fi
     if ! liberator_check "$lib" 2>/dev/null; then
-      liberator_run "$lib" install
+      if $dry_run; then
+        echo "  $lib: WOULD INSTALL"
+        ((would_install++))
+      else
+        liberator_run "$lib" install
+      fi
     else
-      molt_info "Liberator already installed: $lib"
+      echo "  $lib: ✓ ok"
     fi
   done <<< "$liberators"
 
   echo ""
-  molt_info "Sleeve ready. Welcome back."
+  if $dry_run; then
+    if [[ $would_install -eq 0 ]]; then
+      molt_info "All liberators are installed. Nothing to do."
+    else
+      molt_info "$would_install liberator(s) would be installed. Run \`molt resleeve\` to apply."
+    fi
+  else
+    molt_info "Sleeve ready. Welcome back."
+  fi
 }
 
 # --- Main ---
 
 case "${1:-help}" in
-  resleeve) cmd_resleeve ;;
+  resleeve) shift; cmd_resleeve "$@" ;;
   status)   cmd_status ;;
   list)     cmd_list ;;
   doctor)   cmd_doctor ;;

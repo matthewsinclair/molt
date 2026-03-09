@@ -21,23 +21,9 @@ tmux_check() {
 }
 
 tmux_install() {
-  local platform
-  platform="$(molt_platform)"
-
   if ! command -v tmux &>/dev/null; then
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian) sudo apt install -y tmux ;;
-          fedora|rhel|centos) sudo dnf install -y tmux ;;
-          arch) sudo pacman -S --noconfirm tmux ;;
-          *) molt_error "Unsupported distro: $distro"; return 1 ;;
-        esac
-        ;;
-      macos) brew install tmux ;;
-    esac
+    molt_error "tmux not found. Install it (eg apt install tmux, brew install tmux) then re-run."
+    return 1
   fi
 
   local user_repo

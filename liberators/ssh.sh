@@ -58,7 +58,7 @@ ssh_install() {
 
   # Append instance-specific config.d fragments if any exist
   local hostname
-  hostname="$(hostname)"
+  hostname="$(hostname -s 2>/dev/null || hostname)"
   local config_d="$user_repo/instances/$hostname/ssh/config.d"
   if [[ -d "$config_d" ]]; then
     for fragment in "$config_d"/*.conf; do

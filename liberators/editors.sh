@@ -37,42 +37,16 @@ editors_check() {
 }
 
 editors_install() {
-  local platform
-  platform="$(molt_platform)"
-
-  # Install emacs
+  # Verify emacs is installed
   if ! command -v emacs &>/dev/null; then
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian) sudo apt install -y emacs ;;
-          fedora|rhel|centos) sudo dnf install -y emacs ;;
-          arch) sudo pacman -S --noconfirm emacs ;;
-          *) molt_error "Unsupported distro: $distro"; return 1 ;;
-        esac
-        ;;
-      macos)
-        brew install emacs-plus@29
-        ;;
-    esac
+    molt_error "emacs not found. Install it (eg apt install emacs, brew install emacs-plus@29) then re-run."
+    return 1
   fi
 
-  # Install neovim
+  # Verify neovim is installed
   if ! command -v nvim &>/dev/null; then
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian) sudo apt install -y neovim ;;
-          fedora|rhel|centos) sudo dnf install -y neovim ;;
-          arch) sudo pacman -S --noconfirm neovim ;;
-        esac
-        ;;
-      macos) brew install neovim ;;
-    esac
+    molt_error "neovim not found. Install it (eg apt install neovim, brew install neovim) then re-run."
+    return 1
   fi
 
   # Install Doom Emacs

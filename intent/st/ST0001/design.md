@@ -78,7 +78,7 @@ Molt must never mandate a specific package manager or dev environment tool. No h
 
 **Principle**: Molt depends on _commands on PATH_, not on how they got there.
 
-- When Molt needs a tool (e.g. `bats`, `prettier`, `jq`), it checks `command -v` on PATH
+- When Molt needs a tool (eg `bats`, `prettier`, `jq`), it checks `command -v` on PATH
 - If the tool is missing, Molt fails gracefully with a clear message telling the user what's needed
 - It's the user's choice how to satisfy that dependency — brew, apt, mise, asdf, nix, cargo, manual install, whatever
 - Liberators that install tools should be opinionated about _what_ to install, not _how_ — platform-appropriate package managers (apt on Ubuntu, etc.) are a sensible default, but the user can always disable the liberator and manage their own tooling

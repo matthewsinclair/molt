@@ -17,7 +17,7 @@ MOLT_USER_REPO_SEARCH_PATHS=(
 
 # --- Tool repos ---
 # Where tool liberators look for their repos. Each can be overridden
-# individually via env var (e.g. UTILZ_HOME), or they fall back to
+# individually via env var (eg UTILZ_HOME), or they fall back to
 # searching MOLT_PROJECTS_DIR.
 MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PROJECTS_DIR}/Utilz}"
 MOLT_INTENT_HOME="${INTENT_HOME:-${MOLT_PROJECTS_DIR}/Intent}"

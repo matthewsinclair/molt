@@ -164,8 +164,8 @@ Or, as a helper that picks the right strategy automatically:
 ```bash
 # Could add to lib/molt.sh
 molt_install_config() {
-  local source="$1"    # e.g. config/alacritty/alacritty.toml
-  local target="$2"    # e.g. ~/.config/alacritty/alacritty.toml
+  local source="$1"    # eg config/alacritty/alacritty.toml
+  local target="$2"    # eg ~/.config/alacritty/alacritty.toml
 
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1

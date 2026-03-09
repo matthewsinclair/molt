@@ -18,10 +18,10 @@ Think of it as what [Omarchy](https://github.com/basecamp/omarchy) does for Linu
 
 MOLT separates the framework from your personal config:
 
-| Repo                                | What it contains                                              | Shared?          |
-| ----------------------------------- | ------------------------------------------------------------- | ---------------- |
-| **molt** (this repo)                | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
-| **molt-{user}** (e.g. `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
+| Repo                              | What it contains                                              | Shared?          |
+| --------------------------------- | ------------------------------------------------------------- | ---------------- |
+| **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
+| **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
 
 The framework knows how to find your personal repo by searching for `molt-$(whoami)` in standard locations (`~/Devel/prj/`, `~/`, `~/.`). Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
@@ -224,7 +224,7 @@ MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tool
 - **awk** (manifest parsing)
 - **bats** (test suite — optional, for `molt test`)
 
-Liberators declare their own dependencies (e.g., `apt`, `curl`, `git`).
+Liberators declare their own dependencies (eg `apt`, `curl`, `git`).
 
 ## Status
 

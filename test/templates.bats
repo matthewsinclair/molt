@@ -45,7 +45,7 @@ _use_test_repo() {
 create_test_vars() {
     local repo="$1"
     local hostname
-    hostname="$(hostname)"
+    hostname="$(hostname -s 2>/dev/null || hostname)"
     local vars_dir="$repo/instances/$hostname"
     mkdir -p "$vars_dir"
     cat > "$vars_dir/vars.sh" <<'VARS'

@@ -65,7 +65,7 @@ keys_install() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
   local hostname
-  hostname="$(hostname)"
+  hostname="$(hostname -s 2>/dev/null || hostname)"
   local instance_keyd="$user_repo/instances/$hostname/keyd/default.conf"
 
   if [[ -f "$instance_keyd" ]]; then

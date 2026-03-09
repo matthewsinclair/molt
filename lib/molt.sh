@@ -134,7 +134,7 @@ molt_render() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
   local hostname
-  hostname="$(hostname)"
+  hostname="$(hostname -s 2>/dev/null || hostname)"
   local vars_file="$user_repo/instances/$hostname/vars.sh"
 
   # Create parent directory if needed
@@ -171,7 +171,7 @@ molt_render() {
   # Leave a marker so we know this file was rendered (not symlinked).
   echo "rendered $(date -Iseconds) from $template" > "${target}.molt-rendered"
 
-  # If parent directory is locked down (e.g. ~/.ssh at 700), restrict file perms
+  # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
   local parent_perms
   parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null || echo "755")"
@@ -211,7 +211,7 @@ molt_find_manifest() {
   [[ -z "$user_repo" ]] && return 1
 
   local hostname
-  hostname="$(hostname)"
+  hostname="$(hostname -s 2>/dev/null || hostname)"
 
   # Instance-specific overrides repo-level
   local instance_manifest="$user_repo/instances/$hostname/molt.toml"

@@ -32,8 +32,9 @@
 - [x] Split terminal.sh into per-emulator liberators (WP-09)
 - [x] GNOME Terminal Molt profile applied on kovacs
 - [ ] Fix Cmd key passthrough from Parallels (PARKED — needs investigation)
-- [ ] Set up kovacs SSH key for direct GitHub access
-- [ ] Install Nerd Fonts on kovacs
+- [x] Set up kovacs SSH key for direct GitHub access (WP-02)
+- [x] Install Nerd Fonts on kovacs (WP-03)
+- [x] Fix local-bin false negative — PATH check softened to debug
 - [ ] Export iTerm2 + Terminal.app profiles from rhadamanth
 
 ## Dependencies

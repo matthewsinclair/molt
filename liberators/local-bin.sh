@@ -10,10 +10,10 @@ local-bin_check() {
     ok=1
   fi
 
-  # Check that local bin is on PATH
+  # PATH is zsh's responsibility (via path_add in .zshrc), not the liberator's.
+  # Only log at debug level — not a failure condition.
   if [[ ":$PATH:" != *":$MOLT_LOCAL_BIN:"* ]]; then
-    molt_info "local-bin: $MOLT_LOCAL_BIN is not on PATH"
-    ok=1
+    molt_debug "local-bin: $MOLT_LOCAL_BIN is not on PATH (expected if not running from zsh)"
   fi
 
   # Check molt itself is linked

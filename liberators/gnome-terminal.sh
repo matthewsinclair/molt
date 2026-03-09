@@ -57,12 +57,12 @@ gnome-terminal_install() {
   fi
 
   if ! command -v gnome-terminal &>/dev/null; then
-    molt_error "GNOME Terminal not found. Install it (e.g. apt install gnome-terminal) then re-run."
+    molt_error "GNOME Terminal not found. Install it (eg apt install gnome-terminal) then re-run."
     return 1
   fi
 
   if ! command -v dconf &>/dev/null; then
-    molt_error "dconf not found. Install it (e.g. apt install dconf-cli) then re-run."
+    molt_error "dconf not found. Install it (eg apt install dconf-cli) then re-run."
     return 1
   fi
 

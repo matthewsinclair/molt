@@ -39,38 +39,10 @@ zsh_check() {
 }
 
 zsh_install() {
-  local platform
-  platform="$(molt_platform)"
-
-  # Install zsh
+  # Verify zsh is installed
   if ! command -v zsh &>/dev/null; then
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian)
-            molt_info "Installing zsh via apt..."
-            sudo apt install -y zsh
-            ;;
-          fedora|rhel|centos)
-            molt_info "Installing zsh via dnf..."
-            sudo dnf install -y zsh
-            ;;
-          arch)
-            molt_info "Installing zsh via pacman..."
-            sudo pacman -S --noconfirm zsh
-            ;;
-          *)
-            molt_error "Unsupported distro: $distro"
-            return 1
-            ;;
-        esac
-        ;;
-      macos)
-        molt_info "zsh ships with macOS"
-        ;;
-    esac
+    molt_error "zsh not found. Install it (eg apt install zsh, brew install zsh) then re-run."
+    return 1
   fi
 
   # Set as default shell
@@ -83,10 +55,10 @@ zsh_install() {
     chsh -s "$zsh_path"
   fi
 
-  # Install Starship
+  # Verify Starship is installed
   if ! command -v starship &>/dev/null; then
-    molt_info "Installing Starship prompt..."
-    curl -sS https://starship.rs/install.sh | sh -s -- -y
+    molt_error "Starship not found. Install it (https://starship.rs) then re-run."
+    return 1
   fi
 
   # Link config from user repo

@@ -26,42 +26,14 @@ git_check() {
 }
 
 git_install() {
-  local platform
-  platform="$(molt_platform)"
-
   if ! command -v git &>/dev/null; then
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian) sudo apt install -y git ;;
-          fedora|rhel|centos) sudo dnf install -y git ;;
-          arch) sudo pacman -S --noconfirm git ;;
-          *) molt_error "Unsupported distro: $distro"; return 1 ;;
-        esac
-        ;;
-      macos)
-        molt_info "git ships with macOS (Xcode CLT)"
-        ;;
-    esac
+    molt_error "git not found. Install it (eg apt install git, xcode-select --install) then re-run."
+    return 1
   fi
 
-  # Install git-lfs
   if ! command -v git-lfs &>/dev/null; then
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian) sudo apt install -y git-lfs ;;
-          fedora|rhel|centos) sudo dnf install -y git-lfs ;;
-          arch) sudo pacman -S --noconfirm git-lfs ;;
-        esac
-        ;;
-      macos) brew install git-lfs ;;
-    esac
-    git lfs install
+    molt_error "git-lfs not found. Install it (eg apt install git-lfs, brew install git-lfs) then re-run."
+    return 1
   fi
 
   # Link config

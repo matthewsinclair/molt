@@ -168,8 +168,8 @@ Add after `molt_render`. Auto-picker that liberators call instead of choosing st
 
 ```bash
 molt_install_config() {
-  local source="$1"    # relative path, e.g. "config/ssh/config"
-  local target="$2"    # absolute path, e.g. "$HOME/.ssh/config"
+  local source="$1"    # relative path, eg "config/ssh/config"
+  local target="$2"    # absolute path, eg "$HOME/.ssh/config"
   # 1. Find user repo
   # 2. Check for .tmpl version first
   # 3. If .tmpl exists: molt_render
@@ -527,7 +527,7 @@ Host *
 
 The liberator would: render template -> append fragments -> write final file -> `chmod 600`.
 
-This also handles future cases cleanly (e.g., kovacs gets a work VPN host, just drop a fragment in `config.d/`).
+This also handles future cases cleanly (eg kovacs gets a work VPN host, just drop a fragment in `config.d/`).
 
 **Implementation note**: `molt_render` should gain an optional "fragments directory" parameter, or the SSH liberator handles concatenation itself. I lean toward the latter — keep `molt_render` simple, let the liberator do the assembly. Not every template needs fragments.
 

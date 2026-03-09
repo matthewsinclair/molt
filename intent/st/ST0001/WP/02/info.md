@@ -1,9 +1,9 @@
 ---
-verblock: "08 Mar 2026:v0.1: matts - Initial version"
+verblock: "09 Mar 2026:v0.2: matts - As-built, complete"
 wp_id: WP-02
 title: "Set up kovacs SSH for GitHub"
 scope: Small
-status: Not Started
+status: Done
 ---
 
 # WP-02: Set up kovacs SSH for GitHub

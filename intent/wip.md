@@ -38,12 +38,10 @@ verblock: "09 Mar 2026:v0.3: matts - Terminal liberator split complete"
 
 ## Upcoming Work
 
-- Set up kovacs SSH for direct GitHub access (WP-02)
-- Install Nerd Fonts (WP-03)
 - Fix Cmd key passthrough (WP-01, PARKED)
 - Export iTerm2 and Terminal.app profiles from rhadamanth (placeholder configs)
 - Reproducible VM build (WP-07, future)
 
 ## Notes
 
-15 liberators, all tests passing. `molt list` shows clean output (no leaked Zen: lines). gnome-terminal and alacritty both enabled and installed on kovacs. iterm2 and terminal-app disabled (macOS-only placeholders). local-bin shows as not installed due to PATH issue in doctor check context.
+15 liberators, all tests passing, all enabled liberators installed. `molt list` clean. WP-02 (SSH) and WP-03 (Nerd Fonts) done. local-bin PATH check softened to debug (PATH is zsh's job).

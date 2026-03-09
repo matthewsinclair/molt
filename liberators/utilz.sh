@@ -64,25 +64,10 @@ utilz_install() {
   # (zshrc should pick this up — we just inform)
   molt_info "Ensure UTILZ_HOME=$repo is in your shell config"
 
-  # Install bats-core if not present
+  # Verify bats-core is installed
   if ! command -v bats &>/dev/null; then
-    local platform
-    platform="$(molt_platform)"
-    case "$platform" in
-      linux)
-        local distro
-        distro="$(molt_distro)"
-        case "$distro" in
-          ubuntu|debian) sudo apt install -y bats ;;
-          fedora|rhel|centos) sudo dnf install -y bats ;;
-          arch) sudo pacman -S --noconfirm bash-bats ;;
-          *)
-            molt_warn "Install bats-core manually: https://bats-core.readthedocs.io"
-            ;;
-        esac
-        ;;
-      macos) brew install bats-core ;;
-    esac
+    molt_error "bats-core not found. Install it (e.g. apt install bats, brew install bats-core) then re-run."
+    return 1
   fi
 
   molt_info "Liberator complete: utilz"

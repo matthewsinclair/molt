@@ -81,7 +81,7 @@ Audit all config and setup produced during Phase 1 against three principles:
 #### H3: Font family defined in TWO places (LOW)
 
 - **Where**: `config/alacritty/alacritty.toml` sets `family = "DejaVu Sans Mono"`. `config/doom/config.el` sets font to `"DejaVu Sans Mono"` (Linux) or `"Menlo"` (macOS).
-- **Problem**: The font choice for the terminal and the editor are set independently. If you switch fonts (e.g., to a Nerd Font in WP-03), you need to update both.
+- **Problem**: The font choice for the terminal and the editor are set independently. If you switch fonts (eg to a Nerd Font in WP-03), you need to update both.
 - **Severity**: Low. These are genuinely different applications. But the coupling is worth noting for WP-03.
 - **Recommendation**: When WP-03 (Nerd Fonts) is done, ensure both are updated. Consider whether a single "preferred font" variable could be sourced by both (future MOLT templating concern).
 
@@ -98,7 +98,7 @@ Audit all config and setup produced during Phase 1 against three principles:
   - `jump/mark/unmark/marks` (lines 76-79) — bookmark system (4 functions)
   - `e()` (line 98) — emacs client wrapper
   - `noctrld()` (lines 101-106) — env var wrapper
-- **What it should be**: A thin coordinator that sources/delegates. The functions above should live in separate script files (e.g., `~/.local/bin/` or `molt-matts/config/zsh/functions/`) and the zshrc should just source or autoload them.
+- **What it should be**: A thin coordinator that sources/delegates. The functions above should live in separate script files (eg `~/.local/bin/` or `molt-matts/config/zsh/functions/`) and the zshrc should just source or autoload them.
 - **Severity**: Medium. It works, but it's doing too much. The bookmark system alone is 4 functions + an alias. The zshrc should be: env vars, PATH, source tools, done.
 - **Recommendation**: Extract functions into `config/zsh/functions/` and autoload them, or move utility scripts to `~/.local/bin/`. Keep zshrc to: env, path, history opts, completion, aliases (one-liners only), tool activation.
 
@@ -109,7 +109,7 @@ Audit all config and setup produced during Phase 1 against three principles:
   - Ispell/spell checking config (lines 94-112) — 18 lines including a function definition and advice
   - Frame geometry persistence (lines 119-163) — 44 lines, two functions, multiple hooks
 - **What it should be**: Basic settings (user, font, theme) + `load!` calls to custom modules. That's it.
-- **Severity**: Medium. The ispell and frame-geometry code should be in their own custom/\*.el files (e.g., `custom/110-ispell.el` and `custom/120-frame-geometry.el`).
+- **Severity**: Medium. The ispell and frame-geometry code should be in their own custom/\*.el files (eg `custom/110-ispell.el` and `custom/120-frame-geometry.el`).
 - **Recommendation**: Extract ispell config to `custom/110-ispell.el`. Extract frame geometry to `custom/120-frame-geometry.el`. config.el becomes ~40 lines of pure coordination.
 
 ---

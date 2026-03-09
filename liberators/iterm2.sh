@@ -41,7 +41,7 @@ iterm2_install() {
   fi
 
   if [[ ! -d "/Applications/iTerm.app" ]]; then
-    molt_error "iTerm2 not found. Install it (e.g. brew install --cask iterm2) then re-run."
+    molt_error "iTerm2 not found. Install it (eg brew install --cask iterm2) then re-run."
     return 1
   fi
 

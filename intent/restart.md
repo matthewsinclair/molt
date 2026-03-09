@@ -4,26 +4,22 @@
 
 ### What Was Done
 
-- Split `terminal.sh` into four per-emulator liberators: `alacritty.sh`, `gnome-terminal.sh`, `iterm2.sh`, `terminal-app.sh`
-- Created `molt-matts/config/gnome-terminal/profile.dconf` (Molt profile: JetBrainsMono NF 14pt, dark theme, unlimited scrollback)
-- Ran gnome-terminal liberator — profile loaded via dconf, set as default
-- Fixed stdout leak in `cmd_list`/`cmd_doctor` — `_check` info messages no longer pollute list output
-- Enforced "no package install" rule — all four liberators fail with hint if binary missing
-- Updated `molt-matts/instances/kovacs/molt.toml` — replaced `terminal` with `alacritty` + `gnome-terminal` (enabled) + `iterm2` + `terminal-app` (disabled)
-- Deleted `liberators/terminal.sh`
-- All tests pass, `molt doctor` clean, `molt list` clean
+- Split `terminal.sh` into four per-emulator liberators (WP-09, Done)
+- GNOME Terminal Molt profile applied on kovacs
+- Fixed `cmd_list`/`cmd_doctor` stdout leak (`2>/dev/null` → `&>/dev/null`)
+- Softened `local-bin_check` PATH test to debug — PATH is zsh's concern, not the liberator's
+- Marked WP-02 (SSH) and WP-03 (Nerd Fonts) as Done — both were already complete
+- Updated all intent docs (ST0001 info/tasks, WP statuses, MODULES.md, wip.md)
 
 ### What's Next
 
-- Export iTerm2 dynamic profile and Terminal.app profile from rhadamanth → fill placeholder configs
-- WP-02: Set up kovacs SSH for direct GitHub access
-- WP-03: Install Nerd Fonts
-- WP-01: Fix Cmd key passthrough (PARKED)
-- Commit and push changes from both repos
+- Fix Cmd key passthrough (WP-01, PARKED)
+- Export iTerm2 + Terminal.app profiles from rhadamanth
+- Reproducible VM build (WP-07, future)
+- Commit and push
 
 ### Key Context
 
-- 15 liberators now (was 12, +4 new, -1 deleted terminal.sh)
-- gnome-terminal uses fixed UUID `b1dfa3e8-9a6d-4c5e-8e7f-molt00000001` for idempotent dconf management
+- 15 liberators, all enabled liberators now show installed (12/12)
+- gnome-terminal uses fixed UUID `b1dfa3e8-9a6d-4c5e-8e7f-molt00000001`
 - iterm2 and terminal-app are macOS-only placeholders — config files not yet exported from rhadamanth
-- `&>/dev/null` fix in `lib/molt.sh` suppresses all \_check output during list/doctor (was only suppressing stderr)

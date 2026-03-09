@@ -262,7 +262,7 @@ ssh-keygen -t ed25519 -C "hello@matthewsinclair.com"
 
 - Config: `molt-matts/config/ssh/config`
 - Symlink: `~/.ssh/config`
-- Defines host aliases (e.g., `github.com-matthewsinclair`) with identity file references.
+- Defines host aliases (eg `github.com-matthewsinclair`) with identity file references.
 - **Manual step**: Public key must be added to GitHub account.
 
 ---

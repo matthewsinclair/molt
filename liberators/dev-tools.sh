@@ -2,13 +2,6 @@
 # dev-tools.sh — Liberator: CLI tools and runtime managers
 # Frees you from bare-bones coreutils.
 
-# Base packages needed on any Linux sleeve
-_DEVTOOLS_APT_PACKAGES=(
-  htop jq tree bat ripgrep fd-find fzf
-  wl-clipboard curl wget unzip
-  build-essential cmake
-)
-
 dev-tools_check() {
   local ok=0
 
@@ -30,46 +23,24 @@ dev-tools_check() {
 }
 
 dev-tools_install() {
-  local platform
-  platform="$(molt_platform)"
+  # Verify key CLI tools are present
+  local missing=()
+  for cmd in jq tree rg fzf curl; do
+    if ! command -v "$cmd" &>/dev/null; then
+      missing+=("$cmd")
+    fi
+  done
 
-  case "$platform" in
-    linux)
-      local distro
-      distro="$(molt_distro)"
-      case "$distro" in
-        ubuntu|debian)
-          molt_info "Installing CLI tools via apt..."
-          sudo apt update
-          sudo apt install -y "${_DEVTOOLS_APT_PACKAGES[@]}"
-          ;;
-        fedora|rhel|centos)
-          molt_info "Installing CLI tools via dnf..."
-          sudo dnf install -y htop jq tree bat ripgrep fd-find fzf \
-            wl-clipboard curl wget unzip gcc make cmake
-          ;;
-        arch)
-          molt_info "Installing CLI tools via pacman..."
-          sudo pacman -S --noconfirm htop jq tree bat ripgrep fd fzf \
-            wl-clipboard curl wget unzip base-devel cmake
-          ;;
-        *)
-          molt_error "Unsupported distro: $distro"
-          return 1
-          ;;
-      esac
-      ;;
-    macos)
-      molt_info "Installing CLI tools via Homebrew..."
-      molt_require brew || return 1
-      brew install htop jq tree bat ripgrep fd fzf curl wget
-      ;;
-  esac
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    molt_error "Missing CLI tools: ${missing[*]}"
+    molt_error "Install them (e.g. apt install jq tree ripgrep fd-find fzf, brew install jq tree ripgrep fd fzf) then re-run."
+    return 1
+  fi
 
-  # Install mise
+  # Verify mise is installed
   if ! command -v mise &>/dev/null; then
-    molt_info "Installing mise..."
-    curl https://mise.run | sh
+    molt_error "mise not found. Install it (https://mise.run) then re-run."
+    return 1
   fi
 
   molt_info "Liberator complete: dev-tools"

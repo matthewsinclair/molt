@@ -1,9 +1,9 @@
 ---
-verblock: "08 Mar 2026:v0.1: matts - Initial version"
+verblock: "09 Mar 2026:v0.2: matts - As-built, complete"
 wp_id: WP-03
 title: "Install Nerd Fonts"
 scope: Small
-status: Not Started
+status: Done
 ---
 
 # WP-03: Install Nerd Fonts

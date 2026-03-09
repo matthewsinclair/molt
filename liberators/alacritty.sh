@@ -24,7 +24,7 @@ alacritty_check() {
 
 alacritty_install() {
   if ! command -v alacritty &>/dev/null; then
-    molt_error "Alacritty not found. Install it (e.g. apt install alacritty, brew install --cask alacritty) then re-run."
+    molt_error "Alacritty not found. Install it (eg apt install alacritty, brew install --cask alacritty) then re-run."
     return 1
   fi
 
