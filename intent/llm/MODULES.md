@@ -33,9 +33,10 @@
 
 ## Testing
 
-| Module      | File                    | Concern                         |
-| ----------- | ----------------------- | ------------------------------- |
-| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure |
+| Module      | File                    | Concern                                   |
+| ----------- | ----------------------- | ----------------------------------------- |
+| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure            |
+| templates   | `test/templates.bats`   | Template rendering (molt_render) tests     |
 
 ## Templates
 

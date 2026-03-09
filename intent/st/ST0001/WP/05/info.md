@@ -3,7 +3,7 @@ verblock: "08 Mar 2026:v0.2: matts - As-built with testing and CLI"
 wp_id: WP-05
 title: "MOLT framework scaffolding"
 scope: Large
-status: WIP
+status: Done
 ---
 
 # WP-05: MOLT framework scaffolding
@@ -26,14 +26,14 @@ Framework has been substantially built out. The molt repo now has a working CLI,
 - [x] Manifest system (`molt.toml`): enabled/disabled, OS filtering, instance overrides
 - [x] Bats test suite: 42 tests, 6 files, all passing
 - [x] `molt doctor`: 7-step diagnostic
-- [ ] README updates reflecting the framework structure
-- [ ] Template system design (how config templates get rendered per-instance)
+- [x] README updates reflecting the framework structure (09 Mar 2026, rhadamanth)
+- [x] Template system design (09 Mar 2026, rhadamanth — see design-templates.md)
 
 ## Acceptance Criteria
 
 - [x] molt repo has a clear, documented directory structure for framework code
 - [x] At least one working script or template demonstrating the pattern
-- [ ] README explains the two-repo model (molt + molt-{userid})
+- [x] README explains the two-repo model (molt + molt-{userid})
 - [x] Design decisions captured in ST0001/design.md
 
 ## As-Built Summary (08 Mar 2026)

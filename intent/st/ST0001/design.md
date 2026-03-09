@@ -86,6 +86,18 @@ Molt must never mandate a specific package manager or dev environment tool. No h
 
 **Rationale**: Devs are particular about their toolchain. Mandating brew (or anything) would be a deal-breaker for adoption. PATH is the universal interface.
 
+### Secrets management: explicitly out of scope
+
+MOLT manages config, not secrets. Secrets are per-instance by design.
+
+- SSH keys are generated per-sleeve by the `ssh` liberator. The user manually adds the pubkey to GitHub/remotes. This is intentional — keys should be unique per machine.
+- API tokens, credentials, `.env` files are unmanaged. Users bring their own secrets tooling.
+- No 1Password, Bitwarden, `pass`, or other secrets provider integration in the framework.
+- If this becomes a pain point, a provider-agnostic hooks approach (Option B) can be added as a `secrets` liberator without breaking anything.
+- Users who want a secrets tool on their sleeve can write a personal liberator for it in their `molt-{user}` repo.
+
+**Rationale**: Secrets are "reflexes you develop in each body," not memories you carry. A resleeve gives you your config (identity), but secrets are correctly local. The manual steps after resleeve (add pubkey, copy creds) are infrequent and intentionally human-gated.
+
 ## Alternatives Considered
 
 ### GNU Stow

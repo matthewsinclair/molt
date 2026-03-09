@@ -119,6 +119,89 @@ molt_link() {
   molt_info "Linked: $target -> $source"
 }
 
+# --- Template Rendering ---
+
+molt_render() {
+  local template="$1"
+  local target="$2"
+
+  if [[ ! -f "$template" ]]; then
+    molt_error "Template not found: $template"
+    return 1
+  fi
+
+  # Load instance vars
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || return 1
+  local hostname
+  hostname="$(hostname)"
+  local vars_file="$user_repo/instances/$hostname/vars.sh"
+
+  # Create parent directory if needed
+  mkdir -p "$(dirname "$target")"
+
+  if [[ -f "$vars_file" ]]; then
+    # Source vars in a subshell so exports don't leak into framework
+    (
+      source "$vars_file"
+      envsubst < "$template"
+    ) > "${target}.molt-tmp"
+  else
+    molt_warn "No vars.sh for instance $hostname — rendering template with env only"
+    envsubst < "$template" > "${target}.molt-tmp"
+  fi
+
+  # Handle existing file before replacing
+  if [[ -e "$target" ]] || [[ -L "$target" ]]; then
+    if [[ -L "$target" ]]; then
+      # Symlinks are removed, not backed up (they cause permission issues in
+      # directories like ~/.ssh where sshd demands regular files with strict perms)
+      molt_info "Removing existing symlink: $target"
+      rm "$target"
+    elif [[ ! -f "${target}.molt-rendered" ]]; then
+      # Regular file that wasn't rendered by molt — back up
+      local backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+      molt_warn "Backing up existing file: $target -> $backup"
+      mv "$target" "$backup"
+    fi
+  fi
+
+  mv "${target}.molt-tmp" "$target"
+
+  # Leave a marker so we know this file was rendered (not symlinked).
+  echo "rendered $(date -Iseconds) from $template" > "${target}.molt-rendered"
+
+  # If parent directory is locked down (e.g. ~/.ssh at 700), restrict file perms
+  # to match. sshd and similar tools reject files with open permissions.
+  local parent_perms
+  parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null || echo "755")"
+  if [[ "$parent_perms" == "700" ]]; then
+    chmod 600 "$target" "${target}.molt-rendered"
+  fi
+
+  molt_info "Rendered: $template -> $target"
+}
+
+molt_install_config() {
+  local source="$1"    # relative path: "config/ssh/config"
+  local target="$2"    # absolute path: "$HOME/.ssh/config"
+
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || return 1
+
+  local full_source="$user_repo/$source"
+  local template="${full_source}.tmpl"
+
+  if [[ -f "$template" ]]; then
+    molt_render "$template" "$target"
+  elif [[ -f "$full_source" ]]; then
+    molt_link "$full_source" "$target"
+  else
+    molt_warn "Config not found: $source (checked template and static)"
+    return 1
+  fi
+}
+
 # --- Manifest (molt.toml) ---
 
 # Find the molt.toml manifest. Checks instance-specific first, then repo root.
@@ -259,7 +342,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=7
+  local total=9
   local step=0
   local warnings=0
 
@@ -366,6 +449,32 @@ cmd_doctor() {
     echo "[$step/$total] Checking external dependencies... ✓ bats"
   else
     echo "[$step/$total] Checking external dependencies... ⚠ missing:$missing_deps"
+    warnings=$((warnings + 1))
+  fi
+
+  # 8. SSH key
+  step=$((step + 1))
+  if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
+    echo "[$step/$total] Checking SSH key... ✓ ~/.ssh/id_ed25519"
+  elif [[ -f "$HOME/.ssh/id_rsa" ]]; then
+    echo "[$step/$total] Checking SSH key... ✓ ~/.ssh/id_rsa"
+  else
+    echo "[$step/$total] Checking SSH key... ⚠ no SSH key found"
+    warnings=$((warnings + 1))
+  fi
+
+  # 9. GitHub auth
+  step=$((step + 1))
+  local gh_auth_output
+  if gh_auth_output="$(timeout 5 ssh -T git@github.com 2>&1)"; then
+    :
+  fi
+  if echo "$gh_auth_output" | grep -q "successfully authenticated"; then
+    local gh_user
+    gh_user="$(echo "$gh_auth_output" | grep -o 'Hi [^!]*' | sed 's/Hi //')"
+    echo "[$step/$total] Checking GitHub auth... ✓ authenticated as $gh_user"
+  else
+    echo "[$step/$total] Checking GitHub auth... ⚠ not authenticated"
     warnings=$((warnings + 1))
   fi
 

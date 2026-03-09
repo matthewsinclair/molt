@@ -16,13 +16,18 @@ ssh_check() {
     ok=1
   fi
 
-  # Check if config is linked
+  # Check if config is managed by molt (rendered file, not symlink — sshd rejects symlinks)
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
-  if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/ssh/config" ]]; then
-    if [[ ! -L "$HOME/.ssh/config" ]]; then
-      molt_info "ssh: ~/.ssh/config is not a symlink"
-      ok=1
+  if [[ -n "$user_repo" ]]; then
+    if [[ -f "$user_repo/config/ssh/config.tmpl" ]] || [[ -f "$user_repo/config/ssh/config" ]]; then
+      if [[ -L "$HOME/.ssh/config" ]]; then
+        molt_info "ssh: ~/.ssh/config is a symlink (sshd requires regular files)"
+        ok=1
+      elif [[ ! -f "$HOME/.ssh/config.molt-rendered" ]]; then
+        molt_info "ssh: ~/.ssh/config is not managed by molt"
+        ok=1
+      fi
     fi
   fi
 
@@ -46,13 +51,26 @@ ssh_install() {
     molt_warn "  cat ~/.ssh/id_ed25519.pub"
   fi
 
-  # Link config from user repo
+  # Install config from user repo (template or static)
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  if [[ -f "$user_repo/config/ssh/config" ]]; then
-    molt_link "$user_repo/config/ssh/config" "$HOME/.ssh/config"
-    chmod 600 "$user_repo/config/ssh/config"
+  molt_install_config "config/ssh/config" "$HOME/.ssh/config"
+
+  # Append instance-specific config.d fragments if any exist
+  local hostname
+  hostname="$(hostname)"
+  local config_d="$user_repo/instances/$hostname/ssh/config.d"
+  if [[ -d "$config_d" ]]; then
+    for fragment in "$config_d"/*.conf; do
+      [[ -f "$fragment" ]] || continue
+      molt_info "Appending SSH config fragment: $(basename "$fragment")"
+      echo "" >> "$HOME/.ssh/config"
+      echo "# --- molt config.d: $(basename "$fragment") ---" >> "$HOME/.ssh/config"
+      cat "$fragment" >> "$HOME/.ssh/config"
+    done
   fi
+
+  chmod 600 "$HOME/.ssh/config"
 
   molt_info "Liberator complete: ssh"
 }
@@ -65,8 +83,17 @@ ssh_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$HOME/.ssh/config" ]]; then
-    molt_error "VERIFY FAIL: ~/.ssh/config not symlinked"
+  if [[ -L "$HOME/.ssh/config" ]]; then
+    molt_error "VERIFY FAIL: ~/.ssh/config is a symlink (sshd requires regular files)"
+    errors=1
+  elif [[ -f "$HOME/.ssh/config.molt-rendered" ]]; then
+    local provenance
+    provenance="$(cat "$HOME/.ssh/config.molt-rendered")"
+    molt_info "Verified: ~/.ssh/config is rendered ($provenance)"
+  elif [[ -f "$HOME/.ssh/config" ]]; then
+    molt_warn "~/.ssh/config exists but is not molt-managed"
+  else
+    molt_error "VERIFY FAIL: ~/.ssh/config not found"
     errors=1
   fi
 
