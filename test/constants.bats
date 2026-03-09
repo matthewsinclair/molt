@@ -18,10 +18,10 @@ load "test_helper.bash"
     [[ "$MOLT_NAME" == "MOLT" ]]
 }
 
-@test "MOLT_PROJECTS_DIR defaults to \$HOME/Devel/prj" {
+@test "MOLT_PROJECTS_DIR is empty when unset" {
     unset MOLT_PROJECTS_DIR
     load_molt_libs
-    [[ "$MOLT_PROJECTS_DIR" == "$HOME/Devel/prj" ]]
+    [[ -z "$MOLT_PROJECTS_DIR" ]]
 }
 
 @test "MOLT_PROJECTS_DIR respects env var override" {
@@ -53,11 +53,22 @@ load "test_helper.bash"
     [[ ${#MOLT_USER_REPO_SEARCH_PATHS[@]} -gt 0 ]]
 }
 
-@test "MOLT_USER_REPO_SEARCH_PATHS includes Devel/prj path" {
+@test "MOLT_USER_REPO_SEARCH_PATHS includes MOLT_PROJECTS_DIR path when set" {
+    export MOLT_PROJECTS_DIR="/tmp/test-projects"
     load_molt_libs
     local found=0
     for p in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
-        [[ "$p" == *"Devel/prj"* ]] && found=1
+        [[ "$p" == *"/tmp/test-projects"* ]] && found=1
+    done
+    [[ "$found" -eq 1 ]]
+}
+
+@test "MOLT_USER_REPO_SEARCH_PATHS has home fallbacks when MOLT_PROJECTS_DIR unset" {
+    unset MOLT_PROJECTS_DIR
+    load_molt_libs
+    local found=0
+    for p in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
+        [[ "$p" == "$HOME/molt-"* ]] && found=1
     done
     [[ "$found" -eq 1 ]]
 }

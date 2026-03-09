@@ -4,22 +4,27 @@
 
 ### What Was Done
 
-- Split `terminal.sh` into four per-emulator liberators (WP-09, Done)
-- GNOME Terminal Molt profile applied on kovacs
-- Fixed `cmd_list`/`cmd_doctor` stdout leak (`2>/dev/null` → `&>/dev/null`)
-- Softened `local-bin_check` PATH test to debug — PATH is zsh's concern, not the liberator's
-- Marked WP-02 (SSH) and WP-03 (Nerd Fonts) as Done — both were already complete
-- Updated all intent docs (ST0001 info/tasks, WP statuses, MODULES.md, wip.md)
+- Stripped package manager calls from 7 liberators (system, zsh, git, tmux, editors, dev-tools, utilz)
+- Added `molt resleeve --dry-run`
+- Created `rhadamanth/molt.toml` manifest and `bin/bootstrap.sh`
+- Forensic review: fixed SSH key detection, config.d idempotency, errexit resilience, editors guards, molt_render backups, zsh macOS compat
+- Removed hardcoded `MOLT_PROJECTS_DIR` default -- must be set via env var
+- Added `MOLT_PROJECTS_DIR` to zshenv, zshrc, instance vars.sh, sleeve manifests
+- Updated README with all changes
+- Fixed `hostname -s` across entire codebase for macOS compat
+- All tests passing on kovacs
 
 ### What's Next
 
-- Fix Cmd key passthrough (WP-01, PARKED)
+- Commit and push changes from both repos (molt + molt-matts)
+- First resleeve dry-run then resleeve on rhadamanth
 - Export iTerm2 + Terminal.app profiles from rhadamanth
-- Reproducible VM build (WP-07, future)
-- Commit and push
+- Fix Cmd key passthrough (PARKED)
 
 ### Key Context
 
-- 15 liberators, all enabled liberators now show installed (12/12)
-- gnome-terminal uses fixed UUID `b1dfa3e8-9a6d-4c5e-8e7f-molt00000001`
-- iterm2 and terminal-app are macOS-only placeholders — config files not yet exported from rhadamanth
+- `MOLT_PROJECTS_DIR` is now required -- set in `.zshenv` which is symlinked from molt-matts
+- Running molt from a non-zsh context (e.g. bash, cron) needs `MOLT_PROJECTS_DIR` set explicitly
+- 15 liberators, no package installs, two sleeves (kovacs + rhadamanth)
+- rhadamanth manifest: tmux disabled, iterm2 enabled, alacritty/gnome-terminal/keys/desktop disabled
+- `hostname -s` used for all instance lookups (macOS returns rhadamanth.lan)

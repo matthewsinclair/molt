@@ -33,7 +33,7 @@ dev-tools_install() {
 
   if [[ ${#missing[@]} -gt 0 ]]; then
     molt_error "Missing CLI tools: ${missing[*]}"
-    molt_error "Install them (e.g. apt install jq tree ripgrep fd-find fzf, brew install jq tree ripgrep fd fzf) then re-run."
+    molt_error "Install them (eg apt install jq tree ripgrep fd-find fzf, brew install jq tree ripgrep fd fzf) then re-run."
     return 1
   fi
 

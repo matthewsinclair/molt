@@ -73,7 +73,6 @@ cmd_resleeve() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || {
     molt_error "Cannot resleeve without a user config repo."
-    molt_error "Expected: molt-\$(whoami) in ~/Devel/prj/ or ~/"
     exit 1
   }
 
@@ -92,6 +91,7 @@ cmd_resleeve() {
   fi
 
   local would_install=0
+  local failed=0
   echo ""
 
   while IFS= read -r lib; do
@@ -105,7 +105,12 @@ cmd_resleeve() {
         echo "  $lib: WOULD INSTALL"
         ((would_install++))
       else
-        liberator_run "$lib" install
+        if liberator_run "$lib" install; then
+          echo "  $lib: ✓ installed"
+        else
+          molt_error "Liberator failed: $lib — continuing with remaining liberators"
+          ((failed++))
+        fi
       fi
     else
       echo "  $lib: ✓ ok"
@@ -120,7 +125,11 @@ cmd_resleeve() {
       molt_info "$would_install liberator(s) would be installed. Run \`molt resleeve\` to apply."
     fi
   else
-    molt_info "Sleeve ready. Welcome back."
+    if [[ $failed -gt 0 ]]; then
+      molt_error "$failed liberator(s) failed. Review errors above."
+    else
+      molt_info "Sleeve ready. Welcome back."
+    fi
   fi
 }
 

@@ -158,7 +158,14 @@ molt_render() {
       # directories like ~/.ssh where sshd demands regular files with strict perms)
       molt_info "Removing existing symlink: $target"
       rm "$target"
-    elif [[ ! -f "${target}.molt-rendered" ]]; then
+    elif [[ -f "${target}.molt-rendered" ]]; then
+      # Previously rendered by molt — check if content actually changed
+      if ! diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
+        local backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+        molt_warn "Rendered file changed since last render, backing up: $target -> $backup"
+        mv "$target" "$backup"
+      fi
+    else
       # Regular file that wasn't rendered by molt — back up
       local backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
       molt_warn "Backing up existing file: $target -> $backup"
@@ -534,9 +541,15 @@ molt_find_user_repo() {
       return 0
     fi
   done
-  molt_error "Could not find user config repo. Searched:"
-  for path in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
-    molt_error "  $path"
-  done
+  molt_error "Could not find user config repo (molt-$(whoami))."
+  if [[ -z "$MOLT_PROJECTS_DIR" ]]; then
+    molt_error "Set MOLT_PROJECTS_DIR to the directory containing your molt repos, eg:"
+    molt_error "  export MOLT_PROJECTS_DIR=\$HOME/Devel/prj"
+  else
+    molt_error "Searched:"
+    for path in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
+      molt_error "  $path"
+    done
+  fi
   return 1
 }

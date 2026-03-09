@@ -16,40 +16,51 @@ All work done in Claude Code sessions on kovacs, with config committed to molt-m
 8. **Desktop**: GNOME Super bindings stripped via gsettings
 9. **Intent**: Initialized in both molt and molt-matts, skills installed
 
-### Phase 2: Framework (In Progress)
+### Phase 2: Framework (Mature)
 
-MOLT framework built out in the molt repo with working CLI and test suite.
+MOLT framework built out in the molt repo with working CLI, test suite, and two configured sleeves.
 
 1. **CLI** (`bin/molt`): Thin coordinator dispatching to lib functions
-2. **Core lib** (`lib/molt.sh`): Logging, platform detection, symlinks, manifest parsing, CLI commands (doctor, test, list, version)
-3. **Constants** (`lib/constants.sh`): Single source of truth for all configurable paths
+2. **Core lib** (`lib/molt.sh`): Logging, platform detection, symlinks, template rendering, manifest parsing, CLI commands
+3. **Constants** (`lib/constants.sh`): Single source of truth for all configurable paths. No hardcoded defaults for `MOLT_PROJECTS_DIR`.
 4. **Liberator framework** (`lib/liberator.sh`): Load, check, install, verify lifecycle with batch operations and discovery
-5. **12 liberators** (`liberators/*.sh`): system, local-bin, zsh, git, tmux, editors, terminal, keys, desktop, dev-tools, ssh, utilz
-6. **Manifest** (`molt.toml`): Declarative enabled/disabled/OS-filtered liberator list
-7. **Test suite** (`test/`): 42 bats tests across 6 files — CLI, constants, liberator framework, manifest parsing, exemplar liberator
-8. **Doctor** (`molt doctor`): 7-step diagnostic checking structure, repos, manifest, liberators, dependencies
+5. **15 liberators** (`liberators/*.sh`): system, local-bin, zsh, git, tmux, editors, alacritty, gnome-terminal, iterm2, terminal-app, keys, desktop, dev-tools, ssh, utilz
+6. **Manifest** (`molt.toml`): Declarative enabled/disabled/OS-filtered liberator list with per-instance overrides
+7. **Test suite** (`test/`): bats tests across 6 files -- CLI, constants, liberator framework, manifest parsing, templates, exemplar liberator
+8. **Doctor** (`molt doctor`): 9-step diagnostic
+9. **Dry-run** (`molt resleeve --dry-run`): Preview mode, reports what would be installed
+10. **Bootstrap** (`bin/bootstrap.sh`): Fresh-machine one-liner, requires `MOLT_PROJECTS_DIR`
+
+### Design principles (as-built)
+
+- **Liberators never install packages.** They verify prerequisites and fail with hints.
+- **`MOLT_PROJECTS_DIR` must be set.** No hardcoded default. Enforced at constants.sh level.
+- **`hostname -s`** used everywhere for macOS compatibility (rhadamanth.lan vs rhadamanth).
+- **One liberator failure doesn't abort resleeve.** Error is reported, remaining liberators continue.
+- **Rendered files are backed up** if their content changed since last render.
+- **SSH config.d fragments are idempotent** via sentinel comments.
+- **Doom Emacs is hands-off.** Molt clones and links config; user runs doom install/sync manually.
 
 ### Key file locations on kovacs
 
-| Config    | Source (molt-matts)           | Symlink target          |
-| --------- | ----------------------------- | ----------------------- |
-| zsh       | config/zsh/.zshrc             | ~/.zshrc                |
-| git       | config/git/.gitconfig         | ~/.gitconfig            |
-| tmux      | config/tmux/.tmux.conf        | ~/.tmux.conf            |
-| doom      | config/doom/                  | ~/.config/doom          |
-| alacritty | config/alacritty/             | ~/.config/alacritty     |
-| starship  | config/starship/starship.toml | ~/.config/starship.toml |
-| claude    | config/claude/                | ~/.claude/              |
+| Config    | Source (molt-matts)               | Symlink target          |
+| --------- | --------------------------------- | ----------------------- |
+| zsh       | config/zsh/zshrc                  | ~/.zshrc                |
+| zshenv    | config/zsh/zshenv                 | ~/.zshenv               |
+| git       | config/git/gitconfig              | ~/.gitconfig            |
+| tmux      | config/tmux/tmux.conf             | ~/.tmux.conf            |
+| doom      | config/doom/                      | ~/.config/doom          |
+| alacritty | config/alacritty/alacritty.toml   | ~/.config/alacritty/... |
+| starship  | config/starship/starship.toml     | ~/.config/starship.toml |
+| ssh       | config/ssh/config.tmpl (rendered) | ~/.ssh/config           |
 
 ## Challenges & Solutions
 
 ### Cmd key passthrough (UNRESOLVED)
 
 - **Problem**: Parallels is not sending leftmeta (Cmd) to the VM
-- **Symptom**: keyd config is correct but Cmd key never arrives
-- **Investigated**: Parallels keyboard profiles, GNOME/Mutter compositor
-- **Status**: Parked. Requires investigation into Parallels keyboard settings or possibly a macOS-level remapping before the key enters Parallels.
-- **Principle**: Cmd ≠ Ctrl. They must remain distinct modifiers.
+- **Status**: Parked. Requires investigation into Parallels keyboard settings.
+- **Principle**: Cmd != Ctrl. They must remain distinct modifiers.
 
 ### Parallels mount paths
 
@@ -58,5 +69,10 @@ MOLT framework built out in the molt repo with working CLI and test suite.
 
 ### Doom Emacs Nerd Fonts
 
-- Nerd fonts not yet installed on kovacs
-- Need to run M-x nerd-icons-install-fonts or install via package manager
+- Nerd fonts installed on kovacs (WP-03 done)
+- Need to run M-x nerd-icons-install-fonts if icons missing
+
+### macOS hostname
+
+- macOS `hostname` returns FQDN (e.g. rhadamanth.lan)
+- Fixed by using `hostname -s` everywhere for instance directory lookups

@@ -4,13 +4,18 @@
 # When Molt becomes a brew tap, these defaults change in ONE place.
 
 # --- Project directories ---
-# Where repos live. Override via env var for non-standard layouts.
-MOLT_PROJECTS_DIR="${MOLT_PROJECTS_DIR:-$HOME/Devel/prj}"
+# Where repos live. MUST be set via env var or sleeve config.
+# No hardcoded default — every machine chooses its own layout.
+MOLT_PROJECTS_DIR="${MOLT_PROJECTS_DIR:-}"
 
 # --- User config repo ---
 # The molt-{user} repo location. Searched in order.
-MOLT_USER_REPO_SEARCH_PATHS=(
-  "${MOLT_PROJECTS_DIR}/molt-$(whoami)"
+# MOLT_PROJECTS_DIR path only included if set.
+MOLT_USER_REPO_SEARCH_PATHS=()
+if [[ -n "$MOLT_PROJECTS_DIR" ]]; then
+  MOLT_USER_REPO_SEARCH_PATHS+=("${MOLT_PROJECTS_DIR}/molt-$(whoami)")
+fi
+MOLT_USER_REPO_SEARCH_PATHS+=(
   "$HOME/molt-$(whoami)"
   "$HOME/.molt-$(whoami)"
 )
@@ -19,8 +24,8 @@ MOLT_USER_REPO_SEARCH_PATHS=(
 # Where tool liberators look for their repos. Each can be overridden
 # individually via env var (eg UTILZ_HOME), or they fall back to
 # searching MOLT_PROJECTS_DIR.
-MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PROJECTS_DIR}/Utilz}"
-MOLT_INTENT_HOME="${INTENT_HOME:-${MOLT_PROJECTS_DIR}/Intent}"
+MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PROJECTS_DIR:+${MOLT_PROJECTS_DIR}/Utilz}}"
+MOLT_INTENT_HOME="${INTENT_HOME:-${MOLT_PROJECTS_DIR:+${MOLT_PROJECTS_DIR}/Intent}}"
 
 # --- Local bin ---
 MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/bin}"

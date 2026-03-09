@@ -23,23 +23,34 @@ MOLT separates the framework from your personal config:
 | **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
 | **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
 
-The framework knows how to find your personal repo by searching for `molt-$(whoami)` in standard locations (`~/Devel/prj/`, `~/`, `~/.`). Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
+The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PROJECTS_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
 This separation means you can fork the framework independently from your config, and your config never contains framework code.
 
 ## Quick start
 
-Clone both repos, then resleeve:
+### Prerequisites
+
+Set `MOLT_PROJECTS_DIR` to the directory where your repos live. There is no default — every machine chooses its own layout:
+
+```bash
+export MOLT_PROJECTS_DIR="$HOME/Projects"  # or wherever you keep repos
+```
+
+### Clone and resleeve
 
 ```bash
 # Framework
-git clone https://github.com/you/molt ~/Devel/prj/Molt
+git clone https://github.com/you/molt "$MOLT_PROJECTS_DIR/molt"
 
 # Your config (contains molt.toml + config/ directory)
-git clone https://github.com/you/molt-you ~/Devel/prj/molt-you
+git clone https://github.com/you/molt-you "$MOLT_PROJECTS_DIR/molt-you"
 
-# Add molt to PATH
-export PATH="$HOME/Devel/prj/Molt/bin:$PATH"
+# Add molt to PATH (or use the bootstrap script)
+export PATH="$MOLT_PROJECTS_DIR/molt/bin:$PATH"
+
+# Preview what would happen
+molt resleeve --dry-run
 
 # Bootstrap this machine
 molt resleeve
@@ -48,15 +59,26 @@ molt resleeve
 ```
 MOLT v0.1.0 — My Opinionated Local Terminal
 Needlecasting stack to new sleeve...
-Zen: Stack found: /home/you/Devel/prj/molt-you
+Zen: Stack found: /home/you/Projects/molt-you
 Zen: Loading liberators...
-Zen: Running liberator: zsh (install)
-Zen: Running liberator: git (install)
+  system: ✓ ok
+  zsh: ✓ installed
+  git: ✓ installed
 ...
 Zen: Sleeve ready. Welcome back.
 ```
 
 "Welcome back" is the key line. You are not setting up a new machine. You are waking up in a new body with all your memories intact.
+
+### Bootstrap script
+
+For a fresh machine where nothing is set up yet:
+
+```bash
+MOLT_PROJECTS_DIR=$HOME/Projects bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
+```
+
+The bootstrap script clones both repos, links molt into `~/bin`, shows a dry-run, and prompts before applying.
 
 ## Concepts
 
@@ -86,6 +108,7 @@ The central metaphor from _Altered Carbon_: your configuration is your conscious
 
 ```bash
 molt resleeve              # Bootstrap the current machine from your stack
+molt resleeve --dry-run    # Preview what resleeve would do, without changing anything
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
 molt doctor                # System diagnostics and health checks
@@ -94,36 +117,62 @@ molt version               # Show version
 molt help                  # Show help
 ```
 
+## Configuration
+
+### MOLT_PROJECTS_DIR
+
+The only required setting. Tells molt where to find repos. Set it in your shell config (e.g. `.zshenv`):
+
+```bash
+export MOLT_PROJECTS_DIR="$HOME/Devel/prj"
+```
+
+If unset, molt will search `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PROJECTS_DIR` is the intended path.
+
+### Other environment variables
+
+| Variable            | Purpose                       | Default                     |
+| ------------------- | ----------------------------- | --------------------------- |
+| `MOLT_PROJECTS_DIR` | Where repos live              | _(none — must be set)_      |
+| `MOLT_LOCAL_BIN`    | Where to symlink executables  | `~/bin`                     |
+| `UTILZ_HOME`        | Override Utilz repo location  | `$MOLT_PROJECTS_DIR/Utilz`  |
+| `INTENT_HOME`       | Override Intent repo location | `$MOLT_PROJECTS_DIR/Intent` |
+
 ## Liberators
 
 A liberator is a config module that frees you from one default. Each liberator implements three functions:
 
-- `{name}_check` — Is this component already installed?
-- `{name}_install` — Install and configure it.
+- `{name}_check` — Is this component already installed and configured?
+- `{name}_install` — Configure it (verify prerequisites, link config, set up).
 - `{name}_verify` — Confirm the installation is correct.
+
+Liberators **never install packages**. They check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
 
 The framework discovers liberator scripts in `liberators/`, loads them on demand, and runs them through the lifecycle automatically.
 
 ### Built-in liberators
 
-| Liberator | Concern                                      | OS           |
-| --------- | -------------------------------------------- | ------------ |
-| system    | Base packages, package manager, sudo         | linux        |
-| local-bin | `~/bin` directory, molt CLI symlink          | linux, macos |
-| zsh       | Shell, Starship prompt, config linking       | linux, macos |
-| git       | Git + git-lfs, gitconfig linking             | linux, macos |
-| tmux      | Tmux, config linking                         | linux, macos |
-| editors   | Doom Emacs + LazyVim, config linking         | linux, macos |
-| terminal  | Alacritty, config linking                    | linux        |
-| keys      | keyd build from source, key remapping        | linux        |
-| desktop   | GNOME settings, GTK config                   | linux        |
-| dev-tools | CLI tools (bat, rg, fd, fzf) + mise          | linux, macos |
-| ssh       | SSH key generation, config linking           | linux, macos |
-| utilz     | Utilz framework, bats-core, `~/bin` symlinks | linux, macos |
+| Liberator      | Concern                                        | OS           |
+| -------------- | ---------------------------------------------- | ------------ |
+| system         | Verify sudo (linux) or brew (macos)            | linux, macos |
+| local-bin      | `~/bin` directory, molt CLI symlink            | linux, macos |
+| zsh            | Shell default, Starship prompt, config linking | linux, macos |
+| git            | Git + git-lfs verification, gitconfig linking  | linux, macos |
+| tmux           | Tmux verification, config linking              | linux, macos |
+| editors        | Doom Emacs clone + LazyVim, config linking     | linux, macos |
+| alacritty      | Alacritty config linking                       | linux, macos |
+| gnome-terminal | GNOME Terminal profile via dconf               | linux        |
+| iterm2         | iTerm2 dynamic profile linking                 | macos        |
+| terminal-app   | Terminal.app profile                           | macos        |
+| keys           | keyd build from source, key remapping          | linux        |
+| desktop        | GNOME settings, GTK config                     | linux        |
+| dev-tools      | CLI tools (bat, rg, fd, fzf) + mise            | linux, macos |
+| ssh            | SSH key detection, config rendering            | linux, macos |
+| utilz          | Utilz framework, bats-core, `~/bin` symlinks   | linux, macos |
 
 ### molt.toml
 
-The manifest lives in your personal config repo (`molt-{user}/molt.toml`). It declares which liberators to run and on which platforms:
+The manifest lives in your personal config repo. It declares which liberators to run and on which platforms:
 
 ```toml
 [stack]
@@ -132,7 +181,8 @@ version = "0.1.0"
 user_repo = "molt-matts"
 
 [sleeve]
-# Machine-specific overrides (optional)
+hostname = "mymachine"
+projects_dir = "~/Projects"
 
 [[liberator]]
 name = "zsh"
@@ -152,7 +202,6 @@ Instance-specific manifests can override the repo-level one. MOLT checks `instan
 
 ```
 molt-{user}/
-  molt.toml                          # Stack manifest
   config/
     zsh/zshrc                        # -> ~/.zshrc
     zsh/zshenv                       # -> ~/.zshenv
@@ -161,13 +210,19 @@ molt-{user}/
     doom/                            # -> ~/.config/doom
     alacritty/alacritty.toml         # -> ~/.config/alacritty/alacritty.toml
     starship/starship.toml           # -> ~/.config/starship.toml
-    ssh/config                       # -> ~/.ssh/config
+    ssh/config.tmpl                  # -> ~/.ssh/config (rendered via envsubst)
   instances/
     kovacs/                          # Per-machine overrides
+      molt.toml                      # Instance manifest
+      vars.sh                        # Template variables (MOLT_PROJECTS_DIR, etc)
+      ssh/config.d/                  # Instance-specific SSH config fragments
       keyd/default.conf              # Machine-specific keyd config
+    rhadamanth/
+      molt.toml
+      vars.sh
 ```
 
-Liberators use `molt_link` to symlink config files from your repo into their expected locations. Existing files are backed up automatically.
+Liberators use `molt_link` to symlink config files from your repo into their expected locations. Existing files are backed up automatically. Template files (`.tmpl`) are rendered via `envsubst` using instance-specific variables.
 
 ## Personality
 
@@ -185,35 +240,36 @@ MOLT has opinions and says so. The tone is dry, terse, and functional. Output du
 molt/
   bin/
     molt                   # CLI entry point (thin coordinator)
+    bootstrap.sh           # One-liner bootstrap for fresh machines
   lib/
     constants.sh           # All configurable paths and defaults (single source of truth)
     molt.sh                # Core: logging, platform detection, symlinks, manifest parsing
     liberator.sh           # Liberator loading, execution, and discovery
   liberators/
-    system.sh              # Base system setup
+    system.sh              # Base system verification
     zsh.sh                 # Shell + Starship prompt
     git.sh                 # Git + git-lfs
     tmux.sh                # Tmux
     editors.sh             # Doom Emacs + LazyVim
-    terminal.sh            # Alacritty
+    alacritty.sh           # Alacritty
+    gnome-terminal.sh      # GNOME Terminal
+    iterm2.sh              # iTerm2
+    terminal-app.sh        # Terminal.app
     keys.sh                # keyd
     desktop.sh             # GNOME settings
     dev-tools.sh           # CLI tools + mise
     ssh.sh                 # SSH
     local-bin.sh           # ~/bin setup
     utilz.sh               # Utilz framework
-  templates/
-    molt.toml.example      # Example stack manifest
   test/
     test_helper.bash       # Shared test infrastructure (HOME-sandboxed)
     molt.bats              # CLI tests
     constants.bats         # Constants tests
     liberator.bats         # Framework tests
     manifest.bats          # Manifest parsing tests
+    templates.bats         # Template rendering tests
     liberators/
       zsh.bats             # Exemplar liberator test
-  docs/
-    bootstrap-runbook.md   # Phase 1 manual resleeve specification
 ```
 
 ## Dependencies
@@ -224,11 +280,11 @@ MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tool
 - **awk** (manifest parsing)
 - **bats** (test suite — optional, for `molt test`)
 
-Liberators declare their own dependencies (eg `apt`, `curl`, `git`).
+Liberators verify their own prerequisites and fail with install hints if anything is missing.
 
 ## Status
 
-Early development. The framework has a working CLI, core library, 12 liberators, manifest-driven execution, and a 42-test bats suite. The first sleeve (kovacs — Ubuntu 24.04 ARM64) is bootstrapped and operational.
+Early development. The framework has a working CLI, core library, 15 liberators, manifest-driven execution, dry-run support, and a bats test suite. Two sleeves are configured: kovacs (Ubuntu 24.04 ARM64) and rhadamanth (macOS M4).
 
 ## License
 

@@ -51,8 +51,12 @@ editors_install() {
 
   # Install Doom Emacs
   if [[ ! -f "$HOME/.config/emacs/bin/doom" ]]; then
-    molt_info "Installing Doom Emacs..."
-    git clone --depth 1 https://github.com/doomemacs/doomemacs "$HOME/.config/emacs"
+    if [[ -d "$HOME/.config/emacs" ]]; then
+      molt_warn "~/.config/emacs exists but has no doom binary — skipping clone (move it aside to reinstall)"
+    else
+      molt_info "Installing Doom Emacs..."
+      git clone --depth 1 https://github.com/doomemacs/doomemacs "$HOME/.config/emacs"
+    fi
   fi
 
   # Link Doom config from user repo
@@ -63,22 +67,19 @@ editors_install() {
     molt_link "$user_repo/config/doom" "$HOME/.config/doom"
   fi
 
-  # Run doom install/sync if doom config is present
-  if [[ -f "$HOME/.config/emacs/bin/doom" ]] && [[ -L "$HOME/.config/doom" ]]; then
-    if [[ ! -d "$HOME/.config/emacs/.local" ]]; then
-      molt_info "Running doom install..."
-      "$HOME/.config/emacs/bin/doom" install --no-config
-    else
-      molt_info "Running doom sync..."
-      "$HOME/.config/emacs/bin/doom" sync
-    fi
+  # Doom manages its own packages — molt only clones and links config.
+  # Run `doom install` or `doom sync` manually after first resleeve.
+  if [[ -f "$HOME/.config/emacs/bin/doom" ]] && [[ ! -d "$HOME/.config/emacs/.local" ]]; then
+    molt_warn "Doom Emacs cloned but not installed. Run: ~/.config/emacs/bin/doom install"
   fi
 
-  # Install LazyVim
-  if [[ ! -f "$HOME/.config/nvim/init.lua" ]]; then
+  # Install LazyVim — only if ~/.config/nvim does not exist at all
+  if [[ ! -d "$HOME/.config/nvim" ]]; then
     molt_info "Installing LazyVim..."
     git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
     rm -rf "$HOME/.config/nvim/.git"
+  elif [[ ! -f "$HOME/.config/nvim/init.lua" ]]; then
+    molt_warn "~/.config/nvim exists but has no init.lua — skipping LazyVim clone"
   fi
 
   molt_info "Liberator complete: editors"

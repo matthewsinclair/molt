@@ -66,7 +66,7 @@ utilz_install() {
 
   # Verify bats-core is installed
   if ! command -v bats &>/dev/null; then
-    molt_error "bats-core not found. Install it (e.g. apt install bats, brew install bats-core) then re-run."
+    molt_error "bats-core not found. Install it (eg apt install bats, brew install bats-core) then re-run."
     return 1
   fi
 

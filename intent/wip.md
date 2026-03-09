@@ -1,47 +1,51 @@
 ---
-verblock: "09 Mar 2026:v0.3: matts - Terminal liberator split complete"
+verblock: "09 Mar 2026:v0.4: matts - Sleeveable: no pkg install, dry-run, bootstrap, rhadamanth"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**004: Split terminal liberator into per-emulator liberators (DONE)**
+**005: Make Molt Sleeveable (DONE)**
 
-- Replaced monolithic `terminal.sh` with four independent liberators:
-  - `alacritty.sh` — GPU-accelerated terminal (linux, macos)
-  - `gnome-terminal.sh` — dconf-based profile management (linux)
-  - `iterm2.sh` — dynamic JSON profiles (macos, placeholder)
-  - `terminal-app.sh` — .terminal profile import (macos, placeholder)
-- Created `molt-matts/config/gnome-terminal/profile.dconf` (JetBrainsMono Nerd Font 14pt, dark theme)
-- GNOME Terminal profile installed and set as default on kovacs
-- Fixed `cmd_list` and `cmd_doctor` stdout leak from `_check` functions (`2>/dev/null` → `&>/dev/null`)
-- Molt no longer runs `apt install` — liberators fail with hints if binaries missing
-- 15 liberators total, all tests passing
+- Stripped package manager calls from all 7 liberators that had them
+  - system, zsh, git, tmux, editors, dev-tools, utilz
+  - Liberators now verify prerequisites and fail with install hints
+- Added `molt resleeve --dry-run` for previewing changes
+- Created `rhadamanth/molt.toml` manifest (macOS, iTerm2 enabled, tmux disabled)
+- Created `bin/bootstrap.sh` for fresh-machine setup
+- Forensic review and fix of all destructive operations:
+  - SSH: detects any existing key (not just id_ed25519/id_rsa), config.d appends are idempotent
+  - editors: no doom sync/install (molt clones + links only), nvim guarded by directory existence
+  - resleeve: one liberator failure no longer aborts the entire run
+  - molt_render: backs up rendered files if content changed since last render
+  - zsh: macOS-safe shell detection (dscl), chsh only when needed
+- Removed hardcoded `~/Devel/prj` default from constants.sh
+  - `MOLT_PROJECTS_DIR` must be set via env var (zshenv exports it)
+  - Clear error with hint if unset
+  - zshrc uses `$MOLT_PROJECTS_DIR` for Intent/Utilz paths
+- Added `projects_dir` to both sleeve manifests and instance vars.sh
+- bootstrap.sh requires `MOLT_PROJECTS_DIR`, detects existing repos, SSH probe has timeout
+- Updated README with MOLT_PROJECTS_DIR docs, dry-run, bootstrap, all 15 liberators
+- All tests passing
+
+**004: Split terminal liberator into per-emulator liberators (DONE)**
 
 **003: Bats test suite and CLI commands (DONE)**
 
-- Created test infrastructure adapted from Utilz patterns
-- All tests passing
-- Added `molt doctor`, `molt test`, `molt list`, `molt version` CLI commands
-- HOME sandboxed in manifest tests to prevent accidental real-home access
-
 **002: MOLT framework scaffolding (WP-05, DONE)**
-
-- CLI, core lib, 12 liberators, manifest support all working
-- Test suite in place
-- Template rendering system (WP-08) complete
 
 ## Active Steel Threads
 
-- ST0001: Bootstrap — Phase 1 COMPLETE, Phase 2 framework WIP
+- ST0001: Bootstrap -- Phase 1 COMPLETE, Phase 2 framework mature
 
 ## Upcoming Work
 
 - Fix Cmd key passthrough (WP-01, PARKED)
-- Export iTerm2 and Terminal.app profiles from rhadamanth (placeholder configs)
+- Export iTerm2 and Terminal.app profiles from rhadamanth
+- First resleeve on rhadamanth (after committing + pushing from kovacs)
 - Reproducible VM build (WP-07, future)
 
 ## Notes
 
-15 liberators, all tests passing, all enabled liberators installed. `molt list` clean. WP-02 (SSH) and WP-03 (Nerd Fonts) done. local-bin PATH check softened to debug (PATH is zsh's job).
+15 liberators, all tests passing. No liberator installs packages. `MOLT_PROJECTS_DIR` is required. Two sleeves configured (kovacs, rhadamanth). `hostname -s` used everywhere for macOS compatibility.

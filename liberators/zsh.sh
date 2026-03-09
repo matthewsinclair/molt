@@ -13,7 +13,7 @@ zsh_check() {
 
   # Is zsh the default shell?
   local current_shell
-  current_shell="$(getent passwd "$(whoami)" | cut -d: -f7 2>/dev/null || echo "$SHELL")"
+  current_shell="$(dscl . -read /Users/"$(whoami)" UserShell 2>/dev/null | awk '{print $2}' || getent passwd "$(whoami)" 2>/dev/null | cut -d: -f7 || echo "$SHELL")"
   if [[ "$current_shell" != *"zsh"* ]]; then
     molt_info "zsh: installed but not default shell (current: $current_shell)"
     ok=1
@@ -49,7 +49,7 @@ zsh_install() {
   local zsh_path
   zsh_path="$(which zsh)"
   local current_shell
-  current_shell="$(getent passwd "$(whoami)" | cut -d: -f7 2>/dev/null || echo "$SHELL")"
+  current_shell="$(dscl . -read /Users/"$(whoami)" UserShell 2>/dev/null | awk '{print $2}' || getent passwd "$(whoami)" 2>/dev/null | cut -d: -f7 || echo "$SHELL")"
   if [[ "$current_shell" != *"zsh"* ]]; then
     molt_info "Setting zsh as default shell..."
     chsh -s "$zsh_path"

@@ -20,26 +20,32 @@
 
 ## Phase 2: Framework & Gaps
 
-- [x] MOLT framework scaffolding — CLI, core lib, liberator framework, manifest support
+- [x] MOLT framework scaffolding -- CLI, core lib, liberator framework, manifest support
 - [x] 15 liberators: system, local-bin, zsh, git, tmux, editors, alacritty, gnome-terminal, iterm2, terminal-app, keys, desktop, dev-tools, ssh, utilz
 - [x] CLI commands: resleeve, status, list, doctor, test, version, help
-- [x] Bats test suite — all passing (HOME-sandboxed)
-- [x] `molt doctor` — 9-step diagnostics
+- [x] Bats test suite -- all passing (HOME-sandboxed)
+- [x] `molt doctor` -- 9-step diagnostics
 - [x] Highlander & Thin Coordinator audit (WP-06)
 - [x] Document Phase 1 bootstrap steps (docs/bootstrap-runbook.md)
 - [x] Module registry (MODULES.md) with Highlander enforcement
 - [x] Template rendering system (WP-08)
 - [x] Split terminal.sh into per-emulator liberators (WP-09)
 - [x] GNOME Terminal Molt profile applied on kovacs
-- [ ] Fix Cmd key passthrough from Parallels (PARKED — needs investigation)
 - [x] Set up kovacs SSH key for direct GitHub access (WP-02)
 - [x] Install Nerd Fonts on kovacs (WP-03)
-- [x] Fix local-bin false negative — PATH check softened to debug
+- [x] Fix local-bin false negative -- PATH check softened to debug
+- [x] Strip package manager calls from all liberators
+- [x] Add `molt resleeve --dry-run`
+- [x] Create rhadamanth/molt.toml manifest
+- [x] Create bin/bootstrap.sh
+- [x] Forensic review + fix of all destructive operations
+- [x] Remove hardcoded MOLT_PROJECTS_DIR default, require env var
+- [x] Update README
+- [ ] Fix Cmd key passthrough from Parallels (PARKED -- needs investigation)
 - [ ] Export iTerm2 + Terminal.app profiles from rhadamanth
+- [ ] First resleeve on rhadamanth
 
 ## Dependencies
 
 - Cmd key fix depends on Parallels configuration (may need macOS-side changes)
-- SSH setup is independent and can be done anytime
-- MOLT framework scaffolding can begin regardless of other tasks
-- Nerd fonts is independent, just needs doing
+- rhadamanth resleeve requires commit + push from kovacs first

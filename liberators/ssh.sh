@@ -2,6 +2,22 @@
 # ssh.sh — Liberator: SSH configuration
 # Frees you from typing full hostnames.
 
+# Find any existing SSH private key (not just id_ed25519/id_rsa)
+_ssh_find_key() {
+  for key in "$HOME/.ssh"/id_*; do
+    # Skip public keys and non-files
+    [[ -f "$key" ]] || continue
+    [[ "$key" == *.pub ]] && continue
+    echo "$key"
+    return 0
+  done
+  # Also check common custom key names
+  for key in "$HOME/.ssh"/personalid "$HOME/.ssh"/personal_id; do
+    [[ -f "$key" ]] && echo "$key" && return 0
+  done
+  return 1
+}
+
 ssh_check() {
   local ok=0
 
@@ -10,8 +26,8 @@ ssh_check() {
     return 1
   fi
 
-  # Check if SSH key exists
-  if [[ ! -f "$HOME/.ssh/id_ed25519" ]] && [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
+  # Check if any SSH key exists
+  if ! _ssh_find_key &>/dev/null; then
     molt_info "ssh: no SSH key found"
     ok=1
   fi
@@ -41,14 +57,18 @@ ssh_install() {
   mkdir -p "$HOME/.ssh"
   chmod 700 "$HOME/.ssh"
 
-  # Generate key if none exists
-  if [[ ! -f "$HOME/.ssh/id_ed25519" ]] && [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
+  # Generate key only if NO key exists at all
+  if ! _ssh_find_key &>/dev/null; then
     molt_info "Generating SSH key..."
     local email
-    email="$(git config --global user.email 2>/dev/null || echo "$(whoami)@$(hostname)")"
+    email="$(git config --global user.email 2>/dev/null || echo "$(whoami)@$(hostname -s 2>/dev/null || hostname)")"
     ssh-keygen -t ed25519 -C "$email" -f "$HOME/.ssh/id_ed25519" -N ""
     molt_warn "New SSH key generated. Add public key to GitHub/remotes:"
     molt_warn "  cat ~/.ssh/id_ed25519.pub"
+  else
+    local existing_key
+    existing_key="$(_ssh_find_key)"
+    molt_info "SSH key found: $existing_key"
   fi
 
   # Install config from user repo (template or static)
@@ -56,17 +76,25 @@ ssh_install() {
   user_repo="$(molt_find_user_repo)" || return 1
   molt_install_config "config/ssh/config" "$HOME/.ssh/config"
 
-  # Append instance-specific config.d fragments if any exist
+  # Append instance-specific config.d fragments (idempotent via sentinels)
   local hostname
   hostname="$(hostname -s 2>/dev/null || hostname)"
   local config_d="$user_repo/instances/$hostname/ssh/config.d"
   if [[ -d "$config_d" ]]; then
     for fragment in "$config_d"/*.conf; do
       [[ -f "$fragment" ]] || continue
-      molt_info "Appending SSH config fragment: $(basename "$fragment")"
-      echo "" >> "$HOME/.ssh/config"
-      echo "# --- molt config.d: $(basename "$fragment") ---" >> "$HOME/.ssh/config"
-      cat "$fragment" >> "$HOME/.ssh/config"
+      local fragment_name
+      fragment_name="$(basename "$fragment")"
+      local sentinel="# --- molt config.d: ${fragment_name} ---"
+      # Only append if sentinel not already present
+      if ! grep -qF "$sentinel" "$HOME/.ssh/config" 2>/dev/null; then
+        molt_info "Appending SSH config fragment: $fragment_name"
+        echo "" >> "$HOME/.ssh/config"
+        echo "$sentinel" >> "$HOME/.ssh/config"
+        cat "$fragment" >> "$HOME/.ssh/config"
+      else
+        molt_debug "SSH config fragment already present: $fragment_name"
+      fi
     done
   fi
 
@@ -78,7 +106,7 @@ ssh_install() {
 ssh_verify() {
   local errors=0
 
-  if [[ ! -f "$HOME/.ssh/id_ed25519" ]] && [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
+  if ! _ssh_find_key &>/dev/null; then
     molt_error "VERIFY FAIL: no SSH key found"
     errors=1
   fi
