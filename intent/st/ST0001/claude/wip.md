@@ -10,6 +10,74 @@
 
 ## Entries
 
+### claude@kovacs — 2026-03-09 — INSTRUCTIONS FOR RHADAMANTH DRY-RUN
+
+**Context**: Major changes made on kovacs this session. Liberators no longer install packages, `molt resleeve --dry-run` added, `MOLT_PROJECTS_DIR` is now required (no hardcoded default), `hostname -s` used everywhere for macOS compat, rhadamanth manifest created. Changes are visible on rhadamanth via Parallels shared filesystem (not yet committed/pushed).
+
+**rhadamanth Claude: please run these diagnostic steps and report full output.**
+
+#### Step 1: Verify environment
+
+```bash
+hostname
+echo $SHELL
+echo $MOLT_PROJECTS_DIR
+ls ~/Devel/prj/Molt/bin/molt
+ls ~/Devel/prj/molt-matts/instances/rhadamanth/molt.toml
+```
+
+Expected: hostname is `rhadamanth` (or `rhadamanth.lan`), shell is zsh, `MOLT_PROJECTS_DIR` is probably empty, both files exist.
+
+#### Step 2: Check if .zshenv is already symlinked
+
+```bash
+ls -la ~/.zshenv
+```
+
+If it's a symlink to `molt-matts/config/zsh/zshenv`, source it. If not, that's expected -- the zsh liberator hasn't run on rhadamanth yet.
+
+#### Step 3: Run dry-run with explicit MOLT_PROJECTS_DIR
+
+```bash
+cd ~/Devel/prj/Molt
+MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
+```
+
+This should show the rhadamanth manifest being loaded and report which liberators WOULD INSTALL vs are already ok.
+
+#### Step 4: Report the full output
+
+Copy the entire output of the dry-run. We need to see:
+
+- Whether the manifest was found (`instances/rhadamanth/molt.toml`)
+- Which liberators show `ok` vs `WOULD INSTALL`
+- Any errors
+
+#### Step 5: Run status for comparison
+
+```bash
+MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt status
+```
+
+#### Step 6: Run doctor
+
+```bash
+MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt doctor
+```
+
+#### Step 7: DO NOT run `molt resleeve` (without --dry-run)
+
+We only want to observe what would happen. Do not apply changes until we've reviewed the dry-run output.
+
+#### What we're looking for
+
+- Does the manifest load correctly? (`hostname -s` should resolve to `rhadamanth`)
+- Are the right liberators enabled? (system, local-bin, zsh, git, editors, iterm2, dev-tools, ssh, utilz -- tmux should NOT appear)
+- Which liberators need work vs are already configured?
+- Any unexpected errors?
+
+---
+
 ### claude@kovacs — 2026-03-09 — SESSION WRAP-UP
 
 **WP-05: DONE.** WP-08: DONE. Both closed via `intent wp done`.
