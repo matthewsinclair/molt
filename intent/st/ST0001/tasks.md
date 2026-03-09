@@ -45,14 +45,23 @@
 - [x] Add Alacritty to GNOME dock favorites (alacritty liberator updated)
 - [ ] Export iTerm2 + Terminal.app profiles from rhadamanth
 
-## Phase 5: Upgrade, Emacs Keys, Tiling
+## Phase 5: Upgrade, Emacs Keys, Tiling, VS Code (COMPLETE)
 
 - [x] WP-11: Add `molt upgrade` command (pull repos + resleeve)
+- [x] WP-11: Verified — dirty repo detection, pull, resleeve all working
 - [x] WP-12: Add Linux `C-S-` keybindings to Emacs `010-keys.el`
-- [ ] WP-12: Verify Cmd+C/V/X/S/Z/A work in Emacs on kovacs + `doom sync`
-- [ ] WP-13: Configure Ubuntu Tiling Assistant keybindings
-- [ ] WP-13: Evaluate if Tiling Assistant is sufficient or need Forge/Pop-shell
-- [ ] WP-13: Capture tiling config in MOLT (liberator or desktop.sh extension)
+- [x] WP-12: Verified Cmd+C/V/X/S/Z/A work in Emacs on kovacs + `doom sync`
+- [x] WP-13: Evaluated Ubuntu Tiling Assistant — insufficient (no grid picker mode)
+- [x] WP-13: Installed Tactile extension (Divvy-like two-key grid picker)
+- [x] WP-13: Configured 7x3 grid, Shift+Alt+Super+T trigger
+- [x] WP-13: Created `tiling.sh` liberator, added to kovacs manifest
+- [x] Install VS Code from Microsoft apt repo
+- [x] Create `vscode.sh` liberator (settings.json symlink, dock pinning)
+- [x] Create `molt-matts/config/vscode/settings.json` (JetBrainsMono, telemetry off)
+- [x] Update `editors.sh` to pin Emacs to GNOME dock
+- [x] Clean up GNOME dock (Firefox, Nautilus, Alacritty, Emacs, VS Code)
+- [x] Font consistency: JetBrainsMono Nerd Font (Alacritty 11pt, Emacs 14pt, VS Code 14pt)
+- [x] Symlink ~/Dropbox to macOS CloudStorage via Parallels mount
 
 ## Dependencies
 

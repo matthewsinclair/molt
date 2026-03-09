@@ -33,6 +33,16 @@ editors_check() {
     ok=1
   fi
 
+  # On Linux/GNOME, check Emacs is in dock favorites
+  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+    local favorites
+    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    if [[ -n "$favorites" ]] && [[ "$favorites" != *"emacs.desktop"* ]]; then
+      molt_info "editors: Emacs not in GNOME dock favorites"
+      ok=1
+    fi
+  fi
+
   return $ok
 }
 
@@ -80,6 +90,18 @@ editors_install() {
     rm -rf "$HOME/.config/nvim/.git"
   elif [[ ! -f "$HOME/.config/nvim/init.lua" ]]; then
     molt_warn "~/.config/nvim exists but has no init.lua — skipping LazyVim clone"
+  fi
+
+  # On Linux/GNOME, add Emacs to dock favorites
+  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+    local favorites
+    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    if [[ -n "$favorites" ]] && [[ "$favorites" != *"emacs.desktop"* ]]; then
+      local new_favorites
+      new_favorites="$(echo "$favorites" | sed "s/]/, 'emacs.desktop']/")"
+      gsettings set org.gnome.shell favorite-apps "$new_favorites"
+      molt_info "Added Emacs to GNOME dock favorites"
+    fi
   fi
 
   molt_info "Liberator complete: editors"

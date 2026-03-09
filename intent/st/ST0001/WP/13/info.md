@@ -1,9 +1,9 @@
 ---
-verblock: "09 Mar 2026:v0.1: matts - Initial WP"
+verblock: "09 Mar 2026:v0.2: matts - As-built: Tactile 7x3, liberator done"
 wp_id: WP-13
 title: "Tiling window manager (GNOME 46)"
 scope: Medium
-status: WIP
+status: Done
 ---
 
 # WP-13: Tiling Window Manager (GNOME 46)
@@ -12,43 +12,54 @@ status: WIP
 
 No tiling window management configured on kovacs. Windows must be manually positioned and resized.
 
-## Current State
+## What Was Done
 
-- GNOME 46 on Wayland
-- Ubuntu Tiling Assistant already installed (`gnome-shell-extension-ubuntu-tiling-assistant`)
-- Super key overlay disabled (desktop liberator)
-- No other tiling extensions (pop-shell, forge, etc.)
+### Evaluated Ubuntu Tiling Assistant
 
-## Approach
+Ubuntu Tiling Assistant was already installed but only supports direct keybinding tiling (Super+Arrow → half screen, etc.). No grid picker mode — you'd need to memorize a keybinding for every arrangement. Not viable for 20+ Divvy-style layouts.
 
-Exploratory — start with what's already there before adding new extensions.
+### Installed Tactile Extension
 
-### Phase 1: Configure Ubuntu Tiling Assistant
+Tactile (`tactile@lundal.io`) provides a Divvy-like two-step workflow:
 
-- Research what Tiling Assistant exposes via gsettings/dconf
-- Configure snap assist, tile groups, custom layouts
-- Set up keybindings that work with the Cmd key (via Parallels Ctrl+Shift mapping)
+1. Press trigger key → grid overlay appears on screen
+2. Type two keys to define a rectangle (first key = one corner, second = opposite corner)
+3. Window snaps to that rectangle
 
-### Phase 2: Evaluate & Extend (if needed)
+The keyboard physically maps to screen position — same mental model as Divvy on macOS.
 
-If Tiling Assistant is insufficient, consider:
+### Configuration
 
-- **Forge** — GNOME extension, more powerful tiling, auto-tiles
-- **Pop-shell** — COSMIC-style tiling, more opinionated
-- Both are GNOME extensions, not full WM replacements
+- **Trigger:** Shift+Opt+Cmd+T (= `<Shift><Alt><Super>t` on Linux)
+  - Can't use Shift+Alt+Super+D because Parallels passes it to macOS Divvy
+- **Grid:** 7 columns x 3 rows
+  ```
+  Q W E R T Y U
+  A S D F G H J
+  Z X C V B N M
+  ```
+- **Gap:** 4px between tiled windows
+- **Maximize:** enabled (full-grid selection maximizes)
 
-### Phase 3: MOLT Integration
+### Technical Notes
 
-- New `tiling.sh` liberator, or extend `desktop.sh`
-- Config in `molt-matts/instances/kovacs/` for per-instance tiling prefs
+- Installed manually: download zip from extensions.gnome.org, `gnome-extensions install`, requires logout/login
+- Schema must be copied to `/usr/share/glib-2.0/schemas/` and compiled for gsettings to work
+- Both `grid-cols`/`grid-rows` AND `col-N`/`row-N` weight settings must be set (they're independent)
+- Parallels intercepts some Cmd combos before they reach the VM — keybinding choice constrained
+
+### MOLT Integration
+
+- `tiling.sh` liberator created: checks extension installed/active, configures grid and keybinding via gsettings
+- Added to kovacs manifest (`molt.toml`) with `depends = ["desktop"]`
 
 ## Acceptance Criteria
 
-- [ ] Tiling shortcuts work (half-screen, quarter-screen, etc.)
-- [ ] Windows snap to grid with keyboard
-- [ ] Configuration captured in MOLT (reproducible)
-- [ ] Documented which extension/approach was chosen and why
+- [x] Tiling shortcuts work (half-screen, quarter-screen, thirds, sixths, etc.)
+- [x] Windows snap to grid with keyboard (two-key rectangle selection)
+- [x] Configuration captured in MOLT (tiling.sh liberator, reproducible)
+- [x] Documented which extension/approach was chosen and why
 
 ## Dependencies
 
-- WP-12 (Emacs keybindings) — keybinding approach informs tiling shortcuts
+- WP-12 (Emacs keybindings) — keybinding approach informed tiling shortcut choice

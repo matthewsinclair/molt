@@ -547,6 +547,45 @@ cmd_test() {
 
 # --- Upgrade ---
 
+_upgrade_check_clean() {
+  local repo_path="$1"
+  local label="$2"
+  local dirty=0
+
+  local staged unstaged untracked
+  staged="$(git -C "$repo_path" diff --cached --name-only 2>/dev/null)"
+  unstaged="$(git -C "$repo_path" diff --name-only 2>/dev/null)"
+  untracked="$(git -C "$repo_path" ls-files --others --exclude-standard 2>/dev/null)"
+
+  if [[ -n "$staged" ]]; then
+    molt_error "$label repo has staged changes:"
+    while IFS= read -r f; do
+      [[ -n "$f" ]] && molt_error "  staged:    $f"
+    done <<< "$staged"
+    dirty=1
+  fi
+  if [[ -n "$unstaged" ]]; then
+    molt_error "$label repo has unstaged changes:"
+    while IFS= read -r f; do
+      [[ -n "$f" ]] && molt_error "  modified:  $f"
+    done <<< "$unstaged"
+    dirty=1
+  fi
+  if [[ -n "$untracked" ]]; then
+    molt_warn "$label repo has untracked files:"
+    while IFS= read -r f; do
+      [[ -n "$f" ]] && molt_warn "  untracked: $f"
+    done <<< "$untracked"
+    dirty=1
+  fi
+
+  if [[ "$dirty" -eq 1 ]]; then
+    molt_error "Commit or stash changes before upgrading."
+    return 1
+  fi
+  return 0
+}
+
 cmd_upgrade() {
   local dry_run=false
   if [[ "${1:-}" == "--dry-run" ]]; then
@@ -560,8 +599,7 @@ cmd_upgrade() {
 
   # 1. Check framework repo for uncommitted changes
   molt_info "Checking framework repo: $MOLT_ROOT"
-  if ! git -C "$MOLT_ROOT" diff --quiet 2>/dev/null || ! git -C "$MOLT_ROOT" diff --cached --quiet 2>/dev/null; then
-    molt_error "Framework repo has uncommitted changes. Commit or stash first."
+  if ! _upgrade_check_clean "$MOLT_ROOT" "Framework"; then
     return 1
   fi
 
@@ -572,8 +610,7 @@ cmd_upgrade() {
     return 1
   }
   molt_info "Checking user config repo: $user_repo"
-  if ! git -C "$user_repo" diff --quiet 2>/dev/null || ! git -C "$user_repo" diff --cached --quiet 2>/dev/null; then
-    molt_error "User config repo has uncommitted changes. Commit or stash first."
+  if ! _upgrade_check_clean "$user_repo" "User config"; then
     return 1
   fi
 

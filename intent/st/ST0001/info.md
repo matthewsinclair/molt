@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.6: matts - WP-11 upgrade, WP-12 emacs keys, WP-13 tiling"
+verblock: "09 Mar 2026:v0.7: matts - As-built: upgrade, emacs keys, tiling, vscode, dock"
 intent_version: 2.6.0
 status: WIP
 slug: bootstrap
@@ -97,17 +97,30 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Alacritty liberator updated to add Alacritty to GNOME dock favorites
 - GNOME Terminal replaced by Alacritty as dock terminal on kovacs
 
-### What's Done (Phase 5 — Upgrade, Emacs Keys, Tiling)
+### What's Done (Phase 5 — Upgrade, Emacs Keys, Tiling, VS Code)
 
 - `molt upgrade` command added (WP-11): pulls both repos, reports version changes, re-runs resleeve
   - `--dry-run` support, fails gracefully on dirty repos
 - Emacs macOS keybindings on Linux (WP-12): `C-S-` bindings mirror macOS `s-` bindings
   - Matches Parallels Cmd→Ctrl+Shift mapping at hypervisor level
-- Tiling window manager exploration started (WP-13): Ubuntu Tiling Assistant configuration
+  - `doom sync` verified clean
+- Tiling via Tactile GNOME extension (WP-13): Divvy-like grid picker
+  - Trigger: Shift+Opt+Cmd+T (= `<Shift><Alt><Super>t` on Linux)
+  - 7x3 grid: QWERTYU / ASDFGHJ / ZXCVBNM — keyboard maps to screen position
+  - Two-key rectangle selection (e.g. Q,M = full screen, Q,N = left half)
+  - `tiling.sh` liberator: checks extension, configures grid/keybinding via gsettings
+  - Ubuntu Tiling Assistant insufficient — replaced by Tactile
+- VS Code installed from Microsoft apt repo (WP-14, unplanned)
+  - `vscode.sh` liberator: symlinks settings.json, pins to GNOME dock
+  - `molt-matts/config/vscode/settings.json`: JetBrainsMono Nerd Font, telemetry off
+- Editors liberator updated to pin Emacs to GNOME dock
+- GNOME dock cleaned up: Firefox, Nautilus, Alacritty, Emacs, VS Code
+- Font consistency: JetBrainsMono Nerd Font (Alacritty 11pt, Emacs 14pt, VS Code 14pt)
+- ~/Dropbox symlinked to macOS CloudStorage via Parallels mount
+- 18 liberators total (added: tiling, vscode)
 
 ### What's Remaining
 
-- WP-13: Configure tiling keybindings, evaluate if Tiling Assistant is sufficient
 - Export iTerm2 + Terminal.app profiles from rhadamanth
 - Verify WP-10 changes on kovacs (no regressions)
 - Reproducible VM build (WP-07, future)
@@ -118,4 +131,4 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 ## Context for LLM
 
-This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 15 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key, Alacritty dock) is complete. Phase 5 adds inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), and tiling window manager exploration (WP-13). Both sleeves are operational.
+This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 18 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key, Alacritty dock) is complete. Phase 5 is complete: inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), Tactile tiling (WP-13), VS Code setup, dock cleanup, font consistency. Both sleeves are operational.
