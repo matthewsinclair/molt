@@ -572,11 +572,7 @@ _upgrade_check_clean() {
     dirty=1
   fi
   if [[ -n "$untracked" ]]; then
-    molt_warn "$label repo has untracked files:"
-    while IFS= read -r f; do
-      [[ -n "$f" ]] && molt_warn "  untracked: $f"
-    done <<< "$untracked"
-    dirty=1
+    molt_debug "$label repo has untracked files (not blocking upgrade)"
   fi
 
   if [[ "$dirty" -eq 1 ]]; then
