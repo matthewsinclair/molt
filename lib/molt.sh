@@ -319,7 +319,7 @@ cmd_list() {
       if [[ "$disabled_list" == *" ${lib} "* ]]; then
         status_str="disabled"
       elif [[ "$enabled_list" == *" ${lib} "* ]]; then
-        if liberator_load "$lib" 2>/dev/null && liberator_check "$lib" 2>/dev/null; then
+        if liberator_load "$lib" &>/dev/null && liberator_check "$lib" &>/dev/null; then
           status_str="installed"
         else
           status_str="not installed"
@@ -328,7 +328,7 @@ cmd_list() {
         status_str="not in manifest"
       fi
     else
-      if liberator_load "$lib" 2>/dev/null && liberator_check "$lib" 2>/dev/null; then
+      if liberator_load "$lib" &>/dev/null && liberator_check "$lib" &>/dev/null; then
         status_str="installed"
       else
         status_str="not installed"
@@ -425,7 +425,7 @@ cmd_doctor() {
     while IFS= read -r lib; do
       [[ -z "$lib" ]] && continue
       enabled_count=$((enabled_count + 1))
-      if liberator_load "$lib" 2>/dev/null && liberator_check "$lib" 2>/dev/null; then
+      if liberator_load "$lib" &>/dev/null && liberator_check "$lib" &>/dev/null; then
         installed_count=$((installed_count + 1))
       fi
     done <<< "$enabled"

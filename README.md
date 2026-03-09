@@ -18,10 +18,10 @@ Think of it as what [Omarchy](https://github.com/basecamp/omarchy) does for Linu
 
 MOLT separates the framework from your personal config:
 
-| Repo | What it contains | Shared? |
-| ---- | ---------------- | ------- |
-| **molt** (this repo) | Framework: CLI, core libs, liberator runner, tests | Yes — the engine |
-| **molt-{user}** (e.g. `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul |
+| Repo                                | What it contains                                              | Shared?          |
+| ----------------------------------- | ------------------------------------------------------------- | ---------------- |
+| **molt** (this repo)                | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
+| **molt-{user}** (e.g. `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
 
 The framework knows how to find your personal repo by searching for `molt-$(whoami)` in standard locations (`~/Devel/prj/`, `~/`, `~/.`). Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
@@ -78,9 +78,9 @@ The central metaphor from _Altered Carbon_: your configuration is your conscious
 
 | Term           | What it means                                                                      |
 | -------------- | ---------------------------------------------------------------------------------- |
-| **Zen**        | The bootstrap runner on each machine. Executes commands, reports status.            |
+| **Zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
 | **liberators** | Config modules. Each one frees you from a default.                                 |
-| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains.  |
+| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
 
 ## CLI
 
@@ -106,20 +106,20 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 
 ### Built-in liberators
 
-| Liberator  | Concern                                             | OS           |
-| ---------- | --------------------------------------------------- | ------------ |
-| system     | Base packages, package manager, sudo                | linux        |
-| local-bin  | `~/bin` directory, molt CLI symlink                 | linux, macos |
-| zsh        | Shell, Starship prompt, config linking              | linux, macos |
-| git        | Git + git-lfs, gitconfig linking                    | linux, macos |
-| tmux       | Tmux, config linking                                | linux, macos |
-| editors    | Doom Emacs + LazyVim, config linking                | linux, macos |
-| terminal   | Alacritty, config linking                           | linux        |
-| keys       | keyd build from source, key remapping               | linux        |
-| desktop    | GNOME settings, GTK config                          | linux        |
-| dev-tools  | CLI tools (bat, rg, fd, fzf) + mise                | linux, macos |
-| ssh        | SSH key generation, config linking                  | linux, macos |
-| utilz      | Utilz framework, bats-core, `~/bin` symlinks        | linux, macos |
+| Liberator | Concern                                      | OS           |
+| --------- | -------------------------------------------- | ------------ |
+| system    | Base packages, package manager, sudo         | linux        |
+| local-bin | `~/bin` directory, molt CLI symlink          | linux, macos |
+| zsh       | Shell, Starship prompt, config linking       | linux, macos |
+| git       | Git + git-lfs, gitconfig linking             | linux, macos |
+| tmux      | Tmux, config linking                         | linux, macos |
+| editors   | Doom Emacs + LazyVim, config linking         | linux, macos |
+| terminal  | Alacritty, config linking                    | linux        |
+| keys      | keyd build from source, key remapping        | linux        |
+| desktop   | GNOME settings, GTK config                   | linux        |
+| dev-tools | CLI tools (bat, rg, fd, fzf) + mise          | linux, macos |
+| ssh       | SSH key generation, config linking           | linux, macos |
+| utilz     | Utilz framework, bats-core, `~/bin` symlinks | linux, macos |
 
 ### molt.toml
 

@@ -1,5 +1,5 @@
 ---
-verblock: "08 Mar 2026:v0.2: matts - Fully elaborated"
+verblock: "09 Mar 2026:v0.3: matts - Terminal split, 15 liberators"
 intent_version: 2.6.0
 status: WIP
 slug: bootstrap
@@ -46,27 +46,37 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 ### What's Done (Phase 2 — Framework)
 
-- MOLT framework scaffolded: CLI (`bin/molt`), core lib, 12 liberators, manifest support
+- MOLT framework scaffolded: CLI (`bin/molt`), core lib, 15 liberators, manifest support
 - CLI commands: `resleeve`, `status`, `list`, `doctor`, `test`, `version`, `help`
 - Liberator framework: load, check, install, verify lifecycle
 - Manifest-first (`molt.toml`) with enabled/disabled/OS filtering
 - `constants.sh` for configurable paths (Highlander Rule)
-- Bats test suite: 42 tests across 6 files (all passing)
+- Bats test suite (all passing)
   - `test/test_helper.bash` — shared infrastructure, HOME-sandboxed for safety
   - `test/molt.bats` — CLI tests
   - `test/constants.bats` — constants tests
   - `test/liberator.bats` — framework tests
   - `test/manifest.bats` — manifest parsing tests
   - `test/liberators/zsh.bats` — exemplar liberator test
-- `molt doctor` — 7-step diagnostic (structure, manifest, liberators, deps)
+- `molt doctor` — 9-step diagnostic (structure, manifest, liberators, deps, SSH, GitHub auth)
 - Highlander & Thin Coordinator audit (WP-06) completed and applied
 - Module registry (`MODULES.md`) tracking all framework and liberator modules
+- Template rendering system (WP-08) with envsubst + vars.sh
+- Split monolithic `terminal.sh` into four per-emulator liberators (WP-09):
+  - `alacritty.sh` — GPU-accelerated terminal (linux, macos)
+  - `gnome-terminal.sh` — dconf-based GNOME Terminal profile management (linux)
+  - `iterm2.sh` — iTerm2 dynamic profiles (macos, placeholder)
+  - `terminal-app.sh` — Terminal.app profile import (macos, placeholder)
+- GNOME Terminal Molt profile created and applied on kovacs
+- Liberators enforce "no package install" — fail with hints if binary missing
+- Fixed `cmd_list`/`cmd_doctor` stdout leak from `_check` functions
 
 ### What's Remaining (Phase 2)
 
 - Fix Cmd key passthrough (Parallels not sending leftmeta to VM) — PARKED
 - Set up kovacs SSH for direct GitHub access
 - Nerd fonts installation
+- Export iTerm2 + Terminal.app profiles from rhadamanth
 
 ## Related Steel Threads
 

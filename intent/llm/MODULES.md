@@ -16,27 +16,30 @@
 
 ## Liberators
 
-| Module    | File                      | Concern                                              |
-| --------- | ------------------------- | ---------------------------------------------------- |
-| system    | `liberators/system.sh`    | Base system setup, package manager, sudo             |
-| zsh       | `liberators/zsh.sh`       | Shell installation, Starship prompt, config linking  |
-| git       | `liberators/git.sh`       | Git + git-lfs installation, gitconfig linking        |
-| tmux      | `liberators/tmux.sh`      | Tmux installation, config linking                    |
-| editors   | `liberators/editors.sh`   | Doom Emacs + LazyVim installation, config linking    |
-| terminal  | `liberators/terminal.sh`  | Alacritty installation, config linking (Linux)       |
-| keys      | `liberators/keys.sh`      | keyd build from source, config from instance (Linux) |
-| desktop   | `liberators/desktop.sh`   | GNOME settings, GTK config (Linux)                   |
-| dev-tools | `liberators/dev-tools.sh` | CLI tools (bat, rg, fd, etc.) + mise                 |
-| ssh       | `liberators/ssh.sh`       | SSH key generation, config linking                   |
-| local-bin | `liberators/local-bin.sh` | ~/bin directory, molt CLI symlink                    |
-| utilz     | `liberators/utilz.sh`     | Utilz framework, bats-core, ~/bin symlinks           |
+| Module         | File                           | Concern                                                 |
+| -------------- | ------------------------------ | ------------------------------------------------------- |
+| system         | `liberators/system.sh`         | Base system setup, package manager, sudo                |
+| zsh            | `liberators/zsh.sh`            | Shell installation, Starship prompt, config linking     |
+| git            | `liberators/git.sh`            | Git + git-lfs installation, gitconfig linking           |
+| tmux           | `liberators/tmux.sh`           | Tmux installation, config linking                       |
+| editors        | `liberators/editors.sh`        | Doom Emacs + LazyVim installation, config linking       |
+| alacritty      | `liberators/alacritty.sh`      | Alacritty config linking (linux, macos)                 |
+| gnome-terminal | `liberators/gnome-terminal.sh` | GNOME Terminal dconf profile management (linux)         |
+| iterm2         | `liberators/iterm2.sh`         | iTerm2 dynamic profile linking (macos)                  |
+| terminal-app   | `liberators/terminal-app.sh`   | Terminal.app profile import and default setting (macos) |
+| keys           | `liberators/keys.sh`           | keyd build from source, config from instance (Linux)    |
+| desktop        | `liberators/desktop.sh`        | GNOME settings, GTK config (Linux)                      |
+| dev-tools      | `liberators/dev-tools.sh`      | CLI tools (bat, rg, fd, etc.) + mise                    |
+| ssh            | `liberators/ssh.sh`            | SSH key generation, config linking                      |
+| local-bin      | `liberators/local-bin.sh`      | ~/bin directory, molt CLI symlink                       |
+| utilz          | `liberators/utilz.sh`          | Utilz framework, bats-core, ~/bin symlinks              |
 
 ## Testing
 
-| Module      | File                    | Concern                                   |
-| ----------- | ----------------------- | ----------------------------------------- |
-| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure            |
-| templates   | `test/templates.bats`   | Template rendering (molt_render) tests     |
+| Module      | File                    | Concern                                |
+| ----------- | ----------------------- | -------------------------------------- |
+| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure        |
+| templates   | `test/templates.bats`   | Template rendering (molt_render) tests |
 
 ## Templates
 

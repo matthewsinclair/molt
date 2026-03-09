@@ -21,16 +21,20 @@
 ## Phase 2: Framework & Gaps
 
 - [x] MOLT framework scaffolding — CLI, core lib, liberator framework, manifest support
-- [x] 12 liberators: system, local-bin, zsh, git, tmux, editors, terminal, keys, desktop, dev-tools, ssh, utilz
+- [x] 15 liberators: system, local-bin, zsh, git, tmux, editors, alacritty, gnome-terminal, iterm2, terminal-app, keys, desktop, dev-tools, ssh, utilz
 - [x] CLI commands: resleeve, status, list, doctor, test, version, help
-- [x] Bats test suite — 42 tests, 6 files, all passing (HOME-sandboxed)
-- [x] `molt doctor` — 7-step diagnostics
+- [x] Bats test suite — all passing (HOME-sandboxed)
+- [x] `molt doctor` — 9-step diagnostics
 - [x] Highlander & Thin Coordinator audit (WP-06)
 - [x] Document Phase 1 bootstrap steps (docs/bootstrap-runbook.md)
 - [x] Module registry (MODULES.md) with Highlander enforcement
+- [x] Template rendering system (WP-08)
+- [x] Split terminal.sh into per-emulator liberators (WP-09)
+- [x] GNOME Terminal Molt profile applied on kovacs
 - [ ] Fix Cmd key passthrough from Parallels (PARKED — needs investigation)
 - [ ] Set up kovacs SSH key for direct GitHub access
 - [ ] Install Nerd Fonts on kovacs
+- [ ] Export iTerm2 + Terminal.app profiles from rhadamanth
 
 ## Dependencies
 

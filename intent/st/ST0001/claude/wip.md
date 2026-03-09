@@ -10,6 +10,28 @@
 
 ## Entries
 
+### claude@kovacs — 2026-03-09 — SESSION WRAP-UP
+
+**WP-05: DONE.** WP-08: DONE. Both closed via `intent wp done`.
+
+**Commits pushed:**
+
+- molt repo: `1493215` — WP-05+08: template system, README, SSH hardening, 51 tests
+- molt-matts repo: `6fdd8ba` — vars.sh, SSH config.tmpl, config.d fragments
+
+**Note for rhadamanth:** I edited `lib/molt.sh` and `liberators/ssh.sh` directly (via Parallels mount). The commit is in your working tree on main. Please pull before starting new work.
+
+**Remaining on ST0001:**
+
+- Cmd key passthrough (PARKED)
+- Font config templates (alacritty/doom) — second-wave, not urgent since values already correct on both sleeves
+
+**Matt is asking about terminal liberators** (xterm2/iTerm2, GNOME Terminal, Alacritty, macOS Terminal.app). This may become a new WP or expand the existing terminal liberator. Discussion ongoing.
+
+Awaiting instructions.
+
+---
+
 ### claude@kovacs — 2026-03-09 — SSH permissions fix + integration complete
 
 **Issue:** `~/.ssh` cannot contain symlinks or files with open permissions — `sshd` rejects them. The original `molt_render` created symlink backups and left `.molt-rendered` markers with `664` perms in `~/.ssh`.
@@ -25,6 +47,7 @@
 **Sigils updated**: `@@MOLT:BEGIN@@` / `@@MOLT:END@@` in both `config/ssh/config.tmpl` and static `config/ssh/config`.
 
 **Final `~/.ssh` state (all correct):**
+
 ```
 drwx------  config              (600, rendered, molt-managed)
 drwx------  config.molt-rendered (600, provenance marker)
@@ -79,7 +102,7 @@ All clean. Specific notes:
 
 **One issue to flag:**
 
-The SSH liberator appends `config.d` fragments *after* the rendered template. But the template now has section markers (`--- MOLT MANAGED ---` / `--- END MOLT MANAGED ---`). The current implementation appends fragments at the end of the file, which means they land *outside* the managed section — which is actually correct! Fragments are instance-specific additions, not template-managed content. But the comment `# --- molt config.d: filename ---` that the liberator adds before each fragment is a nice touch.
+The SSH liberator appends `config.d` fragments _after_ the rendered template. But the template now has section markers (`--- MOLT MANAGED ---` / `--- END MOLT MANAGED ---`). The current implementation appends fragments at the end of the file, which means they land _outside_ the managed section — which is actually correct! Fragments are instance-specific additions, not template-managed content. But the comment `# --- molt config.d: filename ---` that the liberator adds before each fragment is a nice touch.
 
 However, if a user adds their own entries "above the MOLT MANAGED line" (as the template instructs), and then resleeve runs again, `molt_render` will overwrite the whole file (including user entries above the marker). **The managed-section markers are aspirational — they communicate intent but aren't enforced by the framework.** This is fine for now, but worth noting for future: a true merge-friendly render would need to preserve user sections. That's scope creep for WP-08 — just flagging it.
 
@@ -421,7 +444,7 @@ Here's how I see the options:
 
 **Option A: Explicitly out of scope**
 
-- MOLT manages *config*, not *secrets*. Full stop.
+- MOLT manages _config_, not _secrets_. Full stop.
 - Secrets are per-instance by nature (SSH keys should never cross machines).
 - Users bring their own secrets tooling. MOLT doesn't care how.
 - Pro: Simple, no security liability, no forced dependency.
@@ -429,7 +452,7 @@ Here's how I see the options:
 
 **Option B: Provider-agnostic hooks**
 
-- MOLT defines a *secrets interface* but doesn't implement a provider.
+- MOLT defines a _secrets interface_ but doesn't implement a provider.
 - Liberators can declare `secrets_provider` in vars.sh or molt.toml.
 - A `secrets` liberator installs the user's chosen provider (1Password CLI, Bitwarden, pass, etc.).
 - Liberators call `molt_secret "github_ssh_key"` and the provider resolves it.
@@ -438,7 +461,7 @@ Here's how I see the options:
 
 **Option C: 1Password-native (opinionated)**
 
-- MOLT is *opinionated*. Pick 1Password, make it first-class.
+- MOLT is _opinionated_. Pick 1Password, make it first-class.
 - `op` CLI available on both platforms. SSH agent integration. Secrets injection via `op run`.
 - Pro: Fully integrated, "one command" resleeve becomes real. Fits the "opinionated" brand.
 - Con: Forces a paid product dependency. Violates PATH-based principle. Deal-breaker for anyone not using 1Password.
@@ -447,7 +470,7 @@ Here's how I see the options:
 
 Reasoning:
 
-1. Secrets are inherently per-instance. SSH keys *should* be unique per sleeve — that's not a gap, it's correct security posture.
+1. Secrets are inherently per-instance. SSH keys _should_ be unique per sleeve — that's not a gap, it's correct security posture.
 2. The manual steps after resleeve (add pubkey to GitHub, copy Claude creds) are infrequent and intentionally human-gated.
 3. Adding a secrets layer now is premature — we have 2 sleeves and ~3 secrets. The abstraction doesn't pay for itself.
 4. If it becomes a pain point later, Option B can be added without breaking anything. A `secrets` liberator is just another liberator.
@@ -518,7 +541,7 @@ kovacs: If this looks good, proceed with Tasks D+E. I'm idle on this side — le
 
 Wrote `intent/st/ST0001/design-templates.md` covering:
 
-- **Problem**: Gap between symlinks (identical files) and instance overrides (whole-file replacement). Some configs are *mostly* the same but need a few values per-instance (fonts, paths).
+- **Problem**: Gap between symlinks (identical files) and instance overrides (whole-file replacement). Some configs are _mostly_ the same but need a few values per-instance (fonts, paths).
 - **Approach**: `envsubst` with `.tmpl` files. Variables from `instances/{hostname}/vars.sh`.
 - **New framework functions**: `molt_render` (template -> target) and `molt_install_config` (auto-picks link vs render).
 - **Scope**: Only 2 files need templates today (alacritty font config, doom font config). Everything else stays as symlinks.
