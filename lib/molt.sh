@@ -545,6 +545,75 @@ cmd_test() {
   fi
 }
 
+# --- Upgrade ---
+
+cmd_upgrade() {
+  local dry_run=false
+  if [[ "${1:-}" == "--dry-run" ]]; then
+    dry_run=true
+  fi
+
+  local old_version="$MOLT_VERSION"
+
+  echo "${MOLT_NAME} v${MOLT_VERSION} — Upgrade"
+  echo ""
+
+  # 1. Check framework repo for uncommitted changes
+  molt_info "Checking framework repo: $MOLT_ROOT"
+  if ! git -C "$MOLT_ROOT" diff --quiet 2>/dev/null || ! git -C "$MOLT_ROOT" diff --cached --quiet 2>/dev/null; then
+    molt_error "Framework repo has uncommitted changes. Commit or stash first."
+    return 1
+  fi
+
+  # 2. Find and check user config repo
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || {
+    molt_error "Cannot upgrade without a user config repo."
+    return 1
+  }
+  molt_info "Checking user config repo: $user_repo"
+  if ! git -C "$user_repo" diff --quiet 2>/dev/null || ! git -C "$user_repo" diff --cached --quiet 2>/dev/null; then
+    molt_error "User config repo has uncommitted changes. Commit or stash first."
+    return 1
+  fi
+
+  # 3. Pull framework repo
+  echo ""
+  molt_info "Pulling framework repo..."
+  if git -C "$MOLT_ROOT" pull --ff-only 2>/dev/null; then
+    molt_info "Framework repo updated."
+  else
+    molt_warn "Framework pull skipped (not on tracking branch or already up-to-date)."
+  fi
+
+  # 4. Pull user config repo
+  molt_info "Pulling user config repo..."
+  if git -C "$user_repo" pull --ff-only 2>/dev/null; then
+    molt_info "User config repo updated."
+  else
+    molt_warn "User config pull skipped (not on tracking branch or already up-to-date)."
+  fi
+
+  # 5. Re-source constants to pick up any version change
+  source "${MOLT_LIB_DIR}/constants.sh"
+  if [[ "$old_version" != "$MOLT_VERSION" ]]; then
+    echo ""
+    molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
+  fi
+
+  # 6. Resleeve
+  echo ""
+  if $dry_run; then
+    molt_info "Dry run — showing what resleeve would do:"
+    echo ""
+    cmd_resleeve --dry-run
+  else
+    molt_info "Running resleeve..."
+    echo ""
+    cmd_resleeve
+  fi
+}
+
 # --- Stack Discovery ---
 
 molt_find_user_repo() {

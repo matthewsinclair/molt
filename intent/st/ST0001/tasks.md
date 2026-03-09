@@ -45,6 +45,15 @@
 - [x] Add Alacritty to GNOME dock favorites (alacritty liberator updated)
 - [ ] Export iTerm2 + Terminal.app profiles from rhadamanth
 
+## Phase 5: Upgrade, Emacs Keys, Tiling
+
+- [x] WP-11: Add `molt upgrade` command (pull repos + resleeve)
+- [x] WP-12: Add Linux `C-S-` keybindings to Emacs `010-keys.el`
+- [ ] WP-12: Verify Cmd+C/V/X/S/Z/A work in Emacs on kovacs + `doom sync`
+- [ ] WP-13: Configure Ubuntu Tiling Assistant keybindings
+- [ ] WP-13: Evaluate if Tiling Assistant is sufficient or need Forge/Pop-shell
+- [ ] WP-13: Capture tiling config in MOLT (liberator or desktop.sh extension)
+
 ## Dependencies
 
 - rhadamanth resleeve requires commit + push from kovacs first

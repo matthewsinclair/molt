@@ -29,6 +29,7 @@ Usage: molt <command> [args]
 
 Commands:
   resleeve [--dry-run]  Bootstrap the current machine from your stack
+  upgrade [--dry-run]   Pull latest framework + config, then resleeve
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   doctor      System diagnostics and health checks
@@ -143,6 +144,7 @@ cmd_resleeve() {
 
 case "${1:-help}" in
   resleeve) shift; cmd_resleeve "$@" ;;
+  upgrade)  shift; cmd_upgrade "$@" ;;
   status)   cmd_status ;;
   list)     cmd_list ;;
   doctor)   cmd_doctor ;;

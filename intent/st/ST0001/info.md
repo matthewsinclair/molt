@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.5: matts - Cmd key resolved, Alacritty dock"
+verblock: "09 Mar 2026:v0.6: matts - WP-11 upgrade, WP-12 emacs keys, WP-13 tiling"
 intent_version: 2.6.0
 status: WIP
 slug: bootstrap
@@ -97,8 +97,17 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Alacritty liberator updated to add Alacritty to GNOME dock favorites
 - GNOME Terminal replaced by Alacritty as dock terminal on kovacs
 
+### What's Done (Phase 5 — Upgrade, Emacs Keys, Tiling)
+
+- `molt upgrade` command added (WP-11): pulls both repos, reports version changes, re-runs resleeve
+  - `--dry-run` support, fails gracefully on dirty repos
+- Emacs macOS keybindings on Linux (WP-12): `C-S-` bindings mirror macOS `s-` bindings
+  - Matches Parallels Cmd→Ctrl+Shift mapping at hypervisor level
+- Tiling window manager exploration started (WP-13): Ubuntu Tiling Assistant configuration
+
 ### What's Remaining
 
+- WP-13: Configure tiling keybindings, evaluate if Tiling Assistant is sufficient
 - Export iTerm2 + Terminal.app profiles from rhadamanth
 - Verify WP-10 changes on kovacs (no regressions)
 - Reproducible VM build (WP-07, future)
@@ -109,4 +118,4 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 ## Context for LLM
 
-This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 15 liberators, 52 tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Both sleeves are operational.
+This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 15 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key, Alacritty dock) is complete. Phase 5 adds inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), and tiling window manager exploration (WP-13). Both sleeves are operational.
