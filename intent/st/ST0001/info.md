@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.4: matts - Rhadamanth resleeved, chezmoi retired"
+verblock: "09 Mar 2026:v0.5: matts - Cmd key resolved, Alacritty dock"
 intent_version: 2.6.0
 status: WIP
 slug: bootstrap
@@ -88,9 +88,17 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
   - All 9 enabled liberators installed: system, local-bin, zsh, git, editors, iterm2, dev-tools, ssh, utilz
   - Doctor: 9/9 checks, GitHub auth working
 
+### What's Done (Phase 4 — Cmd Key + Alacritty Dock)
+
+- Cmd key passthrough resolved via Parallels keyboard shortcuts config (WP-01)
+  - Parallels maps Cmd+C/V/X → Ctrl+Shift+C/V/X at hypervisor level
+  - keyd not involved — config reduced to minimal
+  - Cmd != Ctrl preserved (Cmd+C = copy, Ctrl+C = SIGINT)
+- Alacritty liberator updated to add Alacritty to GNOME dock favorites
+- GNOME Terminal replaced by Alacritty as dock terminal on kovacs
+
 ### What's Remaining
 
-- Fix Cmd key passthrough (Parallels not sending leftmeta to VM) — PARKED
 - Export iTerm2 + Terminal.app profiles from rhadamanth
 - Verify WP-10 changes on kovacs (no regressions)
 - Reproducible VM build (WP-07, future)

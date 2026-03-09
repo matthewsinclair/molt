@@ -41,11 +41,10 @@
 - [x] Forensic review + fix of all destructive operations
 - [x] Remove hardcoded MOLT_PROJECTS_DIR default, require env var
 - [x] Update README
-- [ ] Fix Cmd key passthrough from Parallels (PARKED -- needs investigation)
+- [x] Fix Cmd key passthrough from Parallels (resolved via Parallels keyboard shortcuts)
+- [x] Add Alacritty to GNOME dock favorites (alacritty liberator updated)
 - [ ] Export iTerm2 + Terminal.app profiles from rhadamanth
-- [ ] First resleeve on rhadamanth
 
 ## Dependencies
 
-- Cmd key fix depends on Parallels configuration (may need macOS-side changes)
 - rhadamanth resleeve requires commit + push from kovacs first

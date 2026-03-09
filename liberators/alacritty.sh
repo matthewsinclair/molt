@@ -19,6 +19,16 @@ alacritty_check() {
     fi
   fi
 
+  # On Linux/GNOME, check Alacritty is in the dock favorites
+  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+    local favorites
+    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
+      molt_info "alacritty: not in GNOME dock favorites"
+      ok=1
+    fi
+  fi
+
   return $ok
 }
 
@@ -33,6 +43,19 @@ alacritty_install() {
   if [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
     mkdir -p "$HOME/.config/alacritty"
     molt_link "$user_repo/config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+  fi
+
+  # On Linux/GNOME, add Alacritty to dock favorites if not already there
+  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+    local favorites
+    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
+      # Append Alacritty.desktop to the favorites list
+      local new_favorites
+      new_favorites="$(echo "$favorites" | sed "s/]/, 'Alacritty.desktop']/")"
+      gsettings set org.gnome.shell favorite-apps "$new_favorites"
+      molt_info "Added Alacritty to GNOME dock favorites"
+    fi
   fi
 
   molt_info "Liberator complete: alacritty"
@@ -51,6 +74,16 @@ alacritty_verify() {
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
     if [[ ! -L "$HOME/.config/alacritty/alacritty.toml" ]]; then
       molt_error "VERIFY FAIL: Alacritty config not symlinked"
+      errors=1
+    fi
+  fi
+
+  # On Linux/GNOME, verify Alacritty is in dock favorites
+  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+    local favorites
+    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
+      molt_error "VERIFY FAIL: Alacritty not in GNOME dock favorites"
       errors=1
     fi
   fi

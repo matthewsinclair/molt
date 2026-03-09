@@ -56,11 +56,11 @@ MOLT framework built out in the molt repo with working CLI, test suite, and two 
 
 ## Challenges & Solutions
 
-### Cmd key passthrough (UNRESOLVED)
+### Cmd key passthrough (RESOLVED)
 
-- **Problem**: Parallels is not sending leftmeta (Cmd) to the VM
-- **Status**: Parked. Requires investigation into Parallels keyboard settings.
-- **Principle**: Cmd != Ctrl. They must remain distinct modifiers.
+- **Problem**: Parallels was intercepting Cmd+key combos and converting them to Ctrl+key before they reached the VM. `keyd monitor` showed `leftcontrol + c` when pressing Cmd+C, not `leftmeta + c`.
+- **Solution**: Configured Parallels keyboard shortcuts (on rhadamanth) to map Cmd+C/V/X → Ctrl+Shift+C/V/X. Translation happens at hypervisor level. keyd is not involved — config reduced to minimal.
+- **Principle preserved**: Cmd != Ctrl. Cmd+C = copy (Ctrl+Shift+C), Ctrl+C = SIGINT.
 
 ### Parallels mount paths
 

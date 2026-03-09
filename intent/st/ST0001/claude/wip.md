@@ -10,6 +10,24 @@
 
 ## Entries
 
+### claude@kovacs — 2026-03-09 — CMD KEY RESOLVED + ALACRITTY DOCK
+
+**WP-01: DONE.** Cmd key passthrough resolved.
+
+**Root cause**: Parallels intercepts Cmd+key combos and converts to Ctrl+key before they reach the VM. `keyd monitor` confirmed: pressing Cmd+C produced `leftcontrol + c`, not `leftmeta + c`. The bare `leftmeta` arrived fine, but combos were intercepted.
+
+**Fix**: Configured Parallels keyboard shortcuts on rhadamanth to map Cmd+C/V/X → Ctrl+Shift+C/V/X. These are the standard terminal copy/paste chords that Alacritty and GNOME Terminal handle natively.
+
+**keyd**: No longer needed for key remapping. Config at `/etc/keyd/default.conf` reduced to minimal with a comment explaining Parallels handles it.
+
+**Alacritty liberator**: Updated to add `Alacritty.desktop` to GNOME dock favorites on Linux. All three functions (check/install/verify) updated. Does not remove existing entries — additive only.
+
+**Alacritty config**: Comment updated to reflect Parallels mapping (was referencing keyd CUA keys).
+
+**Tests**: All passing. No regressions.
+
+---
+
 ### claude@kovacs — 2026-03-09 — INSTRUCTIONS FOR RHADAMANTH DRY-RUN
 
 **Context**: Major changes made on kovacs this session. Liberators no longer install packages, `molt resleeve --dry-run` added, `MOLT_PROJECTS_DIR` is now required (no hardcoded default), `hostname -s` used everywhere for macOS compat, rhadamanth manifest created. Changes are visible on rhadamanth via Parallels shared filesystem (not yet committed/pushed).

@@ -459,12 +459,25 @@ cmd_doctor() {
     warnings=$((warnings + 1))
   fi
 
-  # 8. SSH key
+  # 8. SSH key (check common names + any key referenced in SSH config)
   step=$((step + 1))
-  if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
-    echo "[$step/$total] Checking SSH key... ✓ ~/.ssh/id_ed25519"
-  elif [[ -f "$HOME/.ssh/id_rsa" ]]; then
-    echo "[$step/$total] Checking SSH key... ✓ ~/.ssh/id_rsa"
+  local ssh_key_found=""
+  for keyname in id_ed25519 id_rsa; do
+    if [[ -f "$HOME/.ssh/$keyname" ]]; then
+      ssh_key_found="$keyname"
+      break
+    fi
+  done
+  if [[ -z "$ssh_key_found" ]] && [[ -f "$HOME/.ssh/config" ]]; then
+    # Check keys referenced in SSH config
+    local referenced_key
+    referenced_key="$(grep -m1 'IdentityFile' "$HOME/.ssh/config" 2>/dev/null | awk '{print $2}' | sed "s|~|$HOME|" || true)"
+    if [[ -n "$referenced_key" ]] && [[ -f "$referenced_key" ]]; then
+      ssh_key_found="$(basename "$referenced_key")"
+    fi
+  fi
+  if [[ -n "$ssh_key_found" ]]; then
+    echo "[$step/$total] Checking SSH key... ✓ ~/.ssh/$ssh_key_found"
   else
     echo "[$step/$total] Checking SSH key... ⚠ no SSH key found"
     warnings=$((warnings + 1))
