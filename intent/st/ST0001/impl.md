@@ -22,19 +22,19 @@ MOLT framework built out in the molt repo with working CLI, test suite, and two 
 
 1. **CLI** (`bin/molt`): Thin coordinator dispatching to lib functions
 2. **Core lib** (`lib/molt.sh`): Logging, platform detection, symlinks, template rendering, manifest parsing, CLI commands
-3. **Constants** (`lib/constants.sh`): Single source of truth for all configurable paths. No hardcoded defaults for `MOLT_PROJECTS_DIR`.
+3. **Constants** (`lib/constants.sh`): Single source of truth for all configurable paths. No hardcoded defaults for `MOLT_PRJ_DIR`.
 4. **Liberator framework** (`lib/liberator.sh`): Load, check, install, verify lifecycle with batch operations and discovery
 5. **15 liberators** (`liberators/*.sh`): system, local-bin, zsh, git, tmux, editors, alacritty, gnome-terminal, iterm2, terminal-app, keys, desktop, dev-tools, ssh, utilz
 6. **Manifest** (`molt.toml`): Declarative enabled/disabled/OS-filtered liberator list with per-instance overrides
 7. **Test suite** (`test/`): bats tests across 6 files -- CLI, constants, liberator framework, manifest parsing, templates, exemplar liberator
 8. **Doctor** (`molt doctor`): 9-step diagnostic
 9. **Dry-run** (`molt resleeve --dry-run`): Preview mode, reports what would be installed
-10. **Bootstrap** (`bin/bootstrap.sh`): Fresh-machine one-liner, requires `MOLT_PROJECTS_DIR`
+10. **Bootstrap** (`bin/bootstrap.sh`): Fresh-machine one-liner, requires `MOLT_PRJ_DIR`
 
 ### Design principles (as-built)
 
 - **Liberators never install packages.** They verify prerequisites and fail with hints.
-- **`MOLT_PROJECTS_DIR` must be set.** No hardcoded default. Enforced at constants.sh level.
+- **`MOLT_PRJ_DIR` must be set.** No hardcoded default. Enforced at constants.sh level.
 - **`hostname -s`** used everywhere for macOS compatibility (rhadamanth.lan vs rhadamanth).
 - **One liberator failure doesn't abort resleeve.** Error is reported, remaining liberators continue.
 - **Rendered files are backed up** if their content changed since last render.

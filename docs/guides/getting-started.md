@@ -8,12 +8,12 @@ This guide walks you through setting up MOLT on a new machine.
 - git
 - A terminal you're comfortable in
 
-## 1. Set MOLT_PROJECTS_DIR
+## 1. Set MOLT_PRJ_DIR
 
 MOLT needs to know where your repos live. There is no default — you choose the layout per machine:
 
 ```bash
-export MOLT_PROJECTS_DIR="$HOME/Projects"
+export MOLT_PRJ_DIR="$HOME/Projects"
 ```
 
 Add this to your `.zshenv` or `.bashrc` so it persists.
@@ -22,18 +22,18 @@ Add this to your `.zshenv` or `.bashrc` so it persists.
 
 ```bash
 # The framework
-git clone https://github.com/you/molt "$MOLT_PROJECTS_DIR/molt"
+git clone https://github.com/you/molt "$MOLT_PRJ_DIR/molt"
 
 # Your personal config
-git clone https://github.com/you/molt-you "$MOLT_PROJECTS_DIR/molt-you"
+git clone https://github.com/you/molt-you "$MOLT_PRJ_DIR/molt-you"
 ```
 
-The framework finds your config repo by looking for `molt-$(whoami)` in `$MOLT_PROJECTS_DIR`.
+The framework finds your config repo by looking for `molt-$(whoami)` in `$MOLT_PRJ_DIR`.
 
 ## 3. Add molt to PATH
 
 ```bash
-export PATH="$MOLT_PROJECTS_DIR/molt/bin:$PATH"
+export PATH="$MOLT_PRJ_DIR/molt/bin:$PATH"
 ```
 
 Or use the bootstrap script (see below) which handles this for you.
@@ -70,7 +70,7 @@ Zen: Sleeve ready. Welcome back.
 For a completely fresh machine where nothing is set up yet:
 
 ```bash
-MOLT_PROJECTS_DIR=$HOME/Projects \
+MOLT_PRJ_DIR=$HOME/Projects \
   bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
 ```
 

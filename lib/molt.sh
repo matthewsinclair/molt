@@ -550,33 +550,13 @@ cmd_test() {
 _upgrade_check_clean() {
   local repo_path="$1"
   local label="$2"
-  local dirty=0
 
-  local staged unstaged untracked
+  local staged unstaged
   staged="$(git -C "$repo_path" diff --cached --name-only 2>/dev/null)"
   unstaged="$(git -C "$repo_path" diff --name-only 2>/dev/null)"
-  untracked="$(git -C "$repo_path" ls-files --others --exclude-standard 2>/dev/null)"
 
-  if [[ -n "$staged" ]]; then
-    molt_error "$label repo has staged changes:"
-    while IFS= read -r f; do
-      [[ -n "$f" ]] && molt_error "  staged:    $f"
-    done <<< "$staged"
-    dirty=1
-  fi
-  if [[ -n "$unstaged" ]]; then
-    molt_error "$label repo has unstaged changes:"
-    while IFS= read -r f; do
-      [[ -n "$f" ]] && molt_error "  modified:  $f"
-    done <<< "$unstaged"
-    dirty=1
-  fi
-  if [[ -n "$untracked" ]]; then
-    molt_debug "$label repo has untracked files (not blocking upgrade)"
-  fi
-
-  if [[ "$dirty" -eq 1 ]]; then
-    molt_error "Commit or stash changes before upgrading."
+  if [[ -n "$staged" ]] || [[ -n "$unstaged" ]]; then
+    molt_error "$label repo has uncommitted changes. Commit or stash before upgrading."
     return 1
   fi
   return 0
@@ -584,14 +564,86 @@ _upgrade_check_clean() {
 
 cmd_upgrade() {
   local dry_run=false
-  if [[ "${1:-}" == "--dry-run" ]]; then
-    dry_run=true
+  local do_resleeve=""  # "" = use default, "yes" = forced, "no" = suppressed
+  local target_liberators=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run)     dry_run=true; shift ;;
+      --resleeve)    do_resleeve="yes"; shift ;;
+      --no-resleeve) do_resleeve="no"; shift ;;
+      -*)
+        molt_error "Unknown option: $1"
+        return 1
+        ;;
+      *)
+        target_liberators="$1"; shift ;;
+    esac
+  done
+
+  # Default resleeve behavior: yes for full upgrade, no for targeted
+  if [[ -z "$do_resleeve" ]]; then
+    if [[ -n "$target_liberators" ]]; then
+      do_resleeve="no"
+    else
+      do_resleeve="yes"
+    fi
   fi
 
   local old_version="$MOLT_VERSION"
 
   echo "${MOLT_NAME} v${MOLT_VERSION} — Upgrade"
   echo ""
+
+  if [[ -n "$target_liberators" ]]; then
+    # --- Targeted upgrade: run _upgrade() on specified liberators only ---
+    local failed=0
+    # Split comma-separated list
+    IFS=',' read -ra targets <<< "$target_liberators"
+    for lib in "${targets[@]}"; do
+      # Trim whitespace
+      lib="${lib## }"
+      lib="${lib%% }"
+      [[ -z "$lib" ]] && continue
+
+      if ! liberator_load "$lib" 2>/dev/null; then
+        molt_error "Unknown liberator: $lib"
+        failed=1
+        continue
+      fi
+
+      if liberator_has_upgrade "$lib"; then
+        if $dry_run; then
+          echo "  $lib: WOULD UPGRADE"
+        else
+          if ! liberator_upgrade "$lib"; then
+            molt_error "Upgrade failed: $lib"
+            failed=1
+          fi
+        fi
+      else
+        molt_warn "$lib has no upgrade hook — skipping"
+      fi
+    done
+
+    if [[ "$do_resleeve" == "yes" ]]; then
+      echo ""
+      if $dry_run; then
+        molt_info "Dry run — showing what resleeve would do:"
+        echo ""
+        cmd_resleeve --dry-run
+      else
+        molt_info "Running resleeve..."
+        echo ""
+        cmd_resleeve
+      fi
+    fi
+
+    return $failed
+  fi
+
+  # --- Full upgrade: pull repos, run all _upgrade() hooks, then resleeve ---
 
   # 1. Check framework repo for uncommitted changes
   molt_info "Checking framework repo: $MOLT_ROOT"
@@ -634,16 +686,48 @@ cmd_upgrade() {
     molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
   fi
 
-  # 6. Resleeve
+  # 6. Run _upgrade() hooks on all enabled liberators that define one
   echo ""
-  if $dry_run; then
-    molt_info "Dry run — showing what resleeve would do:"
-    echo ""
-    cmd_resleeve --dry-run
+  molt_info "Running liberator upgrade hooks..."
+  local liberators
+  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
+    :
   else
-    molt_info "Running resleeve..."
+    liberators="$(liberator_list)"
+  fi
+
+  local upgrade_count=0
+  while IFS= read -r lib; do
+    [[ -z "$lib" ]] && continue
+    if ! liberator_load "$lib" 2>/dev/null; then
+      continue
+    fi
+    if liberator_has_upgrade "$lib"; then
+      if $dry_run; then
+        echo "  $lib: WOULD UPGRADE"
+      else
+        liberator_upgrade "$lib" || molt_warn "Upgrade hook failed: $lib — continuing"
+      fi
+      upgrade_count=$((upgrade_count + 1))
+    fi
+  done <<< "$liberators"
+
+  if [[ "$upgrade_count" -eq 0 ]]; then
+    molt_info "No liberators have upgrade hooks."
+  fi
+
+  # 7. Resleeve (unless suppressed)
+  if [[ "$do_resleeve" == "yes" ]]; then
     echo ""
-    cmd_resleeve
+    if $dry_run; then
+      molt_info "Dry run — showing what resleeve would do:"
+      echo ""
+      cmd_resleeve --dry-run
+    else
+      molt_info "Running resleeve..."
+      echo ""
+      cmd_resleeve
+    fi
   fi
 }
 
@@ -657,9 +741,9 @@ molt_find_user_repo() {
     fi
   done
   molt_error "Could not find user config repo (molt-$(whoami))."
-  if [[ -z "$MOLT_PROJECTS_DIR" ]]; then
-    molt_error "Set MOLT_PROJECTS_DIR to the directory containing your molt repos, eg:"
-    molt_error "  export MOLT_PROJECTS_DIR=\$HOME/Devel/prj"
+  if [[ -z "$MOLT_PRJ_DIR" ]]; then
+    molt_error "Set MOLT_PRJ_DIR to the directory containing your molt repos, eg:"
+    molt_error "  export MOLT_PRJ_DIR=\$HOME/Devel/prj"
   else
     molt_error "Searched:"
     for path in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do

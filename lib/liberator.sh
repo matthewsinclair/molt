@@ -71,6 +71,32 @@ liberator_verify() {
   fi
 }
 
+liberator_has_upgrade() {
+  local name="$1"
+
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
+    liberator_load "$name" || return 1
+  fi
+
+  declare -f "${name}_upgrade" &>/dev/null
+}
+
+liberator_upgrade() {
+  local name="$1"
+
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
+    liberator_load "$name" || return 1
+  fi
+
+  local upgrade_fn="${name}_upgrade"
+  if declare -f "$upgrade_fn" &>/dev/null; then
+    molt_info "Upgrading liberator: $name"
+    "$upgrade_fn"
+  else
+    molt_debug "Liberator $name has no upgrade hook — skipping"
+  fi
+}
+
 # --- Batch Operations ---
 
 liberator_run_all() {

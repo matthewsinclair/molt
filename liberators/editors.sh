@@ -107,6 +107,41 @@ editors_install() {
   molt_info "Liberator complete: editors"
 }
 
+editors_upgrade() {
+  # Pull Doom Emacs config repo
+  local doom_config="$HOME/.config/doom"
+  if [[ -L "$doom_config" ]]; then
+    # Resolve symlink to actual repo
+    local doom_repo
+    doom_repo="$(readlink -f "$doom_config")"
+    if [[ -d "$doom_repo/.git" ]] || git -C "$doom_repo" rev-parse --git-dir &>/dev/null 2>&1; then
+      molt_info "Pulling Doom config repo..."
+      if git -C "$doom_repo" pull --ff-only 2>/dev/null; then
+        molt_info "Doom config updated."
+      else
+        molt_warn "Doom config pull skipped (not on tracking branch or already up-to-date)."
+      fi
+    else
+      molt_debug "Doom config is not a git repo — skipping pull"
+    fi
+  elif [[ -d "$doom_config/.git" ]]; then
+    molt_info "Pulling Doom config repo..."
+    if git -C "$doom_config" pull --ff-only 2>/dev/null; then
+      molt_info "Doom config updated."
+    else
+      molt_warn "Doom config pull skipped (not on tracking branch or already up-to-date)."
+    fi
+  else
+    molt_debug "No Doom config repo found — skipping"
+  fi
+
+  # Sync Doom packages if doom binary exists
+  if [[ -f "$HOME/.config/emacs/bin/doom" ]]; then
+    molt_info "Running doom sync..."
+    "$HOME/.config/emacs/bin/doom" sync 2>/dev/null || molt_warn "doom sync had warnings (review above)"
+  fi
+}
+
 editors_verify() {
   local errors=0
 

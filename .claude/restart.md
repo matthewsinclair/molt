@@ -15,12 +15,12 @@
 - Parallels must use "macOS" profile, "Send macOS system shortcuts: Always"
 - VS Code uses `win+` for Super (not `meta+` which collides with Ctrl)
 - Physical Ctrl and Opt both arrive as Alt_L (Parallels merges them) — acceptable
-- `MOLT_PROJECTS_DIR` required (no default) — set in `.zshenv`
+- `MOLT_PRJ_DIR` required (no default) — set in `.zshenv`
 - 18 liberators, two sleeves (kovacs + rhadamanth)
 
 ## Quick Verification
 ```bash
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt test
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt doctor
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt test
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt doctor
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
 ```

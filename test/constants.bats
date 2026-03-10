@@ -18,16 +18,37 @@ load "test_helper.bash"
     [[ "$MOLT_NAME" == "MOLT" ]]
 }
 
-@test "MOLT_PROJECTS_DIR is empty when unset" {
-    unset MOLT_PROJECTS_DIR
+@test "MOLT_PRJ_DIR is empty when unset" {
+    unset MOLT_PRJ_DIR
     load_molt_libs
-    [[ -z "$MOLT_PROJECTS_DIR" ]]
+    [[ -z "$MOLT_PRJ_DIR" ]]
 }
 
-@test "MOLT_PROJECTS_DIR respects env var override" {
-    export MOLT_PROJECTS_DIR="/tmp/custom-projects"
+@test "MOLT_PRJ_DIR respects env var override" {
+    export MOLT_PRJ_DIR="/tmp/custom-projects"
     load_molt_libs
-    [[ "$MOLT_PROJECTS_DIR" == "/tmp/custom-projects" ]]
+    [[ "$MOLT_PRJ_DIR" == "/tmp/custom-projects" ]]
+}
+
+@test "MOLT_OPT_DIR derives from MOLT_PRJ_DIR parent" {
+    unset MOLT_OPT_DIR
+    export MOLT_PRJ_DIR="/tmp/test-projects"
+    load_molt_libs
+    [[ "$MOLT_OPT_DIR" == "/tmp/opt" ]]
+}
+
+@test "MOLT_OPT_DIR is empty when MOLT_PRJ_DIR unset" {
+    unset MOLT_PRJ_DIR
+    unset MOLT_OPT_DIR
+    load_molt_libs
+    [[ -z "$MOLT_OPT_DIR" ]]
+}
+
+@test "MOLT_OPT_DIR respects env var override" {
+    export MOLT_OPT_DIR="/custom/opt"
+    export MOLT_PRJ_DIR="/tmp/test-projects"
+    load_molt_libs
+    [[ "$MOLT_OPT_DIR" == "/custom/opt" ]]
 }
 
 @test "MOLT_LOCAL_BIN defaults to \$HOME/bin" {
@@ -53,8 +74,8 @@ load "test_helper.bash"
     [[ ${#MOLT_USER_REPO_SEARCH_PATHS[@]} -gt 0 ]]
 }
 
-@test "MOLT_USER_REPO_SEARCH_PATHS includes MOLT_PROJECTS_DIR path when set" {
-    export MOLT_PROJECTS_DIR="/tmp/test-projects"
+@test "MOLT_USER_REPO_SEARCH_PATHS includes MOLT_PRJ_DIR path when set" {
+    export MOLT_PRJ_DIR="/tmp/test-projects"
     load_molt_libs
     local found=0
     for p in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
@@ -63,8 +84,8 @@ load "test_helper.bash"
     [[ "$found" -eq 1 ]]
 }
 
-@test "MOLT_USER_REPO_SEARCH_PATHS has home fallbacks when MOLT_PROJECTS_DIR unset" {
-    unset MOLT_PROJECTS_DIR
+@test "MOLT_USER_REPO_SEARCH_PATHS has home fallbacks when MOLT_PRJ_DIR unset" {
+    unset MOLT_PRJ_DIR
     load_molt_libs
     local found=0
     for p in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do

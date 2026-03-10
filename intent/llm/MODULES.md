@@ -33,6 +33,7 @@
 | ssh            | `liberators/ssh.sh`            | SSH key generation, config linking                      |
 | local-bin      | `liberators/local-bin.sh`      | ~/bin directory, molt CLI symlink                       |
 | utilz          | `liberators/utilz.sh`          | Utilz framework, bats-core, ~/bin symlinks              |
+| web            | `liberators/web.sh`            | Web scraper for LLMs, ~/bin symlink                     |
 
 ## Testing
 

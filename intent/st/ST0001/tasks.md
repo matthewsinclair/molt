@@ -39,7 +39,7 @@
 - [x] Create rhadamanth/molt.toml manifest
 - [x] Create bin/bootstrap.sh
 - [x] Forensic review + fix of all destructive operations
-- [x] Remove hardcoded MOLT_PROJECTS_DIR default, require env var
+- [x] Remove hardcoded MOLT_PRJ_DIR default, require env var
 - [x] Update README
 - [x] Fix Cmd key passthrough from Parallels (resolved via Parallels keyboard shortcuts)
 - [x] Add Alacritty to GNOME dock favorites (alacritty liberator updated)

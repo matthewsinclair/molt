@@ -142,7 +142,7 @@ This prevents macOS/Parallels artifacts from showing as untracked.
 
 ```bash
 cd ~/Devel/prj/Molt
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
 ```
 
 Review the output. Verify:
@@ -156,7 +156,7 @@ Review the output. Verify:
 If the dry-run looks good:
 
 ```bash
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt resleeve
 ```
 
 #### Step 9: Commit and push both repos
@@ -204,7 +204,7 @@ git add -A && git commit -m "ST0001: rhadamanth resleeve notes" && git push
 
 ### claude@kovacs — 2026-03-09 — INSTRUCTIONS FOR RHADAMANTH DRY-RUN
 
-**Context**: Major changes made on kovacs this session. Liberators no longer install packages, `molt resleeve --dry-run` added, `MOLT_PROJECTS_DIR` is now required (no hardcoded default), `hostname -s` used everywhere for macOS compat, rhadamanth manifest created. Changes are visible on rhadamanth via Parallels shared filesystem (not yet committed/pushed).
+**Context**: Major changes made on kovacs this session. Liberators no longer install packages, `molt resleeve --dry-run` added, `MOLT_PRJ_DIR` is now required (no hardcoded default), `hostname -s` used everywhere for macOS compat, rhadamanth manifest created. Changes are visible on rhadamanth via Parallels shared filesystem (not yet committed/pushed).
 
 **rhadamanth Claude: please run these diagnostic steps and report full output.**
 
@@ -213,12 +213,12 @@ git add -A && git commit -m "ST0001: rhadamanth resleeve notes" && git push
 ```bash
 hostname
 echo $SHELL
-echo $MOLT_PROJECTS_DIR
+echo $MOLT_PRJ_DIR
 ls ~/Devel/prj/Molt/bin/molt
 ls ~/Devel/prj/molt-matts/instances/rhadamanth/molt.toml
 ```
 
-Expected: hostname is `rhadamanth` (or `rhadamanth.lan`), shell is zsh, `MOLT_PROJECTS_DIR` is probably empty, both files exist.
+Expected: hostname is `rhadamanth` (or `rhadamanth.lan`), shell is zsh, `MOLT_PRJ_DIR` is probably empty, both files exist.
 
 #### Step 2: Check if .zshenv is already symlinked
 
@@ -228,11 +228,11 @@ ls -la ~/.zshenv
 
 If it's a symlink to `molt-matts/config/zsh/zshenv`, source it. If not, that's expected -- the zsh liberator hasn't run on rhadamanth yet.
 
-#### Step 3: Run dry-run with explicit MOLT_PROJECTS_DIR
+#### Step 3: Run dry-run with explicit MOLT_PRJ_DIR
 
 ```bash
 cd ~/Devel/prj/Molt
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
 ```
 
 This should show the rhadamanth manifest being loaded and report which liberators WOULD INSTALL vs are already ok.
@@ -248,13 +248,13 @@ Copy the entire output of the dry-run. We need to see:
 #### Step 5: Run status for comparison
 
 ```bash
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt status
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt status
 ```
 
 #### Step 6: Run doctor
 
 ```bash
-MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt doctor
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt doctor
 ```
 
 #### Step 7: DO NOT run `molt resleeve` (without --dry-run)

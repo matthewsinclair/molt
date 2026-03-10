@@ -3,13 +3,13 @@
 # Clones molt + user repo, links molt into ~/bin, runs dry-run.
 #
 # Usage:
-#   MOLT_PROJECTS_DIR=~/Devel/prj bash bootstrap.sh
-#   curl -fsSL <raw-url>/bin/bootstrap.sh | MOLT_PROJECTS_DIR=~/Devel/prj bash
+#   MOLT_PRJ_DIR=~/Devel/prj bash bootstrap.sh
+#   curl -fsSL <raw-url>/bin/bootstrap.sh | MOLT_PRJ_DIR=~/Devel/prj bash
 
 set -euo pipefail
 
 # --- Config ---
-MOLT_PROJECTS_DIR="${MOLT_PROJECTS_DIR:-}"
+MOLT_PRJ_DIR="${MOLT_PRJ_DIR:-}"
 MOLT_REPO="matthewsinclair/molt"
 
 # Detect current user for user repo name
@@ -27,10 +27,10 @@ ok()    { echo "  ✓ $*"; }
 echo "MOLT Bootstrap"
 echo ""
 
-if [[ -z "$MOLT_PROJECTS_DIR" ]]; then
-  error "MOLT_PROJECTS_DIR is not set."
+if [[ -z "$MOLT_PRJ_DIR" ]]; then
+  error "MOLT_PRJ_DIR is not set."
   error "Set it to the directory where your molt repos should live, eg:"
-  error "  MOLT_PROJECTS_DIR=\$HOME/Devel/prj bash bootstrap.sh"
+  error "  MOLT_PRJ_DIR=\$HOME/Devel/prj bash bootstrap.sh"
   exit 1
 fi
 
@@ -45,7 +45,7 @@ if ! command -v curl &>/dev/null; then
 fi
 
 ok "Prerequisites: git, curl"
-info "MOLT_PROJECTS_DIR: $MOLT_PROJECTS_DIR"
+info "MOLT_PRJ_DIR: $MOLT_PRJ_DIR"
 
 # --- Detect platform ---
 
@@ -69,7 +69,7 @@ git_url() {
 
 # --- Clone or pull repos ---
 
-mkdir -p "$MOLT_PROJECTS_DIR"
+mkdir -p "$MOLT_PRJ_DIR"
 
 clone_or_pull() {
   local repo="$1"
@@ -92,24 +92,24 @@ clone_or_pull() {
 find_existing_repo() {
   local name="$1"
   # Check exact name first
-  if [[ -d "$MOLT_PROJECTS_DIR/$name" ]]; then
-    echo "$MOLT_PROJECTS_DIR/$name"
+  if [[ -d "$MOLT_PRJ_DIR/$name" ]]; then
+    echo "$MOLT_PRJ_DIR/$name"
     return 0
   fi
   # Case-insensitive search in the projects dir
   local match
-  match="$(find "$MOLT_PROJECTS_DIR" -maxdepth 1 -iname "$name" -type d 2>/dev/null | head -1)"
+  match="$(find "$MOLT_PRJ_DIR" -maxdepth 1 -iname "$name" -type d 2>/dev/null | head -1)"
   if [[ -n "$match" ]]; then
     echo "$match"
     return 0
   fi
   # Not found — return default path
-  echo "$MOLT_PROJECTS_DIR/$name"
+  echo "$MOLT_PRJ_DIR/$name"
   return 1
 }
 
 echo ""
-info "Setting up repos in $MOLT_PROJECTS_DIR"
+info "Setting up repos in $MOLT_PRJ_DIR"
 
 molt_dir="$(find_existing_repo "molt")" || true
 user_dir="$(find_existing_repo "$MOLT_USER_REPO")" || true
@@ -137,12 +137,12 @@ fi
 echo ""
 info "Running dry run..."
 echo ""
-MOLT_PROJECTS_DIR="$MOLT_PROJECTS_DIR" "$molt_dir/bin/molt" resleeve --dry-run
+MOLT_PRJ_DIR="$MOLT_PRJ_DIR" "$molt_dir/bin/molt" resleeve --dry-run
 
 echo ""
 read -rp "Run molt resleeve now? [y/N] " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-  MOLT_PROJECTS_DIR="$MOLT_PROJECTS_DIR" "$molt_dir/bin/molt" resleeve
+  MOLT_PRJ_DIR="$MOLT_PRJ_DIR" "$molt_dir/bin/molt" resleeve
 else
   info "Skipped. Run 'molt resleeve' when ready."
 fi

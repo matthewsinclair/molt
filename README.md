@@ -23,7 +23,7 @@ MOLT separates the framework from your personal config:
 | **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
 | **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides    | No — your soul   |
 
-The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PROJECTS_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
+The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PRJ_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
 This separation means you can fork the framework independently from your config, and your config never contains framework code.
 
@@ -31,23 +31,23 @@ This separation means you can fork the framework independently from your config,
 
 ### Prerequisites
 
-Set `MOLT_PROJECTS_DIR` to the directory where your repos live. There is no default — every machine chooses its own layout:
+Set `MOLT_PRJ_DIR` to the directory where your repos live. There is no default — every machine chooses its own layout:
 
 ```bash
-export MOLT_PROJECTS_DIR="$HOME/Projects"  # or wherever you keep repos
+export MOLT_PRJ_DIR="$HOME/Projects"  # or wherever you keep repos
 ```
 
 ### Clone and resleeve
 
 ```bash
 # Framework
-git clone https://github.com/you/molt "$MOLT_PROJECTS_DIR/molt"
+git clone https://github.com/you/molt "$MOLT_PRJ_DIR/molt"
 
 # Your config (contains molt.toml + config/ directory)
-git clone https://github.com/you/molt-you "$MOLT_PROJECTS_DIR/molt-you"
+git clone https://github.com/you/molt-you "$MOLT_PRJ_DIR/molt-you"
 
 # Add molt to PATH (or use the bootstrap script)
-export PATH="$MOLT_PROJECTS_DIR/molt/bin:$PATH"
+export PATH="$MOLT_PRJ_DIR/molt/bin:$PATH"
 
 # Preview what would happen
 molt resleeve --dry-run
@@ -75,7 +75,7 @@ Zen: Sleeve ready. Welcome back.
 For a fresh machine where nothing is set up yet:
 
 ```bash
-MOLT_PROJECTS_DIR=$HOME/Projects bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
+MOLT_PRJ_DIR=$HOME/Projects bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
 ```
 
 The bootstrap script clones both repos, links molt into `~/bin`, shows a dry-run, and prompts before applying.
@@ -112,24 +112,25 @@ molt help                  # Show help
 
 ## Configuration
 
-### MOLT_PROJECTS_DIR
+### MOLT_PRJ_DIR
 
 The only required setting. Tells molt where to find repos. Set it in your shell config (eg `.zshenv`):
 
 ```bash
-export MOLT_PROJECTS_DIR="$HOME/Devel/prj"
+export MOLT_PRJ_DIR="$HOME/Devel/prj"
 ```
 
-If unset, molt will search `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PROJECTS_DIR` is the intended path.
+If unset, molt will search `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PRJ_DIR` is the intended path.
 
 ### Other environment variables
 
-| Variable            | Purpose                       | Default                     |
-| ------------------- | ----------------------------- | --------------------------- |
-| `MOLT_PROJECTS_DIR` | Where repos live              | _(none — must be set)_      |
-| `MOLT_LOCAL_BIN`    | Where to symlink executables  | `~/bin`                     |
-| `UTILZ_HOME`        | Override Utilz repo location  | `$MOLT_PROJECTS_DIR/Utilz`  |
-| `INTENT_HOME`       | Override Intent repo location | `$MOLT_PROJECTS_DIR/Intent` |
+| Variable            | Purpose                       | Default                            |
+| ------------------- | ----------------------------- | ---------------------------------- |
+| `MOLT_PRJ_DIR`      | Where repos live              | _(none — must be set)_             |
+| `MOLT_OPT_DIR`      | Where opt-style installs live | `$(dirname "$MOLT_PRJ_DIR")/opt`   |
+| `MOLT_LOCAL_BIN`    | Where to symlink executables  | `~/bin`                            |
+| `UTILZ_HOME`        | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`             |
+| `INTENT_HOME`       | Override Intent repo location | `$MOLT_PRJ_DIR/Intent`            |
 
 ## Liberators
 
@@ -209,7 +210,7 @@ molt-{user}/
   instances/
     kovacs/                          # Per-machine overrides
       molt.toml                      # Instance manifest
-      vars.sh                        # Template variables (MOLT_PROJECTS_DIR, etc)
+      vars.sh                        # Template variables (MOLT_PRJ_DIR, etc)
       ssh/config.d/                   # Instance-specific SSH config fragments
       keyd/default.conf              # Machine-specific keyd config
     rhadamanth/

@@ -73,6 +73,21 @@ utilz_install() {
   molt_info "Liberator complete: utilz"
 }
 
+utilz_upgrade() {
+  local repo
+  if ! repo="$(_utilz_find_repo)"; then
+    molt_error "Utilz repo not found — cannot upgrade"
+    return 1
+  fi
+
+  molt_info "Pulling Utilz repo..."
+  if git -C "$repo" pull --ff-only 2>/dev/null; then
+    molt_info "Utilz repo updated."
+  else
+    molt_warn "Utilz pull skipped (not on tracking branch or already up-to-date)."
+  fi
+}
+
 utilz_verify() {
   local errors=0
 

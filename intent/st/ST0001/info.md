@@ -51,7 +51,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Liberator framework: load, check, install, verify lifecycle
 - Manifest-first (`molt.toml`) with enabled/disabled/OS filtering
 - `constants.sh` for configurable paths (Highlander Rule)
-- `MOLT_PROJECTS_DIR` required via env var (no hardcoded default)
+- `MOLT_PRJ_DIR` required via env var (no hardcoded default)
 - Bats test suite (52 tests, all passing)
   - `test/test_helper.bash` — shared infrastructure, HOME-sandboxed for safety
   - `test/molt.bats` — CLI tests
