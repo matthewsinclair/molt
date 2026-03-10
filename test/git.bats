@@ -20,11 +20,12 @@ create_mock_liberator() {
     local name="$1"
     local repo_path="$2"
     local allowed_cmds="${3:-pull status log diff fetch}"
+    local remote="${4:-origin}"
 
     cat > "${MOLT_LIBERATORS_DIR}/${name}.sh" <<BASH
 #!/usr/bin/env bash
 ${name}_repo() { echo "${repo_path}"; }
-${name}_repo_remote() { echo "origin"; }
+${name}_repo_remote() { echo "${remote}"; }
 ${name}_repo_git_commands() { echo "${allowed_cmds}"; }
 ${name}_check() { return 0; }
 ${name}_install() { return 0; }
@@ -253,10 +254,39 @@ BASH
 # LIBERATOR CONVENTION FUNCTION TESTS
 # ============================================================================
 
+@test "cmd_git appends remote for pull on liberator repos" {
+    setup_isolated_molt
+    local lib_repo="$BATS_TEST_TMPDIR/remote-repo"
+    create_git_repo "$lib_repo"
+    # Add a remote named "myremote"
+    git -C "$lib_repo" remote add myremote "$lib_repo"
+    create_mock_liberator "remotelib" "$lib_repo" "pull fetch status" "myremote"
+
+    # fetch should use the remote from _repo_remote() — avoids branch tracking issues
+    run cmd_git fetch
+    assert_output_contains "--- remotelib ("
+    # Should have fetched from myremote (proves remote was appended)
+    refute_output_contains "does not appear to be a git repository"
+    assert_output_contains "myremote"
+}
+
+@test "cmd_git does not append remote for non-remote commands" {
+    setup_isolated_molt
+    local lib_repo="$BATS_TEST_TMPDIR/noremote-repo"
+    create_git_repo "$lib_repo"
+    create_mock_liberator "statuslib" "$lib_repo" "status" "upstream"
+
+    # status should NOT append the remote
+    run cmd_git status
+    assert_success
+    assert_output_contains "--- statuslib ("
+}
+
 @test "utilz defines repo convention functions" {
     load_molt_libs
     load_liberator utilz
     [ "$(type -t utilz_repo)" = "function" ]
+    [ "$(type -t utilz_repo_remote)" = "function" ]
     [ "$(type -t utilz_repo_git_commands)" = "function" ]
 }
 
@@ -276,6 +306,7 @@ BASH
     load_molt_libs
     load_liberator intent
     [ "$(type -t intent_repo)" = "function" ]
+    [ "$(type -t intent_repo_remote)" = "function" ]
     [ "$(type -t intent_repo_git_commands)" = "function" ]
 }
 
@@ -283,6 +314,7 @@ BASH
     load_molt_libs
     load_liberator pplr
     [ "$(type -t pplr_repo)" = "function" ]
+    [ "$(type -t pplr_repo_remote)" = "function" ]
     [ "$(type -t pplr_repo_git_commands)" = "function" ]
 }
 
@@ -290,6 +322,7 @@ BASH
     load_molt_libs
     load_liberator web
     [ "$(type -t web_repo)" = "function" ]
+    [ "$(type -t web_repo_remote)" = "function" ]
     [ "$(type -t web_repo_git_commands)" = "function" ]
 }
 
@@ -297,5 +330,6 @@ BASH
     load_molt_libs
     load_liberator editors
     [ "$(type -t editors_repo)" = "function" ]
+    [ "$(type -t editors_repo_remote)" = "function" ]
     [ "$(type -t editors_repo_git_commands)" = "function" ]
 }

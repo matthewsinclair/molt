@@ -11,6 +11,7 @@ _intent_find_repo() {
 }
 
 intent_repo() { _intent_find_repo; }
+intent_repo_remote() { echo "origin"; }
 intent_repo_git_commands() { echo "pull status log diff fetch"; }
 
 intent_check() {

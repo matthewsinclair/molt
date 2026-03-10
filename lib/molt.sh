@@ -802,8 +802,20 @@ cmd_git() {
     fi
 
     echo "--- ${label} (${repo_path}) ---"
-    if ! git -C "$repo_path" "$@"; then
-      errors=$((errors + 1))
+    # For liberator repos with a remote defined, append it for remote-aware commands
+    local remote_fn="${label}_repo_remote"
+    if [[ "$label" != "molt" ]] && [[ "$label" != "config" ]] \
+        && declare -f "$remote_fn" &>/dev/null \
+        && [[ " pull fetch push " == *" $git_cmd "* ]]; then
+      local remote
+      remote="$($remote_fn)"
+      if ! git -C "$repo_path" "$@" "$remote"; then
+        errors=$((errors + 1))
+      fi
+    else
+      if ! git -C "$repo_path" "$@"; then
+        errors=$((errors + 1))
+      fi
     fi
     echo ""
   done <<< "$(molt_all_repos)"

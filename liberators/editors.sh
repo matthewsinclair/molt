@@ -17,6 +17,7 @@ editors_repo() {
   fi
   return 1
 }
+editors_repo_remote() { echo "origin"; }
 editors_repo_git_commands() { echo "pull status log diff fetch"; }
 
 editors_check() {
