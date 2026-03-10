@@ -21,7 +21,7 @@ MOLT separates the framework from your personal config:
 | Repo                              | What it contains                                              | Shared?          |
 | --------------------------------- | ------------------------------------------------------------- | ---------------- |
 | **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
-| **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
+| **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides    | No — your soul   |
 
 The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PROJECTS_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
@@ -86,14 +86,14 @@ In Molt, your config is your cortical stack, your consciousness. Every machine i
 
 | Term           | What it means                                                                      |
 | -------------- | ---------------------------------------------------------------------------------- |
-| **stack**      | Your dotfiles and config bundle. The portable identity.                            |
+| **stack**      | Your dotfiles and config bundle. The portable identity.                              |
 | **sleeve**     | A target machine that receives your stack.                                         |
 | **needlecast** | Push your stack to a remote machine.                                               |
 | **resleeve**   | Bootstrap a fresh machine from your stack.                                         |
 | **backup**     | Snapshot your current stack state.                                                 |
 | **Zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
-| **liberators** | Config modules. Each one frees you from a default.                                 |
-| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
+| **liberators** | Config modules. Each one frees you from a default.                                  |
+| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains.  |
 
 ## CLI
 
@@ -149,20 +149,20 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | -------------- | ----------------------------------------------- | ------------ |
 | system         | Verify sudo (linux) or brew (macos)             | linux, macos |
 | local-bin      | `~/bin` directory, molt CLI symlink             | linux, macos |
-| zsh            | Shell default, Starship prompt, config linking  | linux, macos |
-| git            | Git + git-lfs verification, gitconfig linking   | linux, macos |
-| tmux           | Tmux verification, config linking               | linux, macos |
-| editors        | Doom Emacs + LazyVim, config linking, dock pin  | linux, macos |
-| alacritty      | Alacritty config linking, dock pin              | linux, macos |
-| gnome-terminal | GNOME Terminal profile via dconf                | linux        |
-| iterm2         | iTerm2 dynamic profile linking                  | macos        |
-| terminal-app   | Terminal.app profile import                     | macos        |
+| zsh            | Shell default, Starship prompt, config linking   | linux, macos |
+| git            | Git + git-lfs verification, gitconfig linking     | linux, macos |
+| tmux           | Tmux verification, config linking                 | linux, macos |
+| editors        | Doom Emacs + LazyVim, config linking, dock pin   | linux, macos |
+| alacritty      | Alacritty config linking, dock pin               | linux, macos |
+| gnome-terminal | GNOME Terminal profile via dconf                 | linux        |
+| iterm2         | iTerm2 dynamic profile linking                   | macos        |
+| terminal-app   | Terminal.app profile import                      | macos        |
 | keys           | keyd build from source, key remapping           | linux        |
-| desktop        | GNOME settings, GTK config, accessibility       | linux        |
+| desktop        | GNOME settings, GTK config, accessibility        | linux        |
 | tiling         | Tactile GNOME extension grid tiling             | linux        |
 | vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
 | dev-tools      | CLI tools (bat, rg, fd, fzf) + mise             | linux, macos |
-| ssh            | SSH key detection, config rendering + fragments | linux, macos |
+| ssh            | SSH key detection, config rendering + fragments  | linux, macos |
 | utilz          | Utilz framework, bats-core, `~/bin` symlinks    | linux, macos |
 
 ### molt.toml
@@ -200,17 +200,17 @@ molt-{user}/
   config/
     zsh/zshrc                        # -> ~/.zshrc
     zsh/zshenv                       # -> ~/.zshenv
-    git/gitconfig                    # -> ~/.gitconfig
+    git/gitconfig                     # -> ~/.gitconfig
     tmux/tmux.conf                   # -> ~/.tmux.conf
     doom/                            # -> ~/.config/doom
     alacritty/alacritty.toml         # -> ~/.config/alacritty/alacritty.toml
     starship/starship.toml           # -> ~/.config/starship.toml
-    ssh/config.tmpl                  # -> ~/.ssh/config (rendered via envsubst)
+    ssh/config.tmpl                   # -> ~/.ssh/config (rendered via envsubst)
   instances/
     kovacs/                          # Per-machine overrides
       molt.toml                      # Instance manifest
       vars.sh                        # Template variables (MOLT_PROJECTS_DIR, etc)
-      ssh/config.d/                  # Instance-specific SSH config fragments
+      ssh/config.d/                   # Instance-specific SSH config fragments
       keyd/default.conf              # Machine-specific keyd config
     rhadamanth/
       molt.toml
