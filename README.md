@@ -154,25 +154,25 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 
 ### Built-in liberators
 
-| Liberator        | Concern                                        | OS           |
-| ---------------- | ---------------------------------------------- | ------------ |
-| system           | Verify sudo (linux) or brew (macos)            | linux, macos |
-| local-bin        | `~/bin` directory, molt CLI symlink            | linux, macos |
-| zsh              | Shell default, Starship prompt, config linking | linux, macos |
-| git              | Git + git-lfs verification, gitconfig linking  | linux, macos |
-| tmux             | Tmux verification, config linking              | linux, macos |
-| editors          | Doom Emacs + LazyVim, config linking, dock pin | linux, macos |
-| alacritty        | Alacritty config linking, dock pin             | linux, macos |
-| gnome-terminal   | GNOME Terminal profile via dconf               | linux        |
-| iterm2           | iTerm2 dynamic profile linking                 | macos        |
-| terminal-app     | Terminal.app profile import                    | macos        |
-| keys             | keyd build from source, key remapping          | linux        |
-| desktop          | GNOME settings, GTK config, accessibility      | linux        |
-| tiling           | Tactile GNOME extension grid tiling            | linux        |
-| vscode           | VS Code settings linking, CLI setup, dock pin  | linux, macos |
-| dev-tools        | CLI tools (bat, rg, fd, fzf) + mise            | linux, macos |
-| ssh              | SSH key detection, config rendering + fragments| linux, macos |
-| utilz            | Utilz framework, bats-core, `~/bin` symlinks   | linux, macos |
+| Liberator      | Concern                                         | OS           |
+| -------------- | ----------------------------------------------- | ------------ |
+| system         | Verify sudo (linux) or brew (macos)             | linux, macos |
+| local-bin      | `~/bin` directory, molt CLI symlink             | linux, macos |
+| zsh            | Shell default, Starship prompt, config linking  | linux, macos |
+| git            | Git + git-lfs verification, gitconfig linking   | linux, macos |
+| tmux           | Tmux verification, config linking               | linux, macos |
+| editors        | Doom Emacs + LazyVim, config linking, dock pin  | linux, macos |
+| alacritty      | Alacritty config linking, dock pin              | linux, macos |
+| gnome-terminal | GNOME Terminal profile via dconf                | linux        |
+| iterm2         | iTerm2 dynamic profile linking                  | macos        |
+| terminal-app   | Terminal.app profile import                     | macos        |
+| keys           | keyd build from source, key remapping           | linux        |
+| desktop        | GNOME settings, GTK config, accessibility       | linux        |
+| tiling         | Tactile GNOME extension grid tiling             | linux        |
+| vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
+| dev-tools      | CLI tools (bat, rg, fd, fzf) + mise             | linux, macos |
+| ssh            | SSH key detection, config rendering + fragments | linux, macos |
+| utilz          | Utilz framework, bats-core, `~/bin` symlinks    | linux, macos |
 
 ### molt.toml
 
