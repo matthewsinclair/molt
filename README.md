@@ -82,24 +82,15 @@ The bootstrap script clones both repos, links molt into `~/bin`, shows a dry-run
 
 ## Concepts
 
-MOLT's naming draws from two science fiction universes: _Altered Carbon_ (Richard K. Morgan) and _Blake's 7_ (Terry Nation). Both deal with the separation of identity from physical substrate.
-
-### Your config is your cortical stack
-
-The central metaphor from _Altered Carbon_: your configuration is your consciousness. Every machine is just a sleeve it gets loaded into.
-
-| Term           | What it means                                           |
-| -------------- | ------------------------------------------------------- |
-| **stack**      | Your dotfiles and config bundle. The portable identity. |
-| **sleeve**     | A target machine that receives your stack.              |
-| **needlecast** | Push your stack to a remote machine.                    |
-| **resleeve**   | Bootstrap a fresh machine from your stack.              |
-| **backup**     | Snapshot your current stack state.                      |
-
-### System components from Blake's 7
+In Molt, your config is your cortical stack, your consciousness. Every machine is just a sleeve it gets loaded into.
 
 | Term           | What it means                                                                      |
 | -------------- | ---------------------------------------------------------------------------------- |
+| **stack**      | Your dotfiles and config bundle. The portable identity.                            |
+| **sleeve**     | A target machine that receives your stack.                                         |
+| **needlecast** | Push your stack to a remote machine.                                               |
+| **resleeve**   | Bootstrap a fresh machine from your stack.                                         |
+| **backup**     | Snapshot your current stack state.                                                 |
 | **Zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
 | **liberators** | Config modules. Each one frees you from a default.                                 |
 | **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
