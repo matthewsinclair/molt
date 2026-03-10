@@ -11,7 +11,6 @@ _pplr_find_repo() {
 }
 
 pplr_repo() { _pplr_find_repo; }
-pplr_repo_remote() { echo "origin"; }
 pplr_repo_git_commands() { echo "pull status log diff fetch"; }
 
 pplr_check() {

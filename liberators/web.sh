@@ -12,7 +12,6 @@ _web_find_repo() {
 }
 
 web_repo() { _web_find_repo; }
-web_repo_remote() { echo "origin"; }
 web_repo_git_commands() { echo "pull status log diff fetch"; }
 
 web_check() {
