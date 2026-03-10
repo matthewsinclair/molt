@@ -41,13 +41,8 @@ intent_install() {
 
   mkdir -p "$MOLT_LOCAL_BIN"
 
-  # Link intent dispatcher and all sub-commands into ~/bin
-  for f in "$repo/bin/"*; do
-    [[ -f "$f" ]] || continue
-    local name
-    name="$(basename "$f")"
-    molt_link "$f" "$MOLT_LOCAL_BIN/$name"
-  done
+  # Link the intent dispatcher into ~/bin
+  molt_link "$repo/bin/intent" "$MOLT_LOCAL_BIN/intent"
 
   molt_info "Liberator complete: intent"
 }
