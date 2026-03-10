@@ -766,6 +766,32 @@ molt_all_repos() {
   done <<< "$liberators"
 }
 
+_git_detect_remote() {
+  local repo="$1"
+
+  # If the current branch already tracks a remote, use it
+  local branch
+  branch="$(git -C "$repo" rev-parse --abbrev-ref HEAD 2>/dev/null)" || return 1
+  local tracking
+  tracking="$(git -C "$repo" config "branch.${branch}.remote" 2>/dev/null)"
+  if [[ -n "$tracking" ]]; then
+    echo "$tracking"
+    return 0
+  fi
+
+  # No tracking — if there's exactly one remote, use it
+  local remotes
+  remotes="$(git -C "$repo" remote 2>/dev/null)" || return 1
+  local count
+  count="$(echo "$remotes" | grep -c . 2>/dev/null || echo 0)"
+  if [[ "$count" -eq 1 ]]; then
+    echo "$remotes"
+    return 0
+  fi
+
+  return 1
+}
+
 cmd_git() {
   if [[ $# -eq 0 ]]; then
     echo "Usage: molt git <git-command> [args...]"
@@ -807,8 +833,22 @@ cmd_git() {
     fi
 
     echo "--- ${label} (${repo_path}) ---"
-    if ! git -C "$repo_path" "$@"; then
-      errors=$((errors + 1))
+    # For remote-aware commands, auto-detect the remote when needed
+    if [[ " pull fetch push " == *" $git_cmd "* ]]; then
+      local remote
+      if remote="$(_git_detect_remote "$repo_path")"; then
+        if ! git -C "$repo_path" "$@" "$remote"; then
+          errors=$((errors + 1))
+        fi
+      else
+        if ! git -C "$repo_path" "$@"; then
+          errors=$((errors + 1))
+        fi
+      fi
+    else
+      if ! git -C "$repo_path" "$@"; then
+        errors=$((errors + 1))
+      fi
     fi
     echo ""
   done <<< "$(molt_all_repos)"

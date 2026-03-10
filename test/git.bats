@@ -249,6 +249,58 @@ BASH
 }
 
 # ============================================================================
+# REMOTE AUTO-DETECTION TESTS
+# ============================================================================
+
+@test "_git_detect_remote returns tracking remote when set" {
+    load_molt_libs
+    local repo="$BATS_TEST_TMPDIR/tracked-repo"
+    create_git_repo "$repo"
+    git -C "$repo" remote add myorigin "$repo"
+    git -C "$repo" config branch.main.remote myorigin
+
+    run _git_detect_remote "$repo"
+    assert_success
+    [ "$output" = "myorigin" ]
+}
+
+@test "_git_detect_remote returns sole remote when no tracking" {
+    load_molt_libs
+    local repo="$BATS_TEST_TMPDIR/single-remote"
+    create_git_repo "$repo"
+    git -C "$repo" remote add solo "$repo"
+
+    run _git_detect_remote "$repo"
+    assert_success
+    [ "$output" = "solo" ]
+}
+
+@test "_git_detect_remote fails when multiple remotes and no tracking" {
+    load_molt_libs
+    local repo="$BATS_TEST_TMPDIR/multi-remote"
+    create_git_repo "$repo"
+    git -C "$repo" remote add one "$repo"
+    git -C "$repo" remote add two "$repo"
+
+    run _git_detect_remote "$repo"
+    assert_failure
+}
+
+@test "cmd_git fetch auto-detects remote for untracked branch" {
+    setup_isolated_molt
+    local lib_repo="$BATS_TEST_TMPDIR/autoremote-repo"
+    create_git_repo "$lib_repo"
+    git -C "$lib_repo" remote add myremote "$lib_repo"
+    create_mock_liberator "autolib" "$lib_repo" "fetch status"
+
+    run cmd_git fetch
+    assert_output_contains "--- autolib ("
+    # Should have fetched from myremote (the only remote)
+    assert_output_contains "myremote"
+    refute_output_contains "does not appear to be a git repository"
+}
+
+# ============================================================================
 # LIBERATOR CONVENTION FUNCTION TESTS
 # ============================================================================
 
