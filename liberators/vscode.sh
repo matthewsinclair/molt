@@ -9,10 +9,17 @@ _vscode_settings_dir() {
   esac
 }
 
+_vscode_has_code() {
+  command -v code &>/dev/null && return 0
+  # macOS: check app bundle even if 'code' not on PATH
+  [[ -x "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" ]] && return 0
+  return 1
+}
+
 vscode_check() {
   local ok=0
 
-  if ! command -v code &>/dev/null; then
+  if ! _vscode_has_code; then
     molt_info "vscode: not installed"
     ok=1
     return $ok
@@ -43,11 +50,21 @@ vscode_check() {
 }
 
 vscode_install() {
-  if ! command -v code &>/dev/null; then
+  if ! _vscode_has_code; then
     molt_error "VS Code not found. Install it first:"
     molt_error "  Linux: https://code.visualstudio.com/docs/setup/linux"
     molt_error "  macOS: brew install --cask visual-studio-code"
     return 1
+  fi
+
+  # On macOS, ensure 'code' CLI is on PATH via ~/bin symlink
+  if [[ "$(molt_platform)" == "macos" ]] && ! command -v code &>/dev/null; then
+    local app_bin="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+    if [[ -x "$app_bin" ]]; then
+      mkdir -p "$HOME/bin"
+      ln -sf "$app_bin" "$HOME/bin/code"
+      molt_info "Symlinked 'code' CLI to ~/bin/code"
+    fi
   fi
 
   local user_repo
@@ -86,7 +103,7 @@ vscode_install() {
 vscode_verify() {
   local errors=0
 
-  if ! command -v code &>/dev/null; then
+  if ! _vscode_has_code; then
     molt_error "VERIFY FAIL: VS Code not installed"
     errors=1
   fi

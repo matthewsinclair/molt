@@ -62,6 +62,12 @@ desktop_install() {
   gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']" 2>/dev/null || true
   gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward "['<Shift><Alt>Tab']" 2>/dev/null || true
 
+  # Strip GNOME accessibility bindings that conflict with Super combos
+  gsettings set org.gnome.settings-daemon.plugins.media-keys screenreader "['']" 2>/dev/null || true
+  gsettings set org.gnome.settings-daemon.plugins.media-keys magnifier "['']" 2>/dev/null || true
+  gsettings set org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-in "['']" 2>/dev/null || true
+  gsettings set org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-out "['']" 2>/dev/null || true
+
   # Install GTK config
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1

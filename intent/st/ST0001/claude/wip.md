@@ -10,6 +10,187 @@
 
 ## Entries
 
+### claude@kovacs — 2026-03-09 — PHASE 5 COMPLETE, RHADAMANTH INSTRUCTIONS
+
+**Session summary — what was done on kovacs:**
+
+- **WP-11: `molt upgrade`** — added `cmd_upgrade()` to `lib/molt.sh`, wired into `bin/molt` dispatcher. Pulls both repos (`--ff-only`), reports version changes, runs resleeve. `--dry-run` support. Later fix: untracked files (`.DS_Store`, `Icon\r`) no longer block upgrade — only staged/unstaged changes matter.
+- **WP-12: Emacs Linux keybindings** — added `gnu/linux` block to `config/doom/custom/010-keys.el` mapping 15 `C-S-` combos (what Parallels sends for Cmd+key) to the same functions as macOS `s-` bindings. Copy, paste, cut, select-all, undo, find, save, close-buffer, new-file, find-next, goto-line, kill-buffer, quit, comment-toggle, save-all.
+- **WP-13: Tiling via Tactile** — installed Tactile GNOME extension. Created `liberators/tiling.sh`. Grid: 7x3 (QWERTYU / ASDFGHJ / ZXCVBNM). Trigger: Shift+Alt+Super+T. 4px gap. Both `grid-cols`/`grid-rows` AND `col-N` weight settings required in gsettings. Schema installed system-wide.
+- **VS Code liberator** — installed VS Code from Microsoft apt repo (arm64). Created `liberators/vscode.sh` (cross-platform). Created `config/vscode/settings.json` (JetBrainsMono, ligatures, telemetry off). Pinned to dock.
+- **Dock cleanup** — final order: Firefox, Nautilus, Alacritty, Emacs, VS Code. Removed snap-store and yelp. Emacs pinning added to `editors.sh`.
+- **Font consistency** — JetBrainsMono Nerd Font everywhere: Alacritty 11pt, Emacs 14pt, VS Code 14pt (terminal 13pt).
+- **.gitignore** — created `molt/.gitignore` ignoring `.DS_Store` and `Icon\r`.
+- **Dropbox symlink** — `~/Dropbox` → `/media/psf/Home/Library/CloudStorage/Dropbox` on kovacs.
+
+**Both repos are committed and clean.** Recent commits:
+
+- molt: `a96d565 ST0001 Done`, `86a1c65 ST0001 Done`, `2712428 ST0001:WP{11,12,13}: first cut`
+- molt-matts: `33e1131 See: ST0001 in Molt for details`, `4448e1b See: ST0001 in Molt for details`
+
+**One untracked file in molt-matts:** `Icon\r` (macOS Parallels artifact) — needs `.gitignore` added to molt-matts.
+
+---
+
+### claude@kovacs — 2026-03-10 — PARALLELS KEYBOARD PROFILE FIX (BLOCKING)
+
+**Problem**: Parallels modifier mapping is broken. xev confirms:
+
+| Physical key | Arrives in VM as         | Should be   |
+| ------------ | ------------------------ | ----------- |
+| Cmd          | `Control_L` (keycode 37) | `Super_L`   |
+| Ctrl         | `Alt_L` (keycode 64)     | `Control_L` |
+| Opt          | `Alt_L` (keycode 64)     | `Alt_L`     |
+
+Ctrl and Opt are merged into the same keysym — can't distinguish them inside the VM. Cmd maps to Ctrl, which shadows all standard Ctrl bindings. keyd can't fix this because there's nothing to remap Ctrl FROM (it's merged with Opt).
+
+**Fix required on rhadamanth**: Change Parallels keyboard profile so modifiers pass through correctly.
+
+In **Parallels Desktop → Settings (for kovacs VM) → Hardware → Mouse & Keyboard → Keyboard**:
+
+- Look for keyboard profile dropdown (e.g. "Mac", "Windows", "Custom")
+- Change to a profile where Cmd passes as Super/Meta, NOT Ctrl
+- Or go to **Preferences → Shortcuts** and check "Send macOS system shortcuts to" setting
+- May need to create a custom profile with: Cmd=Super, Ctrl=Ctrl, Opt=Alt
+
+After changing, verify from kovacs with `xev -event keyboard`:
+
+- Physical Cmd should show `Super_L` (keysym `0xffeb`)
+- Physical Ctrl should show `Control_L` (keysym `0xffe3`)
+- Physical Opt should show `Alt_L` (keysym `0xffe9`)
+
+**Once Parallels is fixed**:
+
+1. Enable `keys` liberator in kovacs manifest
+2. Update keyd config: `leftmeta = leftmeta` (or remove if pass-through is clean)
+3. Update Emacs Linux keybindings to use `s-` (Super) — same as macOS
+4. Re-enable the Parallels C/V/X shortcuts as `Super+Shift+C/V/X` if needed
+
+**Current state**: Reverted to minimal keyd, Emacs Linux block only binds `C-S-c/v/x` (copy/paste/cut via Parallels shortcuts). All other Cmd combos are broken on Linux until Parallels is fixed.
+
+---
+
+### claude@kovacs — 2026-03-09 — INSTRUCTIONS FOR RHADAMANTH
+
+**Context**: Phase 5 work is committed on kovacs but several tasks need to happen on rhadamanth (macOS side). Both repos are clean and pushed. The rhadamanth manifest needs updating for the new `vscode` liberator.
+
+#### Step 1: Review uncommitted state (should be clean)
+
+```bash
+cd ~/Devel/prj/Molt && git status
+cd ~/Devel/prj/molt-matts && git status
+```
+
+Both repos should be clean. If there are local changes on rhadamanth, review before proceeding.
+
+#### Step 2: Pull latest from GitHub
+
+```bash
+cd ~/Devel/prj/Molt && git pull --ff-only
+cd ~/Devel/prj/molt-matts && git pull --ff-only
+```
+
+This brings in all the Phase 5 commits from kovacs.
+
+#### Step 3: Export iTerm2 profile
+
+On rhadamanth (macOS), export the current iTerm2 profile:
+
+1. Open iTerm2 → Preferences → Profiles
+2. Select the active profile
+3. Click "Other Actions…" → "Save Profile as JSON…"
+4. Save to `~/Devel/prj/molt-matts/config/iterm2/profile.json`
+
+Alternatively via CLI:
+
+```bash
+# iTerm2 stores profiles in its plist — extract via defaults
+defaults read com.googlecode.iterm2 "New Bookmarks" | plutil -convert json -o ~/Devel/prj/molt-matts/config/iterm2/profile.json -
+```
+
+#### Step 4: Export Terminal.app profile
+
+```bash
+# List available profiles
+defaults read com.apple.Terminal "Window Settings" | plutil -convert json -o - - | jq 'keys'
+
+# Export the profile (replace PROFILE_NAME with the active one)
+defaults read com.apple.Terminal "Window Settings" | plutil -convert json -o ~/Devel/prj/molt-matts/config/terminal-app/profile.json -
+```
+
+Or manually: Terminal → Settings → Profiles → gear icon → Export.
+
+#### Step 5: Update rhadamanth manifest to add `vscode` liberator
+
+Edit `~/Devel/prj/molt-matts/instances/rhadamanth/molt.toml` — add after the `desktop` liberator:
+
+```toml
+[[liberator]]
+name = "vscode"
+enabled = true
+os = ["linux", "macos"]
+depends = ["zsh"]
+```
+
+Note: `tiling` is Linux-only (rhadamanth uses Divvy), so do NOT add it to the rhadamanth manifest.
+
+#### Step 6: Add .gitignore to molt-matts
+
+Create `~/Devel/prj/molt-matts/.gitignore`:
+
+```
+.DS_Store
+Icon\r
+```
+
+This prevents macOS/Parallels artifacts from showing as untracked.
+
+#### Step 7: Dry-run resleeve on rhadamanth
+
+```bash
+cd ~/Devel/prj/Molt
+MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve --dry-run
+```
+
+Review the output. Verify:
+
+- Manifest loads correctly (`instances/rhadamanth/molt.toml`)
+- `vscode` shows as a new liberator that WOULD INSTALL
+- No unexpected errors
+
+#### Step 8: Run resleeve on rhadamanth
+
+If the dry-run looks good:
+
+```bash
+MOLT_PROJECTS_DIR=$HOME/Devel/prj bin/molt resleeve
+```
+
+#### Step 9: Commit and push both repos
+
+```bash
+cd ~/Devel/prj/molt-matts
+git add .gitignore instances/rhadamanth/molt.toml
+# Also add any exported profiles from Steps 3-4
+git add config/iterm2/ config/terminal-app/
+git commit -m "rhadamanth: add vscode liberator, terminal profiles, .gitignore"
+git push
+
+cd ~/Devel/prj/Molt
+# Only if there are changes (e.g. wip.md updates)
+git add -A && git commit -m "ST0001: rhadamanth resleeve notes" && git push
+```
+
+#### What we're looking for
+
+- Both repos pulled cleanly
+- iTerm2 and Terminal.app profiles exported and committed
+- rhadamanth manifest includes `vscode`
+- `molt resleeve` runs cleanly on rhadamanth
+- Both repos pushed to GitHub
+
+---
+
 ### claude@kovacs — 2026-03-09 — CMD KEY RESOLVED + ALACRITTY DOCK
 
 **WP-01: DONE.** Cmd key passthrough resolved.
