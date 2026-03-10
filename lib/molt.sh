@@ -754,9 +754,14 @@ molt_all_repos() {
 
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
+    # Load liberator first (sends debug/info to stderr to keep stdout clean)
+    liberator_load "$lib" >/dev/null 2>&1 || continue
     local repo_path
-    if repo_path="$(liberator_repo "$lib" 2>/dev/null)" && [[ -n "$repo_path" ]]; then
-      echo "${lib}:${repo_path}"
+    local repo_fn="${lib}_repo"
+    if declare -f "$repo_fn" &>/dev/null; then
+      if repo_path="$("$repo_fn" 2>/dev/null)" && [[ -n "$repo_path" ]]; then
+        echo "${lib}:${repo_path}"
+      fi
     fi
   done <<< "$liberators"
 }
