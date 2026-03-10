@@ -170,7 +170,7 @@ git commit -m "rhadamanth: add vscode liberator, terminal profiles, .gitignore"
 git push
 
 cd ~/Devel/prj/Molt
-# Only if there are changes (e.g. wip.md updates)
+# Only if there are changes (eg wip.md updates)
 git add -A && git commit -m "ST0001: rhadamanth resleeve notes" && git push
 ```
 

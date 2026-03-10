@@ -123,7 +123,7 @@ molt help                  # Show help
 
 ### MOLT_PROJECTS_DIR
 
-The only required setting. Tells molt where to find repos. Set it in your shell config (e.g. `.zshenv`):
+The only required setting. Tells molt where to find repos. Set it in your shell config (eg `.zshenv`):
 
 ```bash
 export MOLT_PROJECTS_DIR="$HOME/Devel/prj"

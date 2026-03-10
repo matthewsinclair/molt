@@ -4,7 +4,7 @@ Some config files need per-instance values — SSH key names, font families, pro
 
 ## How it works
 
-1. You create a template file (e.g. `config/ssh/config.tmpl`) with `${VARIABLE}` placeholders
+1. You create a template file (eg `config/ssh/config.tmpl`) with `${VARIABLE}` placeholders
 2. Each instance defines its variables in `instances/{hostname}/vars.sh`
 3. During resleeve, `molt_render` substitutes the variables and writes the rendered file
 
@@ -75,7 +75,7 @@ During install, the SSH liberator renders the template, then appends each `.conf
 
 ## Rendered file markers
 
-When `molt_render` writes a file, it also creates a `.molt-rendered` marker file next to it (e.g. `~/.ssh/config.molt-rendered`). This marker records:
+When `molt_render` writes a file, it also creates a `.molt-rendered` marker file next to it (eg `~/.ssh/config.molt-rendered`). This marker records:
 
 - The source template path
 - The timestamp of rendering

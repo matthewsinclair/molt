@@ -66,7 +66,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Template rendering system (WP-08): `molt_render` + `molt_install_config`, envsubst + vars.sh
   - SSH config rendered from `.tmpl` with `config.d/` fragment concatenation
   - `.molt-rendered` marker files with provenance
-  - `molt_render` handles symlink removal, permission-sensitive dirs (e.g. `~/.ssh`)
+  - `molt_render` handles symlink removal, permission-sensitive dirs (eg `~/.ssh`)
 - Split monolithic `terminal.sh` into four per-emulator liberators (WP-09):
   - `alacritty.sh` — GPU-accelerated terminal (linux, macos)
   - `gnome-terminal.sh` — dconf-based GNOME Terminal profile management (linux)
@@ -115,7 +115,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Tiling via Tactile GNOME extension (WP-13): Divvy-like grid picker
   - Trigger: Shift+Opt+Cmd+T (= `<Shift><Alt><Super>t` on Linux)
   - 7x3 grid: QWERTYU / ASDFGHJ / ZXCVBNM — keyboard maps to screen position
-  - Two-key rectangle selection (e.g. Q,M = full screen, Q,N = left half)
+  - Two-key rectangle selection (eg Q,M = full screen, Q,N = left half)
   - `tiling.sh` liberator: checks extension, configures grid/keybinding via gsettings
   - Ubuntu Tiling Assistant insufficient — replaced by Tactile
 - VS Code installed from Microsoft apt repo (WP-14, unplanned)

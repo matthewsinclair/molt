@@ -110,8 +110,8 @@ myapp_verify() {
 | `molt_install_config`  | Auto-pick render (`.tmpl`) or link (static)           |
 | `molt_find_user_repo`  | Return path to the user's config repo                 |
 | `molt_platform`        | Return `linux` or `macos`                             |
-| `molt_distro`          | Return distro name (e.g. `ubuntu`, `fedora`, `macos`) |
-| `molt_arch`            | Return architecture (e.g. `arm64`, `x86_64`)          |
+| `molt_distro`          | Return distro name (eg `ubuntu`, `fedora`, `macos`)   |
+| `molt_arch`            | Return architecture (eg `arm64`, `x86_64`)            |
 | `molt_info msg`        | Print info message (prefixed with `Zen:`)             |
 | `molt_warn msg`        | Print warning                                         |
 | `molt_error msg`       | Print error                                           |

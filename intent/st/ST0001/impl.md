@@ -74,5 +74,5 @@ MOLT framework built out in the molt repo with working CLI, test suite, and two 
 
 ### macOS hostname
 
-- macOS `hostname` returns FQDN (e.g. rhadamanth.lan)
+- macOS `hostname` returns FQDN (eg rhadamanth.lan)
 - Fixed by using `hostname -s` everywhere for instance directory lookups
