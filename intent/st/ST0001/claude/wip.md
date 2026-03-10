@@ -41,11 +41,13 @@
 **Fix**: Reverse-engineered the binary `.dat` format and built a custom profile with 33 shortcuts — all ⌘→⌘ passthrough. Covers A-Z plus ⇧⌘S, ⌥⌘S, ⌘/, ⌘., ⌘,.
 
 **Parallels settings required**:
+
 - Profile: "macOS" (not "Linux")
 - macOS System Shortcuts → "Send: Always"
 - Parallels must be fully restarted after `.dat` file changes
 
 **Per-app keybinding changes** (Cmd arrives as Super/`s-`):
+
 - **Emacs**: `s-` bindings in `010-keys.el` Linux block — mirrors macOS `s-` block
 - **Alacritty**: `Super+C/V/X` → Copy/Paste in `alacritty.toml`
 - **VS Code**: `win+` keybindings in `keybindings.json` + Emacs-style Ctrl nav (A/E/K/N/P/F/B/D/H/T)
@@ -55,6 +57,7 @@
 **Remaining gap**: GTK apps (Nautilus, etc.) still use Ctrl+C/V for clipboard. Super+C/V does nothing there. Low priority.
 
 **Files**:
+
 - `Mac OS X.dat` backup: `~/Library/Preferences/Parallels/Mac OS X.dat.bak`
 - Profile should be stored in molt-matts for reproducibility (TODO)
 
