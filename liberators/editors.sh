@@ -2,6 +2,23 @@
 # editors.sh — Liberator: Doom Emacs + LazyVim
 # Frees you from nano.
 
+editors_repo() {
+  local doom_config="$HOME/.config/doom"
+  if [[ -L "$doom_config" ]]; then
+    local doom_repo
+    doom_repo="$(readlink -f "$doom_config")"
+    if git -C "$doom_repo" rev-parse --git-dir &>/dev/null 2>&1; then
+      echo "$doom_repo"
+      return 0
+    fi
+  elif [[ -d "$doom_config/.git" ]]; then
+    echo "$doom_config"
+    return 0
+  fi
+  return 1
+}
+editors_repo_git_commands() { echo "pull status log diff fetch"; }
+
 editors_check() {
   local ok=0
 
@@ -108,25 +125,11 @@ editors_install() {
 }
 
 editors_upgrade() {
-  # Pull Doom Emacs config repo
-  local doom_config="$HOME/.config/doom"
-  if [[ -L "$doom_config" ]]; then
-    # Resolve symlink to actual repo
-    local doom_repo
-    doom_repo="$(readlink -f "$doom_config")"
-    if [[ -d "$doom_repo/.git" ]] || git -C "$doom_repo" rev-parse --git-dir &>/dev/null 2>&1; then
-      molt_info "Pulling Doom config repo..."
-      if git -C "$doom_repo" pull --ff-only 2>/dev/null; then
-        molt_info "Doom config updated."
-      else
-        molt_warn "Doom config pull skipped (not on tracking branch or already up-to-date)."
-      fi
-    else
-      molt_debug "Doom config is not a git repo — skipping pull"
-    fi
-  elif [[ -d "$doom_config/.git" ]]; then
+  # Pull Doom Emacs config repo (reuse editors_repo for discovery)
+  local doom_repo
+  if doom_repo="$(editors_repo)"; then
     molt_info "Pulling Doom config repo..."
-    if git -C "$doom_config" pull --ff-only 2>/dev/null; then
+    if git -C "$doom_repo" pull --ff-only 2>/dev/null; then
       molt_info "Doom config updated."
     else
       molt_warn "Doom config pull skipped (not on tracking branch or already up-to-date)."

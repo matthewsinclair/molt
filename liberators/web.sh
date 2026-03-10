@@ -11,6 +11,9 @@ _web_find_repo() {
   return 1
 }
 
+web_repo() { _web_find_repo; }
+web_repo_git_commands() { echo "pull status log diff fetch"; }
+
 web_check() {
   local ok=0
 

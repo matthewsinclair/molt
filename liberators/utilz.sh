@@ -11,6 +11,9 @@ _utilz_find_repo() {
   return 1
 }
 
+utilz_repo() { _utilz_find_repo; }
+utilz_repo_git_commands() { echo "pull status log diff fetch"; }
+
 utilz_check() {
   local ok=0
 

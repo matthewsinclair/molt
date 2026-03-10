@@ -97,6 +97,31 @@ liberator_upgrade() {
   fi
 }
 
+liberator_has_repo() {
+  local name="$1"
+
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
+    liberator_load "$name" || return 1
+  fi
+
+  declare -f "${name}_repo" &>/dev/null
+}
+
+liberator_repo() {
+  local name="$1"
+
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
+    liberator_load "$name" || return 1
+  fi
+
+  local repo_fn="${name}_repo"
+  if declare -f "$repo_fn" &>/dev/null; then
+    "$repo_fn"
+  else
+    return 1
+  fi
+}
+
 # --- Batch Operations ---
 
 liberator_run_all() {

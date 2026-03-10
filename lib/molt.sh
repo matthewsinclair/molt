@@ -731,6 +731,89 @@ cmd_upgrade() {
   fi
 }
 
+# --- Multi-Repo Git ---
+
+molt_all_repos() {
+  # Framework repo (always included)
+  echo "molt:${MOLT_ROOT}"
+
+  # User config repo (if found)
+  local user_repo
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  if [[ -n "$user_repo" ]]; then
+    echo "config:${user_repo}"
+  fi
+
+  # Liberator repos (enabled liberators only)
+  local liberators
+  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
+    :
+  else
+    liberators="$(liberator_list)"
+  fi
+
+  while IFS= read -r lib; do
+    [[ -z "$lib" ]] && continue
+    local repo_path
+    if repo_path="$(liberator_repo "$lib" 2>/dev/null)" && [[ -n "$repo_path" ]]; then
+      echo "${lib}:${repo_path}"
+    fi
+  done <<< "$liberators"
+}
+
+cmd_git() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: molt git <git-command> [args...]"
+    echo ""
+    echo "Run a git command across all managed repos."
+    echo "Examples:"
+    echo "  molt git status"
+    echo "  molt git pull"
+    echo "  molt git log --oneline -3"
+    return 0
+  fi
+
+  local git_cmd="$1"
+  local errors=0
+
+  while IFS=: read -r label repo_path; do
+    [[ -z "$label" ]] && continue
+
+    # For liberator repos (not molt or config), check whitelist
+    if [[ "$label" != "molt" ]] && [[ "$label" != "config" ]]; then
+      # Ensure liberator is loaded in this shell (molt_all_repos ran in a subshell)
+      if ! liberator_load "$label" 2>/dev/null; then
+        echo "--- ${label} (${repo_path}) ---"
+        molt_warn "could not load liberator ${label} — skipping"
+        echo ""
+        continue
+      fi
+      local whitelist_fn="${label}_repo_git_commands"
+      if declare -f "$whitelist_fn" &>/dev/null; then
+        local allowed
+        allowed="$($whitelist_fn)"
+        if [[ " $allowed " != *" $git_cmd "* ]]; then
+          echo "--- ${label} (${repo_path}) ---"
+          molt_warn "git ${git_cmd} not in ${label}'s allowed commands (${allowed})"
+          echo ""
+          continue
+        fi
+      fi
+    fi
+
+    echo "--- ${label} (${repo_path}) ---"
+    if ! git -C "$repo_path" "$@"; then
+      errors=$((errors + 1))
+    fi
+    echo ""
+  done <<< "$(molt_all_repos)"
+
+  if [[ $errors -gt 0 ]]; then
+    molt_warn "${errors} repo(s) had errors"
+    return 1
+  fi
+}
+
 # --- Stack Discovery ---
 
 molt_find_user_repo() {

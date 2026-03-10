@@ -35,6 +35,7 @@ Commands:
                         Default: resleeve after full upgrade, no resleeve after targeted
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
+  git <cmd>    Run a git command across all managed repos
   doctor      System diagnostics and health checks
   test        Run bats test suite (molt test [liberator])
   version     Show version
@@ -148,6 +149,7 @@ cmd_resleeve() {
 case "${1:-help}" in
   resleeve) shift; cmd_resleeve "$@" ;;
   upgrade)  shift; cmd_upgrade "$@" ;;
+  git)      shift; cmd_git "$@" ;;
   status)   cmd_status ;;
   list)     cmd_list ;;
   doctor)   cmd_doctor ;;

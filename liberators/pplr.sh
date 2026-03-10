@@ -10,6 +10,9 @@ _pplr_find_repo() {
   return 1
 }
 
+pplr_repo() { _pplr_find_repo; }
+pplr_repo_git_commands() { echo "pull status log diff fetch"; }
+
 pplr_check() {
   local ok=0
 
