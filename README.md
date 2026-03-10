@@ -109,9 +109,11 @@ The central metaphor from _Altered Carbon_: your configuration is your conscious
 ```bash
 molt resleeve              # Bootstrap the current machine from your stack
 molt resleeve --dry-run    # Preview what resleeve would do, without changing anything
+molt upgrade               # Pull latest framework + config, then resleeve
+molt upgrade --dry-run     # Preview what upgrade would do
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
-molt doctor                # System diagnostics and health checks
+molt doctor                # System diagnostics and health checks (9 checks)
 molt test [liberator]      # Run bats test suite (all or one liberator)
 molt version               # Show version
 molt help                  # Show help
@@ -152,23 +154,25 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 
 ### Built-in liberators
 
-| Liberator      | Concern                                        | OS           |
-| -------------- | ---------------------------------------------- | ------------ |
-| system         | Verify sudo (linux) or brew (macos)            | linux, macos |
-| local-bin      | `~/bin` directory, molt CLI symlink            | linux, macos |
-| zsh            | Shell default, Starship prompt, config linking | linux, macos |
-| git            | Git + git-lfs verification, gitconfig linking  | linux, macos |
-| tmux           | Tmux verification, config linking              | linux, macos |
-| editors        | Doom Emacs clone + LazyVim, config linking     | linux, macos |
-| alacritty      | Alacritty config linking                       | linux, macos |
-| gnome-terminal | GNOME Terminal profile via dconf               | linux        |
-| iterm2         | iTerm2 dynamic profile linking                 | macos        |
-| terminal-app   | Terminal.app profile                           | macos        |
-| keys           | keyd build from source, key remapping          | linux        |
-| desktop        | GNOME settings, GTK config                     | linux        |
-| dev-tools      | CLI tools (bat, rg, fd, fzf) + mise            | linux, macos |
-| ssh            | SSH key detection, config rendering            | linux, macos |
-| utilz          | Utilz framework, bats-core, `~/bin` symlinks   | linux, macos |
+| Liberator        | Concern                                        | OS           |
+| ---------------- | ---------------------------------------------- | ------------ |
+| system           | Verify sudo (linux) or brew (macos)            | linux, macos |
+| local-bin        | `~/bin` directory, molt CLI symlink            | linux, macos |
+| zsh              | Shell default, Starship prompt, config linking | linux, macos |
+| git              | Git + git-lfs verification, gitconfig linking  | linux, macos |
+| tmux             | Tmux verification, config linking              | linux, macos |
+| editors          | Doom Emacs + LazyVim, config linking, dock pin | linux, macos |
+| alacritty        | Alacritty config linking, dock pin             | linux, macos |
+| gnome-terminal   | GNOME Terminal profile via dconf               | linux        |
+| iterm2           | iTerm2 dynamic profile linking                 | macos        |
+| terminal-app     | Terminal.app profile import                    | macos        |
+| keys             | keyd build from source, key remapping          | linux        |
+| desktop          | GNOME settings, GTK config, accessibility      | linux        |
+| tiling           | Tactile GNOME extension grid tiling            | linux        |
+| vscode           | VS Code settings linking, CLI setup, dock pin  | linux, macos |
+| dev-tools        | CLI tools (bat, rg, fd, fzf) + mise            | linux, macos |
+| ssh              | SSH key detection, config rendering + fragments| linux, macos |
+| utilz            | Utilz framework, bats-core, `~/bin` symlinks   | linux, macos |
 
 ### molt.toml
 
@@ -257,6 +261,8 @@ molt/
     terminal-app.sh        # Terminal.app
     keys.sh                # keyd
     desktop.sh             # GNOME settings
+    tiling.sh              # Tactile grid tiling
+    vscode.sh              # VS Code
     dev-tools.sh           # CLI tools + mise
     ssh.sh                 # SSH
     local-bin.sh           # ~/bin setup
@@ -282,9 +288,16 @@ MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tool
 
 Liberators verify their own prerequisites and fail with install hints if anything is missing.
 
+## Documentation
+
+- [Getting Started](docs/guides/getting-started.md) — first-time setup walkthrough
+- [Writing a Liberator](docs/guides/writing-a-liberator.md) — how to create your own config modules
+- [Template System](docs/guides/templates.md) — per-instance config rendering with `envsubst`
+- [Bootstrap Runbook](docs/guides/bootstrap-runbook.md) — detailed manual setup reference
+
 ## Status
 
-Early development. The framework has a working CLI, core library, 15 liberators, manifest-driven execution, dry-run support, and a bats test suite. Two sleeves are configured: kovacs (Ubuntu 24.04 ARM64) and rhadamanth (macOS M4).
+Early development. Two sleeves operational: kovacs (Ubuntu 24.04 ARM64) and rhadamanth (macOS M4).
 
 ## License
 
