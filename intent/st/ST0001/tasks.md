@@ -63,6 +63,21 @@
 - [x] Font consistency: JetBrainsMono Nerd Font (Alacritty 11pt, Emacs 14pt, VS Code 14pt)
 - [x] Symlink ~/Dropbox to macOS CloudStorage via Parallels mount
 
+## Phase 5b: Cmd Key Proper Fix + Per-App Keybindings (COMPLETE)
+
+- [x] Diagnose Parallels modifier mapping via xev (Cmd→Control_L, Ctrl/Opt→Alt_L)
+- [x] Reverse-engineer Parallels `Mac OS X.dat` binary profile format
+- [x] Build custom profile with 33 ⌘→⌘ passthrough shortcuts (Cmd arrives as Super_L)
+- [x] Verify Cmd+S arrives as Super_L in xev after profile install + Parallels restart
+- [x] Update Emacs Linux keybindings to `s-` (Super) — same prefix as macOS
+- [x] Add Super+C/V/X bindings to Alacritty config
+- [x] Set Super bindings for GNOME Terminal via gsettings
+- [x] Create VS Code `keybindings.json` — `win+` Cmd shortcuts + Emacs Ctrl navigation
+- [x] Disable GNOME a11y shortcuts (screen reader, magnifier) that conflict with Super combos
+- [x] Store custom `Mac OS X.dat` in `molt-matts/instances/rhadamanth/parallels/`
+- [ ] Persist GNOME Terminal Super bindings in gnome-terminal liberator
+- [ ] GTK apps (Nautilus etc.) still use Ctrl+C/V — not yet addressed
+
 ## Dependencies
 
 - rhadamanth resleeve requires commit + push from kovacs first

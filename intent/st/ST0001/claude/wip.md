@@ -32,41 +32,31 @@
 
 ---
 
-### claude@kovacs — 2026-03-10 — PARALLELS KEYBOARD PROFILE FIX (BLOCKING)
+### claude@kovacs — 2026-03-10 — PARALLELS CMD KEY: RESOLVED
 
-**Problem**: Parallels modifier mapping is broken. xev confirms:
+**Problem**: Parallels default "Linux" keyboard profile mapped Cmd→Ctrl globally, making Cmd indistinguishable from Ctrl inside the VM. Physical Ctrl and Opt both arrived as `Alt_L` (merged). keyd couldn't fix it — no way to unscramble from inside the VM.
 
-| Physical key | Arrives in VM as         | Should be   |
-| ------------ | ------------------------ | ----------- |
-| Cmd          | `Control_L` (keycode 37) | `Super_L`   |
-| Ctrl         | `Alt_L` (keycode 64)     | `Control_L` |
-| Opt          | `Alt_L` (keycode 64)     | `Alt_L`     |
+**Root cause**: Parallels `Mac OS X.dat` profile (at `~/Library/Preferences/Parallels/Mac OS X.dat`) only listed 10 shortcuts for ⌘→⌘ passthrough. Everything not listed fell through to the default Cmd→Ctrl translation.
 
-Ctrl and Opt are merged into the same keysym — can't distinguish them inside the VM. Cmd maps to Ctrl, which shadows all standard Ctrl bindings. keyd can't fix this because there's nothing to remap Ctrl FROM (it's merged with Opt).
+**Fix**: Reverse-engineered the binary `.dat` format and built a custom profile with 33 shortcuts — all ⌘→⌘ passthrough. Covers A-Z plus ⇧⌘S, ⌥⌘S, ⌘/, ⌘., ⌘,.
 
-**Fix required on rhadamanth**: Change Parallels keyboard profile so modifiers pass through correctly.
+**Parallels settings required**:
+- Profile: "macOS" (not "Linux")
+- macOS System Shortcuts → "Send: Always"
+- Parallels must be fully restarted after `.dat` file changes
 
-In **Parallels Desktop → Settings (for kovacs VM) → Hardware → Mouse & Keyboard → Keyboard**:
+**Per-app keybinding changes** (Cmd arrives as Super/`s-`):
+- **Emacs**: `s-` bindings in `010-keys.el` Linux block — mirrors macOS `s-` block
+- **Alacritty**: `Super+C/V/X` → Copy/Paste in `alacritty.toml`
+- **VS Code**: `win+` keybindings in `keybindings.json` + Emacs-style Ctrl nav (A/E/K/N/P/F/B/D/H/T)
+- **GNOME Terminal**: Super bindings via gsettings (not yet persisted in liberator)
+- **GNOME a11y**: Screen reader + magnifier Super shortcuts stripped (in desktop liberator)
 
-- Look for keyboard profile dropdown (e.g. "Mac", "Windows", "Custom")
-- Change to a profile where Cmd passes as Super/Meta, NOT Ctrl
-- Or go to **Preferences → Shortcuts** and check "Send macOS system shortcuts to" setting
-- May need to create a custom profile with: Cmd=Super, Ctrl=Ctrl, Opt=Alt
+**Remaining gap**: GTK apps (Nautilus, etc.) still use Ctrl+C/V for clipboard. Super+C/V does nothing there. Low priority.
 
-After changing, verify from kovacs with `xev -event keyboard`:
-
-- Physical Cmd should show `Super_L` (keysym `0xffeb`)
-- Physical Ctrl should show `Control_L` (keysym `0xffe3`)
-- Physical Opt should show `Alt_L` (keysym `0xffe9`)
-
-**Once Parallels is fixed**:
-
-1. Enable `keys` liberator in kovacs manifest
-2. Update keyd config: `leftmeta = leftmeta` (or remove if pass-through is clean)
-3. Update Emacs Linux keybindings to use `s-` (Super) — same as macOS
-4. Re-enable the Parallels C/V/X shortcuts as `Super+Shift+C/V/X` if needed
-
-**Current state**: Reverted to minimal keyd, Emacs Linux block only binds `C-S-c/v/x` (copy/paste/cut via Parallels shortcuts). All other Cmd combos are broken on Linux until Parallels is fixed.
+**Files**:
+- `Mac OS X.dat` backup: `~/Library/Preferences/Parallels/Mac OS X.dat.bak`
+- Profile should be stored in molt-matts for reproducibility (TODO)
 
 ---
 

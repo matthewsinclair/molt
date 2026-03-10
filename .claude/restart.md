@@ -1,20 +1,22 @@
 # Claude Restart Context
 
 ## Current WIP
-- **ST0001**: Bootstrap -- Phase 3 (rhadamanth resleeve) complete, Phase 4 done
-- Next: export terminal profiles, verify WP-10 on kovacs, commit/push
+- **ST0001**: Bootstrap — all phases complete (1-5)
+- Next: persist GNOME Terminal Super bindings in liberator, rhadamanth resleeve, commit/push
 
 ## Key Changes This Session
-- **Cmd key RESOLVED** (WP-01 DONE): Parallels keyboard shortcuts map Cmd+C/V/X → Ctrl+Shift+C/V/X
-- keyd config minimal (`/etc/keyd/default.conf`) — not used for key remapping
-- Alacritty liberator adds itself to GNOME dock favorites (Linux only)
-- Alacritty config comment updated (references Parallels, not keyd)
+- **Cmd key FULLY RESOLVED**: custom Parallels `Mac OS X.dat` profile (33 shortcuts, Cmd as Super)
+- Per-app Super keybindings: Emacs (`s-`), Alacritty, VS Code (`win+`), GNOME Terminal
+- VS Code `keybindings.json`: Cmd shortcuts + Emacs Ctrl navigation (A/E/K/N/P/F/B/D/H/T)
+- GNOME a11y shortcuts stripped in desktop liberator
+- Parallels profile stored in `molt-matts/instances/rhadamanth/parallels/Mac OS X.dat`
 
-## Previous Session Changes (still relevant)
-- `MOLT_PROJECTS_DIR` required (no default) -- set in `.zshenv`
-- Liberators never install packages -- verify + hint only
-- `molt resleeve --dry-run` available
-- `hostname -s` used everywhere (macOS compat)
+## Key Facts
+- Parallels must use "macOS" profile, "Send macOS system shortcuts: Always"
+- VS Code uses `win+` for Super (not `meta+` which collides with Ctrl)
+- Physical Ctrl and Opt both arrive as Alt_L (Parallels merges them) — acceptable
+- `MOLT_PROJECTS_DIR` required (no default) — set in `.zshenv`
+- 18 liberators, two sleeves (kovacs + rhadamanth)
 
 ## Quick Verification
 ```bash

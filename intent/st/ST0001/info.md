@@ -90,10 +90,19 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 ### What's Done (Phase 4 — Cmd Key + Alacritty Dock)
 
-- Cmd key passthrough resolved via Parallels keyboard shortcuts config (WP-01)
-  - Parallels maps Cmd+C/V/X → Ctrl+Shift+C/V/X at hypervisor level
-  - keyd not involved — config reduced to minimal
-  - Cmd != Ctrl preserved (Cmd+C = copy, Ctrl+C = SIGINT)
+- Cmd key passthrough fully resolved (WP-01)
+  - Reverse-engineered Parallels `Mac OS X.dat` binary keyboard profile format
+  - Custom profile with 33 ⌘→⌘ passthrough shortcuts — Cmd arrives as Super_L in VM
+  - Parallels "macOS" profile selected, "Send macOS system shortcuts: Always"
+  - Parallels restart required after `.dat` file changes
+  - Custom profile stored in `molt-matts/instances/rhadamanth/parallels/Mac OS X.dat`
+  - Cmd != Ctrl properly separated (Cmd = Super, Ctrl = Ctrl)
+- Per-app keybindings for Super (Cmd) support:
+  - Emacs: `s-` (Super) bindings in Linux block of `010-keys.el` — mirrors macOS
+  - Alacritty: Super+C/V/X bindings in `alacritty.toml`
+  - VS Code: `win+` Cmd shortcuts + Emacs-style Ctrl navigation (A/E/K/N/P/F/B/D/H/T)
+  - GNOME Terminal: Super bindings via gsettings
+  - GNOME a11y shortcuts stripped (screen reader, magnifier) in desktop liberator
 - Alacritty liberator updated to add Alacritty to GNOME dock favorites
 - GNOME Terminal replaced by Alacritty as dock terminal on kovacs
 
@@ -101,9 +110,8 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 - `molt upgrade` command added (WP-11): pulls both repos, reports version changes, re-runs resleeve
   - `--dry-run` support, fails gracefully on dirty repos
-- Emacs macOS keybindings on Linux (WP-12): `C-S-` bindings mirror macOS `s-` bindings
-  - Matches Parallels Cmd→Ctrl+Shift mapping at hypervisor level
-  - `doom sync` verified clean
+- Emacs macOS keybindings on Linux (WP-12): `s-` (Super) bindings mirror macOS directly
+  - Parallels custom profile sends Cmd as Super — same modifier on both platforms
 - Tiling via Tactile GNOME extension (WP-13): Divvy-like grid picker
   - Trigger: Shift+Opt+Cmd+T (= `<Shift><Alt><Super>t` on Linux)
   - 7x3 grid: QWERTYU / ASDFGHJ / ZXCVBNM — keyboard maps to screen position
@@ -131,4 +139,4 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 ## Context for LLM
 
-This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 18 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key, Alacritty dock) is complete. Phase 5 is complete: inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), Tactile tiling (WP-13), VS Code setup, dock cleanup, font consistency. Both sleeves are operational.
+This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 18 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key fully resolved via custom Parallels profile, per-app Super keybindings, Alacritty dock) is complete. Phase 5 is complete: inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), Tactile tiling (WP-13), VS Code setup, dock cleanup, font consistency. Both sleeves are operational.

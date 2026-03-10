@@ -1,31 +1,38 @@
 # Session Restart Context
 
-## Last Session: 09 Mar 2026
+## Last Session: 10 Mar 2026
 
 ### What Was Done
 
-- WP-08 (Template system): `molt_render`, `molt_install_config`, 9 bats tests, SSH liberator updated, doctor checks 8-9
-- WP-10 (chezmoi migration): rhadamanth fully resleeved, chezmoi retired
-  - `.zprofile` updated with Homebrew `brew shellenv` init
-  - Git config merged with `gitignore_global`, identity include
-  - Git liberator links additional files
-  - Fixed `bin/molt` symlink resolution and arithmetic crash
-  - All 9 enabled liberators installed on rhadamanth
-- 52 tests passing across both sleeves
+- Cmd key fully resolved via custom Parallels keyboard profile
+  - Reverse-engineered `Mac OS X.dat` binary format
+  - Custom profile: 33 shortcuts, all Cmd passthrough as Super_L
+  - Profile stored in `molt-matts/instances/rhadamanth/parallels/Mac OS X.dat`
+- Per-app keybindings for Super (Cmd) support:
+  - Emacs: `s-` (Super) Linux block in `010-keys.el`
+  - Alacritty: Super+C/V/X in `alacritty.toml`
+  - VS Code: `win+` Cmd shortcuts + Emacs Ctrl nav in `keybindings.json`
+  - GNOME Terminal: Super bindings via gsettings
+  - GNOME a11y shortcuts stripped in desktop liberator
+- Phase 1 verification: all components confirmed working
+- wip.md updated with rhadamanth instructions for Phase 5 commit/push
 
 ### What's Next
 
-- Verify WP-10 changes on kovacs (no regressions)
+- Persist GNOME Terminal Super bindings in gnome-terminal liberator
+- GTK apps (Nautilus etc.) still use Ctrl+C/V (low priority)
 - Export iTerm2 + Terminal.app profiles from rhadamanth
-- Fix Cmd key passthrough (PARKED)
-- Reproducible VM build (WP-07, future)
+- Update rhadamanth manifest with vscode liberator
+- Run `molt resleeve` on rhadamanth
+- Commit and push both repos
 
 ### Key Context
 
-- `MOLT_PROJECTS_DIR` is required — set in `.zshenv` which is symlinked from molt-matts
-- 15 liberators, no package installs, two sleeves (kovacs + rhadamanth)
-- rhadamanth manifest: tmux disabled, iterm2 enabled, alacritty/gnome-terminal/keys/desktop disabled
-- `hostname -s` used for all instance lookups (macOS returns rhadamanth.lan)
-- chezmoi retired from rhadamanth — safety net at `github.com-matthewsinclair:matthewsinclair/cfg-dotfiles.git`
-- `bin/molt` resolves symlinks before computing `MOLT_ROOT` (works via `~/bin/molt`)
-- Doctor check 8 (SSH key) gives false warning on rhadamanth — key is named `personalid`, not `id_ed25519`
+- Parallels must use "macOS" profile (not "Linux") with "Send macOS system shortcuts: Always"
+- Parallels restart required after `Mac OS X.dat` file changes
+- `MOLT_PROJECTS_DIR` is required — set in `.zshenv` symlinked from molt-matts
+- 18 liberators, two sleeves (kovacs + rhadamanth)
+- kovacs manifest: 14 enabled (keys disabled — not needed, keyd minimal)
+- rhadamanth manifest: needs vscode liberator added
+- VS Code on Linux needs `win+` prefix for Super keybindings (not `meta+`)
+- Physical Ctrl and Opt both arrive as Alt_L in VM (Parallels merges them) — acceptable
