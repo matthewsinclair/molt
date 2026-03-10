@@ -78,6 +78,17 @@
 - [ ] Persist GNOME Terminal Super bindings in gnome-terminal liberator
 - [ ] GTK apps (Nautilus etc.) still use Ctrl+C/V — not yet addressed
 
+## Phase 6: Centralised Git Operations (COMPLETE)
+
+- [x] Add `molt git <cmd>` — run git across all managed repos
+- [x] Per-liberator `{name}_repo()` and `{name}_repo_git_commands()` convention functions
+- [x] Whitelist enforcement — liberator repos only allow declared commands
+- [x] Auto-detect remote for pull/fetch/push (tracking remote or sole remote)
+- [x] Fix stdout contamination from liberator_load debug output in molt_all_repos
+- [x] Refactor editors_upgrade() to reuse editors_repo() for doom config discovery
+- [x] 28 new tests (git.bats) — 77 total tests passing
+- [x] Fix Intent bin/intent symlink resolution (BASH_SOURCE vs readlink)
+
 ## Dependencies
 
 - rhadamanth resleeve requires commit + push from kovacs first
