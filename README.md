@@ -91,7 +91,7 @@ In Molt, your config is your cortical stack, your consciousness. Every machine i
 | **needlecast** | Push your stack to a remote machine.                                               |
 | **resleeve**   | Bootstrap a fresh machine from your stack.                                         |
 | **backup**     | Snapshot your current stack state.                                                 |
-| **Zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
+| **zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
 | **liberators** | Config modules. Each one frees you from a default.                                  |
 | **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains.  |
 
