@@ -59,6 +59,12 @@ zsh_check() {
     fi
   fi
 
+  # Is starship config present and valid? (catches dangling symlinks after template migration)
+  if [[ ! -e "$HOME/.config/starship.toml" ]]; then
+    molt_info "zsh: ~/.config/starship.toml missing or dangling"
+    ok=1
+  fi
+
   return $ok
 }
 
