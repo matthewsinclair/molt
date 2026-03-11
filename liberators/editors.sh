@@ -146,10 +146,13 @@ editors_upgrade() {
 }
 
 editors_maintain() {
-  # Upgrade Doom Emacs framework itself (heavier than doom sync)
+  # Upgrade Doom Emacs framework itself (heavier than doom sync).
+  # Uses --force to auto-accept prompts (doom's y-or-n-p reads from
+  # Emacs's internal stdin, not the terminal, so interactive prompts
+  # fail when called from a shell script).
   if [[ -f "$HOME/.config/emacs/bin/doom" ]]; then
     molt_info "Running doom upgrade (this may take a while)..."
-    "$HOME/.config/emacs/bin/doom" upgrade || molt_warn "doom upgrade had warnings (review above)"
+    "$HOME/.config/emacs/bin/doom" upgrade --force || molt_warn "doom upgrade had warnings (review above)"
   else
     molt_debug "Doom binary not found — skipping doom upgrade"
   fi
