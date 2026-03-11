@@ -141,14 +141,20 @@ molt_render() {
   mkdir -p "$(dirname "$target")"
 
   if [[ -f "$vars_file" ]]; then
-    # Source vars in a subshell so exports don't leak into framework
+    # Source vars in a subshell so exports don't leak into framework.
+    # Only substitute MOLT_* variables — leave other $VAR references
+    # (like starship's $username, $path, etc.) untouched.
     (
       source "$vars_file"
-      envsubst < "$template"
+      local molt_vars
+      molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
+      envsubst "$molt_vars" < "$template"
     ) > "${target}.molt-tmp"
   else
     molt_warn "No vars.sh for instance $hostname — rendering template with env only"
-    envsubst < "$template" > "${target}.molt-tmp"
+    local molt_vars
+    molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
+    envsubst "$molt_vars" < "$template" > "${target}.molt-tmp"
   fi
 
   # Handle existing file before replacing
@@ -727,6 +733,100 @@ cmd_upgrade() {
       molt_info "Running resleeve..."
       echo ""
       cmd_resleeve
+    fi
+  fi
+}
+
+# --- Maintain ---
+
+cmd_maintain() {
+  local dry_run=false
+  local target_liberators=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run)  dry_run=true; shift ;;
+      -*)
+        molt_error "Unknown option: $1"
+        return 1
+        ;;
+      *)
+        target_liberators="$1"; shift ;;
+    esac
+  done
+
+  echo "${MOLT_NAME} v${MOLT_VERSION} — Maintain"
+  echo ""
+
+  # Get enabled liberators
+  local liberators
+  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
+    :
+  else
+    liberators="$(liberator_list)"
+  fi
+
+  if [[ -n "$target_liberators" ]]; then
+    # --- Targeted maintain: run _maintain() on specified liberators only ---
+    local failed=0
+    IFS=',' read -ra targets <<< "$target_liberators"
+    for lib in "${targets[@]}"; do
+      lib="${lib## }"
+      lib="${lib%% }"
+      [[ -z "$lib" ]] && continue
+
+      if ! liberator_load "$lib" 2>/dev/null; then
+        molt_error "Unknown liberator: $lib"
+        failed=1
+        continue
+      fi
+
+      if liberator_has_maintain "$lib"; then
+        if $dry_run; then
+          echo "  $lib: WOULD MAINTAIN"
+        else
+          if ! liberator_maintain "$lib"; then
+            molt_error "Maintain failed: $lib"
+            failed=1
+          fi
+        fi
+      else
+        molt_warn "$lib has no maintain hook — skipping"
+      fi
+    done
+    return $failed
+  fi
+
+  # --- Full maintain: run _maintain() on all enabled liberators ---
+  local maintain_count=0
+  local failed=0
+  while IFS= read -r lib; do
+    [[ -z "$lib" ]] && continue
+    if ! liberator_load "$lib" 2>/dev/null; then
+      continue
+    fi
+    if liberator_has_maintain "$lib"; then
+      if $dry_run; then
+        echo "  $lib: WOULD MAINTAIN"
+      else
+        if ! liberator_maintain "$lib"; then
+          molt_warn "Maintain hook failed: $lib — continuing"
+          failed=1
+        fi
+      fi
+      maintain_count=$((maintain_count + 1))
+    fi
+  done <<< "$liberators"
+
+  if [[ "$maintain_count" -eq 0 ]]; then
+    molt_info "No liberators have maintain hooks."
+  elif ! $dry_run; then
+    echo ""
+    if [[ "$failed" -eq 0 ]]; then
+      molt_info "System maintenance complete."
+    else
+      molt_warn "Maintenance complete with warnings. Review above."
     fi
   fi
 }

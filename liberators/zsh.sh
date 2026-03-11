@@ -93,9 +93,7 @@ zsh_install() {
   molt_link "$user_repo/config/zsh/zshenv" "$HOME/.zshenv"
   molt_link "$user_repo/config/zsh/zprofile" "$HOME/.zprofile"
 
-  if [[ -f "$user_repo/config/starship/starship.toml" ]]; then
-    molt_link "$user_repo/config/starship/starship.toml" "$HOME/.config/starship.toml"
-  fi
+  molt_install_config "config/starship/starship.toml" "$HOME/.config/starship.toml"
 
   molt_info "Liberator complete: zsh"
 }

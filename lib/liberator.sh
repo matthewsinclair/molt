@@ -97,6 +97,32 @@ liberator_upgrade() {
   fi
 }
 
+liberator_has_maintain() {
+  local name="$1"
+
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
+    liberator_load "$name" || return 1
+  fi
+
+  declare -f "${name}_maintain" &>/dev/null
+}
+
+liberator_maintain() {
+  local name="$1"
+
+  if [[ "$_MOLT_LOADED_LIBERATORS" != *" ${name} "* ]]; then
+    liberator_load "$name" || return 1
+  fi
+
+  local maintain_fn="${name}_maintain"
+  if declare -f "$maintain_fn" &>/dev/null; then
+    molt_info "Maintaining liberator: $name"
+    "$maintain_fn"
+  else
+    molt_debug "Liberator $name has no maintain hook — skipping"
+  fi
+}
+
 liberator_has_repo() {
   local name="$1"
 

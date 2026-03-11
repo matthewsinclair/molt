@@ -33,6 +33,9 @@ Commands:
                         Pull latest, run upgrade hooks, then resleeve
                         With liberators: upgrade only those (comma-separated)
                         Default: resleeve after full upgrade, no resleeve after targeted
+  maintain [--dry-run] [liberators]
+                        Run system maintenance (brew update, doom upgrade, etc.)
+                        With liberators: maintain only those (comma-separated)
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   git <cmd>    Run a git command across all managed repos
@@ -149,6 +152,7 @@ cmd_resleeve() {
 case "${1:-help}" in
   resleeve) shift; cmd_resleeve "$@" ;;
   upgrade)  shift; cmd_upgrade "$@" ;;
+  maintain) shift; cmd_maintain "$@" ;;
   git)      shift; cmd_git "$@" ;;
   status)   cmd_status ;;
   list)     cmd_list ;;

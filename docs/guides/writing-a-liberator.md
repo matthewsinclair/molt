@@ -28,6 +28,26 @@ myapp_verify() {
 
 The framework discovers scripts in `liberators/`, loads them on demand by sourcing the file, and calls these functions in order during `molt resleeve`.
 
+### Optional callbacks
+
+```bash
+# {name}_upgrade — Fast config sync.
+# Called by `molt upgrade`. Pull repos, sync packages, etc.
+myapp_upgrade() {
+  ...
+}
+
+# {name}_maintain — Heavy system maintenance.
+# Called by `molt maintain`. Update packages, upgrade frameworks, etc.
+# This is for slow, heavier operations you run weekly/monthly.
+myapp_maintain() {
+  ...
+}
+```
+
+- **`_upgrade()`** = config sync (fast, safe, daily) — pull repos, `doom sync`
+- **`_maintain()`** = system maintenance (slow, heavier, weekly/monthly) — `brew upgrade`, `doom upgrade`
+
 ## Rules
 
 1. **Never install packages.** Check that prerequisites exist and fail with a hint if they're missing. The user installs packages; liberators handle configuration.

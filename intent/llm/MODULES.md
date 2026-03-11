@@ -36,6 +36,7 @@
 | pplr           | `liberators/pplr.sh`           | Pplr people/contacts manager, ~/bin symlinks            |
 | utilz          | `liberators/utilz.sh`          | Utilz framework, bats-core, ~/bin symlinks              |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, ~/bin symlink                     |
+| brew           | `liberators/brew.sh`           | Homebrew lifecycle, package maintenance (macos)         |
 
 ## Testing
 
