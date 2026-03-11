@@ -149,7 +149,7 @@ editors_maintain() {
   # Upgrade Doom Emacs framework itself (heavier than doom sync)
   if [[ -f "$HOME/.config/emacs/bin/doom" ]]; then
     molt_info "Running doom upgrade (this may take a while)..."
-    "$HOME/.config/emacs/bin/doom" upgrade 2>/dev/null || molt_warn "doom upgrade had warnings (review above)"
+    "$HOME/.config/emacs/bin/doom" upgrade || molt_warn "doom upgrade had warnings (review above)"
   else
     molt_debug "Doom binary not found — skipping doom upgrade"
   fi
