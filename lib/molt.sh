@@ -568,14 +568,66 @@ _upgrade_check_clean() {
   return 0
 }
 
+_upgrade_pull_repos() {
+  local dry_run="${1:-false}"
+  local old_version="$MOLT_VERSION"
+
+  # 1. Check framework repo
+  molt_info "Checking framework repo: $MOLT_ROOT"
+  if ! _upgrade_check_clean "$MOLT_ROOT" "Framework"; then
+    return 1
+  fi
+
+  # 2. Check user config repo
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || {
+    molt_error "Cannot upgrade without a user config repo."
+    return 1
+  }
+  molt_info "Checking user config repo: $user_repo"
+  if ! _upgrade_check_clean "$user_repo" "User config"; then
+    return 1
+  fi
+
+  # 3. Pull framework repo
+  echo ""
+  molt_info "Pulling framework repo..."
+  if $dry_run; then
+    echo "  molt: WOULD PULL"
+  elif git -C "$MOLT_ROOT" pull --ff-only 2>/dev/null; then
+    molt_info "Framework repo updated."
+  else
+    molt_warn "Framework pull skipped (not on tracking branch or already up-to-date)."
+  fi
+
+  # 4. Pull user config repo
+  molt_info "Pulling user config repo..."
+  if $dry_run; then
+    echo "  config: WOULD PULL"
+  elif git -C "$user_repo" pull --ff-only 2>/dev/null; then
+    molt_info "User config repo updated."
+  else
+    molt_warn "User config pull skipped (not on tracking branch or already up-to-date)."
+  fi
+
+  # 5. Re-source constants to pick up any version change
+  source "${MOLT_LIB_DIR}/constants.sh"
+  if [[ "$old_version" != "$MOLT_VERSION" ]]; then
+    echo ""
+    molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
+  fi
+}
+
 cmd_upgrade() {
   local dry_run=false
   local do_resleeve=""  # "" = use default, "yes" = forced, "no" = suppressed
   local target_liberators=""
+  local self_only=false
 
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case "$1" in
+      --self)        self_only=true; shift ;;
       --dry-run)     dry_run=true; shift ;;
       --resleeve)    do_resleeve="yes"; shift ;;
       --no-resleeve) do_resleeve="no"; shift ;;
@@ -597,10 +649,14 @@ cmd_upgrade() {
     fi
   fi
 
-  local old_version="$MOLT_VERSION"
-
   echo "${MOLT_NAME} v${MOLT_VERSION} — Upgrade"
   echo ""
+
+  if $self_only; then
+    # Self-update only: pull repos, report, exit
+    _upgrade_pull_repos "$dry_run"
+    return $?
+  fi
 
   if [[ -n "$target_liberators" ]]; then
     # --- Targeted upgrade: run _upgrade() on specified liberators only ---
@@ -651,48 +707,9 @@ cmd_upgrade() {
 
   # --- Full upgrade: pull repos, run all _upgrade() hooks, then resleeve ---
 
-  # 1. Check framework repo for uncommitted changes
-  molt_info "Checking framework repo: $MOLT_ROOT"
-  if ! _upgrade_check_clean "$MOLT_ROOT" "Framework"; then
-    return 1
-  fi
+  _upgrade_pull_repos "$dry_run" || return 1
 
-  # 2. Find and check user config repo
-  local user_repo
-  user_repo="$(molt_find_user_repo)" || {
-    molt_error "Cannot upgrade without a user config repo."
-    return 1
-  }
-  molt_info "Checking user config repo: $user_repo"
-  if ! _upgrade_check_clean "$user_repo" "User config"; then
-    return 1
-  fi
-
-  # 3. Pull framework repo
-  echo ""
-  molt_info "Pulling framework repo..."
-  if git -C "$MOLT_ROOT" pull --ff-only 2>/dev/null; then
-    molt_info "Framework repo updated."
-  else
-    molt_warn "Framework pull skipped (not on tracking branch or already up-to-date)."
-  fi
-
-  # 4. Pull user config repo
-  molt_info "Pulling user config repo..."
-  if git -C "$user_repo" pull --ff-only 2>/dev/null; then
-    molt_info "User config repo updated."
-  else
-    molt_warn "User config pull skipped (not on tracking branch or already up-to-date)."
-  fi
-
-  # 5. Re-source constants to pick up any version change
-  source "${MOLT_LIB_DIR}/constants.sh"
-  if [[ "$old_version" != "$MOLT_VERSION" ]]; then
-    echo ""
-    molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
-  fi
-
-  # 6. Run _upgrade() hooks on all enabled liberators that define one
+  # Run _upgrade() hooks on all enabled liberators that define one
   echo ""
   molt_info "Running liberator upgrade hooks..."
   local liberators
