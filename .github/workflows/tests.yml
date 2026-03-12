@@ -25,6 +25,11 @@ jobs:
         echo "PATH=/usr/local/bin:$PATH" >> $GITHUB_ENV
         bats --version
 
+    - name: Configure git identity for tests
+      run: |
+        git config --global user.email "ci@test.local"
+        git config --global user.name "CI"
+
     - name: Make scripts executable
       run: |
         chmod +x bin/*
@@ -48,6 +53,11 @@ jobs:
         brew install bats-core
         echo "PATH=$PATH:/usr/local/bin:/opt/homebrew/bin" >> $GITHUB_ENV
         bats --version
+
+    - name: Configure git identity for tests
+      run: |
+        git config --global user.email "ci@test.local"
+        git config --global user.name "CI"
 
     - name: Make scripts executable
       run: |
