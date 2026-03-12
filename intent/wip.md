@@ -1,34 +1,27 @@
 ---
-verblock: "11 Mar 2026:v0.10: matts - molt maintain, brew liberator, starship hostname, doom migration"
+verblock: "12 Mar 2026:v0.11: matts - docs, CI/CD, versioning, changelog, iTerm2 SSH colors"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**011: Doom migration, upgrade scripts, hostname in prompt (DONE)**
+**013: Docs, CI/CD, versioning, and iTerm2 SSH colors (DONE)**
 
-- Added `molt maintain` command -- system maintenance separate from config sync
-  - `molt maintain` runs all `_maintain()` hooks on enabled liberators
-  - `molt maintain brew` -- targeted maintenance for specific liberators
-  - `molt maintain --dry-run` -- preview what would happen
-- New brew liberator (macOS) -- brew update/upgrade/cleanup/doctor + npm global update
-- Added `editors_maintain()` -- runs `doom upgrade --force` (framework upgrade)
-- Starship prompt now shows `matts@hostname` with per-host colors
-  - Converted starship.toml to .tmpl template with `MOLT_PROMPT_HOST_COLOR`
-  - rhadamanth: purple (#9A348E), gyges: teal (#2E86AB), kovacs: green (#44803F)
-- Fixed `molt_render()` to only substitute `MOLT_*` variables via envsubst filter
-- Fixed `zsh_check()` to detect missing/dangling starship config
-- Doom migration on rhadamanth: removed legacy `~/.emacs.d` and stale `~/.doom.d`
-- Removed `share_history` from zshrc (each terminal now has own history)
+- VERSION file as single source of truth; `constants.sh` reads it with fallback
+- CHANGELOG.md in Keep a Changelog format
+- GitHub Actions: tests (Linux + macOS), ShellCheck, PR checks
+- README: CI badge, upgrade --self, maintain, new liberators, lifecycle hooks, three sleeves
+- getting-started.md: self-update, maintain, recommended workflow
+- iTerm2 SSH background color wrapper (molt-matts): tints per host on SSH
+- Tagged v0.1.0, fixed CI (git identity for test runners)
 - 83 tests passing (19 liberators)
 
-**010: molt git + centralised git operations (DONE)**
+**012: molt upgrade --self (DONE)**
 
-- Added `molt git <cmd>` -- runs git across framework, config, and liberator repos
-- Per-liberator convention functions: `{name}_repo()`, `{name}_repo_git_commands()`
-- Auto-detect remote for pull/fetch/push
-- 77 tests passing (28 new in git.bats)
+**011: Doom migration, upgrade scripts, hostname in prompt (DONE)**
+
+**010: molt git + centralised git operations (DONE)**
 
 **009: gyges resleeve + symbolic directory vocabulary (DONE)**
 
@@ -52,9 +45,12 @@ verblock: "11 Mar 2026:v0.10: matts - molt maintain, brew liberator, starship ho
 
 ## Upcoming Work
 
+- Verify CI passes on GitHub (just pushed, should be running now)
 - Deploy starship template to gyges (pull + molt resleeve)
 - Deploy starship template to kovacs (pull + molt resleeve)
 - Fix git remote/tracking config on gyges (remotes named "upstream", missing fetch refspecs)
+- Tune iTerm2 SSH background colors after seeing them in practice
+- Check rhadamanth's actual default background color (reset currently uses 000000)
 - Persist GNOME Terminal Super bindings in gnome-terminal liberator
 - GTK apps (Nautilus etc.) still use Ctrl+C/V -- low priority
 - Export iTerm2 + Terminal.app profiles from rhadamanth
@@ -63,4 +59,4 @@ verblock: "11 Mar 2026:v0.10: matts - molt maintain, brew liberator, starship ho
 
 ## Notes
 
-19 liberators (brew added), 83 tests passing. Three sleeves operational (kovacs, rhadamanth, gyges). `molt upgrade` = fast config sync (daily). `molt maintain` = heavy system maintenance (weekly/monthly). envsubst now only substitutes MOLT\_\* variables, preventing clobbering of app-specific $VAR references in templates.
+19 liberators (brew added), 83 tests passing. Three sleeves operational (kovacs, rhadamanth, gyges). `molt upgrade` = fast config sync (daily). `molt maintain` = heavy system maintenance (weekly/monthly). envsubst only substitutes `MOLT_*` variables. VERSION file is single source of truth for version number. CI/CD running on GitHub Actions. Tagged v0.1.0.

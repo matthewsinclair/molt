@@ -1,34 +1,35 @@
 # Session Restart Context
 
-## Last Session: 11 Mar 2026
+## Last Session: 12 Mar 2026
 
 ### What Was Done
 
-- Added `molt maintain` command with `_maintain()` callback pattern
-  - brew liberator: brew update/upgrade/cleanup/doctor + npm global update
-  - editors_maintain(): `doom upgrade --force` (auto-accepts Emacs y-or-n-p prompts)
-  - Supports targeted (`molt maintain brew`) and `--dry-run` modes
-- Starship prompt: `matts@hostname` with per-host color via template
-  - Converted starship.toml to .tmpl, added MOLT_PROMPT_HOST_COLOR to vars.sh
-  - Fixed molt*render() to only substitute MOLT*\* vars (envsubst filter)
-  - Fixed zsh_check() to detect missing/dangling starship.toml
-- Doom migration on rhadamanth: removed ~/.emacs.d and ~/.doom.d
-- Removed share_history from zshrc (terminals no longer share history)
-- 83 tests passing, 19 liberators
+- VERSION file + CHANGELOG.md + constants.sh reads from VERSION
+- GitHub Actions CI/CD: tests.yml (Linux + macOS + ShellCheck), pr-checks.yml
+- Fixed CI: git identity config needed for git.bats test runners
+- README.md: CI badge, full CLI reference, liberator lifecycle with upgrade/maintain hooks, 4 new liberators, three sleeves
+- getting-started.md: self-update, maintain, recommended workflow
+- iTerm2 SSH background color wrapper in molt-matts (per-host tinting)
+- Tagged v0.1.0, pushed both repos
 
 ### What's Next
 
-- Deploy to gyges: pull both repos + `molt resleeve` (will render starship template)
-- Deploy to kovacs: same
+- Verify CI passes (just pushed, should be running)
+- Deploy starship template to gyges and kovacs (pull + resleeve)
 - Fix gyges git remotes: named "upstream" with missing fetch refspecs
   - Fix: `git config remote.upstream.fetch '+refs/heads/*:refs/remotes/upstream/*'`
+- Tune iTerm2 SSH background colors after seeing them in practice
+- Check rhadamanth's default bg color (reset currently uses 000000)
 - Persist GNOME Terminal Super bindings in gnome-terminal liberator
 
 ### Key Context
 
+- VERSION file at project root is single source of truth for version
+- CI runs bats on both Linux and macOS; ShellCheck is non-blocking
+- git.bats tests need git user identity (configured in CI workflow)
+- iTerm2 SSH colors live in molt-matts (user config), not framework
 - `molt upgrade` = config sync (fast, daily). `molt maintain` = system maintenance (slow, weekly)
-- envsubst now only substitutes MOLT\_\* variables -- safe for templates with app $vars
-- doom upgrade uses --force to bypass Emacs y-or-n-p (reads from internal stdin, not terminal)
-- Starship template uses powerline chars (U+E0B0, U+E0B6) -- Write tool strips these, use sed on git-extracted originals
-- ~/.emacs.d.bak still exists on rhadamanth -- safe to remove once confirmed
+- envsubst only substitutes `MOLT_*` variables -- safe for templates with app $vars
+- doom upgrade uses --force to bypass Emacs y-or-n-p
+- Starship template has powerline chars (U+E0B0, U+E0B6) -- don't use Write tool (strips them)
 - 19 liberators, 83 tests, three sleeves (kovacs, rhadamanth, gyges)
