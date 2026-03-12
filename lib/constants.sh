@@ -36,5 +36,5 @@ MOLT_PPLR_HOME="${PPLR_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Pplr}}"
 MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/bin}"
 
 # --- Framework ---
-MOLT_VERSION="0.1.0"
+MOLT_VERSION="$(cat "${MOLT_ROOT}/VERSION" 2>/dev/null || echo "0.1.0")"
 MOLT_NAME="MOLT"

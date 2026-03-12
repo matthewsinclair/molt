@@ -78,14 +78,44 @@ The bootstrap script clones both repos, symlinks `molt` into `~/bin`, shows a dr
 
 ## Keeping up to date
 
-After the initial resleeve, use `molt upgrade` to pull the latest framework and config, then re-run resleeve:
+After the initial resleeve, use `molt upgrade` to pull the latest framework and config, run upgrade hooks, then resleeve:
 
 ```bash
-molt upgrade              # pull + resleeve
+molt upgrade              # pull + upgrade hooks + resleeve
 molt upgrade --dry-run    # preview only
+molt upgrade zsh,git      # upgrade specific liberators only
+molt upgrade --no-resleeve # upgrade without resleeve
 ```
 
 `upgrade` requires clean working trees in both repos (no uncommitted changes).
+
+### Self-update
+
+To update just the framework and config repos without running hooks or resleeving:
+
+```bash
+molt upgrade --self       # pull framework + config repos only
+```
+
+This is useful as a first step before a full upgrade, or when you just want to sync the repos.
+
+### System maintenance
+
+`molt maintain` runs heavier system maintenance tasks — things like `brew upgrade`, `doom upgrade`, or other slow operations that you'd run weekly or monthly rather than daily:
+
+```bash
+molt maintain             # run all maintenance hooks
+molt maintain --dry-run   # preview what would run
+molt maintain brew        # maintain specific liberators only
+```
+
+### Recommended workflow
+
+The typical update sequence is:
+
+1. `molt upgrade --self` — sync repos
+2. `molt upgrade` — run upgrade hooks + resleeve
+3. `molt maintain` — run maintenance (when you have time)
 
 ## Checking health
 

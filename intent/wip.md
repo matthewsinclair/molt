@@ -63,4 +63,4 @@ verblock: "11 Mar 2026:v0.10: matts - molt maintain, brew liberator, starship ho
 
 ## Notes
 
-19 liberators (brew added), 83 tests passing. Three sleeves operational (kovacs, rhadamanth, gyges). `molt upgrade` = fast config sync (daily). `molt maintain` = heavy system maintenance (weekly/monthly). envsubst now only substitutes MOLT_* variables, preventing clobbering of app-specific $VAR references in templates.
+19 liberators (brew added), 83 tests passing. Three sleeves operational (kovacs, rhadamanth, gyges). `molt upgrade` = fast config sync (daily). `molt maintain` = heavy system maintenance (weekly/monthly). envsubst now only substitutes MOLT\_\* variables, preventing clobbering of app-specific $VAR references in templates.

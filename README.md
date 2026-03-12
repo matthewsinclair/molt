@@ -1,3 +1,5 @@
+[![Molt Tests](https://github.com/matthewsinclair/molt/actions/workflows/tests.yml/badge.svg)](https://github.com/matthewsinclair/molt/actions/workflows/tests.yml)
+
 # MOLT — My Opinionated Local Terminal
 
 <p align="center">
@@ -21,7 +23,7 @@ MOLT separates the framework from your personal config:
 | Repo                              | What it contains                                              | Shared?          |
 | --------------------------------- | ------------------------------------------------------------- | ---------------- |
 | **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
-| **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides    | No — your soul   |
+| **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
 
 The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PRJ_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
@@ -86,22 +88,28 @@ In Molt, your config is your cortical stack, your consciousness. Every machine i
 
 | Term           | What it means                                                                      |
 | -------------- | ---------------------------------------------------------------------------------- |
-| **stack**      | Your dotfiles and config bundle. The portable identity.                              |
+| **stack**      | Your dotfiles and config bundle. The portable identity.                            |
 | **sleeve**     | A target machine that receives your stack.                                         |
 | **needlecast** | Push your stack to a remote machine.                                               |
 | **resleeve**   | Bootstrap a fresh machine from your stack.                                         |
 | **backup**     | Snapshot your current stack state.                                                 |
 | **zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
-| **liberators** | Config modules. Each one frees you from a default.                                  |
-| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains.  |
+| **liberators** | Config modules. Each one frees you from a default.                                 |
+| **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
 
 ## CLI
 
 ```bash
 molt resleeve              # Bootstrap the current machine from your stack
 molt resleeve --dry-run    # Preview what resleeve would do, without changing anything
-molt upgrade               # Pull latest framework + config, then resleeve
+molt upgrade               # Pull latest framework + config, run upgrade hooks, resleeve
+molt upgrade --self        # Pull framework + config repos only (no hooks, no resleeve)
 molt upgrade --dry-run     # Preview what upgrade would do
+molt upgrade zsh,git       # Run upgrade hooks for specific liberators only
+molt upgrade --no-resleeve # Upgrade without resleeve
+molt maintain              # Run system maintenance (brew upgrade, doom upgrade, etc.)
+molt maintain --dry-run    # Preview maintenance actions
+molt maintain brew         # Maintain specific liberators only
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
 molt doctor                # System diagnostics and health checks (9 checks)
@@ -124,21 +132,23 @@ If unset, molt will search `~/molt-{user}` and `~/.molt-{user}` as fallbacks, bu
 
 ### Other environment variables
 
-| Variable            | Purpose                       | Default                            |
-| ------------------- | ----------------------------- | ---------------------------------- |
-| `MOLT_PRJ_DIR`      | Where repos live              | _(none — must be set)_             |
-| `MOLT_OPT_DIR`      | Where opt-style installs live | `$(dirname "$MOLT_PRJ_DIR")/opt`   |
-| `MOLT_LOCAL_BIN`    | Where to symlink executables  | `~/bin`                            |
-| `UTILZ_HOME`        | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`             |
-| `INTENT_HOME`       | Override Intent repo location | `$MOLT_PRJ_DIR/Intent`            |
+| Variable         | Purpose                       | Default                          |
+| ---------------- | ----------------------------- | -------------------------------- |
+| `MOLT_PRJ_DIR`   | Where repos live              | _(none — must be set)_           |
+| `MOLT_OPT_DIR`   | Where opt-style installs live | `$(dirname "$MOLT_PRJ_DIR")/opt` |
+| `MOLT_LOCAL_BIN` | Where to symlink executables  | `~/bin`                          |
+| `UTILZ_HOME`     | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`            |
+| `INTENT_HOME`    | Override Intent repo location | `$MOLT_PRJ_DIR/Intent`           |
 
 ## Liberators
 
-A liberator is a config module that frees you from one default. Each liberator implements three functions:
+A liberator is a config module that frees you from one default. Each liberator implements a lifecycle of functions:
 
 - `{name}_check` — Is this component already installed and configured?
 - `{name}_install` — Configure it (verify prerequisites, link config, set up).
-- `{name}_verify` — Confirm the installation is correct.
+- `{name}_upgrade` — _(optional)_ Config sync hook. Fast, safe, runs during `molt upgrade`.
+- `{name}_maintain` — _(optional)_ System maintenance hook. Slow, runs during `molt maintain`.
+- `{name}_verify` — _(optional)_ Final verification.
 
 Liberators **never install packages**. They check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
 
@@ -150,21 +160,25 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | -------------- | ----------------------------------------------- | ------------ |
 | system         | Verify sudo (linux) or brew (macos)             | linux, macos |
 | local-bin      | `~/bin` directory, molt CLI symlink             | linux, macos |
-| zsh            | Shell default, Starship prompt, config linking   | linux, macos |
-| git            | Git + git-lfs verification, gitconfig linking     | linux, macos |
-| tmux           | Tmux verification, config linking                 | linux, macos |
-| editors        | Doom Emacs + LazyVim, config linking, dock pin   | linux, macos |
-| alacritty      | Alacritty config linking, dock pin               | linux, macos |
-| gnome-terminal | GNOME Terminal profile via dconf                 | linux        |
-| iterm2         | iTerm2 dynamic profile linking                   | macos        |
-| terminal-app   | Terminal.app profile import                      | macos        |
+| zsh            | Shell default, Starship prompt, config linking  | linux, macos |
+| git            | Git + git-lfs verification, gitconfig linking   | linux, macos |
+| tmux           | Tmux verification, config linking               | linux, macos |
+| editors        | Doom Emacs + LazyVim, config linking, dock pin  | linux, macos |
+| alacritty      | Alacritty config linking, dock pin              | linux, macos |
+| gnome-terminal | GNOME Terminal profile via dconf                | linux        |
+| iterm2         | iTerm2 dynamic profile linking                  | macos        |
+| terminal-app   | Terminal.app profile import                     | macos        |
 | keys           | keyd build from source, key remapping           | linux        |
-| desktop        | GNOME settings, GTK config, accessibility        | linux        |
+| desktop        | GNOME settings, GTK config, accessibility       | linux        |
 | tiling         | Tactile GNOME extension grid tiling             | linux        |
 | vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
 | dev-tools      | CLI tools (bat, rg, fd, fzf) + mise             | linux, macos |
-| ssh            | SSH key detection, config rendering + fragments  | linux, macos |
+| ssh            | SSH key detection, config rendering + fragments | linux, macos |
 | utilz          | Utilz framework, bats-core, `~/bin` symlinks    | linux, macos |
+| brew           | Homebrew maintenance and upgrade                | macos        |
+| intent         | Intent framework config and linking             | linux, macos |
+| pplr           | Pplr framework config and linking               | linux, macos |
+| web            | Web browser config and linking                  | linux, macos |
 
 ### molt.toml
 
@@ -289,7 +303,7 @@ Liberators verify their own prerequisites and fail with install hints if anythin
 
 ## Status
 
-Early development. Two sleeves operational: kovacs (Ubuntu 24.04 ARM64) and rhadamanth (macOS M4).
+Early development. Three sleeves operational: kovacs (Ubuntu 24.04 ARM64), rhadamanth (macOS M4), and gyges (macOS).
 
 ## License
 
