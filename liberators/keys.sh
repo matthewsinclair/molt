@@ -47,10 +47,7 @@ keys_install() {
     local tmpdir
     tmpdir="$(mktemp -d)"
     git clone https://github.com/rvaiya/keyd "$tmpdir/keyd"
-    cd "$tmpdir/keyd"
-    make
-    sudo make install
-    cd -
+    (cd "$tmpdir/keyd" && make && sudo make install)
     rm -rf "$tmpdir"
   fi
 

@@ -78,20 +78,14 @@ jobs:
     - name: Run ShellCheck
       run: |
         echo "Running ShellCheck on Molt scripts..."
-        # Check bin/molt
-        echo "Checking: bin/molt"
-        shellcheck bin/molt || echo "  ShellCheck found issues (non-blocking)"
-        # Check lib/*.sh
+        shellcheck -x bin/molt
         for script in lib/*.sh; do
-          echo "Checking: $script"
-          shellcheck "$script" || echo "  ShellCheck found issues (non-blocking)"
+          shellcheck -x "$script"
         done
-        # Check liberators/*.sh
         for script in liberators/*.sh; do
-          echo "Checking: $script"
-          shellcheck "$script" || echo "  ShellCheck found issues (non-blocking)"
+          shellcheck -x "$script"
         done
-        echo "ShellCheck analysis completed"
+        echo "ShellCheck: all clean"
 
   test-summary:
     name: Test Summary

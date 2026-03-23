@@ -91,7 +91,7 @@ gnome-terminal_install() {
     else
       # Append to existing list
       local new_list
-      new_list="$(echo "$current_list" | sed "s/]/, '${MOLT_GNOME_TERMINAL_UUID}']/")"
+      new_list="${current_list/]/, \'${MOLT_GNOME_TERMINAL_UUID}\']}"
       gsettings set org.gnome.Terminal.ProfilesList list "$new_list"
     fi
   fi

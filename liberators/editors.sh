@@ -79,6 +79,7 @@ editors_install() {
   # Install Doom Emacs
   if [[ ! -f "$HOME/.config/emacs/bin/doom" ]]; then
     if [[ -d "$HOME/.config/emacs" ]]; then
+      # shellcheck disable=SC2088
       molt_warn "~/.config/emacs exists but has no doom binary — skipping clone (move it aside to reinstall)"
     else
       molt_info "Installing Doom Emacs..."
@@ -106,6 +107,7 @@ editors_install() {
     git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
     rm -rf "$HOME/.config/nvim/.git"
   elif [[ ! -f "$HOME/.config/nvim/init.lua" ]]; then
+    # shellcheck disable=SC2088
     molt_warn "~/.config/nvim exists but has no init.lua — skipping LazyVim clone"
   fi
 
@@ -115,7 +117,7 @@ editors_install() {
     favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"emacs.desktop"* ]]; then
       local new_favorites
-      new_favorites="$(echo "$favorites" | sed "s/]/, 'emacs.desktop']/")"
+      new_favorites="${favorites/]/, \'emacs.desktop\']}"
       gsettings set org.gnome.shell favorite-apps "$new_favorites"
       molt_info "Added Emacs to GNOME dock favorites"
     fi

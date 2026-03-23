@@ -2,6 +2,9 @@
 # constants.sh — Single source of truth for all configurable paths and defaults.
 # The Highlander Rule: every constant defined here and ONLY here.
 # When Molt becomes a brew tap, these defaults change in ONE place.
+#
+# All variables are consumed by scripts that source this file.
+# shellcheck disable=SC2034
 
 # --- Project directories ---
 # Where repos live. MUST be set via env var or sleeve config.

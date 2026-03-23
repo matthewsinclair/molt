@@ -52,7 +52,7 @@ alacritty_install() {
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
       # Append Alacritty.desktop to the favorites list
       local new_favorites
-      new_favorites="$(echo "$favorites" | sed "s/]/, 'Alacritty.desktop']/")"
+      new_favorites="${favorites/]/, \'Alacritty.desktop\']}"
       gsettings set org.gnome.shell favorite-apps "$new_favorites"
       molt_info "Added Alacritty to GNOME dock favorites"
     fi

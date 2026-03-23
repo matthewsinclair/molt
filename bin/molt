@@ -13,9 +13,9 @@ MOLT_ROOT="$(cd "$(dirname "$_molt_self")/.." && pwd)"
 unset _molt_self
 
 # Source core libraries
-# shellcheck source=../lib/molt.sh
+# shellcheck disable=SC1091
 source "${MOLT_ROOT}/lib/molt.sh"
-# shellcheck source=../lib/liberator.sh
+# shellcheck disable=SC1091
 source "${MOLT_ROOT}/lib/liberator.sh"
 
 # --- Commands ---
@@ -67,7 +67,9 @@ cmd_status() {
 
   echo ""
   echo "Liberators:"
-  liberator_status_all $(liberator_list)
+  local libs
+  mapfile -t libs < <(liberator_list)
+  liberator_status_all "${libs[@]}"
 }
 
 cmd_resleeve() {

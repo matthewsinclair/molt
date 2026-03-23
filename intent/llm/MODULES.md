@@ -7,12 +7,12 @@
 
 ## Framework
 
-| Module                | File               | Concern                                                            |
-| --------------------- | ------------------ | ------------------------------------------------------------------ |
-| molt (CLI)            | `bin/molt`         | Main entry point, arg parsing, command dispatch                    |
-| molt (constants)      | `lib/constants.sh` | All configurable paths and defaults (single source of truth)       |
-| molt (core)           | `lib/molt.sh`      | Logging, platform detection, symlink management, dependency checks |
-| liberator (framework) | `lib/liberator.sh` | Liberator loading, execution, verification, discovery              |
+| Module                | File               | Concern                                                                                        |
+| --------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+| molt (CLI)            | `bin/molt`         | Main entry point, arg parsing, command dispatch                                                |
+| molt (constants)      | `lib/constants.sh` | All configurable paths and defaults (single source of truth)                                   |
+| molt (core)           | `lib/molt.sh`      | Logging, platform detection, symlink management, dependency checks, cross-instance aggregation |
+| liberator (framework) | `lib/liberator.sh` | Liberator loading, execution, verification, discovery                                          |
 
 ## Liberators
 

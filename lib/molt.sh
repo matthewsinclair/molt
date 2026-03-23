@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Source constants (single source of truth for all configurable values)
 MOLT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=constants.sh
+# shellcheck disable=SC1091
 source "${MOLT_LIB_DIR}/constants.sh"
 
 # --- Logging ---
@@ -47,6 +47,7 @@ molt_distro() {
     return
   fi
   if [[ -f /etc/os-release ]]; then
+    # shellcheck disable=SC1091
     . /etc/os-release
     echo "${ID:-unknown}"
   else
@@ -102,7 +103,8 @@ molt_link() {
 
   # If target exists and is not a symlink, back it up
   if [[ -e "$target" ]] && [[ ! -L "$target" ]]; then
-    local backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+    local backup
+    backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
     molt_warn "Backing up existing file: $target -> $backup"
     mv "$target" "$backup"
   fi
@@ -145,6 +147,7 @@ molt_render() {
     # Only substitute MOLT_* variables — leave other $VAR references
     # (like starship's $username, $path, etc.) untouched.
     (
+      # shellcheck disable=SC1090
       source "$vars_file"
       local molt_vars
       molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
@@ -167,13 +170,15 @@ molt_render() {
     elif [[ -f "${target}.molt-rendered" ]]; then
       # Previously rendered by molt — check if content actually changed
       if ! diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
-        local backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+        local backup
+        backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
         molt_warn "Rendered file changed since last render, backing up: $target -> $backup"
         mv "$target" "$backup"
       fi
     else
       # Regular file that wasn't rendered by molt — back up
-      local backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+      local backup
+      backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
       molt_warn "Backing up existing file: $target -> $backup"
       mv "$target" "$backup"
     fi
@@ -213,6 +218,43 @@ molt_install_config() {
     molt_warn "Config not found: $source (checked template and static)"
     return 1
   fi
+}
+
+# --- Cross-Instance Aggregation ---
+
+# Read a TOML field from all instance.toml files in the user repo.
+# Iterates instances/*/instance.toml, extracts the named field from the
+# named section, and prints hostname:value pairs (one per line).
+# Usage: molt_instances_field "field_name" "section_name"
+molt_instances_field() {
+  local field="$1"
+  local section="${2:-instance}"
+
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || return 1
+
+  local instances_dir="$user_repo/instances"
+  [[ -d "$instances_dir" ]] || return 1
+
+  for instance_dir in "$instances_dir"/*/; do
+    [[ -d "$instance_dir" ]] || continue
+    local toml="$instance_dir/instance.toml"
+    [[ -f "$toml" ]] || continue
+
+    local hostname value="" in_section=0
+    hostname="$(basename "$instance_dir")"
+
+    while IFS= read -r line; do
+      if [[ "$line" =~ ^\[([a-z_]+)\] ]]; then
+        [[ "${BASH_REMATCH[1]}" == "$section" ]] && in_section=1 || in_section=0
+      elif [[ $in_section -eq 1 ]] && [[ "$line" =~ ^${field}[[:space:]]*=[[:space:]]*\"([^\"]+)\" ]]; then
+        value="${BASH_REMATCH[1]}"
+      fi
+    done < "$toml"
+
+    [[ -n "${value}" ]] && echo "${hostname}:${value}"
+  done
+  return 0
 }
 
 # --- Manifest (molt.toml) ---
@@ -452,7 +494,8 @@ cmd_doctor() {
   step=$((step + 1))
   local deps_ok=1
   local missing_deps=""
-  for dep in bats; do
+  local required_deps=(bats)
+  for dep in "${required_deps[@]}"; do
     if ! command -v "$dep" &>/dev/null; then
       deps_ok=0
       missing_deps="$missing_deps $dep"
@@ -526,6 +569,9 @@ cmd_test() {
     return 1
   fi
 
+  # Run ShellCheck first (if available)
+  _test_shellcheck
+
   if [[ -n "$target" ]]; then
     # Run specific liberator test
     local target_file="$test_dir/liberators/${target}.bats"
@@ -549,6 +595,36 @@ cmd_test() {
     fi
     bats "${test_files[@]}"
   fi
+}
+
+_test_shellcheck() {
+  if ! command -v shellcheck &>/dev/null; then
+    molt_warn "shellcheck not found, skipping static analysis"
+    return 0
+  fi
+
+  local scripts=()
+  scripts+=("${MOLT_ROOT}/bin/molt")
+  for f in "${MOLT_ROOT}"/lib/*.sh; do
+    [[ -f "$f" ]] && scripts+=("$f")
+  done
+  for f in "${MOLT_ROOT}"/liberators/*.sh; do
+    [[ -f "$f" ]] && scripts+=("$f")
+  done
+
+  molt_info "ShellCheck: ${#scripts[@]} scripts..."
+  local failed=0
+  for script in "${scripts[@]}"; do
+    if ! shellcheck -x "$script" 2>&1; then
+      failed=1
+    fi
+  done
+
+  if [[ "$failed" -eq 1 ]]; then
+    molt_error "ShellCheck found issues (see above)"
+    return 1
+  fi
+  molt_info "ShellCheck: all clean"
 }
 
 # --- Upgrade ---
@@ -611,6 +687,7 @@ _upgrade_pull_repos() {
   fi
 
   # 5. Re-source constants to pick up any version change
+  # shellcheck disable=SC1091
   source "${MOLT_LIB_DIR}/constants.sh"
   if [[ "$old_version" != "$MOLT_VERSION" ]]; then
     echo ""

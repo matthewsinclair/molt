@@ -91,7 +91,7 @@ vscode_install() {
     favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"code.desktop"* ]]; then
       local new_favorites
-      new_favorites="$(echo "$favorites" | sed "s/]/, 'code.desktop']/")"
+      new_favorites="${favorites/]/, \'code.desktop\']}"
       gsettings set org.gnome.shell favorite-apps "$new_favorites"
       molt_info "Added VS Code to GNOME dock favorites"
     fi

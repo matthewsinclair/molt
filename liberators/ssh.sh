@@ -89,9 +89,11 @@ ssh_install() {
       # Only append if sentinel not already present
       if ! grep -qF "$sentinel" "$HOME/.ssh/config" 2>/dev/null; then
         molt_info "Appending SSH config fragment: $fragment_name"
-        echo "" >> "$HOME/.ssh/config"
-        echo "$sentinel" >> "$HOME/.ssh/config"
-        cat "$fragment" >> "$HOME/.ssh/config"
+        {
+          echo ""
+          echo "$sentinel"
+          cat "$fragment"
+        } >> "$HOME/.ssh/config"
       else
         molt_debug "SSH config fragment already present: $fragment_name"
       fi
@@ -119,6 +121,7 @@ ssh_verify() {
     provenance="$(cat "$HOME/.ssh/config.molt-rendered")"
     molt_info "Verified: ~/.ssh/config is rendered ($provenance)"
   elif [[ -f "$HOME/.ssh/config" ]]; then
+    # shellcheck disable=SC2088
     molt_warn "~/.ssh/config exists but is not molt-managed"
   else
     molt_error "VERIFY FAIL: ~/.ssh/config not found"
