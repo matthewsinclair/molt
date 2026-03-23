@@ -1,7 +1,7 @@
 ---
 verblock: "23 Mar 2026:v0.1: matts - Initial version"
 intent_version: 2.4.0
-status: WIP
+status: Completed
 slug: proper-per-instance-config-of-per-instance
 created: 20260323
 completed:
