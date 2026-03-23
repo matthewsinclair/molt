@@ -67,8 +67,10 @@ cmd_status() {
 
   echo ""
   echo "Liberators:"
-  local libs
-  mapfile -t libs < <(liberator_list)
+  local libs=()
+  while IFS= read -r lib; do
+    [[ -n "$lib" ]] && libs+=("$lib")
+  done < <(liberator_list)
   liberator_status_all "${libs[@]}"
 }
 
