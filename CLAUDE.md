@@ -1,6 +1,6 @@
 # Molt Project Guidelines
 
-This is an Intent v2.6.0 project.
+This is an Intent v2.8.0 project.
 
 ## Rules
 
