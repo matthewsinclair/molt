@@ -1,3 +1,6 @@
 # macOS filesystem artifacts (leak through Parallels mount)
 .DS_Store
 Icon?
+
+# Ignore intent upgrade backups
+.backup/backup-*
