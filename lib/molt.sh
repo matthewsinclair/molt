@@ -402,11 +402,32 @@ cmd_list() {
   done
 }
 
+# Report config files that bake in another user's absolute home path
+# (/Users/<x> or /home/<x>, including JSON-escaped \/Users\/<x>, where <x> is
+# not the current user). Echoes offending paths relative to dir, one per line.
+# Empty output means clean. This catches non-portable configs like a raw iTerm2
+# or VS Code export committed with hardcoded paths.
+molt_foreign_home_paths() {
+  local dir="$1"
+  [[ -d "$dir" ]] || return 0
+  local me; me="$(whoami)"
+  local f
+  while IFS= read -r f; do
+    # Strip backslashes first (octal \134) so JSON-escaped \/Users\/x
+    # normalises to /Users/x, then match real home paths precisely.
+    if tr -d '\134' < "$f" 2>/dev/null \
+         | grep -oE '/(Users|home)/[A-Za-z0-9_.-]+' \
+         | grep -qvE "/(Users|home)/${me}(/|$)"; then
+      echo "${f#"$dir"/}"
+    fi
+  done < <(grep -rIlE '(Users|home)' "$dir" 2>/dev/null)
+}
+
 cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=9
+  local total=10
   local step=0
   local warnings=0
 
@@ -553,6 +574,19 @@ cmd_doctor() {
     echo "[$step/$total] Checking GitHub auth... ✓ authenticated as $gh_user"
   else
     echo "[$step/$total] Checking GitHub auth... ⚠ not authenticated"
+    warnings=$((warnings + 1))
+  fi
+
+  # 10. Config carries no foreign (other-user) absolute home paths
+  step=$((step + 1))
+  local foreign=""
+  if [[ -n "$user_repo" ]]; then
+    foreign="$(molt_foreign_home_paths "$user_repo/config")"
+  fi
+  if [[ -z "$foreign" ]]; then
+    echo "[$step/$total] Checking config for foreign home paths... ✓ none"
+  else
+    echo "[$step/$total] Checking config for foreign home paths... ⚠ found in: $(echo "$foreign" | tr '\n' ' ')"
     warnings=$((warnings + 1))
   fi
 

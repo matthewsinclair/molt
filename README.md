@@ -115,7 +115,7 @@ molt maintain brew         # Maintain specific liberators only
 molt new-user <user>       # Scaffold a new molt-{user} config repo (prompts for details)
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
-molt doctor                # System diagnostics and health checks (9 checks)
+molt doctor                # System diagnostics and health checks (10 checks)
 molt test [liberator]      # Run bats test suite (all or one liberator)
 molt version               # Show version
 molt help                  # Show help

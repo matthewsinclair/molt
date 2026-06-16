@@ -86,3 +86,32 @@ load "test_helper.bash"
     assert_success
     assert_output_contains "version"
 }
+
+# --- Foreign home-path detection (doctor check 10) ---
+
+@test "molt_foreign_home_paths flags another user's home path (incl JSON-escaped)" {
+    load_molt_libs
+    local me; me="$(whoami)"
+    local d="$BATS_TEST_TMPDIR/cfg"; mkdir -p "$d/iterm2" "$d/zsh"
+    # JSON-escaped foreign path — the iTerm2/VS Code export case
+    printf '{"Working Directory":"\\/Users\\/someoneelse"}\n' > "$d/iterm2/profile.json"
+    # current user's own path must NOT be flagged
+    echo "export P=/Users/$me/bin" > "$d/zsh/zshenv"
+
+    run molt_foreign_home_paths "$d"
+    assert_success
+    assert_output_contains "iterm2/profile.json"
+    refute_output_contains "zsh/zshenv"
+}
+
+@test "molt_foreign_home_paths clean when only current user's paths" {
+    load_molt_libs
+    local me; me="$(whoami)"
+    local d="$BATS_TEST_TMPDIR/cfg2"; mkdir -p "$d"
+    echo "a = /Users/$me/x" > "$d/a.conf"
+    echo "b = /home/$me/y" > "$d/b.conf"
+
+    run molt_foreign_home_paths "$d"
+    assert_success
+    [ -z "$output" ]
+}

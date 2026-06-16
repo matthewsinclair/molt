@@ -12,12 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `molt new-user` command: scaffolds a new `molt-{user}` config repo from a tokenised skeleton (`templates/molt-user/`), substituting name, email, GitHub handle, and first hostname. Implemented in `lib/newuser.sh` with `test/newuser.bats` (10 tests)
 - `docs/guides/new-user.md` guide explaining the scaffold, the identity surface, and the scaffold-time vs resleeve-time placeholder split
 - `git_install` config-linking tests in `test/git.bats` (arbitrary identity name, multiple includes, empty-glob guard)
+- `molt doctor` check (10th) for config files that bake in another user's absolute home path, including JSON-escaped `\/Users\/<x>` exports (`molt_foreign_home_paths`)
 
 ### Changed
 
 - `git` liberator now links any `config/git/gitconfig_*` identity include instead of a hardcoded filename
 - `bootstrap.sh` no longer assumes a fixed GitHub owner for the config repo: `MOLT_REPO` and the new `MOLT_USER_GH` are overridable (default `whoami`)
 - Removed hardcoded personal identity strings throughout framework docs and project artifacts; the framework now reads as generic `{user}`/`{github}`
+
+### Fixed
+
+- `molt_render` now fails cleanly when `envsubst` is missing instead of writing an un-substituted file while reporting success (eg a literal `${MOLT_SSH_KEY}` left in `~/.ssh/config`)
 
 ## [0.1.1] - 2026-03-23
 
