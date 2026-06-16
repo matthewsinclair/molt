@@ -1,6 +1,6 @@
-# molt-**MOLT_USER**
+# `molt-__MOLT_USER__`
 
-Personal MOLT config repo for ****MOLT_FULL_NAME**** (`@__MOLT_GITHUB__`).
+Personal MOLT config repo for `__MOLT_FULL_NAME__` (`@__MOLT_GITHUB__`).
 
 This is the "soul" half of the MOLT two-repo model: your dotfiles, manifest,
 and per-machine overrides. The framework lives separately in the `molt` repo.

@@ -69,6 +69,18 @@ _scaffold_flynn() {
     assert_output_contains 'user_repo = "molt-flynn"'
 }
 
+@test "molt_new_user substitutes README tokens (heading and name)" {
+    _load_newuser
+    local dest; dest="$(_scaffold_flynn)"
+    run cat "$dest/README.md"
+    assert_output_contains "molt-flynn"
+    assert_output_contains "Flynn Sinclair"
+    # Catches both unsubstituted (__MOLT_USER__) and markdown-mangled
+    # (**MOLT_USER**) tokens, since both retain the bare MOLT_ name.
+    refute_output_contains "MOLT_USER"
+    refute_output_contains "MOLT_FULL_NAME"
+}
+
 @test "molt_new_user leaves runtime template vars untouched" {
     _load_newuser
     local dest; dest="$(_scaffold_flynn)"
