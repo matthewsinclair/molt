@@ -13,16 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/guides/new-user.md` guide explaining the scaffold, the identity surface, and the scaffold-time vs resleeve-time placeholder split
 - `git_install` config-linking tests in `test/git.bats` (arbitrary identity name, multiple includes, empty-glob guard)
 - `molt doctor` check (10th) for config files that bake in another user's absolute home path, including JSON-escaped `\/Users\/<x>` exports (`molt_foreign_home_paths`)
+- `molt doctor` external-dependency check now also verifies `envsubst` (gettext), required for template rendering
+- `web` liberator test (`test/liberators/web.bats`)
 
 ### Changed
 
 - `git` liberator now links any `config/git/gitconfig_*` identity include instead of a hardcoded filename
 - `bootstrap.sh` no longer assumes a fixed GitHub owner for the config repo: `MOLT_REPO` and the new `MOLT_USER_GH` are overridable (default `whoami`)
 - Removed hardcoded personal identity strings throughout framework docs and project artifacts; the framework now reads as generic `{user}`/`{github}`
+- `molt new-user` skeleton defaults `MOLT_FONT_FAMILY` to `Hack Nerd Font Mono` (a Nerd Font, matching the iTerm2 profile) so the prompt glyphs render out of the box
 
 ### Fixed
 
 - `molt_render` now fails cleanly when `envsubst` is missing instead of writing an un-substituted file while reporting success (eg a literal `${MOLT_SSH_KEY}` left in `~/.ssh/config`)
+- `web` liberator now detects the repo by `go.mod`/`.git` and links the platform binary (`web-<os>-<arch>`) or a locally built `./web`, instead of requiring a binary literally named `web` that a fresh clone never has
 
 ## [0.1.1] - 2026-03-23
 

@@ -9,6 +9,8 @@ This guide walks you through setting up MOLT on a new machine.
 
 - bash 4+
 - git
+- `gettext` — provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
+- A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
 - A terminal you're comfortable in
 
 ## 1. Set MOLT_PRJ_DIR

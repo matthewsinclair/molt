@@ -524,7 +524,7 @@ cmd_doctor() {
   step=$((step + 1))
   local deps_ok=1
   local missing_deps=""
-  local required_deps=(bats)
+  local required_deps=(bats envsubst)
   for dep in "${required_deps[@]}"; do
     if ! command -v "$dep" &>/dev/null; then
       deps_ok=0
@@ -532,7 +532,7 @@ cmd_doctor() {
     fi
   done
   if [[ "$deps_ok" -eq 1 ]]; then
-    echo "[$step/$total] Checking external dependencies... ✓ bats"
+    echo "[$step/$total] Checking external dependencies... ✓ ${required_deps[*]}"
   else
     echo "[$step/$total] Checking external dependencies... ⚠ missing:$missing_deps"
     warnings=$((warnings + 1))
