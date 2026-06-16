@@ -132,6 +132,15 @@ molt_render() {
     return 1
   fi
 
+  # envsubst (from gettext) is required to render templates. Without this guard
+  # a missing envsubst leaves the target with un-substituted ${VARS} while the
+  # liberator still reports success — a silent failure.
+  if ! command -v envsubst &>/dev/null; then
+    molt_error "envsubst not found — cannot render $template"
+    molt_error "Install gettext (macOS: brew install gettext && brew link --force gettext; linux: apt install gettext) then re-run."
+    return 1
+  fi
+
   # Load instance vars
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1

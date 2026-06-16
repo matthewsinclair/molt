@@ -92,6 +92,18 @@ create_test_template() {
     assert_output_contains "Template not found"
 }
 
+@test "molt_render fails clearly when envsubst is missing" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    create_test_template "$repo" "config/test/needs-envsubst.conf" 'v = ${MOLT_TEST_VAR}'
+
+    local target="$HOME/.config/test/needs-envsubst.conf"
+    # Empty PATH hides envsubst; the guard runs before any external command.
+    PATH="/nonexistent" run molt_render "$repo/config/test/needs-envsubst.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "envsubst not found"
+}
+
 @test "molt_render with missing vars.sh warns and renders with env only" {
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
