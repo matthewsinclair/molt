@@ -41,11 +41,12 @@
 
 ## Testing
 
-| Module      | File                    | Concern                                 |
-| ----------- | ----------------------- | --------------------------------------- |
-| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure         |
-| templates   | `test/templates.bats`   | Template rendering (molt_render) tests  |
-| newuser     | `test/newuser.bats`     | new-user scaffold (molt_new_user) tests |
+| Module      | File                       | Concern                                   |
+| ----------- | -------------------------- | ----------------------------------------- |
+| test_helper | `test/test_helper.bash`    | Shared BATS test infrastructure           |
+| templates   | `test/templates.bats`      | Template rendering (molt_render) tests    |
+| newuser     | `test/newuser.bats`        | new-user scaffold (molt_new_user) tests   |
+| web         | `test/liberators/web.bats` | web liberator repo + binary linking tests |
 
 ## Templates
 
