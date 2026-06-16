@@ -9,7 +9,7 @@
 - Fixed CI: git identity config needed for git.bats test runners
 - README.md: CI badge, full CLI reference, liberator lifecycle with upgrade/maintain hooks, 4 new liberators, three sleeves
 - getting-started.md: self-update, maintain, recommended workflow
-- iTerm2 SSH background color wrapper in molt-matts (per-host tinting)
+- iTerm2 SSH background color wrapper in molt-{user} (per-host tinting)
 - Tagged v0.1.0, pushed both repos
 
 ### What's Next
@@ -27,7 +27,7 @@
 - VERSION file at project root is single source of truth for version
 - CI runs bats on both Linux and macOS; ShellCheck is non-blocking
 - git.bats tests need git user identity (configured in CI workflow)
-- iTerm2 SSH colors live in molt-matts (user config), not framework
+- iTerm2 SSH colors live in molt-{user} (user config), not framework
 - `molt upgrade` = config sync (fast, daily). `molt maintain` = system maintenance (slow, weekly)
 - envsubst only substitutes `MOLT_*` variables -- safe for templates with app $vars
 - doom upgrade uses --force to bypass Emacs y-or-n-p

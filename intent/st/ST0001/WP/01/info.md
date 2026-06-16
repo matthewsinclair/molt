@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.3: matts - Resolved via Parallels keyboard shortcuts"
+verblock: "09 Mar 2026:v0.3: {user} - Resolved via Parallels keyboard shortcuts"
 wp_id: WP-01
 title: "Fix Cmd key passthrough from Parallels"
 scope: Medium
@@ -17,7 +17,7 @@ Get the Cmd (leftmeta) key from the macOS host (rhadamanth) through Parallels an
 - keyd config is correct and ready (/etc/keyd/default.conf)
 - The Cmd key was briefly working, then stopped after Parallels keyboard config changes
 - Parallels appears to be swallowing Cmd at the hypervisor level
-- Matt reset Parallels to defaults but Cmd is still not arriving in the VM
+- {user} reset Parallels to defaults but Cmd is still not arriving in the VM
 - Possible causes: Parallels keyboard profile, GNOME/Mutter compositor grab
 
 ## macOS Key Mapping Reference (rhadamanth)

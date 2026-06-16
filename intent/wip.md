@@ -1,5 +1,5 @@
 ---
-verblock: "12 Mar 2026:v0.11: matts - docs, CI/CD, versioning, changelog, iTerm2 SSH colors"
+verblock: "12 Mar 2026:v0.11: {user} - docs, CI/CD, versioning, changelog, iTerm2 SSH colors"
 ---
 
 # Work In Progress
@@ -13,7 +13,7 @@ verblock: "12 Mar 2026:v0.11: matts - docs, CI/CD, versioning, changelog, iTerm2
 - GitHub Actions: tests (Linux + macOS), ShellCheck, PR checks
 - README: CI badge, upgrade --self, maintain, new liberators, lifecycle hooks, three sleeves
 - getting-started.md: self-update, maintain, recommended workflow
-- iTerm2 SSH background color wrapper (molt-matts): tints per host on SSH
+- iTerm2 SSH background color wrapper (molt-{user}): tints per host on SSH
 - Tagged v0.1.0, fixed CI (git identity for test runners)
 - 83 tests passing (19 liberators)
 

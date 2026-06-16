@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.1: matts - Initial WP"
+verblock: "09 Mar 2026:v0.1: {user} - Initial WP"
 wp_id: WP-11
 title: "Inline upgrade (molt upgrade)"
 scope: Small

@@ -17,6 +17,8 @@ unset _molt_self
 source "${MOLT_ROOT}/lib/molt.sh"
 # shellcheck disable=SC1091
 source "${MOLT_ROOT}/lib/liberator.sh"
+# shellcheck disable=SC1091
+source "${MOLT_ROOT}/lib/newuser.sh"
 
 # --- Commands ---
 
@@ -37,6 +39,9 @@ Commands:
   maintain [--dry-run] [liberators]
                         Run system maintenance (brew update, doom upgrade, etc.)
                         With liberators: maintain only those (comma-separated)
+  new-user <user> [--name N] [--email E] [--github GH] [--hostname H] [--dest DIR]
+                        Scaffold a new molt-{user} config repo from the skeleton.
+                        Prompts for anything not passed as a flag.
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   git <cmd>    Run a git command across all managed repos
@@ -158,6 +163,7 @@ case "${1:-help}" in
   resleeve) shift; cmd_resleeve "$@" ;;
   upgrade)  shift; cmd_upgrade "$@" ;;
   maintain) shift; cmd_maintain "$@" ;;
+  new-user) shift; cmd_new_user "$@" ;;
   git)      shift; cmd_git "$@" ;;
   status)   cmd_status ;;
   list)     cmd_list ;;

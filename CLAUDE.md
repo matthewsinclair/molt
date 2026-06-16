@@ -79,4 +79,4 @@ Steel threads are organized as directories under `intent/st/`:
 
 ## Author
 
-matts
+{user}

@@ -14,7 +14,7 @@ Template files are regular config files with `envsubst`-style variable placehold
 
 ```
 # config/ssh/config.tmpl
-Host github.com-matthewsinclair
+Host github.com-{github}
   HostName github.com
   User git
   IdentityFile ~/.ssh/${MOLT_SSH_KEY}

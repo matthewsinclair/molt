@@ -45,9 +45,13 @@ git_install() {
     molt_link "$user_repo/config/git/gitignore_global" "$HOME/.gitignore_global"
   fi
 
-  if [[ -f "$user_repo/config/git/gitconfig_matthewsinclair" ]]; then
-    molt_link "$user_repo/config/git/gitconfig_matthewsinclair" "$HOME/.gitconfig_matthewsinclair"
-  fi
+  # Link any additional git identity includes. The user's gitconfig pulls these
+  # in via [include] path = ~/.gitconfig_<name>. Glob so we never hardcode a
+  # specific user's identity filename.
+  for identity in "$user_repo"/config/git/gitconfig_*; do
+    [[ -e "$identity" ]] || continue
+    molt_link "$identity" "$HOME/.$(basename "$identity")"
+  done
 
   molt_info "Liberator complete: git"
 }

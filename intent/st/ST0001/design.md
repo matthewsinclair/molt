@@ -6,7 +6,7 @@ Bootstrap follows a two-phase approach:
 
 ### Phase 1: Manual Resleeve (COMPLETE)
 
-Hand-configure a new sleeve (kovacs) by installing packages, writing configs, and validating everything works. This establishes what the automated MOLT process will eventually need to handle. All config is captured in molt-matts/config/ as the single source of truth.
+Hand-configure a new sleeve (kovacs) by installing packages, writing configs, and validating everything works. This establishes what the automated MOLT process will eventually need to handle. All config is captured in molt-{user}/config/ as the single source of truth.
 
 ### Phase 2: Gaps and Foundation
 
@@ -14,20 +14,20 @@ Close remaining gaps from Phase 1 (Cmd key, SSH, fonts), then begin laying groun
 
 ## Design Decisions
 
-### Two-repo split (molt + molt-matts)
+### Two-repo split (molt + molt-{user})
 
 - **molt**: Framework code, templates, tooling — shared, reusable
-- **molt-matts**: Personal config + per-instance data — Matt-specific
+- **molt-{user}**: Personal config + per-instance data — {user}-specific
 - Rationale: Config is the soul (portable); binaries/compiled artifacts are per-instance. Other users would have their own molt-{userid} repo.
 
 ### Config as symlinks
 
-- All dotfiles live in molt-matts/config/ and are symlinked into ~
+- All dotfiles live in molt-{user}/config/ and are symlinked into ~
 - Rationale: Single source of truth (Highlander Rule), easy to diff/commit/push
 
 ### Per-instance overrides
 
-- molt-matts/instances/{hostname}/ holds machine-specific config
+- molt-{user}/instances/{hostname}/ holds machine-specific config
 - Rationale: Some things genuinely differ per machine (display scaling, hardware-specific keyd config, etc.)
 
 ### keyd for key remapping
@@ -58,7 +58,7 @@ molt (framework repo)
 ├── templates/          # Config templates (molt.toml.example)
 └── docs/               # Framework documentation
 
-molt-matts (personal repo)
+molt-{user} (personal repo)
 ├── config/             # Platform-agnostic dotfiles ("the soul")
 │   ├── zsh/
 │   ├── git/

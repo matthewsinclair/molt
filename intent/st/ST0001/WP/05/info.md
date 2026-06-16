@@ -1,5 +1,5 @@
 ---
-verblock: "08 Mar 2026:v0.2: matts - As-built with testing and CLI"
+verblock: "08 Mar 2026:v0.2: {user} - As-built with testing and CLI"
 wp_id: WP-05
 title: "MOLT framework scaffolding"
 scope: Large

@@ -1,5 +1,5 @@
 ---
-verblock: "2026-03-07:v0.1: matts - Initial version"
+verblock: "2026-03-07:v0.1: {user} - Initial version"
 ---
 
 # Technical Product Design - Molt

@@ -1,5 +1,5 @@
 ---
-verblock: "23 Mar 2026:v0.1: matts - Initial version"
+verblock: "23 Mar 2026:v0.1: {user} - Initial version"
 intent_version: 2.4.0
 status: Completed
 slug: proper-per-instance-config-of-per-instance
@@ -15,7 +15,7 @@ Extract hardcoded host-specific configuration from shared liberator config files
 
 ## Context
 
-The file `Molt-matts/config/zsh/iterm2-ssh-colors.sh` has hardcoded hostnames and hex color mappings in a bash `case` statement. This is instance-specific data (each host's terminal background color) that was incorrectly placed in a shared zsh config file. Adding a new host requires editing a shared script rather than adding instance config.
+The file `molt-{user}/config/zsh/iterm2-ssh-colors.sh` has hardcoded hostnames and hex color mappings in a bash `case` statement. This is instance-specific data (each host's terminal background color) that was incorrectly placed in a shared zsh config file. Adding a new host requires editing a shared script rather than adding instance config.
 
 The core challenge is that SSH colors are a _cross-instance_ concern: one machine needs a lookup table of ALL other machines' colors when SSH-ing to them. This differs from `vars.sh` (per-instance, build-time template substitution) and requires a new aggregation mechanism.
 

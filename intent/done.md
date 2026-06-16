@@ -11,13 +11,13 @@
   - Fixed CI: added git identity config for test runners (git.bats needs it)
 - README.md: CI badge, `upgrade --self`, `maintain`, targeted variants, lifecycle hooks, 4 new liberators (brew, intent, pplr, web), three sleeves
 - getting-started.md: self-update, maintain, recommended workflow section
-- iTerm2 SSH background color wrapper in molt-matts:
+- iTerm2 SSH background color wrapper in molt-{user}:
   - `config/zsh/iterm2-ssh-colors.sh`: tints background per host on SSH
   - gyges=navy, kovacs=forest, shrike=burgundy, yggdrasil=olive
   - zshrc sources it (only on iTerm2)
 - Tagged v0.1.0
 - 83 tests passing, 19 liberators
-- Commits: `c38a284`, `37ff0bc` (molt); `57e00c5` (molt-matts)
+- Commits: `c38a284`, `37ff0bc` (molt); `57e00c5` (molt-{user})
 
 ## 012: molt upgrade --self — self-update before upgrade (DONE)
 
@@ -41,7 +41,7 @@
   - `molt maintain --dry-run` -- preview what would happen
 - New brew liberator (macOS) -- brew update/upgrade/cleanup/doctor + npm global update
 - Added `editors_maintain()` -- runs `doom upgrade --force` (framework upgrade)
-- Starship prompt now shows `matts@hostname` with per-host colors
+- Starship prompt now shows `{user}@hostname` with per-host colors
   - Converted starship.toml to .tmpl template with `MOLT_PROMPT_HOST_COLOR`
   - rhadamanth: purple (#9A348E), gyges: teal (#2E86AB), kovacs: green (#44803F)
 - Fixed `molt_render()` to only substitute `MOLT_*` variables via envsubst filter

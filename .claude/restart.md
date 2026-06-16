@@ -12,14 +12,14 @@
 - **CI/CD**: tests.yml (Linux + macOS + ShellCheck), pr-checks.yml (docs, commits, PR size)
 - **CI fix**: git identity config for test runners (git.bats needs user.name/email)
 - **Docs**: README (CLI, lifecycle, liberators, badge), getting-started (maintain, self-update)
-- **iTerm2 SSH colors**: per-host background tinting in molt-matts
+- **iTerm2 SSH colors**: per-host background tinting in molt-{user}
 - **Tagged v0.1.0**
 
 ## Key Facts
 
 - VERSION at project root is the single source of truth for version
 - CI needs git user identity for git.bats tests (configured in workflow)
-- iTerm2 SSH colors live in molt-matts (user config), not framework
+- iTerm2 SSH colors live in molt-{user} (user config), not framework
 - `molt upgrade` = config sync (fast). `molt maintain` = system maintenance (slow)
 - doom upgrade needs --force (Emacs y-or-n-p can't read from shell stdin)
 - Starship template has powerline Unicode chars -- don't use Write tool (strips them)

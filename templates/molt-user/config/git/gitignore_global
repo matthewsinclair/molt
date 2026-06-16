@@ -1,0 +1,18 @@
+# Global gitignore — applies across all repos via core.excludesfile
+
+# macOS
+.DS_Store
+.AppleDouble
+Icon
+
+# Editors
+*~
+*.swp
+.idea/
+
+# Environments
+.envrc
+.direnv/
+
+# Logs
+*.log

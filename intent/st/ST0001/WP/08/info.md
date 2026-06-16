@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.1: matts - Initial version"
+verblock: "09 Mar 2026:v0.1: {user} - Initial version"
 wp_id: WP-08
 title: "Template system implementation"
 scope: Medium
@@ -27,7 +27,7 @@ See `intent/st/ST0001/design-templates.md` for full design. Key points:
 1. `molt_render` function in `lib/molt.sh`
 2. `molt_install_config` helper in `lib/molt.sh`
 3. Bats tests for template rendering
-4. `instances/kovacs/vars.sh` and `instances/rhadamanth/vars.sh` in molt-matts
+4. `instances/kovacs/vars.sh` and `instances/rhadamanth/vars.sh` in molt-{user}
 5. SSH config converted to `.tmpl` + ssh liberator updated
 6. `molt doctor` awareness of rendered files (`.molt-rendered` markers)
 7. `molt doctor` diagnostic checks for secrets presence (SSH key, GitHub auth)

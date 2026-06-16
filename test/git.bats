@@ -63,6 +63,26 @@ setup_isolated_molt() {
     molt_enabled_liberators() { return 1; }
 }
 
+# Load the git liberator with a sandboxed HOME + fake user repo, and make
+# git-lfs appear installed so git_install gets past its prerequisite gate.
+setup_git_install() {
+    load_molt_libs
+    source "$MOLT_ROOT/liberators/git.sh"
+
+    export HOME="$BATS_TEST_TMPDIR/fakehome"
+    mkdir -p "$HOME"
+
+    export TEST_USER_REPO="$BATS_TEST_TMPDIR/molt-testuser"
+    mkdir -p "$TEST_USER_REPO/config/git"
+    eval "molt_find_user_repo() { echo \"$TEST_USER_REPO\"; }"
+
+    # Stub git-lfs onto PATH (git_install aborts if it is missing).
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    printf '#!/usr/bin/env bash\nexit 0\n' > "$BATS_TEST_TMPDIR/bin/git-lfs"
+    chmod +x "$BATS_TEST_TMPDIR/bin/git-lfs"
+    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+}
+
 # ============================================================================
 # CLI TESTS
 # ============================================================================
@@ -298,6 +318,55 @@ BASH
     # Should have fetched from myremote (the only remote)
     assert_output_contains "myremote"
     refute_output_contains "does not appear to be a git repository"
+}
+
+# ============================================================================
+# GIT_INSTALL CONFIG LINKING TESTS
+# ============================================================================
+
+@test "git_install links gitconfig and an arbitrary identity include" {
+    setup_git_install
+    echo "[user]" > "$TEST_USER_REPO/config/git/gitconfig"
+    echo "# identity" > "$TEST_USER_REPO/config/git/gitconfig_flynn-sinclair"
+
+    run git_install
+    assert_success
+    assert_symlink_exists "$HOME/.gitconfig"
+    assert_symlink_exists "$HOME/.gitconfig_flynn-sinclair"
+}
+
+@test "git_install links multiple identity includes" {
+    setup_git_install
+    echo x > "$TEST_USER_REPO/config/git/gitconfig"
+    echo a > "$TEST_USER_REPO/config/git/gitconfig_alice"
+    echo b > "$TEST_USER_REPO/config/git/gitconfig_bob-jones"
+
+    run git_install
+    assert_success
+    assert_symlink_exists "$HOME/.gitconfig_alice"
+    assert_symlink_exists "$HOME/.gitconfig_bob-jones"
+}
+
+@test "git_install makes no stray link when there is no identity include" {
+    setup_git_install
+    echo x > "$TEST_USER_REPO/config/git/gitconfig"
+    # No gitconfig_* file present — the unmatched glob must not create a link.
+
+    run git_install
+    assert_success
+    assert_symlink_exists "$HOME/.gitconfig"
+    run bash -c "ls \"$HOME\"/.gitconfig_* 2>/dev/null"
+    assert_failure
+}
+
+@test "git_install links gitignore_global separately from identities" {
+    setup_git_install
+    echo x > "$TEST_USER_REPO/config/git/gitconfig"
+    echo i > "$TEST_USER_REPO/config/git/gitignore_global"
+
+    run git_install
+    assert_success
+    assert_symlink_exists "$HOME/.gitignore_global"
 }
 
 # ============================================================================

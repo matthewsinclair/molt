@@ -4,17 +4,17 @@
 
 ### Phase 1 (Complete)
 
-All work done in Claude Code sessions on kovacs, with config committed to molt-matts.
+All work done in Claude Code sessions on kovacs, with config committed to molt-{user}.
 
-1. **System setup**: apt packages, keyd from source, matts user
+1. **System setup**: apt packages, keyd from source, {user} user
 2. **Shell**: zsh + Starship, clean .zshrc with Highlander compliance
 3. **Git**: user config, aliases, git-lfs
 4. **tmux**: Ctrl-a prefix, vi mode, mouse, 256color
 5. **Editors**: Doom Emacs (cloned, installed, config ported from macOS), LazyVim
 6. **Terminal**: Alacritty installed and configured
-7. **Config migration**: All dotfiles moved into molt-matts/config/, symlinked
+7. **Config migration**: All dotfiles moved into molt-{user}/config/, symlinked
 8. **Desktop**: GNOME Super bindings stripped via gsettings
-9. **Intent**: Initialized in both molt and molt-matts, skills installed
+9. **Intent**: Initialized in both molt and molt-{user}, skills installed
 
 ### Phase 2: Framework (Mature)
 
@@ -43,7 +43,7 @@ MOLT framework built out in the molt repo with working CLI, test suite, and two 
 
 ### Key file locations on kovacs
 
-| Config    | Source (molt-matts)               | Symlink target          |
+| Config    | Source (molt-{user})              | Symlink target          |
 | --------- | --------------------------------- | ----------------------- |
 | zsh       | config/zsh/zshrc                  | ~/.zshrc                |
 | zshenv    | config/zsh/zshenv                 | ~/.zshenv               |
@@ -64,7 +64,7 @@ MOLT framework built out in the molt repo with working CLI, test suite, and two 
 
 ### Parallels mount paths
 
-- /media/psf/Home/ is the LIVE mount (not /media/psf/matts/ which is stale)
+- /media/psf/Home/ is the LIVE mount (not /media/psf/{user}/ which is stale)
 - ~/Devel/prj is symlinked to /media/psf/Home/Devel/prj for convenience
 
 ### Doom Emacs Nerd Fonts

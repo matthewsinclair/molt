@@ -19,8 +19,8 @@ Base OS setup, user creation, core packages.
 ### 1.1 Create user [instance]
 
 ```bash
-sudo adduser matts
-sudo usermod -aG sudo matts
+sudo adduser {user}
+sudo usermod -aG sudo {user}
 ```
 
 - **Why**: Parallels creates a `parallels` user. We want a named user that matches
@@ -70,12 +70,12 @@ curl -sS https://starship.rs/install.sh | sh
 ```
 
 - **Why**: Fast, cross-platform prompt with git integration, language versions.
-- Config: `molt-matts/config/starship/starship.toml`
+- Config: `molt-{user}/config/starship/starship.toml`
 - Symlink: `~/.config/starship.toml`
 
 ### 2.3 Write zshrc [agnostic]
 
-- Config: `molt-matts/config/zsh/zshrc`
+- Config: `molt-{user}/config/zsh/zshrc`
 - Symlink: `~/.zshrc`
 - **Design**: Thin coordinator. Sources functions via `fpath`, sets env vars, PATH,
   history options, aliases (one-liners only), activates tools.
@@ -96,7 +96,7 @@ Version control configuration.
 
 ### 3.1 Write gitconfig [agnostic]
 
-- Config: `molt-matts/config/git/gitconfig`
+- Config: `molt-{user}/config/git/gitconfig`
 - Symlink: `~/.gitconfig`
 - Contents: user.name, user.email, init.defaultBranch=main, pull.rebase=true, git-lfs filter
 - **Highlander**: No `[alias]` section — all git shortcuts are shell aliases in zshrc.
@@ -115,7 +115,7 @@ Terminal multiplexer configuration.
 
 ### 4.1 Write tmux.conf [agnostic]
 
-- Config: `molt-matts/config/tmux/tmux.conf`
+- Config: `molt-{user}/config/tmux/tmux.conf`
 - Symlink: `~/.tmux.conf`
 - Key settings: Ctrl-a prefix, vi copy mode, mouse on, `|`/`-` splits,
   h/j/k/l pane nav, status bar top, 50k scrollback, escape-time 10ms
@@ -138,7 +138,7 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 
 ### 5.2 Port Doom config [agnostic]
 
-- Config: `molt-matts/config/doom/`
+- Config: `molt-{user}/config/doom/`
 - Symlink: `~/.config/doom`
 - Structure:
   - `config.el` — thin coordinator, loads custom modules
@@ -155,7 +155,7 @@ git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
 ```
 
-- **Note**: Stock LazyVim, no customizations tracked in molt-matts yet.
+- **Note**: Stock LazyVim, no customizations tracked in molt-{user} yet.
 
 ---
 
@@ -171,7 +171,7 @@ sudo apt install -y alacritty
 
 ### 6.2 Write Alacritty config [agnostic]
 
-- Config: `molt-matts/config/alacritty/alacritty.toml`
+- Config: `molt-{user}/config/alacritty/alacritty.toml`
 - Symlink: `~/.config/alacritty/alacritty.toml`
 - Key settings: JetBrainsMono Nerd Font 14pt, copy-on-select, Shift-Enter binding
 
@@ -194,7 +194,7 @@ sudo systemctl enable keyd && sudo systemctl start keyd
 
 ### 7.2 Write keyd config [instance]
 
-- Config: `molt-matts/instances/kovacs/keyd/default.conf`
+- Config: `molt-{user}/instances/kovacs/keyd/default.conf`
 - Install target: `/etc/keyd/default.conf` (requires sudo, manual copy)
 - Maps leftmeta (Cmd) to a custom layer for CUA-style shortcuts (c/v/x)
 - **Status**: Config ready but Cmd key passthrough from Parallels is PARKED.
@@ -221,7 +221,7 @@ gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']
 
 ### 8.2 GTK config [linux]
 
-- Config: `molt-matts/config/gtk/gtk.css`
+- Config: `molt-{user}/config/gtk/gtk.css`
 - Minimal styling overrides.
 
 ---
@@ -253,16 +253,16 @@ SSH configuration for remote access.
 ### 10.1 Generate SSH key [instance]
 
 ```bash
-ssh-keygen -t ed25519 -C "hello@matthewsinclair.com"
+ssh-keygen -t ed25519 -C "you@example.com"
 ```
 
-- Keys are per-instance secrets, NOT managed by molt-matts.
+- Keys are per-instance secrets, NOT managed by molt-{user}.
 
 ### 10.2 Write SSH config [agnostic]
 
-- Config: `molt-matts/config/ssh/config`
+- Config: `molt-{user}/config/ssh/config`
 - Symlink: `~/.ssh/config`
-- Defines host aliases (eg `github.com-matthewsinclair`) with identity file references.
+- Defines host aliases (eg `github.com-{github}`) with identity file references.
 - **Manual step**: Public key must be added to GitHub account.
 
 ---
@@ -275,7 +275,7 @@ Intent project management integration.
 
 ```bash
 cd ~/Devel/prj/Molt && intent init
-cd ~/Devel/prj/molt-matts && intent init
+cd ~/Devel/prj/molt-{user} && intent init
 ```
 
 ### 11.2 Install Claude skills [agnostic]
@@ -295,25 +295,25 @@ Claude Code configuration.
 
 ### 12.1 Claude keybindings [agnostic]
 
-- Config: `molt-matts/config/claude/keybindings.json`
+- Config: `molt-{user}/config/claude/keybindings.json`
 
 ---
 
 ## Config Symlink Summary
 
-| Source (molt-matts/config/) | Target                             |
-| --------------------------- | ---------------------------------- |
-| zsh/zshrc                   | ~/.zshrc                           |
-| zsh/zshenv                  | ~/.zshenv                          |
-| zsh/zprofile                | ~/.zprofile                        |
-| git/gitconfig               | ~/.gitconfig                       |
-| tmux/tmux.conf              | ~/.tmux.conf                       |
-| doom/                       | ~/.config/doom                     |
-| alacritty/alacritty.toml    | ~/.config/alacritty/alacritty.toml |
-| starship/starship.toml      | ~/.config/starship.toml            |
-| ssh/config                  | ~/.ssh/config                      |
+| Source (molt-{user}/config/) | Target                             |
+| ---------------------------- | ---------------------------------- |
+| zsh/zshrc                    | ~/.zshrc                           |
+| zsh/zshenv                   | ~/.zshenv                          |
+| zsh/zprofile                 | ~/.zprofile                        |
+| git/gitconfig                | ~/.gitconfig                       |
+| tmux/tmux.conf               | ~/.tmux.conf                       |
+| doom/                        | ~/.config/doom                     |
+| alacritty/alacritty.toml     | ~/.config/alacritty/alacritty.toml |
+| starship/starship.toml       | ~/.config/starship.toml            |
+| ssh/config                   | ~/.ssh/config                      |
 
-Instance-specific config lives in `molt-matts/instances/{hostname}/`.
+Instance-specific config lives in `molt-{user}/instances/{hostname}/`.
 
 ---
 

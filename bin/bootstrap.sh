@@ -10,11 +10,16 @@ set -euo pipefail
 
 # --- Config ---
 MOLT_PRJ_DIR="${MOLT_PRJ_DIR:-}"
-MOLT_REPO="matthewsinclair/molt"
+# GitHub owner/repo of the framework. Override to bootstrap from your own fork.
+MOLT_REPO="${MOLT_REPO:-matthewsinclair/molt}"
 
 # Detect current user for user repo name
 MOLT_USER_REPO="molt-$(whoami)"
-MOLT_USER_REPO_FULL="matthewsinclair/${MOLT_USER_REPO}"
+# GitHub owner of YOUR personal config repo. Defaults to your local username;
+# override when your GitHub handle differs, eg:
+#   MOLT_USER_GH=flynn-sinclair bash bootstrap.sh
+MOLT_USER_GH="${MOLT_USER_GH:-$(whoami)}"
+MOLT_USER_REPO_FULL="${MOLT_USER_GH}/${MOLT_USER_REPO}"
 
 # --- Helpers ---
 

@@ -4,7 +4,7 @@
 
 - [x] Install base packages (htop, jq, tree, bat, ripgrep, fd-find, fzf, mise, etc.)
 - [x] Build and configure keyd from source
-- [x] Create matts user with sudo, SSH key, Claude creds
+- [x] Create {user} user with sudo, SSH key, Claude creds
 - [x] Install and configure zsh + Starship
 - [x] Write clean .zshrc (Highlander-compliant)
 - [x] Configure git (user, email, aliases, git-lfs)
@@ -12,8 +12,8 @@
 - [x] Install and configure Doom Emacs
 - [x] Install and configure LazyVim (nvim)
 - [x] Install and configure Alacritty
-- [x] Migrate all config into molt-matts/config/
-- [x] Symlink all dotfiles from molt-matts
+- [x] Migrate all config into molt-{user}/config/
+- [x] Symlink all dotfiles from molt-{user}
 - [x] Strip GNOME Super keybindings
 - [x] Install Intent skills
 - [x] Push to GitHub
@@ -57,7 +57,7 @@
 - [x] WP-13: Created `tiling.sh` liberator, added to kovacs manifest
 - [x] Install VS Code from Microsoft apt repo
 - [x] Create `vscode.sh` liberator (settings.json symlink, dock pinning)
-- [x] Create `molt-matts/config/vscode/settings.json` (JetBrainsMono, telemetry off)
+- [x] Create `molt-{user}/config/vscode/settings.json` (JetBrainsMono, telemetry off)
 - [x] Update `editors.sh` to pin Emacs to GNOME dock
 - [x] Clean up GNOME dock (Firefox, Nautilus, Alacritty, Emacs, VS Code)
 - [x] Font consistency: JetBrainsMono Nerd Font (Alacritty 11pt, Emacs 14pt, VS Code 14pt)
@@ -74,7 +74,7 @@
 - [x] Set Super bindings for GNOME Terminal via gsettings
 - [x] Create VS Code `keybindings.json` — `win+` Cmd shortcuts + Emacs Ctrl navigation
 - [x] Disable GNOME a11y shortcuts (screen reader, magnifier) that conflict with Super combos
-- [x] Store custom `Mac OS X.dat` in `molt-matts/instances/rhadamanth/parallels/`
+- [x] Store custom `Mac OS X.dat` in `molt-{user}/instances/rhadamanth/parallels/`
 - [ ] Persist GNOME Terminal Super bindings in gnome-terminal liberator
 - [ ] GTK apps (Nautilus etc.) still use Ctrl+C/V — not yet addressed
 

@@ -2,6 +2,9 @@
 
 This guide walks you through setting up MOLT on a new machine.
 
+> **Don't have a `molt-{user}` repo yet?** Create one first with
+> [`molt new-user`](new-user.md), then come back here to resleeve a machine.
+
 ## Prerequisites
 
 - bash 4+
@@ -151,5 +154,6 @@ Each machine gets its own directory under `instances/` with a manifest and optio
 
 ## Next steps
 
+- [Creating a New User Config Repo](new-user.md) — scaffold a fresh `molt-{user}` repo
 - [Writing a Liberator](writing-a-liberator.md) — add your own config modules
 - [Template System](templates.md) — per-instance config rendering

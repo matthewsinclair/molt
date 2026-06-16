@@ -14,7 +14,7 @@ There's a gap: config files that are _mostly_ the same across sleeves but need a
 | `alacritty.toml` | Font name/size (Nerd Font may not be on all sleeves) | Hardcoded, must manually edit                |
 | `doom/config.el` | Font face and size (platform-conditional)            | Inline `IS-LINUX` / `IS-MAC` guards in elisp |
 | `starship.toml`  | Potentially nothing yet, but hostname display        | Static                                       |
-| `ssh/config`     | Identity file paths differ if username differs       | Hardcoded to `matts`                         |
+| `ssh/config`     | Identity file paths differ if username differs       | Hardcoded to `{user}`                        |
 
 These are not enough files to justify a heavy template engine. But without _something_, config files accumulate platform conditionals and instance-specific hardcoding.
 
@@ -237,7 +237,7 @@ Start with alacritty.toml and doom font config as the two pilot templates. If th
 
 1. Add `molt_render` to `lib/molt.sh`
 2. Add `molt_install_config` helper
-3. Create `instances/kovacs/vars.sh` and `instances/rhadamanth/vars.sh` in molt-matts
+3. Create `instances/kovacs/vars.sh` and `instances/rhadamanth/vars.sh` in molt-{user}
 4. Convert `config/alacritty/alacritty.toml` to `.tmpl`
 5. Update `terminal` liberator to use `molt_install_config`
 6. Convert doom font config to `.tmpl`

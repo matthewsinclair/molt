@@ -1,5 +1,5 @@
 ---
-verblock: "08 Mar 2026:v0.1: matts - Initial capture"
+verblock: "08 Mar 2026:v0.1: {user} - Initial capture"
 wp_id: WP-07
 title: "Reproducible VM build and self-upgrading Molt"
 scope: Large

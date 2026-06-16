@@ -28,11 +28,11 @@ Decision: **ditch chezmoi, let MOLT own everything.**
 
 ### 2. Merged git config
 
-- Email: `hello@matthewsinclair.com` (canonical)
+- Email: `you@example.com` (canonical)
 - Added `core.excludesfile = ~/.gitignore_global`, `core.autocrlf = false`, `http.sslVerify = true`
-- Added `[include] path = ~/.gitconfig_matthewsinclair` identity include
-- Created `molt-matts/config/git/gitignore_global` (OS/editor ignores)
-- Created `molt-matts/config/git/gitconfig_matthewsinclair` (identity include)
+- Added `[include] path = ~/.gitconfig_{github}` identity include
+- Created `molt-{user}/config/git/gitignore_global` (OS/editor ignores)
+- Created `molt-{user}/config/git/gitconfig_{github}` (identity include)
 - Updated git liberator to link both additional files
 - Dropped: GPG signing config, project-level `.gitignore` (belongs in project repos)
 
@@ -40,7 +40,7 @@ Decision: **ditch chezmoi, let MOLT own everything.**
 
 - `chezmoi purge --force` — removed source state
 - `brew uninstall chezmoi` — removed the tool
-- Safety net: `github.com-matthewsinclair:matthewsinclair/cfg-dotfiles.git`
+- Safety net: `github.com-{github}:{github}/cfg-dotfiles.git`
 
 ### 4. Fixed dry-run crash (zsh liberator) -- kovacs
 

@@ -1,0 +1,19 @@
+# @@MOLT:BEGIN@@ — managed by molt, do not edit below this line
+# Rendered from config/ssh/config.tmpl — manual edits will be overwritten.
+# Add your own entries ABOVE this line.
+
+# GitHub: @__MOLT_GITHUB__
+Host github.com-__MOLT_GITHUB__
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/${MOLT_SSH_KEY}
+  IdentitiesOnly yes
+
+# GitHub: default (so standard clone URLs work)
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/${MOLT_SSH_KEY}
+  IdentitiesOnly yes
+
+# @@MOLT:END@@ — end of molt-managed section

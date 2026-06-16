@@ -23,11 +23,13 @@ MOLT separates the framework from your personal config:
 | Repo                              | What it contains                                              | Shared?          |
 | --------------------------------- | ------------------------------------------------------------- | ---------------- |
 | **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
-| **molt-{user}** (eg `molt-matts`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
+| **molt-{user}** (eg `molt-flynn`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
 
 The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PRJ_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
 This separation means you can fork the framework independently from your config, and your config never contains framework code.
+
+To create a fresh personal repo, run `molt new-user <you>` — it scaffolds a tokenised `molt-{user}` skeleton (git + ssh identity, a first instance, a minimal manifest) ready to `git init` and push. No copy-and-find-replace.
 
 ## Quick start
 
@@ -110,6 +112,7 @@ molt upgrade --no-resleeve # Upgrade without resleeve
 molt maintain              # Run system maintenance (brew upgrade, doom upgrade, etc.)
 molt maintain --dry-run    # Preview maintenance actions
 molt maintain brew         # Maintain specific liberators only
+molt new-user <user>       # Scaffold a new molt-{user} config repo (prompts for details)
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
 molt doctor                # System diagnostics and health checks (9 checks)
@@ -188,7 +191,7 @@ The manifest lives in your personal config repo. It declares which liberators to
 [stack]
 name = "my-stack"
 version = "0.1.0"
-user_repo = "molt-matts"
+user_repo = "molt-{user}"
 
 [sleeve]
 hostname = "mymachine"
@@ -297,6 +300,7 @@ Liberators verify their own prerequisites and fail with install hints if anythin
 ## Documentation
 
 - [Getting Started](docs/guides/getting-started.md) — first-time setup walkthrough
+- [Creating a New User Config Repo](docs/guides/new-user.md) — scaffold a `molt-{user}` repo with `molt new-user`
 - [Writing a Liberator](docs/guides/writing-a-liberator.md) — how to create your own config modules
 - [Template System](docs/guides/templates.md) — per-instance config rendering with `envsubst`
 - [Bootstrap Runbook](docs/guides/bootstrap-runbook.md) — detailed manual setup reference

@@ -1,5 +1,5 @@
 ---
-verblock: "08 Mar 2026:v0.3: matts - Audit complete, fixes applied"
+verblock: "08 Mar 2026:v0.3: {user} - Audit complete, fixes applied"
 wp_id: WP-06
 title: "Highlander and Thin Coordinator audit"
 scope: Small
@@ -18,8 +18,8 @@ Audit all config and setup produced during Phase 1 against three principles:
 
 ## Scope
 
-- molt-matts/config/ (all dotfiles)
-- Any config on kovacs that isn't yet in molt-matts
+- molt-{user}/config/ (all dotfiles)
+- Any config on kovacs that isn't yet in molt-{user}
 - keyd, systemd, and other system-level config
 
 ## Deliverables
@@ -30,7 +30,7 @@ Audit all config and setup produced during Phase 1 against three principles:
 
 ## Acceptance Criteria
 
-- [ ] Every config file in molt-matts/config/ reviewed
+- [ ] Every config file in molt-{user}/config/ reviewed
 - [ ] No Highlander violations remain (or are documented as accepted exceptions)
 - [ ] No fat coordinators (shell rc files doing too much)
 - [ ] Audit findings recorded below
@@ -73,8 +73,8 @@ Audit all config and setup produced during Phase 1 against three principles:
 
 #### H2: Email address defined in TWO places (LOW)
 
-- **Where**: `config/git/gitconfig` has `hello@matthewsinclair.com`. `config/doom/config.el` has `matthew.sinclair@gmail.com`.
-- **Problem**: Two different email addresses, so not technically a duplication, but the "identity" concern is split across two files. If Matt changes his preferred email, he has to remember both.
+- **Where**: `config/git/gitconfig` has `you@example.com`. `config/doom/config.el` has `you@example.com`.
+- **Problem**: Two different email addresses, so not technically a duplication, but the "identity" concern is split across two files. If {user} changes his preferred email, he has to remember both.
 - **Severity**: Low. These may legitimately be different (work vs personal), but worth noting.
 - **Recommendation**: Document the intent. If they're intentionally different, add a comment in each. If they should be the same, unify.
 
@@ -98,7 +98,7 @@ Audit all config and setup produced during Phase 1 against three principles:
   - `jump/mark/unmark/marks` (lines 76-79) — bookmark system (4 functions)
   - `e()` (line 98) — emacs client wrapper
   - `noctrld()` (lines 101-106) — env var wrapper
-- **What it should be**: A thin coordinator that sources/delegates. The functions above should live in separate script files (eg `~/.local/bin/` or `molt-matts/config/zsh/functions/`) and the zshrc should just source or autoload them.
+- **What it should be**: A thin coordinator that sources/delegates. The functions above should live in separate script files (eg `~/.local/bin/` or `molt-{user}/config/zsh/functions/`) and the zshrc should just source or autoload them.
 - **Severity**: Medium. It works, but it's doing too much. The bookmark system alone is 4 functions + an alias. The zshrc should be: env vars, PATH, source tools, done.
 - **Recommendation**: Extract functions into `config/zsh/functions/` and autoload them, or move utility scripts to `~/.local/bin/`. Keep zshrc to: env, path, history opts, completion, aliases (one-liners only), tool activation.
 
@@ -134,21 +134,21 @@ Audit all config and setup produced during Phase 1 against three principles:
 
 ### MISSING FROM MOLT-MATTS
 
-#### M1: keyd config NOT in molt-matts (MEDIUM)
+#### M1: keyd config NOT in molt-{user} (MEDIUM)
 
-- **Where**: `/etc/keyd/default.conf` exists on kovacs but is NOT in `molt-matts/config/` or `molt-matts/instances/kovacs/`.
+- **Where**: `/etc/keyd/default.conf` exists on kovacs but is NOT in `molt-{user}/config/` or `molt-{user}/instances/kovacs/`.
 - **Problem**: This is system-level config that was hand-written. If kovacs is rebuilt, it's lost.
 - **Severity**: Medium. It's parked/commented-out anyway, but the config should be captured.
-- **Recommendation**: Add to `molt-matts/instances/kovacs/keyd/default.conf`. This is genuinely per-instance (different hardware = different key mappings).
+- **Recommendation**: Add to `molt-{user}/instances/kovacs/keyd/default.conf`. This is genuinely per-instance (different hardware = different key mappings).
 
-#### M2: nvim/LazyVim config NOT in molt-matts (LOW)
+#### M2: nvim/LazyVim config NOT in molt-{user} (LOW)
 
-- **Where**: `~/.config/nvim` is a git clone (LazyVim starter), not symlinked from molt-matts.
-- **Problem**: If Matt customizes LazyVim, those customizations aren't captured.
+- **Where**: `~/.config/nvim` is a git clone (LazyVim starter), not symlinked from molt-{user}.
+- **Problem**: If {user} customizes LazyVim, those customizations aren't captured.
 - **Severity**: Low. If it's stock LazyVim with no customizations, this is fine.
-- **Recommendation**: If/when nvim is customized, move config into molt-matts.
+- **Recommendation**: If/when nvim is customized, move config into molt-{user}.
 
-#### M3: .DS_Store files in molt-matts (TRIVIAL)
+#### M3: .DS_Store files in molt-{user} (TRIVIAL)
 
 - **Where**: `config/.DS_Store`, `config/doom/.DS_Store`
 - **Problem**: macOS junk files committed to the repo.
@@ -171,7 +171,7 @@ These files passed audit with no issues:
 - **config/doom/packages.el**: Clean package declarations.
 - **config/doom/early-init.el**: Platform-guarded performance tweaks. Clean.
 - **config/doom/custom.el**: Auto-generated by Emacs. Leave alone.
-- **Symlink integrity**: All dotfiles correctly symlinked from molt-matts. No orphans.
+- **Symlink integrity**: All dotfiles correctly symlinked from molt-{user}. No orphans.
 - **config/starship/starship.toml**: Clean, single concern. Good.
 
 ---
@@ -187,7 +187,7 @@ These files passed audit with no issues:
 | Thin Coord | T2: config.el has inline logic     | Medium   | Extract to custom/\*.el   |
 | PFIC       | P1: Nested conditional in path_add | Low      | Accept (shell idiom)      |
 | PFIC       | P2: Hardcoded Homebrew paths       | Low      | Accept (guarded)          |
-| Missing    | M1: keyd config not in molt-matts  | Medium   | Add to instances/kovacs/  |
+| Missing    | M1: keyd config not in molt-{user} | Medium   | Add to instances/kovacs/  |
 | Missing    | M2: nvim config not tracked        | Low      | Track when customized     |
 | Missing    | M3: .DS_Store files                | Trivial  | gitignore                 |
 
@@ -210,7 +210,7 @@ All medium-severity items fixed on 08 Mar 2026:
 | H1: Git aliases in two places | Removed `[alias]` section from gitconfig. Added `glg` alias to zshrc. All git shortcuts now in zshrc only.                                                                                                             |
 | T1: zshrc fat coordinator     | Extracted `path_add`, `git_current_branch`, `jump`, `mark`, `unmark`, `marks` to `config/zsh/functions/`. zshrc now autoloads via `fpath`. `noctrld` kept inline (shell state manipulation). `e()` converted to alias. |
 | T2: config.el fat coordinator | Extracted ispell config to `custom/110-ispell.el`. Extracted frame geometry to `custom/120-frame-geometry.el`. config.el down from 173 to 95 lines.                                                                    |
-| M1: keyd not in molt-matts    | Copied `/etc/keyd/default.conf` to `instances/kovacs/keyd/default.conf`.                                                                                                                                               |
+| M1: keyd not in molt-{user}   | Copied `/etc/keyd/default.conf` to `instances/kovacs/keyd/default.conf`.                                                                                                                                               |
 | M3: .DS_Store                 | Already in .gitignore, not tracked. Non-issue.                                                                                                                                                                         |
 
 ### Accepted (no fix needed)

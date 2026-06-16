@@ -13,6 +13,7 @@
 | molt (constants)      | `lib/constants.sh` | All configurable paths and defaults (single source of truth)                                   |
 | molt (core)           | `lib/molt.sh`      | Logging, platform detection, symlink management, dependency checks, cross-instance aggregation |
 | liberator (framework) | `lib/liberator.sh` | Liberator loading, execution, verification, discovery                                          |
+| newuser               | `lib/newuser.sh`   | Scaffold a new molt-{user} config repo from the template skeleton                              |
 
 ## Liberators
 
@@ -40,19 +41,22 @@
 
 ## Testing
 
-| Module      | File                    | Concern                                |
-| ----------- | ----------------------- | -------------------------------------- |
-| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure        |
-| templates   | `test/templates.bats`   | Template rendering (molt_render) tests |
+| Module      | File                    | Concern                                 |
+| ----------- | ----------------------- | --------------------------------------- |
+| test_helper | `test/test_helper.bash` | Shared BATS test infrastructure         |
+| templates   | `test/templates.bats`   | Template rendering (molt_render) tests  |
+| newuser     | `test/newuser.bats`     | new-user scaffold (molt_new_user) tests |
 
 ## Templates
 
-| Module    | File                          | Concern                |
-| --------- | ----------------------------- | ---------------------- |
-| molt.toml | `templates/molt.toml.example` | Stack manifest example |
+| Module             | File                          | Concern                                                      |
+| ------------------ | ----------------------------- | ------------------------------------------------------------ |
+| molt.toml          | `templates/molt.toml.example` | Stack manifest example                                       |
+| molt-user skeleton | `templates/molt-user/`        | Skeleton tree for new `molt-{user}` config repos (tokenised) |
 
 ## Documentation
 
-| Module            | File                        | Concern                                                |
-| ----------------- | --------------------------- | ------------------------------------------------------ |
-| bootstrap-runbook | `docs/bootstrap-runbook.md` | Phase 1 manual resleeve steps, liberator specification |
+| Module            | File                               | Concern                                                |
+| ----------------- | ---------------------------------- | ------------------------------------------------------ |
+| bootstrap-runbook | `docs/guides/bootstrap-runbook.md` | Phase 1 manual resleeve steps, liberator specification |
+| new-user guide    | `docs/guides/new-user.md`          | How `molt new-user` scaffolds a config repo            |

@@ -1,5 +1,5 @@
 ---
-verblock: "08 Mar 2026:v0.1: matts - Initial version"
+verblock: "08 Mar 2026:v0.1: {user} - Initial version"
 wp_id: WP-04
 title: "Document Phase 1 bootstrap steps"
 scope: Medium
@@ -28,7 +28,7 @@ Phase 1 was done manually across several Claude Code sessions. The steps are sca
 - [ ] Document covers all Phase 1 steps in order
 - [ ] Each step notes: what was done, why, and any gotchas
 - [ ] Platform-specific vs agnostic steps are clearly marked
-- [ ] Document is in the Molt repo (not molt-matts)
+- [ ] Document is in the Molt repo (not molt-{user})
 
 ## Dependencies
 

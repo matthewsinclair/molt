@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.2: matts - As-built: Tactile 7x3, liberator done"
+verblock: "09 Mar 2026:v0.2: {user} - As-built: Tactile 7x3, liberator done"
 wp_id: WP-13
 title: "Tiling window manager (GNOME 46)"
 scope: Medium

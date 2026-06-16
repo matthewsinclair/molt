@@ -7,7 +7,7 @@
 [stack]
 name = "my-stack"                    # Your stack name (typically molt-{userid})
 version = "0.1.0"
-user_repo = "molt-matts"             # GitHub repo: {user}/{user_repo}
+user_repo = "molt-you"               # GitHub repo: {user}/{user_repo}
 
 [sleeve]
 # Machine-specific overrides (optional)

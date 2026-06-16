@@ -1,5 +1,5 @@
 ---
-verblock: "23 Mar 2026:v0.1: matts - Initial version"
+verblock: "23 Mar 2026:v0.1: {user} - Initial version"
 wp_id: WP-06
 title: "Add tests for cross-instance aggregation"
 scope: Small

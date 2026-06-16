@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.7: matts - As-built: upgrade, emacs keys, tiling, vscode, dock"
+verblock: "09 Mar 2026:v0.7: {user} - As-built: upgrade, emacs keys, tiling, vscode, dock"
 intent_version: 2.6.0
 status: WIP
 slug: bootstrap
@@ -18,9 +18,9 @@ Stand up a fully opinionated, reproducible dev environment on a new sleeve (VM/m
 MOLT (My Opinionated Local Terminal) is a system for maintaining consistent, portable dev environments across multiple machines ("sleeves"). The core principle is separation of concerns:
 
 - **molt** (framework repo): templates, tooling, scripts — shared infrastructure
-- **molt-matts** (personal repo): Matt's config ("the soul") + per-instance overrides
+- **molt-{user}** (personal repo): {user}'s config ("the soul") + per-instance overrides
 
-This steel thread covers the full bootstrap journey: from a bare VM to a working, opinionated environment with all dotfiles managed through molt-matts, editors configured, and the MOLT framework itself ready for development.
+This steel thread covers the full bootstrap journey: from a bare VM to a working, opinionated environment with all dotfiles managed through molt-{user}, editors configured, and the MOLT framework itself ready for development.
 
 ### Sleeves
 
@@ -30,7 +30,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 ### What's Done (Phase 1 — Resleeve)
 
 - keyd installed and configured (Cmd→Ctrl mapping, systemd enabled)
-- matts user created with sudo, SSH key, Claude creds
+- {user} user created with sudo, SSH key, Claude creds
 - zsh + Starship prompt installed and configured
 - Clean .zshrc (Highlander-compliant), minimal .zshenv, empty .zprofile
 - Git configured (user.name, email, aliases, git-lfs)
@@ -39,7 +39,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Emacs + Doom Emacs installed and synced
 - LazyVim (nvim) configured
 - Alacritty installed and configured
-- All config migrated into molt-matts/config/, symlinked from ~
+- All config migrated into molt-{user}/config/, symlinked from ~
 - GNOME Super bindings stripped
 - Intent skills installed (all 12 /in-\* skills)
 - Commits pushed to GitHub
@@ -83,7 +83,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 - Migrated from chezmoi to MOLT on rhadamanth (WP-10)
   - chezmoi purged and uninstalled (safety net: cfg-dotfiles on GitHub)
   - `.zprofile` updated with Homebrew `brew shellenv` init
-  - Git config merged: `gitignore_global`, `gitconfig_matthewsinclair` identity include
+  - Git config merged: `gitignore_global`, `gitconfig_{github}` identity include
   - Git liberator updated to link additional files
   - All 9 enabled liberators installed: system, local-bin, zsh, git, editors, iterm2, dev-tools, ssh, utilz
   - Doctor: 9/9 checks, GitHub auth working
@@ -95,7 +95,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
   - Custom profile with 33 ⌘→⌘ passthrough shortcuts — Cmd arrives as Super_L in VM
   - Parallels "macOS" profile selected, "Send macOS system shortcuts: Always"
   - Parallels restart required after `.dat` file changes
-  - Custom profile stored in `molt-matts/instances/rhadamanth/parallels/Mac OS X.dat`
+  - Custom profile stored in `molt-{user}/instances/rhadamanth/parallels/Mac OS X.dat`
   - Cmd != Ctrl properly separated (Cmd = Super, Ctrl = Ctrl)
 - Per-app keybindings for Super (Cmd) support:
   - Emacs: `s-` (Super) bindings in Linux block of `010-keys.el` — mirrors macOS
@@ -120,7 +120,7 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
   - Ubuntu Tiling Assistant insufficient — replaced by Tactile
 - VS Code installed from Microsoft apt repo (WP-14, unplanned)
   - `vscode.sh` liberator: symlinks settings.json, pins to GNOME dock
-  - `molt-matts/config/vscode/settings.json`: JetBrainsMono Nerd Font, telemetry off
+  - `molt-{user}/config/vscode/settings.json`: JetBrainsMono Nerd Font, telemetry off
 - Editors liberator updated to pin Emacs to GNOME dock
 - GNOME dock cleaned up: Firefox, Nautilus, Alacritty, Emacs, VS Code
 - Font consistency: JetBrainsMono Nerd Font (Alacritty 11pt, Emacs 14pt, VS Code 14pt)
@@ -139,4 +139,4 @@ This steel thread covers the full bootstrap journey: from a bare VM to a working
 
 ## Context for LLM
 
-This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-matts). Phase 2 is complete (framework, 18 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key fully resolved via custom Parallels profile, per-app Super keybindings, Alacritty dock) is complete. Phase 5 is complete: inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), Tactile tiling (WP-13), VS Code setup, dock cleanup, font consistency. Both sleeves are operational.
+This is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-{user}). Phase 2 is complete (framework, 18 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key fully resolved via custom Parallels profile, per-app Super keybindings, Alacritty dock) is complete. Phase 5 is complete: inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), Tactile tiling (WP-13), VS Code setup, dock cleanup, font consistency. Both sleeves are operational.

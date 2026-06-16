@@ -1,0 +1,6 @@
+# Git identity: __MOLT_GITHUB__
+# Included from ~/.gitconfig via [include] path
+# Use for repos where this identity applies.
+[user]
+	name = __MOLT_FULL_NAME__
+	email = __MOLT_EMAIL__

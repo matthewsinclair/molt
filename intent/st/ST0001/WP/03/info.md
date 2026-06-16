@@ -1,5 +1,5 @@
 ---
-verblock: "09 Mar 2026:v0.2: matts - As-built, complete"
+verblock: "09 Mar 2026:v0.2: {user} - As-built, complete"
 wp_id: WP-03
 title: "Install Nerd Fonts"
 scope: Small
@@ -22,7 +22,7 @@ Install Nerd Fonts on kovacs so that Doom Emacs icons, Starship prompt glyphs, a
 
 - [ ] Starship prompt renders all glyphs correctly in Alacritty
 - [ ] Doom Emacs shows icons in treemacs/modeline
-- [ ] Font choice documented / added to molt-matts config
+- [ ] Font choice documented / added to molt-{user} config
 
 ## Dependencies
 
