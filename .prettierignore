@@ -1,0 +1,30 @@
+# Generated views have ONE writer, and it is the renderer -- hv's ruling in
+# Intent's own tree, 2026-08-19 (ST0056 AC-03.17). This repo qualifies on a
+# read of the hook, not on the family resemblance: `.git/hooks/pre-commit`
+# runs `prettier --write` over every staged .md and `git add`s the rewrite
+# back, so the formatter writes the views behind the renderer and the commit
+# carries its edit silently.
+#
+# MEASURED HERE, 2026-08-26: NO SKEW TODAY. `intent doctor` reports 0 findings
+# over 26 views, and prettier renders all 24 tracked candidates byte-identical
+# to disk -- so the two writers currently agree and this fence prevents a
+# divergence rather than repairing one. That is the whole point of doing it
+# now: the day the renderer changes a view is the day the disagreement starts,
+# and it then survives its own remedy, because `sync --to-disk` fixes the file
+# and the next commit strips it again.
+#
+# THE LIST IS THE RENDERER-OWNED SET, NOT ALL OF `intent/st/`. Established
+# here by perturbing each file and re-running `sync --to-disk`: info.md,
+# acceptance.md, steel_threads.md and todo.md were restored by the renderer;
+# design.md, impl.md, tasks.md, claude/wip.md, intent/wip.md and intent/done.md
+# kept the perturbation and are authored files the renderer does not own.
+# Fencing those would quietly stop formatting hand-written prose, which is not
+# what was ruled.
+#
+# `**` IS LOAD-BEARING: in .prettierignore a single `*` does not cross a `/`,
+# so `intent/st/*/info.md` matches a flat layout and misses every thread under
+# a status directory.
+intent/st/**/info.md
+intent/st/**/acceptance.md
+intent/st/steel_threads.md
+intent/todo.md
