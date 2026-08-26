@@ -79,5 +79,25 @@
       "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
       "preamble": ""
     }
+  ],
+  "attachments": [
+    {
+      "path": "design.md",
+      "text": "# Design - ST0002: Proper per-instance config of per-instance variables\n\n## Approach\n\n[Planned approach for implementing this steel thread, including methodology and key steps]\n\n## Design Decisions\n\n[Key design decisions and their rationale]\n\n## Architecture\n\n[Architectural considerations and diagrams if applicable]\n\n## Alternatives Considered\n\n[Other approaches that were considered and why they were not chosen]\n",
+      "bytes": 416,
+      "sha256": "56763a77773da3ae752d372f2a4d4f157b19f39492ed36d791409d891305f334"
+    },
+    {
+      "path": "impl.md",
+      "text": "# Implementation - ST0002: Proper per-instance config of per-instance variables\n\n## Implementation\n\n[Notes on implementation details, decisions, challenges, and their resolutions]\n\n## Code Examples\n\n[Key code snippets and examples]\n\n## Technical Details\n\n[Specific technical details and considerations]\n\n## Challenges & Solutions\n\n[Challenges encountered during implementation and how they were resolved]\n",
+      "bytes": 405,
+      "sha256": "13f76685744d4573ae1f88c8786410005c6b887612029a0846d52e5e978b1e03"
+    },
+    {
+      "path": "tasks.md",
+      "text": "# Tasks - ST0002: Proper per-instance config of per-instance variables\n\n## Tasks\n\n- [ ] Task 1\n- [ ] Task 2\n- [ ] Task 3\n- ...\n\n## Task Notes\n\n[Additional notes about specific tasks if needed]\n\n## Dependencies\n\n[Task dependencies and sequencing requirements]\n",
+      "bytes": 259,
+      "sha256": "9a4b73c7713a8d8edf916efacbe382b84dc37bc677d292099246deac253eb7af"
+    }
   ]
 }
