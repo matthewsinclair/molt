@@ -1,10 +1,11 @@
 {
-  "intent_version": "2.13.0",
-  "project_name": "Molt",
   "author": "matts",
   "created": "2026-03-07",
-  "st_prefix": "ST",
+  "intent_version": "3.0.0",
   "languages": [
     "shell"
-  ]
+  ],
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "project_name": "Molt",
+  "st_prefix": "ST"
 }

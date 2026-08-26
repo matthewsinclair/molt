@@ -1,82 +1,54 @@
-# Molt Project Guidelines
+# Molt
 
-This is an Intent v2.11.5 project.
+This project is built with Intent -- run `intent --version` for the version it is running. The primary config file for AI coding agents is `AGENTS.md` at the project root -- read that first. `CLAUDE.md` is a Claude Code-specific overlay that adds directives beyond the tool-agnostic contract.
 
-## Rules
+## Required on every session
 
-1. **The Highlander Rule**: There can be only one. Never duplicate code paths, modules, or logic for the same concern. Before creating anything new, check MODULES.md.
-2. **Thin controllers and LiveViews**: Business logic lives in service modules or Ash domains, never in controllers, LiveViews, or CLI commands.
-3. **Tagged tuples everywhere**: Functions return `{:ok, result}` or `{:error, reason}`. Never return bare values from fallible operations.
-4. **No silent failures**: Every error path must be handled explicitly. No bare `rescue`, no `catch-all` that swallows errors.
-5. **Check before you create**: Before creating a new module, check MODULES.md. If a module already owns that concern, use it.
-6. **Register before you code**: When you must create a new module, add it to MODULES.md FIRST, then create the file.
+Run `/in-session` immediately after session start and after every `/compact` or context reset. It reads the project's declared languages and loads the right skills (`/in-essentials`, `/in-standards`, plus language-specific). Rationale: `intent/docs/working-with-llms.md#skills-and-in-session-auto-load` at the Intent install.
 
-## Project Structure
+## Persistent memory
 
-- `intent/` - Project artifacts (steel threads, docs, work tracking)
-  - `st/` - Steel threads organized as directories
-  - `docs/` - Technical documentation
-  - `llm/` - LLM-specific guidelines (MODULES.md, DECISION_TREE.md, ARCHETYPES.md)
-- `.intent/` - Configuration and metadata
+Claude Code persists cross-session memories at `~/.claude/projects/<project-dir>/memory/`. Notes about user preferences, design decisions not derivable from code, and project context live there. See Claude Code's memory docs for management.
 
-## Key Reference Files
+## Session hooks
 
-Read these on every session start and after every context reset:
+When `.claude/settings.json` is installed -- the default, declined by `intent upgrade --skip-settings` -- it wires Claude Code lifecycle hooks: `SessionStart` (inject project context + `/in-session` reminder), `UserPromptSubmit` (strict gate -- block first prompt until `/in-session` runs), `Stop` (remind `/in-finish` at wrap-up). Each dispatches through `intent claude hook <name>`; the hook BODIES are served from the Intent install (`$INTENT_HOME/lib/templates/.claude/scripts/`), not from this project, so a hook fix reaches every project on the next `intent upgrade` without touching `.git/hooks/`. Full architecture: `intent/docs/working-with-llms.md#session-hook-architecture` at the Intent install.
 
-- `CLAUDE.md` (this file) - Project rules and structure
-- `intent/llm/MODULES.md` - Module registry (the Highlander enforcer)
-- `intent/llm/DECISION_TREE.md` - Where does this code belong?
-- `intent/wip.md` - Current work in progress
-- `intent/restart.md` - Session restart context (if exists)
+## File map
 
-## Steel Threads
+- `AGENTS.md` -- primary tool-agnostic contract. Read first.
+- `usage-rules.md` -- terse DO / NEVER rules (Elixir convention; honoured by `mix usage_rules.sync`).
+- `intent/llm/MODULES.md` -- Highlander registry; check before creating new modules.
+- `intent/llm/DECISION_TREE.md` -- code-placement flow chart.
+- `intent/` -- steel threads (`st/`), project docs (`docs/`), work tracking (`wip.md`, `restart.md`).
+- `intent/.config/` -- configuration and metadata.
 
-Steel threads are organized as directories under `intent/st/`:
+Canon narrative on how AGENTS.md + CLAUDE.md + usage-rules.md + hooks + critics + skills compose: `intent/docs/working-with-llms.md` at the Intent install.
 
-- Each steel thread has its own directory (eg ST0001/)
-- Minimum required file is `info.md` with metadata
-- Optional files: design.md, impl.md, tasks.md
+## Rules of the road
 
-## Commands
+The four cross-language principles -- Highlander, PFIC, Thin Coordinator, No Silent Errors -- are stated in `AGENTS.md` under "Rules of the Road", with their rule IDs. **They are not restated here**: AGENTS.md is the tool-agnostic contract and this file is the Claude-specific overlay, so a second copy would be a Highlander violation in the document that defines the rule.
 
-### Core Commands
+Read any of them with `intent claude rules show <id>` (`intent claude rules list` to enumerate, `--lang <lang>` to filter).
 
-- `intent st new "Title"` - Create a new steel thread
-- `intent st list` - List all steel threads
-- `intent st show <id>` - Show steel thread details
-- `intent wp new <STID> "Title"` - Create a new work package
-- `intent wp list <STID>` - List work packages for a steel thread
-- `intent wp start <STID/NN>` - Mark work package as WIP
-- `intent wp done <STID/NN>` - Mark work package as Done
-- `intent doctor` - Check configuration
-- `intent help` - Get help
+## Critic dispatch
 
-### Claude Commands
+Per-language rule enforcement via thin subagents that read the rule library at invocation:
 
-- `intent claude subagents <command>` - Manage Claude subagents
-- `intent claude skills <command>` - Manage Claude skills
-- `intent claude prime` - Synthesize project knowledge into MEMORY.md
+```
+Task(subagent_type="critic-<lang>", prompt="review <paths>")
+Task(subagent_type="critic-<lang>", prompt="test-check <paths>")
+```
 
-## Session Workflow
+`/in-review` reads the declared languages and dispatches. The installed Intent tool's headless runner (`intent critic <lang>`) powers the pre-commit gate. Contract: `intent/docs/critics.md` at the Intent install.
 
-### On session start
+## Project-specific
 
-1. Read this file, MODULES.md, DECISION_TREE.md, wip.md, restart.md
-2. Understand current state before making any changes
-3. Ask clarifying questions if the task is ambiguous
+<!-- user:start -->
+<!-- Author: matts. Add project-specific Claude directives below this line. Preserved across regeneration. -->
 
-### Before creating code
+<!-- user:end -->
 
-1. Check MODULES.md -- does a module already own this concern?
-2. Check DECISION_TREE.md -- where does this code belong?
-3. If creating a new module: register in MODULES.md first
+---
 
-### On session end
-
-1. Update intent/wip.md with current state
-2. Update intent/restart.md with context for next session
-3. Commit with descriptive message
-
-## Author
-
-{user}
+_Generated by Intent v3.0.0 from `lib/templates/llm/_CLAUDE.md`._

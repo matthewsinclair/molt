@@ -1,0 +1,83 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0002",
+  "title": "Proper per-instance config of per-instance variables",
+  "slug": "proper-per-instance-config-of-per-instance",
+  "status": "completed",
+  "created": "2026-03-23",
+  "objective": "Extract hardcoded host-specific configuration from shared liberator config files into instance-level configuration. Establish a general-purpose pattern for cross-instance aggregation so that any liberator can read data from all instances at resleeve time.",
+  "context": "The file `molt-{user}/config/zsh/iterm2-ssh-colors.sh` has hardcoded hostnames and hex color mappings in a bash `case` statement. This is instance-specific data (each host's terminal background color) that was incorrectly placed in a shared zsh config file. Adding a new host requires editing a shared script rather than adding instance config.\n\nThe core challenge is that SSH colors are a _cross-instance_ concern: one machine needs a lookup table of ALL other machines' colors when SSH-ing to them. This differs from `vars.sh` (per-instance, build-time template substitution) and requires a new aggregation mechanism.\n\n### Approach\n\n1. **Data model**: Add `[terminal]` section to `instance.toml` with `ssh_bg_color` field\n2. **Framework primitive**: Add `molt_instances_field()` to `lib/molt.sh` for cross-instance TOML field reads\n3. **Generation**: zsh liberator generates `iterm2-ssh-colors.sh` at resleeve time from aggregated instance data\n4. **Output**: Generated file goes to `~/.config/molt/iterm2-ssh-colors.sh`\n5. **Stub instances**: Non-Molt hosts (shrike, yggdrasil) get minimal instance directories\n\n### Key Design Decisions\n\n- `instance.toml` over `vars.sh` for color data (machine identity metadata, not template variables)\n- `~/.config/molt/` for generated runtime config (clean separation from source-controlled files)\n- Framework owns the aggregation primitive (reusable for future cross-instance needs)\n- `.lan` and `.local` hostname variants are auto-generated (convention, not per-host config)",
+  "body": "## Related Steel Threads\n\n- ST0001: Bootstrap (provides the framework, liberator system, and instance config infrastructure this builds on)",
+  "preamble": "",
+  "related": [
+    {
+      "id": "ST0001",
+      "note": "Bootstrap (provides the framework, liberator system, and instance config infrastructure this builds on"
+    }
+  ],
+  "wps": [
+    {
+      "seq": 1,
+      "title": "Add molt_instances_field() to framework",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    },
+    {
+      "seq": 2,
+      "title": "Add [terminal] to instance.toml files",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    },
+    {
+      "seq": 3,
+      "title": "Create stub instances for shrike + yggdrasil",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    },
+    {
+      "seq": 4,
+      "title": "Add SSH colors generation to zsh liberator",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    },
+    {
+      "seq": 5,
+      "title": "Update zshrc sourcing path + delete static file",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    },
+    {
+      "seq": 6,
+      "title": "Add tests for cross-instance aggregation",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    },
+    {
+      "seq": 7,
+      "title": "Verify end-to-end on current sleeve",
+      "scope": "S",
+      "status": "done",
+      "objective": "[Clear statement of what this work package aims to accomplish]",
+      "body": "## Acceptance Criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2",
+      "preamble": ""
+    }
+  ]
+}

@@ -101,6 +101,8 @@ Every `with` clause must have a matching `else` clause or all called functions m
 
 <!-- intent-lang-packs:start -->
 
+- **shell** -- rules via `intent claude rules list --lang shell` (served by the installed Intent tool, not vendored into this project); concretised RULES at `intent/llm/RULES-shell.md`.
+
 <!-- intent-lang-packs:end -->
 
 ## Project-Specific Rules
