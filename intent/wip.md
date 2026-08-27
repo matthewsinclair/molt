@@ -1,38 +1,22 @@
 ---
-verblock: "27 Aug 2026:v0.12: Matthew Sinclair - Intent v3 port, dvb shell function, whiteboard roster"
+verblock: "27 Aug 2026:v0.13: Matthew Sinclair - globalfold: dvb, whiteboard roster, snapshots re-cut"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**015: `dvb` shell function + whiteboard roster (DONE, 27 Aug 2026)**
+Nothing in flight. The session of 27 Aug 2026 closed out clean -- full detail for each item below is in `done.md`.
 
-- `dvb` autoload function added to `molt-matts/config/zsh/functions/dvb`, registered on the `autoload -Uz` line in `config/zsh/zshrc`. Walks up from `$PWD` to the nearest `bin/devbin` and runs it, passing the child's exit code through.
-- Devbin's `9ce1c88` retired the per-project launcher symlinks and offered `dvb` as the replacement, but shipped it only as a README snippet -- so it existed nowhere in any shell. This closes that.
-- Two defects were found and fixed against the proposed body before it landed: the candidate list collapsed onto one line (`${^tried}` needs `[@]`), and a `bin/devbin` at mode 644 was stepped over in silence, letting the walk run a PARENT project's launcher. The second now stops with rc=126 and says why.
-- Verified through the real config in a fresh shell, not a synthetic fpath: rc=0 in a devbin project, rc=127 with a multi-line candidate list from `$HOME`, rc=126 on the non-executable case, rc=2 passed through from a failing child.
-- Whiteboard: `hv` node provisioned and `intent/whiteboard/README.md` written, naming `vc` as the node obliged to read `hv/inbox.*` and surface it to the human. Before this the escalation surface had no reader.
+**015: `dvb` shell function, whiteboard roster, snapshot re-cut (DONE, 27 Aug 2026)** -- `dvb` installed in molt-matts and verified in a fresh shell; two defects in the proposed body fixed before landing; `hv` node and roster README stood up so the escalation surface has a named reader; `wip.md` / `restart.md` re-cut off five-month-stale March figures. Commits `131642d` (molt), `a4e6cb2` (molt-{user}).
 
-**014: Intent v3 port (DONE, 26-27 Aug 2026)**
+**014: Intent v3 port (DONE, 26-27 Aug 2026)** -- migrated to the v3 canonical store, ST prose carried per file and byte-verified, generated views fenced from prettier. `intent doctor` 0 findings.
 
-- Migrated to Intent v3 canonical store; ST prose carried into the store per file, byte-verified
-- Closed threads dehydrated to flat views; generated views fenced from prettier (`.prettierignore`)
-- `intent doctor` reports 0 findings across 2 threads, 26 views, 40 files
-
-**013: Docs, CI/CD, versioning, and iTerm2 SSH colors (DONE, Mar 2026)**
-
-- VERSION file as single source of truth; `constants.sh` reads it with fallback
-- CHANGELOG.md in Keep a Changelog format
-- GitHub Actions: tests (Linux + macOS), ShellCheck, PR checks
-- README: CI badge, upgrade --self, maintain, lifecycle hooks, three sleeves
-- iTerm2 SSH background color wrapper (molt-{user}): tints per host on SSH
-
-**012: molt upgrade --self (DONE)** / **011: Doom migration, upgrade scripts, hostname in prompt (DONE)** / **010: molt git + centralised git operations (DONE)** / **009: gyges resleeve + symbolic directory vocabulary (DONE)** / **008: Cmd key proper fix + per-app keybindings (DONE)** / **007: Phase 5 -- Upgrade, Emacs Keys, Tiling, VS Code (DONE)** / **006: Rhadamanth resleeve + chezmoi migration (DONE)** / **005: Make Molt Sleeveable (DONE)** / **004: Split terminal liberator into per-emulator liberators (DONE)** / **003: Bats test suite and CLI commands (DONE)** / **002: MOLT framework scaffolding (DONE)**
+**013 and earlier** -- see `done.md`.
 
 ## Active Steel Threads
 
-- ST0001: Bootstrap -- WIP. WP-04 (document Phase 1 bootstrap steps) and WP-07 (reproducible VM build) are still open; the other eleven are done.
+- ST0001: Bootstrap -- WIP. WP-04 (document Phase 1 bootstrap steps) and WP-07 (reproducible VM build) are open; the other eleven are done.
 - ST0002: Proper per-instance config of per-instance variables -- Completed 2026-03-23.
 
 ## Upcoming Work
@@ -40,8 +24,14 @@ verblock: "27 Aug 2026:v0.12: Matthew Sinclair - Intent v3 port, dvb shell funct
 Verified open on this machine:
 
 - ST0001/WP-04: document Phase 1 bootstrap steps
-- ST0001/WP-07: reproducible VM build and self-upgrading Molt
-- Reconcile ST0001's status: prior snapshots called Phase 1-6 complete while two work packages remain open
+- ST0001/WP-07: reproducible VM build and self-upgrading Molt. **Partly met already** -- `molt upgrade` exists with `--self`, `--dry-run` and targeted liberators, so three of its six acceptance rows are arguably satisfied and only the VM-build half is untouched. Which rows to tick is an `intent ac` change against canon and hv's call.
+- `molt-matts` is an Intent project with zero steel threads, and the `dvb` work landed there untracked. Opening its first thread is hv's call.
+
+Not this project's to fix, tracked so it is not lost:
+
+- Devbin's `README.md:60` snippet still carries both defects fixed in `a4e6cb2`, so anyone pasting from it gets a shortcut that can run the wrong project's launcher and report success. Routed to devbin-vc.
+- The `dvb` body now lives in three places and has already diverged. The durable fix is devbin shipping `devbin shell-init zsh`; devbin-vc holds that pen.
+- `devbin doctor` reports a surviving retired alias but nothing reports a MISSING replacement, which is why `dvb` went unnoticed from `9ce1c88` until hv found it by opening shells.
 
 Carried forward from March, not verifiable from this sleeve -- confirm before acting:
 
@@ -56,6 +46,6 @@ Carried forward from March, not verifiable from this sleeve -- confirm before ac
 
 ## Notes
 
-Measured 27 Aug 2026: **112 tests pass**, ShellCheck clean over 27 scripts, **22 liberators**, `VERSION` = **0.1.1**, `intent doctor` 0 findings. Earlier snapshots claimed 83 tests / 19 liberators / v0.1.0 and were five months stale.
+Measured 27 Aug 2026: **112 tests pass**, ShellCheck clean over 27 scripts, **22 liberators**, `VERSION` = **0.1.1**, `intent doctor` 0 findings. Snapshots before this session claimed 83 tests / 19 liberators / v0.1.0 and were five months stale.
 
 Three sleeves operational (kovacs, rhadamanth, gyges). `molt upgrade` = fast config sync (daily); `molt maintain` = heavy system maintenance (weekly/monthly). `envsubst` only substitutes `MOLT_*` variables. The VERSION file is the single source of truth for the version number.

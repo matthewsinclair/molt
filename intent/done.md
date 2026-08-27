@@ -1,5 +1,28 @@
 # Done
 
+## 015: `dvb` shell function, whiteboard roster, snapshot re-cut (DONE)
+
+- **`dvb` shell function** installed in molt-matts: new autoload file `config/zsh/functions/dvb`, registered on the `autoload -Uz` line at `config/zsh/zshrc:11`. Walks up from `$PWD` to the nearest `bin/devbin` and runs it, passing the child's exit code through.
+  - Devbin's `9ce1c88` retired the per-project launcher symlinks and offered `dvb` as the replacement, but shipped it only as a README snippet. Measured: zero references in devbin's `bin/ lib/ tests/ docs/`, two in prose, and zero hits across all four of hv's zsh init files. The shortcut every devbin project assumed had never existed anywhere.
+  - Lands in molt-matts rather than the framework: devbin's `usage-rules.md:66` says shell config and never a project, and the framework would otherwise hard-code one project's launcher into every sleeve.
+  - **Two defects fixed before landing**, both verified under `zsh -f`: `${^tried}` collapsed the candidate list onto one line (needs `[@]`; byte-identical to the correct form at depth 1, which is why a `/tmp` negative control could not catch it); and `-x` with no `-f` arm let a mode-644 `bin/devbin` be stepped over so the walk ran a PARENT project's launcher and returned rc=0 -- now stops at rc=126 with the path named.
+  - Verified through the real config in a fresh shell: rc=0 in a devbin project, rc=127 with a multi-line candidate list from `$HOME`, rc=126 non-executable, rc=2 passed through. hv confirmed live in their own shell.
+- **Whiteboard escalation surface** stood up: provisioned the `hv` node, seeded inboxes both directions, and wrote `intent/whiteboard/README.md` naming `vc` as the node obliged to read `hv/inbox.*` and surface it to the human. Before this the board had one node, no roster, and no reader -- a write surface with no named reader is a queue, not a channel.
+- **Snapshots re-cut off March**: `intent/wip.md` and `intent/restart.md` claimed 83 tests / 19 liberators / v0.1.0 and were five months stale. Measured 2026-08-27: 112 tests, ShellCheck clean over 27 scripts, 22 liberators, VERSION 0.1.1, `intent doctor` 0 findings. March's gyges/kovacs items carried forward marked unverifiable from this sleeve rather than silently re-asserted.
+- Fixed the unsubstituted `{user}` author placeholder in wip.md's verblock that `fc20931` missed.
+- ST0001 checked and found correct: WP-04 and WP-07 genuinely Not Started; the earlier "Phase 1-6 COMPLETE" was a different axis (phases map to focus items, not WP numbers).
+- Commits: `131642d` (molt); `a4e6cb2` (molt-{user})
+
+## 014: Intent v3 port (DONE)
+
+- Migrated the project to the Intent v3 canonical store
+- Substituted the author placeholder ahead of the migration
+- Declared the open set and dehydrated the closed threads' flat views, by hand, ahead of `organize --default --force`
+- Carried the v2 buckets' prose into the store per file, byte-verified, and pruned what was proven carried
+- Fenced the renderer-owned views from prettier in `.prettierignore` -- generated views have one writer and it is the renderer. Established the owned set by perturbation rather than by family resemblance: `info.md`, `acceptance.md`, `steel_threads.md` and `todo.md` are restored by the renderer; `design.md`, `impl.md`, `tasks.md`, `claude/wip.md`, `intent/wip.md` and `intent/done.md` keep the perturbation and are authored.
+- ST0002 dated and closed; `intent doctor` 0 findings
+- Commits: `fc20931`, `84726b0`, `4212bf6`, `e94ed2b`, `fb053ab`, `555dd08`
+
 ## 013: Docs, CI/CD, versioning, and iTerm2 SSH colors (DONE)
 
 - VERSION file as single source of truth; `constants.sh` reads it with fallback
