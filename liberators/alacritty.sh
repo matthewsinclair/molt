@@ -13,7 +13,7 @@ alacritty_check() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
-    if [[ ! -L "$HOME/.config/alacritty/alacritty.toml" ]]; then
+    if ! molt_link_healthy "$HOME/.config/alacritty/alacritty.toml"; then
       molt_info "alacritty: config not symlinked"
       ok=1
     fi
@@ -72,7 +72,7 @@ alacritty_verify() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
-    if [[ ! -L "$HOME/.config/alacritty/alacritty.toml" ]]; then
+    if ! molt_link_healthy "$HOME/.config/alacritty/alacritty.toml"; then
       molt_error "VERIFY FAIL: Alacritty config not symlinked"
       errors=1
     fi

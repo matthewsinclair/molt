@@ -86,6 +86,21 @@ molt_require_all() {
 
 # --- Symlink Management ---
 
+# True when target is a symlink that actually resolves.
+#
+# The install checks tested `[[ -L "$target" ]]` -- is there a symlink here --
+# which a DANGLING symlink satisfies. So after the user repo was renamed on a
+# case-sensitive filesystem, every dotfile link pointed at a path that no longer
+# existed, every liberator check reported ok, install never ran, molt_link was
+# never called, and `molt resleeve` printed "Sleeve ready. Welcome back." over a
+# sleeve with no .zshrc, no git identity and no Doom config.
+#
+# Invisible on macOS: case folding keeps the old path resolving, so nothing ever
+# dangles there. kovacs found it, as with the local-storage check.
+molt_link_healthy() {
+  [[ -L "$1" ]] && [[ -e "$1" ]]
+}
+
 molt_link() {
   local source="$1"
   local target="$2"

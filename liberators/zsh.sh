@@ -108,10 +108,15 @@ zsh_check() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]]; then
-    if [[ ! -L "$HOME/.zshrc" ]]; then
-      molt_info "zsh: ~/.zshrc is not a symlink"
-      ok=1
-    fi
+    # All three are linked by _install, so all three must be checked. Checking
+    # only .zshrc let a broken .zshenv or .zprofile report healthy.
+    local zf
+    for zf in .zshrc .zshenv .zprofile; do
+      if ! molt_link_healthy "$HOME/$zf"; then
+        molt_info "zsh: ~/${zf} is missing, not a symlink, or dangling"
+        ok=1
+      fi
+    done
   fi
 
   # Is starship config present and valid? (catches dangling symlinks after template migration)
@@ -175,7 +180,7 @@ zsh_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$HOME/.zshrc" ]]; then
+  if ! molt_link_healthy "$HOME/.zshrc"; then
     molt_error "VERIFY FAIL: ~/.zshrc not symlinked"
     errors=1
   fi

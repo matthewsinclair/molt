@@ -17,7 +17,7 @@ git_check() {
 
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
-  if [[ -n "$user_repo" ]] && [[ ! -L "$HOME/.gitconfig" ]]; then
+  if [[ -n "$user_repo" ]] && ! molt_link_healthy "$HOME/.gitconfig"; then
     molt_info "git: ~/.gitconfig is not a symlink"
     ok=1
   fi
@@ -69,7 +69,7 @@ git_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$HOME/.gitconfig" ]]; then
+  if ! molt_link_healthy "$HOME/.gitconfig"; then
     molt_error "VERIFY FAIL: ~/.gitconfig not symlinked"
     errors=1
   fi

@@ -25,7 +25,7 @@ utilz_check() {
   fi
 
   # Is utilz linked into ~/bin?
-  if [[ ! -L "$MOLT_LOCAL_BIN/utilz" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/utilz"; then
     molt_info "utilz: not linked in ~/bin"
     ok=1
   fi
@@ -99,7 +99,7 @@ utilz_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$MOLT_LOCAL_BIN/utilz" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/utilz"; then
     molt_error "VERIFY FAIL: utilz not linked in ~/bin"
     errors=1
   fi
