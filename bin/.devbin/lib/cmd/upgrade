@@ -1,0 +1,306 @@
+#!/usr/bin/env bash
+#
+# The built-in `upgrade` -- re-sync the vendored runtime (design D5).
+#
+# The manifest is what makes this safe to type. Every vendored file was
+# checksummed at install; a file whose checksum has moved since has been edited
+# in place, and upgrade REPORTS it and leaves it alone rather than silently
+# replacing someone's debugging line, or their fix.
+#
+# The refusal is the feature. An upgrade that always wins is a tool people stop
+# running, and a project that stops upgrading is the four hand-maintained
+# launchers this framework exists to fold.
+#
+set -euo pipefail
+
+# shellcheck source=lib/helpers
+. "${DEVBIN_LIB:?run me through bin/devbin}/helpers"
+# shellcheck source=lib/install
+. "$DEVBIN_LIB/install"
+
+usage() {
+  cat <<EOF
+usage: $DEVBIN_INVOKE upgrade [--from <dir>] [--force]
+
+  --from <dir>   the devbin to upgrade from (default: the source recorded at install)
+  --force        overwrite vendored files that were edited in place
+
+Replaces bin/devbin and bin/.devbin/lib/. Never touches config.yaml, cmd/ or
+help/ -- those are yours.
+EOF
+}
+
+# _upgrade_provenance_lines <dstroot> <srcroot> -- the two lines every arm of
+# the notice prints: where these bytes came from, and where they are going.
+#
+# ONE HOME. There were two copies before issue 0053 and the fix would have made
+# four, which is how the pair drifts into saying different things in the two
+# arms a reader compares.
+_upgrade_provenance_lines() {
+  warn "  vendored from: $(manifest_source_commit "$1" 2>/dev/null || printf 'unrecorded')"
+  warn "  upgrading to:  $(git -C "$2" rev-parse HEAD 2>/dev/null || printf 'unknown')"
+}
+
+main() {
+  local from="" force="" dstroot srcroot version states paths rel src state
+  local added=0 updated=0 unchanged=0 skipped=0 removed=0 converged=0 sum_src sum_dst
+  # Every path this run REFUSED to replace. Passed to manifest_write so each
+  # keeps its install-time checksum: re-checksumming a file we declined to
+  # overwrite would record the edit as canonical and the next `doctor` would
+  # pronounce it intact. Refusing to touch a file and then blessing it is worse
+  # than either overwriting it or leaving it flagged.
+  local preserved=""
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -h | --help)
+        usage
+        return 0
+        ;;
+      --from)
+        from="${2:-}"
+        shift 2 || die "--from needs a directory"
+        ;;
+      --force)
+        force=yes
+        shift
+        ;;
+      -*) die "unknown option '$1' (try: $DEVBIN_INVOKE upgrade --help)" ;;
+      *) die "unexpected argument '$1'" ;;
+    esac
+  done
+
+  dstroot="${PROJECT_ROOT:?}"
+
+  is_devbin_installed "$dstroot" || {
+    # Two un-installed shapes, and only one of them wants an install. The D12
+    # checkout runs its own lib/ in place, so there is nothing vendored to
+    # bring forward -- and advising `install --into` here pointed at the exact
+    # command install refuses (a vendored copy would shadow lib/): a
+    # remediation string leading to a dead end (hv probe, 2026-08-09).
+    if is_devbin_source "$dstroot"; then
+      warn "this is the devbin source checkout -- it runs lib/ in place (D12), so there is nothing vendored to upgrade"
+      warn "  the checkout moves with git; a project installed from it picks that up with ITS bin/devbin upgrade"
+    else
+      warn "devbin is not installed here -- there is no vendored runtime at $dstroot/bin/.devbin/lib"
+      warn "  to install it:  <path-to-devbin>/bin/devbin install --into $dstroot"
+    fi
+    return 1
+  }
+
+  if [ -n "$from" ]; then
+    srcroot="$(cd "$from" 2>/dev/null && pwd)" || die "no such directory: $from"
+  else
+    srcroot="$(manifest_source "$dstroot" 2>/dev/null || true)"
+    [ -n "$srcroot" ] ||
+      die "no source recorded in $DEVBIN_MANIFEST_REL -- name one with --from <dir>"
+  fi
+
+  # Validated BEFORE anything is written (AC-09.9). Half a runtime is a project
+  # that will not start at all, which is strictly worse than the stale runtime
+  # this was going to replace -- so the only safe place to fail is here.
+  is_devbin_source "$srcroot" || {
+    warn "not a devbin source: $srcroot"
+    warn "  (looked for bin/devbin and a lib/ beside it)"
+    warn "  name a different one with:  $DEVBIN_INVOKE upgrade --from <dir>"
+    return 1
+  }
+
+  # WHICH WAY THIS IS ABOUT TO MOVE, said BEFORE anything is written. Upgrade
+  # syncs from the source unconditionally, so pointing `--from` at an older
+  # checkout silently REVERTS the runtime while printing `updated` per file and
+  # leaving doctor green afterwards -- measured at 11 files (issue 0021). The
+  # manifest's `source_commit` is the only thing that ever knew the difference.
+  #
+  # A WARNING RATHER THAN A REFUSAL. Rolling back deliberately is a real thing
+  # to do -- pinning a consumer while a regression is investigated is the
+  # obvious case -- and a tool that refused it would just be run with a flag
+  # nobody reads. What was missing was never permission; it was being told.
+  #
+  # AND THE CONSEQUENCE IS GATED ON BYTES, NOT ON COMMITS (issue 0053). The
+  # direction above is a fact about history; `will REVERT the runtime` is a
+  # claim about this tree, and the two came apart the moment a commit touched
+  # no vendored file. Measured: an estate installed from `49e8bb2`, upgraded
+  # from its parent `08aa004` -- zero seam paths differ between them -- was told
+  # the runtime would be REVERTED, and then told `No vendored file differs` by
+  # the same command four lines later. A loud line that fires when nothing will
+  # change is how the loud line stops being read, and this one guards a real
+  # defect (0021) that needs to be heard.
+  case "$(source_direction "$dstroot" "$srcroot")" in
+    backward)
+      if seam_is_level "$dstroot" "$srcroot"; then
+        warn "this source is BEHIND what is vendored here, but NO vendored file would change"
+        _upgrade_provenance_lines "$dstroot" "$srcroot"
+        warn "  only the recorded provenance moves -- the runtime here is byte-identical"
+      else
+        warn "this source is BEHIND what is vendored here -- upgrading will REVERT the runtime"
+        _upgrade_provenance_lines "$dstroot" "$srcroot"
+        warn "  run '$DEVBIN_INVOKE vendor' first if that is not what you meant"
+      fi
+      ;;
+    unrelated)
+      if seam_is_level "$dstroot" "$srcroot"; then
+        warn "this source shares NO history with what is vendored here, but NO vendored file would change"
+        _upgrade_provenance_lines "$dstroot" "$srcroot"
+        warn "  only the recorded provenance moves -- the runtime here is byte-identical"
+      else
+        warn "this source shares NO history with what is vendored here"
+        _upgrade_provenance_lines "$dstroot" "$srcroot"
+      fi
+      ;;
+  esac
+
+  version="$(devbin_version_of "$srcroot")"
+  states="$(manifest_check "$dstroot")"
+  paths="$(vendored_paths "$srcroot")"
+
+  printf 'Upgrading from %s (devbin %s)\n\n' "$srcroot" "$version"
+
+  while IFS= read -r rel; do
+    [ -n "$rel" ] || continue
+    src="$(vendor_source_path "$srcroot" "$rel")" || continue
+    state="$(manifest_state_of "$states" "$rel")"
+
+    if [ ! -f "$dstroot/$rel" ]; then
+      copy_vendored "$src" "$dstroot/$rel" || die "failed to write $dstroot/$rel"
+      printf '  added      %s\n' "$rel"
+      added=$((added + 1))
+      continue
+    fi
+
+    # EQUALITY IS ASKED BEFORE THE REFUSAL, AND THE ORDER IS THE FIX (issue
+    # 0021). A file edited here whose edit has since been UPSTREAMED matches the
+    # canonical bytes exactly -- which is what the carry doctrine produces every
+    # time it works. Asking `modified` first skipped it as "edited in place",
+    # preserved its install-time checksum, and left doctor red forever with
+    # nothing upgrade could ever change: the one state the tool could see and
+    # could not heal. Convergence is not divergence.
+    #
+    # Nothing is written on this path either way, so reordering cannot cost a
+    # file: the two branches differ only in what the MANIFEST ends up recording.
+    sum_src="$(sha256_of "$src")"
+    sum_dst="$(sha256_of "$dstroot/$rel")"
+    if [ "$sum_src" = "$sum_dst" ]; then
+      # DELIBERATELY NOT added to `preserved`: the checksum computed from disk
+      # is now the canonical one, and recording it IS the heal. Preserving here
+      # would carry the stale entry forward and re-create the defect.
+      if [ "$state" = modified ]; then
+        printf '  converged  %s (your edit is now upstream -- tracking it again)\n' "$rel"
+        converged=$((converged + 1))
+      fi
+      unchanged=$((unchanged + 1))
+      continue
+    fi
+
+    if [ "$state" = modified ] && [ -z "$force" ]; then
+      printf '  skipped    %s (edited in place -- upgrade with --force to replace it)\n' "$rel"
+      preserved="$preserved$rel
+"
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    copy_vendored "$src" "$dstroot/$rel" || die "failed to write $dstroot/$rel"
+    printf '  updated    %s\n' "$rel"
+    updated=$((updated + 1))
+  done <<EOF
+$paths
+EOF
+
+  # A file the manifest records and the source no longer ships. Devbin dropped
+  # it, so the vendored copy is dead code in this project -- but only remove one
+  # that still matches its recorded checksum. An edited orphan is somebody's
+  # work and gets the same refusal an edited live file gets.
+  while IFS= read -r rel; do
+    [ -n "$rel" ] || continue
+    state="${rel%%	*}"
+    rel="${rel#*	}"
+    list_contains "$paths" "$rel" && continue
+    case "$state" in
+      missing) continue ;;
+      modified)
+        if [ -z "$force" ]; then
+          # Said in full because this is the LAST time devbin mentions the file.
+          # It leaves the manifest here -- manifest_write only records what the
+          # source still ships -- so the next upgrade has no entry for it and
+          # nothing to report. A bare "skipped" would imply it gets revisited,
+          # which is the same misdescription as calling an edited file intact.
+          printf '  released   %s\n' "$rel"
+          printf '             devbin no longer ships this and your copy differs, so it is\n'
+          printf '             left with the project and no longer tracked. Delete it if it\n'
+          printf '             is dead, or move it out of bin/.devbin/lib/ if it is yours.\n'
+          skipped=$((skipped + 1))
+          continue
+        fi
+        ;;
+    esac
+    rm -f "$dstroot/$rel"
+    printf '  removed    %s (no longer shipped)\n' "$rel"
+    removed=$((removed + 1))
+  done <<EOF
+$states
+EOF
+
+  # WHAT THE MANIFEST SAID BEFORE THIS RUN, captured here because after the
+  # write there is nothing left to compare against. manifest_write rewrites the
+  # header unconditionally, so a run that moves NO vendored byte can still
+  # change this tree: `source_commit` advances on its own whenever the source
+  # has moved past what was vendored.
+  #
+  # THE DEFECT THIS CLOSES, measured across the fleet on 2026-08-27. On exactly
+  # that run the summary printed `Already up to date.` while leaving the tree
+  # MODIFIED -- correct behaviour reported as no behaviour, and the single file
+  # it changed is the one that records where this runtime came from. A clean
+  # tree came back dirty under a message saying nothing had happened, which is
+  # the shape this project refuses everywhere else.
+  manifest_was=""
+  [ -f "$(manifest_path "$dstroot")" ] &&
+    manifest_was="$(cat "$(manifest_path "$dstroot")" 2>/dev/null || true)"
+  prev_commit="$(manifest_source_commit "$dstroot" 2>/dev/null || true)"
+
+  manifest_write "$dstroot" "$srcroot" "$version" "$preserved" ||
+    die "failed to write the manifest"
+
+  manifest_now="$(cat "$(manifest_path "$dstroot")" 2>/dev/null || true)"
+
+  # An empty report is indistinguishable from a run that did nothing because it
+  # broke. Every path above prints only when it changed something, so the
+  # all-unchanged case has to say so explicitly.
+  printf '\n%d added, %d updated, %d unchanged, %d removed, %d skipped\n' \
+    "$added" "$updated" "$unchanged" "$removed" "$skipped"
+  if [ "$((added + updated + removed + converged))" -eq 0 ] && [ "$skipped" -eq 0 ]; then
+    if [ "$manifest_now" = "$manifest_was" ]; then
+      printf 'Already up to date.\n'
+    else
+      # NOTHING RAN AND THE TREE STILL CHANGED. Say which file and which way,
+      # because the caller is about to find a modified working tree and the
+      # summary above accounts for none of it.
+      now_commit="$(manifest_source_commit "$dstroot" 2>/dev/null || true)"
+      printf 'Runtime already up to date -- but the PROVENANCE moved, so %s changed.\n' \
+        "$DEVBIN_MANIFEST_REL"
+      printf '  was recording: %s\n' "${prev_commit:-unrecorded}"
+      printf '  now records:   %s\n' "${now_commit:-unrecorded}"
+      printf 'No vendored file differs; this tree simply now names where it came from.\n'
+    fi
+  fi
+  if [ "$converged" -gt 0 ]; then
+    printf '\n%d file(s) you had edited now match the source and are tracked again.\n' "$converged"
+  fi
+  if [ "$skipped" -gt 0 ]; then
+    printf '\n%d file(s) left alone because they differ from what was installed.\n' "$skipped"
+    printf 'Re-run with --force to replace them, or diff them against %s first.\n' "$srcroot"
+  fi
+  # THE EXIT STATUS IS A RULING, NOT A DEFAULT (issue 0021). It stays 0 when
+  # files were refused, because this command's status answers "did I complete",
+  # and a run that reported every refusal and wrote a correct manifest DID. The
+  # other question -- is this tree level with its source -- is a different one,
+  # and giving it its own command means neither has to be read out of the other's
+  # exit code. A scripted sweep asserts convergence with `vendor`, whose status
+  # means only that.
+  if [ "$skipped" -gt 0 ]; then
+    printf 'still divergent: %s vendor    (its exit status is that question)\n' "$DEVBIN_INVOKE"
+  fi
+  return 0
+}
+
+main "$@"
