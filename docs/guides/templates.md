@@ -132,3 +132,15 @@ For sensitive directories like `~/.ssh` (which has `700` permissions), `molt_ren
 
 - Removes existing symlinks rather than backing them up (symlinks in `~/.ssh` break SSH)
 - Sets rendered files and markers to `600` permissions
+
+## Instance-scoped liberator config
+
+Some liberators read per-machine files from `instances/<hostname>/` rather than from `config/`, because the value is genuinely machine-specific rather than shared:
+
+| Liberator | File                                     | Shape                                                                                      |
+| --------- | ---------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `keys`    | `instances/<host>/keyd/default.conf`     | keyd config, copied to `/etc/keyd/`                                                        |
+| `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                         |
+| `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored |
+
+Prefer this over a `vars.sh` variable when the value is a list, when ordering matters, or when it is really a config file in its own format. Prefer `vars.sh` for scalars that a template needs to interpolate.

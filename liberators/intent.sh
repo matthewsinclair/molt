@@ -21,12 +21,36 @@ intent_check() {
     return 1
   fi
 
+  local repo
+  repo="$(_intent_find_repo)"
+
   if ! molt_link_healthy "$MOLT_LOCAL_BIN/intent"; then
     molt_info "intent: $MOLT_LOCAL_BIN/intent $(molt_link_fault "$MOLT_LOCAL_BIN/intent")"
     ok=1
+  elif ! molt_link_points_to "$MOLT_LOCAL_BIN/intent" "$repo/bin/intent"; then
+    # Resolves, but not to what _install creates. Reporting ok here means
+    # reporting on a link this liberator does not govern.
+    molt_warn "intent: $MOLT_LOCAL_BIN/intent resolves to $(_molt_realpath "$MOLT_LOCAL_BIN/intent")"
+    molt_warn "        but this liberator installs $repo/bin/intent. Not repairing it:"
+    molt_warn "        the link was placed by something else and may be deliberate."
   fi
 
+  # Whatever is linked, PATH may resolve a different binary entirely -- a brew
+  # install lands at $(brew --prefix)/bin, ahead of both ~/.local/bin and ~/bin.
+  _intent_warn_path_shadow
+
   return $ok
+}
+
+# Warn when the intent on PATH is not the one this liberator manages.
+_intent_warn_path_shadow() {
+  local on_path
+  on_path="$(command -v intent 2>/dev/null)" || return 0
+  [[ -n "$on_path" ]] || return 0
+  if [[ "$(_molt_realpath "$on_path")" != "$(_molt_realpath "$MOLT_LOCAL_BIN/intent")" ]]; then
+    molt_warn "intent: PATH resolves intent to ${on_path}, not $MOLT_LOCAL_BIN/intent."
+    molt_warn "        This liberator manages a symlink that nothing is using."
+  fi
 }
 
 intent_install() {

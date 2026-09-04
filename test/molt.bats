@@ -115,3 +115,57 @@ load "test_helper.bash"
     assert_success
     [ -z "$output" ]
 }
+
+# --- Symlink state helpers ---
+
+@test "molt_link_fault distinguishes all four states" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/faults"
+    mkdir -p "$d"
+    : > "$d/real"
+    ln -s "$d/real" "$d/good"
+    ln -s "$d/NOPE" "$d/dangling"
+    : > "$d/regular"
+
+    run molt_link_fault "$d/good"
+    assert_output_contains "resolves"
+    run molt_link_fault "$d/dangling"
+    assert_output_contains "is a broken symlink"
+    run molt_link_fault "$d/regular"
+    assert_output_contains "is not a symlink"
+    run molt_link_fault "$d/absent"
+    assert_output_contains "is missing"
+}
+
+@test "molt_link_fault does not report a fault for a healthy link" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/healthy"
+    mkdir -p "$d"
+    : > "$d/real"
+    ln -s "$d/real" "$d/good"
+    run molt_link_fault "$d/good"
+    # Assert positively. A bare refute passes when the function is not loaded
+    # at all and the output is "command not found" -- a false green of exactly
+    # the kind these helpers exist to prevent.
+    assert_success
+    [ "$output" = "resolves" ]
+}
+
+@test "molt_link_points_to rejects a healthy link to the wrong target" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/points"
+    mkdir -p "$d"
+    : > "$d/wanted"
+    : > "$d/other"
+    ln -s "$d/other" "$d/link"
+
+    run molt_link_healthy "$d/link"
+    [ "$status" -eq 0 ]
+
+    run molt_link_points_to "$d/link" "$d/wanted"
+    [ "$status" -ne 0 ]
+
+    ln -sfn "$d/wanted" "$d/link"
+    run molt_link_points_to "$d/link" "$d/wanted"
+    [ "$status" -eq 0 ]
+}

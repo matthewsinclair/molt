@@ -127,21 +127,22 @@ myapp_verify() {
 
 ## Framework functions available to liberators
 
-| Function                | Purpose                                                                                                             |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `molt_link src dst`     | Symlink `src` to `dst`, backup existing, mkdir parent                                                               |
-| `molt_link_healthy dst` | True only when `dst` is a symlink that actually resolves. Use instead of `[[ -L ]]`, which passes on dangling links |
-| `molt_link_fault dst`   | Names the fault for messages: `is missing`, `is not a symlink`, `is a broken symlink` (or `resolves`)               |
-| `molt_render tmpl dst`  | Render template via `envsubst` with instance vars                                                                   |
-| `molt_install_config`   | Auto-pick render (`.tmpl`) or link (static)                                                                         |
-| `molt_config_stale`     | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check`   |
-| `molt_find_user_repo`   | Return path to the user's config repo                                                                               |
-| `molt_platform`         | Return `linux` or `macos`                                                                                           |
-| `molt_distro`           | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                                 |
-| `molt_arch`             | Return architecture (eg `arm64`, `x86_64`)                                                                          |
-| `molt_info msg`         | Print info message (prefixed with `Zen:`)                                                                           |
-| `molt_warn msg`         | Print warning                                                                                                       |
-| `molt_error msg`        | Print error                                                                                                         |
+| Function                      | Purpose                                                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `molt_link src dst`           | Symlink `src` to `dst`, backup existing, mkdir parent                                                                               |
+| `molt_link_healthy dst`       | True only when `dst` is a symlink that actually resolves. Use instead of `[[ -L ]]`, which passes on dangling links                 |
+| `molt_link_fault dst`         | Names the fault for messages: `is missing`, `is not a symlink`, `is a broken symlink` (or `resolves`)                               |
+| `molt_link_points_to dst src` | True when `dst` is a healthy symlink pointing at `src`. A link that resolves to the _wrong_ target still passes `molt_link_healthy` |
+| `molt_render tmpl dst`        | Render template via `envsubst` with instance vars                                                                                   |
+| `molt_install_config`         | Auto-pick render (`.tmpl`) or link (static)                                                                                         |
+| `molt_config_stale`           | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check`                   |
+| `molt_find_user_repo`         | Return path to the user's config repo                                                                                               |
+| `molt_platform`               | Return `linux` or `macos`                                                                                                           |
+| `molt_distro`                 | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                                                 |
+| `molt_arch`                   | Return architecture (eg `arm64`, `x86_64`)                                                                                          |
+| `molt_info msg`               | Print info message (prefixed with `Zen:`)                                                                                           |
+| `molt_warn msg`               | Print warning                                                                                                                       |
+| `molt_error msg`              | Print error                                                                                                                         |
 
 ## Adding to the manifest
 

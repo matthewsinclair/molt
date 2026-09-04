@@ -65,8 +65,18 @@ _scaffold_flynn() {
     assert_output_contains 'MOLT_HOSTNAME="jormungandr"'
 
     run cat "$dest/instances/jormungandr/molt.toml"
+    # Two conventions, deliberately different: the stack/GitHub name is
+    # lowercase (matthewsinclair/molt-matts), the DIRECTORY is Capitalised
+    # (Molt-matts), and user_repo names the directory.
     assert_output_contains 'name = "molt-flynn"'
-    assert_output_contains 'user_repo = "molt-flynn"'
+    assert_output_contains 'user_repo = "Molt-flynn"'
+}
+
+@test "molt_new_user manifest declares the scaffolded liberators" {
+    _load_newuser
+    local dest; dest="$(_scaffold_flynn)"
+    run cat "$dest/instances/jormungandr/molt.toml"
+    assert_output_contains 'name = "claude"'
 }
 
 @test "molt_new_user substitutes README tokens (heading and name)" {
