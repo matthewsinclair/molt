@@ -169,3 +169,43 @@ load "test_helper.bash"
     run molt_link_points_to "$d/link" "$d/wanted"
     [ "$status" -eq 0 ]
 }
+
+# --- Digest covers every input the render depends on ---
+
+@test "molt_config_digest changes when an extra input changes" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/dg"
+    mkdir -p "$d"
+    printf 'template body\n' > "$d/config.tmpl"
+    printf 'fragment one\n'  > "$d/a.conf"
+
+    local base with_frag
+    base="$(molt_config_digest "$d/config.tmpl" 2>/dev/null || true)"
+    with_frag="$(molt_config_digest "$d/config.tmpl" "$d/a.conf" 2>/dev/null || true)"
+    [ -n "$base" ]
+    [ -n "$with_frag" ]
+    # Adding a fragment must change the digest -- this is the bug: a new
+    # fragment altered the rendered result while nothing marked it stale.
+    [ "$base" != "$with_frag" ]
+
+    # Editing that fragment must change it again.
+    printf 'fragment one EDITED\n' > "$d/a.conf"
+    local edited
+    edited="$(molt_config_digest "$d/config.tmpl" "$d/a.conf" 2>/dev/null || true)"
+    [ "$edited" != "$with_frag" ]
+}
+
+@test "molt_config_digest is stable regardless of extra-input order" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/dg2"
+    mkdir -p "$d"
+    printf 'template body\n' > "$d/config.tmpl"
+    printf 'one\n' > "$d/a.conf"
+    printf 'two\n' > "$d/b.conf"
+
+    local ab ba
+    ab="$(molt_config_digest "$d/config.tmpl" "$d/a.conf" "$d/b.conf" 2>/dev/null || true)"
+    ba="$(molt_config_digest "$d/config.tmpl" "$d/b.conf" "$d/a.conf" 2>/dev/null || true)"
+    [ -n "$ab" ]
+    [ "$ab" = "$ba" ]
+}

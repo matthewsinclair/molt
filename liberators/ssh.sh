@@ -18,6 +18,26 @@ _ssh_find_key() {
   return 1
 }
 
+# The instance config.d fragments, as a sorted list (empty if none).
+#
+# These are inputs to the rendered ~/.ssh/config, so they belong in the digest.
+# Adding a fragment changes neither config.tmpl nor vars.sh, so without this
+# ssh_check passes, ssh_install never runs, and the new fragment simply never
+# lands -- which is what happened on gyges. Editing one has the same shape and
+# is the six-month drift seen on rhadamanth.
+_ssh_fragments() {
+  local user_repo hostname config_d
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  [[ -n "$user_repo" ]] || return 0
+  hostname="$(hostname -s 2>/dev/null || hostname)"
+  config_d="$user_repo/instances/$hostname/ssh/config.d"
+  [[ -d "$config_d" ]] || return 0
+  local f
+  for f in "$config_d"/*.conf; do
+    [[ -f "$f" ]] && printf '%s\n' "$f"
+  done | sort
+}
+
 ssh_check() {
   local ok=0
 
@@ -35,13 +55,21 @@ ssh_check() {
   # Check if config is managed by molt (rendered file, not symlink — sshd rejects symlinks)
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+
+  # Read into an array rather than splitting a command substitution: a fragment
+  # path can contain spaces, and word splitting would silently pass fragments.
+  local _ssh_frags=() _f
+  while IFS= read -r _f; do [[ -n "$_f" ]] && _ssh_frags+=("$_f"); done \
+    < <(_ssh_fragments)
+
   if [[ -n "$user_repo" ]]; then
     if [[ -f "$user_repo/config/ssh/config.tmpl" ]] || [[ -f "$user_repo/config/ssh/config" ]]; then
       if [[ -L "$HOME/.ssh/config" ]]; then
         molt_info "ssh: ~/.ssh/config is a symlink (sshd requires regular files)"
         ok=1
-      elif molt_config_stale "config/ssh/config" "$HOME/.ssh/config"; then
-        molt_info "ssh: ~/.ssh/config differs from its template or instance vars — re-rendering"
+      elif molt_config_stale "config/ssh/config" "$HOME/.ssh/config" \
+             ${_ssh_frags+"${_ssh_frags[@]}"}; then
+        molt_info "ssh: ~/.ssh/config differs from its template, instance vars or config.d fragments — re-rendering"
         ok=1
       elif [[ ! -f "$HOME/.ssh/config.molt-rendered" ]]; then
         molt_info "ssh: ~/.ssh/config is not managed by molt"
@@ -79,6 +107,13 @@ ssh_install() {
   user_repo="$(molt_find_user_repo)" || return 1
   molt_install_config "config/ssh/config" "$HOME/.ssh/config"
 
+  # THE RENDER AND THE APPEND MUST STAY IN THIS FUNCTION, IN THIS ORDER.
+  # molt_render preserves only the region ABOVE @@MOLT:BEGIN@@; fragments are
+  # appended BELOW @@MOLT:END@@, so every render wipes every fragment. That is
+  # safe only because the re-append happens here, immediately after. Separating
+  # them -- or rendering from anywhere else -- silently drops every fragment on
+  # the next template change. Flagged by gyges.
+  #
   # Append instance-specific config.d fragments (idempotent via sentinels)
   local hostname
   hostname="$(hostname -s 2>/dev/null || hostname)"
@@ -104,6 +139,16 @@ ssh_install() {
   fi
 
   chmod 600 "$HOME/.ssh/config"
+
+  # Re-stamp the sidecar so its digest covers the fragments too. Without this
+  # the check (which digests fragments) and the sidecar (which did not) never
+  # agree, and ssh reinstalls on every run.
+  local _frags=() _f
+  while IFS= read -r _f; do [[ -n "$_f" ]] && _frags+=("$_f"); done < <(_ssh_fragments)
+  if [[ -f "$user_repo/config/ssh/config.tmpl" ]]; then
+    molt_config_record_digest "$HOME/.ssh/config" \
+      "$user_repo/config/ssh/config.tmpl" ${_frags+"${_frags[@]}"}
+  fi
 
   molt_info "Liberator complete: ssh"
 }
