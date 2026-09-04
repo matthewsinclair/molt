@@ -426,6 +426,28 @@ cmd_list() {
 }
 
 # Report config files that bake in another user's absolute home path
+# Filesystem type for a path, as a short name ("apfs", "ext4", "fuse.prl_fsd").
+# Linux and BSD/macOS disagree on how to ask, so try both.
+molt_fstype() {
+  local path="$1"
+  [[ -e "$path" ]] || return 1
+
+  # Branch on platform rather than probing. BSD stat does not merely fail on
+  # GNU's `-f -c %T` -- it reads `-c` as the format string and prints it, so a
+  # "try GNU first and fall back" probe silently returns "-c" on macOS.
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    stat -f -c %T "$path" 2>/dev/null
+    return
+  fi
+
+  # macOS: df names the device, mount reports the type in parentheses:
+  #   /dev/disk3s5 on /System/Volumes/Data (apfs, local, journaled, ...)
+  local dev
+  dev="$(df -k "$path" 2>/dev/null | awk 'NR==2 {print $1}')" || return 1
+  [[ -n "$dev" ]] || return 1
+  mount 2>/dev/null | grep "^${dev} on " | sed -n 's/.*(\([^,)]*\).*/\1/p' | head -1
+}
+
 # (/Users/<x> or /home/<x>, including JSON-escaped \/Users\/<x>, where <x> is
 # not the current user). Echoes offending paths relative to dir, one per line.
 # Empty output means clean. This catches non-portable configs like a raw iTerm2
@@ -450,7 +472,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=10
+  local total=11
   local step=0
   local warnings=0
 
@@ -610,6 +632,30 @@ cmd_doctor() {
     echo "[$step/$total] Checking config for foreign home paths... ✓ none"
   else
     echo "[$step/$total] Checking config for foreign home paths... ⚠ found in: $(echo "$foreign" | tr '\n' ' ')"
+    warnings=$((warnings + 1))
+  fi
+
+  # 11. The stack itself lives on a local filesystem
+  step=$((step + 1))
+  local foreign_fs=""
+  local p
+  for p in "${MOLT_ROOT:-}" "${user_repo:-}"; do
+    [[ -n "$p" && -d "$p" ]] || continue
+    local fstype
+    fstype="$(molt_fstype "$p")" || continue
+    case "$fstype" in
+      fuse*|prl_fsd|nfs|smbfs|cifs|afpfs|webdav|osxfuse|vboxsf|9p|virtiofs)
+        foreign_fs="${foreign_fs}${foreign_fs:+, }${p} (${fstype})" ;;
+    esac
+  done
+  if [[ -z "$foreign_fs" ]]; then
+    echo "[$step/$total] Checking stack is on local storage... ✓"
+  else
+    echo "[$step/$total] Checking stack is on local storage... ⚠ ${foreign_fs}"
+    echo "         This sleeve is running someone else's checkout over a network or"
+    echo "         guest mount. It shares one working tree, index and HEAD with the"
+    echo "         host, so every command here reports success while changing files"
+    echo "         that do not belong to this machine. Clone the repos locally."
     warnings=$((warnings + 1))
   fi
 
