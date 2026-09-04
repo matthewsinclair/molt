@@ -269,12 +269,30 @@ editors_maintain() {
   # Uses --force to auto-accept prompts (doom's y-or-n-p reads from
   # Emacs's internal stdin, not the terminal, so interactive prompts
   # fail when called from a shell script).
-  if [[ -f "$HOME/.config/emacs/bin/doom" ]]; then
-    molt_info "Running doom upgrade (this may take a while)..."
-    "$HOME/.config/emacs/bin/doom" upgrade --force || molt_warn "doom upgrade had warnings (review above)"
-  else
+  if [[ ! -f "$HOME/.config/emacs/bin/doom" ]]; then
     molt_debug "Doom binary not found — skipping doom upgrade"
+    return 0
   fi
+
+  molt_info "Running doom upgrade (this may take a while)..."
+  "$HOME/.config/emacs/bin/doom" upgrade --force || molt_warn "doom upgrade had warnings (review above)"
+
+  # `doom upgrade` short-circuits on "Doom is already up-to-date!" and returns
+  # BEFORE the package sync. So when Doom itself is current but a previous run
+  # left packages half-updated, upgrade does nothing, exits 0, and maintain
+  # reports success while the orphaned packages are never retried.
+  #
+  # That is not hypothetical: a straight.el fetch died mid-run on kovacs
+  # (package-lint renamed master->main upstream, the local clone had a
+  # single-branch refspec pinned to master, so `git fetch origin` returned 128)
+  # and aborted the update at 181/191. Re-running maintain reported success and
+  # skipped the remaining ten every time; only a hand-run `doom sync -u`
+  # recovered them.
+  #
+  # So always sync afterwards. It is cheap when there is nothing to do, and it
+  # is the only step that actually reconciles the package set.
+  molt_info "Running doom sync -u..."
+  "$HOME/.config/emacs/bin/doom" sync -u || molt_warn "doom sync -u had warnings (review above)"
 }
 
 editors_verify() {
