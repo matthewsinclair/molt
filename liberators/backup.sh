@@ -6,15 +6,15 @@
 # making the destination *reachable*: the SMB share mounted, healthy, speaking a
 # sane dialect, with the .asif visible on it — and reporting honestly when it is not.
 #
-# It deliberately does NOT attach the image, and treats an unattached image as
-# normal. SuperDuper binds a disk-image destination by the image FILE (its
-# `imagePath`) and attaches it itself, as root, at copy time; it refuses an image
-# that something else has already mounted. Attaching it here is at best useless
-# and at worst stops the destination being bound as an image at all.
+# It deliberately does NOT create, attach or touch the image, and treats an absent
+# or unattached image as normal. SuperDuper creates <hostname>.sparsebundle itself
+# when you point a job at the SMB share and take its "Use an Image..." button, then
+# attaches and detaches it around every copy. Anything we attach ourselves is at
+# best useless and at worst poisons the job's destination binding permanently.
 #
 # Requires these in the instance's vars.sh:
 #   MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT
-#   MOLT_BACKUP_IMAGE MOLT_BACKUP_VOLUME MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG
+#   MOLT_BACKUP_IMAGE MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG
 
 _backup_vars() {
   local repo hostname vars
@@ -27,7 +27,7 @@ _backup_vars() {
   local missing=()
   local v
   for v in MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT \
-           MOLT_BACKUP_IMAGE MOLT_BACKUP_VOLUME MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG; do
+           MOLT_BACKUP_IMAGE MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG; do
     [[ -n "${!v:-}" ]] || missing+=("$v")
   done
   if [[ ${#missing[@]} -gt 0 ]]; then
@@ -117,13 +117,12 @@ backup_check() {
             ok=1 ;;
   esac
 
-  # The image only has to be *there*. Whether it is attached is SuperDuper's
-  # business, and "not attached" is the normal resting state between copies.
+  # The image is SuperDuper's to create and mount. Absent means "not set up yet",
+  # attached means "a copy is probably running" -- neither is a fault of ours.
   if ! _backup_probe "$MOLT_BACKUP_IMAGE"; then
-    molt_info "backup: ${MOLT_BACKUP_IMAGE} not visible on the share"
-    ok=1
+    molt_info "backup: no image at ${MOLT_BACKUP_IMAGE} — point the job at the ${MOLT_BACKUP_SHARE} share in SuperDuper and use 'Use an Image...'"
   elif _backup_attached; then
-    molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper copying, or mounted by hand)"
+    molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper is probably copying)"
   fi
 
   if _backup_sd_locked; then
@@ -175,7 +174,9 @@ backup_verify() {
 
   _backup_mounted || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} not mounted"; errors=1; }
   _backup_probe "$MOLT_BACKUP_MOUNT" || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} not readable"; errors=1; }
-  _backup_probe "$MOLT_BACKUP_IMAGE" || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_IMAGE} not visible on ${MOLT_BACKUP_MOUNT}"; errors=1; }
+  # Not a verification failure: the image belongs to SuperDuper and legitimately
+  # does not exist until a job has been pointed at the share.
+  _backup_probe "$MOLT_BACKUP_IMAGE" || molt_info "backup: no image at ${MOLT_BACKUP_IMAGE} yet (SuperDuper creates it)"
 
   local dialect
   dialect="$(_backup_dialect)"
