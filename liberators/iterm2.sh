@@ -22,7 +22,7 @@ iterm2_check() {
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/iterm2/molt-profile.json" ]]; then
     local target="$HOME/Library/Application Support/iTerm2/DynamicProfiles/molt-profile.json"
-    if [[ ! -L "$target" ]]; then
+    if ! molt_link_healthy "$target"; then
       molt_info "iterm2: dynamic profile not linked"
       ok=1
     fi
@@ -82,7 +82,7 @@ iterm2_verify() {
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/iterm2/molt-profile.json" ]]; then
     local target="$HOME/Library/Application Support/iTerm2/DynamicProfiles/molt-profile.json"
-    if [[ ! -L "$target" ]]; then
+    if ! molt_link_healthy "$target"; then
       molt_error "VERIFY FAIL: iTerm2 dynamic profile not linked"
       errors=1
     fi

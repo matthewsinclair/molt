@@ -21,7 +21,7 @@ intent_check() {
     return 1
   fi
 
-  if [[ ! -L "$MOLT_LOCAL_BIN/intent" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/intent"; then
     molt_info "intent: not linked in ~/bin"
     ok=1
   fi
@@ -55,7 +55,7 @@ intent_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$MOLT_LOCAL_BIN/intent" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/intent"; then
     molt_error "VERIFY FAIL: intent not linked in ~/bin"
     errors=1
   fi

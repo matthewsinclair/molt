@@ -17,7 +17,7 @@ local-bin_check() {
   fi
 
   # Check molt itself is linked
-  if [[ ! -L "$MOLT_LOCAL_BIN/molt" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/molt"; then
     molt_info "local-bin: molt not linked in $MOLT_LOCAL_BIN"
     ok=1
   fi
@@ -52,7 +52,7 @@ local-bin_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$MOLT_LOCAL_BIN/molt" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/molt"; then
     molt_error "VERIFY FAIL: molt not linked in $MOLT_LOCAL_BIN"
     errors=1
   fi

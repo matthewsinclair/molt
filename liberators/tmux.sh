@@ -12,7 +12,7 @@ tmux_check() {
 
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
-  if [[ -n "$user_repo" ]] && [[ ! -L "$HOME/.tmux.conf" ]]; then
+  if [[ -n "$user_repo" ]] && ! molt_link_healthy "$HOME/.tmux.conf"; then
     molt_info "tmux: ~/.tmux.conf is not a symlink"
     ok=1
   fi
@@ -41,7 +41,7 @@ tmux_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$HOME/.tmux.conf" ]]; then
+  if ! molt_link_healthy "$HOME/.tmux.conf"; then
     molt_error "VERIFY FAIL: ~/.tmux.conf not symlinked"
     errors=1
   fi

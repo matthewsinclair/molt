@@ -21,7 +21,7 @@ pplr_check() {
     return 1
   fi
 
-  if [[ ! -L "$MOLT_LOCAL_BIN/pplr" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/pplr"; then
     molt_info "pplr: not linked in ~/bin"
     ok=1
   fi
@@ -55,7 +55,7 @@ pplr_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$MOLT_LOCAL_BIN/pplr" ]]; then
+  if ! molt_link_healthy "$MOLT_LOCAL_BIN/pplr"; then
     molt_error "VERIFY FAIL: pplr not linked in ~/bin"
     errors=1
   fi

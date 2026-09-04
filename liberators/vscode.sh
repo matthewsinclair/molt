@@ -30,7 +30,9 @@ vscode_check() {
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/vscode/settings.json" ]]; then
     local settings_dir
     settings_dir="$(_vscode_settings_dir)"
-    if [[ ! -L "$settings_dir/settings.json" ]]; then
+    if ! molt_link_healthy "$settings_dir/settings.json" \
+       || { [[ -f "$user_repo/config/vscode/keybindings.json" ]] \
+            && ! molt_link_healthy "$settings_dir/keybindings.json"; }; then
       molt_info "vscode: settings.json not symlinked"
       ok=1
     fi
@@ -113,7 +115,9 @@ vscode_verify() {
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/vscode/settings.json" ]]; then
     local settings_dir
     settings_dir="$(_vscode_settings_dir)"
-    if [[ ! -L "$settings_dir/settings.json" ]]; then
+    if ! molt_link_healthy "$settings_dir/settings.json" \
+       || { [[ -f "$user_repo/config/vscode/keybindings.json" ]] \
+            && ! molt_link_healthy "$settings_dir/keybindings.json"; }; then
       molt_error "VERIFY FAIL: VS Code settings.json not symlinked"
       errors=1
     fi
