@@ -600,7 +600,30 @@ cmd_doctor() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" && -d "$user_repo" ]]; then
-    echo "[$step/$total] Checking user stack repo... ✓ $user_repo"
+    # Resolving via the lowercase fallback means this sleeve's directory does not
+    # match the convention. Harmless on case-insensitive storage, which is why it
+    # went unnoticed for months; fatal on a case-sensitive sleeve, where the
+    # dotfile symlinks are raw-pointed at one specific spelling. Say so rather
+    # than absorb it -- a tolerant lookup would hide exactly this.
+    # Compare against the name as STORED, not as resolved. On a case-insensitive
+    # filesystem the capitalised search path matches a lowercase directory by
+    # folding, so basename returns the spelling we asked for and the drift is
+    # invisible -- which is the whole failure mode. Ask the parent directory what
+    # the entry is actually called.
+    local want_repo real_repo parent
+    want_repo="Molt-$(whoami)"
+    parent="$(dirname "$user_repo")"
+    real_repo="$(ls -1 "$parent" 2>/dev/null | grep -ixF "$(basename "$user_repo")" | head -1)"
+    [[ -n "$real_repo" ]] || real_repo="$(basename "$user_repo")"
+    if [[ "$real_repo" != "$want_repo" ]]; then
+      echo "[$step/$total] Checking user stack repo... ⚠ $user_repo"
+      echo "         Directory is stored as '${real_repo}'; the convention is '${want_repo}'."
+      echo "         Resolved via the compatibility fallback. Rename it and re-run"
+      echo "         'molt resleeve' so the dotfile symlinks are regenerated too."
+      warnings=$((warnings + 1))
+    else
+      echo "[$step/$total] Checking user stack repo... ✓ $user_repo"
+    fi
   else
     echo "[$step/$total] Checking user stack repo... ✗ not found"
     warnings=$((warnings + 1))
@@ -1306,7 +1329,7 @@ molt_find_user_repo() {
       return 0
     fi
   done
-  molt_error "Could not find user config repo (molt-$(whoami))."
+  molt_error "Could not find user config repo (Molt-$(whoami))."
   if [[ -z "$MOLT_PRJ_DIR" ]]; then
     molt_error "Set MOLT_PRJ_DIR to the directory containing your molt repos, eg:"
     molt_error "  export MOLT_PRJ_DIR=\$HOME/Devel/prj"
