@@ -1,18 +1,14 @@
 ---
-verblock: "27 Aug 2026:v0.13: Matthew Sinclair - globalfold: dvb, whiteboard roster, snapshots re-cut"
+verblock: "04 Sep 2026:v0.14: Matthew Sinclair - kovacs decoupling in flight; digest-based staleness landed"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-Nothing in flight. The session of 27 Aug 2026 closed out clean -- full detail for each item below is in `done.md`.
+**kovacs decoupling -- IN FLIGHT, blocked on push.** kovacs has no stack of its own: `~/Devel/prj` is a symlink to `/media/psf/Home/Devel/prj`, so it has been reading and writing rhadamanth's working tree over the Parallels mount -- same device and inode, one index and one HEAD shared between two machines and two agents. `molt doctor` reported 10/10 green throughout. The migration onto local clones is planned, reviewed and ACKed by both other sleeves; it does not start until the six commits below are on GitHub, because a stage cloned from a published state is the entire point and staging from rhadamanth's tree would pin the migration to the machine it is decoupling from.
 
-**015: `dvb` shell function, whiteboard roster, snapshot re-cut (DONE, 27 Aug 2026)** -- `dvb` installed in molt-matts and verified in a fresh shell; two defects in the proposed body fixed before landing; `hv` node and roster README stood up so the escalation surface has a named reader; `wip.md` / `restart.md` re-cut off five-month-stale March figures. Commits `131642d` (molt), `a4e6cb2` (molt-{user}).
-
-**014: Intent v3 port (DONE, 26-27 Aug 2026)** -- migrated to the v3 canonical store, ST prose carried per file and byte-verified, generated views fenced from prettier. `intent doctor` 0 findings.
-
-**013 and earlier** -- see `done.md`.
+**Six commits await push.** `1c980c6`, `53b75fc`, `7d1508b`, `9f28dce` (molt); `0e57e83`, `7ebf26f` (molt-{user}). Four of them can only be validated on kovacs: check 11 needs a sleeve that can actually fail it, the digest work and the marker fix need configs that are genuinely stale, and the `doom sync -u` fix needs an install that has already tripped the short-circuit.
 
 ## Active Steel Threads
 
@@ -21,31 +17,30 @@ Nothing in flight. The session of 27 Aug 2026 closed out clean -- full detail fo
 
 ## Upcoming Work
 
-Verified open on this machine:
+Opened by this session, all verified on at least one sleeve:
 
-- ST0001/WP-04: document Phase 1 bootstrap steps
-- ST0001/WP-07: reproducible VM build and self-upgrading Molt. **Partly met already** -- `molt upgrade` exists with `--self`, `--dry-run` and targeted liberators, so three of its six acceptance rows are arguably satisfied and only the VM-build half is untouched. Which rows to tick is an `intent ac` change against canon and hv's call.
-- `molt-matts` is an Intent project with zero steel threads, and the `dvb` work landed there untracked. Opening its first thread is hv's call.
+- **Normalise repo directory case.** `constants.sh` searches `${MOLT_PRJ_DIR}/molt-$(whoami)` and every `molt.toml` declares `user_repo = "molt-matts"`, both lowercase, while the directory on both Macs is `Molt-matts`. It resolves only because APFS folds case; ext4 will not. `MOLT_PPLR_HOME` has the mirror-image fault -- `constants.sh` wants `Pplr`, gyges has `pplr` -- and the pplr liberator reports ok there for the same reason. Rename after kovacs lands, not during: it would invalidate the paths kovacs is cloning against.
+- **Sidecars record a case-folded path.** Every `.molt-rendered` names its template as `.../molt-matts/...` lowercase, the path molt resolved through case folding. Informational while the digest recomputes the path from its `source` argument, but it is on-disk state that survives a rename and would then resolve only on a case-insensitive filesystem.
+- **Remote naming is inconsistent across sleeves.** rhadamanth has `local` + `upstream` and no `origin`; gyges has `origin` only; `lib/newuser.sh:139` scaffolds new user repos with `origin`. `molt upgrade` resolves via `@{upstream}` so all three work, but assuming `origin` exists silently returns a false "0 behind" -- which cost kovacs a wrong answer this morning. Pick one and make `newuser.sh` agree.
+- **Decide whether `molt doctor` should warn on `core.ignorecase=true`.** Both Macs carry it; it is harmless while the authoritative copy is on APFS and a hazard the moment a case-sensitive host is authoritative.
 
-Not this project's to fix, tracked so it is not lost:
+Carried, not this project's to fix:
 
-- Devbin's `README.md:60` snippet still carries both defects fixed in `a4e6cb2`, so anyone pasting from it gets a shortcut that can run the wrong project's launcher and report success. Routed to devbin-vc.
-- The `dvb` body now lives in three places and has already diverged. The durable fix is devbin shipping `devbin shell-init zsh`; devbin-vc holds that pen.
-- `devbin doctor` reports a surviving retired alias but nothing reports a MISSING replacement, which is why `dvb` went unnoticed from `9ce1c88` until hv found it by opening shells.
+- Devbin's `README.md:60` snippet still carries both defects fixed in `a4e6cb2`; the `dvb` body now lives in three places and has diverged; `devbin doctor` reports surviving retired aliases but nothing reports a MISSING replacement. All three are devbin-vc's pen.
+- `molt-matts` is an Intent project with zero steel threads, and work keeps landing there untracked. Opening its first thread is hv's call.
 
-Carried forward from March, not verifiable from this sleeve -- confirm before acting:
+Carried from March, unverified from this sleeve -- confirm before acting:
 
-- Deploy starship template to gyges and kovacs (pull + `molt resleeve`)
-- Fix gyges git remotes: named "upstream" with missing fetch refspecs (`git config remote.upstream.fetch '+refs/heads/*:refs/remotes/upstream/*'`)
 - Tune iTerm2 SSH background colors after seeing them in practice
 - Check rhadamanth's actual default background color (reset currently uses 000000)
 - Persist GNOME Terminal Super bindings in the gnome-terminal liberator
 - GTK apps (Nautilus etc.) still use Ctrl+C/V -- low priority
 - Export iTerm2 + Terminal.app profiles from rhadamanth
-- Run `molt resleeve` on kovacs (needs MOLT_PRJ_DIR in .zshenv)
 
 ## Notes
 
-Measured 27 Aug 2026: **112 tests pass**, ShellCheck clean over 27 scripts, **22 liberators**, `VERSION` = **0.1.1**, `intent doctor` 0 findings. Snapshots before this session claimed 83 tests / 19 liberators / v0.1.0 and were five months stale.
+Three sleeves: rhadamanth and gyges on macOS, kovacs on Ubuntu in Parallels. `molt upgrade` = fast config sync (daily); `molt maintain` = heavy system maintenance (weekly/monthly). `envsubst` only substitutes `MOLT_*` variables. `VERSION` is the single source of truth for the version number.
 
-Three sleeves operational (kovacs, rhadamanth, gyges). `molt upgrade` = fast config sync (daily); `molt maintain` = heavy system maintenance (weekly/monthly). `envsubst` only substitutes `MOLT_*` variables. The VERSION file is the single source of truth for the version number.
+Configs are re-rendered when a content digest of (template + `instances/<host>/vars.sh`) no longer matches the one recorded in the `.molt-rendered` sidecar. It is not an mtime comparison: git restamps files whose content never changed, and across two filesystems mtime produces false negatives, which is the silent direction. Installs predating `9f28dce` carry no digest, so every rendered config re-renders once on first resleeve -- four of them on gyges, including the launch agent plist, whose re-render reloads `com.matts.backup-mount`.
+
+The `backup` liberator never touches the disk image. SuperDuper creates, attaches and detaches its own sparsebundle; anything that competes for the image can permanently break the job's destination binding. The liberator's only job is the SMB share.
