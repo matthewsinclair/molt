@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `molt_config_stale` and `molt_config_digest`: liberators that render configs can now detect when a rendered file no longer matches its inputs. molt renders only when a `_check` reports not-ok, so before this a template change never propagated -- the check passed, install was skipped, and the sleeve ran the previous rendered file while reporting success. Wired into `ssh`, `zsh` and `backup`, the three liberators that render
+- `molt doctor` check (11th): the stack itself must be on local storage. Rejects `fuse*`, `nfs*`, `smb*`, `cifs`, `9p`, `virtiofs` and friends. Catches a sleeve running out of another machine's checkout over a guest or network mount, which check 10 cannot see because the coupling is structural rather than textual
+- `molt_fstype`: filesystem type for a path, branching on platform rather than probing (BSD `stat` reads GNU's `-f -c %T` as a format string and prints `-c` instead of failing)
+- `molt_render` honours the `@@MOLT:BEGIN@@` marker its own templates advertise: content above the marker in an existing file is preserved across re-renders. Previously the whole file was replaced, so "add your own entries ABOVE this line" was not true
+- `molt upgrade` warns about unpushed commits and untracked files. Unpushed commits are the damaging case: `git pull --ff-only` cannot fast-forward past them, so it is skipped with a soft warning and every other sleeve upgrades to a tree without the fixes while reporting success
+- `docs/guides/templates.md`: sections on detecting stale renders and on preserving hand-written entries
 - `molt new-user` command: scaffolds a new `molt-{user}` config repo from a tokenised skeleton (`templates/molt-user/`), substituting name, email, GitHub handle, and first hostname. Implemented in `lib/newuser.sh` with `test/newuser.bats` (10 tests)
 - `docs/guides/new-user.md` guide explaining the scaffold, the identity surface, and the scaffold-time vs resleeve-time placeholder split
 - `git_install` config-linking tests in `test/git.bats` (arbitrary identity name, multiple includes, empty-glob guard)
@@ -17,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `web` liberator test (`test/liberators/web.bats`)
 
 ### Changed
+
+- `backup` liberator rewritten for SuperDuper 4.0.5, which creates and owns its own sparsebundle on the SMB share. It no longer creates, attaches or detaches the disk image -- anything competing for the image can permanently break the job's destination binding. `maintain` refuses to tear down the share while the image is open. `MOLT_BACKUP_VOLUME` removed; `MOLT_BACKUP_IMAGE` now names the sparsebundle. A missing image is a warning, not an error
+- `backup-mount` mounts via NetAuth rather than `mount_smbfs`. `/Volumes` is `root:wheel drwxr-xr-x`, so the previous `mkdir -p` could never succeed as a normal user; it failed silently and the mount only worked when Finder had already created the mount point. Also logs the tool's real stderr, password scrubbed, and trims its log to 30 days
+- `editors_maintain` runs `doom sync -u` unconditionally. `doom upgrade` short-circuits before the package sync when Doom itself is current, so packages orphaned by a failed run were never retried while maintain reported success
+- `editors_check` warns when `emacs-plus` is linked against ImageMagick, which breaks Emacs at launch on every imagemagick soname bump
 
 - `git` liberator now links any `config/git/gitconfig_*` identity include instead of a hardcoded filename
 - `bootstrap.sh` no longer assumes a fixed GitHub owner for the config repo: `MOLT_REPO` and the new `MOLT_USER_GH` are overridable (default `whoami`)

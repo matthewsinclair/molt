@@ -84,11 +84,12 @@ backup_check() {
   _backup_vars || return 1
   local ok=0
 
-  # A template change alone does not trigger a re-render (molt only installs when
-  # a check fails), so ask for one explicitly rather than run a stale script.
+  # A change to the template OR to instance vars does not trigger a re-render on
+  # its own (molt only installs when a check fails), so ask for one explicitly
+  # rather than run a stale script.
   if molt_config_stale "config/backup/backup-mount.sh" "$MOLT_BACKUP_SCRIPT" \
      || molt_config_stale "config/backup/com.${MOLT_USER}.backup-mount.plist" "$_BACKUP_AGENT"; then
-    molt_info "backup: rendered config is older than its template — re-rendering"
+    molt_info "backup: rendered config differs from its template or instance vars — re-rendering"
     ok=1
   fi
 

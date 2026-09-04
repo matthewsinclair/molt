@@ -96,10 +96,11 @@ zsh_check() {
     ok=1
   fi
 
-  # Starship is rendered, not linked, so a template change does not propagate on
-  # its own -- molt only renders when a check reports not-ok. Ask for it.
+  # Starship is rendered, not linked, so a change to its template or to instance
+  # vars does not propagate on its own -- molt only renders when a check reports
+  # not-ok. Ask for it.
   if molt_config_stale "config/starship/starship.toml" "$HOME/.config/starship.toml"; then
-    molt_info "zsh: ~/.config/starship.toml is older than its template — re-rendering"
+    molt_info "zsh: ~/.config/starship.toml differs from its template or instance vars — re-rendering"
     ok=1
   fi
 

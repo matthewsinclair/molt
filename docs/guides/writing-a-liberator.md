@@ -56,9 +56,11 @@ myapp_maintain() {
 
 3. **Use `molt_install_config` when templates might apply.** It auto-picks between render (`.tmpl`) and symlink based on what exists in the user's config repo.
 
-4. **Be idempotent.** Running a liberator twice should produce the same result. Don't duplicate backups, don't create duplicate entries.
+4. **If you render, call `molt_config_stale` in your `_check`.** molt only renders when a check reports not-ok, so without it a template or `vars.sh` change never reaches the machine — the check passes, install is skipped, and the sleeve runs the old file while reporting success. See [templates.md](templates.md#detecting-stale-renders).
 
-5. **Use `molt_platform` for OS branching.** Returns `linux` or `macos`.
+5. **Be idempotent.** Running a liberator twice should produce the same result. Don't duplicate backups, don't create duplicate entries.
+
+6. **Use `molt_platform` for OS branching.** Returns `linux` or `macos`.
 
 ## Minimal example
 
@@ -123,18 +125,19 @@ myapp_verify() {
 
 ## Framework functions available to liberators
 
-| Function               | Purpose                                               |
-| ---------------------- | ----------------------------------------------------- |
-| `molt_link src dst`    | Symlink `src` to `dst`, backup existing, mkdir parent |
-| `molt_render tmpl dst` | Render template via `envsubst` with instance vars     |
-| `molt_install_config`  | Auto-pick render (`.tmpl`) or link (static)           |
-| `molt_find_user_repo`  | Return path to the user's config repo                 |
-| `molt_platform`        | Return `linux` or `macos`                             |
-| `molt_distro`          | Return distro name (eg `ubuntu`, `fedora`, `macos`)   |
-| `molt_arch`            | Return architecture (eg `arm64`, `x86_64`)            |
-| `molt_info msg`        | Print info message (prefixed with `Zen:`)             |
-| `molt_warn msg`        | Print warning                                         |
-| `molt_error msg`       | Print error                                           |
+| Function               | Purpose                                                                                                           |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `molt_link src dst`    | Symlink `src` to `dst`, backup existing, mkdir parent                                                             |
+| `molt_render tmpl dst` | Render template via `envsubst` with instance vars                                                                 |
+| `molt_install_config`  | Auto-pick render (`.tmpl`) or link (static)                                                                       |
+| `molt_config_stale`    | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check` |
+| `molt_find_user_repo`  | Return path to the user's config repo                                                                             |
+| `molt_platform`        | Return `linux` or `macos`                                                                                         |
+| `molt_distro`          | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                               |
+| `molt_arch`            | Return architecture (eg `arm64`, `x86_64`)                                                                        |
+| `molt_info msg`        | Print info message (prefixed with `Zen:`)                                                                         |
+| `molt_warn msg`        | Print warning                                                                                                     |
+| `molt_error msg`       | Print error                                                                                                       |
 
 ## Adding to the manifest
 
