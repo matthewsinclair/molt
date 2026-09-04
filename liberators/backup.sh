@@ -3,8 +3,14 @@
 # Frees you from hand-mounting a share before a backup can run.
 #
 # This liberator does not perform backups. SuperDuper does that. What it owns is
-# making the destination *exist*: the SMB share mounted, healthy, speaking a
-# sane dialect, and the .asif attached — and reporting honestly when it is not.
+# making the destination *reachable*: the SMB share mounted, healthy, speaking a
+# sane dialect, with the .asif visible on it — and reporting honestly when it is not.
+#
+# It deliberately does NOT attach the image, and treats an unattached image as
+# normal. SuperDuper binds a disk-image destination by the image FILE (its
+# `imagePath`) and attaches it itself, as root, at copy time; it refuses an image
+# that something else has already mounted. Attaching it here is at best useless
+# and at worst stops the destination being bound as an image at all.
 #
 # Requires these in the instance's vars.sh:
 #   MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT
@@ -111,14 +117,13 @@ backup_check() {
             ok=1 ;;
   esac
 
-  if _backup_attached; then
-    _backup_probe "/Volumes/${MOLT_BACKUP_VOLUME}" || {
-      molt_info "backup: /Volumes/${MOLT_BACKUP_VOLUME} attached but not answering (run: molt maintain backup)"
-      ok=1
-    }
-  else
-    molt_info "backup: ${MOLT_BACKUP_IMAGE} not attached"
+  # The image only has to be *there*. Whether it is attached is SuperDuper's
+  # business, and "not attached" is the normal resting state between copies.
+  if ! _backup_probe "$MOLT_BACKUP_IMAGE"; then
+    molt_info "backup: ${MOLT_BACKUP_IMAGE} not visible on the share"
     ok=1
+  elif _backup_attached; then
+    molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper copying, or mounted by hand)"
   fi
 
   if _backup_sd_locked; then
@@ -170,8 +175,7 @@ backup_verify() {
 
   _backup_mounted || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} not mounted"; errors=1; }
   _backup_probe "$MOLT_BACKUP_MOUNT" || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} not readable"; errors=1; }
-  _backup_attached || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_IMAGE} not attached"; errors=1; }
-  _backup_probe "/Volumes/${MOLT_BACKUP_VOLUME}" || { molt_error "VERIFY FAIL: /Volumes/${MOLT_BACKUP_VOLUME} not readable"; errors=1; }
+  _backup_probe "$MOLT_BACKUP_IMAGE" || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_IMAGE} not visible on ${MOLT_BACKUP_MOUNT}"; errors=1; }
 
   local dialect
   dialect="$(_backup_dialect)"
@@ -184,8 +188,10 @@ backup_verify() {
   return $errors
 }
 
-# Force a clean session. Use when the share or the image volume has wedged.
-# Order matters: the attached image pins the mount, so it goes first.
+# Force a clean session. Use when the share has wedged.
+# We never detach the image: if it is open, SuperDuper is very likely copying
+# into it, and pulling it out from under a running copy is how you corrupt a
+# backup. An open image also pins the mount, so there is nothing safe to do.
 backup_maintain() {
   _backup_vars || return 1
 
@@ -199,11 +205,12 @@ backup_maintain() {
     return 1
   fi
 
-  molt_info "Rebuilding the ${MOLT_BACKUP_HOST} session..."
   if _backup_attached; then
-    /usr/bin/hdiutil detach "/Volumes/${MOLT_BACKUP_VOLUME}" -force >/dev/null 2>&1 \
-      && molt_info "  detached /Volumes/${MOLT_BACKUP_VOLUME}"
+    molt_error "backup: ${MOLT_BACKUP_IMAGE} is open — refusing to tear down the share under it"
+    return 1
   fi
+
+  molt_info "Rebuilding the ${MOLT_BACKUP_HOST} session..."
   if _backup_mounted; then
     /sbin/umount -f "$MOLT_BACKUP_MOUNT" >/dev/null 2>&1 \
       && molt_info "  unmounted ${MOLT_BACKUP_MOUNT}"
