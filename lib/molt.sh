@@ -325,6 +325,7 @@ molt_hash() {
 # leave that hole open.
 molt_config_digest() {
   local template="$1"
+  shift
   [[ -f "$template" ]] || return 1
 
   local user_repo hostname vars_file
@@ -332,9 +333,31 @@ molt_config_digest() {
   hostname="$(hostname -s 2>/dev/null || hostname)"
   vars_file="${user_repo}/instances/${hostname}/vars.sh"
 
+  # Any remaining arguments are extra inputs that also determine the rendered
+  # result -- ssh's instance config.d fragments, for one. A fragment ADDED or
+  # EDITED changes the file the sleeve ends up with while changing neither the
+  # template nor vars.sh, so without this the digest looks straight past it,
+  # _check passes, _install never runs, and the fragment never lands. That is
+  # the third place this same bug has appeared: template, then vars.sh, now
+  # fragments. Include everything the output depends on, or the check is
+  # answering a narrower question than the one being asked.
+  #
+  # Sorted so the digest does not depend on glob order across filesystems.
+  local extras=()
+  if [[ $# -gt 0 ]]; then
+    local e
+    while IFS= read -r e; do [[ -n "$e" ]] && extras+=("$e"); done \
+      < <(printf '%s\n' "$@" | sort)
+  fi
+
   {
     cat "$template"
     [[ -f "$vars_file" ]] && cat "$vars_file"
+    local x
+    for x in ${extras+"${extras[@]}"}; do
+      # Name as well as content: renaming a fragment changes the sentinel.
+      [[ -f "$x" ]] && { basename "$x"; cat "$x"; }
+    done
   } 2>/dev/null | molt_hash
 }
 
@@ -364,9 +387,36 @@ molt_config_digest() {
 # re-rendering costs a moment and skipping it is the failure mode above.
 #
 # Liberators that render configs should fold this into their check.
+# Re-stamp a rendered file's digest to include extra inputs.
+#
+# molt_render records molt_config_digest(template) only. When a liberator also
+# post-processes the rendered file from other inputs -- ssh appending its
+# config.d fragments -- the check computes a digest WITH those inputs and the
+# sidecar holds one WITHOUT, so they can never match and the liberator
+# reinstalls on every single run. Call this after the post-processing, with the
+# same extra inputs the _check passes to molt_config_stale.
+molt_config_record_digest() {
+  local target="$1" template="$2"
+  shift 2
+  local sidecar="${target}.molt-rendered"
+  [[ -f "$sidecar" ]] || return 0
+
+  local digest
+  digest="$(molt_config_digest "$template" ${1+"$@"})" || return 0
+  [[ -n "$digest" ]] || return 0
+
+  local tmp="${sidecar}.tmp.$$"
+  { grep -v '^digest ' "$sidecar" 2>/dev/null; echo "digest ${digest}"; } > "$tmp" \
+    && mv "$tmp" "$sidecar"
+  # Match the sidecar's permissions to the rendered file (eg 600 under ~/.ssh).
+  chmod --reference="$target" "$sidecar" 2>/dev/null \
+    || chmod "$(stat -f '%Lp' "$target" 2>/dev/null || echo 644)" "$sidecar" 2>/dev/null || true
+}
+
 molt_config_stale() {
   local source="$1"    # relative path, no .tmpl: "config/backup/backup-mount.sh"
   local target="$2"    # absolute path of the rendered file
+  shift 2              # any remaining args: extra inputs the render depends on
 
   local user_repo template
   if ! user_repo="$(molt_find_user_repo)"; then
@@ -379,7 +429,7 @@ molt_config_stale() {
   [[ -e "$target" ]]   || return 0      # never rendered: trivially stale
 
   local want have
-  want="$(molt_config_digest "$template")" || return 0
+  want="$(molt_config_digest "$template" ${1+"$@"})" || return 0
   [[ -n "$want" ]] || return 0
   have="$(sed -n 's/^digest //p' "${target}.molt-rendered" 2>/dev/null)"
 
