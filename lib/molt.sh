@@ -115,6 +115,29 @@ molt_link_healthy() {
 # is guarded by a failed molt_link_healthy, so the healthy branch is
 # unreachable from here -- but a helper that names a fault on a sound link is
 # the very bug this fixes, and the next caller will not be guarded.
+# True when target is a healthy symlink pointing at the expected source.
+#
+# molt_link_healthy asks only whether a link resolves, not whether it resolves
+# to the thing this liberator installs. ~/bin/intent resolves fine -- to a Rust
+# release binary that intent_install never created -- so the check passed about
+# a link it was not governing. A resolving link to the wrong target is the same
+# "reports ok while wrong" class as a dangling one, just harder to see.
+molt_link_points_to() {
+  local target="$1" expected="$2"
+  molt_link_healthy "$target" || return 1
+  [[ "$(_molt_realpath "$target")" == "$(_molt_realpath "$expected")" ]]
+}
+
+# realpath(1) is not on every macOS; readlink -f is not on every BSD.
+_molt_realpath() {
+  local p="$1"
+  if command -v realpath &>/dev/null; then
+    realpath "$p" 2>/dev/null || echo "$p"
+  else
+    python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$p" 2>/dev/null || echo "$p"
+  fi
+}
+
 molt_link_fault() {
   local target="$1"
   if molt_link_healthy "$target"; then
@@ -609,7 +632,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=11
+  local total=12
   local step=0
   local warnings=0
 
@@ -685,7 +708,22 @@ cmd_doctor() {
   local manifest
   manifest="$(molt_find_manifest 2>/dev/null || echo "")"
   if [[ -n "$manifest" && -f "$manifest" ]]; then
-    echo "[$step/$total] Checking manifest... ✓ $manifest"
+    # user_repo is never consumed -- it cannot be, since you must already know
+    # the repo to find the manifest inside it. Left as prose it silently drifts
+    # out of date, which is how a lowercase declaration survived the rename. So
+    # assert it instead: dead documentation becomes a live check.
+    local declared_repo
+    declared_repo="$(grep -E '^[[:space:]]*user_repo[[:space:]]*=' "$manifest" 2>/dev/null \
+                     | head -n 1 | sed -E 's/.*=[[:space:]]*"?([^"]*)"?.*/\1/')"
+    if [[ -n "$declared_repo" && -n "${real_repo:-}" && "$declared_repo" != "$real_repo" ]]; then
+      echo "[$step/$total] Checking manifest... ⚠ $manifest"
+      echo "         Declares user_repo = '${declared_repo}' but the directory is '${real_repo}'."
+      echo "         Nothing reads this key, so the mismatch is silent -- fix it before"
+      echo "         something starts trusting it."
+      warnings=$((warnings + 1))
+    else
+      echo "[$step/$total] Checking manifest... ✓ $manifest"
+    fi
   else
     echo "[$step/$total] Checking manifest... ⚠ no molt.toml found"
     warnings=$((warnings + 1))
@@ -825,6 +863,27 @@ cmd_doctor() {
     echo "         guest mount. It shares one working tree, index and HEAD with the"
     echo "         host, so every command here reports success while changing files"
     echo "         that do not belong to this machine. Clone the repos locally."
+    warnings=$((warnings + 1))
+  fi
+
+  # 12. git is not folding case in the managed repos
+  step=$((step + 1))
+  local ignorecase_repos=""
+  for p in "${MOLT_ROOT:-}" "${user_repo:-}"; do
+    [[ -n "$p" && -d "$p/.git" ]] || continue
+    if [[ "$(git -C "$p" config --get core.ignorecase 2>/dev/null)" == "true" ]]; then
+      ignorecase_repos="${ignorecase_repos}${ignorecase_repos:+, }$(basename "$p")"
+    fi
+  done
+  if [[ -z "$ignorecase_repos" ]]; then
+    echo "[$step/$total] Checking git case sensitivity... ✓"
+  else
+    echo "[$step/$total] Checking git case sensitivity... ⚠ core.ignorecase=true in ${ignorecase_repos}"
+    echo "         git set this because the filesystem folds case. Harmless while the"
+    echo "         authoritative copy stays here, but a rename that differs only in"
+    echo "         case will not be committed, so a case-sensitive sleeve pulls the"
+    echo "         OLD spelling and every symlink to it dangles. This is what hid the"
+    echo "         repo rename until a Linux sleeve found it."
     warnings=$((warnings + 1))
   fi
 

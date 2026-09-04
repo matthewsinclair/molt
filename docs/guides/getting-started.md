@@ -128,7 +128,7 @@ The typical update sequence is:
 molt doctor
 ```
 
-Runs 11 diagnostic checks: directory structure, manifest validity, liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), and that the stack itself is on local storage rather than a network or guest mount.
+Runs 12 diagnostic checks: directory structure, manifest validity (including that the manifest's `user_repo` still names the real directory), liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, and that git is not folding case in the managed repos.
 
 ## Your config repo
 

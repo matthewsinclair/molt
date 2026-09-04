@@ -120,11 +120,16 @@ cmd_new_user() {
   [[ -z "$hostname" ]]  && read -rp "First machine hostname: " hostname
   if [[ -z "$hostname" ]]; then molt_error "hostname is required"; return 1; fi
 
+  # Directory name is Capitalised (Molt-matts, Molt-flynn), matching every
+  # other project under MOLT_PRJ_DIR and the order constants.sh searches. The
+  # GITHUB repo stays lowercase (matthewsinclair/molt-matts) -- the two
+  # conventions differ on purpose, so do not "fix" the remote URL below.
   if [[ -z "$dest" ]]; then
+    local dirname="Molt-${user}"
     if [[ -n "${MOLT_PRJ_DIR:-}" ]]; then
-      dest="${MOLT_PRJ_DIR}/molt-${user}"
+      dest="${MOLT_PRJ_DIR}/${dirname}"
     else
-      dest="$(pwd)/molt-${user}"
+      dest="$(pwd)/${dirname}"
     fi
   fi
 

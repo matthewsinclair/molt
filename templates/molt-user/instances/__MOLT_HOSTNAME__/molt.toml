@@ -4,7 +4,7 @@
 [stack]
 name = "molt-__MOLT_USER__"
 version = "0.1.0"
-user_repo = "molt-__MOLT_USER__"
+user_repo = "Molt-__MOLT_USER__"
 
 [sleeve]
 hostname = "__MOLT_HOSTNAME__"
@@ -75,4 +75,10 @@ depends = ["zsh"]
 name = "brew"
 enabled = false
 os = ["macos"]
+depends = ["system"]
+
+[[liberator]]
+name = "claude"
+enabled = true
+os = ["linux", "macos"]
 depends = ["system"]
