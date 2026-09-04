@@ -96,6 +96,13 @@ zsh_check() {
     ok=1
   fi
 
+  # Starship is rendered, not linked, so a template change does not propagate on
+  # its own -- molt only renders when a check reports not-ok. Ask for it.
+  if molt_config_stale "config/starship/starship.toml" "$HOME/.config/starship.toml"; then
+    molt_info "zsh: ~/.config/starship.toml is older than its template — re-rendering"
+    ok=1
+  fi
+
   # Are config files linked?
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"

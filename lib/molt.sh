@@ -169,6 +169,24 @@ molt_render() {
     envsubst "$molt_vars" < "$template" > "${target}.molt-tmp"
   fi
 
+  # Honour the @@MOLT:BEGIN@@ contract. Templates carrying the marker tell the
+  # user "add your own entries ABOVE this line" -- but rendering replaced the
+  # whole file, so anything added there was destroyed on the next render. It
+  # stayed invisible only because a template change was the sole trigger and
+  # templates rarely changed; molt_config_stale makes renders routine, which
+  # turns a latent bug into a frequent one.
+  #
+  # Capture the region above the marker from the CURRENT file BEFORE the backup
+  # logic below moves it aside. Only applies when both the existing file and the
+  # new render carry the marker, so rendered scripts and plists are untouched.
+  local marker='@@MOLT:BEGIN@@'
+  local preamble=""
+  if [[ -f "$target" ]] \
+     && grep -qF "$marker" "$target" 2>/dev/null \
+     && grep -qF "$marker" "${target}.molt-tmp" 2>/dev/null; then
+    preamble="$(awk -v m="$marker" 'index($0, m) { exit } { print }' "$target")"
+  fi
+
   # Handle existing file before replacing
   if [[ -e "$target" ]] || [[ -L "$target" ]]; then
     if [[ -L "$target" ]]; then
@@ -191,6 +209,13 @@ molt_render() {
       molt_warn "Backing up existing file: $target -> $backup"
       mv "$target" "$backup"
     fi
+  fi
+
+  if [[ -n "$preamble" ]]; then
+    printf '%s\n' "$preamble" > "${target}.molt-tmp2"
+    cat "${target}.molt-tmp" >> "${target}.molt-tmp2"
+    mv "${target}.molt-tmp2" "${target}.molt-tmp"
+    molt_info "Preserved $(printf '%s\n' "$preamble" | grep -c .) line(s) above ${marker}"
   fi
 
   mv "${target}.molt-tmp" "$target"
@@ -224,7 +249,15 @@ molt_config_stale() {
   local target="$2"    # absolute path of the rendered file
 
   local user_repo template
-  user_repo="$(molt_find_user_repo)" || return 1
+  # Fail loudly rather than silently reporting "fresh". A function whose job is
+  # catching silent staleness must not go quiet when it cannot do that job: an
+  # unset MOLT_PRJ_DIR or an unexpected repo layout would otherwise make every
+  # config on the machine report fresh -- precisely the symptom this exists to
+  # prevent. Raised by the Claude session on gyges.
+  if ! user_repo="$(molt_find_user_repo)"; then
+    molt_warn "molt_config_stale: no user repo — cannot tell whether ${target} is stale"
+    return 1
+  fi
   template="${user_repo}/${source}.tmpl"
 
   [[ -f "$template" ]] || return 1      # nothing to be stale against
