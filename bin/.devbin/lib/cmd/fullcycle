@@ -1,0 +1,644 @@
+#!/usr/bin/env bash
+#
+# `fullcycle` -- from a total clean: remove the cargo trees, rebuild, test.
+#
+# A TOP-LEVEL COMMAND AND DELIBERATELY NOT `build fullcycle`, which is where it
+# was first put and where it did not belong. `build` is D18 tier 4 -- universal
+# in name only, shipping no option set, because the four corpus projects'
+# build targets intersect at nothing and shipping any of them imposes one
+# project's shape on the rest. A `build.fullcycle` row broke that, and broke it
+# in the way the tier exists to prevent: `command_active` makes a command with
+# no active options inactive, so `build` would have resolved for the FIRST time
+# in every rust estate on the strength of a devbin-shipped option, with `build
+# all` then being exactly one thing -- the destructive one.
+#
+# As a command it is STRUCTURALLY outside every `all`. `all` sweeps a command's
+# options; a command is not one of them. For a verb that deletes the build tree
+# that is worth more than a flag saying the same thing, because no config can
+# opt it back in by accident and no future refactor can quietly re-include it.
+#
+set -euo pipefail
+
+# shellcheck source=lib/helpers
+. "${DEVBIN_LIB:?run me through bin/devbin}/helpers"
+# shellcheck source=lib/runlog
+. "$DEVBIN_LIB/runlog"
+# shellcheck source=lib/config
+. "$DEVBIN_LIB/config"
+
+# THE CONFIG CACHE DOES NOT CROSS INTO A HANDLER -- a built-in handler is a
+# separate process, so the dispatcher's `cfg_load` is not in scope here and
+# every accessor would answer empty. Answering empty is the dangerous shape
+# rather than a loud one: the restore phase would read "nothing declared" in a
+# project that had declared one, and silently decline to put back what it
+# deleted.
+[ -z "${DEVBIN_DIR:-}" ] || [ ! -f "$DEVBIN_DIR/config.yaml" ] ||
+  cfg_load "$DEVBIN_DIR/config.yaml" >/dev/null 2>&1 || true
+
+_fullcycle_usage() {
+  printf 'usage: %s fullcycle [--dry-run] [--force]\n\n' "${DEVBIN_INVOKE:-bin/devbin}"
+  printf '  From a total clean: remove the cargo target trees, rebuild, test.\n'
+  printf '  DESTRUCTIVE. --dry-run shows what would run and executes nothing.\n'
+}
+
+# _fullcycle_phases -- THE PHASE LIST, DEFINED EXACTLY ONCE.
+#
+# The dry run and the real run walk this same function. A dry run carrying its
+# own copy of the sequence drifts from the real one and then lies with
+# confidence, in the direction that matters: it is consulted precisely when the
+# caller is unsure what is about to happen.
+#
+# THE REBUILD PHASE IS NOT OPTIONAL AND ITS ABSENCE WAS A REAL DEFECT, SHIPPED.
+# The first version of this ran `clean rust` then `test rust` and nothing else,
+# on the reasoning that devbin's `build` is D18 tier 4 and ships no options, so
+# a shipped cycle must not name it. That reasoning was about which verbs devbin
+# OWNS and never asked whether what remained was still a cycle. It was not:
+# `clean rust` removes `target/` INCLUDING `release/`, and `cargo test` builds
+# debug test binaries and never the release artefacts. On the estate this was
+# specified from, `~/.local/bin/intent` is a symlink into
+# `native/rust/target/release/`, so the two-phase cycle would have deleted the
+# binary every whiteboard guard on the machine resolves through and not put it
+# back -- the 2026-08-29 outage, reproduced by the command written to prevent
+# its cause.
+#
+# So `build all` is a phase again, and it is UNCONDITIONAL. It used to be
+# emitted only when `_fullcycle_can_rebuild` passed, and that guard is gone from
+# here for a reason worth the paragraph (issue 0051, laksa/dc).
+#
+# THE SAME PREDICATE WAS TESTED TWICE AND THE TWO COPIES FAILED IN OPPOSITE
+# DIRECTIONS. `cmd_fullcycle` tests it and REFUSES the whole verb, loudly, with
+# five lines of stderr -- it fails CLOSED. This function tested it and silently
+# dropped the rebuild, emitting `clean rust` + `test rust`, which IS the
+# net-destructive two-phase cycle described above -- it failed OPEN. The closed
+# copy won only because it runs first.
+#
+# AND THE OPEN COPY WAS THE ONE A READER MET FIRST -- this function sits near
+# the top of the file and the guard sits near the bottom, in `cmd_fullcycle`,
+# hundreds of lines away and executed BEFORE it. So the open copy read as
+# evidence that the verb already handled a no-build project gracefully, which
+# makes the guard look like belt-and-braces and deleting it look like a tidy-up
+# a careful reviewer would approve. A duplicated decision does not merely wait
+# to be disturbed here; it ARGUES for removing the copy that protects you.
+#
+# (Stated as the SHAPE and not as two line numbers, which is this file's own
+# rule from the `-maxdepth` warning in the fleet command: a warning that names a
+# number gets the number changed.)
+#
+# So the list is a list. The guard is a guard, it lives in `cmd_fullcycle`, and
+# there is exactly one of it.
+_fullcycle_phases() {
+  printf '%s\n' "clean rust"
+  printf '%s\n' "build all"
+  printf '%s\n' "test rust"
+}
+
+# _fullcycle_can_rebuild <launcher> -- true when this project HAS a build verb.
+#
+# A NECESSARY CONDITION AND NOT A SUFFICIENT ONE, and the name used to promise
+# more than it delivers. The property that matters is "can restore the release
+# artefacts"; this asks "is there a build command". Conflab satisfied the proxy
+# and failed the property -- `build all` there runs cargo at the DEV profile, so
+# a cycle refused nothing, reported rc=0 three phases running, and left
+# `~/.local/bin/conflab` and `conflabd` dangling into a release/ the clean had
+# deleted. A sound instrument aimed one unit wide, returning clean.
+#
+# It is kept because a project with NO build verb certainly cannot restore, and
+# refusing those early is still right. What it cannot do is bless the ones that
+# have a verb, so such guarantee as exists is measured after the fact by
+# _fullcycle_path_links below rather than predicted here.
+#
+# AND THAT GUARANTEE IS CONDITIONAL, WHICH THIS COMMENT ASSERTED FLATLY UNTIL
+# 2026-09-01. `_fullcycle_path_links` measures PATH SYMLINKS. On an estate with
+# none, the after-half has an empty list to walk, so it fires nothing and the
+# cycle asserts NOTHING about whether the build restored anything -- while
+# still finishing rc=0. Found by laksa/dc, in the estate that proves it: Laksa
+# has no PATH symlinks, so Conflab's exact defect would land there as a clean
+# green, with the tripwire that caught it in Conflab simply absent.
+#
+# The instrument answers "did I darken anything that was lit". It cannot answer
+# "did the rebuild produce anything at all", and those two coincide only where
+# a PATH symlink happens to exist. **So the run now SAYS when the check was
+# vacuous** -- see _fullcycle_run. That is not the fix for the underlying gap
+# (issue 0048); it is the refusal to let an empty-set green read as a measured
+# one, which is the same discipline this project's own test harness applies to
+# itself when it prints CONTROL IS VACUOUS, NOT RUN.
+_fullcycle_can_rebuild() {
+  "$1" build --help >/dev/null 2>&1
+}
+
+# _fullcycle_path_links -- PATH symlinks that CURRENTLY RESOLVE into this tree,
+# as `<link><TAB>` lines. The before-half of a two-sided control.
+#
+# WHY MEASURED AND NOT PREDICTED. Every attempt to decide in advance whether a
+# cycle will restore what it deletes is a proxy for the thing that matters, and
+# each proxy has now failed in a different way: "has a build verb" passes for a
+# debug-only build, and "clean warns about at-risk binaries" cannot see a
+# symlink that is ALREADY dangling, because a PATH resolver only finds binaries
+# that still work. Once a cycle darkens them, every later run is correctly
+# silent about repeating the damage.
+#
+# So this records what worked BEFORE and re-checks the same list AFTER. Only
+# links that resolved at the start are recorded, which is the honest scope: the
+# cycle answers for what IT broke, not for what it found broken.
+_fullcycle_path_links() {
+  local p f want="${1:-live}"
+  local -a elements=()
+  IFS=: read -r -a elements <<<"$PATH"
+  for p in "${elements[@]}"; do
+    [ -n "$p" ] || continue
+    [ -d "$p" ] || continue
+    for f in "$p"/*; do
+      [ -L "$f" ] || continue
+      case "$(readlink "$f")" in "$PROJECT_ROOT"/*) ;; *) continue ;; esac
+      # -e follows the link: true means it resolves today.
+      if [ -e "$f" ]; then
+        [ "$want" = live ] && printf '%s\n' "$f"
+      else
+        [ "$want" = dead ] && printf '%s\n' "$f"
+      fi
+    done
+  done
+  return 0
+}
+
+_fullcycle_header() {
+  local dirty link predark=0
+  # WRITTEN BEFORE ANYTHING RUNS, so the log can never be a verdict describing
+  # no commit. git_head_identity already carries `+dirty`; the count sits beside
+  # it because "dirty" and "how dirty" are different questions to somebody
+  # reading this log a week later.
+  # A NON-CHECKOUT REPORTS AS ONE, rather than as zero dirty files. `dirty: 0`
+  # would claim the tree matches its commit when there is no commit to match --
+  # the same false statement a bare sha makes on a dirty tree, in the other
+  # direction. It also cannot be computed here: `set -o pipefail` is on, and
+  # git exiting 128 into `wc` takes the whole handler down with it.
+  printf '    HEAD:  %s\n' "$(git_head_identity "$PROJECT_ROOT")"
+  if git -C "$PROJECT_ROOT" rev-parse --git-dir >/dev/null 2>&1; then
+    dirty="$(git -C "$PROJECT_ROOT" status --porcelain | wc -l | tr -d ' ')"
+    printf '    dirty: %s file(s)\n' "$dirty"
+  else
+    printf '    dirty: not a checkout -- these bytes are not compared to anything\n'
+  fi
+
+  # ALREADY DARK BEFORE THIS RUN, REPORTED AND NOT BLAMED ON THE CYCLE.
+  #
+  # THE BEFORE/AFTER CONTROL ALONE HAS A HOLE AND THIS IS IT. It records only
+  # links that RESOLVE at the start, so a tree whose binaries were already
+  # dangling gets a clean report -- correctly, since this cycle did not break
+  # them, and uselessly, since nothing else on the machine will say so either.
+  # `clean`'s at-risk detector resolves basenames through PATH and a dangling
+  # symlink is invisible to a PATH resolver, so once anything darkens a binary
+  # every later run is CORRECTLY silent about it. A check that goes quiet
+  # exactly as the damage persists is worse than one that cannot fire, because
+  # it used to work.
+  #
+  # Measured cause, not hypothetical: hv could not recall whether `conflab`
+  # resolved before a cold cycle, having run a full clean earlier that day. If
+  # it was already dark, the run that reported rc=0 was the SECOND green report
+  # over the same damage.
+  #
+  # REPORTED, NOT FAILED. The cycle answers for what it broke; this is a fact
+  # about the tree it found, and failing on it would make an estate red for
+  # somebody else's clean.
+  while IFS= read -r link; do
+    [ -n "$link" ] || continue
+    [ "$predark" -eq 0 ] &&
+      printf '    ALREADY DANGLING BEFORE THIS RUN (not caused by it, and nothing else reports it):\n'
+    predark=$((predark + 1))
+    printf '      %s -> %s\n' "$link" "$(readlink "$link")"
+  done < <(_fullcycle_path_links dead)
+}
+
+# _fullcycle_run <force> -- the real cycle. Wrapped by run_gate, so its output
+# is sealed and the heartbeat covers its silences -- which is the whole reason
+# this is not a plain handler: the clean is the longest silent operation devbin
+# has, and a silent 35 minutes is indistinguishable from a hang.
+_fullcycle_launcher() {
+  local l="$PROJECT_ROOT/bin/devbin"
+  if [ ! -x "$l" ]; then
+    die "fullcycle: no launcher at $l -- it drives devbin's own verbs and cannot find it."
+  fi
+  printf '%s' "$l"
+}
+
+# _fullcycle_clean_flags <force> -- the flags this verb hands `clean`, and the
+# ONE place that decision is made (issue 0054).
+#
+# TWO HOMES IS HOW THE DRY RUN STARTED LYING. The real invocation built its
+# array in `_fullcycle_run`; `cmd_fullcycle`'s `--dry-run` re-derived the same
+# decision from the same variable three hundred lines away. When 0047 added
+# `--force-blocked` to the first, the second was not touched -- so the preview
+# printed `clean rust` for a run that executes `clean rust --force-blocked`,
+# and the two had agreed right up until the commit that split them, which is
+# why nothing in that diff looked wrong.
+#
+# A dry run has exactly one contract: the command it describes is the command
+# it would run. The previewed form was strictly WEAKER than the real one -- it
+# would refuse on a blocked tree where the real one proceeds -- so a reader
+# checking the preview for reassurance was reading a safer command than the one
+# about to run.
+#
+# Space-joined, split by the caller. Safe here and only here: every element is
+# a literal written in this function, so there is no field a split can damage.
+# A flag that could ever carry a space has to move to an array return.
+_fullcycle_clean_flags() {
+  local out="--force-blocked"
+  [ "${1:-0}" = 1 ] && out="$out --force"
+  printf '%s' "$out"
+}
+
+# _fullcycle_consent_notice <force> -- what fullcycle has answered on the
+# operator's behalf, and what it has not.
+#
+# PRINTED BY THE PREVIEW AS WELL AS THE REAL RUN, and that is half of 0054.
+# The dry branch returns before `_fullcycle_run`, so this was the one surface
+# saying a consent is being given for you -- and it was missing from exactly
+# the path most likely to be read by someone who has not read the code.
+_fullcycle_consent_notice() {
+  [ "${1:-0}" = 1 ] && return 0
+  printf '    No --force given. What that means here:\n'
+  printf '      - fullcycle HAS answered clean'"'"'s blocked-binaries refusal for you,\n'
+  printf '        because rebuilding what it darkens is this verb'"'"'s contract and\n'
+  printf '        the after-half verifies the restore rather than assuming it.\n'
+  printf '      - it has NOT answered the removal prompt. clean asks on the tty,\n'
+  printf '        and refuses without one. That is the refusal you will meet.\n'
+  return 0
+}
+
+_fullcycle_run() {
+  local force="$1" launcher phase rc=0 prc start elapsed cleaned=0 link broken=0 restore_cmd
+  local -a pass=()
+  # ALWAYS `--force-blocked`, NEVER `--force` UNASKED (issue 0047, hv: option 3).
+  #
+  # THIS VERB CAN HONESTLY ANSWER ONE OF clean's TWO QUESTIONS AND NOT THE
+  # OTHER. "Do you accept these binaries going dark?" -- yes, and it is the
+  # whole contract: clean, build, test, and the after-half now verifies the
+  # restore rather than assuming it. "Do you accept deleting the build trees at
+  # all?" -- that is the operator's, and passing `--force` used to answer it for
+  # them as a side effect of getting past the first.
+  #
+  # Before this, the default invocation was UNUSABLE on exactly the estate class
+  # the verb exists for: a dev tree whose PATH resolves into its own
+  # `target/release/` hit the blocked refusal every time, so the happy path
+  # required `--force` precisely where the stakes were highest.
+  read -r -a pass <<<"$(_fullcycle_clean_flags "$force")"
+  launcher="$(_fullcycle_launcher)"
+
+  _fullcycle_header
+  # THE BEFORE-HALF, taken before anything is removed.
+  local -a atrisk=()
+  while IFS= read -r link; do
+    [ -n "$link" ] && atrisk+=("$link")
+  done < <(_fullcycle_path_links live)
+  # REPORTED IN BOTH DIRECTIONS. Printing only the non-zero case made a cycle
+  # that watched nothing look exactly like one that watched everything, which
+  # is the defect this verb exists to prevent, committed by the verb itself.
+  if [ "${#atrisk[@]}" -gt 0 ]; then
+    printf '    watching: %s PATH symlink(s) resolving into this tree\n' "${#atrisk[@]}"
+  else
+    printf '    watching: NOTHING -- no PATH symlink resolves into this tree.\n'
+  fi
+
+
+  printf '\n    FULLCYCLE STARTING -- this REMOVES the cargo build trees.\n'
+  # TWO REFUSALS LIVE IN clean AND THIS LINE NAMED THE WRONG ONE. The
+  # blocked-binaries `die` fires FIRST and has no tty test in it at all;
+  # `_clean_confirm`'s no-tty refusal is further down and is reached only when
+  # nothing is blocked. The old wording -- "clean will ask, or refuse if there
+  # is no terminal" -- described the second, so hv was refused WITH a terminal
+  # and sent hunting a tty problem that does not exist (intent/dc, 2026-09-01).
+  # A WRONG MECHANISM IN AN ERROR PATH IS WORSE THAN NO MECHANISM: it is
+  # actionable, in the wrong direction.
+  #
+  # It names both and predicts NEITHER on purpose. `atrisk` is in scope here and
+  # is tempting, but it is not clean's `blocked` set: atrisk is any live PATH
+  # link into this tree, blocked is a PATH binary inside a tree clean is about
+  # to remove. Predicting the refusal from the wider set would replace a false
+  # sentence with a differently false one.
+  # AND THE REACHABLE SET MOVED UNDER THIS NOTICE WHEN 0047 LANDED, WHICH
+  # intent/dc PREDICTED IN THE SAME BREATH AS PROPOSING THE SPLIT. Before it,
+  # a no---force cycle died at the blocked arm. Now this verb always passes
+  # `--force-blocked`, so that arm is pre-answered and the ONLY refusal an
+  # operator reaches here is the tty one. The old wording stayed literally true
+  # about clean and became false about THIS CALLER -- the same defect as the
+  # original, one layer out, arriving through its own fix.
+  #
+  # So it describes what the caller actually meets, and says plainly which
+  # consent has been given on the operator's behalf. A flag that answers a
+  # safety question for someone must say so where they will read it.
+  _fullcycle_consent_notice "$force"
+
+  while IFS= read -r phase; do
+    [ -n "$phase" ] || continue
+    printf '\n    --- phase: %s ---\n' "$phase"
+    start=$SECONDS
+    prc=0
+    # NO `< /dev/null`. Redirecting the tool's stdin hides terminal-only hangs,
+    # and here it would also defeat `clean`'s confirmation, turning a refusal
+    # into a silent proceed.
+    case "$phase" in
+      clean*)
+        # shellcheck disable=SC2086
+        "$launcher" $phase ${pass[@]+"${pass[@]}"} || prc=$?
+        ;;
+      *)
+        # shellcheck disable=SC2086
+        "$launcher" $phase || prc=$?
+        ;;
+    esac
+    # THE RC IS CAPTURED BEFORE THE TIMING IS PRINTED. A printf placed after a
+    # phase does not run at all when the phase fails under errexit, so the
+    # timing goes missing on exactly the run somebody most wanted a number for
+    # -- and its absence looks identical to the success case. `time` is not used
+    # for a separate measured reason: it reports nothing for a shell function,
+    # however that function was defined.
+    elapsed=$((SECONDS - start))
+    printf '    phase: %-14s %8s  rc=%d\n' "$phase" "$(fmt_duration "$elapsed")" "$prc"
+    case "$phase" in clean*) [ "$prc" -eq 0 ] && cleaned=1 ;; esac
+    if [ "$prc" -ne 0 ]; then
+      rc="$prc"
+      printf '    STOPPING: %s failed. The remaining phases were NOT run.\n' "$phase"
+      # SAY WHAT STATE THE TREE IS IN, because "stopping" understates it once
+      # the clean has already succeeded. A build that fails after the delete
+      # leaves the estate with no release artefacts and no cycle left to
+      # restore them -- and the symptom an operator meets is not a missing
+      # binary, it is a pre-commit gate that will not let them commit, with a
+      # remedy line telling them to install the very tool that is absent.
+      # Reporting "stopped" and letting them discover that is the silent half.
+      if [ "$cleaned" = 1 ]; then
+        printf '\n    THE BUILD TREES WERE ALREADY REMOVED AND HAVE NOT BEEN REBUILT.\n'
+        printf '    Anything on PATH resolving through target/release/ is now dangling.\n'
+        printf '    Rebuild before doing anything else: %s build all\n' "${DEVBIN_INVOKE:-bin/devbin}"
+      fi
+      break
+    fi
+  done < <(_fullcycle_phases)
+
+  # THE RESTORE HALF (issue 0050, hv's ruling: the TARGETED option).
+  #
+  # WHY THIS EXISTS. `build all` is whatever the project declares, and on a
+  # dev-profile estate that is a debug build. So the cycle deleted `release/`,
+  # rebuilt `debug/`, reported three green phases and went red on the
+  # after-check -- correctly, and on EVERY invocation, permanently. conflab/vc
+  # measured exactly that. A gate that is red in the ordinary case teaches people
+  # to ignore it, and unlike the test-target rule hv killed, this one is red on a
+  # genuinely broken configuration, so the answer was never to soften the check.
+  # The cycle was missing its other half.
+  #
+  # TARGETED, WHICH IS THE WHOLE POINT OF THE OPTION CHOSEN. It runs only when
+  # something the snapshot was watching is actually dark. An estate with no PATH
+  # links into the tree pays nothing; an estate whose `build all` already builds
+  # release finds nothing dangling and pays nothing either. The cost lands only
+  # where the damage is.
+  #
+  # AND IT IS WHAT MAKES `_fullcycle_can_rebuild`'s PROMISE TRUE rather than
+  # approximately true. That probe asks "is there a build verb" while the
+  # property that matters is "can restore the release artefacts". Before this,
+  # the after-check made the proxy HARMLESS -- damage was reported rather than
+  # prevented. Now the cycle attempts the restore it always claimed to be
+  # capable of, and reports only what it could not put back.
+  if [ "$cleaned" = 1 ] && [ "${#atrisk[@]}" -gt 0 ] && [ "$rc" -eq 0 ]; then
+    local dark=0
+    for link in "${atrisk[@]}"; do
+      [ -e "$link" ] || dark=$((dark + 1))
+    done
+    if [ "$dark" -gt 0 ]; then
+      printf '\n    RESTORING -- %d watched link(s) are dark after the build.\n' "$dark"
+      printf '    The build phase did not repopulate release/.\n'
+      # THE PROJECT SUPPLIES THE RELEASE BUILD. devbin does not reach for cargo.
+      #
+      # THIS SHIPPED AS `( cd "$PROJECT_ROOT" && cargo build --release )` FOR
+      # ONE DAY AND WAS WRONG, and the argument in favour was good enough to
+      # survive review: `build all` is what just failed to produce these
+      # artefacts, so running it again is the one thing known not to work, and
+      # fullcycle is already rust-specific. Both halves are still true. The
+      # premise they rest on is not: that a release build is devbin's to
+      # perform.
+      #
+      # MEASURED, by the one instrument on the estate that could see it. Intent
+      # guards `native/rust/target/release/` because four nodes invoke that
+      # artefact, and a build from a dirty tree poisons it for all of them --
+      # so every release build there must go through a guarded path that
+      # refuses a dirty tree. Vendored in, this line was a NEW UNGUARDED
+      # ENTRANCE, and Intent's shared-artefact guard named it by file and line
+      # on the first commit that carried it. Twelve other estates took the same
+      # bytes and have no such guard, which is not the same as having no such
+      # exposure.
+      #
+      # AND THE OBVIOUS ALTERNATIVE IS WORSE. `build release` looks like a
+      # portable spelling and is not: at Intent that arm is INTERACTIVE and
+      # pushes. Guessing a verb by name would have turned a restore into a
+      # publish.
+      #
+      # So the rule is the one this file already applies to its refusal: devbin
+      # cannot know whether a release build in this tree is safe to run, and
+      # FAIL-CLOSED is the safe direction. A project that wants the restore
+      # declares what performs it. Undeclared, the cycle reports what it could
+      # not put back -- which is the state 0050 found, now with the reason and
+      # the remedy attached instead of silence.
+      restore_cmd="$(cfg_get "commands.fullcycle.restore")"
+      if [ -z "$restore_cmd" ]; then
+        printf '    NO RESTORE COMMAND DECLARED -- this cycle cannot put them back.\n'
+        printf '    devbin will not run a release build it cannot know is safe here:\n'
+        printf '    at least one estate guards its release path because several nodes\n'
+        printf '    invoke the artefact, and a build from a dirty tree poisons it.\n'
+        printf '    Declare one and this phase runs:  commands.fullcycle.restore\n'
+      else
+        start=$SECONDS
+        prc=0
+        # Unquoted expansion, deliberately NOT eval -- the same rule run_option
+        # applies to a config `run:`, for the same reason.
+        # shellcheck disable=SC2086
+        ( cd "$PROJECT_ROOT" && $restore_cmd ) || prc=$?
+        elapsed=$((SECONDS - start))
+        printf '    phase: %-14s %8s  rc=%d\n' "restore" "$(fmt_duration "$elapsed")" "$prc"
+        [ "$prc" -eq 0 ] || rc="$prc"
+      fi
+    fi
+  fi
+
+  # THE AFTER-HALF. A GREEN CYCLE THAT DARKENED THE TOOLCHAIN IS THE FALSE GREEN
+  # THIS WHOLE VERB EXISTS TO AVOID, and it is exactly what shipped: clean rust
+  # rc=0, build all rc=0, test rust rc=0, FULLCYCLE FINISHED rc=0, and two
+  # binaries left dangling into a deleted release/ because `build all` there is
+  # debug-only. The warning for that damage existed, was correct, and sat inside
+  # the failed-phase branch -- unreachable on the one path where the operator
+  # has no other clue.
+  #
+  # Checked on EVERY path, success included, and it makes the run RED. The
+  # remedy an operator meets otherwise is a pre-commit gate refusing to let them
+  # commit, with a message naming the tool that is absent.
+  # AN EMPTY WATCH LIST IS DECLARED, NOT PASSED OVER. Until 2026-09-01 the
+  # whole block below was skipped when atrisk was empty and nothing was said,
+  # so a cycle that measured nothing and a cycle that measured everything
+  # emitted the identical rc=0 and the identical silence (laksa/dc).
+  # THE ARTEFACT CHECK THAT NEEDS NO TRIPWIRE (issue 0048, hv's ruling: option
+  # B, before/after on the build tree itself).
+  #
+  # THE VACUITY DECLARATION USED TO STAND HERE AND DID NOT MEASURE ANYTHING. It
+  # said, honestly, that a cycle watching nothing asserted nothing -- which
+  # converted a silent empty-set green into a stated one and left the underlying
+  # property unmeasured. laksa/dc filed it and then held the acceptance
+  # condition that matters: a check that cannot fail against a dev-profile build
+  # is the same instrument again with better wording.
+  #
+  # WHY THE BUILD TREE AND NOT DECLARED ARTEFACT NAMES. Asking a project to list
+  # its artefacts in config.yaml protects the projects whose maintainer already
+  # thought about this, which is the wrong population -- the estates where this
+  # fails silently are exactly the ones that would never have configured
+  # anything. It is also the D18 tier-4 trap: per-project knowledge shipped into
+  # a framework used by thirteen. `release/` empty while `debug/` is populated
+  # is the Conflab signature and it needs no configuration at all.
+  #
+  # SCOPED TO WHAT IT CAN ACTUALLY CLAIM. It fires only after a clean succeeded
+  # and only when `debug/` came back, because that is what makes the comparison
+  # mean something: the toolchain demonstrably rebuilt SOMETHING and did not
+  # rebuild release. A tree with neither is a failed build, already red above.
+  if [ "$cleaned" = 1 ] && [ "$rc" -eq 0 ]; then
+    local tdir compared=0 lost=0 looked=0
+    local -a seen=()
+    while IFS= read -r tdir; do
+      [ -n "$tdir" ] || continue
+      looked=$((looked + 1))
+      seen+=("$tdir")
+      if dir_has_binary "$tdir/debug" && ! dir_has_binary "$tdir/release"; then
+        [ "$lost" -eq 0 ] &&
+          printf '\n    THE BUILD TREE CAME BACK WITHOUT ITS RELEASE ARTEFACTS.\n'
+        lost=$((lost + 1))
+        compared=1
+        printf '      %s -- debug/ has binaries, release/ has none\n' "$tdir"
+      elif dir_has_binary "$tdir/release"; then
+        compared=1
+      fi
+    done < <(cargo_target_dirs)
+
+    # NAME THE POPULATION, ALWAYS. "Compared 1 tree and it was fine" and
+    # "found no tree to compare" are the exact distinction this issue exists to
+    # keep visible, and a bare silence renders them identically -- which is what
+    # the vacuity declaration was put here to stop in the first place (laksa/dc).
+    if [ "$looked" -gt 0 ]; then
+      printf '\n    artefact check: %d cargo build tree(s) examined\n' "$looked"
+      printf '      %s\n' "${seen[@]}"
+      printf '    Dependency trees are not examined -- deps/, _build/, node_modules/,\n'
+      printf '    .venv/ are somebody else'"'"'s crates and this cycle did not build them.\n'
+    else
+      printf '\n    artefact check: NO cargo build tree found under this project.\n'
+    fi
+
+    if [ "$lost" -gt 0 ]; then
+      printf '    The clean removed release/ and this cycle did not put it back.\n'
+      printf '    Nothing on PATH had to resolve into this tree for that to be true --\n'
+      printf '    which is the case the PATH-symlink check cannot see at all.\n'
+      rc=1
+    elif [ "$compared" -eq 0 ]; then
+      # SAY IT RATHER THAN PASS OVER IT. No tree carried a binary in either
+      # profile, so there was nothing to compare and this cycle asserts nothing
+      # about artefacts. An unremarked silence here would rebuild precisely the
+      # defect the whole block replaces -- a cycle that measured nothing and one
+      # that measured everything emitting the same quiet rc=0.
+      printf '\n    ARTEFACT CHECK INCONCLUSIVE -- no cargo build tree under this\n'
+      printf '    project holds a binary in either profile, so there is nothing to\n'
+      printf '    compare. This cycle makes NO claim about release artefacts.\n'
+    fi
+  fi
+
+  if [ "$cleaned" = 1 ] && [ "${#atrisk[@]}" -gt 0 ]; then
+    for link in "${atrisk[@]}"; do
+      [ -e "$link" ] && continue
+      [ "$broken" -eq 0 ] && printf '\n    THIS CYCLE DARKENED BINARIES IT DID NOT RESTORE:\n'
+      broken=$((broken + 1))
+      printf '      %s -> %s (DANGLING)\n' "$link" "$(readlink "$link")"
+    done
+    if [ "$broken" -gt 0 ]; then
+      printf '    %s link(s) resolved before this run and do not now.\n' "$broken"
+      printf '    The build phase did not repopulate release/ -- a dev-profile build does not.\n'
+      printf '    Rebuild with a RELEASE profile before doing anything else.\n'
+      rc=1
+    fi
+  fi
+
+  printf '\n    FULLCYCLE FINISHED -- rc=%d\n' "$rc"
+  return "$rc"
+}
+
+cmd_fullcycle() {
+  local dry=0 force=0 arg launcher phase
+
+  # THE FLAG IS ONLY AS SAFE AS THE PARSER'S STRICTNESS ABOUT ITS NEIGHBOURS.
+  # For a verb that deletes the build tree the lethal failure is not a dry run
+  # that does something -- it is `--dryrun` or `--dry_run` falling through to a
+  # REAL run because the parser ignored what it did not recognise. So an unknown
+  # argument REFUSES. `clean` sets exactly this precedent and the wording
+  # follows it deliberately.
+  for arg in "$@"; do
+    case "$arg" in
+      -h | --help)
+        _fullcycle_usage
+        return 0
+        ;;
+      --dry-run) dry=1 ;;
+      --force) force=1 ;;
+      *)
+        die "fullcycle: unknown argument '$arg' (only --dry-run and --force are accepted)
+       A verb that deletes the build tree does not guess at what it was asked for."
+        ;;
+    esac
+  done
+
+  cd "$PROJECT_ROOT" || die "cannot enter $PROJECT_ROOT"
+  launcher="$(_fullcycle_launcher)"
+
+  # FAIL CLOSED WHEN THE CYCLE CANNOT PUT BACK WHAT IT TAKES AWAY.
+  #
+  # `clean rust` removes `target/` including `release/`, and `test rust` builds
+  # debug binaries only. Without a rebuild phase this verb is net-destructive,
+  # and on at least one estate the deleted path is what `~/.local/bin/intent`
+  # resolves through -- so the cost is not a slow next build, it is every
+  # whiteboard guard on the machine going dark until somebody rebuilds by hand.
+  #
+  # REFUSING IS THE SAFE DIRECTION AND SKIPPING IS NOT, so the probe's failure
+  # is treated as "cannot rebuild" rather than "no rebuild needed". A project
+  # that genuinely wants clean-then-test has two honest verbs for it and does
+  # not need this one.
+  if ! _fullcycle_can_rebuild "$launcher"; then
+    printf 'fullcycle: REFUSING -- this project has no build command, so the cycle cannot rebuild what it deletes.\n' >&2
+    printf '  clean rust removes target/ INCLUDING release/, and test rust builds debug binaries only.\n' >&2
+    printf '  Anything on PATH resolving through target/release/ would stop resolving and stay broken.\n' >&2
+    printf '  Run %s clean rust and %s test rust yourself if that is really what you want,\n' \
+      "${DEVBIN_INVOKE:-bin/devbin}" "${DEVBIN_INVOKE:-bin/devbin}" >&2
+    printf '  or declare a build command this project can rebuild through.\n' >&2
+    return 1
+  fi
+
+  if [ "$dry" = 1 ]; then
+    # NO run_gate ON A DRY RUN. It executes nothing, so there is no verdict to
+    # seal and no silence to cover, and writing a log artefact for a run that
+    # did not happen would put a record of work beside work that was not done.
+    _fullcycle_header
+    printf '\n    DRY RUN -- nothing below is executed.\n'
+    while IFS= read -r phase; do
+      [ -n "$phase" ] || continue
+      printf '      %s %s%s\n' "${DEVBIN_INVOKE:-bin/devbin}" "$phase" \
+        "$(case "$phase" in clean*) printf ' %s' "$(_fullcycle_clean_flags "$force")" ;; esac)"
+    done < <(_fullcycle_phases)
+    # THE CONSENT NOTICE BELONGS HERE TOO, and its absence was the half of 0054
+    # that was not cosmetic. This branch returns before `_fullcycle_run`, so the
+    # one surface saying a consent is being given on the operator's behalf was
+    # missing from exactly the path most likely to be read by someone who has
+    # not read the code.
+    printf '\n'
+    _fullcycle_consent_notice "$force"
+    # WHAT IT CANNOT KNOW, SAID RATHER THAN GUESSED. Quoting a remembered
+    # "~35 minutes, frees 113G" would report another estate's measurement of
+    # another estate's tree as though it described this one.
+    printf '\n    Not shown: how long the clean takes, or how much it frees.\n'
+    printf '    Neither is knowable without running it, and this tree is not the one those numbers came from.\n'
+    return 0
+  fi
+
+  run_gate --label fullcycle --suffix FULLCYC --grammar generic \
+    --out-dir "$(gate_out_dir fullcycle)" \
+    -- _fullcycle_run "$force"
+}
+
+cmd_fullcycle "$@"

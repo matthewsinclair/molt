@@ -1,0 +1,1096 @@
+#!/usr/bin/env bash
+#
+# lib/helpers -- shared output and guard primitives.
+#
+# Sourced, not executed: defines functions and sets no shell options (the
+# dispatcher owns those).
+#
+# THIS FILE HAS NO DEPENDENCIES, and that is a load-bearing rule rather than a
+# happy accident. Command handlers are separate processes that source this file
+# ALONE (see bin/.devbin/cmd/check). The moment a primitive here needs config,
+# every handler in every project has to load the config reader to print a
+# warning. So the rule is: needs config, belongs in lib/resolve; needs nothing,
+# belongs here. `is_command` and `parse_common_opts` live in lib/resolve for
+# exactly this reason, despite reading as helpers.
+#
+# WP-05 folds the universal functions out of the four source projects. The
+# run-log subsystem -- open_run_log, write_errors_file, note_promotion, the
+# purge family, print_run_verdict -- is deliberately NOT here: it is one
+# cohesive subsystem and WP-06 ports it whole into lib/runlog. Splitting it
+# across two files to satisfy a function count would be the worse trade.
+#
+# The project name in the die/warn prefix comes from config rather than being
+# baked in, which is the whole point of the fold: four projects printing
+# `conflab:` / `laksa:` / `baize:` / `lamplight:` from four copies of the same
+# two lines becomes one line reading a value.
+#
+[ -n "${_DEVBIN_HELPERS_LOADED:-}" ] && return 0
+_DEVBIN_HELPERS_LOADED=1
+
+# The prefix on diagnostics. Set by the dispatcher once config is loaded;
+# defaults to `devbin` so a failure BEFORE config load still says something
+# sensible rather than printing a bare colon.
+DEVBIN_NAME="${DEVBIN_NAME:-devbin}"
+
+# DEVBIN_INVOKE -- HOW YOU TYPE IT, which is now a CONSTANT rather than the
+# project's name.
+#
+# These were one field until 2026-08-27, because the launcher was symlinked to
+# the project's own name and `bin/lamplight` was both the thing you typed and
+# the thing the project was called. That convention collided with the binaries
+# these projects now BUILD -- Lamplight ships a `lamplight`, Intent ships an
+# `intent` -- and Intent had already routed around it by naming its shim `int`.
+# So the per-project symlink is retired and `bin/devbin` is the invocation
+# everywhere.
+#
+# A CONSTANT AND NOT A SECOND VARIABLE. The invocation no longer varies, so a
+# variable would be a field that must be kept in sync with a fact that cannot
+# change. One name, one place, and DEVBIN_NAME is left with exactly one job:
+# saying which project this is.
+DEVBIN_INVOKE="bin/devbin"
+
+die() {
+  printf '%s: %s\n' "$DEVBIN_NAME" "$*" >&2
+  exit 1
+}
+
+warn() {
+  printf '%s: %s\n' "$DEVBIN_NAME" "$*" >&2
+}
+
+step() { printf '\n==> %s\n' "$*"; }
+ok() { printf '    done.\n'; }
+
+# report_not_yet <what> <gate> -- print the STUB refusal and return 3.
+#
+# The non-exiting half of not_yet, for callers running inside a loop over
+# several options: `all` must not stop at the first breach, so a function it
+# calls in the same process cannot exit. One message, two exit behaviours.
+report_not_yet() {
+  printf '%s: %s is not built yet.\n' "$DEVBIN_NAME" "$1" >&2
+  printf '       gated on: %s\n' "$2" >&2
+  return 3
+}
+
+# not_yet <what> <gate> -- the STUB refusal, ported from the corpus.
+#
+# A surface that is not built yet exits NON-ZERO with the reason and what
+# unblocks it, never a quiet no-op. An unbuilt gate that exits 0 is
+# indistinguishable from a passing one, which is the exact failure the sealed
+# gates exist to prevent.
+not_yet() {
+  report_not_yet "$1" "$2" || true
+  exit 3
+}
+
+require_tool() {
+  command -v "$1" >/dev/null 2>&1 || die "$1 not found. ${2:-}"
+}
+
+# init_colors [auto|off] -- set green/red/dim/reset. All empty when off, when
+# NO_COLOR is set, or when stdout is not a TTY.
+#
+# SC2034 (appears unused) is expected here and suppressed: these are globals for
+# the whole runtime, and shellcheck only sees this file. Exporting them to
+# satisfy the linter would push four colour variables into the environment of
+# every command devbin runs, which is a worse trade than one directive.
+# shellcheck disable=SC2034
+init_colors() {
+  green="" red="" dim="" reset=""
+  if [ "${1:-auto}" = auto ] && [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+    green=$'\033[32m' red=$'\033[31m' dim=$'\033[2m' reset=$'\033[0m'
+  fi
+}
+
+# strip_ansi -- filter: remove CSI escape sequences from stdin.
+#
+# Byte-identical in all four projects. Reads stdin, writes stdout, so it
+# composes in a pipeline: `... | strip_ansi > "$errors"`.
+#
+# The escape byte is passed in as an awk variable rather than written into the
+# pattern, because a literal ESC in source survives neither editors nor patches
+# reliably.
+strip_ansi() {
+  awk -v esc="$(printf '\033')" '{ gsub(esc "\\[[0-9;?]*[A-Za-z]", ""); print }'
+}
+
+# upper_snake <string> -- the environment-variable spelling of a name.
+#
+# `lamplight` -> LAMPLIGHT, `my-proj` -> MY_PROJ. Devbin derives variable names
+# from the project name in several places -- <NAME>_ROOT, <NAME>_REPL_HISTORY,
+# DEVBIN_OPT_<NAME>, the run-log suffix -- and each did the same `tr` inline.
+# Four copies of one transformation is four chances to disagree about whether a
+# hyphen becomes an underscore.
+upper_snake() {
+  printf '%s' "$1" | tr '[:lower:]-' '[:upper:]_'
+}
+
+# sed_inplace <expression> <file> -- edit a file in place, portably.
+#
+# `sed -i` is not portable: BSD sed (macOS) requires an argument to -i and GNU
+# sed (Linux CI) refuses one. The corpus wrote `sed -i ''`, which is correct on
+# a Mac and fails on Ubuntu. Writing through a temporary and renaming sidesteps
+# the divergence and is atomic besides, which matters when the file being
+# rewritten is the project's version.
+sed_inplace() {
+  local expr="$1" file="$2" tmp
+  tmp="$(mktemp "${file}.XXXXXX")" || return 1
+  if sed "$expr" "$file" >"$tmp"; then
+    mv "$tmp" "$file"
+    return 0
+  fi
+  rm -f "$tmp"
+  return 1
+}
+
+# bump_semver <current> <major|minor|patch> -- print the next version.
+#
+# Byte-identical in all four projects. Bumping a part zeroes everything to its
+# right, which is semver's rule rather than a preference.
+bump_semver() {
+  local current="$1" part="$2" major minor patch
+  assert_semver "$current"
+  IFS='.' read -r major minor patch <<EOF
+$current
+EOF
+  case "$part" in
+    major) printf '%d.0.0\n' "$((major + 1))" ;;
+    minor) printf '%d.%d.0\n' "$major" "$((minor + 1))" ;;
+    patch) printf '%d.%d.%d\n' "$major" "$minor" "$((patch + 1))" ;;
+    *) die "invalid bump part '$part' (use major, minor or patch)" ;;
+  esac
+}
+
+# abs_path <path> -- absolutise against the project root, leaving absolutes be.
+#
+# Present in two of four (Baize, Conflab) and PROMOTED by the WP-05 fold: it is
+# four lines, has no dependencies, and the two projects that lacked it were
+# simply the ones that had not needed it yet. A verdict line printing a relative
+# path is not clickable in a terminal, which is the whole reason it exists.
+abs_path() {
+  case "$1" in
+    /*) printf '%s' "$1" ;;
+    *) printf '%s/%s' "${PROJECT_ROOT:-.}" "$1" ;;
+  esac
+}
+
+# read_version [file] [role] -- the project version, or `unknown`.
+#
+# THE DRIFT: three projects read a VERSION file; Laksa reads the version out of
+# mix.exs. Neither is wrong -- an Elixir project's version genuinely lives in
+# mix.exs, and duplicating it into a VERSION file would be two sources of truth.
+#
+# So the ruling is not "pick one" but "the file is config, the extraction is
+# library". `project.version_from` names the file; the case below knows how to
+# read each kind. That keeps the YAML declarative (D1: a name, not a recipe)
+# while the knowledge of how a mix.exs states its version lives in code, where
+# it can be tested.
+#
+# The roles mirror write_version_into's, and they scope the issue-0002 guard:
+# with no arguments this reads the file `version_from` names, whose whole
+# content IS the version by declaration -- second-guessing it turned a
+# hand-authored `v1.2.3` into `unknown` (delta review, finding 9). An explicit
+# <file> is a SIDECAR read unless <role> says `version-file`, and there the
+# bare-version fallback is devbin GUESSING about a file kind it has no recipe
+# for, which is exactly where the guard belongs.
+#
+# No newline, matching the corpus: callers interpolate it into their own format.
+#
+# shellcheck disable=SC2120  # the bare call IS the point: it selects the
+# version-file role, which is the documented default above and not an omission.
+# Callers that pass a <file> are reading a SIDECAR; both forms are real and
+# in-file analysis cannot see the sidecar callers, which live in lib/cmd/version.
+read_version() {
+  local file="${1:-${DEVBIN_VERSION_FILE:-VERSION}}" role path v=""
+  if [ $# -ge 1 ]; then role="${2:-sidecar}"; else role=version-file; fi
+  case "$file" in
+    /*) path="$file" ;;
+    *) path="${PROJECT_ROOT:-.}/$file" ;;
+  esac
+  if [ -f "$path" ]; then
+    case "${path##*/}" in
+      mix.exs) v="$(awk -F'"' '/^ *version: *"/ { print $2; exit }' "$path" 2>/dev/null)" || v="" ;;
+      Cargo.toml) v="$(awk -F'"' '/^version *= *"/ { print $2; exit }' "$path" 2>/dev/null)" || v="" ;;
+      package.json) v="$(awk -F'"' '/"version" *:/ { print $4; exit }' "$path" 2>/dev/null)" || v="" ;;
+      # Added by WP-17 so this stays the ONE reader. `version check` needs to
+      # read a plist sidecar, and giving it its own extractor would put two
+      # patterns on one file kind -- which is how a reader and a writer come to
+      # disagree about which line they mean.
+      *.plist)
+        if [ -x /usr/libexec/PlistBuddy ]; then
+          v="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$path" 2>/dev/null)" || v=""
+        fi
+        ;;
+      # The bare-version default reads the WHOLE file, so a file devbin has no
+      # recipe for yields its entire contents as the "version" -- a Cargo.lock
+      # read back as `#Thisfileis@generatedbyCargo.version=3[[package]]...`,
+      # which `version check` then reported as drift against every real version
+      # forever (issue 0002). `unknown` is the honest answer and the one every
+      # caller here already handles. SIDECAR reads only -- see the role note in
+      # the header for why the version file itself reads raw.
+      *)
+        v="$(tr -d '[:space:]' <"$path" 2>/dev/null)" || v=""
+        if [ "$role" = sidecar ]; then
+          is_bare_version "$v" || v=""
+        fi
+        ;;
+    esac
+  fi
+  [ -n "$v" ] || v=unknown
+  printf '%s' "$v"
+}
+
+# sha256_files <file>... -- `<sum>  <path>` per file, in ONE process.
+#
+# The tool is spelled differently on the two platforms this ships to and neither
+# name is universal: macOS has `shasum` and no `sha256sum`, a minimal Linux
+# image usually has `sha256sum` and no perl to back `shasum`. Both accept many
+# paths and both print `<sum>  <path>`, which is also the manifest's own line
+# format -- so the batch form needs no reshaping at all.
+#
+# MANY files rather than one, because the caller is always checksumming a whole
+# manifest. Per-file it was 26 forks per install and half the wall clock of the
+# test suite, which runs an install per fixture.
+# sha256_run [file]... -- THE one place that knows how this tool is spelled.
+#
+# EXTRACTED 2026-09-02 BECAUSE A SECOND COPY HAD ALREADY DIVERGED. `seam_digest`
+# in the fleet command called `shasum -a 256` directly, and `shasum` is the name
+# that does NOT exist on a minimal Linux image -- the exact case the comment
+# below was written to cover. The knowledge was documented in one place and
+# re-implemented in another: the Highlander failure in its ordinary form, not
+# two algorithms but two copies of one DECISION, only one carrying the fix.
+#
+# Both tools read stdin when given no operands, which is what makes one dispatch
+# serve the file case and the stream case.
+sha256_run() {
+  if command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$@"
+  elif command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$@"
+  else
+    die "no sha256 tool found (looked for shasum and sha256sum)"
+  fi
+}
+
+sha256_files() {
+  [ $# -gt 0 ] || return 0
+  sha256_run "$@"
+}
+
+# sha256_stdin -- SHA256 of stdin, bare hex, no trailing path field.
+#
+# `sha256_files` deliberately refuses an empty argument list rather than falling
+# through to this behaviour, and the two are separate names for that reason: a
+# checksum of nothing is a valid-looking hex string that no downstream reader
+# can distinguish from a checksum of something.
+sha256_stdin() {
+  sha256_run | cut -d' ' -f1
+}
+
+# cargo_target_dirs -- every cargo build tree under this project, discovered.
+#
+# NOT `$PROJECT_ROOT/target`, WHICH IS THE ASSUMPTION THIS FUNCTION EXISTS TO
+# REPLACE. A cargo tree sits at the WORKSPACE root, and a workspace is very
+# often nested: Laksa builds into `native/cli/target`, Intent into
+# `native/rust/target`. A checker that looks only at the project root finds
+# nothing on those estates, concludes nothing is wrong, and reports a clean
+# result -- which is the same shape as the defect it was written to catch, and
+# was the first draft of exactly that check.
+#
+# DELIBERATELY NOT SHARED WITH `_clean_roots`, and the reason is what each one
+# is FOR rather than what each one does. Clean discovers trees it is about to
+# DELETE, so it demands cargo's own markers (CACHEDIR.TAG, .rustc_info.json, a
+# profile .fingerprint) before touching a directory that merely has the right
+# name -- the cost of being wrong there is removing somebody's source tree. This
+# only READS, across several languages' worth of layouts, and a directory named
+# `target` holding an executable is the thing being asked about whether or not
+# cargo has stamped it yet. Sharing one function would force one of those two
+# risk postures onto the other.
+#
+# CARGO_TARGET_DIR wins outright when set: cargo writes there and nowhere else,
+# so a discovered tree would be a stale one.
+#
+# DEPENDENCY TREES ARE PRUNED, AND THE POPULATION IS THE POINT (laksa/dc,
+# 2026-09-02). Laksa carries five Cargo.toml files and exactly one is its own:
+# the other four are Elixir NIF crates under `deps/`, built through mix by
+# Rustler rather than by cargo in place. A caller asking "did MY build restore
+# MY artefacts" must not be answered about somebody else's crate. If a dep ever
+# does grow a `target/` -- somebody runs a bare `cargo build` in one for their
+# own reasons -- the populated-debug-empty-release signature appears there with
+# no cycle having caused it, and the check goes red on a tree the project's
+# build never touches.
+#
+# A CHECK THAT CRIES WOLF ON FOUR TREES OUT OF FIVE GETS ITS OUTPUT IGNORED,
+# which is the same end state as the vacuity it replaces, arrived at from the
+# other direction. Same argument that killed the >1-test-target rule.
+#
+# Note what does NOT need pruning: a crate with no `target/` at all -- which is
+# all four of Laksa's -- is invisible here by construction, because this
+# discovers BUILD TREES and never crates. There is nothing to skip.
+cargo_target_dirs() {
+  if [ -n "${CARGO_TARGET_DIR:-}" ]; then
+    printf '%s\n' "${CARGO_TARGET_DIR%/}"
+    return 0
+  fi
+  find "${PROJECT_ROOT:-.}" \
+    \( -name .git -o -name node_modules -o -name .direnv \
+       -o -name deps -o -name _build -o -name .venv \) -prune -o \
+    -type d -name target -prune -print 2>/dev/null | sort
+  return 0
+}
+
+# dir_has_binary <dir> -- true when <dir> holds at least one executable FILE at
+# its top level, which is where cargo puts the binaries it builds.
+#
+# `-type f` and not `-e`: a cargo profile directory always exists once cargo has
+# run in it, carrying `.fingerprint/`, `build/`, `deps/` and `incremental/`
+# whether or not a single binary was produced. So "the directory is there" and
+# "the artefacts are there" are different facts, and the first one is the
+# reading that made a dev-profile cycle look complete.
+dir_has_binary() {
+  local d="$1" f
+  [ -d "$d" ] || return 1
+  for f in "$d"/*; do
+    [ -f "$f" ] || continue
+    [ -x "$f" ] || continue
+    return 0
+  done
+  return 1
+}
+
+# utc_from_epoch <epoch> -- an epoch second rendered `YYYY-MM-DD HH:MMZ`.
+#
+# THE TWO PLATFORMS SPELL THIS INCOMPATIBLY AND ONE OF THE SPELLINGS FAILS
+# QUIETLY. BSD `date -r <epoch>` takes a NUMBER; GNU `date -r <file>` takes a
+# FILE and wants `-d @<epoch>` for a number. Hand GNU an epoch and it errors to
+# stderr and prints nothing, so the field goes EMPTY rather than wrong -- which
+# is the safe direction and is still a column that silently stops existing on
+# one platform.
+#
+# Reading order matters: BSD is tried first because GNU's `-r` would ACCEPT the
+# argument as a filename and fail on it, while BSD's rejection of `-d @...` is
+# clean. Both arms are guarded, so an unparseable value returns 1 rather than
+# emitting a plausible-looking wrong time -- see the clock discipline in
+# `/in-whiteboard`: a fabricated timestamp is indistinguishable from a real one.
+utc_from_epoch() {
+  local e="$1" out
+  [ -n "$e" ] || return 1
+  out="$(date -u -r "$e" +'%Y-%m-%d %H:%MZ' 2>/dev/null)" ||
+    out="$(date -u -d "@$e" +'%Y-%m-%d %H:%MZ' 2>/dev/null)" || return 1
+  [ -n "$out" ] || return 1
+  printf '%s' "$out"
+}
+
+# sha256_of <file> -- one file's SHA256, bare hex, or return 1.
+#
+# Built on sha256_files so the knowledge of which tool exists lives in exactly
+# one place (IN-AG-HIGHLANDER-001).
+sha256_of() {
+  [ -f "$1" ] || return 1
+  sha256_files "$1" | awk '{print $1}'
+}
+
+# --- the build's git identity (issue 0014) -------------------------------------
+#
+# Devbin owns the version-number axis completely -- `version_from`, the sidecars,
+# `version sync` -- and owned nothing of the git one, so every project resolved
+# "what commit is this build" for itself. hv ruled option B: devbin owns the half
+# that is genuinely SHARED and gets independently wrong, and declares nothing
+# about how a build system consumes it.
+#
+# THE READ IS THE HALF NOBODY GETS WRONG. All six Lamplight sites agreed on
+# `git rev-parse --short HEAD` with `unknown` on failure. The INVALIDATION is
+# where four of four went wrong, each by naming git's internals literally:
+#
+#     ../../.git/HEAD          ../../.git/refs/heads/
+#
+# In a linked worktree neither exists -- `.git` is a FILE reading `gitdir: ...`.
+# The same unresolved path produced OPPOSITE symptoms, decided entirely by
+# whether the toolchain fails open or closed on a path it cannot find: Elixir's
+# `@external_resource` over an empty list registered no dependency and served a
+# frozen sha for a working day; cargo could not stat its `rerun-if-changed` and
+# treated the target as permanently dirty, rebuilding forever. The version that
+# silently freezes and the version that silently rebuilds are the same bug, and
+# only one of them ever gets reported -- which is why it is worth one home.
+#
+# These emit FACTS -- a string and a list of file paths -- and declare nothing.
+# Each build system states its own dependency in its own vocabulary: cargo's
+# `rerun-if-changed`, Elixir's `@external_resource`, a make prerequisite, a
+# Dockerfile COPY. That is what makes one function serve four toolchains.
+
+# git_head_sha [root] [short|full] -- the commit sha, or `unknown`.
+#
+# `unknown` rather than empty or a failure, because every caller in the corpus
+# already handles that string and a build stamped with an empty version is worse
+# than one stamped honestly as unresolved.
+#
+# The form is a PARAMETER rather than a second function, which is the whole
+# point of this being issue 0014's one home: `git_head_sha_full` beside it would
+# be two readers of one fact, free to disagree about the failure string the
+# moment either is touched. `short` stays the default so every existing caller
+# is unchanged.
+git_head_sha() {
+  local root="${1:-${PROJECT_ROOT:-.}}" form="${2:-short}" sha
+  case "$form" in
+    full) sha="$(git -C "$root" rev-parse HEAD 2>/dev/null)" || sha="" ;;
+    *) sha="$(git -C "$root" rev-parse --short HEAD 2>/dev/null)" || sha="" ;;
+  esac
+  [ -n "$sha" ] || sha=unknown
+  printf '%s\n' "$sha"
+  return 0
+}
+
+# git_head_identity [root] -- `<full sha>`, `<full sha> +dirty`, or `unknown`.
+#
+# What a `--version` line should say about WHICH bytes are running. A bare sha
+# on a dirty tree is a confident false statement: the binary in front of you is
+# not that commit.
+#
+# IT SAYS `+dirty` AND NOT `THESE BYTES MATCH NO COMMIT`, AND THE DIFFERENT
+# WORDING IS DELIBERATE RATHER THAN A DRIFTED COPY. `source_commit_of` in
+# lib/install stamps that sentence, and it is making a narrower and stronger
+# claim: the VENDORED FILE SET does not correspond to any commit, which is a
+# statement about bytes somebody else will later read out of a manifest (issue
+# 0033). This function answers a looser question -- the working tree it is
+# standing in has uncommitted changes -- and borrowing the stronger sentence for
+# it would put a provenance claim on a checkout that never made one. Two claims,
+# two vocabularies, one producer each.
+# platform_identity -- WHICH MACHINE produced this, as one line.
+#
+# THE NARROWING THAT COST THE FIRST TAGGED RELEASE (issue 0052), which names
+# the version -- this file may not, and the guard that says so is right even
+# here: a version literal in a source file is a hazard whether it is a claim or
+# a citation. A local `test all`
+# runs on one machine. Its seal is a true record of a macOS run, and nothing in
+# the `.out`, the `.errors` or the summary named a platform -- so
+# `824 tests, 0 failures` read as a fact about devbin when it was a fact about
+# one OS. CI had been red on Ubuntu for six days and three pushes, one of them
+# the release, and the release note's Verified section was assembled from those
+# local seals. The instrument was sound and aimed one unit wide, and the output
+# said nothing about which unit.
+#
+# BASH IS IN IT ALONGSIDE uname, and not for symmetry: bash >= 5 is this
+# project's floor (issue 0022) and macOS ships 3.2.57 at /bin/bash, so "which
+# bash" is a real axis on which two runs of the same code differ. The two
+# together are what distinguishes a green anyone can rely on from a green about
+# one machine.
+#
+# It says nothing about the analyser versions that were 0052's OTHER narrowing.
+# Those are a property of a gate's TOOL rather than of the run, and pinning
+# them is the analyser's own job -- .github/install-shellcheck.sh does it by
+# asserting the version it installed. Claiming them here would be devbin
+# reporting a fact it did not establish.
+platform_identity() {
+  printf '%s / bash %s' "$(uname -srm 2>/dev/null || printf 'unknown')" \
+    "${BASH_VERSION:-unknown}"
+}
+
+# runtime_digest <launcher> <libdir> -- SHA256 of the RUNTIME BYTES, 12 hex.
+#
+# THE ONE HOME FOR "WHICH BYTES ARE THESE", and it now has two readers: the
+# `--version` line here, and `fleet`'s per-estate seam digest, which had this
+# computation written out inside it. Two copies of a fingerprint is the worst
+# duplication available -- when they drift, the two surfaces report different
+# identities for one tree and neither says which is authoritative.
+#
+# A STAMP IS NOT AN IDENTITY. `git_head_identity` below answers "which commit
+# was this checkout on", which is a different question and can be `<sha> +dirty`
+# -- a value that names no bytes at all. This answers the one a reader comparing
+# two installs actually has: are these the same runtime.
+#
+# PATHS ARE FOLDED IN RELATIVE TO THE LIB DIRECTORY, not to a project root, and
+# the choice is load-bearing. It makes a source checkout (`lib/helpers`) and an
+# install of it (`bin/.devbin/lib/helpers`) digest IDENTICALLY when the bytes
+# match, which is the comparison anyone re-vendoring actually wants. Folding
+# against a root would have made every install differ from its own source by
+# construction, and the difference would have looked like divergence.
+#
+# The paths go in ALONGSIDE the contents so a moved or missing file changes the
+# digest rather than hiding inside a concatenation.
+runtime_digest() {
+  local launcher="$1" libdir="$2" f
+  {
+    cat "$launcher" 2>/dev/null
+    find "$libdir" -type f 2>/dev/null | sort | while IFS= read -r f; do
+      printf '%s\n' "${f#"$libdir"/}"
+      cat "$f"
+    done
+  } | sha256_stdin | cut -c1-12
+}
+
+# version_identity [root] -- the ONE renderer for `<name> <version> (<tree>)`.
+#
+# TWO CALL SITES ASK THE SAME QUESTION AND BEFORE 2026-09-01 THEY ANSWERED IT
+# DIFFERENTLY. `bin/devbin --version` printed the name, the version and the
+# tree's commit; `bin/devbin version` printed the name and the version alone.
+# Same question, one tree, two answers, and nothing in either output said which
+# one was the whole story -- found by hv running both in devbin's own checkout,
+# where the project IS devbin so the disagreement had nowhere left to hide.
+#
+# It is a Highlander violation of the ordinary kind: not duplicated logic, but
+# duplicated RENDERING, which is the copy that drifts without anyone noticing
+# because each site reads correct on its own. The fix is this function and the
+# rule that no third site prints this line itself.
+#
+# `version show` deliberately does NOT come through here. It is the machine
+# arm -- a bare number for scripting -- and giving it provenance would break
+# every line-oriented reader that consumes it.
+version_identity() {
+  local root="${1:-${PROJECT_ROOT:-.}}"
+  # shellcheck disable=SC2119  # the bare call IS the point: version-file role.
+  # This directive travelled here WITH the call. It used to sit in bin/devbin
+  # above the printf that moved into this function, and leaving it behind is
+  # what reddened lint on the first run of this change -- a suppression is
+  # part of its call site, not of the file it was written in.
+  # TWO FIELDS BECAUSE THEY ANSWER TWO QUESTIONS AND ONE OF THEM CAN BE EMPTY
+  # OF MEANING. The commit says where this checkout stood; on a dirty tree it
+  # says `+dirty`, which names no bytes at all and is exactly when a reader most
+  # needs an identity. `runtime` is that identity: the same twelve hex `fleet`
+  # reports per estate, so `--version` here and a row in the fleet table can be
+  # compared directly without either side deriving anything.
+  #
+  # NOT CALLED `tree`. hv's ruling used that word and it is the wrong one for
+  # this value: `tree` is a git object, a reader meeting it would go looking for
+  # one, and would not find it -- a wrong mechanism in a provenance line is
+  # actionable in the wrong direction. Rename it if the git object was meant.
+  printf '%s %s (%s, runtime %s)\n' "${DEVBIN_NAME:-devbin}" "$(read_version)" \
+    "$(git_head_identity "$root")" \
+    "$(runtime_digest "$root/bin/devbin" "${DEVBIN_LIB:-$root/lib}")"
+}
+
+git_head_identity() {
+  local root="${1:-${PROJECT_ROOT:-.}}" sha
+  sha="$(git_head_sha "$root" full)"
+  if [ "$sha" = unknown ]; then
+    printf 'unknown\n'
+    return 0
+  fi
+  if [ -n "$(git -C "$root" status --porcelain 2>/dev/null)" ]; then
+    printf '%s +dirty\n' "$sha"
+  else
+    printf '%s\n' "$sha"
+  fi
+  return 0
+}
+
+# _git_path <root> <name> -- `git rev-parse --git-path <name>`, made ABSOLUTE,
+# printed only when it names a file that exists. Returns 1 otherwise.
+#
+# THE ABSOLUTISING IS NOT TIDINESS, AND A TEST FOUND IT. `--git-path` answers
+# RELATIVE in a normal checkout (`.git/HEAD`) and ABSOLUTE in a linked worktree,
+# where the gitdir is somewhere else entirely. So a caller doing `[ -f "$p" ]`
+# from any other directory -- which a build script always is -- resolves
+# everything in the worktree case and NOTHING in the ordinary one. That is the
+# exact inverse of the bug this whole function exists to fix, and it would have
+# shipped looking right: every hard test passed and the easy one failed.
+_git_path() {
+  local root="$1" p
+  p="$(git -C "$root" rev-parse --git-path "$2" 2>/dev/null)" || return 1
+  [ -n "$p" ] || return 1
+  case "$p" in
+    /*) ;;
+    *) p="$root/$p" ;;
+  esac
+  [ -f "$p" ] || return 1
+  printf '%s\n' "$p"
+  return 0
+}
+
+# git_head_watch_paths [root] -- every EXISTING file whose mtime tracks HEAD,
+# one absolute path per line. Returns 1, loudly, when it resolves none.
+#
+# `git rev-parse --git-path` is the whole trick: git already knows about worktree
+# indirection, the common directory and the loose/packed question, and answers
+# with a real path. Three separate layout rules that a hand-rolled implementation
+# has to get right independently, and did not.
+#
+# THREE PATHS, EACH FOR A DIFFERENT EVENT:
+#
+#   HEAD          changes on checkout, and on every commit when detached
+#   the branch    what actually moves on a commit -- and it lives in the COMMON
+#                 directory, not the worktree's gitdir, because a worktree's own
+#                 HEAD holds `ref: refs/heads/<x>` and that string never changes
+#   packed-refs   `git pack-refs` DELETES the loose ref file, so a branch living
+#                 only here drops out of any watch set built from loose paths
+#
+# THE EMPTY LIST IS THE FAILURE THAT MATTERS, AND IT IS CREATED BY THIS FIX.
+# Before it, a broken watch meant "always rebuild" -- a cost, not a visible
+# defect. Restoring a working watch restores CACHING, so an enumeration that
+# quietly returned nothing would turn a slow-but-correct build into a fast and
+# possibly wrong one. Same rule as a gate that examines nothing: empty-and-
+# successful is the one answer that must not be available.
+git_head_watch_paths() {
+  local root="${1:-${PROJECT_ROOT:-.}}" ref n=0
+  if git -C "$root" rev-parse --git-dir >/dev/null 2>&1; then
+    _git_path "$root" HEAD && n=$((n + 1))
+    ref="$(git -C "$root" symbolic-ref -q HEAD 2>/dev/null)" || ref=""
+    if [ -n "$ref" ]; then
+      _git_path "$root" "$ref" && n=$((n + 1))
+    fi
+    _git_path "$root" packed-refs && n=$((n + 1))
+  fi
+  if [ "$n" -eq 0 ]; then
+    warn "git_head_watch_paths: resolved NO files to watch under $root"
+    warn "  a build baking the sha would never refresh it -- do not cache on an empty watch set"
+    return 1
+  fi
+  return 0
+}
+
+# assert_identifier <value> <what> -- refuse a value that cannot be a shell
+# variable name, or that would clobber one the shell needs.
+#
+# Devbin turns three CONFIG VALUES into variable names: `project.root_var`,
+# `options.<name>.export`, and `<NAME>_ROOT` derived from `project.name`. The
+# config KEY charset is validated by the parser; these values were not, and the
+# failure was raw and unlocated -- a space in any of them produced bash's own
+# `export: not a valid identifier`, with no `config:` prefix and no file, which
+# is well below the bar D7 sets for every other malformed-config message.
+#
+# The reserved list is short and only holds names whose loss breaks the run
+# itself. `root_var: PATH` was the worst case found: the export succeeds, the
+# handler exec then fails with `env: bash: No such file or directory` and exit
+# 127, and nothing in that message points anywhere near the config that caused
+# it. Refusing beats diagnosing.
+assert_identifier() {
+  local value="${1:-}" what="${2:-value}"
+  case "$value" in
+    '') die "$what is empty -- it has to be a shell variable name" ;;
+    [!A-Za-z_]*) die "$what must start with a letter or underscore, got '$value'" ;;
+    *[!A-Za-z0-9_]*) die "$what may contain only letters, digits and underscore, got '$value'" ;;
+  esac
+  case "$value" in
+    PATH | IFS | HOME | PWD | OLDPWD | SHELL | BASH_ENV | ENV | LD_PRELOAD | LD_LIBRARY_PATH)
+      die "$what must not be '$value' -- overwriting it breaks the commands devbin runs"
+      ;;
+    # devbin's OWN environment, enumerated rather than matched as `DEVBIN_*`.
+    # The wildcard was the first thing tried and it broke Devbin itself inside a
+    # minute: this project is called `devbin`, so its derived root variable is
+    # `DEVBIN_ROOT` -- a legitimate name devbin does not use, refused by a
+    # pattern aimed at names it does. Devbin uses devbin (D12), so the guard's
+    # own overreach failed here before it could reach a live project.
+    DEVBIN_NAME | DEVBIN_INVOKE | DEVBIN_LIB | DEVBIN_DIR | DEVBIN_COMMAND | DEVBIN_ARGS | \
+      DEVBIN_SEAL_LEDGER | DEVBIN_VERSION_FILE | DEVBIN_VERSION_SIDECARS | \
+      DEVBIN_TREEINDEX_DIRS | DEVBIN_OPT_* | PROJECT_ROOT | BIN_DIR)
+      die "$what must not be '$value' -- that name belongs to devbin's own environment"
+      ;;
+  esac
+  return 0
+}
+
+# assert_semver <version> -- refuse anything that is not X.Y.Z.
+#
+# The corpus put each project's own current version in the error message, which
+# is why four copies existed at all. The example is generic here; the value the
+# caller passed is what the reader actually needs to see.
+assert_semver() {
+  [[ "${1:-}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+    die "version must be semver (eg 1.2.3), got '${1:-}'"
+}
+
+# is_handler <path> -- true when <path> is a runnable handler: a REGULAR file
+# carrying the execute bit.
+#
+# `-x` ALONE IS TRUE FOR A DIRECTORY, and the corpus keeps directories exactly
+# where handlers live. Lamplight's `lamplight_macos.d/pkg` is a directory of
+# packaging resources sitting beside the real sub-handlers, so `macos pkg`
+# descended into it and exec'd it: a raw bash "Is a directory" naming an
+# internal library path, exit 126, and the handler never reached (issue 0005).
+#
+# One predicate for every site that asks "can I run this", so a second place
+# cannot keep the old answer. Lives here because the question has no
+# dependencies, which is what D15 requires of this file.
+is_handler() {
+  [ -f "$1" ] && [ -x "$1" ]
+}
+
+# is_bare_version <string> -- true when <string> is a lone version and nothing
+# else: it starts with a digit and carries only characters a version carries.
+#
+# DELIBERATELY LOOSER THAN assert_semver, and not a substitute for it. This
+# guards the bare-version DEFAULT -- the branch that reads or writes a whole
+# file as though the file were nothing but a version. Its question is "is this
+# a version string at all", not "is this project's numbering well-formed", so
+# `0.6.0-rc1`, `1.4` and `20260808` all pass. assert_semver still polices what a
+# caller may SET.
+#
+# Both the reader and the writer ask this one predicate, which is the point: a
+# reader and a writer that disagree about which files they mean is the exact
+# mechanism `lib/cmd/version`'s own comment was written to prevent, and issue
+# 0002 was the two of them agreeing on the wrong answer.
+is_bare_version() {
+  case "${1:-}" in
+    [0-9]*) ;;
+    *) return 1 ;;
+  esac
+  case "$1" in
+    *[!0-9A-Za-z.+-]*) return 1 ;;
+  esac
+  return 0
+}
+
+# rlwrap_exec <completions> <history> [--] <cmd> [args...] -- exec under rlwrap.
+#
+# Byte-identical in all four projects. Missing rlwrap degrades to a plain exec
+# with a warning rather than failing: losing history is an inconvenience,
+# refusing to start a REPL is an outage.
+#
+# `opts` is a plain indexed array, which bash 3.2 has (design D9 -- since
+# reversed by issue 0022 -- ruled out only
+# the ASSOCIATIVE arrays of bash 4). It is never empty at expansion, so it needs
+# none of the `${a[@]+...}` guarding parse_common_opts does.
+rlwrap_exec() {
+  local completions="$1" history="$2"
+  shift 2
+  [ "${1:-}" = "--" ] && shift
+  if command -v rlwrap >/dev/null 2>&1; then
+    local opts
+    opts=(-r -c -H "$history" -s 2000)
+    if [ -n "$completions" ] && [ -f "$completions" ]; then
+      opts=(-f "$completions" "${opts[@]}")
+    fi
+    exec rlwrap "${opts[@]}" "$@"
+  fi
+  warn "rlwrap not found -- no history or tab completion (try: brew install rlwrap)"
+  exec "$@"
+}
+
+# ============================================================================
+# GENERATED DOCUMENTATION, AND THE FIVE REFUSALS THAT MAKE IT SAFE
+# ============================================================================
+#
+# generated_doc_write --target FILE --begin MARKER --end MARKER \
+#   [--deny-env VAR]... [--expect-lines N] [--expect-contains STR]... \
+#   -- <producer> [args...]
+#
+# Replace the region between two markers in FILE with what <producer> writes to
+# stdout, or refuse and leave FILE untouched.
+#
+# WHY THIS IS HERE AND NOT IN A COMMAND. Four estates independently needed to
+# generate the factual half of a database runbook from live probes. The obvious
+# read is that the PROVIDER CODE is the shared thing, which would put a fly.io
+# opinion inside devbin and break the rule at lib/cmd/db:16. That read is wrong.
+# The fly verbs are ninety lines, cheap to write and trivial to verify because
+# you can just run them; what actually cost a measured incident is the
+# DISCIPLINE of writing a generated file safely. So devbin owns the discipline
+# and every project keeps its own producer. A Neon estate writes a Neon producer
+# and none of this changes (issue 0028; conflab/vc, relayed by lamplight/vc).
+#
+# It is a HELPER rather than a command, which is what keeps the surface honest:
+# no catalogue row, no opt-in cell, no `@builtin`, and no config schema key --
+# so it costs devbin no new mechanism at all. The layering rule decides the
+# home: needs config, belongs in resolve; needs nothing, belongs here (D15).
+#
+# WHAT DEVBIN MUST NOT LEARN, and does not: what a cluster is, what a connection
+# pooler is, that `--json` exists on anything, or that the output is Markdown.
+# The markers are opaque delimiters and are REQUIRED rather than defaulted --
+# any default would encode a comment syntax, and a framework that ships
+# `<!-- ... -->` has quietly decided its consumers write HTML.
+#
+# It WARNS and RETURNS rather than dying, because a caller generating several
+# documents must not lose the rest of them to the first refusal.
+generated_doc_write() {
+  local target="" begin="" end="" expect_lines=0
+  local block tmp nb ne bl el v s n
+  local -a deny=() expect_contains=()
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --target) shift; target="${1:-}" ;;
+      --target=*) target="${1#*=}" ;;
+      --begin) shift; begin="${1:-}" ;;
+      --begin=*) begin="${1#*=}" ;;
+      --end) shift; end="${1:-}" ;;
+      --end=*) end="${1#*=}" ;;
+      --deny-env) shift; deny+=("${1:-}") ;;
+      --deny-env=*) deny+=("${1#*=}") ;;
+      --expect-lines) shift; expect_lines="${1:-0}" ;;
+      --expect-lines=*) expect_lines="${1#*=}" ;;
+      --expect-contains) shift; expect_contains+=("${1:-}") ;;
+      --expect-contains=*) expect_contains+=("${1#*=}") ;;
+      --) shift; break ;;
+      *) die "generated_doc_write: unknown option '$1' (the producer goes after --)" ;;
+    esac
+    shift
+  done
+
+  # Usage errors DIE: they are the caller's bug and no run of this is correct.
+  # The five refusals below WARN, because they are facts about the world.
+  [ -n "$target" ] || die "generated_doc_write: --target is required"
+  [ -n "$begin" ] || die "generated_doc_write: --begin marker is required"
+  [ -n "$end" ] || die "generated_doc_write: --end marker is required"
+  [ $# -gt 0 ] || die "generated_doc_write: no producer given (put it after --)"
+
+  if [ ! -f "$target" ]; then
+    warn "generated_doc_write: $target does not exist -- this regenerates a region of a hand-authored file, it does not create one"
+    return 1
+  fi
+
+  # R4 -- THE HAND-AUTHORED HALF SURVIVES. Everything outside the markers is
+  # copied through untouched, including both marker lines. Regeneration must
+  # never eat judgement: a probe can report a pooler's port and cannot report
+  # that changing it needs the owner's say-so.
+  #
+  # Exactly one of each marker, in order, or refuse. Two begins is ambiguous
+  # about which region is generated, and guessing is how a generator eats the
+  # wrong half of a file.
+  nb="$(grep -c -F -- "$begin" "$target" 2>/dev/null || true)"
+  ne="$(grep -c -F -- "$end" "$target" 2>/dev/null || true)"
+  if [ "${nb:-0}" -ne 1 ] || [ "${ne:-0}" -ne 1 ]; then
+    warn "generated_doc_write: $target must contain each marker exactly once (found begin=${nb:-0} end=${ne:-0}) -- untouched"
+    return 1
+  fi
+  bl="$(awk -v m="$begin" 'index($0, m) { print NR; exit }' "$target")"
+  el="$(awk -v m="$end" 'index($0, m) { print NR; exit }' "$target")"
+  if [ "$bl" -ge "$el" ]; then
+    warn "generated_doc_write: $target has its end marker at line $el, before or at the begin marker at line $bl -- untouched"
+    return 1
+  fi
+
+  # R2 -- NEVER WRITE FROM A FAILED MEASUREMENT. A producer that could not
+  # measure exits non-zero and the target is left alone. This is the
+  # determinate-zero doctrine in prose: a document assembled from failed probes
+  # is worse than a stale one, because it looks freshly generated. Measured --
+  # an estate captured psql ERROR TEXT into a runbook and then reported counts
+  # off it, which is a refuted inference wearing the format of a measurement.
+  if ! block="$("$@")"; then
+    warn "generated_doc_write: the producer exited non-zero -- $target left untouched"
+    return 1
+  fi
+  if [ -z "$block" ]; then
+    warn "generated_doc_write: the producer wrote nothing -- $target left untouched"
+    return 1
+  fi
+
+  # R1 -- NEVER INLINE A SECRET, ENFORCED MECHANICALLY rather than by review.
+  # Exact value matching, no entropy heuristics. Measured twice: a hand-edit
+  # replaced a username in six places and left the old password beside it, which
+  # authenticates as a rotation failure and reads like a platform problem; and a
+  # cleanup step was about to fold a live credential into a runbook.
+  for v in ${deny[@]+"${deny[@]}"}; do
+    # UNSET OR EMPTY IS ITSELF A REFUSAL, and the message must say so. An unset
+    # variable makes the check below compare against the empty string, which
+    # every block contains -- so the naive version refuses, correctly, and
+    # reports a leak. There was none. That is a wrong recorded reason, which is
+    # worse than no reason: it sends the reader hunting a credential leak in a
+    # file that is fine, and the real fault (a guard pointed at a variable that
+    # is not there) goes unread. Driven red before this branch existed.
+    if [ -z "${!v:-}" ]; then
+      warn "generated_doc_write: --deny-env $v is unset or empty, so there is no value to search for -- $target left untouched. A secret guard that cannot see its secret must not pass, and has not."
+      return 1
+    fi
+    case "$block" in
+      *"${!v}"*)
+        warn "generated_doc_write: \$$v's value appears in the generated block -- $target left untouched. Use env indirection in the producer's output (postgresql://user:\$$v@host) rather than the value."
+        return 1
+        ;;
+    esac
+  done
+
+  # R5 -- VALIDATE THE ARTEFACT, NOT THE EXIT PATH. A producer exiting 0 says it
+  # ran; it does not say it produced the document. The expectation is the
+  # producer's own declaration of what sufficient output looks like, which is
+  # why there is no built-in threshold here to guess wrong.
+  if [ "$expect_lines" -gt 0 ]; then
+    n="$(printf '%s\n' "$block" | wc -l | tr -d ' ')"
+    if [ "$n" -lt "$expect_lines" ]; then
+      warn "generated_doc_write: the block is $n line(s), fewer than the $expect_lines declared -- $target left untouched"
+      return 1
+    fi
+  fi
+  for s in ${expect_contains[@]+"${expect_contains[@]}"}; do
+    case "$block" in
+      *"$s"*) ;;
+      *)
+        warn "generated_doc_write: the block does not contain the declared '$s' -- $target left untouched"
+        return 1
+        ;;
+    esac
+  done
+
+  # R3 -- ATOMIC REPLACE. The temp is created BESIDE THE TARGET, not in TMPDIR:
+  # rename is atomic only within a filesystem, so a temp under /tmp renaming
+  # onto a project path can fail cross-device. sed_inplace above already learned
+  # this; the pattern is shared deliberately.
+  #
+  # What this gives and does NOT give: the reader sees the old file or the new
+  # one and never a half-written one. It is not a durability guarantee -- shell
+  # has no portable fsync, so a machine losing power at the wrong moment may
+  # have neither. Atomicity is the property that matters here, and claiming the
+  # other one would be the wrong kind of confident.
+  if ! tmp="$(mktemp "${target}.XXXXXX")"; then
+    warn "generated_doc_write: could not create a temporary file beside $target -- untouched"
+    return 1
+  fi
+  {
+    awk -v n="$bl" 'NR <= n' "$target"
+    printf '%s\n' "$block"
+    awk -v n="$el" 'NR >= n' "$target"
+  } >"$tmp" || {
+    rm -f "$tmp"
+    warn "generated_doc_write: could not assemble the new $target -- untouched"
+    return 1
+  }
+  if ! mv "$tmp" "$target"; then
+    rm -f "$tmp"
+    warn "generated_doc_write: could not replace $target -- untouched"
+    return 1
+  fi
+  return 0
+}
+
+# MOVED HERE FROM lib/install AT THE UPDATE-NOTICE CHANGE. The dispatcher
+# needs to read two manifest header lines on every invocation, and it does
+# NOT source lib/install -- deliberately, because the install machinery has
+# no business on the hot path of a launcher that runs on every command. The
+# alternative was a second manifest reader in the dispatcher, which is the
+# Highlander breach this project names first. lib/install sources this file
+# and calls them unchanged.
+DEVBIN_MANIFEST_REL="bin/.devbin/manifest.sha256"
+
+manifest_path() { printf '%s\n' "$1/$DEVBIN_MANIFEST_REL"; }
+
+# manifest_field <root> <field> -- read one `# <field>: <value>` header line.
+manifest_field() {
+  local path
+  path="$(manifest_path "$1")"
+  [ -f "$path" ] || return 1
+  awk -v f="$2" '
+    $0 !~ /^#/ { exit }
+    {
+      line = $0
+      sub(/^#[[:space:]]*/, "", line)
+      if (line ~ ("^" f ":")) {
+        sub("^" f ":[[:space:]]*", "", line)
+        sub(/[[:space:]]+$/, "", line)
+        print line
+        exit
+      }
+    }
+  ' "$path"
+}
+
+manifest_version() { manifest_field "$1" devbin_version; }
+manifest_source() { manifest_field "$1" source; }
+manifest_source_commit() { manifest_field "$1" source_commit; }
+
+# _devbin_update_line <projroot> -- print the notice body, or nothing.
+#
+# SEPARATED FROM DELIVERY SO IT CAN BE TESTED. The comparison is the part with
+# the logic in it and the guards are the part with the policy; keeping them in
+# one function made the whole thing reachable only through a real terminal.
+#
+# THE TERMINAL PROBLEM IS SOLVED AND THIS PARAGRAPH USED TO SAY OTHERWISE. It
+# read, in the present tense, that "the only way to give a test one is `script`,
+# which fails outright when stdin is a socket", and recorded that two tests
+# asserting the notice stayed SILENT had passed vacuously -- no pty, no output,
+# refutation satisfied. That was true when written and has not been true since
+# `run_tty_eof` (tests/lib/test_helper.bash) landed: `script` starts when its
+# OWN stdin is `/dev/null`, and the child still gets the allocated pty. The
+# delivery half is exercised for real today -- `ON A TERMINAL the notice
+# actually SPEAKS` is green, not skipped.
+#
+# The correction is kept rather than the paragraph deleted, because the stale
+# version cost something measurable: a node read it as a live gap, re-derived
+# the `</dev/null` trick from scratch, and offered it as a fix that was already
+# in the tree. A comment describing a solved problem in the present tense is a
+# claim with an expiry date, and this file is where that class gets recorded.
+#
+# Prints to stdout; the caller decides where it goes. Empty output means there
+# is nothing to say.
+_devbin_update_line() {
+  local root="${1:-}" src rec cur
+  [ -n "$root" ] || return 0
+
+  src="$(manifest_source "$root" 2>/dev/null)" || return 0
+  rec="$(manifest_source_commit "$root" 2>/dev/null)" || return 0
+  [ -n "$src" ] && [ -n "$rec" ] || return 0
+  [ -d "$src" ] || return 0
+
+  # THE RECORDED FIELD IS NOT A BARE SHA, AND COMPARING THE WHOLE STRING IS THE
+  # DEFECT THIS LINE EXISTS TO AVOID. `source_commit_of` stamps
+  #
+  #     <sha> +dirty -- THESE BYTES MATCH NO COMMIT
+  #
+  # whenever devbin's own half is uncommitted -- the ordinary state of a source
+  # tree somebody is working in -- and words rather than a sha when the source
+  # is not a checkout at all. Compared whole against `git rev-parse HEAD` those
+  # can never be equal, so the notice fired on EVERY invocation and `upgrade`
+  # could not clear it: upgrade re-vendors and writes the same dirty stamp back.
+  # A permanently-red notice is the mirror of a false green -- both end with
+  # nobody reading it -- and this shipped that way to a consumer before a test
+  # caught it.
+  #
+  # Take the leading field and compare like with like. A record carrying no sha
+  # yields nothing and stays silent, which is correct: bytes that name no commit
+  # cannot be said to have fallen behind one.
+  rec="${rec%% *}"
+  case "$rec" in
+    *[!0-9a-f]* | "") return 0 ;;
+  esac
+
+  cur="$(git -C "$src" rev-parse HEAD 2>/dev/null)" || return 0
+  [ -n "$cur" ] || return 0
+  [ "$cur" = "$rec" ] && return 0
+
+  # Twelve characters, and only ever printed when the full shas differ. The
+  # first version truncated BEFORE comparing like with like, so it printed two
+  # identical-looking values as its evidence that they differed -- the
+  # truncation did not merely fail to help, it hid the cause.
+  printf 'UPDATE: devbin has moved on since this project vendored it.\n'
+  printf '        vendored %s, source now %s\n' "${rec:0:12}" "${cur:0:12}"
+  printf '        run: %s upgrade      (silence: DEVBIN_NO_UPDATE_NOTICE=1)\n' \
+    "${DEVBIN_INVOKE:-bin/devbin}"
+  return 0
+}
+
+# devbin_update_notice <projroot> -- tell the user, ONCE A DAY AND ONLY ON A
+# TERMINAL, that the devbin this project vendored has moved on.
+#
+# THE POINT IS THAT A CONSUMING PROJECT LEARNS WITHOUT BEING ASKED. `vendor`
+# already answers "is this tree level with its SOURCE" -- the comparison is not
+# new, only the moment it is made. What is new is that the answer reaches
+# someone who was not investigating.
+#
+# FOUR CONSTRAINTS, AND THE FIRST IS NOT OBVIOUS.
+#
+#   STDERR, NEVER STDOUT. devbin seals gate output and six extraction grammars
+#   parse it; two print on unanchored patterns. A version notice on stdout lands
+#   INSIDE a run log and is read as tool output -- issue 0025's class exactly.
+#
+#   A TERMINAL, OR NOTHING. `[ -t 2 ]` keeps it out of CI logs and out of sealed
+#   gates, whose stderr is a pipe. Load-bearing, not a nicety.
+#
+#   ONCE A DAY. A git call on every invocation would put a fork on the hot path
+#   of a launcher that runs on every command.
+#
+#   NEVER FATAL, AND NEVER NOISY ABOUT ITS OWN FAILURE. A consumer usually does
+#   not have devbin's source on disk at all. That is the ordinary case, so every
+#   failure path is a silent `return 0`. This is the one place in devbin where
+#   swallowing is correct: the function asserts nothing, and IN-AG-NO-SILENT-001
+#   is about failures that reach a verdict.
+#
+# THE STAMP IS WRITTEN BEFORE THE COMPARISON, DELIBERATELY: the rate limit is on
+# the CHECK, not on the message, so a source that moves on five minutes after a
+# check is reported at the next day's check rather than on the next command.
+devbin_update_notice() {
+  local root="${1:-}" stamp msg dir base
+  [ -n "$root" ] || return 0
+  [ -n "${DEVBIN_NO_UPDATE_NOTICE:-}" ] && return 0
+  [ -t 2 ] || return 0
+
+  # The stamp lives in TMPDIR rather than the project, so it needs no .gitignore
+  # entry and can never appear in a consumer's git status.
+  base=".devbin-update-$(printf '%s' "$root" | tr -c 'a-zA-Z0-9' '-')"
+  dir="${TMPDIR:-/tmp}"
+  stamp="$dir/$base"
+  # -mtime is POSIX; -newermt is GNU-only and this fleet runs on macOS.
+  if [ -f "$stamp" ] && [ -n "$(find "$dir" -maxdepth 1 -name "$base" -mtime -1 2>/dev/null)" ]; then
+    return 0
+  fi
+  : >"$stamp" 2>/dev/null || true
+
+  msg="$(_devbin_update_line "$root")"
+  [ -n "$msg" ] && printf '%s\n' "$msg" >&2
+  return 0
+}
