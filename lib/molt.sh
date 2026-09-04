@@ -101,6 +101,33 @@ molt_link_healthy() {
   [[ -L "$1" ]] && [[ -e "$1" ]]
 }
 
+# Names which fault molt_link_healthy tripped on, for user-facing messages.
+#
+# molt_link_healthy is one boolean over three distinct states, and the messages
+# all said "is not a symlink". For the dangling case that is a false statement:
+# it IS a symlink, that is the whole problem. Someone debugging runs `ls -l`,
+# sees `.tmux.conf -> ...`, concludes the tool is wrong and stops looking --
+# which is exactly the wrong place to stop, because a dangling link is the
+# failure that hid the repo rename. Same defect class as a check reporting a
+# reason it no longer tests.
+#
+# Total over all four states, including the healthy one. Every call site today
+# is guarded by a failed molt_link_healthy, so the healthy branch is
+# unreachable from here -- but a helper that names a fault on a sound link is
+# the very bug this fixes, and the next caller will not be guarded.
+molt_link_fault() {
+  local target="$1"
+  if molt_link_healthy "$target"; then
+    echo "resolves"
+  elif [[ -L "$target" ]]; then
+    echo "is a broken symlink"
+  elif [[ -e "$target" ]]; then
+    echo "is not a symlink"
+  else
+    echo "is missing"
+  fi
+}
+
 molt_link() {
   local source="$1"
   local target="$2"

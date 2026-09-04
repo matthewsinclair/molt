@@ -133,7 +133,7 @@ editors_check() {
 
   # Doom config linked?
   if ! molt_link_healthy "$HOME/.config/doom"; then
-    molt_info "editors: ~/.config/doom is not a symlink"
+    molt_info "editors: ~/.config/doom $(molt_link_fault "$HOME/.config/doom")"
     ok=1
   fi
 
@@ -309,7 +309,7 @@ editors_verify() {
   fi
 
   if ! molt_link_healthy "$HOME/.config/doom"; then
-    molt_error "VERIFY FAIL: ~/.config/doom not symlinked"
+    molt_error "VERIFY FAIL: ~/.config/doom $(molt_link_fault "$HOME/.config/doom")"
     errors=1
   fi
 

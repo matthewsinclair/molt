@@ -113,7 +113,7 @@ zsh_check() {
     local zf
     for zf in .zshrc .zshenv .zprofile; do
       if ! molt_link_healthy "$HOME/$zf"; then
-        molt_info "zsh: ~/${zf} is missing, not a symlink, or dangling"
+        molt_info "zsh: ~/${zf} $(molt_link_fault "$HOME/$zf")"
         ok=1
       fi
     done
@@ -180,10 +180,15 @@ zsh_verify() {
     errors=1
   fi
 
-  if ! molt_link_healthy "$HOME/.zshrc"; then
-    molt_error "VERIFY FAIL: ~/.zshrc not symlinked"
-    errors=1
-  fi
+  # _install links all three; verifying only .zshrc let a broken .zshenv or
+  # .zprofile pass verify after passing check. Same gap, one phase later.
+  local zf
+  for zf in .zshrc .zshenv .zprofile; do
+    if ! molt_link_healthy "$HOME/$zf"; then
+      molt_error "VERIFY FAIL: ~/${zf} $(molt_link_fault "$HOME/$zf")"
+      errors=1
+    fi
+  done
 
   if [[ $errors -eq 0 ]]; then
     molt_info "Verified: zsh liberator is fully operational"
