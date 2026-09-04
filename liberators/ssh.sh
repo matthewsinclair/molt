@@ -40,6 +40,9 @@ ssh_check() {
       if [[ -L "$HOME/.ssh/config" ]]; then
         molt_info "ssh: ~/.ssh/config is a symlink (sshd requires regular files)"
         ok=1
+      elif molt_config_stale "config/ssh/config" "$HOME/.ssh/config"; then
+        molt_info "ssh: ~/.ssh/config is older than its template — re-rendering"
+        ok=1
       elif [[ ! -f "$HOME/.ssh/config.molt-rendered" ]]; then
         molt_info "ssh: ~/.ssh/config is not managed by molt"
         ok=1
