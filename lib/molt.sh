@@ -610,11 +610,20 @@ cmd_doctor() {
     # folding, so basename returns the spelling we asked for and the drift is
     # invisible -- which is the whole failure mode. Ask the parent directory what
     # the entry is actually called.
-    local want_repo real_repo parent
+    local want_repo real_repo parent base entry entry_name
     want_repo="Molt-$(whoami)"
     parent="$(dirname "$user_repo")"
-    real_repo="$(ls -1 "$parent" 2>/dev/null | grep -ixF "$(basename "$user_repo")" | head -1)"
-    [[ -n "$real_repo" ]] || real_repo="$(basename "$user_repo")"
+    base="$(basename "$user_repo")"
+    real_repo="$base"
+    for entry in "$parent"/*; do
+      [[ -d "$entry" ]] || continue
+      entry_name="$(basename "$entry")"
+      if [[ "$(printf '%s' "$entry_name" | tr '"'"'[:upper:]'"'"' '"'"'[:lower:]'"'"')" \
+         == "$(printf '%s' "$base" | tr '"'"'[:upper:]'"'"' '"'"'[:lower:]'"'"')" ]]; then
+        real_repo="$entry_name"
+        break
+      fi
+    done
     if [[ "$real_repo" != "$want_repo" ]]; then
       echo "[$step/$total] Checking user stack repo... ⚠ $user_repo"
       echo "         Directory is stored as '${real_repo}'; the convention is '${want_repo}'."
