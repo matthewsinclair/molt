@@ -16,13 +16,26 @@ MOLT_PRJ_DIR="${MOLT_PRJ_DIR:-}"
 MOLT_OPT_DIR="${MOLT_OPT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/opt}}"
 
 # --- User config repo ---
-# The molt-{user} repo location. Searched in order.
+# The Molt-{user} repo location. Searched in order.
 # MOLT_PRJ_DIR path only included if set.
+#
+# Project directories under MOLT_PRJ_DIR are Capitalised -- Molt, Molt-matts,
+# Molt-flynn, Intent, Pplr, Utilz -- so the capitalised form is the convention
+# and is searched first. The lowercase form is kept as a fallback: it is what
+# earlier versions asked for, and a sleeve on a case-sensitive filesystem that
+# cloned before this change would otherwise stop resolving entirely.
+#
+# This only ever mattered on case-sensitive storage. On APFS the lowercase
+# lookup folded onto the capitalised directory and nothing noticed for months.
 MOLT_USER_REPO_SEARCH_PATHS=()
 if [[ -n "$MOLT_PRJ_DIR" ]]; then
-  MOLT_USER_REPO_SEARCH_PATHS+=("${MOLT_PRJ_DIR}/molt-$(whoami)")
+  MOLT_USER_REPO_SEARCH_PATHS+=(
+    "${MOLT_PRJ_DIR}/Molt-$(whoami)"
+    "${MOLT_PRJ_DIR}/molt-$(whoami)"
+  )
 fi
 MOLT_USER_REPO_SEARCH_PATHS+=(
+  "$HOME/Molt-$(whoami)"
   "$HOME/molt-$(whoami)"
   "$HOME/.molt-$(whoami)"
 )
