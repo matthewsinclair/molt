@@ -34,3 +34,26 @@ load "../test_helper.bash"
     run _desktop_favorites_file
     [ "$status" -ne 0 ] || [ -f "$output" ]
 }
+
+@test "_desktop_favorites_empty detects a file with no usable entries" {
+    load_liberator desktop
+    local d="$BATS_TEST_TMPDIR"
+    printf '# only comments\n\n   \n' > "$d/empty"
+    printf 'Alacritty.desktop\n'      > "$d/full"
+
+    run _desktop_favorites_empty "$d/empty"
+    [ "$status" -eq 0 ]
+    run _desktop_favorites_empty "$d/full"
+    [ "$status" -ne 0 ]
+}
+
+@test "_desktop_favorites_wanted still emits @as [] — the guard, not the formatter, refuses it" {
+    load_liberator desktop
+    local d="$BATS_TEST_TMPDIR"
+    printf '\n' > "$d/blank"
+    run _desktop_favorites_wanted "$d/blank"
+    # Confirmed against GNOME on Ubuntu 24.04 / gsettings 2.80.0: an empty
+    # string array really does print "@as []", not "[]". Verified on a real
+    # sleeve rather than assumed.
+    [ "$output" = "@as []" ]
+}
