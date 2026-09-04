@@ -220,8 +220,13 @@ molt_render() {
 
   mv "${target}.molt-tmp" "$target"
 
-  # Leave a marker so we know this file was rendered (not symlinked).
-  echo "rendered $(date -Iseconds) from $template" > "${target}.molt-rendered"
+  # Leave a marker so we know this file was rendered (not symlinked), carrying
+  # the digest of the inputs so molt_config_stale can tell whether they moved.
+  {
+    echo "rendered $(date -Iseconds) from $template"
+    local d
+    d="$(molt_config_digest "$template")" && [[ -n "$d" ]] && echo "digest $d"
+  } > "${target}.molt-rendered"
 
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
@@ -234,14 +239,64 @@ molt_render() {
   molt_info "Rendered: $template -> $target"
 }
 
-# True when a rendered config is older than the template it came from.
+# SHA-256 of a string on stdin, portable across macOS and Linux.
+molt_hash() {
+  if command -v shasum &>/dev/null; then
+    shasum -a 256 | awk '{print $1}'
+  elif command -v sha256sum &>/dev/null; then
+    sha256sum | awk '{print $1}'
+  else
+    return 1
+  fi
+}
+
+# Digest of everything that determines a rendered file's content: the template
+# AND the instance vars.sh that molt_render substitutes into it.
+#
+# vars.sh matters as much as the template. molt_render sources it and feeds the
+# MOLT_* values to envsubst, so a vars-only edit changes the output while
+# leaving the template untouched -- and a vars-only edit is the *likely* kind,
+# because vars.sh is the per-machine file. Digesting only the template would
+# leave that hole open.
+molt_config_digest() {
+  local template="$1"
+  [[ -f "$template" ]] || return 1
+
+  local user_repo hostname vars_file
+  user_repo="$(molt_find_user_repo)" || return 1
+  hostname="$(hostname -s 2>/dev/null || hostname)"
+  vars_file="${user_repo}/instances/${hostname}/vars.sh"
+
+  {
+    cat "$template"
+    [[ -f "$vars_file" ]] && cat "$vars_file"
+  } 2>/dev/null | molt_hash
+}
+
+# True when a rendered config no longer matches its inputs.
 #
 # molt only re-renders a config when its liberator's check reports not-ok. So a
-# template change on its own never propagates: the check passes, install is
-# skipped, and the sleeve keeps running the previous rendered file while
-# reporting "ok" at every step. That is how gyges spent a morning running a
-# backup agent that pointed at a disk image rhadamanth had already migrated away
-# from, with both machines reporting a clean upgrade.
+# change to a template or to instance vars never propagated on its own: the
+# check passed, install was skipped, and the sleeve kept running the previous
+# rendered file while reporting "ok" at every step. That is how gyges spent a
+# morning running a backup agent that named a disk image rhadamanth had already
+# migrated away from, with both machines reporting a clean upgrade.
+#
+# This compares a CONTENT DIGEST, not mtimes. mtime looked adequate and is not:
+#   - git rewrites mtimes. A checkout, a clone, or `git checkout -- <file>`
+#     restamps files whose content never changed, so every template reads stale.
+#   - a byte-identical template that is merely touched reads stale.
+#   - worst, it produces FALSE NEGATIVES across filesystems. A FUSE mount that
+#     truncates mtime to whole seconds, compared against an ext4 file carrying
+#     nanoseconds inside the same second, reports "not newer" -- silently NOT
+#     re-rendering, which is the exact failure this function exists to catch.
+#     Everything else here fails safe by over-rendering; that one fails quiet.
+#   - and a guest with no NTP has no clock authority to compare against at all.
+#
+# Digests are immune to all four, and cover vars.sh in the same move.
+#
+# Fails CLOSED: when the digest cannot be computed we report stale, because
+# re-rendering costs a moment and skipping it is the failure mode above.
 #
 # Liberators that render configs should fold this into their check.
 molt_config_stale() {
@@ -249,20 +304,21 @@ molt_config_stale() {
   local target="$2"    # absolute path of the rendered file
 
   local user_repo template
-  # Fail loudly rather than silently reporting "fresh". A function whose job is
-  # catching silent staleness must not go quiet when it cannot do that job: an
-  # unset MOLT_PRJ_DIR or an unexpected repo layout would otherwise make every
-  # config on the machine report fresh -- precisely the symptom this exists to
-  # prevent. Raised by the Claude session on gyges.
   if ! user_repo="$(molt_find_user_repo)"; then
     molt_warn "molt_config_stale: no user repo — cannot tell whether ${target} is stale"
-    return 1
+    return 0
   fi
   template="${user_repo}/${source}.tmpl"
 
-  [[ -f "$template" ]] || return 1      # nothing to be stale against
+  [[ -f "$template" ]] || return 1      # static/linked config: nothing to render
   [[ -e "$target" ]]   || return 0      # never rendered: trivially stale
-  [[ "$template" -nt "$target" ]]
+
+  local want have
+  want="$(molt_config_digest "$template")" || return 0
+  [[ -n "$want" ]] || return 0
+  have="$(sed -n 's/^digest //p' "${target}.molt-rendered" 2>/dev/null)"
+
+  [[ "$want" == "$have" ]] && return 1 || return 0
 }
 
 molt_install_config() {
@@ -469,6 +525,12 @@ molt_fstype() {
   # GNU's `-f -c %T` -- it reads `-c` as the format string and prints it, so a
   # "try GNU first and fall back" probe silently returns "-c" on macOS.
   if [[ "$(molt_platform)" == "linux" ]]; then
+    # Prefer df -T: it reports the mount type ("fuse.prl_fsd"), where stat -f
+    # gives only the statfs magic ("fuseblk"). Both match the fuse* glob, but
+    # naming the actual driver makes the warning far more actionable.
+    local t
+    t="$(df -T "$path" 2>/dev/null | awk 'NR==2 {print $2}')"
+    [[ -n "$t" ]] && { printf '%s\n' "$t"; return 0; }
     stat -f -c %T "$path" 2>/dev/null
     return
   fi
@@ -677,7 +739,7 @@ cmd_doctor() {
     local fstype
     fstype="$(molt_fstype "$p")" || continue
     case "$fstype" in
-      fuse*|prl_fsd|nfs|smbfs|cifs|afpfs|webdav|osxfuse|vboxsf|9p|virtiofs)
+      fuse*|prl_fsd|nfs*|smb*|cifs|afpfs|webdav|osxfuse|vboxsf|9p|virtiofs)
         foreign_fs="${foreign_fs}${foreign_fs:+, }${p} (${fstype})" ;;
     esac
   done
