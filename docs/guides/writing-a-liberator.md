@@ -58,9 +58,11 @@ myapp_maintain() {
 
 4. **If you render, call `molt_config_stale` in your `_check`.** molt only renders when a check reports not-ok, so without it a template or `vars.sh` change never reaches the machine — the check passes, install is skipped, and the sleeve runs the old file while reporting success. See [templates.md](templates.md#detecting-stale-renders).
 
-5. **Be idempotent.** Running a liberator twice should produce the same result. Don't duplicate backups, don't create duplicate entries.
+5. **Check symlinks with `molt_link_healthy`, and describe them with `molt_link_fault`.** A bare `[[ -L "$target" ]]` asks only "is there a symlink here", which a _dangling_ symlink satisfies — so a link pointing at a path that no longer exists reports ok, install never runs, and `molt resleeve` prints "Sleeve ready" over a sleeve with no config. Check every target your `_install` links, in both `_check` and `_verify`, and get the message from `molt_link_fault` rather than hard-coding one: it distinguishes missing, not-a-symlink and broken-symlink, and telling someone their file "is not a symlink" when `ls -l` plainly shows an arrow is how a real debugging session gets sent the wrong way.
 
-6. **Use `molt_platform` for OS branching.** Returns `linux` or `macos`.
+6. **Be idempotent.** Running a liberator twice should produce the same result. Don't duplicate backups, don't create duplicate entries.
+
+7. **Use `molt_platform` for OS branching.** Returns `linux` or `macos`.
 
 ## Minimal example
 
@@ -125,19 +127,21 @@ myapp_verify() {
 
 ## Framework functions available to liberators
 
-| Function               | Purpose                                                                                                           |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `molt_link src dst`    | Symlink `src` to `dst`, backup existing, mkdir parent                                                             |
-| `molt_render tmpl dst` | Render template via `envsubst` with instance vars                                                                 |
-| `molt_install_config`  | Auto-pick render (`.tmpl`) or link (static)                                                                       |
-| `molt_config_stale`    | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check` |
-| `molt_find_user_repo`  | Return path to the user's config repo                                                                             |
-| `molt_platform`        | Return `linux` or `macos`                                                                                         |
-| `molt_distro`          | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                               |
-| `molt_arch`            | Return architecture (eg `arm64`, `x86_64`)                                                                        |
-| `molt_info msg`        | Print info message (prefixed with `Zen:`)                                                                         |
-| `molt_warn msg`        | Print warning                                                                                                     |
-| `molt_error msg`       | Print error                                                                                                       |
+| Function                | Purpose                                                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `molt_link src dst`     | Symlink `src` to `dst`, backup existing, mkdir parent                                                               |
+| `molt_link_healthy dst` | True only when `dst` is a symlink that actually resolves. Use instead of `[[ -L ]]`, which passes on dangling links |
+| `molt_link_fault dst`   | Names the fault for messages: `is missing`, `is not a symlink`, `is a broken symlink` (or `resolves`)               |
+| `molt_render tmpl dst`  | Render template via `envsubst` with instance vars                                                                   |
+| `molt_install_config`   | Auto-pick render (`.tmpl`) or link (static)                                                                         |
+| `molt_config_stale`     | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check`   |
+| `molt_find_user_repo`   | Return path to the user's config repo                                                                               |
+| `molt_platform`         | Return `linux` or `macos`                                                                                           |
+| `molt_distro`           | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                                 |
+| `molt_arch`             | Return architecture (eg `arm64`, `x86_64`)                                                                          |
+| `molt_info msg`         | Print info message (prefixed with `Zen:`)                                                                           |
+| `molt_warn msg`         | Print warning                                                                                                       |
+| `molt_error msg`        | Print error                                                                                                         |
 
 ## Adding to the manifest
 

@@ -50,7 +50,7 @@ web_check() {
   fi
 
   if ! molt_link_healthy "$MOLT_LOCAL_BIN/web"; then
-    molt_info "web: not linked in ~/bin"
+    molt_info "web: $MOLT_LOCAL_BIN/web $(molt_link_fault "$MOLT_LOCAL_BIN/web")"
     ok=1
   fi
 
@@ -90,7 +90,7 @@ web_verify() {
   fi
 
   if ! molt_link_healthy "$MOLT_LOCAL_BIN/web"; then
-    molt_error "VERIFY FAIL: web not linked in ~/bin"
+    molt_error "VERIFY FAIL: $MOLT_LOCAL_BIN/web $(molt_link_fault "$MOLT_LOCAL_BIN/web")"
     errors=1
   fi
 
