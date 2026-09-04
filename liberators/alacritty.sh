@@ -2,6 +2,47 @@
 # alacritty.sh — Liberator: Alacritty terminal emulator
 # Frees you from default terminals with a GPU-accelerated alternative.
 
+# Reports whether the installed config is wrong, for either form.
+#
+# A rendered config is a regular FILE, so molt_link_healthy fails on it forever
+# and the liberator reinstalls every run. A linked config has no digest, so
+# molt_config_stale is meaningless for it. The right test depends on which form
+# the repo carries, which is exactly what rule 4 in writing-a-liberator.md is
+# about -- and the trap that switching to molt_install_config would otherwise
+# have set for whoever first renamed this file to .tmpl.
+_alacritty_config_wrong() {
+  local user_repo target="$HOME/.config/alacritty/alacritty.toml"
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  [[ -n "$user_repo" ]] || return 1
+
+  local tmpl="$user_repo/config/alacritty/alacritty.toml.tmpl"
+  if [[ -f "$tmpl" ]]; then
+    molt_config_stale "$tmpl" "$target"
+  else
+    ! molt_link_healthy "$target"
+  fi
+}
+
+# Describes the fault, in whichever form applies.
+_alacritty_config_fault() {
+  local user_repo target="$HOME/.config/alacritty/alacritty.toml"
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  if [[ -n "$user_repo" && -f "$user_repo/config/alacritty/alacritty.toml.tmpl" ]]; then
+    echo "differs from its template or instance vars -- re-rendering"
+  else
+    molt_link_fault "$target"
+  fi
+}
+
+# True when the user repo carries an alacritty config in either form.
+_alacritty_config_present() {
+  local user_repo
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  [[ -n "$user_repo" ]] || return 1
+  [[ -f "$user_repo/config/alacritty/alacritty.toml" ]] \
+    || [[ -f "$user_repo/config/alacritty/alacritty.toml.tmpl" ]]
+}
+
 alacritty_check() {
   local ok=0
 
@@ -12,9 +53,9 @@ alacritty_check() {
 
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
-  if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
-    if ! molt_link_healthy "$HOME/.config/alacritty/alacritty.toml"; then
-      molt_info "alacritty: ~/.config/alacritty/alacritty.toml $(molt_link_fault "$HOME/.config/alacritty/alacritty.toml")"
+  if [[ -n "$user_repo" ]] && _alacritty_config_present; then
+    if _alacritty_config_wrong; then
+      molt_info "alacritty: ~/.config/alacritty/alacritty.toml $(_alacritty_config_fault)"
       ok=1
     fi
   fi
@@ -40,9 +81,14 @@ alacritty_install() {
 
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  if [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
+  if _alacritty_config_present; then
     mkdir -p "$HOME/.config/alacritty"
-    molt_link "$user_repo/config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+    # Via molt_install_config, not molt_link, so alacritty.toml.tmpl is possible.
+    # Linking directly meant the liberator only ever looked for the literal
+    # filename: renaming the config to .tmpl made it vanish rather than render.
+    # That is why MOLT_FONT_FAMILY and MOLT_FONT_SIZE are declared in every
+    # instance's vars.sh and read by nothing.
+    molt_install_config "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
   fi
 
   # On Linux/GNOME, add Alacritty to dock favorites if not already there
@@ -71,9 +117,9 @@ alacritty_verify() {
 
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
-  if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/alacritty/alacritty.toml" ]]; then
-    if ! molt_link_healthy "$HOME/.config/alacritty/alacritty.toml"; then
-      molt_error "VERIFY FAIL: ~/.config/alacritty/alacritty.toml $(molt_link_fault "$HOME/.config/alacritty/alacritty.toml")"
+  if [[ -n "$user_repo" ]] && _alacritty_config_present; then
+    if _alacritty_config_wrong; then
+      molt_error "VERIFY FAIL: ~/.config/alacritty/alacritty.toml $(_alacritty_config_fault)"
       errors=1
     fi
   fi
