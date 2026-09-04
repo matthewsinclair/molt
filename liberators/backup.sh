@@ -84,6 +84,14 @@ backup_check() {
   _backup_vars || return 1
   local ok=0
 
+  # A template change alone does not trigger a re-render (molt only installs when
+  # a check fails), so ask for one explicitly rather than run a stale script.
+  if molt_config_stale "config/backup/backup-mount.sh" "$MOLT_BACKUP_SCRIPT" \
+     || molt_config_stale "config/backup/com.${MOLT_USER}.backup-mount.plist" "$_BACKUP_AGENT"; then
+    molt_info "backup: rendered config is older than its template — re-rendering"
+    ok=1
+  fi
+
   if [[ ! -x "$MOLT_BACKUP_SCRIPT" ]]; then
     molt_info "backup: mount script not installed at $MOLT_BACKUP_SCRIPT"
     ok=1

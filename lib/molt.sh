@@ -209,6 +209,29 @@ molt_render() {
   molt_info "Rendered: $template -> $target"
 }
 
+# True when a rendered config is older than the template it came from.
+#
+# molt only re-renders a config when its liberator's check reports not-ok. So a
+# template change on its own never propagates: the check passes, install is
+# skipped, and the sleeve keeps running the previous rendered file while
+# reporting "ok" at every step. That is how gyges spent a morning running a
+# backup agent that pointed at a disk image rhadamanth had already migrated away
+# from, with both machines reporting a clean upgrade.
+#
+# Liberators that render configs should fold this into their check.
+molt_config_stale() {
+  local source="$1"    # relative path, no .tmpl: "config/backup/backup-mount.sh"
+  local target="$2"    # absolute path of the rendered file
+
+  local user_repo template
+  user_repo="$(molt_find_user_repo)" || return 1
+  template="${user_repo}/${source}.tmpl"
+
+  [[ -f "$template" ]] || return 1      # nothing to be stale against
+  [[ -e "$target" ]]   || return 0      # never rendered: trivially stale
+  [[ "$template" -nt "$target" ]]
+}
+
 molt_install_config() {
   local source="$1"    # relative path: "config/ssh/config"
   local target="$2"    # absolute path: "$HOME/.ssh/config"
