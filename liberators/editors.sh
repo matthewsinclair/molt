@@ -77,6 +77,35 @@ editors_doom_profile_stale() {
 }
 
 # major.minor as Doom names it: 31.1 -> 31.1, 31.0.91 -> 31.0
+# emacs-plus built --with-imagemagick hard-links libMagickWand/libMagickCore by
+# exact soname, and imagemagick bumps that soname often and in both directions.
+# Every bump then breaks Emacs at launch with a DYLD "Library not loaded" abort
+# that also takes out `doom sync`, and the only cure is a ~15 minute source
+# rebuild. It has cost this stack four separate mornings.
+#
+# Nothing is gained by it: svg, webp, png, jpeg, tiff and gif all come from
+# librsvg, libtiff and webp directly, so dropping the flag leaves only
+# (image-type-available-p 'imagemagick) nil. The tap deprecates the option too.
+#
+# Warn rather than fail: the fix is a long rebuild the user should choose when to
+# run, and `brew reinstall` will NOT do it -- reinstall silently reuses
+# used_options from INSTALL_RECEIPT.json, so it must be uninstall + install.
+editors_warn_emacs_imagemagick() {
+  [[ "$(molt_platform)" == "macos" ]] || return 0
+
+  local formula app_bin
+  formula="$(editors_emacs_formula)" || return 0
+  app_bin="$(brew --prefix 2>/dev/null)/opt/${formula}/Emacs.app/Contents/MacOS/Emacs"
+  [[ -x "$app_bin" ]] || return 0
+
+  otool -L "$app_bin" 2>/dev/null | grep -qiE 'libMagick(Wand|Core)' || return 0
+
+  molt_warn "editors: ${formula} is linked against ImageMagick — every imagemagick soname bump will break Emacs at launch"
+  molt_warn "  Rebuild without it (reinstall is NOT enough, it reuses the recorded options):"
+  molt_warn "    brew uninstall ${formula} && brew install ${formula} && molt resleeve editors"
+  return 0
+}
+
 editors_emacs_series() {
   emacs --version 2>/dev/null | head -1 | awk '{print $3}' | cut -d. -f1,2
 }
@@ -93,6 +122,8 @@ editors_check() {
     molt_info "editors: neovim not installed"
     ok=1
   fi
+
+  editors_warn_emacs_imagemagick
 
   # Doom Emacs installed?
   if [[ ! -f "$HOME/.config/emacs/bin/doom" ]]; then
