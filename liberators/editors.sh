@@ -293,6 +293,54 @@ editors_maintain() {
   # is the only step that actually reconciles the package set.
   molt_info "Running doom sync -u..."
   "$HOME/.config/emacs/bin/doom" sync -u || molt_warn "doom sync -u had warnings (review above)"
+
+  _editors_warn_stale_straight_links
+}
+
+# Warn when straight.el has left dangling links in the ACTIVE build tree.
+#
+# straight.el adds and updates build-dir entries but does not PRUNE ones whose
+# source has vanished upstream. When a package renames or drops a file, the old
+# symlink survives pointing at nothing, and an autoloads file that still loads
+# it breaks Emacs at boot with a bare (file-missing ...). kovacs hit exactly
+# this: cider renamed cider-repl-history.el -> cider-history.el and dropped
+# cider-jar.el; three links were left behind and Doom would not start.
+#
+# Same shape as the dangling-link bug in molt's own checks -- a step that adds
+# and updates but never removes -- which is worth noting because this one is in
+# somebody else's code. Build-and-link steps that never prune are common, and
+# the failure is always silent until something downstream dereferences.
+#
+# Here rather than in _check because it costs ~60ms and _check runs on every
+# resleeve, while this is only ever caused by the sync immediately above.
+# The remedy is deliberately not automatic: deleting a build dir is destructive
+# and the operator should choose it.
+# MOLT_STRAIGHT_DIR / MOLT_EMACS_VERSION exist so this is testable without a
+# real Emacs tree, and so a test never has to write into the live one.
+_editors_warn_stale_straight_links() {
+  local straight="${MOLT_STRAIGHT_DIR:-$HOME/.config/emacs/.local/straight}"
+  [[ -d "$straight" ]] || return 0
+
+  # Only the build dir for the running Emacs matters. Dirs for older versions
+  # are orphaned and nothing loads them.
+  local version build
+  version="${MOLT_EMACS_VERSION:-$(emacs --batch --eval '(princ emacs-version)' 2>/dev/null)}"
+  [[ -n "$version" ]] || return 0
+  build="$straight/build-${version}"
+  [[ -d "$build" ]] || return 0
+
+  # find -L reports a symlink it cannot resolve as type l. Much cheaper than
+  # -type l -exec test -e, which takes ~5s on a 6000-entry tree.
+  local dangling
+  dangling="$(find -L "$build" -type l 2>/dev/null | head -20)"
+  [[ -n "$dangling" ]] || return 0
+
+  molt_warn "editors: straight.el left dangling links in build-${version}:"
+  printf '%s\n' "$dangling" | sed 's|^|          |'
+  molt_warn "        A package renamed or dropped a file and straight did not prune."
+  molt_warn "        Emacs will fail at boot if an autoloads file still loads one."
+  molt_warn "        Fix: delete the affected package dir under ${build}/ and re-run"
+  molt_warn "        'doom sync', then confirm with an actual batch boot."
 }
 
 editors_verify() {
