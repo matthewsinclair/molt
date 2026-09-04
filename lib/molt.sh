@@ -684,6 +684,43 @@ _upgrade_check_clean() {
     molt_error "$label repo has uncommitted changes. Commit or stash before upgrading."
     return 1
   fi
+
+  _upgrade_warn_untracked "$repo_path" "$label"
+  _upgrade_warn_unpushed "$repo_path" "$label"
+  return 0
+}
+
+# Untracked files are not a reason to refuse an upgrade -- editors and tools drop
+# scratch files in a repo all the time -- but a rendered config that was never
+# added is a real way to lose work, so say so.
+_upgrade_warn_untracked() {
+  local repo_path="$1" label="$2" untracked count
+  untracked="$(git -C "$repo_path" ls-files --others --exclude-standard 2>/dev/null)"
+  [[ -n "$untracked" ]] || return 0
+  count="$(printf '%s\n' "$untracked" | grep -c .)"
+  molt_warn "$label repo has ${count} untracked file(s) — they will NOT reach your other machines:"
+  printf '%s\n' "$untracked" | head -5 | sed 's/^/    /'
+  [[ "$count" -gt 5 ]] && echo "    ... and $((count - 5)) more"
+  return 0
+}
+
+# The one that actually bites. Commits sitting unpushed mean `git pull --ff-only`
+# below cannot fast-forward, so it is skipped with a soft warning, and every other
+# sleeve upgrades to a version that does not contain your fixes -- while reporting
+# success. That is how gyges spent a morning running a backup agent pointing at a
+# path rhadamanth had already moved.
+_upgrade_warn_unpushed() {
+  local repo_path="$1" label="$2" upstream ahead
+  upstream="$(git -C "$repo_path" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)" || {
+    molt_warn "$label repo has no upstream branch — nothing here will ever reach your other machines."
+    return 0
+  }
+  ahead="$(git -C "$repo_path" rev-list --count "${upstream}..HEAD" 2>/dev/null || echo 0)"
+  [[ "$ahead" -gt 0 ]] || return 0
+  molt_warn "$label repo is ${ahead} commit(s) ahead of ${upstream} and NOT pushed:"
+  git -C "$repo_path" log --oneline "${upstream}..HEAD" 2>/dev/null | head -5 | sed 's/^/    /'
+  [[ "$ahead" -gt 5 ]] && echo "    ... and $((ahead - 5)) more"
+  molt_warn "  Push before upgrading your other sleeves, or they will pull an older tree and report success."
   return 0
 }
 
