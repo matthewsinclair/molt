@@ -26,6 +26,18 @@ _desktop_favorites_file() {
   echo "$f"
 }
 
+# True when the favourites file yields no entries.
+#
+# "Present but empty" is almost always a malformed file or a glob that matched
+# nothing, not a deliberate request for a bare dock -- and applying it wipes
+# every pinned app, which the user sees immediately. kovacs demonstrated this
+# for real while testing the empty case: one gsettings set with an empty list
+# emptied the live dock. Recoverable only because the favourites file existed
+# to restore from. Refuse it rather than apply it.
+_desktop_favorites_empty() {
+  [[ "$(_desktop_favorites_wanted "$1")" == "@as []" ]]
+}
+
 # The value gsettings would need, as a GVariant string array literal.
 _desktop_favorites_wanted() {
   local f="$1" line first=1 out="["
@@ -87,12 +99,18 @@ desktop_check() {
   # Dock favourites drift
   local fav_file
   if fav_file="$(_desktop_favorites_file)" && command -v gsettings &>/dev/null; then
-    local want have
-    want="$(_desktop_favorites_wanted "$fav_file")"
-    have="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
-    if [[ "$want" != "$have" ]]; then
-      molt_info "desktop: dock favourites differ from ${fav_file#"$HOME/"}"
-      ok=1
+    if _desktop_favorites_empty "$fav_file"; then
+      molt_warn "desktop: ${fav_file#"$HOME/"} has no entries -- ignoring it."
+      molt_warn "        Applying it would empty the dock, which is far more likely"
+      molt_warn "        to be a malformed file than a deliberate choice."
+    else
+      local want have
+      want="$(_desktop_favorites_wanted "$fav_file")"
+      have="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+      if [[ "$want" != "$have" ]]; then
+        molt_info "desktop: dock favourites differ from ${fav_file#"$HOME/"}"
+        ok=1
+      fi
     fi
   fi
 
@@ -142,7 +160,11 @@ desktop_install() {
   # Dock favourites
   local fav_file
   if fav_file="$(_desktop_favorites_file)"; then
-    if command -v gsettings &>/dev/null; then
+    if _desktop_favorites_empty "$fav_file"; then
+      molt_warn "desktop: refusing to apply ${fav_file#"$HOME/"} -- it has no entries."
+      molt_warn "        That would empty the dock. Fix the file, or delete it if you"
+      molt_warn "        want molt to leave dock favourites alone entirely."
+    elif command -v gsettings &>/dev/null; then
       local want
       want="$(_desktop_favorites_wanted "$fav_file")"
       if gsettings set org.gnome.shell favorite-apps "$want" 2>/dev/null; then
