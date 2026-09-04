@@ -879,11 +879,18 @@ cmd_doctor() {
     echo "[$step/$total] Checking git case sensitivity... ✓"
   else
     echo "[$step/$total] Checking git case sensitivity... ⚠ core.ignorecase=true in ${ignorecase_repos}"
-    echo "         git set this because the filesystem folds case. Harmless while the"
-    echo "         authoritative copy stays here, but a rename that differs only in"
-    echo "         case will not be committed, so a case-sensitive sleeve pulls the"
-    echo "         OLD spelling and every symlink to it dangles. This is what hid the"
-    echo "         repo rename until a Linux sleeve found it."
+    echo "         EXPECTED on macOS -- this is a standing condition, not a defect."
+    echo "         git set it because the statement is true: APFS does fold case."
+    echo "         Do NOT set it false to clear this warning. That makes git assert"
+    echo "         something false about the filesystem, permanently, and git then"
+    echo "         treats case-variant paths as distinct entries the filesystem"
+    echo "         cannot actually hold."
+    echo "         What it costs you: a rename differing ONLY in case will not reach"
+    echo "         the index, so a case-sensitive sleeve pulls the OLD spelling and"
+    echo "         every symlink to it dangles. That is what hid the repo rename."
+    echo "         What to do, at the moment you rename: 'git mv -f Old New', then"
+    echo "         'git status' to confirm the rename is actually staged before you"
+    echo "         commit. Nothing to do otherwise."
     warnings=$((warnings + 1))
   fi
 
@@ -909,8 +916,18 @@ cmd_test() {
     return 1
   fi
 
-  # Run ShellCheck first (if available)
-  _test_shellcheck
+  # Run ShellCheck first (if available).
+  #
+  # set -e would abort here on failure, which exits non-zero but prints no test
+  # output at all -- and an operator who reads "no 'not ok' lines" as success has
+  # been told the suite passed when it never ran. Say so instead. This is the
+  # same absent-signal-read-as-positive shape as launchctl returning 0 for a
+  # missing script and the old mtime check reporting fresh when it could not
+  # tell: the answer in all three is to fail loudly rather than quietly.
+  if ! _test_shellcheck; then
+    molt_error "TESTS DID NOT RUN. ShellCheck failed above; fix those first."
+    return 1
+  fi
 
   if [[ -n "$target" ]]; then
     # Run specific liberator test
@@ -931,6 +948,16 @@ cmd_test() {
     done
     if [[ ${#test_files[@]} -eq 0 ]]; then
       molt_error "No test files found"
+      return 1
+    fi
+    # Files can exist and still declare no tests -- a new .bats file with no
+    # `load` line, or one whose @test blocks were all commented out. bats then
+    # reports "1..0" and exits 0, which reads as a pass.
+    local declared
+    declared="$(grep -c '^[[:space:]]*@test' "${test_files[@]}" 2>/dev/null \
+                | awk -F: '{n += $NF} END {print n + 0}')"
+    if [[ "$declared" -eq 0 ]]; then
+      molt_error "Found ${#test_files[@]} test file(s) but zero @test declarations. Refusing to report a pass."
       return 1
     fi
     bats "${test_files[@]}"
