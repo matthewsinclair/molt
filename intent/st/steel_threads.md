@@ -2,10 +2,10 @@
 
 An index of every steel thread in the project. A steel thread is a self-contained unit of work focused on implementing one piece of functionality.
 
-| ID     | Slug                                       | Status    | Created    | Completed  |
-| ------ | ------------------------------------------ | --------- | ---------- | ---------- |
-| ST0001 | bootstrap                                  | WIP       | 2026-03-07 |            |
-| ST0002 | proper-per-instance-config-of-per-instance | Completed | 2026-03-23 | 2026-03-23 |
+| ID     | Title                                                | Status    | Created    | Completed  |
+| ------ | ---------------------------------------------------- | --------- | ---------- | ---------- |
+| ST0001 | Bootstrap                                            | WIP       | 2026-03-07 |            |
+| ST0002 | Proper per-instance config of per-instance variables | Completed | 2026-03-23 | 2026-03-23 |
 
 ---
 
