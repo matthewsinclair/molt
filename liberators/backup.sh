@@ -208,6 +208,50 @@ _backup_sd_locked() {
   tail -50 "$log" 2>/dev/null | grep -q "daemon is LOCKED"
 }
 
+# Assert SuperDuper's schedule for this sleeve sits inside the window the
+# instance claims. Two failures this catches, both seen on 7 Sep 2026:
+#
+#   - A schedule block that the scheduler ignores. Both NAS jobs carried
+#     {"weeks":[1..5],"minuteOfDay":1380} while the scheduler logged
+#     scheduled=0 and the panel read "not on a schedule". A real schedule also
+#     carries scheduleOn and days, so every backup either machine had ever
+#     completed was triggered by hand.
+#   - A schedule edited months from now with no memory of the other machine.
+#     Attaching an image costs ~260s while another copy is running against the
+#     same NAS, against a 120s budget, so two jobs must not overlap. Windows are
+#     assigned per sleeve and do not intersect; this asserts the local one.
+#
+# It cannot see the other machine, and does not pretend to. It only checks that
+# this sleeve stayed inside the lane it was given.
+_backup_window_check() {
+  local proto="$1" win="${MOLT_BACKUP_WINDOW:-}"
+  [[ -n "$win" ]] || return 0
+  [[ "$win" =~ ^([0-9]{1,2}):([0-9]{2})-([0-9]{1,2}):([0-9]{2})$ ]] || {
+    molt_warn "backup: MOLT_BACKUP_WINDOW is not HH:MM-HH:MM: $win"; return 1; }
+  local lo=$(( 10#${BASH_REMATCH[1]} * 60 + 10#${BASH_REMATCH[2]} ))
+  local hi=$(( 10#${BASH_REMATCH[3]} * 60 + 10#${BASH_REMATCH[4]} ))
+
+  local on min
+  on="$(/usr/bin/plutil -extract schedule.scheduleOn raw -o - "$proto" 2>/dev/null)"
+  min="$(/usr/bin/plutil -extract schedule.minuteOfDay raw -o - "$proto" 2>/dev/null)"
+
+  if [[ "$on" != "true" ]]; then
+    molt_warn "backup: job is not actually scheduled — it only runs when you click Copy Now"
+    molt_warn "        (a schedule block without scheduleOn is inert; the scheduler ignores it)"
+    return 1
+  fi
+  if [[ ! "$min" =~ ^[0-9]+$ ]]; then
+    molt_warn "backup: job is scheduled but carries no start time"; return 1
+  fi
+  if [[ "$min" -lt "$lo" ]] || [[ "$min" -gt "$hi" ]]; then
+    molt_warn "backup: scheduled at $(printf '%02d:%02d' $((min/60)) $((min%60))) — outside this sleeve's window ${win}"
+    molt_warn "        Windows are assigned so the machines never copy at once. See instances/yggdrasil/NOTES.md."
+    return 1
+  fi
+  molt_debug "backup: scheduled $(printf '%02d:%02d' $((min/60)) $((min%60))), inside ${win}"
+  return 0
+}
+
 backup_check() {
   _backup_vars || return 1
   local ok=0
@@ -279,6 +323,7 @@ backup_check() {
     molt_warn "backup: no SuperDuper job has an image on the ${MOLT_BACKUP_SHARE} share"
     ok=1
   fi
+  _backup_window_check "$proto" || ok=1
   rm -f "$proto"
 
   # Predictive: warn while the image is still growing, not once it is fatal.
