@@ -86,8 +86,13 @@ _backup_dialect() {
 _backup_sd_share_bound() {
   local tiles="/Library/Application Support/SuperDuper4/tiles.json"
   [[ -r "$tiles" ]] || return 1
-  /usr/bin/grep -q "$MOLT_BACKUP_SHARE" "$tiles" || return 1
-  ! /usr/bin/grep -q 'hostShareUrl' "$tiles"
+  # A correctly bound image destination carries a diskImage object and no
+  # networkUrl whatsoever. One that has fallen back to the share carries a
+  # networkUrl naming that share. Match on the destination field rather than
+  # the file: tiles.json embeds whole run logs, whose prose says "backup"
+  # constantly, and a Mac can hold several jobs of which only one is armed.
+  /usr/bin/grep -o 'networkUrl[^,}]*' "$tiles" 2>/dev/null \
+    | /usr/bin/grep -q "$MOLT_BACKUP_SHARE"
 }
 
 # SuperDuper 4 will happily show "NEXT TOMORROW AT 03:00" while its daemon is
