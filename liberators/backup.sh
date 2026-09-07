@@ -16,6 +16,18 @@
 #   MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT
 #   MOLT_BACKUP_IMAGE MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG
 
+# --- What "working" actually means -------------------------------------------
+# SuperDuper aborts an image attach after this long. Hardcoded in sdcopyserver;
+# there is no preference key for it.
+BACKUP_ATTACH_BUDGET_S=120
+# Measured cost of enumerating one band over SMB3 to the Synology: 21m28s for
+# 108,413 bands, idle machine, nothing competing. 12ms each.
+BACKUP_MS_PER_BAND=12
+# Warn once a full image would need this share of the budget.
+BACKUP_ATTACH_WARN_PCT=50
+# A successful backup older than this is stale.
+BACKUP_MAX_AGE_DAYS=3
+
 _backup_vars() {
   local repo hostname vars
   repo="$(molt_find_user_repo)" || return 1
@@ -95,6 +107,62 @@ _backup_sd_share_bound() {
     | /usr/bin/grep -q "$MOLT_BACKUP_SHARE"
 }
 
+# Everything above asserts an *input*: share mounted, script installed, agent
+# loaded. None of them imply a backup exists. On 7 Sep 2026 both sleeves printed
+# "backup: ok" for days while pointing at a share that had never held one, and
+# the image that did hold one was deleted without a single check going red. A
+# check that cannot fail is decoration.
+#
+# So ask SuperDuper directly. tiles.json nests a JSON document inside a JSON
+# string; plutil reads both and ships with macOS, so this needs no jq or python.
+
+# Write our tile's proto to $1. Ours is the one whose image lives on our share.
+_backup_sd_tile() {
+  local out="$1" tiles="/Library/Application Support/SuperDuper4/tiles.json"
+  local n i url
+  [[ -r "$tiles" ]] || return 1
+  n="$(/usr/bin/plutil -extract tiles raw -o - "$tiles" 2>/dev/null)" || return 1
+  [[ "$n" =~ ^[0-9]+$ ]] || return 1
+  for (( i = 0; i < n; i++ )); do
+    /usr/bin/plutil -extract "tiles.$i.proto" raw -o - "$tiles" >"$out" 2>/dev/null || continue
+    url="$(/usr/bin/plutil -extract destination.diskImage.hostShareUrl raw -o - "$out" 2>/dev/null)"
+    [[ "$url" == */"$MOLT_BACKUP_SHARE" ]] && return 0
+  done
+  return 1
+}
+
+# Most recent run: _SD_OUTCOME, _SD_AGE_DAYS, _SD_BYTES. Absent history is not
+# an error -- a freshly created job has none until its first copy finishes.
+_backup_last_run() {
+  local proto="$1" n last ended
+  _SD_OUTCOME="" _SD_AGE_DAYS="" _SD_BYTES=""
+  n="$(/usr/bin/plutil -extract recentRuns raw -o - "$proto" 2>/dev/null)" || return 1
+  [[ "$n" =~ ^[0-9]+$ ]] && [[ "$n" -gt 0 ]] || return 1
+  last=$((n - 1))
+  _SD_OUTCOME="$(/usr/bin/plutil -extract "recentRuns.$last.outcome" raw -o - "$proto" 2>/dev/null)"
+  _SD_BYTES="$(/usr/bin/plutil -extract "recentRuns.$last.bytesCopied" raw -o - "$proto" 2>/dev/null)"
+  ended="$(/usr/bin/plutil -extract "recentRuns.$last.endedAtUnixNanos" raw -o - "$proto" 2>/dev/null)"
+  [[ "$ended" =~ ^[0-9]+$ ]] && _SD_AGE_DAYS=$(( ( $(date +%s) - ended / 1000000000 ) / 86400 ))
+  return 0
+}
+
+# How long a *full* image would take to attach. Deliberately does NOT count the
+# bands directory: enumerating it is the very operation that takes 21 minutes on
+# a sick image, so the check would be slowest exactly when things are worst.
+# band-size and size are two small reads from Info.plist, and the ceiling is
+# what matters anyway -- this warns while the image is still growing, not after.
+_backup_attach_projection() {
+  local info="$MOLT_BACKUP_IMAGE/Info.plist" bs sz
+  _BACKUP_WORST_BANDS="" _BACKUP_WORST_S=""
+  [[ -r "$info" ]] || return 1
+  bs="$(/usr/bin/plutil -extract band-size raw -o - "$info" 2>/dev/null)"
+  sz="$(/usr/bin/plutil -extract size raw -o - "$info" 2>/dev/null)"
+  [[ "$bs" =~ ^[0-9]+$ ]] && [[ "$sz" =~ ^[0-9]+$ ]] && [[ "$bs" -gt 0 ]] || return 1
+  _BACKUP_WORST_BANDS=$(( sz / bs ))
+  _BACKUP_WORST_S=$(( _BACKUP_WORST_BANDS * BACKUP_MS_PER_BAND / 1000 ))
+  return 0
+}
+
 # SuperDuper 4 will happily show "NEXT TOMORROW AT 03:00" while its daemon is
 # locked and skipping every single fire. The only honest source is the log.
 _backup_sd_locked() {
@@ -156,6 +224,52 @@ backup_check() {
     ok=1
   elif _backup_attached; then
     molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper is probably copying)"
+  fi
+
+  # The question the old checks never asked: did a backup actually happen?
+  local proto; proto="$(mktemp -t molt-sdtile)"
+  if _backup_sd_tile "$proto"; then
+    if _backup_last_run "$proto"; then
+      case "$_SD_OUTCOME" in
+        OUTCOME_SUCCEEDED)
+          if [[ "$_SD_AGE_DAYS" -gt "$BACKUP_MAX_AGE_DAYS" ]]; then
+            molt_warn "backup: last successful copy was ${_SD_AGE_DAYS} days ago (want <= ${BACKUP_MAX_AGE_DAYS})"
+            ok=1
+          else
+            molt_info "backup: last copy succeeded ${_SD_AGE_DAYS} day(s) ago$( [[ -n "$_SD_BYTES" ]] && printf ', %s bytes' "$_SD_BYTES" )"
+          fi ;;
+        OUTCOME_CANCELLED)
+          molt_warn "backup: last copy was cancelled ${_SD_AGE_DAYS} day(s) ago — no complete backup from it"
+          ok=1 ;;
+        *)
+          molt_error "backup: last copy did NOT succeed (${_SD_OUTCOME:-unknown}), ${_SD_AGE_DAYS} day(s) ago"
+          ok=1 ;;
+      esac
+    else
+      # Correctly configured but never run is still "you have no backup".
+      molt_warn "backup: SuperDuper job is bound correctly but has never completed a copy — no backup exists yet"
+      ok=1
+    fi
+  else
+    molt_warn "backup: no SuperDuper job has an image on the ${MOLT_BACKUP_SHARE} share"
+    ok=1
+  fi
+  rm -f "$proto"
+
+  # Predictive: warn while the image is still growing, not once it is fatal.
+  if _backup_attach_projection; then
+    local pct=$(( _BACKUP_WORST_S * 100 / BACKUP_ATTACH_BUDGET_S ))
+    if [[ "$pct" -ge 100 ]]; then
+      molt_error "backup: a full image needs ~${_BACKUP_WORST_S}s to attach (${_BACKUP_WORST_BANDS} bands)"
+      molt_error "        SuperDuper gives up at ${BACKUP_ATTACH_BUDGET_S}s, then rebinds to the share and deletes the image."
+      molt_error "        Rebuild it with a larger sparse-band-size. See instances/yggdrasil/NOTES.md."
+      ok=1
+    elif [[ "$pct" -ge "$BACKUP_ATTACH_WARN_PCT" ]]; then
+      molt_warn "backup: a full image would need ~${_BACKUP_WORST_S}s of SuperDuper's ${BACKUP_ATTACH_BUDGET_S}s attach budget (${pct}%)"
+      ok=1
+    else
+      molt_debug "backup: worst-case attach ~${_BACKUP_WORST_S}s of ${BACKUP_ATTACH_BUDGET_S}s (${_BACKUP_WORST_BANDS} bands)"
+    fi
   fi
 
   if _backup_sd_share_bound; then
