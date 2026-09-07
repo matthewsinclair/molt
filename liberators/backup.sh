@@ -25,11 +25,31 @@
 # SuperDuper aborts an image attach after this long. Hardcoded in sdcopyserver;
 # there is no preference key for it.
 BACKUP_ATTACH_BUDGET_S=120
-# Measured cost of enumerating one band over SMB3 to the Synology: 21m28s for
-# 108,413 bands, idle machine, nothing competing. 12ms each.
-BACKUP_MS_PER_BAND=12
+# Cost of one band during an attach, over SMB3 to the Synology. This is NOT a
+# constant: it rises with band size, so a single figure under-reports badly on
+# large-band images. Two measurements, same NAS, same wire:
+#
+#     8 MB bands   108,413 bands   1288s   ->  11.9 ms/band
+#     1 GiB bands      849 bands     70s   ->  78   ms/band
+#
+# 128x the band size costs 6.5x per band. Larger bands still win by a mile (66s
+# against 1288s for the same 850 GB) but nowhere near the 128x that band count
+# alone suggests, and assuming they do is how you conclude an image is at 10% of
+# budget when it is at 59%. Bracketed rather than fitted: two points do not
+# justify a curve, and the brackets round the wrong way on purpose.
+# Re-derive with: time hdiutil imageinfo <image>, divided by its band count.
+_backup_ms_per_band() {
+  local bs="$1"
+  if   [[ "$bs" -le 16777216   ]]; then echo 12    # <= 16 MB
+  elif [[ "$bs" -le 268435456  ]]; then echo 40    # <= 256 MB
+  elif [[ "$bs" -le 1073741824 ]]; then echo 80    # <= 1 GiB
+  else                                  echo 105   # larger
+  fi
+}
+# Fixed cost of the attach itself, measured on an empty image: ~4s.
+BACKUP_ATTACH_FIXED_S=4
 # Warn once a full image would need this share of the budget.
-BACKUP_ATTACH_WARN_PCT=50
+BACKUP_ATTACH_WARN_PCT=75
 # A successful backup older than this is stale.
 BACKUP_MAX_AGE_DAYS=3
 
@@ -160,8 +180,23 @@ _backup_attach_projection() {
   bs="$(/usr/bin/plutil -extract band-size raw -o - "$info" 2>/dev/null)"
   sz="$(/usr/bin/plutil -extract size raw -o - "$info" 2>/dev/null)"
   [[ "$bs" =~ ^[0-9]+$ ]] && [[ "$sz" =~ ^[0-9]+$ ]] && [[ "$bs" -gt 0 ]] || return 1
+  # Project from what the source actually holds, not from the image ceiling.
+  # SuperDuper sizes the image to the whole source container, so on a machine
+  # whose disk is largely empty the ceiling is wildly pessimistic -- rhadamanth's
+  # image can hold 3,722 GiB but its source has 1.38 TB in it, and projecting the
+  # ceiling would keep it permanently red over bands that will never exist.
+  # Fall back to the ceiling when the source cannot be read.
+  local used total free
+  total="$(/usr/sbin/diskutil info / 2>/dev/null | /usr/bin/awk -F'[()]' '/Container Total Space/{print $2}' | /usr/bin/awk '{print $1}')"
+  free="$(/usr/sbin/diskutil info / 2>/dev/null | /usr/bin/awk -F'[()]' '/Container Free Space/{print $2}' | /usr/bin/awk '{print $1}')"
+  if [[ "$total" =~ ^[0-9]+$ ]] && [[ "$free" =~ ^[0-9]+$ ]] && [[ "$total" -gt "$free" ]]; then
+    used=$(( total - free ))
+    [[ "$used" -lt "$sz" ]] && sz="$used"
+  fi
+
   _BACKUP_WORST_BANDS=$(( sz / bs ))
-  _BACKUP_WORST_S=$(( _BACKUP_WORST_BANDS * BACKUP_MS_PER_BAND / 1000 ))
+  local per; per="$(_backup_ms_per_band "$bs")"
+  _BACKUP_WORST_S=$(( BACKUP_ATTACH_FIXED_S + _BACKUP_WORST_BANDS * per / 1000 ))
   return 0
 }
 
