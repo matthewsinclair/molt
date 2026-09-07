@@ -293,7 +293,16 @@ backup_check() {
       molt_warn "backup: a full image would need ~${_BACKUP_WORST_S}s of SuperDuper's ${BACKUP_ATTACH_BUDGET_S}s attach budget (${pct}%)"
       ok=1
     else
-      molt_debug "backup: worst-case attach ~${_BACKUP_WORST_S}s of ${BACKUP_ATTACH_BUDGET_S}s (${_BACKUP_WORST_BANDS} bands)"
+      molt_debug "backup: worst-case attach ~${_BACKUP_WORST_S}s of ${BACKUP_ATTACH_BUDGET_S}s (${_BACKUP_WORST_BANDS} bands, NAS idle)"
+    fi
+    # The figure above is an idle floor, not a guarantee. Measured on the same
+    # image minutes apart: 70s with the NAS quiet, 268s while the other Mac was
+    # mid-copy -- 78ms against 316ms per band, roughly 4x, and 223% of the
+    # budget. Nothing here can see the other machine, so this cannot be checked
+    # from one sleeve; it is an operational rule (never let two copies overlap)
+    # recorded in instances/yggdrasil/NOTES.md and in each share's README.
+    if [[ $(( _BACKUP_WORST_S * 4 )) -ge "$BACKUP_ATTACH_BUDGET_S" ]]; then
+      molt_debug "backup: would exceed the attach budget if another copy ran concurrently (~$(( _BACKUP_WORST_S * 4 ))s) — do not overlap the two machines"
     fi
   fi
 
