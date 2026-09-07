@@ -172,8 +172,27 @@ load "test_helper.bash"
 
 # --- Digest covers every input the render depends on ---
 
+# molt_config_digest RESOLVES vars.sh THROUGH molt_find_user_repo and returns 1
+# when it cannot find one -- correctly, because a digest taken without vars.sh
+# would silently omit an input the rendered result depends on, which is the very
+# hole the digest exists to close.
+#
+# The two arms below assert on that digest, and originally supplied no user repo.
+# So they read the DEVELOPER'S machine -- ~/Devel/prj/Molt-$(whoami)/config, which
+# happens to exist there -- and passed, while failing on every CI runner from the
+# moment they landed. Green where it was written, red where it mattered, for three
+# days and twelve runs before anyone looked.
+#
+# Same idiom as test/instances.bats:41: point the search paths at a repo the test
+# builds itself.
+_use_digest_test_repo() {
+    mkdir -p "$BATS_TEST_TMPDIR/molt-testuser/config"
+    MOLT_USER_REPO_SEARCH_PATHS=("$BATS_TEST_TMPDIR/molt-testuser")
+}
+
 @test "molt_config_digest changes when an extra input changes" {
     load_molt_libs
+    _use_digest_test_repo
     local d="$BATS_TEST_TMPDIR/dg"
     mkdir -p "$d"
     printf 'template body\n' > "$d/config.tmpl"
@@ -197,6 +216,7 @@ load "test_helper.bash"
 
 @test "molt_config_digest is stable regardless of extra-input order" {
     load_molt_libs
+    _use_digest_test_repo
     local d="$BATS_TEST_TMPDIR/dg2"
     mkdir -p "$d"
     printf 'template body\n' > "$d/config.tmpl"
