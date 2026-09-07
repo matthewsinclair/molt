@@ -72,6 +72,24 @@ _backup_dialect() {
   /usr/bin/smbutil statshares -a 2>/dev/null | /usr/bin/awk '/SMB_VERSION/{print $2; exit}'
 }
 
+# The destination is not a stored path. SuperDuper re-derives it on every run,
+# and deriving an image destination means attaching it, which means hdiutil
+# imageinfo -- an operation whose cost grows with the band count, against a
+# hardcoded 120s budget. When that budget blows, SuperDuper does not stop: it
+# falls back to the nearest matching volume, which is the SHARE the image lives
+# on, rewrites the tile and drops the diskImage binding entirely. The next Smart
+# Update then runs --delete against the share root and deletes the sparsebundle,
+# because the sparsebundle is not part of the source.
+#
+# That is not a hypothetical. It destroyed the gyges backup on 7 Sep 2026.
+# A job that names our share but carries no image binding is armed, not broken.
+_backup_sd_share_bound() {
+  local tiles="/Library/Application Support/SuperDuper4/tiles.json"
+  [[ -r "$tiles" ]] || return 1
+  /usr/bin/grep -q "$MOLT_BACKUP_SHARE" "$tiles" || return 1
+  ! /usr/bin/grep -q 'hostShareUrl' "$tiles"
+}
+
 # SuperDuper 4 will happily show "NEXT TOMORROW AT 03:00" while its daemon is
 # locked and skipping every single fire. The only honest source is the log.
 _backup_sd_locked() {
@@ -129,9 +147,17 @@ backup_check() {
   # The image is SuperDuper's to create and mount. Absent means "not set up yet",
   # attached means "a copy is probably running" -- neither is a fault of ours.
   if ! _backup_probe "$MOLT_BACKUP_IMAGE"; then
-    molt_info "backup: no image at ${MOLT_BACKUP_IMAGE} — point the job at the ${MOLT_BACKUP_SHARE} share in SuperDuper and use 'Use an Image...'"
+    molt_warn "backup: no image at ${MOLT_BACKUP_IMAGE} — point the job at the ${MOLT_BACKUP_SHARE} share in SuperDuper and use 'Use an Image...'"
+    ok=1
   elif _backup_attached; then
     molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper is probably copying)"
+  fi
+
+  if _backup_sd_share_bound; then
+    molt_error "backup: SuperDuper's job names ${MOLT_BACKUP_SHARE} but has NO disk-image binding."
+    molt_error "        Running it would Smart Update into the share root and DELETE the sparsebundle."
+    molt_error "        Fix: re-point the job at the ${MOLT_BACKUP_SHARE} share, then take its 'Use an Image...' button."
+    ok=1
   fi
 
   if _backup_sd_locked; then
