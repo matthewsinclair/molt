@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
-# backup.sh — Liberator: NAS backup share and disk image
-# Frees you from hand-mounting a share before a backup can run.
+# backup.sh — Liberator: verify the NAS backup is real
 #
-# This liberator does not perform backups. SuperDuper does that. What it owns is
-# making the destination *reachable*: the SMB share mounted, healthy, speaking a
-# sane dialect, with the .asif visible on it — and reporting honestly when it is not.
+# This liberator OBSERVES. It configures nothing, mounts nothing, and installs
+# nothing, because there is nothing here it can usefully own.
 #
-# It deliberately does NOT create, attach or touch the image, and treats an absent
-# or unattached image as normal. SuperDuper creates <hostname>.sparsebundle itself
-# when you point a job at the SMB share and take its "Use an Image..." button, then
-# attaches and detaches it around every copy. Anything we attach ourselves is at
-# best useless and at worst poisons the job's destination binding permanently.
+# It used to render a mount script and a LaunchAgent that mounted the SMB share
+# on every network change. All three were deleted on 7 Sep 2026. SuperDuper
+# mounts the share itself from the hostShareUrl in its own job definition, so
+# that machinery duplicated work already being done — and it was worse than
+# redundant. A share mounted for no reason is another volume for SuperDuper's
+# destination resolver to fall back onto when it cannot open the image, and on
+# 7 Sep it did exactly that: fell back onto an unrelated share and began a
+# Smart Update into its root.
+#
+# What is left is the only thing molt can honestly assert about a backup that
+# lives inside a GUI app's private state: whether one actually happened, whether
+# the job is still bound to the image rather than the share, and whether the
+# next attach will fit inside SuperDuper's budget. See instances/yggdrasil/NOTES.md.
 #
 # Requires these in the instance's vars.sh:
-#   MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT
-#   MOLT_BACKUP_IMAGE MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG
+#   MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT MOLT_BACKUP_IMAGE
 
 # --- What "working" actually means -------------------------------------------
 # SuperDuper aborts an image attach after this long. Hardcoded in sdcopyserver;
@@ -38,16 +43,13 @@ _backup_vars() {
   source "$vars"
   local missing=()
   local v
-  for v in MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT \
-           MOLT_BACKUP_IMAGE MOLT_BACKUP_SCRIPT MOLT_BACKUP_LOG; do
+  for v in MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT MOLT_BACKUP_IMAGE; do
     [[ -n "${!v:-}" ]] || missing+=("$v")
   done
   if [[ ${#missing[@]} -gt 0 ]]; then
     molt_error "backup: vars.sh for $hostname is missing: ${missing[*]}"
     return 1
   fi
-  _BACKUP_AGENT="$HOME/Library/LaunchAgents/com.${MOLT_USER}.backup-mount.plist"
-  _BACKUP_LABEL="com.${MOLT_USER}.backup-mount"
 }
 
 # Is the NAS reachable on the SMB port? A laptop away from home is a normal
@@ -175,55 +177,43 @@ backup_check() {
   _backup_vars || return 1
   local ok=0
 
-  # A change to the template OR to instance vars does not trigger a re-render on
-  # its own (molt only installs when a check fails), so ask for one explicitly
-  # rather than run a stale script.
-  if molt_config_stale "config/backup/backup-mount.sh" "$MOLT_BACKUP_SCRIPT" \
-     || molt_config_stale "config/backup/com.${MOLT_USER}.backup-mount.plist" "$_BACKUP_AGENT"; then
-    molt_info "backup: rendered config differs from its template or instance vars — re-rendering"
-    ok=1
-  fi
-
-  if [[ ! -x "$MOLT_BACKUP_SCRIPT" ]]; then
-    molt_info "backup: mount script not installed at $MOLT_BACKUP_SCRIPT"
-    ok=1
-  fi
-  if [[ ! -f "$_BACKUP_AGENT" ]]; then
-    molt_info "backup: launch agent not installed at $_BACKUP_AGENT"
-    ok=1
-  fi
-
   if ! _backup_home; then
     molt_info "backup: ${MOLT_BACKUP_HOST} not reachable — away from home, nothing to check"
     return $ok
   fi
 
+  # An unmounted share is no longer a fault: nothing here mounts it any more,
+  # and SuperDuper mounts it itself when a copy runs. It only costs us the two
+  # checks that have to read the image, so say which were skipped and move on.
+  # Everything derived from tiles.json is local and runs either way.
+  local share_readable=0
   if _backup_mounted; then
-    if ! _backup_probe "$MOLT_BACKUP_MOUNT"; then
-      molt_info "backup: ${MOLT_BACKUP_MOUNT} is mounted but not answering (run: molt maintain backup)"
+    if _backup_probe "$MOLT_BACKUP_MOUNT"; then
+      share_readable=1
+    else
+      molt_warn "backup: ${MOLT_BACKUP_MOUNT} is mounted but not answering (run: molt maintain backup)"
       ok=1
     fi
   else
-    molt_info "backup: ${MOLT_BACKUP_MOUNT} not mounted"
-    ok=1
+    molt_debug "backup: ${MOLT_BACKUP_MOUNT} not mounted — image checks skipped (SuperDuper mounts it when it runs)"
   fi
 
-  local dialect
-  dialect="$(_backup_dialect)"
-  case "${dialect:-}" in
-    SMB_3*) molt_debug "backup: dialect $dialect" ;;
-    "")     : ;;
-    *)      molt_warn "backup: ${MOLT_BACKUP_HOST} negotiated $dialect, expected SMB_3.x — check DSM SMB settings"
-            ok=1 ;;
-  esac
+  if [[ "$share_readable" -eq 1 ]]; then
+    local dialect
+    dialect="$(_backup_dialect)"
+    case "${dialect:-}" in
+      SMB_3*) molt_debug "backup: dialect $dialect" ;;
+      "")     : ;;
+      *)      molt_warn "backup: ${MOLT_BACKUP_HOST} negotiated $dialect, expected SMB_3.x — check DSM SMB settings"
+              ok=1 ;;
+    esac
 
-  # The image is SuperDuper's to create and mount. Absent means "not set up yet",
-  # attached means "a copy is probably running" -- neither is a fault of ours.
-  if ! _backup_probe "$MOLT_BACKUP_IMAGE"; then
-    molt_warn "backup: no image at ${MOLT_BACKUP_IMAGE} — point the job at the ${MOLT_BACKUP_SHARE} share in SuperDuper and use 'Use an Image...'"
-    ok=1
-  elif _backup_attached; then
-    molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper is probably copying)"
+    if ! _backup_probe "$MOLT_BACKUP_IMAGE"; then
+      molt_warn "backup: no image at ${MOLT_BACKUP_IMAGE} — point the job at the ${MOLT_BACKUP_SHARE} share in SuperDuper and use 'Use an Image...'"
+      ok=1
+    elif _backup_attached; then
+      molt_debug "backup: ${MOLT_BACKUP_IMAGE} is attached (SuperDuper is probably copying)"
+    fi
   fi
 
   # The question the old checks never asked: did a backup actually happen?
@@ -257,7 +247,7 @@ backup_check() {
   rm -f "$proto"
 
   # Predictive: warn while the image is still growing, not once it is fatal.
-  if _backup_attach_projection; then
+  if [[ "$share_readable" -eq 1 ]] && _backup_attach_projection; then
     local pct=$(( _BACKUP_WORST_S * 100 / BACKUP_ATTACH_BUDGET_S ))
     if [[ "$pct" -ge 100 ]]; then
       molt_error "backup: a full image needs ~${_BACKUP_WORST_S}s to attach (${_BACKUP_WORST_BANDS} bands)"
@@ -287,63 +277,81 @@ backup_check() {
   return $ok
 }
 
+# Nothing to install. Kept because resleeve calls _install whenever _check
+# fails, and a red check here is a fact about the backup -- no recent copy, a
+# job bound to the share, an image that can no longer be attached in time --
+# not a missing file that molt can put back. SuperDuper's destination binding
+# can only be set from its UI, via the "Use an Image..." button; anything
+# written directly into tiles.json is silently discarded by the daemon.
 backup_install() {
   _backup_vars || return 1
-
-  molt_install_config "config/backup/backup-mount.sh" "$MOLT_BACKUP_SCRIPT" || return 1
-  chmod 755 "$MOLT_BACKUP_SCRIPT"
-
-  mkdir -p "$(dirname "$MOLT_BACKUP_LOG")"
-  mkdir -p "$HOME/Library/LaunchAgents"
-  molt_install_config "config/backup/com.${MOLT_USER}.backup-mount.plist" "$_BACKUP_AGENT" || return 1
-
-  # Reload so an edited plist actually takes effect.
-  launchctl bootout "gui/$(id -u)/${_BACKUP_LABEL}" 2>/dev/null
-  if launchctl bootstrap "gui/$(id -u)" "$_BACKUP_AGENT" 2>/dev/null; then
-    molt_info "Loaded launch agent: ${_BACKUP_LABEL}"
-  else
-    molt_warn "backup: could not bootstrap ${_BACKUP_LABEL} (already loaded?)"
-  fi
-
-  molt_info "Liberator complete: backup"
+  molt_info "backup: nothing to install — this liberator verifies, it does not configure."
+  molt_info "        A warning above is about the backup itself. See instances/yggdrasil/NOTES.md."
+  return 0
 }
 
 backup_verify() {
   _backup_vars || return 1
   local errors=0
 
-  [[ -x "$MOLT_BACKUP_SCRIPT" ]] || { molt_error "VERIFY FAIL: $MOLT_BACKUP_SCRIPT missing or not executable"; errors=1; }
-  [[ -f "$_BACKUP_AGENT" ]]      || { molt_error "VERIFY FAIL: $_BACKUP_AGENT missing"; errors=1; }
-
-  launchctl print "gui/$(id -u)/${_BACKUP_LABEL}" >/dev/null 2>&1 \
-    || { molt_error "VERIFY FAIL: launch agent ${_BACKUP_LABEL} not loaded"; errors=1; }
-
   if ! _backup_home; then
-    # Being away is not a verification failure. The installed pieces are what
-    # this hook is entitled to assert on.
-    molt_info "backup: away from ${MOLT_BACKUP_HOST}; skipped share and image checks"
-    [[ $errors -eq 0 ]] && molt_info "Verified: backup liberator installed (share checks deferred)"
-    return $errors
+    molt_info "backup: away from ${MOLT_BACKUP_HOST}; share and image checks skipped"
+    return 0
   fi
 
-  _backup_mounted || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} not mounted"; errors=1; }
-  _backup_probe "$MOLT_BACKUP_MOUNT" || { molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} not readable"; errors=1; }
-  # Not a verification failure: the image belongs to SuperDuper and legitimately
-  # does not exist until a job has been pointed at the share.
-  _backup_probe "$MOLT_BACKUP_IMAGE" || molt_info "backup: no image at ${MOLT_BACKUP_IMAGE} yet (SuperDuper creates it)"
+  # Bound to the image, not the share. This is the one that matters: a
+  # share-bound job does not merely fail, it Smart Updates into the share root
+  # and deletes the sparsebundle, because the sparsebundle is not on the source.
+  if _backup_sd_share_bound; then
+    molt_error "VERIFY FAIL: SuperDuper's job names ${MOLT_BACKUP_SHARE} with no disk-image binding"
+    errors=1
+  fi
 
-  local dialect
-  dialect="$(_backup_dialect)"
-  case "${dialect:-}" in
-    SMB_3*) ;;
-    *) molt_error "VERIFY FAIL: expected SMB_3.x, got ${dialect:-unknown}"; errors=1 ;;
-  esac
+  local proto; proto="$(mktemp -t molt-sdtile)"
+  if _backup_sd_tile "$proto"; then
+    if _backup_last_run "$proto"; then
+      case "$_SD_OUTCOME" in
+        OUTCOME_SUCCEEDED)
+          if [[ "$_SD_AGE_DAYS" -gt "$BACKUP_MAX_AGE_DAYS" ]]; then
+            molt_error "VERIFY FAIL: last successful copy was ${_SD_AGE_DAYS} days ago"
+            errors=1
+          fi ;;
+        *) molt_error "VERIFY FAIL: last copy did not succeed (${_SD_OUTCOME:-unknown})"; errors=1 ;;
+      esac
+    else
+      molt_error "VERIFY FAIL: SuperDuper job has never completed a copy — no backup exists"
+      errors=1
+    fi
+  else
+    molt_error "VERIFY FAIL: no SuperDuper job has an image on the ${MOLT_BACKUP_SHARE} share"
+    errors=1
+  fi
+  rm -f "$proto"
 
-  [[ $errors -eq 0 ]] && molt_info "Verified: backup liberator is fully operational"
+  if _backup_mounted && _backup_probe "$MOLT_BACKUP_MOUNT"; then
+    local dialect; dialect="$(_backup_dialect)"
+    case "${dialect:-}" in
+      SMB_3*) ;;
+      *) molt_error "VERIFY FAIL: expected SMB_3.x, got ${dialect:-unknown}"; errors=1 ;;
+    esac
+    if _backup_attach_projection \
+       && [[ $(( _BACKUP_WORST_S * 100 / BACKUP_ATTACH_BUDGET_S )) -ge 100 ]]; then
+      molt_error "VERIFY FAIL: a full image needs ~${_BACKUP_WORST_S}s to attach, budget is ${BACKUP_ATTACH_BUDGET_S}s"
+      errors=1
+    fi
+  else
+    molt_info "backup: ${MOLT_BACKUP_MOUNT} not mounted; dialect and attach checks skipped"
+  fi
+
+  [[ $errors -eq 0 ]] && molt_info "Verified: a recent backup exists and the job is bound to its image"
   return $errors
 }
 
-# Force a clean session. Use when the share has wedged.
+# Force a clean session when the share has wedged. Unmount only -- we no longer
+# remount, because SuperDuper does that itself from its own hostShareUrl, and
+# leaving a share mounted for no reason is what gave its resolver somewhere
+# wrong to fall back to.
+#
 # We never detach the image: if it is open, SuperDuper is very likely copying
 # into it, and pulling it out from under a running copy is how you corrupt a
 # backup. An open image also pins the mount, so there is nothing safe to do.
@@ -365,13 +373,16 @@ backup_maintain() {
     return 1
   fi
 
-  molt_info "Rebuilding the ${MOLT_BACKUP_HOST} session..."
   if _backup_mounted; then
-    /sbin/umount -f "$MOLT_BACKUP_MOUNT" >/dev/null 2>&1 \
-      && molt_info "  unmounted ${MOLT_BACKUP_MOUNT}"
+    if /sbin/umount -f "$MOLT_BACKUP_MOUNT" >/dev/null 2>&1; then
+      molt_info "backup: unmounted ${MOLT_BACKUP_MOUNT} — SuperDuper will remount it on its next copy"
+    else
+      molt_error "backup: could not unmount ${MOLT_BACKUP_MOUNT}"
+      return 1
+    fi
+  else
+    molt_info "backup: ${MOLT_BACKUP_MOUNT} is not mounted — nothing to repair"
   fi
 
-  "$MOLT_BACKUP_SCRIPT" || { molt_error "backup: remount failed — see $MOLT_BACKUP_LOG"; return 1; }
-  molt_info "Session rebuilt. $(_backup_dialect)"
   backup_check
 }
