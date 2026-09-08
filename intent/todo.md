@@ -18,6 +18,8 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
   - [x] 11: Inline upgrade (molt upgrade)
   - [x] 12: Emacs macOS keybindings on Linux
   - [x] 13: Tiling window manager (GNOME 46)
+  - [x] 14: Doctor names what it did not install
+  - [x] 15: Version-agnostic intent liberator
 
 ## TODO
 
