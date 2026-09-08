@@ -1,12 +1,24 @@
 ---
-verblock: "04 Sep 2026:v0.17: Matthew Sinclair - fragment staleness closed; font + fonts + authorized_keys decisions open"
+verblock: "08 Sep 2026:v0.18: Matthew Sinclair - ST0001 closed after six months; honest-instrument sweep; ST0003 opened"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** The kovacs decoupling is complete and everything from this session is on `upstream/main` (Molt `6f94807`, Molt-matts `d7d1e66`).
+**Nothing in flight.**
+
+The 8 Sep session was a sweep for one defect class: **an instrument that reports success while the condition it names is false.** Six instances, five closed:
+
+- `molt doctor` check 6 printed a green tick for every ratio, so `0/16` rendered byte-identical to `16/16`, and it discarded the reason its own check function had already printed. Now warns, names the liberators, prints the reason. It immediately surfaced a `15/16` that had been invisible.
+- `intent_verify` passed on exactly the mismatched link `intent_check` warns about -- it asked whether the link resolved, never whether it resolved to what the liberator installs.
+- The `intent` liberator found the Intent repo by probing for `bin/intent`, so Intent's pending v2-script deletion would have made Molt tell you to clone a repo sitting on disk. It now identifies a repo by being one.
+- Nothing asserted that the font a config names is one the machine can resolve; fontconfig falls back silently, so the terminal opens fine minus its glyphs. New doctor check 13. It deliberately does not use `fc-match`, which returns Verdana for a font that does not exist and therefore cannot express absence at all.
+- `e` in Molt-matts had discarded its filename argument since it was written, because an alias appends arguments after a body ending in `&`.
+
+The sixth is open and escalated: **`backup_verify` returns PASS having asserted nothing** when away from home or when the share is unmounted, and the backup liberator has **zero tests** across 477 lines and 17 functions. Those are one finding, not two.
+
+Everything from this session is on `upstream/main` and the Dropbox mirror.
 
 kovacs now has its own clones on local ext4 with conventional names (`Molt`, `Molt-matts`, `Utilz`); nothing of rhadamanth's tree reaches it except `~/mac`, browse-only. All three sleeves report doctor green (11 checks) and resleeve is idempotent on kovacs across three consecutive runs.
 
@@ -20,7 +32,10 @@ Worth keeping one sleeve on a case-sensitive filesystem permanently for exactly 
 
 ## Active Steel Threads
 
-- ST0001: Bootstrap -- WIP. WP-04 (document Phase 1 bootstrap steps) and WP-07 (reproducible VM build) are open; the other eleven are done.
+- **ST0001: Bootstrap -- COMPLETED 2026-09-08**, six months after it opened. 15/15 work packages, 7/7 acceptance criteria. Both "open" packages turned out to be largely already built, which is the thing worth remembering: a `Not Started` status records what someone last typed, not what exists.
+  - WP-07 was HALF met. `molt upgrade` exists, runs identically on the kovacs VM sleeve and both Macs, and is idempotent across consecutive dry-runs. But there is no VM build spec, no one-command build, and the v0.1.1 release carries zero assets. Closing it whole would have been false, so it was split: the self-upgrading half is AC002-004 here with evidence; the VM-build half is now **ST0003**, at Triage with its own unsatisfied 3-row contract.
+  - WP-04's deliverable existed since 16 June and was three months stale -- it asserted alacritty was a symlink at JetBrainsMono 14pt when it is a rendered template at MesloLGS 11. Brought current, and it now names the 12 of 23 liberators it does NOT cover rather than implying completeness.
+- ST0003: Reproducible VM build and release artifact -- Triage. Carries what WP-07 never delivered.
 - ST0002: Proper per-instance config of per-instance variables -- Completed 2026-03-23.
 
 ## Upcoming Work
@@ -31,12 +46,17 @@ Opened by this session, all verified on at least one sleeve:
 - **The `intent` liberator's model breaks when Intent arrives via brew.** Intent is 3.0.0 on rhadamanth and 2.6.0 on gyges and kovacs; the v2 -> v3 upgrade there is deliberately deferred and will come from brew rather than a source build. The liberator assumes a source checkout: it finds `${MOLT_INTENT_HOME}/bin/intent` and symlinks it into `~/bin`. A brew install lands at `/opt/homebrew/bin/intent`, which sits at PATH position 2 and therefore wins over both `~/.local/bin` (18) and `~/bin` (20). The liberator needs rewriting rather than patching -- its whole model is "find a checkout, link its dispatcher", and a brew-installed tool has no checkout to find. Not scheduled; hv's call, and explicitly not now. `intent_check` no longer _reports ok_ about this (see below), but reporting honestly is not the same as fixing it. When it happens, `~/bin/intent` should go so there is one source of truth.
 - **Decide whether `desktop` should own more of GNOME than it does.** It now manages the GTK stylesheet (3.0 and 4.0) and dock favourites. What it still hardcodes is its gsettings block; the same instance-scoped-file argument applies there if it grows.
 
-- **Decide what to do with `MOLT_FONT_FAMILY` / `MOLT_FONT_SIZE`.** Declared in all three instances' `vars.sh` and in the new-user scaffold; consumed by nothing (verified by grep across both repos -- every hit is docs, tests or changelog). They are also wrong: the scaffold documents the var as "a Nerd Font; the prompt glyphs need one" and both Macs set it to `Menlo`, which is not one. Nothing is broken today because iTerm2 carries its own real Nerd Font (`HackNFM-Regular 12`) set in its own prefs, and kovacs's alacritty reads the static file. The danger is prospective: the first template that interpolates the var silently breaks glyph rendering on both Macs, and it will look like a font bug rather than a stale var. Two honest options -- wire it to the iTerm2 profile so the declared value is the effective one, or delete it so nothing can later trust a value nobody maintains. gyges leans to deleting, on the grounds that an unused var that is wrong reads as authoritative; I agree. Fleet-wide `vars.sh` change, so hv's call.
-- **Decide whether molt should manage fonts at all.** Nothing does. `config/alacritty/alacritty.toml` names a font family; on kovacs the JetBrainsMono and Meslo Nerd Font files sit loose in `~/.local/share/fonts`, hand-installed and owned by nothing. A fresh sleeve gets the config naming the font and none of the font. The failure is silent -- fontconfig falls back and the terminal opens fine, just without powerline or devicon glyphs and with no error anywhere. Same class as the dangling symlink: everything reports success, the result is wrong. Shape and licensing both need deciding before building a `fonts` liberator.
-- **Decide whether gyges should have key access to rhadamanth.** gyges reaches `rhadamanth.lan` and its `personalid` is offered and rejected -- not in rhadamanth's `authorized_keys` -- so only password auth remains. This also blocks `ProxyJump` to kovacs from gyges. Granting it is a security decision about machine-to-machine access, not a config tidy-up, so it stays hv's.
-- **gyges has a branch awaiting review.** `c137146` on `gyges-ssh-lan-hosts` in Molt-matts: an instance `ssh/config.d` fragment for the LAN hosts, deliberately off main.
+Resolved 8 Sep, listed so they are not re-opened:
 
-Resolved this session, listed so they are not re-opened:
+- ~~Decide what to do with `MOLT_FONT_FAMILY` / `MOLT_FONT_SIZE`.~~ Wired, not deleted. `alacritty.toml` is now a template and the font comes from the instance's `vars.sh`, so the declared value is the effective one. Values corrected to what each sleeve actually runs -- and kovacs turned out to have them declared TWICE and already diverged (`vars.sh` said JetBrainsMono 14, the config said MesloLGS 11, and the config was right). The render is byte-identical to what kovacs ran before.
+- ~~Decide whether molt should manage fonts at all.~~ A check, not an installer. `molt doctor` check 13 asserts the declared font is one fontconfig can resolve, which turns a silent fallback into a named failure without touching font licensing or redistribution. Build the installer later if provisioning frequency justifies it.
+- ~~Decide whether gyges should have key access to rhadamanth.~~ **It already had it.** `26ff1ef` closed this on 4 Sep and the note was never retired. Verified live: `gyges -> rhadamanth` returns `KEY_AUTH_OK`, and gyges's `personalid`, rhadamanth's `personalid` and the key in rhadamanth's `authorized_keys` are one and the same ed25519 key. Nothing was written to `authorized_keys`.
+- ~~gyges has a branch awaiting review.~~ **Merged**, at `048d06f`. Also never retired.
+- ~~ProxyJump to kovacs from gyges.~~ Not a key problem and correctly deferred. kovacs, `kovacs.lan` and `kovacs.local` resolve from nowhere, `10.211.55.3` answers neither ping nor 22, and the Parallels ARP entry has now gone entirely. Molt-matts' `instances/gyges/ssh/config.d/lan-hosts.conf` documents this and says a ProxyJump block is right once kovacs is reachable. Adding one now is what that comment warns against.
+
+**Three of the six carried decisions were already resolved and the list did not know it.** They were overtaken during 04-07 Sep, the same week nobody was folding the whiteboard. A carried-decision list is not self-cleaning: verify each against as-built before ruling on it.
+
+Resolved 4 Sep, listed so they are not re-opened:
 
 - ~~Normalise repo directory case.~~ `constants.sh`, all three live instance manifests and every project directory are on the capitalised convention. `molt new-user` now scaffolds `Molt-{user}` to match. The GitHub repo name stays lowercase (`matthewsinclair/molt-matts`) -- the two conventions differ deliberately and `newuser.sh` carries a comment saying so.
 - ~~`user_repo` is dead documentation.~~ It cannot be consumed -- you must already know the repo to find the manifest inside it -- so doctor check 4 now asserts it matches the real directory name instead.
