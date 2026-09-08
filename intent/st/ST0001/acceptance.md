@@ -13,7 +13,15 @@ title: Bootstrap
 
 ## Acceptance Criteria
 
+### Group AC001
+
+- AC001 (non-test) No Molt health check reports success while the condition it names is false: every check either asserts the thing it claims, or says plainly what it did not cover. -- evidence: lib/molt.sh check 6 warns+names+prints the reason it previously discarded; liberators/intent.sh intent_verify no longer passes on a mismatched link; test/liberators/intent.bats 11 of 15 arms fail against pre-fix code; 04 Sep 568e620 (dangling symlinks) and 9f28dce (mtime->digest) close the same class -- satisfied: yes
+
 ## Acceptance Tests
+
+### Group AC001
+
+_(no tests in this group)_
 
 ---
 

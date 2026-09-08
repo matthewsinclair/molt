@@ -157,6 +157,8 @@ This is the bootstrap steel thread for the entire MOLT project. Phase 1 is compl
 | WP-11 | Inline upgrade (molt upgrade)                         | S    | Done        |
 | WP-12 | Emacs macOS keybindings on Linux                      | S    | Done        |
 | WP-13 | Tiling window manager (GNOME 46)                      | M    | Done        |
+| WP-14 | Doctor names what it did not install                  | S    | Done        |
+| WP-15 | Version-agnostic intent liberator                     | S    | Done        |
 
 ## Acceptance
 
