@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: eee6bf33-7b42-4c64-b7be-60b1b4dd9d83
-heartbeat_at: 2026-09-08T11:57Z
-status: paused
-focus: "session closed clean -- every thread in both repos Completed, one live finding: backup_verify passes on nothing and its liberator has no tests"
+heartbeat_at: 2026-09-08T12:06Z
+status: active
+focus: "folded and holding for instructions; one live finding: backup_verify passes on nothing and its liberator has no tests"
 claims: []
 ---
 
