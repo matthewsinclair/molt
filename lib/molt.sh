@@ -436,6 +436,38 @@ molt_config_stale() {
   [[ "$want" == "$have" ]] && return 1 || return 0
 }
 
+# --- Fonts ---
+
+# Can the system actually resolve this font family?
+#   0 = resolved    1 = not installed    2 = cannot determine
+#
+# fc-match is NOT usable here, and that is the whole point: it ALWAYS succeeds.
+# `fc-match ThisFontDoesNotExist12345` returns Verdana on this machine, so a
+# check built on it reports every font as present -- the same "reports ok while
+# wrong" class as a link check that passed on a dangling symlink. Exact family
+# matching over `fc-list : family` is the only honest test.
+#
+# 2 is a distinct answer on purpose, and callers must not fold it into 0 or 1.
+# A machine with no fontconfig cannot be said to be missing the font; claiming
+# ok there is the same lie pointing the other way.
+molt_font_available() {
+  local family="$1" families
+  [[ -n "$family" ]] || return 2
+  command -v fc-list &>/dev/null || return 2
+  families="$(fc-list : family 2>/dev/null)" || return 2
+  [[ -n "$families" ]] || return 2
+
+  # Materialise the list, THEN match. `... | grep -qixF` looks equivalent and is
+  # not: grep -q closes the pipe on its first hit, the upstream stages take
+  # SIGPIPE, and under `set -o pipefail` the function returns 141 for a font
+  # that IS installed. The caller reads 141 as "cannot determine", so the honest
+  # answer becomes an unmeasurable one on any shell with pipefail set -- passing
+  # everywhere it was tried and failing where it was not.
+  local list
+  list="$(printf '%s\n' "$families" | tr ',' '\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+  grep -qixF -- "$family" <<< "$list"
+}
+
 molt_install_config() {
   local source="$1"    # relative path: "config/ssh/config"
   local target="$2"    # absolute path: "$HOME/.ssh/config"
@@ -682,7 +714,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=12
+  local total=13
   local step=0
   local warnings=0
 
@@ -809,14 +841,42 @@ cmd_doctor() {
     enabled="$(molt_enabled_liberators 2>/dev/null || echo "")"
     local enabled_count=0
     local installed_count=0
+    local not_installed=""
+    local not_installed_why=""
+    local why=""
     while IFS= read -r lib; do
       [[ -z "$lib" ]] && continue
       enabled_count=$((enabled_count + 1))
-      if liberator_load "$lib" &>/dev/null && liberator_check "$lib" &>/dev/null; then
+      # Capture rather than discard. The check function already prints exactly
+      # why it failed; &>/dev/null threw that away and left the operator with a
+      # ratio and no lead. Assign separately from `local` -- `local x="$(...)"`
+      # returns local's status, not the command's (SC2155).
+      if why="$(liberator_load "$lib" 2>&1 && liberator_check "$lib" 2>&1)"; then
         installed_count=$((installed_count + 1))
+      else
+        not_installed="${not_installed:+$not_installed }$lib"
+        while IFS= read -r line; do
+          [[ -z "$line" ]] && continue
+          not_installed_why="${not_installed_why}         ${lib}: ${line}"$'\n'
+        done <<< "$(echo "$why" | head -3)"
       fi
     done <<< "$enabled"
-    echo "[$step/$total] Checking enabled liberators... ✓ $installed_count/$enabled_count installed"
+    # This printed ✓ for every ratio and raised no warning, so 0/16 rendered as
+    # a pass and the missing liberator was never named. A count is not a verdict:
+    # "15/16 installed" tells you something is wrong and refuses to say what,
+    # which is the same "reports ok while wrong" class as a check that passed on
+    # a dangling symlink. It matters most exactly when it is least visible --
+    # when a liberator breaks estate-wide, this is the instrument that should
+    # notice, and a green tick means it never will.
+    if [[ "$installed_count" -eq "$enabled_count" ]]; then
+      echo "[$step/$total] Checking enabled liberators... ✓ $installed_count/$enabled_count installed"
+    else
+      echo "[$step/$total] Checking enabled liberators... ⚠ $installed_count/$enabled_count installed"
+      echo "         not installed: ${not_installed}"
+      [[ -n "$not_installed_why" ]] && printf '%s' "$not_installed_why"
+      echo "         Run \`molt resleeve\` to install, or \`molt list\` for status."
+      warnings=$((warnings + 1))
+    fi
   else
     echo "[$step/$total] Checking enabled liberators... ⚠ no manifest (skipped)"
     warnings=$((warnings + 1))
@@ -942,6 +1002,49 @@ cmd_doctor() {
     echo "         'git status' to confirm the rename is actually staged before you"
     echo "         commit. Nothing to do otherwise."
     warnings=$((warnings + 1))
+  fi
+
+  # 13. The font this instance declares is one the system can actually resolve
+  #
+  # Nothing installs fonts. A fresh sleeve gets the config naming the font and
+  # none of the font, and fontconfig then falls back silently -- the terminal
+  # opens fine, just without powerline or devicon glyphs, with no error anywhere.
+  # Same shape as the dangling-symlink and mtime defects: everything reports
+  # success, the result is wrong.
+  step=$((step + 1))
+  local font_family="" font_vars=""
+  [[ -n "${manifest:-}" ]] && font_vars="$(dirname "$manifest")/vars.sh"
+  if [[ -n "$font_vars" && -f "$font_vars" ]]; then
+    # shellcheck disable=SC1090
+    font_family="$( . "$font_vars" >/dev/null 2>&1; printf '%s' "${MOLT_FONT_FAMILY:-}" )"
+  fi
+  if [[ -z "$font_family" ]]; then
+    echo "[$step/$total] Checking declared font... ⚠ this instance declares no MOLT_FONT_FAMILY"
+    warnings=$((warnings + 1))
+  else
+    molt_font_available "$font_family"
+    case $? in
+      0)
+        echo "[$step/$total] Checking declared font... ✓ ${font_family}" ;;
+      1)
+        echo "[$step/$total] Checking declared font... ⚠ ${font_family} is NOT installed"
+        echo "         The config names this font; nothing on this machine provides it."
+        echo "         fontconfig will fall back without erroring, so the terminal opens"
+        echo "         looking fine and the powerline and devicon glyphs are simply gone."
+        echo "         Install it into ~/.local/share/fonts (Linux, then 'fc-cache -f')"
+        echo "         or ~/Library/Fonts (macOS)."
+        warnings=$((warnings + 1)) ;;
+      *)
+        # Deliberately NOT a warning, and deliberately never a tick. "I could not
+        # measure this" is not a finding about the sleeve, and counting it would
+        # leave every fontconfig-less machine permanently yellow -- which is how
+        # a check trains people to ignore it. Saying so plainly is the honest
+        # middle, and the marker is not ✓ for exactly that reason.
+        echo "[$step/$total] Checking declared font... ? cannot verify ${font_family}"
+        echo "         fc-list is not on this machine, so whether the font resolves is"
+        echo "         unknown. Not reporting ok: that would assert something unmeasured."
+        echo "         Install fontconfig if you want this checked." ;;
+    esac
   fi
 
   echo ""
