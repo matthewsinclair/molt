@@ -229,3 +229,62 @@ _use_digest_test_repo() {
     [ -n "$ab" ]
     [ "$ab" = "$ba" ]
 }
+
+# ---------------------------------------------------------------------------
+# molt_font_available -- the config names a font; does the machine have it?
+# ---------------------------------------------------------------------------
+
+@test "molt_font_available resolves a family fontconfig actually lists" {
+    load_molt_libs
+    command -v fc-list &>/dev/null || skip "fontconfig not installed"
+    local fam
+    # Take a family the machine really has, so the test asserts resolution
+    # rather than the presence of one particular font.
+    fam="$(fc-list : family 2>/dev/null | tr ',' '\n' \
+           | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' \
+           | grep -v '^$' | head -1)"
+    [ -n "$fam" ]
+    run molt_font_available "$fam"
+    [ "$status" -eq 0 ]
+}
+
+@test "molt_font_available returns 1 for a font that is not installed" {
+    load_molt_libs
+    command -v fc-list &>/dev/null || skip "fontconfig not installed"
+    # THE REGRESSION GUARD. fc-match answers this exact query with Verdana --
+    # it always succeeds -- so a check built on fc-match would return 0 here and
+    # report every font on earth as present. If this test ever goes green on a
+    # status of 0, the honest test has been swapped for the lying one.
+    run molt_font_available "ThisFontDoesNotExist12345"
+    [ "$status" -eq 1 ]
+}
+
+@test "molt_font_available does not partial-match a longer family name" {
+    load_molt_libs
+    command -v fc-list &>/dev/null || skip "fontconfig not installed"
+    local fam
+    fam="$(fc-list : family 2>/dev/null | tr ',' '\n' \
+           | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' \
+           | grep -v '^$' | head -1)"
+    [ -n "$fam" ]
+    # A substring of a real family is still not that family.
+    run molt_font_available "${fam} Definitely Not A Real Suffix"
+    [ "$status" -eq 1 ]
+}
+
+@test "molt_font_available returns 2 -- not 0 or 1 -- for an empty family" {
+    load_molt_libs
+    run molt_font_available ""
+    [ "$status" -eq 2 ]
+}
+
+@test "molt_font_available returns 2 when fontconfig is absent" {
+    load_molt_libs
+    # "Cannot determine" must stay distinct from "not installed". Folding it
+    # into 1 would report a missing font on every machine without fontconfig;
+    # folding it into 0 would report ok having measured nothing.
+    local empty="$BATS_TEST_TMPDIR/nopath"
+    mkdir -p "$empty"
+    PATH="$empty" run molt_font_available "Hack Nerd Font Mono"
+    [ "$status" -eq 2 ]
+}
