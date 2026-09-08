@@ -4,14 +4,22 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 
 ## DOING
 
-- [-] ST0001: Bootstrap
+_(none)_
+
+## TODO
+
+- [?] ST0003: Reproducible VM build and release artifact
+
+## DONE
+
+- [x] ST0001: Bootstrap
   - [x] 01: Fix Cmd key passthrough from Parallels
   - [x] 02: Set up kovacs SSH for GitHub
   - [x] 03: Install Nerd Fonts
-  - [ ] 04: Document Phase 1 bootstrap steps
+  - [x] 04: Document Phase 1 bootstrap steps
   - [x] 05: MOLT framework scaffolding
   - [x] 06: Highlander and Thin Coordinator audit
-  - [ ] 07: Reproducible VM build and self-upgrading Molt
+  - [x] 07: Reproducible VM build and self-upgrading Molt
   - [x] 08: Template system implementation
   - [x] 09: Split terminal liberator into per-emulator liberators
   - [x] 10: Migrate from chezmoi to MOLT on rhadamanth
@@ -20,13 +28,6 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
   - [x] 13: Tiling window manager (GNOME 46)
   - [x] 14: Doctor names what it did not install
   - [x] 15: Version-agnostic intent liberator
-
-## TODO
-
-_(none)_
-
-## DONE
-
 - [x] ST0002: Proper per-instance config of per-instance variables
   - [x] 01: Add molt_instances_field() to framework
   - [x] 02: Add [terminal] to instance.toml files

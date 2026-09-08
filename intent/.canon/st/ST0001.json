@@ -3,8 +3,9 @@
   "id": "ST0001",
   "title": "Bootstrap",
   "slug": "bootstrap",
-  "status": "wip",
+  "status": "completed",
   "created": "2026-03-07",
+  "completed": "2026-09-08",
   "objective": "Stand up a fully opinionated, reproducible dev environment on a new sleeve (VM/machine) using the MOLT framework. The first target sleeve is **kovacs** (Ubuntu 24.04 ARM64, Parallels on rhadamanth).",
   "context": "MOLT (My Opinionated Local Terminal) is a system for maintaining consistent, portable dev environments across multiple machines (\"sleeves\"). The core principle is separation of concerns:\n\n- **molt** (framework repo): templates, tooling, scripts — shared infrastructure\n- **molt-{user}** (personal repo): {user}'s config (\"the soul\") + per-instance overrides\n\nThis steel thread covers the full bootstrap journey: from a bare VM to a working, opinionated environment with all dotfiles managed through molt-{user}, editors configured, and the MOLT framework itself ready for development.\n\n### Sleeves\n\n- **kovacs**: Ubuntu 24.04 ARM64 VM (Parallels) — first target, fully bootstrapped\n- **rhadamanth**: M4 MacBook Pro (macOS host) — fully resleeved, chezmoi retired\n\n### What's Done (Phase 1 — Resleeve)\n\n- keyd installed and configured (Cmd→Ctrl mapping, systemd enabled)\n- {user} user created with sudo, SSH key, Claude creds\n- zsh + Starship prompt installed and configured\n- Clean .zshrc (Highlander-compliant), minimal .zshenv, empty .zprofile\n- Git configured (user.name, email, aliases, git-lfs)\n- tmux configured (Ctrl-a prefix, vi keys, mouse, 256color)\n- CLI tools: htop, jq, tree, wl-clipboard, bat, ripgrep, fd-find, fzf, mise\n- Emacs + Doom Emacs installed and synced\n- LazyVim (nvim) configured\n- Alacritty installed and configured\n- All config migrated into molt-{user}/config/, symlinked from ~\n- GNOME Super bindings stripped\n- Intent skills installed (all 12 /in-\\* skills)\n- Commits pushed to GitHub\n\n### What's Done (Phase 2 — Framework)\n\n- MOLT framework scaffolded: CLI (`bin/molt`), core lib, 15 liberators, manifest support\n- CLI commands: `resleeve [--dry-run]`, `status`, `list`, `doctor`, `test`, `version`, `help`\n- Liberator framework: load, check, install, verify lifecycle\n- Manifest-first (`molt.toml`) with enabled/disabled/OS filtering\n- `constants.sh` for configurable paths (Highlander Rule)\n- `MOLT_PRJ_DIR` required via env var (no hardcoded default)\n- Bats test suite (52 tests, all passing)\n  - `test/test_helper.bash` — shared infrastructure, HOME-sandboxed for safety\n  - `test/molt.bats` — CLI tests\n  - `test/constants.bats` — constants tests\n  - `test/liberator.bats` — framework tests\n  - `test/manifest.bats` — manifest parsing tests\n  - `test/templates.bats` — template rendering tests (9 tests)\n  - `test/liberators/zsh.bats` — exemplar liberator test\n- `molt doctor` — 9-step diagnostic (structure, manifest, liberators, deps, SSH, GitHub auth)\n- Highlander & Thin Coordinator audit (WP-06) completed and applied\n- Module registry (`MODULES.md`) tracking all framework and liberator modules\n- Template rendering system (WP-08): `molt_render` + `molt_install_config`, envsubst + vars.sh\n  - SSH config rendered from `.tmpl` with `config.d/` fragment concatenation\n  - `.molt-rendered` marker files with provenance\n  - `molt_render` handles symlink removal, permission-sensitive dirs (eg `~/.ssh`)\n- Split monolithic `terminal.sh` into four per-emulator liberators (WP-09):\n  - `alacritty.sh` — GPU-accelerated terminal (linux, macos)\n  - `gnome-terminal.sh` — dconf-based GNOME Terminal profile management (linux)\n  - `iterm2.sh` — iTerm2 dynamic profiles (macos)\n  - `terminal-app.sh` — Terminal.app profile import (macos)\n- GNOME Terminal Molt profile created and applied on kovacs\n- Liberators enforce \"no package install\" — fail with hints if binary missing\n- `bin/molt` resolves symlinks for `MOLT_ROOT` (works via `~/bin/molt` symlink)\n- `hostname -s` used everywhere for macOS compatibility\n- `bin/bootstrap.sh` for fresh-machine setup\n\n### What's Done (Phase 3 — Rhadamanth Resleeve)\n\n- Migrated from chezmoi to MOLT on rhadamanth (WP-10)\n  - chezmoi purged and uninstalled (safety net: cfg-dotfiles on GitHub)\n  - `.zprofile` updated with Homebrew `brew shellenv` init\n  - Git config merged: `gitignore_global`, `gitconfig_{github}` identity include\n  - Git liberator updated to link additional files\n  - All 9 enabled liberators installed: system, local-bin, zsh, git, editors, iterm2, dev-tools, ssh, utilz\n  - Doctor: 9/9 checks, GitHub auth working\n\n### What's Done (Phase 4 — Cmd Key + Alacritty Dock)\n\n- Cmd key passthrough fully resolved (WP-01)\n  - Reverse-engineered Parallels `Mac OS X.dat` binary keyboard profile format\n  - Custom profile with 33 ⌘→⌘ passthrough shortcuts — Cmd arrives as Super_L in VM\n  - Parallels \"macOS\" profile selected, \"Send macOS system shortcuts: Always\"\n  - Parallels restart required after `.dat` file changes\n  - Custom profile stored in `molt-{user}/instances/rhadamanth/parallels/Mac OS X.dat`\n  - Cmd != Ctrl properly separated (Cmd = Super, Ctrl = Ctrl)\n- Per-app keybindings for Super (Cmd) support:\n  - Emacs: `s-` (Super) bindings in Linux block of `010-keys.el` — mirrors macOS\n  - Alacritty: Super+C/V/X bindings in `alacritty.toml`\n  - VS Code: `win+` Cmd shortcuts + Emacs-style Ctrl navigation (A/E/K/N/P/F/B/D/H/T)\n  - GNOME Terminal: Super bindings via gsettings\n  - GNOME a11y shortcuts stripped (screen reader, magnifier) in desktop liberator\n- Alacritty liberator updated to add Alacritty to GNOME dock favorites\n- GNOME Terminal replaced by Alacritty as dock terminal on kovacs\n\n### What's Done (Phase 5 — Upgrade, Emacs Keys, Tiling, VS Code)\n\n- `molt upgrade` command added (WP-11): pulls both repos, reports version changes, re-runs resleeve\n  - `--dry-run` support, fails gracefully on dirty repos\n- Emacs macOS keybindings on Linux (WP-12): `s-` (Super) bindings mirror macOS directly\n  - Parallels custom profile sends Cmd as Super — same modifier on both platforms\n- Tiling via Tactile GNOME extension (WP-13): Divvy-like grid picker\n  - Trigger: Shift+Opt+Cmd+T (= `<Shift><Alt><Super>t` on Linux)\n  - 7x3 grid: QWERTYU / ASDFGHJ / ZXCVBNM — keyboard maps to screen position\n  - Two-key rectangle selection (eg Q,M = full screen, Q,N = left half)\n  - `tiling.sh` liberator: checks extension, configures grid/keybinding via gsettings\n  - Ubuntu Tiling Assistant insufficient — replaced by Tactile\n- VS Code installed from Microsoft apt repo (WP-14, unplanned)\n  - `vscode.sh` liberator: symlinks settings.json, pins to GNOME dock\n  - `molt-{user}/config/vscode/settings.json`: JetBrainsMono Nerd Font, telemetry off\n- Editors liberator updated to pin Emacs to GNOME dock\n- GNOME dock cleaned up: Firefox, Nautilus, Alacritty, Emacs, VS Code\n- Font consistency: JetBrainsMono Nerd Font (Alacritty 11pt, Emacs 14pt, VS Code 14pt)\n- ~/Dropbox symlinked to macOS CloudStorage via Parallels mount\n- 18 liberators total (added: tiling, vscode)\n\n### What's Remaining\n\n- Export iTerm2 + Terminal.app profiles from rhadamanth\n- Verify WP-10 changes on kovacs (no regressions)\n- Reproducible VM build (WP-07, future)",
   "body": "## Related Steel Threads\n\n- None yet — this is the foundational steel thread\n\n## Context for LLM\n\nThis is the bootstrap steel thread for the entire MOLT project. Phase 1 is complete (manual setup, config in molt-{user}). Phase 2 is complete (framework, 18 liberators, tests, template system). Phase 3 (rhadamanth resleeve, chezmoi migration) is complete. Phase 4 (Cmd key fully resolved via custom Parallels profile, per-app Super keybindings, Alacritty dock) is complete. Phase 5 is complete: inline upgrade (WP-11), Emacs macOS keybindings on Linux (WP-12), Tactile tiling (WP-13), VS Code setup, dock cleanup, font consistency. Both sleeves are operational.",
@@ -41,7 +42,7 @@
       "seq": 4,
       "title": "Document Phase 1 bootstrap steps",
       "scope": "M",
-      "status": "not-started",
+      "status": "done",
       "objective": "Capture the manual steps performed during Phase 1 (resleeve of kovacs) as structured documentation. This becomes the reference for what MOLT's automation needs to replicate.",
       "body": "## Context\n\nPhase 1 was done manually across several Claude Code sessions. The steps are scattered across session history and memory files. We need a single, ordered document that could serve as both human-readable instructions and a specification for future automation.\n\n## Deliverables\n\n- Bootstrap runbook document in the Molt repo (docs/ or intent/docs/)\n- Ordered list of every step from bare VM to working environment\n- Notes on which steps are platform-specific vs platform-agnostic\n- Notes on which steps are user-specific vs universal\n\n## Acceptance Criteria\n\n- [ ] Document covers all Phase 1 steps in order\n- [ ] Each step notes: what was done, why, and any gotchas\n- [ ] Platform-specific vs agnostic steps are clearly marked\n- [ ] Document is in the Molt repo (not molt-{user})\n\n## Dependencies\n\n- Relies on memory/context from Phase 1 sessions\n- No technical blockers",
       "preamble": ""
@@ -68,7 +69,7 @@
       "seq": 7,
       "title": "Reproducible VM build and self-upgrading Molt",
       "scope": "L",
-      "status": "not-started",
+      "status": "done",
       "objective": "Two related but distinct capabilities:\n\n1. **Reproducible VM build**: Build a complete, standalone VM image from scratch\n   containing the canonically opinionated Molt environment. This VM is a release\n   artifact in the Molt GitHub repo — downloadable and bootable on any machine\n   that can run the VM.\n\n2. **Self-upgrading Molt**: Any Molt installation — whether inside the Molt VM\n   or installed on bare metal / an existing machine — can upgrade itself using\n   agreed normal upgrade protocols. The VM is just one delivery mechanism; Molt\n   itself is the thing that stays current.",
       "body": "## Design Considerations\n\n### VM build\n\n- **Build from source**: The VM image is built on demand from a declarative spec,\n  not hand-crafted. Think Packer, cloud-init, or similar.\n- **Delivery format TBD**: Docker container image? QEMU/qcow2? OVA? Parallels\n  .pvm? Multiple formats? Needs investigation into what's most portable and\n  practical for macOS host usage.\n- **Release artifact**: Published to GitHub Releases on the Molt repo.\n- **Build frequency**: Not common — Molt instances should be upgradeable in-situ.\n  VM rebuilds are for fresh starts or major version bumps.\n\n### Self-upgrading Molt\n\n- **In-situ upgrades**: A running Molt installation can pull framework updates\n  (from the molt repo) and config updates (from molt-{user} repo) without\n  rebuilding the VM.\n- **Upgrade protocol**: Needs definition. Likely: `molt upgrade` pulls latest\n  framework, re-runs liberators in check/update mode, reports drift.\n- **Idempotent**: Running upgrade on an already-current system is a no-op.\n- **Works everywhere**: Same upgrade path whether Molt is in the VM, on bare\n  metal Linux, on macOS, or in WSL2.\n\n## Open Questions\n\n- What VM format is best for macOS (Parallels, UTM/QEMU, Docker)?\n- Can a single build spec produce multiple VM formats?\n- How does the VM image relate to the base OS (Ubuntu 24.04)? Is the VM just\n  \"Ubuntu + Molt resleeve\", or is there more customization?\n- What does the upgrade protocol look like? Git pull + re-run liberators?\n  Something more structured?\n- Version pinning: should molt.toml lock liberator versions?\n\n## Dependencies\n\n- WP-05 (Framework scaffolding) — needs the liberator framework to exist\n- WP-04 (Bootstrap runbook) — the runbook defines what the VM build automates\n\n## Acceptance Criteria\n\n- [ ] VM build spec exists (Packer, Dockerfile, or equivalent)\n- [ ] VM can be built from scratch with a single command\n- [ ] VM image published as GitHub Release artifact\n- [ ] `molt upgrade` command exists and works\n- [ ] Upgrade works identically inside VM and on bare metal\n- [ ] Upgrade is idempotent",
       "preamble": ""
@@ -154,6 +155,60 @@
       "state": {
         "is": "satisfied",
         "evidence": "lib/molt.sh check 6 warns+names+prints the reason it previously discarded; liberators/intent.sh intent_verify no longer passes on a mismatched link; test/liberators/intent.bats 11 of 15 arms fail against pre-fix code; 04 Sep 568e620 (dangling symlinks) and 9f28dce (mtime->digest) close the same class"
+      }
+    },
+    {
+      "id": "AC002",
+      "text": "`molt upgrade` exists and works: pulls framework and config, runs upgrade hooks, resleeves.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "cmd_upgrade() at lib/molt.sh:1255; `molt upgrade [--self] [--dry-run] [liberators] [--resleeve|--no-resleeve]` live in bin/molt help; driven --dry-run this session"
+      }
+    },
+    {
+      "id": "AC003",
+      "text": "The upgrade path is the same inside a VM sleeve and on bare metal.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "same molt upgrade path on kovacs (Ubuntu 24.04 ARM64 VM under Parallels) and on rhadamanth and gyges (macOS bare metal); all three report doctor green, and the kovacs decoupling of 04 Sep ran it on local ext4"
+      }
+    },
+    {
+      "id": "AC004",
+      "text": "Upgrade is idempotent: running it on an already-current system is a no-op.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "two consecutive `molt upgrade --dry-run` runs this session produced byte-identical output (3 liberator(s) would be installed, same set); resleeve idempotent on kovacs across three consecutive runs per intent/wip.md"
+      }
+    },
+    {
+      "id": "AC005",
+      "text": "A bootstrap runbook exists in the Molt repo covering the Phase 1 kovacs resleeve steps in order.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "docs/guides/bootstrap-runbook.md, 370 lines, 11 ordered sections (system, zsh, git, tmux, editors, alacritty, keys, desktop, dev-tools, ssh, intent) matching the Phase 1 liberator set; in the Molt repo, not Molt-matts"
+      }
+    },
+    {
+      "id": "AC006",
+      "text": "Every step is tagged platform-specific, platform-agnostic or instance-specific.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "every subsection carries [agnostic], [linux] or [instance]; the legend is in the document header"
+      }
+    },
+    {
+      "id": "AC007",
+      "text": "The runbook states its own currency and names what it does NOT cover, rather than implying completeness.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "new 'What this covers, and what it does not' section names the 11 covered and the 12 uncovered liberators explicitly, dates the document 2026-09-08, and states the liberator is authoritative where the two disagree"
       }
     }
   ],

@@ -17,9 +17,57 @@ title: Bootstrap
 
 - AC001 (non-test) No Molt health check reports success while the condition it names is false: every check either asserts the thing it claims, or says plainly what it did not cover. -- evidence: lib/molt.sh check 6 warns+names+prints the reason it previously discarded; liberators/intent.sh intent_verify no longer passes on a mismatched link; test/liberators/intent.bats 11 of 15 arms fail against pre-fix code; 04 Sep 568e620 (dangling symlinks) and 9f28dce (mtime->digest) close the same class -- satisfied: yes
 
+### Group AC002
+
+- AC002 (non-test) `molt upgrade` exists and works: pulls framework and config, runs upgrade hooks, resleeves. -- evidence: cmd_upgrade() at lib/molt.sh:1255; `molt upgrade [--self] [--dry-run] [liberators] [--resleeve|--no-resleeve]` live in bin/molt help; driven --dry-run this session -- satisfied: yes
+
+### Group AC003
+
+- AC003 (non-test) The upgrade path is the same inside a VM sleeve and on bare metal. -- evidence: same molt upgrade path on kovacs (Ubuntu 24.04 ARM64 VM under Parallels) and on rhadamanth and gyges (macOS bare metal); all three report doctor green, and the kovacs decoupling of 04 Sep ran it on local ext4 -- satisfied: yes
+
+### Group AC004
+
+- AC004 (non-test) Upgrade is idempotent: running it on an already-current system is a no-op. -- evidence: two consecutive `molt upgrade --dry-run` runs this session produced byte-identical output (3 liberator(s) would be installed, same set); resleeve idempotent on kovacs across three consecutive runs per intent/wip.md -- satisfied: yes
+
+### Group AC005
+
+- AC005 (non-test) A bootstrap runbook exists in the Molt repo covering the Phase 1 kovacs resleeve steps in order. -- evidence: docs/guides/bootstrap-runbook.md, 370 lines, 11 ordered sections (system, zsh, git, tmux, editors, alacritty, keys, desktop, dev-tools, ssh, intent) matching the Phase 1 liberator set; in the Molt repo, not Molt-matts -- satisfied: yes
+
+### Group AC006
+
+- AC006 (non-test) Every step is tagged platform-specific, platform-agnostic or instance-specific. -- evidence: every subsection carries [agnostic], [linux] or [instance]; the legend is in the document header -- satisfied: yes
+
+### Group AC007
+
+- AC007 (non-test) The runbook states its own currency and names what it does NOT cover, rather than implying completeness. -- evidence: new 'What this covers, and what it does not' section names the 11 covered and the 12 uncovered liberators explicitly, dates the document 2026-09-08, and states the liberator is authoritative where the two disagree -- satisfied: yes
+
 ## Acceptance Tests
 
 ### Group AC001
+
+_(no tests in this group)_
+
+### Group AC002
+
+_(no tests in this group)_
+
+### Group AC003
+
+_(no tests in this group)_
+
+### Group AC004
+
+_(no tests in this group)_
+
+### Group AC005
+
+_(no tests in this group)_
+
+### Group AC006
+
+_(no tests in this group)_
+
+### Group AC007
 
 _(no tests in this group)_
 

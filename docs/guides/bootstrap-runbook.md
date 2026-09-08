@@ -10,6 +10,29 @@ Steps are grouped by **liberator** (config module). Each step is tagged:
 - **[linux]** — Linux-specific (apt, systemd, Wayland, etc.)
 - **[instance]** — machine-specific (kovacs only)
 
+## What this covers, and what it does not
+
+**Current as at 2026-09-08. It covers 11 of the framework's 23 liberators.**
+
+Stating the gap rather than implying completeness is deliberate: a runbook that
+silently covers half the system is indistinguishable from one that covers all of
+it, and the reader has no way to tell which they are holding. The same principle
+the framework's own checks are held to.
+
+Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`,
+`desktop`, `dev-tools`, `ssh`, `intent`.
+
+**NOT documented here** — these arrived after the Phase 1 resleeve and their
+steps have never been captured: `backup`, `brew`, `claude`, `gnome-terminal`,
+`iterm2`, `local-bin`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`,
+`web`. Read the liberator source for those; each has a `_check` that states its
+own preconditions.
+
+This is a record of what was done BY HAND on kovacs, kept as the specification
+for what the liberators automate. It is not the install procedure — that is
+`molt resleeve`. Where the two disagree, the liberator is authoritative and this
+document is stale.
+
 ---
 
 ## 1. system
@@ -159,9 +182,11 @@ rm -rf ~/.config/nvim/.git
 
 ---
 
-## 6. terminal
+## 6. alacritty
 
-Terminal emulator setup.
+Terminal emulator setup. **There is no `terminal` liberator any more** — WP-09
+split it per emulator, so this section is `alacritty` and its siblings are
+`gnome-terminal`, `iterm2` and `terminal-app`, none of which are documented here.
 
 ### 6.1 Install Alacritty [linux]
 
@@ -171,9 +196,20 @@ sudo apt install -y alacritty
 
 ### 6.2 Write Alacritty config [agnostic]
 
-- Config: `molt-{user}/config/alacritty/alacritty.toml`
-- Symlink: `~/.config/alacritty/alacritty.toml`
-- Key settings: JetBrainsMono Nerd Font 14pt, copy-on-select, Shift-Enter binding
+- Template: `Molt-{user}/config/alacritty/alacritty.toml.tmpl`
+- Rendered to: `~/.config/alacritty/alacritty.toml`
+
+**This is rendered, not symlinked**, as of 2026-09-08. The font comes from the
+instance's `vars.sh` (`MOLT_FONT_FAMILY`, `MOLT_FONT_SIZE`) so the declared value
+is the effective one — it was previously declared in both places and had already
+diverged. kovacs runs **MesloLGS Nerd Font at 11.0**, set by `6e99b17`.
+
+Other settings: copy-on-select, Super+C/V/X clipboard bindings for Parallels,
+Shift-Enter kitty-protocol encoding.
+
+`molt doctor` check 13 asserts the declared font is one fontconfig can resolve;
+nothing installs fonts, so a fresh sleeve gets the config naming the font and
+none of the font.
 
 ---
 
@@ -325,4 +361,10 @@ Key findings from the Highlander/Thin Coordinator audit:
 - **T1 (Fixed)**: zshrc functions extracted to `config/zsh/functions/`
 - **T2 (Fixed)**: Doom config.el inline logic extracted to custom/\*.el modules
 - **M1 (Fixed)**: keyd config captured in `instances/kovacs/keyd/`
-- **H3 (Fixed)**: Font unified to JetBrainsMono Nerd Font in both Alacritty and Doom
+- **H3 (Fixed, then regressed, then fixed again)**: the font was unified to
+  JetBrainsMono Nerd Font here in June. It did not stay unified: `6e99b17`
+  switched kovacs's `alacritty.toml` to MesloLGS while `vars.sh` still said
+  JetBrainsMono, and the two sat diverged until 2026-09-08. The durable fix was
+  not to re-unify the values but to remove the second place they could disagree
+  — the config is now rendered from `vars.sh`. Two copies of one fact drift; the
+  fix is one copy, not two matching copies.

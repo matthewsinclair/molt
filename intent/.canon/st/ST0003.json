@@ -1,0 +1,38 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0003",
+  "title": "Reproducible VM build and release artifact",
+  "slug": "reproducible-vm-build-and-release-artifact",
+  "status": "triage",
+  "created": "2026-09-08",
+  "objective": "",
+  "context": "",
+  "body": "",
+  "preamble": "",
+  "criteria": [
+    {
+      "id": "AC001",
+      "text": "A declarative VM build spec exists (Packer, Dockerfile, cloud-init or equivalent) -- the image is built from a spec, not hand-crafted.",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    },
+    {
+      "id": "AC002",
+      "text": "The VM can be built from scratch with a single command.",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    },
+    {
+      "id": "AC003",
+      "text": "A VM image is published as a GitHub Release artifact on the Molt repo.",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    }
+  ]
+}

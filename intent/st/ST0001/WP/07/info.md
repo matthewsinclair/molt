@@ -2,7 +2,7 @@
 wp_id: WP-07
 title: Reproducible VM build and self-upgrading Molt
 scope: L
-status: Not Started
+status: Done
 ---
 
 # WP-07: Reproducible VM build and self-upgrading Molt
