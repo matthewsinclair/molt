@@ -4,7 +4,7 @@ An index of every steel thread in the project. A steel thread is a self-containe
 
 | ID     | Title                                                | Status    | Created    | Completed  |
 | ------ | ---------------------------------------------------- | --------- | ---------- | ---------- |
-| ST0003 | Reproducible VM build and release artifact           | Triage    | 2026-09-08 |            |
+| ST0003 | Reproducible VM build and release artifact           | Completed | 2026-09-08 | 2026-09-08 |
 | ST0002 | Proper per-instance config of per-instance variables | Completed | 2026-03-23 | 2026-03-23 |
 | ST0001 | Bootstrap                                            | Completed | 2026-03-07 | 2026-09-08 |
 

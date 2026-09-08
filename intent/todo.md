@@ -8,7 +8,7 @@ _(none)_
 
 ## TODO
 
-- [?] ST0003: Reproducible VM build and release artifact
+_(none)_
 
 ## DONE
 
@@ -36,6 +36,7 @@ _(none)_
   - [x] 05: Update zshrc sourcing path + delete static file
   - [x] 06: Add tests for cross-instance aggregation
   - [x] 07: Verify end-to-end on current sleeve
+- [x] ST0003: Reproducible VM build and release artifact
 
 ---
 
