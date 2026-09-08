@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: eee6bf33-7b42-4c64-b7be-60b1b4dd9d83
-heartbeat_at: 2026-09-08T10:15Z
+heartbeat_at: 2026-09-08T10:53Z
 status: active
-focus: "hv's four rulings executed: doctor + intent liberator + fonts check landed, 148 tests green, nothing committed yet"
+focus: "ST0001 CLOSED after six months, 15/15 WPs and 7/7 ACs; sweep found the backup liberator has zero tests and a verify that passes on nothing"
 claims: []
 ---
 
@@ -15,14 +15,13 @@ Session of 2026-08-27 archived to `.history/20260827/wip.md`.
 
 ## DOING
 
-- All four of hv's rulings executed and green. Nothing committed -- hv has not asked for a commit.
+- (nothing in flight)
 
 ## TODO
 
-- Commit today's work once hv says so: `lib/molt.sh`, `liberators/intent.sh`, `test/liberators/intent.bats`, `test/molt.bats`, the whiteboard files, and in Molt-matts the alacritty template rename plus three `vars.sh`.
-- ST0001/WP-04 (document Phase 1 bootstrap steps) and WP-07 (reproducible VM build) remain the only open work on the thread. WP-04 should follow the intent-liberator change, not precede it -- it documents bootstrap, and the liberator is part of bootstrap.
-- Molt-matts ST0001 is open at `Triage` as "Backup that runs without being asked". Naming flagged to hv: it is the repo's largest live body of work, but it is also the topic hv deprioritised today, so it may want recutting.
-- The 04-07 Sep body of work (38 commits) has still never had a validation pass. Backup liberator and `9f28dce` (digest staleness) are the highest-risk subset.
+- **`test/liberators/backup.bats` is the next piece of work, and it is one job not two.** The liberator has zero tests over 477 lines and 17 functions, and `backup_verify` returns PASS having asserted nothing when away from home (`backup.sh:386`) or when the share is unmounted (`backup.sh:431`). The first control to write is "verify must FAIL when it has not checked anything" -- the same arm that caught `intent_verify`. Escalated to hv; not started.
+- ST0003 (reproducible VM build) is at Triage with a 3-row contract, none satisfied. It carries the half of the old WP-07 that was never built: no build spec, no one-command build, no release artifact.
+- Molt-matts ST0001 is at Triage as "Backup that runs without being asked". Naming still flagged for hv.
 
 ## Watch-outs
 
@@ -44,3 +43,5 @@ Session of 2026-08-27 archived to `.history/20260827/wip.md`.
 - (2026-09-08) Three of hv's six "carried decisions" were already resolved and nobody had noticed: the `gyges-ssh-lan-hosts` branch is merged (`048d06f`), gyges reaches rhadamanth by key (`26ff1ef`, 4 Sep, verified live gyges -> rhadamanth this morning), and kovacs is absent from gyges's ssh fragment for a documented non-key reason. **A carried decision list is not self-cleaning.** Re-verify each item against as-built before putting it to hv; three of six were archaeology.
 - (2026-09-08) `acceptance: exempt` is NOT reachable from the CLI -- Intent's own `known-defects.md` records it as `intent#0227`: the state has a read path and no writer, and the close gate names it as the remedy anyway. Used the documented workaround: define one criterion and satisfy it. ST0001 therefore has a minimal-but-true contract (AC001, 1/1), not a complete one.
 - (2026-09-08) Fixed the `e` alias in Molt-matts (`config/zsh/zshrc:135`), routed by hv via geodica. It could never work: an alias appends arguments at the END, the body ended in `&` which terminates the command, so `e file` ran emacsclient with no file and then shell-EXECUTED the path. Now `config/zsh/functions/e`, body-only, autoloaded. Verified against a stub emacsclient -- old form captured `[--alternate-editor=emacs]` with no file plus `permission denied: /etc/hosts`; new form captures both filenames. First call fires, so the dvb no-op defect is avoided.
+- (2026-09-08) ST0001 closed. WP-07 was HALF met and closing it wholesale would have been false: `molt upgrade` exists, works identically on the VM sleeve and both Macs, and is idempotent across two dry-runs -- but there is no VM build spec, no one-command build, and the v0.1.1 release carries zero assets. Split rather than fudged: the self-upgrading half became AC002-004 on ST0001 with evidence, the VM-build half became ST0003 with its own unsatisfied contract. A half-met work package closed whole is a lie that compounds, because the next reader has no way to see which half.
+- (2026-09-08) WP-04 was also largely already built -- `docs/guides/bootstrap-runbook.md` existed since 16 June and was three months stale, asserting alacritty was a symlink at JetBrainsMono 14pt when it is a rendered template at MesloLGS 11. **Both remaining WPs on a six-month-old thread turned out to be mostly delivered.** Check the artefact before believing a `Not Started` status; the status field records what someone last typed, not what exists.

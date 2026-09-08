@@ -39,3 +39,22 @@ Demonstrated rather than assumed, under `set -o pipefail`: a 200k-line payload g
 **And intent-vc's structural point is the one I would most want you to hear: the guard is a per-repo property, not a fleet one.** Intent's covers Intent's own instruments and would never have seen Molt's liberator. Nothing in either estate looks across the boundary. So every repo that has not ported it carries this unmeasured -- Molt, Molt-matts, Utilz, devbin, Laksa, Lamplight. That is a fleet decision, not a Molt one.
 
 Not porting it without your say-so: it is a new instrument, not a fix to existing work.
+
+## (2026-09-08 10:53Z)
+
+**Validation sweep of the 04-07 Sep window, scoped as hv ruled: the backup liberator and `9f28dce`. Three findings, none of them fixed -- a sweep reports, it does not patch.**
+
+**1. The backup liberator has ZERO tests.** 477 lines, 17 functions, 9 commits in the last two days, and it is the liberator that decides whether your backups exist and are scheduled. `test/liberators/` pins desktop, editors, intent, web and zsh -- every one of them smaller and less churned. This is the largest untested surface in the framework and it governs the thing with the least tolerance for being wrong.
+
+**2. `backup_verify` returns PASS having checked nothing, in two distinct ways.** Same class as the `intent_verify` hole closed this morning, and the one AC001 is written against:
+
+- `liberators/backup.sh:386` -- away from `MOLT_BACKUP_HOST` it prints an info line and `return 0`. Verify PASSED. Zero assertions ran. A caller reading the exit code cannot distinguish "your backup is verified" from "I was on a different network".
+- `liberators/backup.sh:431` -- share not mounted, so the dialect and attach-budget checks are skipped, and it then falls through to `molt_info "Verified: a recent backup exists and the job is bound to its image"`. The skip is announced on its own line; the verdict line is not qualified, and the return code is not qualified at all.
+
+The information is present in both cases and the VERDICT does not carry it. That is the same shape as check 6 printing a tick over `15/16`.
+
+**3. `9f28dce` (mtime -> content digest) holds up.** I tried to break it and could not. The digest covers template, `vars.sh` and extra inputs, sorts extras so it does not depend on glob order, includes each extra's basename so a rename is caught, and fails toward "stale" on every error path -- missing repo, failed digest, absent sidecar. Probed a missing `vars.sh` under `set -euo pipefail`: computes correctly rather than tripping `set -e`. The comments name the three separate occasions this same bug appeared. Good work, and the extras case is tested.
+
+One property it does NOT have, which may be by design: a hand-edited RENDERED file is never detected, because the digest is taken over the inputs and never over the output. mtime did not catch that either, so it is not a regression -- but "the config on disk is what the template says" is a thing a reader may believe this provides.
+
+**Recommendation, and it is one decision not three.** Findings 1 and 2 are the same finding: a 477-line liberator with no tests grew a verify that passes on nothing, and nothing caught it. Writing `test/liberators/backup.bats` fixes 2 as a side effect, because the first control you write is "verify must FAIL when it has not checked anything" -- exactly the arm that caught `intent_verify` this morning. I would do that before touching backup.sh's logic.
