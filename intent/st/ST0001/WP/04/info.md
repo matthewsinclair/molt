@@ -2,7 +2,7 @@
 wp_id: WP-04
 title: Document Phase 1 bootstrap steps
 scope: M
-status: Not Started
+status: Done
 ---
 
 # WP-04: Document Phase 1 bootstrap steps

@@ -1,9 +1,9 @@
 ---
 st_id: ST0001
 title: Bootstrap
-status: WIP
+status: Completed
 created: 2026-03-07
-completed:
+completed: 2026-09-08
 ---
 
 # ST0001: Bootstrap
@@ -142,23 +142,23 @@ This is the bootstrap steel thread for the entire MOLT project. Phase 1 is compl
 
 ## Work Packages
 
-| WP    | Title                                                 | Size | Status      |
-| ----- | ----------------------------------------------------- | ---- | ----------- |
-| WP-01 | Fix Cmd key passthrough from Parallels                | M    | Done        |
-| WP-02 | Set up kovacs SSH for GitHub                          | S    | Done        |
-| WP-03 | Install Nerd Fonts                                    | S    | Done        |
-| WP-04 | Document Phase 1 bootstrap steps                      | M    | Not Started |
-| WP-05 | MOLT framework scaffolding                            | L    | Done        |
-| WP-06 | Highlander and Thin Coordinator audit                 | S    | Done        |
-| WP-07 | Reproducible VM build and self-upgrading Molt         | L    | Not Started |
-| WP-08 | Template system implementation                        | M    | Done        |
-| WP-09 | Split terminal liberator into per-emulator liberators | M    | Done        |
-| WP-10 | Migrate from chezmoi to MOLT on rhadamanth            | M    | Done        |
-| WP-11 | Inline upgrade (molt upgrade)                         | S    | Done        |
-| WP-12 | Emacs macOS keybindings on Linux                      | S    | Done        |
-| WP-13 | Tiling window manager (GNOME 46)                      | M    | Done        |
-| WP-14 | Doctor names what it did not install                  | S    | Done        |
-| WP-15 | Version-agnostic intent liberator                     | S    | Done        |
+| WP    | Title                                                 | Size | Status |
+| ----- | ----------------------------------------------------- | ---- | ------ |
+| WP-01 | Fix Cmd key passthrough from Parallels                | M    | Done   |
+| WP-02 | Set up kovacs SSH for GitHub                          | S    | Done   |
+| WP-03 | Install Nerd Fonts                                    | S    | Done   |
+| WP-04 | Document Phase 1 bootstrap steps                      | M    | Done   |
+| WP-05 | MOLT framework scaffolding                            | L    | Done   |
+| WP-06 | Highlander and Thin Coordinator audit                 | S    | Done   |
+| WP-07 | Reproducible VM build and self-upgrading Molt         | L    | Done   |
+| WP-08 | Template system implementation                        | M    | Done   |
+| WP-09 | Split terminal liberator into per-emulator liberators | M    | Done   |
+| WP-10 | Migrate from chezmoi to MOLT on rhadamanth            | M    | Done   |
+| WP-11 | Inline upgrade (molt upgrade)                         | S    | Done   |
+| WP-12 | Emacs macOS keybindings on Linux                      | S    | Done   |
+| WP-13 | Tiling window manager (GNOME 46)                      | M    | Done   |
+| WP-14 | Doctor names what it did not install                  | S    | Done   |
+| WP-15 | Version-agnostic intent liberator                     | S    | Done   |
 
 ## Acceptance
 
