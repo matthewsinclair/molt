@@ -15,11 +15,19 @@ Molt has no separate control node. `vc` is currently the only session-driven nod
 
 ## Who reads the hv inbox
 
-**`vc` is obliged to read `hv/inbox.*` and surface its contents to the human.**
+**`hv` is Matthew, personally. Not a proxy, not a role account, not a session.** Nothing reads `hv/inbox.*` on its own, because the node has no session loop -- so a write there reaches a human only if some other node carries it.
 
-This is the whole point of the file. A write surface with no named reader is a queue, not a channel: writing succeeds every time, delivery never happens, and nothing observable distinguishes the two. Peers write into `hv/inbox.<sender>.md` so that an escalation survives when the human is not reachable live; `vc` is what turns that write into a delivery.
+**`vc` is that carrier. Everything addressed to `hv` routes `peer -> hv/inbox.<sender>.md -> vc -> hv for review.`**
 
-`vc` does this at every pickup, before reporting anything else. If `vc` is not running, the obligation is unmet -- that is a real gap, not a technicality, and it is the first thing to fix rather than something to route around.
+That third hop is the one worth stating, because it is the one that does not happen by itself:
+
+- **`vc` reads every `hv/inbox.*` at every pickup, before reporting anything else**, and surfaces the contents to hv in the session -- quoted or summarised, but delivered, in the conversation, where hv will see it.
+- **The same applies to whiteboard notes generally**, not only inbox entries. A `## Decisions` line, a `## Watch-outs` entry or a `focus:` on a peer board that hv needs to rule on is surfaced the same way. The inbox is the durable surface; it is not the only thing that needs a reader.
+- **`vc` presents these for hv's REVIEW, and does not action them on hv's behalf.** Escalations exist because a decision is needed. Deciding it and reporting it as handled removes the decision from the person whose decision it was.
+
+A write surface with no named reader is a queue, not a channel: writing succeeds every time, delivery never happens, and **nothing observable distinguishes the two**. Peers write into `hv/inbox.<sender>.md` so an escalation survives when hv is not reachable live; `vc` is what turns that write into a delivery.
+
+If `vc` is not running, the obligation is unmet -- that is a real gap, not a technicality, and it is the first thing to fix rather than something to route around. **An entry that `vc` has read but not put in front of hv is also unmet**, and it looks identical from the file's side.
 
 ## Escalation
 
