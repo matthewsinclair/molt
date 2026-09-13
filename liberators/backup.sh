@@ -23,8 +23,10 @@
 
 # --- What "working" actually means -------------------------------------------
 # SuperDuper aborts an image attach after this long. Hardcoded in sdcopyserver;
-# there is no preference key for it.
-BACKUP_ATTACH_BUDGET_S=120
+# there is no preference key for it. It was 120s up to 4.0.5; 4.0.6 raised it to
+# 600s, which is the figure its own failure now reports ("timed out after 600s").
+# Re-check it on every SuperDuper upgrade.
+BACKUP_ATTACH_BUDGET_S=600
 # Cost of one band during an attach, over SMB3 to the Synology. This is NOT a
 # constant: it rises with band size, so a single figure under-reports badly on
 # large-band images. Two measurements, same NAS, same wire:
@@ -108,8 +110,9 @@ _backup_dialect() {
 
 # The destination is not a stored path. SuperDuper re-derives it on every run,
 # and deriving an image destination means attaching it, which means hdiutil
-# imageinfo -- an operation whose cost grows with the band count, against a
-# hardcoded 120s budget. When that budget blows, SuperDuper does not stop: it
+# imageinfo -- an operation whose cost grows with the band count and with the
+# APFS metadata inside the image, against a hardcoded budget
+# (BACKUP_ATTACH_BUDGET_S). When that budget blows, SuperDuper does not stop: it
 # falls back to the nearest matching volume, which is the SHARE the image lives
 # on, rewrites the tile and drops the diskImage binding entirely. The next Smart
 # Update then runs --delete against the share root and deletes the sparsebundle,
@@ -217,9 +220,10 @@ _backup_sd_locked() {
 #     carries scheduleOn and days, so every backup either machine had ever
 #     completed was triggered by hand.
 #   - A schedule edited months from now with no memory of the other machine.
-#     Attaching an image costs ~260s while another copy is running against the
-#     same NAS, against a 120s budget, so two jobs must not overlap. Windows are
-#     assigned per sleeve and do not intersect; this asserts the local one.
+#     An attach costs roughly 4x as much while another copy is running against
+#     the same NAS, and a cold attach of a full image can already use most of
+#     the budget, so two jobs must not overlap. Windows are assigned per sleeve
+#     and do not intersect; this asserts the local one.
 #
 # It cannot see the other machine, and does not pretend to. It only checks that
 # this sleeve stayed inside the lane it was given.
@@ -342,10 +346,11 @@ backup_check() {
     fi
     # The figure above is an idle floor, not a guarantee. Measured on the same
     # image minutes apart: 70s with the NAS quiet, 268s while the other Mac was
-    # mid-copy -- 78ms against 316ms per band, roughly 4x, and 223% of the
-    # budget. Nothing here can see the other machine, so this cannot be checked
-    # from one sleeve; it is an operational rule (never let two copies overlap)
-    # recorded in instances/yggdrasil/NOTES.md and in each share's README.
+    # mid-copy -- 78ms against 316ms per band, roughly 4x, and 223% of the 120s
+    # budget SuperDuper had then. Nothing here can see the other machine, so
+    # this cannot be checked from one sleeve; it is an operational rule (never
+    # let two copies overlap) recorded in instances/yggdrasil/NOTES.md and in
+    # each share's README.
     if [[ $(( _BACKUP_WORST_S * 4 )) -ge "$BACKUP_ATTACH_BUDGET_S" ]]; then
       molt_debug "backup: would exceed the attach budget if another copy ran concurrently (~$(( _BACKUP_WORST_S * 4 ))s) — do not overlap the two machines"
     fi
