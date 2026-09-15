@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 7,
+  "slug": "alacritty-check-never-flags-a-template-form-conf",
+  "title": "alacritty check never flags a template-form config: molt_config_stale gets an absolute .tmpl path",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-09-15",
+  "reporter": "Matthew Sinclair",
+  "body": "_alacritty_config_wrong calls molt_config_stale with the ABSOLUTE template path ($user_repo/config/alacritty/alacritty.toml.tmpl). molt_config_stale takes a repo-relative source without .tmpl (as zsh.sh and ssh.sh pass it), so it looks for $user_repo/$abs.tmpl.tmpl, finds nothing, and returns 1: not stale. A template-form alacritty config is therefore never flagged, rendered or verified on any sleeve. Found by kovacs on 2026-09-15 after the ~/Devel/cfg move: ~/.config/alacritty/alacritty.toml has been a dangling link since Molt-matts 573e401 (8 Sep) renamed the file to alacritty.toml.tmpl, while resleeve reported 'alacritty: ok'. The liberator has no tests. Fix: pass the relative source, check what rendering does when the target is still an old symlink, and add tests covering both the template and the linked forms."
+}

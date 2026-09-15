@@ -418,6 +418,19 @@ molt_config_stale() {
   local target="$2"    # absolute path of the rendered file
   shift 2              # any remaining args: extra inputs the render depends on
 
+  # An absolute or .tmpl source can never name a template, so the "no template,
+  # nothing to render" answer below would be a silent pass. The alacritty
+  # liberator passed its absolute .tmpl path and was told "not stale" for a week
+  # over a dangling link (issue 0007). Say so, and fail closed.
+  if [[ "$source" == /* ]]; then
+    molt_error "molt_config_stale: source must be repo-relative, got ${source}"
+    return 0
+  fi
+  if [[ "$source" == *.tmpl ]]; then
+    molt_error "molt_config_stale: pass the source without .tmpl, got ${source}"
+    return 0
+  fi
+
   local user_repo template
   if ! user_repo="$(molt_find_user_repo)"; then
     molt_warn "molt_config_stale: no user repo — cannot tell whether ${target} is stale"
