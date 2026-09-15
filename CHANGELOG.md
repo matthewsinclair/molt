@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `molt doctor` check (10th) for config files that bake in another user's absolute home path, including JSON-escaped `\/Users\/<x>` exports (`molt_foreign_home_paths`)
 - `molt doctor` external-dependency check now also verifies `envsubst` (gettext), required for template rendering
 - `web` liberator test (`test/liberators/web.bats`)
+- `test/liberators/backup.bats`: the `backup` liberator's first tests (31). Fixtures stand in for SuperDuper's state through `MOLT_SD_TILES` and `MOLT_SD_SCHEDULER_LOG`, and the errexit arms run in a fresh `bash` under `set -euo pipefail`, where a failing assignment would abort
 
 ### Changed
 
@@ -41,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `bootstrap.sh` no longer assumes a fixed GitHub owner for the config repo: `MOLT_REPO` and the new `MOLT_USER_GH` are overridable (default `whoami`)
 - Removed hardcoded personal identity strings throughout framework docs and project artifacts; the framework now reads as generic `{user}`/`{github}`
 - `molt new-user` skeleton defaults `MOLT_FONT_FAMILY` to `Hack Nerd Font Mono` (a Nerd Font, matching the iTerm2 profile) so the prompt glyphs render out of the box
+- `backup_verify` has three exit codes: 0 when every check ran and passed, 1 when a check failed, and 2 when nothing failed but the share-side checks (SMB dialect, attach budget) could not run. 2 is the usual state, because SuperDuper mounts the share only while it copies
 
 ### Fixed
 
@@ -57,6 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `web` liberator now detects the repo by `go.mod`/`.git` and links the platform binary (`web-<os>-<arch>`) or a locally built `./web`, instead of requiring a binary literally named `web` that a fresh clone never has
 - `backup` measured attach headroom against a 120s budget that SuperDuper 4.0.6 no longer uses. 4.0.6 aborts an image attach at 600s (its own failure reads "timed out after 600s"), so `BACKUP_ATTACH_BUDGET_S` is now 600 and the percentages and VERIFY FAIL threshold follow it. The per-band projection is unchanged and still reports an idle floor: it knows nothing of the APFS metadata cost that now dominates a full image's attach
 - `backup` window check failed on every run for rhadamanth. The instance claimed `04:00-06:00` while SuperDuper fires the job at 03:00, so `backup_check` was permanently red and resleeve ran the no-op `_install` each time. rhadamanth's window is now `03:00-05:00`, and gyges' narrows from `01:00-03:00` to `01:00-02:00` so the two lanes no longer share the 03:00 boundary (both ends are inclusive)
+- `backup_verify` passed without checking anything. Away from home it returned 0 before reading any SuperDuper state, and with the share unmounted, mounted but not answering, or its image unreadable, it skipped the share-side checks and still printed "Verified". `backup_check` also stopped at "away from home, nothing to check" over local state it could read
+- `backup` stated "no backup exists" when the job carried no run history, which a recreated job disproves, and a failed latest run hid when the last good copy was. Check and verify now share one assessment, instead of two copies that disagreed about cancelled runs
+- `backup` reported a failed finished run while a new copy was running, because `recentRuns` records only finished runs. A running copy is now detected and named, and clears a cancelled or failed latest run only when the last successful copy is recent
 
 ## [0.1.1] - 2026-03-23
 
@@ -64,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Cross-instance aggregation: `molt_instances_field()` reads TOML fields from all instances
 - iTerm2 SSH background colors now generated at resleeve time from `instance.toml` data
-- `[terminal]` section in `instance.toml` for host identity metadata (e.g., `ssh_bg_color`)
+- `[terminal]` section in `instance.toml` for host identity metadata (eg `ssh_bg_color`)
 - Stub instance support: minimal `instance.toml` for non-Molt hosts (shrike, yggdrasil)
 - ShellCheck integrated into `molt test` (runs before bats, fails on any warning)
 - 6 new bats tests for cross-instance aggregation (`test/instances.bats`)

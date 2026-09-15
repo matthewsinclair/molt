@@ -1,5 +1,29 @@
 # Done
 
+## 018: Backup liberator verdicts, and the Molt-matts iTerm2 rebase (DONE)
+
+- **`backup_verify` passed without checking anything** (issue 0001). Away from home it returned 0 before reading any SuperDuper state; with the share unmounted, mounted but not answering, or its image unreadable, it skipped the share-side checks and still printed "Verified". Local `tiles.json` checks now run everywhere. Verify exits 0 when every check ran and passed, 1 when a check failed, and 2 when nothing failed but the share-side checks could not run. `backup_check` lost the same away-from-home early return.
+- **Run history was misreported** (issue 0002). An empty history was stated as "no backup exists", which a recreated job disproves, and a failed latest run hid when the last good copy was. Check and verify now share `_backup_run_assess` instead of two copies that already disagreed about cancelled runs.
+- **A running copy was invisible** (issue 0003). `recentRuns` records only finished runs, so both commands reported a failed run while hv's copy was 11% done. `_backup_copying` is the one probe, also used by `backup_maintain`. A running copy is always named, and it clears a cancelled or failed latest run only when the last successful copy is within `BACKUP_MAX_AGE_DAYS`.
+- `test/liberators/backup.bats`: 31 tests, the liberator's first. 17 of the first 23 fail on the pre-fix liberator. Suite 148 -> 179.
+- **Molt-matts was stuck mid-rebase** after a 15 Sep pull. iTerm2 3.7.1 had rewritten `config/iterm2/molt-profile.json` on two machines within three minutes: once in its own serialisation (`cc8028c`), once down to a 4-key stub (`da54ef3`). Resolved by skipping the stub, whose keys were all in `cc8028c`. Cause: iTerm2's Claude Code onboarding offers "Mark Rewritable & Install" for dynamic profiles, which adds `"Rewritable": true` and lets iTerm2 write settings changes back through the symlink into git. hv ruled iTerm2 does not write into terminal config unannounced; the profile was restored byte-for-byte to `11f8476`, without the flag.
+- Retired from vc's 8 Sep escalations: the SuperDuper schedule mismatch. rhadamanth's job runs at 03:00, inside its `03:00-05:00` window.
+- Commits: `445067c` (molt); `b58e0d4` (molt-{user})
+
+## 017: Honest-instrument sweep, ST0001 closed (DONE)
+
+One defect class, 8 Sep: an instrument that reports success while the condition it names is false.
+
+- `molt doctor` check 6 printed a tick for every ratio, so `0/16` rendered like `16/16`, and discarded the reason the check function had printed. Now warns, names the liberators and prints the reason.
+- `intent_verify` passed on the mismatched link `intent_check` warns about: it asked whether the link resolved, never whether it resolved to what the liberator installs.
+- The `intent` liberator found the Intent repo by probing for `bin/intent`, so Intent's v2-script deletion would have sent hv to clone a repo already on disk. It now identifies a repo by being one.
+- `molt doctor` check 13: the declared font must be one fontconfig resolves. Not `fc-match`, which returns Verdana for a font that does not exist.
+- `e` in Molt-matts had always discarded its filename argument: an alias appends arguments after a body ending in `&`.
+- **ST0001 closed after six months**, 15/15 work packages. WP-07 was half met and was split; its VM-build half became ST0003, since fiat-closed by hv. WP-04's runbook was three months stale and was brought current.
+- kovacs moved onto its own ext4 clones. Running one sleeve case-sensitive found three defects APFS had hidden: dangling links passing `[[ -L ]]` (`568e620`), renders compared by mtime (`9f28dce`), and a stack running from another machine's checkout (check 11). Keep one sleeve case-sensitive for this reason.
+- **Resolved, not to be re-opened.** Font vars are wired, not deleted: `alacritty.toml` is a template fed from `vars.sh`. Fonts get a check, not an installer. gyges already had key access to rhadamanth (`26ff1ef`). gyges's branch was merged (`048d06f`). A kovacs ProxyJump is correctly deferred while kovacs is unreachable. From 4 Sep: repo directory case normalised to `Molt-{user}`; `user_repo` asserted by doctor check 4; remote naming (`local`/`upstream` vs `origin`) is not a defect; the `claude` liberator owns `~/.claude/keybindings.json`; `desktop` links gtk-3.0 and gtk-4.0; doctor check 12 warns on `core.ignorecase`; `intent_check` tells "resolves" from "resolves to what we installed".
+- Commits: `200a8d3`, `0f6ac17`, `1adef9b`, `d8c7c67` (molt)
+
 ## 016: NAS backup migration, and four silent-success bugs in the framework (DONE)
 
 - **SuperDuper moved off hand-made `.asif` images onto its own sparsebundles.** rhadamanth's daily backup had failed every run since 4 Sep 02:59 with `resolve — missingField("disk7s1 belongs to a disk image; bind the image file instead")`, after succeeding for two weeks. The job's destination was anchored to the APFS volume _inside_ a hand-created image; that binding is enriched in the daemon's memory and survives only until the image detaches. A share drop at 22:12 on 3 Sep detached it, and `enrichBinding` could never rebuild it: `attach-heal: ... appeared but enrichment still failed — leaving unenriched`. The fix is to select the SMB **share** as the destination and take SuperDuper's "Use an Image..." button, which creates and owns `<host>.sparsebundle` at the share root with a `.sd4claim` lock. Both Macs migrated. Written up in full at `/Volumes/backup/notes/supersuper4-synology-nas-backup-post-mortem.md`.
