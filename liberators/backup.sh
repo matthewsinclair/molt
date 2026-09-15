@@ -54,6 +54,10 @@ BACKUP_ATTACH_FIXED_S=4
 BACKUP_ATTACH_WARN_PCT=75
 # A successful backup older than this is stale.
 BACKUP_MAX_AGE_DAYS=3
+# SuperDuper's own state. Overridable so tests can stand a fixture in for it;
+# nothing in a sleeve should ever set these.
+MOLT_SD_TILES="${MOLT_SD_TILES:-/Library/Application Support/SuperDuper4/tiles.json}"
+MOLT_SD_SCHEDULER_LOG="${MOLT_SD_SCHEDULER_LOG:-/Library/Logs/SuperDuper 4/scheduler.log}"
 
 _backup_vars() {
   local repo hostname vars
@@ -81,6 +85,12 @@ _backup_home() {
 }
 
 _backup_mounted()  { /sbin/mount | /usr/bin/grep -q " on ${MOLT_BACKUP_MOUNT} (" ; }
+
+# Is a SuperDuper copy running right now? recentRuns records only runs that have
+# finished, so a copy in flight is invisible in tiles.json. On 15 Sep 2026 the
+# history read "cancelled, failed, failed" over a copy that was 11% done, and it
+# was taken for a failing backup.
+_backup_copying() { pgrep -f 'sdcopy --progress-fd' >/dev/null 2>&1; }
 _backup_attached() {
   # Exact match on the resolved path. hdiutil pads image-path with spaces, so a
   # literal grep is brittle; compare the field instead.
@@ -121,7 +131,7 @@ _backup_dialect() {
 # That is not a hypothetical. It destroyed the gyges backup on 7 Sep 2026.
 # A job that names our share but carries no image binding is armed, not broken.
 _backup_sd_share_bound() {
-  local tiles="/Library/Application Support/SuperDuper4/tiles.json"
+  local tiles="$MOLT_SD_TILES"
   [[ -r "$tiles" ]] || return 1
   # A correctly bound image destination carries a diskImage object and no
   # networkUrl whatsoever. One that has fallen back to the share carries a
@@ -143,7 +153,7 @@ _backup_sd_share_bound() {
 
 # Write our tile's proto to $1. Ours is the one whose image lives on our share.
 _backup_sd_tile() {
-  local out="$1" tiles="/Library/Application Support/SuperDuper4/tiles.json"
+  local out="$1" tiles="$MOLT_SD_TILES"
   local n i url
   [[ -r "$tiles" ]] || return 1
   n="$(/usr/bin/plutil -extract tiles raw -o - "$tiles" 2>/dev/null)" || return 1
@@ -156,18 +166,118 @@ _backup_sd_tile() {
   return 1
 }
 
-# Most recent run: _SD_OUTCOME, _SD_AGE_DAYS, _SD_BYTES. Absent history is not
-# an error -- a freshly created job has none until its first copy finishes.
+# Age in whole days of run $2 in proto $1; empty when the run carries no end.
+_backup_run_age_days() {
+  local ended
+  ended="$(/usr/bin/plutil -extract "recentRuns.$2.endedAtUnixNanos" raw -o - "$1" 2>/dev/null)" || return 0
+  if [[ "$ended" =~ ^[0-9]+$ ]]; then
+    echo $(( ( $(date +%s) - ended / 1000000000 ) / 86400 ))
+  fi
+  return 0
+}
+
+# Most recent run: _SD_OUTCOME, _SD_AGE_DAYS, _SD_BYTES, and _SD_RUNS for how
+# many SuperDuper keeps. Also the most recent SUCCESSFUL run's age in
+# _SD_OK_AGE_DAYS, empty when none of them succeeded: a failing latest attempt
+# says nothing about whether a good copy from earlier still exists, and reporting
+# only the attempt hides it. recentRuns is oldest first. Absent history is not an
+# error -- a job created or recreated has none until its first copy finishes.
 _backup_last_run() {
-  local proto="$1" n last ended
-  _SD_OUTCOME="" _SD_AGE_DAYS="" _SD_BYTES=""
+  local proto="$1" n i last
+  _SD_OUTCOME="" _SD_AGE_DAYS="" _SD_BYTES="" _SD_OK_AGE_DAYS="" _SD_RUNS=""
   n="$(/usr/bin/plutil -extract recentRuns raw -o - "$proto" 2>/dev/null)" || return 1
   [[ "$n" =~ ^[0-9]+$ ]] && [[ "$n" -gt 0 ]] || return 1
+  _SD_RUNS="$n"
   last=$((n - 1))
   _SD_OUTCOME="$(/usr/bin/plutil -extract "recentRuns.$last.outcome" raw -o - "$proto" 2>/dev/null)"
   _SD_BYTES="$(/usr/bin/plutil -extract "recentRuns.$last.bytesCopied" raw -o - "$proto" 2>/dev/null)"
-  ended="$(/usr/bin/plutil -extract "recentRuns.$last.endedAtUnixNanos" raw -o - "$proto" 2>/dev/null)"
-  [[ "$ended" =~ ^[0-9]+$ ]] && _SD_AGE_DAYS=$(( ( $(date +%s) - ended / 1000000000 ) / 86400 ))
+  _SD_AGE_DAYS="$(_backup_run_age_days "$proto" "$last")"
+  for (( i = last; i >= 0; i-- )); do
+    if [[ "$(/usr/bin/plutil -extract "recentRuns.$i.outcome" raw -o - "$proto" 2>/dev/null)" == "OUTCOME_SUCCEEDED" ]]; then
+      _SD_OK_AGE_DAYS="$(_backup_run_age_days "$proto" "$i")"
+      break
+    fi
+  done
+  return 0
+}
+
+# One reading of the job and its history, shared by check and verify so the two
+# cannot drift apart again -- they had: check told a cancelled copy from a failed
+# one and verify did not. Fills $1 with our tile's proto (the window check reads
+# it) and sets _BACKUP_RUN_STATE and _BACKUP_RUN_MSG. The message is a sentence
+# that is true whichever verb prints it; each verb chooses only the severity.
+#
+#   ok          latest copy succeeded, within BACKUP_MAX_AGE_DAYS
+#   copying     a copy is running, latest recorded run did not succeed, but the
+#               last successful copy is within BACKUP_MAX_AGE_DAYS -- not a fault
+#   stale       latest copy succeeded, too long ago
+#   cancelled   latest copy was cancelled
+#   failed      latest copy ended any other way
+#   no_history  the job exists but carries no runs
+#   no_job      no job has an image on our share
+#
+# A running copy is always named, but it excuses nothing on its own: until it
+# finishes it is not a backup, so stale, never-succeeded and empty histories
+# keep their verdict.
+_backup_run_assess() {
+  local proto="$1" since bytes="" running=0
+  _BACKUP_RUN_STATE="" _BACKUP_RUN_MSG=""
+  if _backup_copying; then
+    running=1
+  fi
+  if ! _backup_sd_tile "$proto"; then
+    _BACKUP_RUN_STATE="no_job"
+    _BACKUP_RUN_MSG="no SuperDuper job has an image on the ${MOLT_BACKUP_SHARE} share"
+    return 0
+  fi
+  if ! _backup_last_run "$proto"; then
+    # Not "no backup exists". A job that is recreated loses its run history and
+    # keeps its backup, so an empty history cannot tell the two apart. On 8 Sep
+    # 2026 this message said it could, and was believed.
+    _BACKUP_RUN_STATE="no_history"
+    _BACKUP_RUN_MSG="SuperDuper job is bound correctly but carries no run history, so whether a backup exists cannot be read from it (a new or recreated job has none until its first copy finishes)"
+    if [[ "$running" -eq 1 ]]; then
+      _BACKUP_RUN_MSG="${_BACKUP_RUN_MSG}; a SuperDuper copy is running now"
+    fi
+    return 0
+  fi
+  if [[ -n "$_SD_OK_AGE_DAYS" ]]; then
+    since="last successful copy ${_SD_OK_AGE_DAYS} day(s) ago"
+  else
+    since="none of the ${_SD_RUNS} runs SuperDuper keeps succeeded"
+  fi
+  if [[ -n "$_SD_BYTES" ]]; then
+    bytes=", ${_SD_BYTES} bytes"
+  fi
+  case "$_SD_OUTCOME" in
+    OUTCOME_SUCCEEDED)
+      if [[ "$_SD_AGE_DAYS" -gt "$BACKUP_MAX_AGE_DAYS" ]]; then
+        _BACKUP_RUN_STATE="stale"
+        _BACKUP_RUN_MSG="last successful copy was ${_SD_AGE_DAYS} days ago (want <= ${BACKUP_MAX_AGE_DAYS})"
+      else
+        _BACKUP_RUN_STATE="ok"
+        _BACKUP_RUN_MSG="last copy succeeded ${_SD_AGE_DAYS} day(s) ago${bytes}"
+      fi ;;
+    OUTCOME_CANCELLED)
+      _BACKUP_RUN_STATE="cancelled"
+      _BACKUP_RUN_MSG="last copy was cancelled ${_SD_AGE_DAYS} day(s) ago; ${since}" ;;
+    *)
+      _BACKUP_RUN_STATE="failed"
+      _BACKUP_RUN_MSG="last copy did NOT succeed (${_SD_OUTCOME:-unknown}), ${_SD_AGE_DAYS} day(s) ago; ${since}" ;;
+  esac
+  if [[ "$running" -eq 1 ]]; then
+    case "$_BACKUP_RUN_STATE" in
+      cancelled|failed)
+        if [[ -n "$_SD_OK_AGE_DAYS" ]] && [[ "$_SD_OK_AGE_DAYS" -le "$BACKUP_MAX_AGE_DAYS" ]]; then
+          _BACKUP_RUN_STATE="copying"
+          _BACKUP_RUN_MSG="a SuperDuper copy is running now; last successful copy ${_SD_OK_AGE_DAYS} day(s) ago; the last recorded run before this one ended ${_SD_OUTCOME:-unknown}, ${_SD_AGE_DAYS} day(s) ago"
+        else
+          _BACKUP_RUN_MSG="${_BACKUP_RUN_MSG}; a SuperDuper copy is running now"
+        fi ;;
+      *)
+        _BACKUP_RUN_MSG="${_BACKUP_RUN_MSG}; a SuperDuper copy is running now" ;;
+    esac
+  fi
   return 0
 }
 
@@ -206,7 +316,7 @@ _backup_attach_projection() {
 # SuperDuper 4 will happily show "NEXT TOMORROW AT 03:00" while its daemon is
 # locked and skipping every single fire. The only honest source is the log.
 _backup_sd_locked() {
-  local log="/Library/Logs/SuperDuper 4/scheduler.log"
+  local log="$MOLT_SD_SCHEDULER_LOG"
   [[ -r "$log" ]] || return 1
   tail -50 "$log" 2>/dev/null | grep -q "daemon is LOCKED"
 }
@@ -260,9 +370,15 @@ backup_check() {
   _backup_vars || return 1
   local ok=0
 
+  # Away from home is a normal state, not a fault -- but it only puts the share
+  # and the image out of reach. Run history, image binding, schedule and the lock
+  # all live in local SuperDuper state and are read either way. This used to
+  # return here, so a laptop away for a fortnight said "nothing to check" over a
+  # backup that had stopped happening.
+  local home=1
   if ! _backup_home; then
-    molt_info "backup: ${MOLT_BACKUP_HOST} not reachable — away from home, nothing to check"
-    return $ok
+    molt_info "backup: ${MOLT_BACKUP_HOST} not reachable — away from home; share and image checks skipped"
+    home=0
   fi
 
   # An unmounted share is no longer a fault: nothing here mounts it any more,
@@ -270,7 +386,9 @@ backup_check() {
   # checks that have to read the image, so say which were skipped and move on.
   # Everything derived from tiles.json is local and runs either way.
   local share_readable=0
-  if _backup_mounted; then
+  if [[ "$home" -eq 0 ]]; then
+    :
+  elif _backup_mounted; then
     if _backup_probe "$MOLT_BACKUP_MOUNT"; then
       share_readable=1
     else
@@ -301,32 +419,12 @@ backup_check() {
 
   # The question the old checks never asked: did a backup actually happen?
   local proto; proto="$(mktemp -t molt-sdtile)"
-  if _backup_sd_tile "$proto"; then
-    if _backup_last_run "$proto"; then
-      case "$_SD_OUTCOME" in
-        OUTCOME_SUCCEEDED)
-          if [[ "$_SD_AGE_DAYS" -gt "$BACKUP_MAX_AGE_DAYS" ]]; then
-            molt_warn "backup: last successful copy was ${_SD_AGE_DAYS} days ago (want <= ${BACKUP_MAX_AGE_DAYS})"
-            ok=1
-          else
-            molt_info "backup: last copy succeeded ${_SD_AGE_DAYS} day(s) ago$( [[ -n "$_SD_BYTES" ]] && printf ', %s bytes' "$_SD_BYTES" )"
-          fi ;;
-        OUTCOME_CANCELLED)
-          molt_warn "backup: last copy was cancelled ${_SD_AGE_DAYS} day(s) ago — no complete backup from it"
-          ok=1 ;;
-        *)
-          molt_error "backup: last copy did NOT succeed (${_SD_OUTCOME:-unknown}), ${_SD_AGE_DAYS} day(s) ago"
-          ok=1 ;;
-      esac
-    else
-      # Correctly configured but never run is still "you have no backup".
-      molt_warn "backup: SuperDuper job is bound correctly but has never completed a copy — no backup exists yet"
-      ok=1
-    fi
-  else
-    molt_warn "backup: no SuperDuper job has an image on the ${MOLT_BACKUP_SHARE} share"
-    ok=1
-  fi
+  _backup_run_assess "$proto"
+  case "$_BACKUP_RUN_STATE" in
+    ok|copying) molt_info "backup: ${_BACKUP_RUN_MSG}" ;;
+    failed) molt_error "backup: ${_BACKUP_RUN_MSG}"; ok=1 ;;
+    *)      molt_warn  "backup: ${_BACKUP_RUN_MSG}"; ok=1 ;;
+  esac
   _backup_window_check "$proto" || ok=1
   rm -f "$proto"
 
@@ -384,14 +482,20 @@ backup_install() {
   return 0
 }
 
+# Exit codes, because a verdict the caller cannot read is no verdict:
+#   0  every check ran and passed
+#   1  a check ran and failed
+#   2  nothing that ran failed, but the share-side checks could not run
+#
+# 2 is the common case, not an edge: the share is normally unmounted, since
+# SuperDuper mounts it only while it copies, and a laptop is often away. This
+# used to return 0 in both states and print "Verified" over what it had skipped;
+# away from home it had asserted nothing at all. The attach budget is the check
+# standing between a growing image and SuperDuper deleting it, so "not checked"
+# must never read as "fine".
 backup_verify() {
   _backup_vars || return 1
-  local errors=0
-
-  if ! _backup_home; then
-    molt_info "backup: away from ${MOLT_BACKUP_HOST}; share and image checks skipped"
-    return 0
-  fi
+  local errors=0 skipped=""
 
   # Bound to the image, not the share. This is the one that matters: a
   # share-bound job does not merely fail, it Smart Updates into the share root
@@ -402,43 +506,48 @@ backup_verify() {
   fi
 
   local proto; proto="$(mktemp -t molt-sdtile)"
-  if _backup_sd_tile "$proto"; then
-    if _backup_last_run "$proto"; then
-      case "$_SD_OUTCOME" in
-        OUTCOME_SUCCEEDED)
-          if [[ "$_SD_AGE_DAYS" -gt "$BACKUP_MAX_AGE_DAYS" ]]; then
-            molt_error "VERIFY FAIL: last successful copy was ${_SD_AGE_DAYS} days ago"
-            errors=1
-          fi ;;
-        *) molt_error "VERIFY FAIL: last copy did not succeed (${_SD_OUTCOME:-unknown})"; errors=1 ;;
-      esac
-    else
-      molt_error "VERIFY FAIL: SuperDuper job has never completed a copy — no backup exists"
-      errors=1
-    fi
-  else
-    molt_error "VERIFY FAIL: no SuperDuper job has an image on the ${MOLT_BACKUP_SHARE} share"
-    errors=1
-  fi
+  _backup_run_assess "$proto"
   rm -f "$proto"
+  case "$_BACKUP_RUN_STATE" in
+    ok|copying) ;;
+    *) molt_error "VERIFY FAIL: ${_BACKUP_RUN_MSG}"; errors=1 ;;
+  esac
 
-  if _backup_mounted && _backup_probe "$MOLT_BACKUP_MOUNT"; then
+  if ! _backup_home; then
+    skipped="${MOLT_BACKUP_HOST} not reachable"
+  elif ! _backup_mounted; then
+    skipped="${MOLT_BACKUP_MOUNT} not mounted (SuperDuper mounts it only while copying)"
+  elif ! _backup_probe "$MOLT_BACKUP_MOUNT"; then
+    molt_error "VERIFY FAIL: ${MOLT_BACKUP_MOUNT} is mounted but not answering"
+    errors=1
+  else
     local dialect; dialect="$(_backup_dialect)"
     case "${dialect:-}" in
       SMB_3*) ;;
       *) molt_error "VERIFY FAIL: expected SMB_3.x, got ${dialect:-unknown}"; errors=1 ;;
     esac
-    if _backup_attach_projection \
-       && [[ $(( _BACKUP_WORST_S * 100 / BACKUP_ATTACH_BUDGET_S )) -ge 100 ]]; then
+    if ! _backup_attach_projection; then
+      # The share is mounted and answering, so an unreadable image is a fault.
+      molt_error "VERIFY FAIL: cannot read ${MOLT_BACKUP_IMAGE}/Info.plist, so the attach budget is unknown"
+      errors=1
+    elif [[ $(( _BACKUP_WORST_S * 100 / BACKUP_ATTACH_BUDGET_S )) -ge 100 ]]; then
       molt_error "VERIFY FAIL: a full image needs ~${_BACKUP_WORST_S}s to attach, budget is ${BACKUP_ATTACH_BUDGET_S}s"
       errors=1
     fi
-  else
-    molt_info "backup: ${MOLT_BACKUP_MOUNT} not mounted; dialect and attach checks skipped"
   fi
 
-  [[ $errors -eq 0 ]] && molt_info "Verified: a recent backup exists and the job is bound to its image"
-  return $errors
+  if [[ -n "$skipped" ]]; then
+    molt_warn "VERIFY INCOMPLETE: SMB dialect and attach budget not checked — ${skipped}"
+  fi
+  if [[ "$errors" -ne 0 ]]; then
+    return 1
+  fi
+  if [[ -n "$skipped" ]]; then
+    molt_info "Checked and passing: the job is bound to its image and a recent copy succeeded"
+    return 2
+  fi
+  molt_info "Verified: a recent backup exists, the job is bound to its image, and a full image attaches within budget"
+  return 0
 }
 
 # Force a clean session when the share has wedged. Unmount only -- we no longer
@@ -457,7 +566,7 @@ backup_maintain() {
     return 0
   fi
 
-  if pgrep -f 'sdcopy --progress-fd' >/dev/null 2>&1; then
+  if _backup_copying; then
     molt_error "backup: a SuperDuper copy is running — refusing to tear down the share"
     return 1
   fi
