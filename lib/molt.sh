@@ -711,13 +711,21 @@ molt_foreign_home_paths() {
   local dir="$1"
   [[ -d "$dir" ]] || return 0
   local me; me="$(whoami)"
-  local f
+  local f homes
   while IFS= read -r f; do
     # Strip backslashes first (octal \134) so JSON-escaped \/Users\/x
     # normalises to /Users/x, then match real home paths precisely.
-    if tr -d '\134' < "$f" 2>/dev/null \
-         | grep -oE '/(Users|home)/[A-Za-z0-9_.-]+' \
-         | grep -qvE "/(Users|home)/${me}(/|$)"; then
+    #
+    # Capture the home paths, THEN match (issue 0008). This was one pipeline
+    # ending in `grep -qvE`, which exits at the first foreign path; under
+    # pipefail the upstream grep -oE then dies of SIGPIPE on a large file and the
+    # whole test reads false, so a file with a foreign path near its top went
+    # unreported. The -n test matters: a file mentioning "home" with no real
+    # home path captures nothing, and `grep -qv` on an empty herestring matches
+    # its one blank line and would report it.
+    homes="$(tr -d '\134' < "$f" 2>/dev/null \
+               | grep -oE '/(Users|home)/[A-Za-z0-9_.-]+' || true)"
+    if [[ -n "$homes" ]] && grep -qvE "/(Users|home)/${me}(/|$)" <<< "$homes"; then
       echo "${f#"$dir"/}"
     fi
   done < <(grep -rIlE '(Users|home)' "$dir" 2>/dev/null)
@@ -943,7 +951,7 @@ cmd_doctor() {
   if gh_auth_output="$(timeout 5 ssh -T git@github.com 2>&1)"; then
     :
   fi
-  if echo "$gh_auth_output" | grep -q "successfully authenticated"; then
+  if [[ "$gh_auth_output" == *"successfully authenticated"* ]]; then
     local gh_user
     gh_user="$(echo "$gh_auth_output" | grep -o 'Hi [^!]*' | sed 's/Hi //')"
     echo "[$step/$total] Checking GitHub auth... ✓ authenticated as $gh_user"

@@ -318,7 +318,10 @@ _backup_attach_projection() {
 _backup_sd_locked() {
   local log="$MOLT_SD_SCHEDULER_LOG"
   [[ -r "$log" ]] || return 1
-  tail -50 "$log" 2>/dev/null | grep -q "daemon is LOCKED"
+  # Capture, then match (issue 0008): a pipeline into grep -q can lose under pipefail.
+  local recent
+  recent="$(tail -50 "$log" 2>/dev/null || true)"
+  [[ "$recent" == *"daemon is LOCKED"* ]]
 }
 
 # Assert SuperDuper's schedule for this sleeve sits inside the window the

@@ -98,7 +98,10 @@ editors_warn_emacs_imagemagick() {
   app_bin="$(brew --prefix 2>/dev/null)/opt/${formula}/Emacs.app/Contents/MacOS/Emacs"
   [[ -x "$app_bin" ]] || return 0
 
-  otool -L "$app_bin" 2>/dev/null | grep -qiE 'libMagick(Wand|Core)' || return 0
+  # Capture, then match (issue 0008): a pipeline into grep -q can lose under pipefail.
+  local links
+  links="$(otool -L "$app_bin" 2>/dev/null || true)"
+  grep -qiE 'libMagick(Wand|Core)' <<< "$links" || return 0
 
   molt_warn "editors: ${formula} is linked against ImageMagick — every imagemagick soname bump will break Emacs at launch"
   molt_warn "  Rebuild without it (reinstall is NOT enough, it reuses the recorded options):"

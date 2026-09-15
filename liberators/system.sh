@@ -13,7 +13,11 @@ system_check() {
 
   # Check if current user is in sudo group (Linux)
   if [[ "$(molt_platform)" == "linux" ]]; then
-    if ! groups "$(whoami)" 2>/dev/null | grep -qw sudo; then
+    # Capture, then match (issue 0008): under pipefail a SIGPIPE'd writer would
+    # make this negated test report "not in sudo group" falsely.
+    local user_groups
+    user_groups="$(groups "$(whoami)" 2>/dev/null || true)"
+    if ! grep -qw sudo <<< "$user_groups"; then
       molt_info "system: user not in sudo group"
       ok=1
     fi
