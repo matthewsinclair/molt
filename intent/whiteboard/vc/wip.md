@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T13:36Z
+heartbeat_at: 2026-09-15T13:47Z
 status: paused
-focus: "EOD 15 Sep: config repos moved to ~/Devel/cfg on all three sleeves; kovacs to land issue 0007"
+focus: "EOD 15 Sep: config repos moved to ~/Devel/cfg on all three sleeves; issues 0005-0007 closed and landed"
 claims: []
 ---
 
@@ -18,8 +18,6 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 - (none)
 
 ## TODO
-
-- **Confirm kovacs landed issue 0007**: Molt at `8c3bd5a` or later, resleeve re-rendered `~/.config/alacritty/alacritty.toml`, and no link still points into `~/Devel/prj/Molt-matts`. kovacs reports to this node's session; if the session has ended, check kovacs directly.
 
 - **Get hv's ruling on `pipefail_sigpipe_check.sh`** (`hv/inbox.vc.md`, 2026-09-08 10:24Z). Explained to hv live on 15 Sep with a recommendation: skip the guard and convert Molt's 8 `cmd | grep -q` pipelines to capture-then-match, as an issue. The other inbox entries are actioned or overtaken: the backup findings closed as issues 0001-0003, the schedule note is resolved, and the ST0001 AC001 revert question was overtaken on 8 Sep when ST0001 closed with seven satisfied criteria.
 
