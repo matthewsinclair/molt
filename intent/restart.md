@@ -7,6 +7,7 @@ Start here, then read the files below. This file is an index, not a record -- it
 - [`wip.md`](wip.md) -- what is in flight and what is next. The only place current work is described.
 - [`done.md`](done.md) -- everything completed, newest first. Look here for why something is the way it is.
 - [`todo.md`](todo.md) -- generated view; the renderer owns it.
+- [`issues/`](issues) -- issues tracked without a steel thread. Use `intent issues list --kind all`; the files are generated.
 
 ## The work itself
 
@@ -18,11 +19,11 @@ Start here, then read the files below. This file is an index, not a record -- it
 
 ## Coordination
 
-- [`whiteboard/README.md`](whiteboard/README.md) -- node roster and who is obliged to read whose inbox. Two nodes: `hv` (human) and `vc`. Molt has no control node, so `vc` both validates and, when hv says so, builds.
+- [`whiteboard/README.md`](whiteboard/README.md) -- node roster and who is obliged to read whose inbox. Two nodes: `hv` (human) and `vc`. Molt has no control node, so `vc` both validates and, when hv says so, builds. The nodes are not yet registered with `intent wb register`, so the boards are still hand-authored files.
 
 ## Project files outside intent/
 
 - `VERSION` -- single source of truth for the version number.
 - `CHANGELOG.md` -- Keep a Changelog format.
 - `lib/`, `liberators/`, `bin/`, `test/` -- the framework itself.
-- `../molt-matts/` -- the user config repo this framework renders from. Note the directory is `Molt-matts` on the Macs while every reference to it is lowercase; see `wip.md`.
+- `../Molt-matts/` -- the user config repo this framework renders from. The GitHub repo name stays lowercase (`matthewsinclair/molt-matts`).
