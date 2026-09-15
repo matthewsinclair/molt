@@ -3,9 +3,10 @@
   "number": 4,
   "slug": "ci-red-since-445067c-backup-bats-fixture-is-inva",
   "title": "CI red since 445067c: backup.bats fixture is invalid JSON under bash 3.2",
-  "status": "open",
+  "status": "closed",
   "severity": "high",
   "created": "2026-09-15",
+  "closed": "2026-09-15",
   "reporter": "Matthew Sinclair",
   "body": "CI (Molt Tests) has failed on every push since 445067c: runs 34955303402 and 34958434667, job \"Test on macOS\". 22 of the 31 backup.bats tests fail. Ubuntu passes only because it has no plutil and those tests skip.\n\nThe runner image macos-26-arm64 ships only Bash 3.2.57. The _tile fixture builder in test/liberators/backup.bats defaults its schedule with ${_TILE_SCHEDULE:-{\\\"scheduleOn\\\":true,\\\"minuteOfDay\\\":180\\}}. Bash 5 strips the backslash before the closing brace; bash 3.2 keeps it, producing {\"scheduleOn\":true,\"minuteOfDay\":180\\}, which is invalid JSON. plutil cannot parse the tile, so every test that needs a job sees \"no SuperDuper job has an image on the bkp_test share\".\n\nReproduced locally by running bats with /bin first on PATH: the same 22 tests fail. The liberator is not implicated; only the tests that set _TILE_SCHEDULE explicitly, or never parse the tile, pass.\n\nThe earlier \"suite passes\" claims were made under Homebrew bash 5.3 only. Fix: build the default with a plain assignment, then run the suite under both /bin/bash 3.2 and bash 5 before pushing."
 }
