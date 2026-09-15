@@ -15,7 +15,6 @@ verblock: "15 Sep 2026:v0.19: Matthew Sinclair - backup liberator verdicts; wip 
 ## Waiting on hv
 
 - **Port Intent's `pipefail_sigpipe_check.sh`?** Raised by vc on 8 Sep in `whiteboard/hv/inbox.vc.md`. No Molt site loses today; the case for it is growth. The guard is per-repo, so this is a fleet decision across Molt, Molt-matts, Utilz, devbin, Laksa and Lamplight. `lib/molt.sh:707` is the one site where the obvious herestring remedy is wrong.
-- **ST0001 AC001 is a minimal one-criterion contract**, because `acceptance: exempt` has no CLI writer (`intent#0227`). vc asked on 8 Sep whether to revert it.
 
 ## Upcoming Work
 
