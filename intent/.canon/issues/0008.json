@@ -3,9 +3,10 @@
   "number": 8,
   "slug": "grep-q-pipelines-can-report-a-found-match-as-mis",
   "title": "grep -q pipelines can report a found match as missing under pipefail",
-  "status": "open",
+  "status": "closed",
   "severity": "low",
   "created": "2026-09-15",
+  "closed": "2026-09-15",
   "reporter": "Matthew Sinclair",
   "body": "hv's ruling, 15 Sep: do not port Intent's pipefail_sigpipe_check.sh; convert Molt's pipelines that end in grep -q to capture-then-match instead (escalated by vc on 8 Sep). Molt runs under set -euo pipefail. A pipeline whose reader exits early (grep -q) can kill its writer with SIGPIPE once the writer's output outgrows the pipe buffer, and pipefail then turns a found match into a failure. Six sites: bin/bootstrap.sh:74 (ssh -T), lib/molt.sh:720 (molt_foreign_home_paths, three-stage tr | grep -oE | grep -qvE), lib/molt.sh:946 (doctor GitHub auth), liberators/system.sh:16 (groups), liberators/backup.sh:321 (tail -50), liberators/editors.sh:101 (otool -L). lib/molt.sh:720 can lose today: a foreign home path early in a large file makes grep -qvE exit, the upstream grep -oE takes SIGPIPE, and the file goes unreported. Converting it needs an explicit empty-capture test, because grep -qv on an empty herestring answers true. Fix: capture each writer's output, then match; add a test that fails on the old molt_foreign_home_paths."
 }

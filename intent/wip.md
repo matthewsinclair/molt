@@ -12,13 +12,8 @@ TODO:
 
 - **Flynn's jormungandr** moves its config repo only if Flynn wants it; same steps (below). Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed; pushing is Flynn's call.
 
-Left for hv, from the move:
+Still open from the move:
 
-- `~/.claude/settings.json:167`: its allow rule still names `.../Devel/prj/Gtools-geodica/bin/mail-recent`. It is a permission setting, so vc did not touch it.
-- The Gtools CMS and Gtools.app on rhadamanth are stopped; restart them when wanted.
-- Delete the `~/.gitignore_global.molt-backup.*` files on rhadamanth and gyges when wanted, and the `*.pre-cfg-move.*` backups beside `~/.config/gtools/{config.yaml,env}` and `~/.config/intent/projects.json` on rhadamanth.
-- Molt-matts `config/git/gitignore_global` ignores `*.sql` globally, since 9 Mar. Now linked, it hides no `.sql` file today (every ignored one is also covered by its repo's own `.gitignore`), but it will hide new ones.
-- Doom projectile (`config/doom/custom/090-projectile-mode.el`) still searches only `~/Devel/prj`.
 - The Gtools `README.md` prose still names the old path; that is the Gtools sessions' pen.
 
 How a sleeve moves its config repos, for any later one:
@@ -34,7 +29,7 @@ How a sleeve moves its config repos, for any later one:
 
 ## Waiting on hv
 
-- **Port Intent's `pipefail_sigpipe_check.sh`, or fix the 8 pipelines instead?** Raised by vc on 8 Sep in `whiteboard/hv/inbox.vc.md`. Molt has 8 `cmd | grep -q` pipelines. None loses today, because every writer's output is small, but under `pipefail` a writer that outgrows the ~64KB pipe buffer turns a found match into a failure, and in `if ! ... | grep -q` into a false "missing". vc's recommendation (15 Sep): skip the guard and convert the 8 sites to capture-then-match, as `lib/molt.sh:481` already does, tracked as an issue. `lib/molt.sh:720` needs an explicit empty-capture test first. The guard is per-repo, so porting it would be a fleet decision across Molt, Molt-matts, Utilz, devbin, Laksa and Lamplight.
+- (none)
 
 ## Upcoming Work
 
