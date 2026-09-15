@@ -3,9 +3,10 @@
   "number": 5,
   "slug": "molt-cannot-find-the-user-config-repo-once-it-mo",
   "title": "Molt cannot find the user config repo once it moves to ~/Devel/cfg",
-  "status": "open",
+  "status": "closed",
   "severity": "medium",
   "created": "2026-09-15",
+  "closed": "2026-09-15",
   "reporter": "Matthew Sinclair",
   "body": "hv wants the config repos (Molt-matts, Molt-flynn, Gtools-geodica) to live in ~/Devel/cfg/ rather than ~/Devel/prj/, because they are configuration, not development projects. Molt cannot follow them: lib/constants.sh searches for the user repo only under $MOLT_PRJ_DIR and $HOME, so after the move molt resleeve, doctor and upgrade all fail with 'Could not find user config repo'. bin/bootstrap.sh and molt new-user also put the user repo under MOLT_PRJ_DIR.\n\nFix: add MOLT_CFG_DIR, overridable, derived from MOLT_PRJ_DIR's parent the way MOLT_OPT_DIR is (so ~/Devel/prj gives ~/Devel/cfg). Search it ahead of MOLT_PRJ_DIR, and keep the MOLT_PRJ_DIR paths so a sleeve that has not moved still resolves. bootstrap clones the user repo into MOLT_CFG_DIR (finding an existing one in either place), and new-user scaffolds into it. The docs name the new location. Tests pass under bash 3.2 and bash 5, and CI passes."
 }

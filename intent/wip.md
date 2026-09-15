@@ -10,23 +10,23 @@ verblock: "15 Sep 2026:v0.20: Matthew Sinclair - backup liberator verdicts; CI o
 
 Blast radius, measured on rhadamanth on 15 Sep:
 
-- **Molt cannot find the user repo.** `lib/constants.sh` searches only `$MOLT_PRJ_DIR/Molt-<user>` and `~/Molt-<user>`, so `molt resleeve`, `doctor` and `upgrade` all fail after the move.
 - **10 symlinks dangle until `molt resleeve`**: `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.gitconfig`, `~/.gitconfig_matthewsinclair`, `~/.config/doom`, `~/.claude/keybindings.json`, VS Code `settings.json` and `keybindings.json`, and the iTerm2 `molt-profile.json`. A new shell opened before resleeve starts with no zsh config.
 - **Gtools** reads `~/.config/gtools/config.yaml` (`manifest:`) and `~/.config/gtools/env` (`GTOOLS_CONFIG`). `~/.local/state/gtools/estate` is derived and rebuilds. Stop any running Gtools CMS first.
 - **Intent's registry** `~/.config/intent/projects.json` has the Molt-matts and Molt-flynn roots. Gtools-geodica is not registered.
 - `~/.ssh/config` and `~/.config/starship.toml` re-render once. Not affected: git remotes (GitHub and the Dropbox mirrors), Claude Code state, and `MOLT_PRJ_DIR` in `vars.sh`.
 - Prose only: Gtools `README.md`, Molt `README.md`, `docs/guides/new-user.md`, and `projects_dir` in the template `molt.toml`.
 
-Steps:
+The Molt side is done and needs no action: `MOLT_CFG_DIR` (`549678e`, issue 0005, closed). Each sleeve must pull Molt to `549678e` or later before it moves anything.
 
-1. **Next action.** Molt change, tracked as an issue: `MOLT_CFG_DIR` (default `~/Devel/cfg`) searched ahead of `MOLT_PRJ_DIR` in `lib/constants.sh`, still compatible with `~/Devel/prj`; `bin/bootstrap.sh` and `molt new-user` clone and scaffold into it; docs and template updated; tests run under bash 3.2 and bash 5; CI green.
-2. Per machine: stop any Gtools CMS, and close shells and editors whose cwd is inside the repos.
-3. `mv ~/Devel/prj/{Molt-matts,Molt-flynn,Gtools-geodica} ~/Devel/cfg/`
-4. `molt resleeve` from an already-open shell, before opening any new one.
-5. Update the two Gtools config files and the Intent registry.
-6. Verify with `molt doctor` and a `gtools` command.
+Per-machine steps:
 
-Coordination: a Claude session on gyges, named `gyges`, has the briefing and is holding read-only (confirmed 15 Sep, pwd `/Users/matts`). Sending to the name `gyges` fails from rhadamanth; reply to its bridge address `bridge:session_01UskGEo7TKsP5HF8d1YJpkH`. It runs in prompting mode, so hv may need to approve messages there. Send it steps 2-6 once step 1 is pushed. kovacs needs the same steps; Flynn's jormungandr only if Flynn wants it. Molt-flynn on rhadamanth is 5 commits ahead of its origin.
+1. Pull Molt, and Molt-matts, first.
+2. Stop any Gtools CMS, and close shells and editors whose cwd is inside the repos.
+3. Run the mv and the resleeve in one command: `mkdir -p ~/Devel/cfg && mv ~/Devel/prj/{Molt-matts,Molt-flynn,Gtools-geodica} ~/Devel/cfg/ && MOLT_PRJ_DIR="$HOME/Devel/prj" "$HOME/Devel/prj/Molt/bin/molt" resleeve`. The explicit env and absolute path matter: once the mv lands, `~/.zshenv` dangles, so any new shell (an agent's next Bash call included) has no `MOLT_PRJ_DIR`, and so no `MOLT_CFG_DIR` either.
+4. Update the two Gtools config files and the Intent registry.
+5. Verify with `molt doctor` (check 3 names `~/Devel/cfg/Molt-matts`) and a `gtools` command.
+
+Order: hv chose gyges first (15 Sep). The steps went to the gyges Claude session at its bridge address `bridge:session_01UskGEo7TKsP5HF8d1YJpkH`, which reports its survey, resleeve, config edits and doctor output back. Delivery is unconfirmed, and hv may need to approve the message on gyges, so wait for its reply; silence is not progress. **rhadamanth is on hold** until hv stops the Gtools CMS serving Gtools-geodica on port 4360 and closes the VS Code window whose cwd is Gtools-geodica (it holds a Claude extension session and a zsh). The gtools-vc/cc/ic sessions run from `~/Devel/prj/Gtools` and do not block. kovacs follows; Flynn's jormungandr only if Flynn wants it. Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed. The move carries them along; pushing is Flynn's call.
 
 ## Active Steel Threads
 
