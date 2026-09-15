@@ -14,7 +14,7 @@ and per-machine overrides. The framework lives separately in the `molt` repo.
 ## First resleeve
 
 ```
-export MOLT_PRJ_DIR="$HOME/Devel/prj"
+export MOLT_PRJ_DIR="$HOME/Devel/prj"   # this repo lives in the sibling ~/Devel/cfg
 molt resleeve --dry-run
 molt resleeve
 ```

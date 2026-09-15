@@ -15,19 +15,35 @@ MOLT_PRJ_DIR="${MOLT_PRJ_DIR:-}"
 # Where opt-style installs live. Derived from MOLT_PRJ_DIR's parent.
 MOLT_OPT_DIR="${MOLT_OPT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/opt}}"
 
+# --- Config directory ---
+# Where config repos live: the Molt-{user} repo, and anything else that is
+# configuration rather than a development project. Derived from MOLT_PRJ_DIR's
+# parent, like MOLT_OPT_DIR, so ~/Devel/prj gives ~/Devel/cfg.
+MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
+
 # --- User config repo ---
 # The Molt-{user} repo location. Searched in order.
-# MOLT_PRJ_DIR path only included if set.
+# MOLT_CFG_DIR and MOLT_PRJ_DIR paths only included if set.
 #
-# Project directories under MOLT_PRJ_DIR are Capitalised -- Molt, Molt-matts,
-# Molt-flynn, Intent, Pplr, Utilz -- so the capitalised form is the convention
-# and is searched first. The lowercase form is kept as a fallback: it is what
+# MOLT_CFG_DIR is where the repo belongs and is searched first. MOLT_PRJ_DIR is
+# where it lived until 2026-09-15 and stays in the list, so a sleeve that has
+# not moved its repo yet still resolves instead of failing every command.
+#
+# Molt-matts and Molt-flynn are Capitalised, like every project under
+# MOLT_PRJ_DIR, so the capitalised form is the convention and is searched first.
+# The lowercase form is kept as a fallback: it is what
 # earlier versions asked for, and a sleeve on a case-sensitive filesystem that
 # cloned before this change would otherwise stop resolving entirely.
 #
 # This only ever mattered on case-sensitive storage. On APFS the lowercase
 # lookup folded onto the capitalised directory and nothing noticed for months.
 MOLT_USER_REPO_SEARCH_PATHS=()
+if [[ -n "$MOLT_CFG_DIR" ]]; then
+  MOLT_USER_REPO_SEARCH_PATHS+=(
+    "${MOLT_CFG_DIR}/Molt-$(whoami)"
+    "${MOLT_CFG_DIR}/molt-$(whoami)"
+  )
+fi
 if [[ -n "$MOLT_PRJ_DIR" ]]; then
   MOLT_USER_REPO_SEARCH_PATHS+=(
     "${MOLT_PRJ_DIR}/Molt-$(whoami)"

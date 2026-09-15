@@ -10,11 +10,16 @@ set -euo pipefail
 
 # --- Config ---
 MOLT_PRJ_DIR="${MOLT_PRJ_DIR:-}"
+# Where the user config repo goes. Same derivation as lib/constants.sh, restated
+# because this script runs before the framework is cloned and cannot source it.
+MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
 # GitHub owner/repo of the framework. Override to bootstrap from your own fork.
 MOLT_REPO="${MOLT_REPO:-matthewsinclair/molt}"
 
-# Detect current user for user repo name
+# Detect current user for user repo name. The GitHub repo is lowercase; the
+# local directory is Capitalised, which is what molt doctor checks for.
 MOLT_USER_REPO="molt-$(whoami)"
+MOLT_USER_DIR="Molt-$(whoami)"
 # GitHub owner of YOUR personal config repo. Defaults to your local username;
 # override when your GitHub handle differs, eg:
 #   MOLT_USER_GH=flynn-sinclair bash bootstrap.sh
@@ -51,6 +56,7 @@ fi
 
 ok "Prerequisites: git, curl"
 info "MOLT_PRJ_DIR: $MOLT_PRJ_DIR"
+info "MOLT_CFG_DIR: $MOLT_CFG_DIR"
 
 # --- Detect platform ---
 
@@ -74,7 +80,7 @@ git_url() {
 
 # --- Clone or pull repos ---
 
-mkdir -p "$MOLT_PRJ_DIR"
+mkdir -p "$MOLT_PRJ_DIR" "$MOLT_CFG_DIR"
 
 clone_or_pull() {
   local repo="$1"
@@ -93,31 +99,38 @@ clone_or_pull() {
   fi
 }
 
-# Find existing repos (case-insensitive on macOS)
+# Find an existing repo (case-insensitive on macOS) in each directory in turn.
+# Usage: find_existing_repo <name> <dir> [<dir> ...]
+# Prints the match, or <first dir>/<name> and returns 1 when there is none.
 find_existing_repo() {
   local name="$1"
-  # Check exact name first
-  if [[ -d "$MOLT_PRJ_DIR/$name" ]]; then
-    echo "$MOLT_PRJ_DIR/$name"
-    return 0
-  fi
-  # Case-insensitive search in the projects dir
-  local match
-  match="$(find "$MOLT_PRJ_DIR" -maxdepth 1 -iname "$name" -type d 2>/dev/null | head -1)"
-  if [[ -n "$match" ]]; then
-    echo "$match"
-    return 0
-  fi
+  shift
+  local dir match
+  for dir in "$@"; do
+    # Check exact name first
+    if [[ -d "$dir/$name" ]]; then
+      echo "$dir/$name"
+      return 0
+    fi
+    # Case-insensitive search in this dir
+    match="$(find "$dir" -maxdepth 1 -iname "$name" -type d 2>/dev/null | head -1)"
+    if [[ -n "$match" ]]; then
+      echo "$match"
+      return 0
+    fi
+  done
   # Not found — return default path
-  echo "$MOLT_PRJ_DIR/$name"
+  echo "$1/$name"
   return 1
 }
 
 echo ""
-info "Setting up repos in $MOLT_PRJ_DIR"
+info "Setting up molt in $MOLT_PRJ_DIR and your config repo in $MOLT_CFG_DIR"
 
-molt_dir="$(find_existing_repo "molt")" || true
-user_dir="$(find_existing_repo "$MOLT_USER_REPO")" || true
+molt_dir="$(find_existing_repo "molt" "$MOLT_PRJ_DIR")" || true
+# A user repo cloned before MOLT_CFG_DIR existed lives in MOLT_PRJ_DIR; use it
+# where it is rather than cloning a second copy.
+user_dir="$(find_existing_repo "$MOLT_USER_DIR" "$MOLT_CFG_DIR" "$MOLT_PRJ_DIR")" || true
 
 clone_or_pull "$MOLT_REPO" "$molt_dir"
 clone_or_pull "$MOLT_USER_REPO_FULL" "$user_dir"
@@ -142,12 +155,12 @@ fi
 echo ""
 info "Running dry run..."
 echo ""
-MOLT_PRJ_DIR="$MOLT_PRJ_DIR" "$molt_dir/bin/molt" resleeve --dry-run
+MOLT_PRJ_DIR="$MOLT_PRJ_DIR" MOLT_CFG_DIR="$MOLT_CFG_DIR" "$molt_dir/bin/molt" resleeve --dry-run
 
 echo ""
 read -rp "Run molt resleeve now? [y/N] " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-  MOLT_PRJ_DIR="$MOLT_PRJ_DIR" "$molt_dir/bin/molt" resleeve
+  MOLT_PRJ_DIR="$MOLT_PRJ_DIR" MOLT_CFG_DIR="$MOLT_CFG_DIR" "$molt_dir/bin/molt" resleeve
 else
   info "Skipped. Run 'molt resleeve' when ready."
 fi

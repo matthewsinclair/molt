@@ -27,8 +27,7 @@ Anything you don't pass as a flag is prompted for. Sensible defaults:
 
 - `--github` defaults to `<user>`
 - `--name` defaults to `<user>`
-- `--dest` defaults to `$MOLT_PRJ_DIR/molt-<user>` (or `./molt-<user>` if
-  `MOLT_PRJ_DIR` is unset)
+- `--dest` defaults to `$MOLT_CFG_DIR/Molt-<user>` (or `./Molt-<user>` if `MOLT_CFG_DIR` is unset); `MOLT_CFG_DIR` defaults to the `cfg/` directory beside `MOLT_PRJ_DIR`
 
 Example, fully specified:
 
@@ -115,7 +114,7 @@ git init && git add -A && git commit -m "Initial molt-<user> config"
 # create the GitHub repo <github>/molt-<user>, then:
 git remote add origin git@github.com-<github>:<github>/molt-<user>.git
 git push -u origin main
-MOLT_PRJ_DIR="<parent>" molt resleeve --dry-run
+MOLT_CFG_DIR="<parent>" molt resleeve --dry-run
 ```
 
 The remote URL uses the `github.com-<github>` ssh host alias that the generated

@@ -25,7 +25,7 @@ MOLT separates the framework from your personal config:
 | **molt** (this repo)              | Framework: CLI, core libs, liberator runner, tests            | Yes — the engine |
 | **molt-{user}** (eg `molt-flynn`) | Your config files, dotfiles, manifest, per-instance overrides | No — your soul   |
 
-The framework finds your personal repo by searching for `molt-$(whoami)` in `$MOLT_PRJ_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
+The framework finds your personal repo by searching for `Molt-$(whoami)` (or `molt-$(whoami)`) in `$MOLT_CFG_DIR`, then `$MOLT_PRJ_DIR`, `~/`, and `~/.`. Your personal repo contains a `config/` directory with dotfiles and a `molt.toml` manifest declaring which liberators to run.
 
 This separation means you can fork the framework independently from your config, and your config never contains framework code.
 
@@ -41,6 +41,8 @@ Set `MOLT_PRJ_DIR` to the directory where your repos live. There is no default �
 export MOLT_PRJ_DIR="$HOME/Projects"  # or wherever you keep repos
 ```
 
+Your config repo is configuration, not a project, so it lives in `MOLT_CFG_DIR`: the `cfg/` directory beside `MOLT_PRJ_DIR` unless you set it yourself.
+
 ### Clone and resleeve
 
 ```bash
@@ -48,7 +50,7 @@ export MOLT_PRJ_DIR="$HOME/Projects"  # or wherever you keep repos
 git clone https://github.com/you/molt "$MOLT_PRJ_DIR/molt"
 
 # Your config (contains molt.toml + config/ directory)
-git clone https://github.com/you/molt-you "$MOLT_PRJ_DIR/molt-you"
+git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
 
 # Add molt to PATH (or use the bootstrap script)
 export PATH="$MOLT_PRJ_DIR/molt/bin:$PATH"
@@ -63,7 +65,7 @@ molt resleeve
 ```
 MOLT v0.1.0 — My Opinionated Local Terminal
 Needlecasting stack to new sleeve...
-Zen: Stack found: /home/you/Projects/molt-you
+Zen: Stack found: /home/you/cfg/Molt-you
 Zen: Loading liberators...
   system: ✓ ok
   zsh: ✓ installed
@@ -82,7 +84,7 @@ For a fresh machine where nothing is set up yet:
 MOLT_PRJ_DIR=$HOME/Projects bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
 ```
 
-The bootstrap script clones both repos, links molt into `~/bin`, shows a dry-run, and prompts before applying.
+The bootstrap script clones the framework into `$MOLT_PRJ_DIR` and your config repo into `$MOLT_CFG_DIR`, links molt into `~/bin`, shows a dry-run, and prompts before applying.
 
 ## Concepts
 
@@ -133,11 +135,16 @@ export MOLT_PRJ_DIR="$HOME/Devel/prj"
 
 If unset, molt will search `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PRJ_DIR` is the intended path.
 
+### MOLT_CFG_DIR
+
+Where your config repo lives, kept apart from development projects. Defaults to the `cfg/` sibling of `MOLT_PRJ_DIR`, so `~/Devel/prj` gives `~/Devel/cfg`. molt searches it first and then `MOLT_PRJ_DIR`, so a machine whose config repo is still under `MOLT_PRJ_DIR` keeps working until you move it. After moving it, run `molt resleeve` from a shell that is already open: the dotfile symlinks still point at the old location until then.
+
 ### Other environment variables
 
 | Variable         | Purpose                       | Default                          |
 | ---------------- | ----------------------------- | -------------------------------- |
 | `MOLT_PRJ_DIR`   | Where repos live              | _(none — must be set)_           |
+| `MOLT_CFG_DIR`   | Where your config repo lives  | `$(dirname "$MOLT_PRJ_DIR")/cfg` |
 | `MOLT_OPT_DIR`   | Where opt-style installs live | `$(dirname "$MOLT_PRJ_DIR")/opt` |
 | `MOLT_LOCAL_BIN` | Where to symlink executables  | `~/bin`                          |
 | `UTILZ_HOME`     | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`            |
