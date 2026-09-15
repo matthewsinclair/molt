@@ -10,11 +10,11 @@ verblock: "15 Sep 2026:v0.21: Matthew Sinclair - config repos moved to ~/Devel/c
 
 TODO:
 
-- **Flynn's jormungandr** moves its config repo only if Flynn wants it; same steps (below). Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed; pushing is Flynn's call.
+- **Flynn's jormungandr: parked by hv (15 Sep), "ignore that for now".** It would move its config repo with the same steps (below). Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed; pushing is Flynn's call.
 
 Still open from the move:
 
-- The Gtools `README.md` prose still names the old path; that is the Gtools sessions' pen.
+- The Gtools `README.md:15` still says both working trees live in `~/Devel/prj/`. Handed to gtools-vc on 15 Sep at hv's request; it is Gtools' pen, not Molt's.
 
 How a sleeve moves its config repos, for any later one:
 
