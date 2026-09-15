@@ -3,9 +3,10 @@
   "number": 6,
   "slug": "git-check-misses-gitignore-global-and-identity-l",
   "title": "git_check misses ~/.gitignore_global and identity links that git_install creates",
-  "status": "open",
+  "status": "closed",
   "severity": "medium",
   "created": "2026-09-15",
+  "closed": "2026-09-15",
   "reporter": "Matthew Sinclair",
   "body": "git_check tests only ~/.gitconfig, but git_install also links ~/.gitignore_global and every config/git/gitconfig_* identity (~/.gitconfig_<handle>). A break in either passes the check, so install never runs and resleeve reports git ok. Found 2026-09-15 during the ~/Devel/cfg move: on both rhadamanth and gyges, ~/.gitignore_global was a regular file (rhadamanth's dated 24 Aug) instead of the link to Molt-matts, and differed from it (no *.sql; Icon\\r\\r instead of Icon?). Nothing reported it until the move broke ~/.gitconfig and install ran, backing the file up. This is the check-covers-fewer-targets-than-install class the CHANGELOG already records for zsh and vscode. Fix: git_check and git_verify cover every target git_install links, with a test that breaks each one."
 }

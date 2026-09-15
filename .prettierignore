@@ -28,3 +28,9 @@ intent/st/**/info.md
 intent/st/**/acceptance.md
 intent/st/steel_threads.md
 intent/todo.md
+#
+# ISSUE VIEWS JOINED THE SET ON 2026-09-15, when this repo's first issues were
+# filed. The list above predates them, so prettier rewrote intent/issues/0006.md
+# (it read `~/.gitignore_global` ... `~/.gitconfig` as strikethrough delimiters)
+# and `intent doctor` refused the next commit on view skew.
+intent/issues/*.md

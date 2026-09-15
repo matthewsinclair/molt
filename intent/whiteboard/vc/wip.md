@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T13:10Z
+heartbeat_at: 2026-09-15T13:17Z
 status: active
-focus: "config repos moved to ~/Devel/cfg on gyges and rhadamanth; kovacs next; fixing issue 0006 (git_check link coverage)"
+focus: "config repos moved to ~/Devel/cfg on gyges and rhadamanth; kovacs next"
 claims: []
 ---
 
@@ -16,7 +16,6 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 ## DOING
 
 - **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. The Molt side is shipped (`549678e`, issue 0005 closed, CI green). gyges is done: it reported at 2026-09-15 12:58Z after hv ran the move there, and was told to stand down. rhadamanth is done too: it moved once hv had stopped the CMS and Gtools.app, and gtools-vc/cc/ic were told. Next: kovacs.
-- **Issue 0006: `git_check`/`git_verify` cover only `~/.gitconfig`.** The move surfaced it, because `~/.gitignore_global` was a stale regular file on both Macs. The fix is one `_git_links` list read by check, install and verify, plus tests. Before closing: run under bash 3.2 and bash 5, and confirm CI.
 
 ## TODO
 
