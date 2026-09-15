@@ -1,6 +1,6 @@
 # Done
 
-## 018: Backup liberator verdicts, and the Molt-matts iTerm2 rebase (DONE)
+## 018: Backup liberator verdicts, CI on bash 3.2, and iTerm2 profile and history (DONE)
 
 - **`backup_verify` passed without checking anything** (issue 0001). Away from home it returned 0 before reading any SuperDuper state; with the share unmounted, mounted but not answering, or its image unreadable, it skipped the share-side checks and still printed "Verified". Local `tiles.json` checks now run everywhere. Verify exits 0 when every check ran and passed, 1 when a check failed, and 2 when nothing failed but the share-side checks could not run. `backup_check` lost the same away-from-home early return.
 - **Run history was misreported** (issue 0002). An empty history was stated as "no backup exists", which a recreated job disproves, and a failed latest run hid when the last good copy was. Check and verify now share `_backup_run_assess` instead of two copies that already disagreed about cancelled runs.
@@ -8,7 +8,10 @@
 - `test/liberators/backup.bats`: 31 tests, the liberator's first. 17 of the first 23 fail on the pre-fix liberator. Suite 148 -> 179.
 - **Molt-matts was stuck mid-rebase** after a 15 Sep pull. iTerm2 3.7.1 had rewritten `config/iterm2/molt-profile.json` on two machines within three minutes: once in its own serialisation (`cc8028c`), once down to a 4-key stub (`da54ef3`). Resolved by skipping the stub, whose keys were all in `cc8028c`. Cause: iTerm2's Claude Code onboarding offers "Mark Rewritable & Install" for dynamic profiles, which adds `"Rewritable": true` and lets iTerm2 write settings changes back through the symlink into git. hv ruled iTerm2 does not write into terminal config unannounced; the profile was restored byte-for-byte to `11f8476`, without the flag.
 - Retired from vc's 8 Sep escalations: the SuperDuper schedule mismatch. rhadamanth's job runs at 03:00, inside its `03:00-05:00` window.
-- Commits: `445067c` (molt); `b58e0d4` (molt-{user})
+- **CI was red for two pushes after `445067c`** (issue 0004). GitHub's `macos-26-arm64` runner has only bash 3.2, which keeps the backslash in `${VAR:-{...\}}`, so a `backup.bats` fixture was invalid JSON there and 22 tests failed. The suite had only been run under Homebrew bash 5.3. Fixed with a plain assignment: 179/179 under bash 3.2 and 5.3 locally, and CI green with the backup tests running, not skipping, on the macOS runner.
+- Retired from `wip.md`: the ST0001 AC001 revert question, overtaken on 8 Sep when ST0001 closed with AC001-AC007 all satisfied.
+- **Per-session zsh history in iTerm2** (Molt-matts). Each iTerm2 session keeps its own history file under `~/.local/state/zsh/sessions`, keyed on the session GUID, so a restored window gets its own history back. New sessions start from `~/.zsh_history`, and at exit a session's commands are appended to both. Same mechanism as `/etc/zshrc_Apple_Terminal`: the shell writes to a scratch file because `fc -AI` writes only new commands when appending to the current `HISTFILE`. The shared file is append-only, because quitting iTerm2 closes every pane at once. Verified with expect-driven shells; GUID persistence across an iTerm2 restart is not yet verified.
+- Commits: `445067c`, `fb4cc3f`, `2e7dba9`, `c5bffa4` (molt); `b58e0d4`, `389ef6f` (molt-{user})
 
 ## 017: Honest-instrument sweep, ST0001 closed (DONE)
 
