@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T11:31Z
+heartbeat_at: 2026-09-15T11:52Z
 status: active
-focus: "moving the config repos to ~/Devel/cfg; next: Molt MOLT_CFG_DIR change; gyges briefed and holding"
+focus: "moving the config repos to ~/Devel/cfg; Molt side shipped (549678e); gyges moving first; rhadamanth held"
 claims: []
 ---
 
@@ -15,7 +15,7 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 
 ## DOING
 
-- **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. Next: the Molt `MOLT_CFG_DIR` change, as an issue. gyges is briefed and holding; reach it at `bridge:session_01UskGEo7TKsP5HF8d1YJpkH`, not by name.
+- **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. The Molt side is shipped (`549678e`, issue 0005 closed, CI green). hv chose gyges first: steps sent 2026-09-15 11:52Z to `bridge:session_01UskGEo7TKsP5HF8d1YJpkH` (not by name). Delivery is unconfirmed, and hv may need to approve it on gyges. Next: check gyges's report, then rhadamanth once its hold releases, then kovacs.
 
 ## TODO
 
@@ -35,11 +35,13 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 - `fpath` and `autoload` are read at shell startup. A change under `config/zsh/functions/` needs a fresh shell; `source ~/.zshrc` is not enough, and testing in the current shell shows the old behaviour.
 - A negative control with ONE candidate cannot see a preference-order or list-formatting bug. Depth-1 failure cases prove the exit code and nothing about the output.
 - `molt doctor` check 12 (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.
-- **Re-measure at pickup; do not quote a restart file.** The suite was 179 tests at the end of 15 Sep; count it again rather than trusting that figure.
+- **Re-measure at pickup; do not quote a restart file.** The suite was 185 tests at `549678e`; count it again rather than trusting that figure.
+- **After a config repo moves, every new shell starts with no zsh config until `molt resleeve` runs**, because `~/.zshenv` dangles. That includes an agent's next Bash call, which then has no `MOLT_PRJ_DIR` and so no `MOLT_CFG_DIR`. Run the mv and the resleeve in one command, with `MOLT_PRJ_DIR` set explicitly and molt called by absolute path.
+- **`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.
 
 ## Holds
 
-- (none)
+- **rhadamanth's config-repo move.** Released when hv has stopped the Gtools CMS serving Gtools-geodica (port 4360) and closed the VS Code window whose cwd is Gtools-geodica, and says go. Re-check with `lsof -a -d cwd -c ''` and `pgrep -fl gtools_cms` before moving.
 
 ## Decisions
 
