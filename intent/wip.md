@@ -26,7 +26,16 @@ Per-machine steps:
 4. Update the two Gtools config files and the Intent registry.
 5. Verify with `molt doctor` (check 3 names `~/Devel/cfg/Molt-matts`) and a `gtools` command.
 
-Order: hv chose gyges first (15 Sep). **gyges: done**, Molt-matts only. No gtools or Intent registry files exist there, doctor check 3 names `~/Devel/cfg/Molt-matts`, and every relinked dotfile resolves. Its auto mode refused the mv, so hv ran it on gyges. The resleeve backed up a regular-file `~/.gitignore_global` to `.gitignore_global.molt-backup.20260915135742`, differing only by `Icon` versus `Icon?`; deleting that is hv's call. **rhadamanth is on hold** until hv stops the Gtools CMS serving Gtools-geodica on port 4360 and closes the VS Code window whose cwd is Gtools-geodica (it holds a Claude extension session and a zsh). The gtools-vc/cc/ic sessions run from `~/Devel/prj/Gtools` and do not block. kovacs follows; Flynn's jormungandr only if Flynn wants it. Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed. The move carries them along; pushing is Flynn's call.
+Order: hv chose gyges first (15 Sep). **gyges: done**, Molt-matts only. No gtools or Intent registry files exist there, doctor check 3 names `~/Devel/cfg/Molt-matts`, and every relinked dotfile resolves. Its auto mode refused the mv, so hv ran it on gyges. The resleeve backed up a regular-file `~/.gitignore_global` to `.gitignore_global.molt-backup.20260915135742`, differing only by `Icon` versus `Icon?`; deleting that is hv's call. **rhadamanth: done**. All three repos moved, and the resleeve relinked all 11 targets. `~/.config/gtools/config.yaml` and `env` are repointed (backups `*.pre-cfg-move.*`). The Intent registry now has the `~/Devel/cfg` roots via `intent discover ~/Devel/cfg --depth 1`, and the two old roots were removed by hand, since there is no remove verb (backup `projects.json.pre-cfg-move.*`). Doctor check 3, `gtools estate` and `gtools doctor` are all green, and gtools-vc/cc/ic were told.
+
+Left for hv:
+
+- `~/.claude/settings.json:167`: its allow rule still names `.../Devel/prj/Gtools-geodica/bin/mail-recent`. It is a permission setting, so vc did not touch it.
+- The Gtools CMS and Gtools.app are stopped; restart them when wanted.
+- Delete the `~/.gitignore_global.molt-backup.*` files on rhadamanth and gyges when wanted.
+- Molt-matts `config/git/gitignore_global` ignores `*.sql` globally, since 9 Mar. Now linked, it hides no `.sql` file today (every ignored one is also covered by its repo's own `.gitignore`), but it will hide new ones.
+- Doom projectile (`config/doom/custom/090-projectile-mode.el`) still searches only `~/Devel/prj`.
+- The Gtools `README.md` prose still names the old path; that is the Gtools sessions' pen. kovacs follows; Flynn's jormungandr only if Flynn wants it. Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed. The move carries them along; pushing is Flynn's call.
 
 ## Active Steel Threads
 
