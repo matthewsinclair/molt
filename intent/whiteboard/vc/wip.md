@@ -5,7 +5,7 @@ role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
 heartbeat_at: 2026-09-15T10:27Z
 status: paused
-focus: "session ended; nothing in flight; two rulings wait on hv (pipefail guard port, ST0001 AC001)"
+focus: "session ended; nothing in flight; one ruling waits on hv (pipefail guard port)"
 claims: []
 ---
 
@@ -19,7 +19,7 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 
 ## TODO
 
-- **Surface two unruled escalations to hv at next pickup**, both in `hv/inbox.vc.md`: whether to port `pipefail_sigpipe_check.sh` (2026-09-08 10:24Z), and whether to revert ST0001's one-criterion AC001 (2026-09-08 10:15Z). The other two entries there are actioned: the backup findings closed as issues 0001-0003 in `445067c`, and the schedule note is resolved.
+- **Surface one unruled escalation to hv at next pickup**, in `hv/inbox.vc.md`: whether to port `pipefail_sigpipe_check.sh` (2026-09-08 10:24Z). The other entries there are actioned or overtaken: the backup findings closed as issues 0001-0003, the schedule note is resolved, and the ST0001 AC001 revert question was overtaken the same day, when ST0001 closed with seven satisfied criteria.
 
 ## Watch-outs
 
