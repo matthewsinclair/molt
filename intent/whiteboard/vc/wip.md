@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T11:11Z
-status: paused
-focus: "session ended; nothing in flight; one ruling waits on hv (pipefail: port the guard or fix the 8 pipelines)"
+heartbeat_at: 2026-09-15T11:31Z
+status: active
+focus: "moving the config repos to ~/Devel/cfg; next: Molt MOLT_CFG_DIR change; gyges briefed and holding"
 claims: []
 ---
 
@@ -15,7 +15,7 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 
 ## DOING
 
-- (nothing in flight)
+- **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. Next: the Molt `MOLT_CFG_DIR` change, as an issue. gyges is briefed and holding; reach it at `bridge:session_01UskGEo7TKsP5HF8d1YJpkH`, not by name.
 
 ## TODO
 

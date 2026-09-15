@@ -6,7 +6,27 @@ verblock: "15 Sep 2026:v0.20: Matthew Sinclair - backup liberator verdicts; CI o
 
 ## Current Focus
 
-**Nothing in flight.** Finished work lives in `done.md` (017, 018), the closed issues (`intent issues list --kind all`) and git.
+**In flight: move the config repos out of `~/Devel/prj/` into `~/Devel/cfg/`** -- Molt-matts, Molt-flynn and Gtools-geodica. hv asked on 15 Sep and said to continue straight after the localfold+compact. `~/Devel/cfg/` exists and is empty. Finished work lives in `done.md` (017, 018), the closed issues (`intent issues list --kind all`) and git.
+
+Blast radius, measured on rhadamanth on 15 Sep:
+
+- **Molt cannot find the user repo.** `lib/constants.sh` searches only `$MOLT_PRJ_DIR/Molt-<user>` and `~/Molt-<user>`, so `molt resleeve`, `doctor` and `upgrade` all fail after the move.
+- **10 symlinks dangle until `molt resleeve`**: `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.gitconfig`, `~/.gitconfig_matthewsinclair`, `~/.config/doom`, `~/.claude/keybindings.json`, VS Code `settings.json` and `keybindings.json`, and the iTerm2 `molt-profile.json`. A new shell opened before resleeve starts with no zsh config.
+- **Gtools** reads `~/.config/gtools/config.yaml` (`manifest:`) and `~/.config/gtools/env` (`GTOOLS_CONFIG`). `~/.local/state/gtools/estate` is derived and rebuilds. Stop any running Gtools CMS first.
+- **Intent's registry** `~/.config/intent/projects.json` has the Molt-matts and Molt-flynn roots. Gtools-geodica is not registered.
+- `~/.ssh/config` and `~/.config/starship.toml` re-render once. Not affected: git remotes (GitHub and the Dropbox mirrors), Claude Code state, and `MOLT_PRJ_DIR` in `vars.sh`.
+- Prose only: Gtools `README.md`, Molt `README.md`, `docs/guides/new-user.md`, and `projects_dir` in the template `molt.toml`.
+
+Steps:
+
+1. **Next action.** Molt change, tracked as an issue: `MOLT_CFG_DIR` (default `~/Devel/cfg`) searched ahead of `MOLT_PRJ_DIR` in `lib/constants.sh`, still compatible with `~/Devel/prj`; `bin/bootstrap.sh` and `molt new-user` clone and scaffold into it; docs and template updated; tests run under bash 3.2 and bash 5; CI green.
+2. Per machine: stop any Gtools CMS, and close shells and editors whose cwd is inside the repos.
+3. `mv ~/Devel/prj/{Molt-matts,Molt-flynn,Gtools-geodica} ~/Devel/cfg/`
+4. `molt resleeve` from an already-open shell, before opening any new one.
+5. Update the two Gtools config files and the Intent registry.
+6. Verify with `molt doctor` and a `gtools` command.
+
+Coordination: a Claude session on gyges, named `gyges`, has the briefing and is holding read-only (confirmed 15 Sep, pwd `/Users/matts`). Sending to the name `gyges` fails from rhadamanth; reply to its bridge address `bridge:session_01UskGEo7TKsP5HF8d1YJpkH`. It runs in prompting mode, so hv may need to approve messages there. Send it steps 2-6 once step 1 is pushed. kovacs needs the same steps; Flynn's jormungandr only if Flynn wants it. Molt-flynn on rhadamanth is 5 commits ahead of its origin.
 
 ## Active Steel Threads
 
