@@ -370,6 +370,74 @@ BASH
 }
 
 # ============================================================================
+# GIT_CHECK / GIT_VERIFY COVER EVERY LINK GIT_INSTALL MAKES (issue 0006)
+# ============================================================================
+
+_git_full_repo() {
+    setup_git_install
+    echo x > "$TEST_USER_REPO/config/git/gitconfig"
+    echo i > "$TEST_USER_REPO/config/git/gitignore_global"
+    echo a > "$TEST_USER_REPO/config/git/gitconfig_alice"
+    git_install >/dev/null 2>&1
+}
+
+@test "git_check and git_verify pass once git_install has linked everything" {
+    _git_full_repo
+    run git_check
+    assert_success
+    run git_verify
+    assert_success
+}
+
+# The sleeve state that went unreported: a regular file where the link belongs.
+@test "git_check and git_verify fail when ~/.gitignore_global is a regular file" {
+    _git_full_repo
+    rm "$HOME/.gitignore_global"
+    echo stale > "$HOME/.gitignore_global"
+    run git_check
+    assert_failure
+    assert_output_contains ".gitignore_global is not a symlink"
+    run git_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: ~/.gitignore_global is not a symlink"
+}
+
+@test "git_check fails when an identity include link is missing" {
+    _git_full_repo
+    rm "$HOME/.gitconfig_alice"
+    run git_check
+    assert_failure
+    assert_output_contains ".gitconfig_alice is missing"
+}
+
+@test "git_check fails when a link resolves somewhere other than the user repo" {
+    _git_full_repo
+    echo elsewhere > "$BATS_TEST_TMPDIR/other_gitconfig"
+    ln -sfn "$BATS_TEST_TMPDIR/other_gitconfig" "$HOME/.gitconfig"
+    run git_check
+    assert_failure
+    assert_output_contains "not the user repo"
+}
+
+@test "git_install repairs every link git_check reports" {
+    _git_full_repo
+    rm "$HOME/.gitignore_global" "$HOME/.gitconfig_alice"
+    echo stale > "$HOME/.gitignore_global"
+    run git_install
+    assert_success
+    run git_check
+    assert_success
+}
+
+@test "git_verify fails rather than passing when the user repo cannot be found" {
+    setup_git_install
+    eval "molt_find_user_repo() { return 1; }"
+    run git_verify
+    assert_failure
+    assert_output_contains "no git config link was checked"
+}
+
+# ============================================================================
 # LIBERATOR CONVENTION FUNCTION TESTS
 # ============================================================================
 
