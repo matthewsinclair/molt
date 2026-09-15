@@ -1620,9 +1620,10 @@ molt_find_user_repo() {
     fi
   done
   molt_error "Could not find user config repo (Molt-$(whoami))."
-  if [[ -z "$MOLT_PRJ_DIR" ]]; then
-    molt_error "Set MOLT_PRJ_DIR to the directory containing your molt repos, eg:"
+  if [[ -z "$MOLT_CFG_DIR" && -z "$MOLT_PRJ_DIR" ]]; then
+    molt_error "Set MOLT_PRJ_DIR to the directory containing your repos, eg:"
     molt_error "  export MOLT_PRJ_DIR=\$HOME/Devel/prj"
+    molt_error "The user repo is then looked for in its sibling cfg/ (override with MOLT_CFG_DIR)."
   else
     molt_error "Searched:"
     for path in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do

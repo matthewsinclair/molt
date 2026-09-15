@@ -121,13 +121,14 @@ cmd_new_user() {
   if [[ -z "$hostname" ]]; then molt_error "hostname is required"; return 1; fi
 
   # Directory name is Capitalised (Molt-matts, Molt-flynn), matching every
-  # other project under MOLT_PRJ_DIR and the order constants.sh searches. The
+  # project under MOLT_PRJ_DIR and the order constants.sh searches. The
   # GITHUB repo stays lowercase (matthewsinclair/molt-matts) -- the two
   # conventions differ on purpose, so do not "fix" the remote URL below.
+  # It goes in MOLT_CFG_DIR, the first place constants.sh searches.
   if [[ -z "$dest" ]]; then
     local dirname="Molt-${user}"
-    if [[ -n "${MOLT_PRJ_DIR:-}" ]]; then
-      dest="${MOLT_PRJ_DIR}/${dirname}"
+    if [[ -n "${MOLT_CFG_DIR:-}" ]]; then
+      dest="${MOLT_CFG_DIR}/${dirname}"
     else
       dest="$(pwd)/${dirname}"
     fi
@@ -143,6 +144,6 @@ Next steps:
   # create the GitHub repo ${github}/molt-${user}, then:
   git remote add origin git@github.com-${github}:${github}/molt-${user}.git
   git push -u origin main
-  MOLT_PRJ_DIR="$(dirname "$dest")" molt resleeve --dry-run
+  MOLT_CFG_DIR="$(dirname "$dest")" molt resleeve --dry-run
 EOF
 }

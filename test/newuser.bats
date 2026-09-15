@@ -141,3 +141,16 @@ _scaffold_flynn() {
     assert_directory_exists "$dest/instances/jormungandr"
     assert_output_contains "git remote add origin git@github.com-flynn-sinclair:flynn-sinclair/molt-flynn.git"
 }
+
+@test "molt new-user without --dest scaffolds into MOLT_CFG_DIR" {
+    export MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+    mkdir -p "$MOLT_CFG_DIR"
+    run_molt new-user flynn \
+        --name "Flynn Sinclair" \
+        --email "flynn.sinclair@gmail.com" \
+        --github flynn-sinclair \
+        --hostname jormungandr
+    assert_success
+    assert_directory_exists "$MOLT_CFG_DIR/Molt-flynn/instances/jormungandr"
+    assert_output_contains "MOLT_CFG_DIR=\"$MOLT_CFG_DIR\" molt resleeve --dry-run"
+}

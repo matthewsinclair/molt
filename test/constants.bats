@@ -84,6 +84,53 @@ load "test_helper.bash"
     [[ "$found" -eq 1 ]]
 }
 
+@test "MOLT_CFG_DIR derives from MOLT_PRJ_DIR parent" {
+    unset MOLT_CFG_DIR
+    export MOLT_PRJ_DIR="/tmp/test-projects"
+    load_molt_libs
+    [[ "$MOLT_CFG_DIR" == "/tmp/cfg" ]]
+}
+
+@test "MOLT_CFG_DIR is empty when MOLT_PRJ_DIR unset" {
+    unset MOLT_PRJ_DIR
+    unset MOLT_CFG_DIR
+    load_molt_libs
+    [[ -z "$MOLT_CFG_DIR" ]]
+}
+
+@test "MOLT_CFG_DIR respects env var override" {
+    export MOLT_CFG_DIR="/custom/cfg"
+    export MOLT_PRJ_DIR="/tmp/test-projects"
+    load_molt_libs
+    [[ "$MOLT_CFG_DIR" == "/custom/cfg" ]]
+}
+
+# The move to cfg/ is per sleeve, so a sleeve that has not moved its repo must
+# still find it in MOLT_PRJ_DIR -- but only after cfg/ has been tried.
+@test "MOLT_USER_REPO_SEARCH_PATHS searches MOLT_CFG_DIR before MOLT_PRJ_DIR" {
+    unset MOLT_CFG_DIR
+    export MOLT_PRJ_DIR="/tmp/test-projects"
+    load_molt_libs
+    [[ "${MOLT_USER_REPO_SEARCH_PATHS[0]}" == "/tmp/cfg/Molt-$(whoami)" ]]
+    [[ "${MOLT_USER_REPO_SEARCH_PATHS[1]}" == "/tmp/cfg/molt-$(whoami)" ]]
+    [[ "${MOLT_USER_REPO_SEARCH_PATHS[2]}" == "/tmp/test-projects/Molt-$(whoami)" ]]
+}
+
+@test "molt_find_user_repo resolves a repo left in MOLT_PRJ_DIR and prefers MOLT_CFG_DIR" {
+    unset MOLT_CFG_DIR
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/Devel/prj"
+    mkdir -p "$MOLT_PRJ_DIR/Molt-$(whoami)/config"
+    load_molt_libs
+    run molt_find_user_repo
+    assert_success
+    [[ "$output" == "$MOLT_PRJ_DIR/Molt-$(whoami)" ]]
+
+    mkdir -p "$BATS_TEST_TMPDIR/Devel/cfg/Molt-$(whoami)/config"
+    run molt_find_user_repo
+    assert_success
+    [[ "$output" == "$BATS_TEST_TMPDIR/Devel/cfg/Molt-$(whoami)" ]]
+}
+
 @test "MOLT_USER_REPO_SEARCH_PATHS has home fallbacks when MOLT_PRJ_DIR unset" {
     unset MOLT_PRJ_DIR
     load_molt_libs

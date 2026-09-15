@@ -30,10 +30,10 @@ Add this to your `.zshenv` or `.bashrc` so it persists.
 git clone https://github.com/you/molt "$MOLT_PRJ_DIR/molt"
 
 # Your personal config
-git clone https://github.com/you/molt-you "$MOLT_PRJ_DIR/molt-you"
+git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
 ```
 
-The framework finds your config repo by looking for `molt-$(whoami)` in `$MOLT_PRJ_DIR`.
+The framework finds your config repo by looking for `Molt-$(whoami)` in `$MOLT_CFG_DIR`, which defaults to the `cfg/` directory beside `$MOLT_PRJ_DIR`, and then in `$MOLT_PRJ_DIR` itself.
 
 ## 3. Add molt to PATH
 
@@ -79,7 +79,7 @@ MOLT_PRJ_DIR=$HOME/Projects \
   bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
 ```
 
-The bootstrap script clones both repos, symlinks `molt` into `~/bin`, shows a dry-run, and prompts before applying.
+The bootstrap script clones the framework into `$MOLT_PRJ_DIR` and your config repo into `$MOLT_CFG_DIR`, symlinks `molt` into `~/bin`, shows a dry-run, and prompts before applying.
 
 ## Keeping up to date
 

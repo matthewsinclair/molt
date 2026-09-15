@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `git_install` config-linking tests in `test/git.bats` (arbitrary identity name, multiple includes, empty-glob guard)
 - `molt doctor` check (10th) for config files that bake in another user's absolute home path, including JSON-escaped `\/Users\/<x>` exports (`molt_foreign_home_paths`)
 - `molt doctor` external-dependency check now also verifies `envsubst` (gettext), required for template rendering
+- `MOLT_CFG_DIR`: where the user config repo lives, apart from development projects. Defaults to the `cfg/` sibling of `MOLT_PRJ_DIR` (`~/Devel/prj` gives `~/Devel/cfg`) and is searched before `MOLT_PRJ_DIR`, which stays in the search list so a sleeve whose repo has not moved still resolves
 - `web` liberator test (`test/liberators/web.bats`)
 - `test/liberators/backup.bats`: the `backup` liberator's first tests (31). Fixtures stand in for SuperDuper's state through `MOLT_SD_TILES` and `MOLT_SD_SCHEDULER_LOG`, and the errexit arms run in a fresh `bash` under `set -euo pipefail`, where a failing assignment would abort
 
@@ -40,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `git` liberator now links any `config/git/gitconfig_*` identity include instead of a hardcoded filename
 - `bootstrap.sh` no longer assumes a fixed GitHub owner for the config repo: `MOLT_REPO` and the new `MOLT_USER_GH` are overridable (default `whoami`)
+- `bootstrap.sh` clones the config repo into `MOLT_CFG_DIR` as `Molt-{user}`, and uses one it finds already in `MOLT_PRJ_DIR` rather than cloning a second copy. It cloned `molt-{user}` in lowercase, which `molt doctor` then flagged as off-convention
+- `molt new-user` scaffolds into `MOLT_CFG_DIR` when `--dest` is not given, and its printed next step sets `MOLT_CFG_DIR` rather than `MOLT_PRJ_DIR`
 - Removed hardcoded personal identity strings throughout framework docs and project artifacts; the framework now reads as generic `{user}`/`{github}`
 - `molt new-user` skeleton defaults `MOLT_FONT_FAMILY` to `Hack Nerd Font Mono` (a Nerd Font, matching the iTerm2 profile) so the prompt glyphs render out of the box
 - `backup_verify` has three exit codes: 0 when every check ran and passed, 1 when a check failed, and 2 when nothing failed but the share-side checks (SMB dialect, attach budget) could not run. 2 is the usual state, because SuperDuper mounts the share only while it copies
