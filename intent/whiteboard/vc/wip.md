@@ -3,21 +3,23 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T13:17Z
-status: active
-focus: "config repos moved to ~/Devel/cfg on gyges and rhadamanth; kovacs next"
+heartbeat_at: 2026-09-15T13:36Z
+status: paused
+focus: "EOD 15 Sep: config repos moved to ~/Devel/cfg on all three sleeves; kovacs to land issue 0007"
 claims: []
 ---
 
 # Validation Claude (vc)
 
-Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 session is recorded in `intent/done.md` 018 and in issues 0001-0004.
+Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 session is recorded in `intent/done.md` 018 and 019 and in issues 0001-0007.
 
 ## DOING
 
-- **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. The Molt side is shipped (`549678e`, issue 0005 closed, CI green). gyges is done: it reported at 2026-09-15 12:58Z after hv ran the move there, and was told to stand down. rhadamanth is done too: it moved once hv had stopped the CMS and Gtools.app, and gtools-vc/cc/ic were told. Next: kovacs.
+- (none)
 
 ## TODO
+
+- **Confirm kovacs landed issue 0007**: Molt at `8c3bd5a` or later, resleeve re-rendered `~/.config/alacritty/alacritty.toml`, and no link still points into `~/Devel/prj/Molt-matts`. kovacs reports to this node's session; if the session has ended, check kovacs directly.
 
 - **Get hv's ruling on `pipefail_sigpipe_check.sh`** (`hv/inbox.vc.md`, 2026-09-08 10:24Z). Explained to hv live on 15 Sep with a recommendation: skip the guard and convert Molt's 8 `cmd | grep -q` pipelines to capture-then-match, as an issue. The other inbox entries are actioned or overtaken: the backup findings closed as issues 0001-0003, the schedule note is resolved, and the ST0001 AC001 revert question was overtaken on 8 Sep when ST0001 closed with seven satisfied criteria.
 
@@ -29,7 +31,7 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 - **iTerm2 3.7.1's Claude Code onboarding offers "Mark Rewritable & Install" for dynamic profiles.** Taking it adds `"Rewritable": true`. The Molt profile is symlinked into Molt-matts, so iTerm2 then writes into git. Restored without the flag in Molt-matts `b58e0d4`; hv ruled iTerm2 does not write into terminal config unannounced.
 - **`fc -AI <file>` appends nothing to a file other than the current `HISTFILE`**, and `fc -A`/`fc -W` append everything, seeded history included. Per-session history (Molt-matts `389ef6f`) therefore points `HISTFILE` at an empty scratch file and copies it out at exit, as `/etc/zshrc_Apple_Terminal` does.
 - **`pgrep -x iTerm2` matches nothing while iTerm2 is running.** Use `pgrep -fl 'iTerm.app'`. An empty probe that contradicts something obvious is a probe defect, not a finding.
-- **A `grep -qv` converted to a herestring changes its answer on an EMPTY capture.** The substitution yields the empty string, the herestring appends a newline, and `-v` matches that line -- so the predicate answers TRUE where the pipeline answered FALSE. Demonstrated: `grep -qv x <<<"$(printf '')"` returns 0. `lib/molt.sh:707` (`tr | grep -oE | grep -qvE`) is exactly that shape and is DELIBERATELY UNTOUCHED. Test emptiness explicitly before converting it. A herestring on the FIRST stage of a multi-stage pipeline fixes nothing.
+- **A `grep -qv` converted to a herestring changes its answer on an EMPTY capture.** The substitution yields the empty string, the herestring appends a newline, and `-v` matches that line -- so the predicate answers TRUE where the pipeline answered FALSE. Demonstrated: `grep -qv x <<<"$(printf '')"` returns 0. `lib/molt.sh:720` (`tr | grep -oE | grep -qvE`) is exactly that shape and is DELIBERATELY UNTOUCHED. Test emptiness explicitly before converting it. A herestring on the FIRST stage of a multi-stage pipeline fixes nothing.
 - **Sourcing `lib/molt.sh` turns on `set -euo pipefail` for the caller** (line 5). bats has pipefail OFF, so the suite only sees SIGPIPE defects because `load_molt_libs` sources the real lib. A harness that stubbed it would have the hazard and no way to see it. `backup.bats` runs its errexit arms in a fresh `bash` for the same reason.
 - **An autoload file contains the BODY ONLY.** Wrapping it as `name() { ... }` makes the first call merely define the function and do nothing else -- it silently no-ops once, then works. `jump`, `git_current_branch` and `e` are the convention in `Molt-matts/config/zsh/functions/`. devbin's `README.md:60` shows the WRAPPED form, so anyone copying from there walks into it.
 - `fpath` and `autoload` are read at shell startup. A change under `config/zsh/functions/` needs a fresh shell; `source ~/.zshrc` is not enough, and testing in the current shell shows the old behaviour.
