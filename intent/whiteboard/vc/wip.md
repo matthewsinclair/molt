@@ -3,15 +3,15 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T10:27Z
+heartbeat_at: 2026-09-15T11:11Z
 status: paused
-focus: "session ended; nothing in flight; one ruling waits on hv (pipefail guard port)"
+focus: "session ended; nothing in flight; one ruling waits on hv (pipefail: port the guard or fix the 8 pipelines)"
 claims: []
 ---
 
 # Validation Claude (vc)
 
-Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 session is recorded in `intent/done.md` 018 and in issues 0001-0003.
+Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 session is recorded in `intent/done.md` 018 and in issues 0001-0004.
 
 ## DOING
 
@@ -19,13 +19,15 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 
 ## TODO
 
-- **Surface one unruled escalation to hv at next pickup**, in `hv/inbox.vc.md`: whether to port `pipefail_sigpipe_check.sh` (2026-09-08 10:24Z). The other entries there are actioned or overtaken: the backup findings closed as issues 0001-0003, the schedule note is resolved, and the ST0001 AC001 revert question was overtaken the same day, when ST0001 closed with seven satisfied criteria.
+- **Get hv's ruling on `pipefail_sigpipe_check.sh`** (`hv/inbox.vc.md`, 2026-09-08 10:24Z). Explained to hv live on 15 Sep with a recommendation: skip the guard and convert Molt's 8 `cmd | grep -q` pipelines to capture-then-match, as an issue. The other inbox entries are actioned or overtaken: the backup findings closed as issues 0001-0003, the schedule note is resolved, and the ST0001 AC001 revert question was overtaken on 8 Sep when ST0001 closed with seven satisfied criteria.
 
 ## Watch-outs
 
+- **Molt CI's macOS runner has only bash 3.2**, and this Mac's `env bash` is Homebrew bash 5.3. A green run under 5.3 is not a pass: run the suite with `/bin` first on PATH as well, and check the CI run before calling work done. `${VAR:-{...\}}` is where the two diverged (issue 0004).
 - **`backup_verify` exit 2 is normal, not a failure.** It means nothing failed but the share-side checks (SMB dialect, attach budget) could not run, which is the usual state because SuperDuper mounts the share only while copying. 0 means every check ran and passed; 1 means a check failed.
 - **SuperDuper `recentRuns` records finished runs only.** A copy in flight is invisible there, and cancelled or failed runs are often hv's own interruptions, eg for an OS install. Check for a running copy and ask before calling the backup failing.
 - **iTerm2 3.7.1's Claude Code onboarding offers "Mark Rewritable & Install" for dynamic profiles.** Taking it adds `"Rewritable": true`. The Molt profile is symlinked into Molt-matts, so iTerm2 then writes into git. Restored without the flag in Molt-matts `b58e0d4`; hv ruled iTerm2 does not write into terminal config unannounced.
+- **`fc -AI <file>` appends nothing to a file other than the current `HISTFILE`**, and `fc -A`/`fc -W` append everything, seeded history included. Per-session history (Molt-matts `389ef6f`) therefore points `HISTFILE` at an empty scratch file and copies it out at exit, as `/etc/zshrc_Apple_Terminal` does.
 - **`pgrep -x iTerm2` matches nothing while iTerm2 is running.** Use `pgrep -fl 'iTerm.app'`. An empty probe that contradicts something obvious is a probe defect, not a finding.
 - **A `grep -qv` converted to a herestring changes its answer on an EMPTY capture.** The substitution yields the empty string, the herestring appends a newline, and `-v` matches that line -- so the predicate answers TRUE where the pipeline answered FALSE. Demonstrated: `grep -qv x <<<"$(printf '')"` returns 0. `lib/molt.sh:707` (`tr | grep -oE | grep -qvE`) is exactly that shape and is DELIBERATELY UNTOUCHED. Test emptiness explicitly before converting it. A herestring on the FIRST stage of a multi-stage pipeline fixes nothing.
 - **Sourcing `lib/molt.sh` turns on `set -euo pipefail` for the caller** (line 5). bats has pipefail OFF, so the suite only sees SIGPIPE defects because `load_molt_libs` sources the real lib. A harness that stubbed it would have the hazard and no way to see it. `backup.bats` runs its errexit arms in a fresh `bash` for the same reason.
@@ -47,3 +49,4 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 - (2026-09-08) **`intent fc` was invoked by hv, at hv's keyboard, both times.** `IN-AG-FIAT-001`. vc moved ST0003 and Molt-matts ST0001 out of Triage into WIP so the transition was legal, which is not the verb and not a route around it.
 - (2026-09-15) **A verdict must say what it checked.** A skipped check reported as a pass is the defect; `backup_verify` now has a distinct exit for "passed what it could reach".
 - (2026-09-15) **iTerm2 does not write into terminal config without hv knowing.** hv's ruling. No dynamic profile in Molt-matts carries `"Rewritable": true`; profile changes are made in git.
+- (2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after "179 passing", and a stale AC001 question written into wip.
