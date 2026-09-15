@@ -10,7 +10,6 @@ verblock: "15 Sep 2026:v0.21: Matthew Sinclair - config repos moved to ~/Devel/c
 
 TODO:
 
-- **kovacs: land issue 0007.** Pull Molt to `8c3bd5a` or later and `molt resleeve`; alacritty should re-render `~/.config/alacritty/alacritty.toml` over its dangling link. Handed to kovacs (Claude session `kovacs`) on 15 Sep; hv stewards it. Confirm with `find ~ -lname '*Devel/prj/Molt-matts*'` returning nothing.
 - **Flynn's jormungandr** moves its config repo only if Flynn wants it; same steps (below). Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed; pushing is Flynn's call.
 
 Left for hv, from the move:
