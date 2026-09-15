@@ -70,8 +70,11 @@ info "Platform: $platform"
 # --- Determine git URL scheme ---
 
 git_url() {
-  local repo="$1"
-  if timeout 5 ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+  local repo="$1" ssh_out
+  # Capture, then match: a pipeline into `grep -q` can lose under pipefail
+  # (issue 0008). ssh -T exits 1 even when it authenticates, hence || true.
+  ssh_out="$(timeout 5 ssh -T git@github.com 2>&1 || true)"
+  if [[ "$ssh_out" == *"successfully authenticated"* ]]; then
     echo "git@github.com:${repo}.git"
   else
     echo "https://github.com/${repo}.git"

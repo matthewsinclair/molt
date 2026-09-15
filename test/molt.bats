@@ -116,6 +116,33 @@ load "test_helper.bash"
     [ -z "$output" ]
 }
 
+# Issue 0008. This was one pipeline ending in `grep -qvE`, which exits at the
+# first foreign path. With that path at the top of a large file, the upstream
+# grep -oE took SIGPIPE, pipefail (on once lib/molt.sh is sourced) made the whole
+# test false, and the file went unreported.
+@test "molt_foreign_home_paths flags a foreign path at the top of a large file" {
+    load_molt_libs
+    local me; me="$(whoami)"
+    local d="$BATS_TEST_TMPDIR/cfg3"; mkdir -p "$d"
+    awk -v me="$me" 'BEGIN { print "/Users/someoneelse/x"; for (i = 0; i < 200000; i++) print "/Users/" me "/f" i }' > "$d/big.conf"
+
+    run molt_foreign_home_paths "$d"
+    assert_success
+    assert_output_contains "big.conf"
+}
+
+# The trap in converting it: a file that mentions "home" but holds no home path
+# captures nothing, and `grep -qv` on an empty herestring matches its blank line.
+@test "molt_foreign_home_paths ignores a file that mentions home but holds no home path" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/cfg4"; mkdir -p "$d"
+    echo "go home early; Users welcome" > "$d/words.txt"
+
+    run molt_foreign_home_paths "$d"
+    assert_success
+    [ -z "$output" ]
+}
+
 # --- Symlink state helpers ---
 
 @test "molt_link_fault distinguishes all four states" {
