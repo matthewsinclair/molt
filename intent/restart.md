@@ -26,4 +26,4 @@ Start here, then read the files below. This file is an index, not a record -- it
 - `VERSION` -- single source of truth for the version number.
 - `CHANGELOG.md` -- Keep a Changelog format.
 - `lib/`, `liberators/`, `bin/`, `test/` -- the framework itself.
-- `../Molt-matts/` -- the user config repo this framework renders from. The GitHub repo name stays lowercase (`matthewsinclair/molt-matts`).
+- `~/Devel/cfg/Molt-matts/` -- the user config repo this framework renders from, in `MOLT_CFG_DIR` since 15 Sep (it was `../Molt-matts/`). The GitHub repo name stays lowercase (`matthewsinclair/molt-matts`).
