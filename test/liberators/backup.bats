@@ -57,7 +57,13 @@ _tile() {
         share) dest='{"networkUrl":"smb://u@nas.test/bkp_test"}' ;;
         other) dest='{"diskImage":{"hostShareUrl":"smb://u@nas.test/bkp_elsewhere"}}' ;;
     esac
-    local schedule="${_TILE_SCHEDULE:-{\"scheduleOn\":true,\"minuteOfDay\":180\}}"
+    # A plain assignment, not ${_TILE_SCHEDULE:-{...\}}: bash 3.2, the only bash
+    # on GitHub's macOS runners, keeps the backslash before that closing brace,
+    # so the fixture became invalid JSON and every tile read failed in CI.
+    local schedule='{"scheduleOn":true,"minuteOfDay":180}'
+    if [[ -n "${_TILE_SCHEDULE:-}" ]]; then
+        schedule="$_TILE_SCHEDULE"
+    fi
     local proto="{\"destination\":${dest},\"schedule\":${schedule},\"recentRuns\":[${runs}]}"
     printf '{"schemaVersion":5,"tiles":[{"proto":"%s"}]}' "${proto//\"/\\\"}" > "$MOLT_SD_TILES"
 }
