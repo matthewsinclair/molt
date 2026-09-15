@@ -15,9 +15,11 @@ _alacritty_config_wrong() {
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   [[ -n "$user_repo" ]] || return 1
 
-  local tmpl="$user_repo/config/alacritty/alacritty.toml.tmpl"
-  if [[ -f "$tmpl" ]]; then
-    molt_config_stale "$tmpl" "$target"
+  # molt_config_stale takes the repo-relative source WITHOUT .tmpl, like
+  # molt_install_config. Passing the absolute .tmpl path made it look for
+  # alacritty.toml.tmpl.tmpl and answer "not stale" forever (issue 0007).
+  if [[ -f "$user_repo/config/alacritty/alacritty.toml.tmpl" ]]; then
+    molt_config_stale "config/alacritty/alacritty.toml" "$target"
   else
     ! molt_link_healthy "$target"
   fi
