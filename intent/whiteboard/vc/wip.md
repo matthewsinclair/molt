@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-15T11:52Z
+heartbeat_at: 2026-09-15T12:58Z
 status: active
-focus: "moving the config repos to ~/Devel/cfg; Molt side shipped (549678e); gyges moving first; rhadamanth held"
+focus: "moving the config repos to ~/Devel/cfg; Molt side shipped (549678e); gyges done; rhadamanth held; kovacs after"
 claims: []
 ---
 
@@ -15,7 +15,7 @@ Sessions of 2026-08-27 and 2026-09-08 archived to `.history/`. The 2026-09-15 se
 
 ## DOING
 
-- **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. The Molt side is shipped (`549678e`, issue 0005 closed, CI green). hv chose gyges first: steps sent 2026-09-15 11:52Z to `bridge:session_01UskGEo7TKsP5HF8d1YJpkH` (not by name). Delivery is unconfirmed, and hv may need to approve it on gyges. Next: check gyges's report, then rhadamanth once its hold releases, then kovacs.
+- **Move the config repos from `~/Devel/prj/` to `~/Devel/cfg/`** (Molt-matts, Molt-flynn, Gtools-geodica). Plan, blast radius and steps are in `intent/wip.md`. The Molt side is shipped (`549678e`, issue 0005 closed, CI green). gyges is done: it reported at 2026-09-15 12:58Z after hv ran the move there, and was told to stand down. Next: rhadamanth once its hold releases, then kovacs.
 
 ## TODO
 
