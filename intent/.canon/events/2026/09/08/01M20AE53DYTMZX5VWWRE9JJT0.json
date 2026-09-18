@@ -1,0 +1,14 @@
+{
+  "id": "01M20AE53DYTMZX5VWWRE9JJT0",
+  "ts": "2026-09-08T10:53:48.525Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0001/AC005"
+  },
+  "payload": {
+    "evidence": "docs/guides/bootstrap-runbook.md, 370 lines, 11 ordered sections (system, zsh, git, tmux, editors, alacritty, keys, desktop, dev-tools, ssh, intent) matching the Phase 1 liberator set; in the Molt repo, not Molt-matts"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M207FHGQ5ZE0SQXSPSD8EJEW",
+  "ts": "2026-09-08T10:02:08.279Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0001/15"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "Version-agnostic intent liberator"
+  }
+}

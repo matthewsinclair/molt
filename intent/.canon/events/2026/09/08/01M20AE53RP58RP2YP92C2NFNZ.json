@@ -1,0 +1,14 @@
+{
+  "id": "01M20AE53RP58RP2YP92C2NFNZ",
+  "ts": "2026-09-08T10:53:48.536Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0001/AC006"
+  },
+  "payload": {
+    "evidence": "every subsection carries [agnostic], [linux] or [instance]; the legend is in the document header"
+  }
+}

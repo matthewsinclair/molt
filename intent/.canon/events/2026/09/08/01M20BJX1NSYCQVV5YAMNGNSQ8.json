@@ -1,0 +1,16 @@
+{
+  "id": "01M20BJX1NSYCQVV5YAMNGNSQ8",
+  "ts": "2026-09-08T11:13:52.693Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "st.triage",
+  "subject": {
+    "type": "thread",
+    "id": "ST0003"
+  },
+  "payload": {
+    "from": "triage",
+    "reason": null,
+    "to": "not-started"
+  }
+}
