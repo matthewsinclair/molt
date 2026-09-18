@@ -1,0 +1,14 @@
+{
+  "id": "01M207PM08KWHTJD4V2ARDTYW9",
+  "ts": "2026-09-08T10:06:00.200Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0001/AC001"
+  },
+  "payload": {
+    "evidence": "lib/molt.sh check 6 warns+names+prints the reason it previously discarded; liberators/intent.sh intent_verify no longer passes on a mismatched link; test/liberators/intent.bats 11 of 15 arms fail against pre-fix code; 04 Sep 568e620 (dangling symlinks) and 9f28dce (mtime->digest) close the same class"
+  }
+}

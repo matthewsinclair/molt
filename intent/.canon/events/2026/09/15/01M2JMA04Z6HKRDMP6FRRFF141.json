@@ -1,0 +1,15 @@
+{
+  "id": "01M2JMA04Z6HKRDMP6FRRFF141",
+  "ts": "2026-09-15T13:32:37.919Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0007"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "alacritty check never flags a template-form config: molt_config_stale gets an absolute .tmpl path"
+  }
+}

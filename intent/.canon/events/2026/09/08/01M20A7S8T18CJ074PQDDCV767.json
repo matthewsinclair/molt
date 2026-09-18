@@ -1,0 +1,14 @@
+{
+  "id": "01M20A7S8T18CJ074PQDDCV767",
+  "ts": "2026-09-08T10:50:19.802Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0001/AC004"
+  },
+  "payload": {
+    "evidence": "two consecutive `molt upgrade --dry-run` runs this session produced byte-identical output (3 liberator(s) would be installed, same set); resleeve idempotent on kovacs across three consecutive runs per intent/wip.md"
+  }
+}

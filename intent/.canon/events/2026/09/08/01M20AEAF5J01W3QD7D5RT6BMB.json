@@ -1,0 +1,16 @@
+{
+  "id": "01M20AEAF5J01W3QD7D5RT6BMB",
+  "ts": "2026-09-08T10:53:54.021Z",
+  "principal": "local",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.start",
+  "subject": {
+    "type": "wp",
+    "id": "ST0001/04"
+  },
+  "payload": {
+    "from": "not-started",
+    "reason": null,
+    "to": "wip"
+  }
+}
