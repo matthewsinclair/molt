@@ -2,13 +2,32 @@
 # tiling.sh — Liberator: tiling window management via Tactile
 # Frees you from manual window positioning with a Divvy-like grid picker.
 #
-# Tactile workflow: Shift+Alt+Super+T shows grid overlay, type two keys to define
-# a rectangle (eg Q,C = full left column, Q,V = full screen).
+# Tactile workflow: the activation binding shows the grid overlay, then you type
+# two keys to define a rectangle (eg Q,C = full left column, Q,V = full screen).
 # Keyboard maps to screen position: QWE=top, ASD=middle, ZXC=bottom.
 
 TACTILE_UUID="tactile@lundal.io"
 TACTILE_SCHEMA="org.gnome.shell.extensions.tactile"
 TACTILE_EXT_DIR="$HOME/.local/share/gnome-shell/extensions/$TACTILE_UUID"
+
+# Default activation binding. A sleeve that needs a different one exports
+# MOLT_TACTILE_ACTIVATE in its instance vars.sh — the binding is the one piece
+# of this liberator that is a per-machine choice, so the value lives there and
+# nowhere else.
+TACTILE_ACTIVATE_DEFAULT="<Shift><Alt><Super>t"
+
+# Runs in a subshell via command substitution, so sourcing vars.sh here cannot
+# leak the instance's other exports into the caller.
+_tiling_activate() {
+  local repo hostname vars
+  if repo="$(molt_find_user_repo 2>/dev/null)"; then
+    hostname="$(hostname -s 2>/dev/null || hostname)"
+    vars="$repo/instances/$hostname/vars.sh"
+    # shellcheck disable=SC1090
+    [[ -f "$vars" ]] && source "$vars"
+  fi
+  echo "${MOLT_TACTILE_ACTIVATE:-$TACTILE_ACTIVATE_DEFAULT}"
+}
 
 tiling_check() {
   local ok=0
@@ -107,15 +126,17 @@ tiling_install() {
   gsettings set $TACTILE_SCHEMA row-3 0
   gsettings set $TACTILE_SCHEMA row-4 0
 
-  # Activation keybinding: Shift+Alt+Super+T
-  gsettings set $TACTILE_SCHEMA show-tiles "['<Shift><Alt><Super>t']"
+  # Activation keybinding (see MOLT_TACTILE_ACTIVATE above)
+  local activate
+  activate="$(_tiling_activate)"
+  gsettings set $TACTILE_SCHEMA show-tiles "['$activate']"
 
   # Window gap and maximize
   gsettings set $TACTILE_SCHEMA gap-size 4
   gsettings set $TACTILE_SCHEMA maximize true
 
   molt_info "Liberator complete: tiling"
-  molt_info "  Activate: Shift+Alt+Super+T → type two keys to tile (eg Q,C = left third)"
+  molt_info "  Activate: $activate → type two keys to tile (eg Q,C = left third)"
   molt_info "  Grid: Q W E R T Y U / A S D F G H J / Z X C V B N M"
 }
 
