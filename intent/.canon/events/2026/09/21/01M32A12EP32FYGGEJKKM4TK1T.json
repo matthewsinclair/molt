@@ -1,0 +1,26 @@
+{
+  "id": "01M32A12EP32FYGGEJKKM4TK1T",
+  "ts": "2026-09-21T15:40:50.518Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.register",
+  "subject": {
+    "type": "roster",
+    "id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1"
+  },
+  "payload": {
+    "from": "headers",
+    "nodes": [
+      [
+        "hv",
+        "Hypervisor",
+        "hypervisor"
+      ],
+      [
+        "vc",
+        "Validation Claude",
+        "validation"
+      ]
+    ]
+  }
+}

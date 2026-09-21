@@ -1,0 +1,219 @@
+{
+  "schema": "intent/board@3.0",
+  "node": {
+    "moniker": "vc",
+    "name": "Validation Claude",
+    "role": "validation",
+    "session_id": "d4708625-920e-4023-b3fd-4dacdc6294c4",
+    "heartbeat_at": "2026-09-21T15:40:58.246Z",
+    "status": "paused",
+    "focus": "EOD 15 Sep: config repos moved to ~/Devel/cfg on all three sleeves; issues 0005-0008 closed; hv's list cleared",
+    "claims": [],
+    "recorded_at": "2026-09-21T15:40:50.518Z",
+    "authored_at": "2026-09-15T13:58Z",
+    "migrated_at": "2026-09-21T15:40:58.246Z"
+  },
+  "items": [
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 1,
+      "text": "(none)",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 1,
+      "text": "(none)",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 1,
+      "text": "**Molt CI's macOS runner has only bash 3.2**, and this Mac's `env bash` is Homebrew bash 5.3. A green run under 5.3 is not a pass: run the suite with `/bin` first on PATH as well, and check the CI run before calling work done. `${VAR:-{...\\}}` is where the two diverged (issue 0004).",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 2,
+      "text": "**`backup_verify` exit 2 is normal, not a failure.** It means nothing failed but the share-side checks (SMB dialect, attach budget) could not run, which is the usual state because SuperDuper mounts the share only while copying. 0 means every check ran and passed; 1 means a check failed.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 3,
+      "text": "**SuperDuper `recentRuns` records finished runs only.** A copy in flight is invisible there, and cancelled or failed runs are often hv's own interruptions, eg for an OS install. Check for a running copy and ask before calling the backup failing.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 4,
+      "text": "**iTerm2 3.7.1's Claude Code onboarding offers \"Mark Rewritable & Install\" for dynamic profiles.** Taking it adds `\"Rewritable\": true`. The Molt profile is symlinked into Molt-matts, so iTerm2 then writes into git. Restored without the flag in Molt-matts `b58e0d4`; hv ruled iTerm2 does not write into terminal config unannounced.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 5,
+      "text": "**`fc -AI <file>` appends nothing to a file other than the current `HISTFILE`**, and `fc -A`/`fc -W` append everything, seeded history included. Per-session history (Molt-matts `389ef6f`) therefore points `HISTFILE` at an empty scratch file and copies it out at exit, as `/etc/zshrc_Apple_Terminal` does.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 6,
+      "text": "**`pgrep -x iTerm2` matches nothing while iTerm2 is running.** Use `pgrep -fl 'iTerm.app'`. An empty probe that contradicts something obvious is a probe defect, not a finding.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 7,
+      "text": "**A `grep -qv` converted to a herestring changes its answer on an EMPTY capture.** The substitution yields the empty string, the herestring appends a newline, and `-v` matches that line -- so the predicate answers TRUE where the pipeline answered FALSE. Demonstrated: `grep -qv x <<<\"$(printf '')\"` returns 0. `molt_foreign_home_paths` (`tr | grep -oE | grep -qvE`) was exactly that shape; issue 0008 converted it with an explicit `[[ -n ]]` test, and a bats test pins the empty case. A herestring on the FIRST stage of a multi-stage pipeline fixes nothing.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 8,
+      "text": "**Sourcing `lib/molt.sh` turns on `set -euo pipefail` for the caller** (line 5). bats has pipefail OFF, so the suite only sees SIGPIPE defects because `load_molt_libs` sources the real lib. A harness that stubbed it would have the hazard and no way to see it. `backup.bats` runs its errexit arms in a fresh `bash` for the same reason.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 9,
+      "text": "**An autoload file contains the BODY ONLY.** Wrapping it as `name() { ... }` makes the first call merely define the function and do nothing else -- it silently no-ops once, then works. `jump`, `git_current_branch` and `e` are the convention in `Molt-matts/config/zsh/functions/`. devbin's `README.md:60` shows the WRAPPED form, so anyone copying from there walks into it.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 10,
+      "text": "`fpath` and `autoload` are read at shell startup. A change under `config/zsh/functions/` needs a fresh shell; `source ~/.zshrc` is not enough, and testing in the current shell shows the old behaviour.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 11,
+      "text": "A negative control with ONE candidate cannot see a preference-order or list-formatting bug. Depth-1 failure cases prove the exit code and nothing about the output.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 12,
+      "text": "`molt doctor` check 12 (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 13,
+      "text": "**Re-measure at pickup; do not quote a restart file.** The suite was 185 tests at `549678e`; count it again rather than trusting that figure.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 14,
+      "text": "**After a config repo moves, every new shell starts with no zsh config until `molt resleeve` runs**, because `~/.zshenv` dangles. That includes an agent's next Bash call, which then has no `MOLT_PRJ_DIR` and so no `MOLT_CFG_DIR`. Run the mv and the resleeve in one command, with `MOLT_PRJ_DIR` set explicitly and molt called by absolute path.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 15,
+      "text": "**`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 1,
+      "text": "(none)",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 1,
+      "text": "(2026-09-08) **Verify a peer's findings before acting on them, and verify a carried decision before ruling on it.** intent-vc's six claims about the `intent` liberator all held when checked against source. hv's six carried decisions did not: three were already resolved and the list did not know it. A carried-decision list is not self-cleaning.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 2,
+      "text": "(2026-09-08) **Check the artefact before believing a status field.** Both \"Not Started\" packages on a six-month-old ST0001 turned out to be mostly delivered -- WP-07 half built, WP-04's runbook written in June and three months stale. The status records what someone last typed.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 3,
+      "text": "(2026-09-08) **A half-met work package closed whole is a lie that compounds**, because the next reader cannot see which half they inherited. WP-07 was split: the delivered half took evidence-backed ACs, the unbuilt half became ST0003.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 4,
+      "text": "(2026-09-08) **`intent fc` was invoked by hv, at hv's keyboard, both times.** `IN-AG-FIAT-001`. vc moved ST0003 and Molt-matts ST0001 out of Triage into WIP so the transition was legal, which is not the verb and not a route around it.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 5,
+      "text": "(2026-09-15) **A verdict must say what it checked.** A skipped check reported as a pass is the defect; `backup_verify` now has a distinct exit for \"passed what it could reach\".",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 6,
+      "text": "(2026-09-15) **iTerm2 does not write into terminal config without hv knowing.** hv's ruling. No dynamic profile in Molt-matts carries `\"Rewritable\": true`; profile changes are made in git.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 7,
+      "text": "(2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after \"179 passing\", and a stale AC001 question written into wip.",
+      "state": "live",
+      "recorded_at": "2026-09-21T15:40:58.246Z"
+    }
+  ],
+  "messages": []
+}
