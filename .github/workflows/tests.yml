@@ -3,8 +3,31 @@ name: Molt Tests
 on:
   push:
     branches: [ main ]
+    # ONE TAG FILTER FOR THE WHOLE FLEET, carrying both release forms (hv,
+    # 2026-09-22): Molt tags v0.1.1, and Utilz has tagged bare since 2.7.0.
+    # This is the only place in this file where a tag's FORM is written.
+    tags: ['v[0-9]*', '[0-9]*']
+    # A push that only moves a board starts no run (devbin#0110). Path filters
+    # are not evaluated for pushes of tags, so this cannot suppress a release.
+    paths-ignore:
+      - 'intent/whiteboard/**'
   pull_request:
     branches: [ main ]
+  # ON DEMAND. The macOS leg no longer runs on a push (devbin#0108), so this is
+  # how it is asked for between releases:
+  #
+  #   gh workflow run tests.yml --ref main
+  workflow_dispatch:
+
+# SUPERSEDED RUNS ARE CANCELLED (hv's ruling of 2026-09-21; devbin#0108 carries
+# the reasoning). The EVENT is part of the key because a push to main and a
+# workflow_dispatch on main share a ref: a group keyed on the ref alone would
+# let a push cancel an on-demand macOS run after its ten-times minutes had been
+# spent, and let a dispatch cancel a push's run. A tag has its own ref, so a
+# release run is never cancelled by a push.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test-linux:
@@ -12,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -41,10 +64,20 @@ jobs:
 
   test-macos:
     name: Test on macOS
+    # ON TAGS AND ON DEMAND, NEVER ON A PUSH (hv's ruling of 2026-09-21,
+    # devbin#0108). A macOS minute costs ten times a Linux one on a private
+    # repository, and the fleet applies one rule rather than one per repository.
+    #
+    # The tag half asks github.ref_type, which GitHub documents as `branch` or
+    # `tag`, and never the tag's spelling: on.push.tags above decides WHICH tags
+    # start a run, and this decides whether the run carries macOS. A
+    # pull_request's ref is refs/pull/N/merge, whose ref_type is `branch`, so
+    # the leg skips there too -- deliberately, and Test Summary below knows it.
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -73,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Run ShellCheck
       run: |
@@ -91,16 +124,48 @@ jobs:
     name: Test Summary
     runs-on: ubuntu-latest
     needs: [test-linux, test-macos]
-    if: always()
+    # NOT always(). Cancelling superseded runs (see concurrency above) makes a
+    # cancelled run an ordinary event rather than a rare one, and always() would
+    # print a failure into the log of every push that overtook another. A
+    # verdict that is red in ordinary operation is one people stop reading.
+    # cancelled() asks about the RUN, so a failed or cancelled LEG inside a live
+    # run still reaches the decision below and is still reported.
+    if: ${{ !cancelled() }}
+
+    # THE INPUTS COME THROUGH env RATHER THAN INLINE ${{ }}, so the script below
+    # is a script: it can be run on a given combination of results, by a person
+    # or by a test. An inline expression can only ever be read.
+    env:
+      LINUX: ${{ needs.test-linux.result }}
+      MACOS: ${{ needs.test-macos.result }}
+      MACOS_REQUIRED: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
 
     steps:
     - name: Summary
       run: |
         echo "## Test Summary"
-        echo "All test jobs have completed."
-        if [ "${{ needs.test-linux.result }}" == "success" ] && [ "${{ needs.test-macos.result }}" == "success" ]; then
-          echo "All tests passed!"
+        echo "test-linux     = '$LINUX'"
+        echo "test-macos     = '$MACOS'"
+        echo "macos required = '$MACOS_REQUIRED'"
+        failed=""
+        [ "$LINUX" = success ] || failed="$failed test-linux"
+        # A SKIPPED macOS LEG IS A PASS ONLY WHERE IT WAS NOT ASKED FOR. On a
+        # release tag or an on-demand run it is a missing verdict wearing a
+        # pass. An EMPTY result -- a job GitHub never started, which is what a
+        # billing refusal looks like from here -- is never acceptable, on any
+        # event. Before this, the summary required macOS to have SUCCEEDED on
+        # every event, so gating the leg without rewriting this would have
+        # turned every push red.
+        if [ "$MACOS_REQUIRED" = true ]; then
+          [ "$MACOS" = success ] || failed="$failed test-macos"
         else
-          echo "Some tests failed. Please review the logs."
+          case "$MACOS" in
+            success | skipped) ;;
+            *) failed="$failed test-macos" ;;
+          esac
+        fi
+        if [ -n "$failed" ]; then
+          printf 'FAILED:%s\n' "$failed"
           exit 1
         fi
+        echo "All required checks passed."

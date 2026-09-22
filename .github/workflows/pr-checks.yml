@@ -4,13 +4,21 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# SUPERSEDED RUNS ARE CANCELLED (hv's ruling of 2026-09-21; devbin#0108). This
+# workflow runs on pull_request only, so what it cancels is an older run for the
+# same PR when a new commit arrives. The event is in the key for one spelling
+# across the fleet.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check-documentation:
     name: Documentation Checks
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Check for documentation updates
       run: |
@@ -30,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
 
@@ -53,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Check PR size
       run: |
