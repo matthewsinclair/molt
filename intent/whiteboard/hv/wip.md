@@ -13,11 +13,11 @@ claims: []
 
 ## DOING
 
-- (not started)
+_(none)_
 
 ## TODO
 
-- (set on first pickup)
+_(none)_
 
 ## Holds
 
@@ -29,11 +29,11 @@ _(none)_
 
 ## Watch-outs
 
-- (none yet)
+_(none)_
 
 ## Decisions
 
-- (none yet)
+_(none)_
 
 ---
 
