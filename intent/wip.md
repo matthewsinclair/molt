@@ -29,15 +29,15 @@ How a sleeve moves its config repos, for any later one:
 
 ## Waiting on hv
 
-- (none)
+- **Clear vc's four 8 Sep messages from hv's inbox.** All four are actioned (issues 0001, 0002 and 0008 closed; ST0001 closed). It is hv's inbox, so only hv clears it: `intent wb clear vc --node hv`.
 
 ## Upcoming Work
 
-- **iTerm2 on rhadamanth still holds the Molt profile as rewritable** until it is relaunched, so a settings change to that profile can still write into Molt-matts. On any Mac, choose **Skip Dynamic Profiles** if iTerm2's Claude Code onboarding asks again.
-- **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
-- **Claude Code's iTerm2 triggers are not in the Molt dynamic profile.** If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
-- **Sidecars record a case-folded path.** Every `.molt-rendered` names its template as `.../molt-matts/...` lowercase, the path molt resolved through case folding. Informational while the digest recomputes the path from its `source` argument, but it is on-disk state that survives a rename and would then resolve only on a case-insensitive filesystem.
-- **When Intent 3.2.1 reaches gyges, watch the first `molt upgrade` after the `brew upgrade`** (Intent 0527). The 3.2.0 gate home names a keg the upgrade deletes. The intent check should report "install is gone", install should run `intent bootstrap`, and the home should then name `opt/intent/libexec`. It is the one path of ST0004 not yet seen live. Until the fix is in, `intent bootstrap` once by hand also repairs it.
+- **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
+- **The ssh wrapper resets a tab to `#000000`, but rhadamanth's base iTerm2 profile is `#15191F`** -- separate light and dark colours, both `#15191F`, in the 10 Mar export (Molt-matts `config/iterm2/profile.json`; macOS is in Light mode). A tab comes back from ssh slightly blacker than it started. The reset is `liberators/zsh.sh:69`; resetting to the profile's colour is small. Not scheduled; hv's call. The live profile may differ from the export.
+- **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
+- **Sidecars record the template path as of the last render, and nothing refreshes it.** `~/.ssh/config.molt-rendered` still names `~/Devel/prj/Molt-matts/config/ssh/config.tmpl`, the pre-move path, which no longer exists; starship's names `~/Devel/cfg/...`. The lowercase case-folding seen earlier is gone from both. Informational while the digest recomputes the path from its `source` argument.
+- **When Intent 3.2.1 reaches gyges, watch the first `molt upgrade` after the `brew upgrade`** (Intent 0527; the fix landed at Intent `9358663ff` and ships in 3.2.1). The 3.2.0 gate home names a keg the upgrade deletes. The intent check should report "install is gone", install should run `intent bootstrap`, and the home should then name `opt/intent/libexec`. It is the one path of ST0004 not yet seen live. No project on gyges has the pre-commit gate installed (hv: leave the hooks for now), so nothing is refused there meanwhile; `intent bootstrap` once by hand also repairs it.
 - **Decide whether `desktop` should own more of GNOME than it does.** It manages the GTK stylesheet (3.0 and 4.0) and dock favourites; its gsettings block is still hardcoded.
 
 Carried, not this project's to fix:
@@ -47,10 +47,8 @@ Carried, not this project's to fix:
 Carried from March, unverified from this sleeve -- confirm before acting:
 
 - Tune iTerm2 SSH background colors after seeing them in practice
-- Check rhadamanth's actual default background color (reset currently uses 000000)
-- Persist GNOME Terminal Super bindings in the gnome-terminal liberator
+- Persist GNOME Terminal Super bindings in the gnome-terminal liberator (still none in the liberator or `config/gnome-terminal`, 23 Sep)
 - GTK apps (Nautilus etc.) still use Ctrl+C/V -- low priority
-- Export iTerm2 + Terminal.app profiles from rhadamanth
 
 ## Notes
 
