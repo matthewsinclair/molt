@@ -1,0 +1,118 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0004",
+  "title": "Intent liberator: install from Homebrew, hands off rhadamanth",
+  "slug": "intent-liberator-install-from-homebrew-hands-off",
+  "status": "completed",
+  "created": "2026-09-23",
+  "completed": "2026-09-23",
+  "objective": "Molt's intent liberator installs and checks Intent the way an everyday user gets it, from Homebrew, and its verdict names the Intent that `intent` actually runs. Molt stops managing Intent on rhadamanth, the machine Intent is developed on.",
+  "context": "On 23 Sep 2026 gyges's `molt upgrade` warned that PATH resolves `intent` to `/opt/homebrew/bin/intent`, not `~/bin/intent`, and still printed `intent: ✓ ok`. Measured on gyges the same morning: the link Molt managed pointed at Intent 2.6.0 (the v2 script in a frozen, pre-rewrite checkout), login shells ran Homebrew's 3.2.0, and an interactive non-login shell ran 2.6.0. The check never asked which version it had linked, and its shadow warning went quiet in exactly the shell where v2 ran. v2.6.0 refuses a v3 project with an error and writes nothing, so nothing was damaged.\n\nhv's rulings the same day: gyges is the test bed for running Intent from brew like an everyday user, with no local copy of the dev tree, and problems with that go to intent-vc. Nothing to do with Intent on rhadamanth may be touched. Do just enough to prove it works.\n\nThe liberator's source-checkout mode had two intended users. rhadamanth is now off limits, and kovacs has no Intent and does not list the liberator. So the liberator becomes brew-only rather than keep a mode that no machine runs.",
+  "body": "",
+  "preamble": "",
+  "wps": [
+    {
+      "seq": 1,
+      "title": "Keep Molt off Intent on rhadamanth",
+      "scope": "S",
+      "status": "done",
+      "objective": "",
+      "body": "",
+      "preamble": ""
+    },
+    {
+      "seq": 2,
+      "title": "Brew-only intent liberator",
+      "scope": "S",
+      "status": "done",
+      "objective": "",
+      "body": "",
+      "preamble": ""
+    },
+    {
+      "seq": 3,
+      "title": "Roll out on gyges",
+      "scope": "S",
+      "status": "done",
+      "objective": "",
+      "body": "",
+      "preamble": ""
+    },
+    {
+      "seq": 4,
+      "title": "Retire gyges's Intent v2 links and checkout (hv's action)",
+      "scope": "S",
+      "status": "done",
+      "objective": "",
+      "body": "",
+      "preamble": ""
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC001",
+      "text": "On gyges, molt upgrade reports the intent liberator ok, naming the Homebrew Intent that a login shell runs.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "gyges-infra, 2026-09-23: molt upgrade exit 0 at Molt 70504ca / Molt-matts 857d49c -- 'Zen: intent: Homebrew's intent 3.2.0 (4e2f908a5857c4ac878aa8f071c5f09b60753993) runs from PATH and the gate' then 'intent: ✓ ok'; no warning or error lines"
+      }
+    },
+    {
+      "id": "AC002",
+      "text": "The intent check fails, naming the path, when intent on PATH is not Homebrew's.",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC003",
+      "text": "The intent check fails when the gate home names an install directory that no longer exists.",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC004",
+      "text": "Molt does nothing with Intent on rhadamanth: the intent liberator is disabled in its manifest and no Intent file there was changed.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "Molt-matts 857d49c: rhadamanth manifest intent enabled=false; 'molt list' on rhadamanth prints 'intent: disabled'. Only read-only probes of rhadamanth's Intent (one git status there before hv's ruling can refresh the index stat cache)."
+      }
+    },
+    {
+      "id": "AC005",
+      "text": "gyges has no Intent v2 links and no local Intent checkout.",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "gyges-infra, 2026-09-23, with hv's approval: ~/bin/intent, ~/.local/bin/intent and ~/Devel/prj/Intent all 'No such file or directory'; login and non-login zsh resolve /opt/homebrew/bin/intent, intent 3.2.0 (4e2f908a5)"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT001",
+      "kind": "test",
+      "file": "test/liberators/intent.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "green",
+      "note": "@test 'intent_check FAILS, naming it, when PATH runs another intent'. Not observed red: written with the rewrite, and the pre-ST0004 liberator had no brew path to fail. Green at 70504ca under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT002",
+      "kind": "test",
+      "file": "test/liberators/intent.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "green",
+      "note": "@test 'intent_check FAILS when the gate home names an install that is gone'. Not observed red: written with the rewrite, and the pre-ST0004 liberator had no brew path to fail. Green at 70504ca under bash 5.3 and /bin/bash 3.2."
+    }
+  ]
+}

@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: d4708625-920e-4023-b3fd-4dacdc6294c4
-heartbeat_at: 2026-09-21 15:40Z
-status: paused
-focus: "EOD 15 Sep: config repos moved to ~/Devel/cfg on all three sleeves; issues 0005-0008 closed; hv's list cleared"
+session_id: 34ff872f-ee41-417c-ae35-576287e8543c
+heartbeat_at: 2026-09-23 07:27Z
+status: active
+focus: "23 Sep: answered hv's question on the gyges intent-liberator warning; day plan awaiting hv's go"
 claims: []
 ---
 
@@ -13,11 +13,11 @@ claims: []
 
 ## DOING
 
-- (none)
+_(none)_
 
 ## TODO
 
-- (none)
+- When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)
 
 ## Holds
 
