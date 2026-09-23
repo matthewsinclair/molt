@@ -18,7 +18,8 @@
       "kind": "doing",
       "seq": 1,
       "text": "(not started)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:26:53.614Z",
       "recorded_at": "2026-09-21T15:40:50.539Z"
     },
     {
@@ -26,7 +27,8 @@
       "kind": "todo",
       "seq": 1,
       "text": "(set on first pickup)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:26:53.657Z",
       "recorded_at": "2026-09-21T15:40:50.539Z"
     },
     {
@@ -34,7 +36,8 @@
       "kind": "watchout",
       "seq": 1,
       "text": "(none yet)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:26:53.689Z",
       "recorded_at": "2026-09-21T15:40:50.539Z"
     },
     {
@@ -42,7 +45,8 @@
       "kind": "decision",
       "seq": 1,
       "text": "(none yet)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:26:53.722Z",
       "recorded_at": "2026-09-21T15:40:50.539Z"
     }
   ],
