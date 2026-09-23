@@ -39,7 +39,7 @@ EOF
     export PATH="$BATS_TEST_TMPDIR/stub:$FAKE_PREFIX/bin:$PATH"
 }
 
-@test "intent_check passes when Homebrew's intent runs from PATH and the gate" {
+@test "intent_check passes when Homebrew's intent is what PATH and the gate run" {
     _fake_brew_intent
     load_liberator intent
     run intent_check
@@ -48,7 +48,7 @@ EOF
 }
 
 @test "intent_check FAILS, naming it, when PATH runs another intent" {
-    # gyges, 23 Sep 2026: a link to Intent 2.6.0 checked ok while a login shell
+    # AT001 (ST0004 AC002). gyges, 23 Sep 2026: a link to Intent 2.6.0 checked ok while a login shell
     # ran Homebrew's 3.2.0 and a non-login shell ran the 2.6.0.
     _fake_brew_intent
     mkdir -p "$BATS_TEST_TMPDIR/v2"
@@ -64,7 +64,7 @@ EOF
 }
 
 @test "intent_check FAILS when the gate home names an install that is gone" {
-    # What a brew upgrade leaves behind when the gate home names a versioned
+    # AT002 (ST0004 AC003). What a brew upgrade leaves behind when the gate home names a versioned
     # keg and cleanup has removed it.
     _fake_brew_intent
     echo "$FAKE_PREFIX/Cellar/intent/9.9.8/libexec" > "$XDG_DATA_HOME/intent/home"
