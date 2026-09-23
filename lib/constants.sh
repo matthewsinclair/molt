@@ -61,7 +61,6 @@ MOLT_USER_REPO_SEARCH_PATHS+=(
 # individually via env var (eg UTILZ_HOME), or they fall back to
 # searching MOLT_PRJ_DIR.
 MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Utilz}}"
-MOLT_INTENT_HOME="${INTENT_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Intent}}"
 MOLT_PPLR_HOME="${PPLR_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Pplr}}"
 
 # --- Local bin ---

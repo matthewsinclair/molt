@@ -1,203 +1,100 @@
 #!/usr/bin/env bats
-# intent.bats — intent liberator (repo discovery, dispatcher choice, link honesty)
+# intent.bats — intent liberator: Intent from Homebrew, and a verdict that names
+# the Intent that actually runs
 #
-# Every arm here fails on the pre-2026-09-08 liberator. That is the point: the
-# old code found the repo by probing for bin/intent, linked the v2 dispatcher,
-# and let intent_verify pass on a link pointing somewhere it never installed.
+# brew and intent are stubs on PATH, and XDG_DATA_HOME puts the gate home in
+# the test directory. Nothing here reaches the real Homebrew or gate home.
 
 load "../test_helper.bash"
 
-# A repo is identified by BEING a repo. The binaries are independently present
-# or absent, because the whole transition is about them moving.
-_make_intent_repo() {
-    local root="$1" want_v2="$2" want_v3="$3"
-    mkdir -p "$root/intent/.config"
-    echo '{"project_name":"Intent"}' > "$root/intent/.config/config.json"
-    if [[ "$want_v2" == "v2" ]]; then
-        mkdir -p "$root/bin"
-        printf '#!/bin/bash\necho v2-dispatcher\n' > "$root/bin/intent"
-        chmod +x "$root/bin/intent"
-    fi
-    if [[ "$want_v3" == "v3" ]]; then
-        mkdir -p "$root/native/rust/target/release"
-        printf '#!/bin/bash\necho v3-binary\n' > "$root/native/rust/target/release/intent"
-        chmod +x "$root/native/rust/target/release/intent"
-    fi
+# Homebrew's Intent installed, linked and first on PATH, with a gate home naming
+# its install. Each test then breaks one thing.
+_fake_brew_intent() {
+    export FAKE_PREFIX="$BATS_TEST_TMPDIR/brew"
+    export FAKE_LOG="$BATS_TEST_TMPDIR/calls.log"
+    export XDG_DATA_HOME="$BATS_TEST_TMPDIR/xdg"
+    local libexec="$FAKE_PREFIX/Cellar/intent/9.9.9/libexec"
+    mkdir -p "$BATS_TEST_TMPDIR/stub" "$FAKE_PREFIX/bin" "$FAKE_PREFIX/opt" \
+        "$libexec/lib/templates" "$XDG_DATA_HOME/intent"
+    ln -s "../Cellar/intent/9.9.9" "$FAKE_PREFIX/opt/intent"
+    touch "$FAKE_PREFIX/.installed"
+    cat > "$BATS_TEST_TMPDIR/stub/brew" <<'EOF'
+#!/bin/bash
+case "$1" in
+  --prefix) echo "$FAKE_PREFIX" ;;
+  list)     [[ -e "$FAKE_PREFIX/.installed" ]] ;;
+  install)  echo "brew $*" >> "$FAKE_LOG"; touch "$FAKE_PREFIX/.installed" ;;
+  *)        exit 1 ;;
+esac
+EOF
+    cat > "$FAKE_PREFIX/bin/intent" <<'EOF'
+#!/bin/bash
+case "$1" in
+  --version) echo "intent 9.9.9 (fake)" ;;
+  bootstrap) echo "intent bootstrap" >> "$FAKE_LOG" ;;
+esac
+EOF
+    chmod +x "$BATS_TEST_TMPDIR/stub/brew" "$FAKE_PREFIX/bin/intent"
+    echo "$libexec" > "$XDG_DATA_HOME/intent/home"
+    export PATH="$BATS_TEST_TMPDIR/stub:$FAKE_PREFIX/bin:$PATH"
 }
 
-# ---------------------------------------------------------------------------
-# Repo discovery -- find the repo by the repo, not by one of its binaries
-# ---------------------------------------------------------------------------
-
-@test "_intent_find_repo finds a repo that has NO binaries at all" {
+@test "intent_check passes when Homebrew's intent runs from PATH and the gate" {
+    _fake_brew_intent
     load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-burned"
-    # Exactly the state after Intent's flip-then-burn: config present, v2 script
-    # deleted, nothing built yet. The old probe returned 1 here and sent the user
-    # off to clone a repo that was sitting right there.
-    _make_intent_repo "$root" "no-v2" "no-v3"
-    MOLT_INTENT_HOME="$root" run _intent_find_repo
-    [ "$status" -eq 0 ]
-    [ "$output" = "$root" ]
+    run intent_check
+    assert_success
+    assert_output_contains "intent 9.9.9 (fake)"
 }
 
-@test "_intent_find_repo finds a repo by .git when there is no intent config" {
+@test "intent_check FAILS, naming it, when PATH runs another intent" {
+    # gyges, 23 Sep 2026: a link to Intent 2.6.0 checked ok while a login shell
+    # ran Homebrew's 3.2.0 and a non-login shell ran the 2.6.0.
+    _fake_brew_intent
+    mkdir -p "$BATS_TEST_TMPDIR/v2"
+    printf '#!/bin/bash\necho "Intent version 2.6.0"\n' > "$BATS_TEST_TMPDIR/v2/intent"
+    chmod +x "$BATS_TEST_TMPDIR/v2/intent"
+    export PATH="$BATS_TEST_TMPDIR/v2:$PATH"
     load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-git"
-    mkdir -p "$root/.git"
-    MOLT_INTENT_HOME="$root" run _intent_find_repo
-    [ "$status" -eq 0 ]
+    run intent_check
+    assert_failure
+    assert_output_contains "PATH runs $BATS_TEST_TMPDIR/v2/intent (Intent version 2.6.0)"
+    run intent_verify
+    assert_failure
 }
 
-@test "_intent_find_repo rejects a directory that is not a repo" {
+@test "intent_check FAILS when the gate home names an install that is gone" {
+    # What a brew upgrade leaves behind when the gate home names a versioned
+    # keg and cleanup has removed it.
+    _fake_brew_intent
+    echo "$FAKE_PREFIX/Cellar/intent/9.9.8/libexec" > "$XDG_DATA_HOME/intent/home"
     load_liberator intent
-    local root="$BATS_TEST_TMPDIR/not-a-repo"
-    mkdir -p "$root/bin"
-    : > "$root/bin/intent"
-    MOLT_INTENT_HOME="$root" run _intent_find_repo
-    [ "$status" -ne 0 ]
+    run intent_check
+    assert_failure
+    assert_output_contains "install is gone"
 }
 
-@test "_intent_find_repo rejects a missing directory" {
+@test "intent_install installs from the tap and bootstraps a missing gate home" {
+    _fake_brew_intent
+    rm "$FAKE_PREFIX/.installed" "$XDG_DATA_HOME/intent/home"
     load_liberator intent
-    MOLT_INTENT_HOME="$BATS_TEST_TMPDIR/nowhere" run _intent_find_repo
-    [ "$status" -ne 0 ]
+    run intent_install
+    assert_success
+    grep -qx "brew install matthewsinclair/intent/intent" "$FAKE_LOG"
+    grep -qx "intent bootstrap" "$FAKE_LOG"
 }
 
-# ---------------------------------------------------------------------------
-# Dispatcher choice -- prefer the release binary, ALWAYS
-# ---------------------------------------------------------------------------
-
-@test "_intent_dispatcher prefers the release binary when BOTH are present" {
+@test "intent_install leaves a gate home that points at another install alone" {
+    # bootstrap repoints whatever is there. A deliberately placed pointer is the
+    # check's to report, not install's to move.
+    _fake_brew_intent
+    mkdir -p "$BATS_TEST_TMPDIR/checkout/lib/templates"
+    echo "$BATS_TEST_TMPDIR/checkout" > "$XDG_DATA_HOME/intent/home"
     load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-both"
-    # The control arm that matters: both candidates present and distinguishable.
-    # A fixture with only one candidate cannot see a preference-order bug.
-    _make_intent_repo "$root" "v2" "v3"
-    run _intent_dispatcher "$root"
-    [ "$status" -eq 0 ]
-    [ "$output" = "$root/native/rust/target/release/intent" ]
-}
-
-@test "_intent_dispatcher falls back to bin/intent only when nothing is built" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-v2only"
-    _make_intent_repo "$root" "v2" "no-v3"
-    run _intent_dispatcher "$root"
-    [ "$status" -eq 0 ]
-    [ "$output" = "$root/bin/intent" ]
-}
-
-@test "_intent_dispatcher fails when the repo carries neither" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-none"
-    _make_intent_repo "$root" "no-v2" "no-v3"
-    run _intent_dispatcher "$root"
-    [ "$status" -ne 0 ]
-}
-
-# ---------------------------------------------------------------------------
-# install -- the two failures need two different instructions
-# ---------------------------------------------------------------------------
-
-@test "intent_install links the release binary, not the v2 dispatcher" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-inst"
-    local lbin="$BATS_TEST_TMPDIR/localbin"
-    _make_intent_repo "$root" "v2" "v3"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_install
-    [ "$status" -eq 0 ]
-    [ -L "$lbin/intent" ]
-    [ "$(readlink "$lbin/intent")" = "$root/native/rust/target/release/intent" ]
-}
-
-@test "intent_install says BUILD -- not CLONE -- when the repo is present but unbuilt" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-unbuilt"
-    local lbin="$BATS_TEST_TMPDIR/localbin2"
-    # The arm that would otherwise go unwritten. "Clone it" for a repo already on
-    # disk is a confusing, wrong message at exactly the wrong moment.
-    _make_intent_repo "$root" "no-v2" "no-v3"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_install
-    [ "$status" -ne 0 ]
-    assert_output_contains "Build it"
-    refute_output_contains "Clone it"
-}
-
-@test "intent_install says CLONE when the repo genuinely is not there" {
-    load_liberator intent
-    local lbin="$BATS_TEST_TMPDIR/localbin3"
-    MOLT_INTENT_HOME="$BATS_TEST_TMPDIR/absent" MOLT_LOCAL_BIN="$lbin" run intent_install
-    [ "$status" -ne 0 ]
-    assert_output_contains "Clone it"
-    refute_output_contains "Build it"
-}
-
-# ---------------------------------------------------------------------------
-# verify -- must not pass on the state check warns about
-# ---------------------------------------------------------------------------
-
-@test "intent_verify FAILS on a link resolving to something it never installed" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-mismatch"
-    local lbin="$BATS_TEST_TMPDIR/localbin4"
-    _make_intent_repo "$root" "v2" "v3"
-    mkdir -p "$lbin"
-    # Healthy link, wrong target -- resolves perfectly, to the v2 script. The old
-    # verify asked only molt_link_healthy and called this "fully operational"
-    # while intent_check was warning about the very same link.
-    ln -s "$root/bin/intent" "$lbin/intent"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_verify
-    [ "$status" -ne 0 ]
-    assert_output_contains "VERIFY FAIL"
-    refute_output_contains "fully operational"
-}
-
-@test "intent_verify passes when the link points at the release binary" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-match"
-    local lbin="$BATS_TEST_TMPDIR/localbin5"
-    _make_intent_repo "$root" "v2" "v3"
-    mkdir -p "$lbin"
-    ln -s "$root/native/rust/target/release/intent" "$lbin/intent"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_verify
-    [ "$status" -eq 0 ]
-    assert_output_contains "fully operational"
-}
-
-@test "intent_verify FAILS on a repo with nothing built" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-verify-unbuilt"
-    local lbin="$BATS_TEST_TMPDIR/localbin6"
-    _make_intent_repo "$root" "no-v2" "no-v3"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_verify
-    [ "$status" -ne 0 ]
-    assert_output_contains "no built dispatcher"
-}
-
-# ---------------------------------------------------------------------------
-# check -- reports the mismatch, and declines to repair it
-# ---------------------------------------------------------------------------
-
-@test "intent_check reports a mismatched link without repairing it" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-check"
-    local lbin="$BATS_TEST_TMPDIR/localbin7"
-    _make_intent_repo "$root" "v2" "v3"
-    mkdir -p "$lbin"
-    ln -s "$root/bin/intent" "$lbin/intent"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_check
-    assert_output_contains "may be deliberate"
-    # Not repairing means exactly that: the link is untouched afterwards.
-    [ "$(readlink "$lbin/intent")" = "$root/bin/intent" ]
-}
-
-@test "intent_check fails when the repo is present but nothing is built" {
-    load_liberator intent
-    local root="$BATS_TEST_TMPDIR/intent-check-unbuilt"
-    local lbin="$BATS_TEST_TMPDIR/localbin8"
-    _make_intent_repo "$root" "no-v2" "no-v3"
-    MOLT_INTENT_HOME="$root" MOLT_LOCAL_BIN="$lbin" run intent_check
-    [ "$status" -ne 0 ]
-    assert_output_contains "no built dispatcher"
+    run intent_install
+    assert_success
+    [ ! -e "$FAKE_LOG" ]
+    run intent_check
+    assert_failure
+    assert_output_contains "gate runs $BATS_TEST_TMPDIR/checkout"
 }
