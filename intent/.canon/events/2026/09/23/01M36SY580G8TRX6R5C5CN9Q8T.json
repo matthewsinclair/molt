@@ -1,0 +1,14 @@
+{
+  "id": "01M36SY580G8TRX6R5C5CN9Q8T",
+  "ts": "2026-09-23T09:35:50.016Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0004/AC001"
+  },
+  "payload": {
+    "evidence": "gyges-infra, 2026-09-23: molt upgrade exit 0 at Molt 70504ca / Molt-matts 857d49c -- 'Zen: intent: Homebrew's intent 3.2.0 (4e2f908a5857c4ac878aa8f071c5f09b60753993) runs from PATH and the gate' then 'intent: ✓ ok'; no warning or error lines"
+  }
+}

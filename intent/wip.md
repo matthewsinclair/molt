@@ -1,12 +1,12 @@
 ---
-verblock: "15 Sep 2026:v0.21: Matthew Sinclair - config repos moved to ~/Devel/cfg; git and alacritty check coverage"
+verblock: "23 Sep 2026:v0.22: Matthew Sinclair - ST0004: Intent from Homebrew on gyges; Molt off rhadamanth's Intent"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** Finished work lives in `done.md` (019 is the `~/Devel/cfg` move), the closed issues (`intent issues list --kind all`) and git.
+**Nothing in flight.** Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
 
 TODO:
 
@@ -25,7 +25,7 @@ How a sleeve moves its config repos, for any later one:
 
 ## Active Steel Threads
 
-- None open. ST0001, ST0002 and ST0003 are closed.
+- None open. ST0001 to ST0004 are closed.
 
 ## Waiting on hv
 
@@ -37,7 +37,7 @@ How a sleeve moves its config repos, for any later one:
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile.** If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
 - **Sidecars record a case-folded path.** Every `.molt-rendered` names its template as `.../molt-matts/...` lowercase, the path molt resolved through case folding. Informational while the digest recomputes the path from its `source` argument, but it is on-disk state that survives a rename and would then resolve only on a case-insensitive filesystem.
-- **The `intent` liberator's model breaks when Intent arrives via brew.** It assumes a source checkout: it finds `${MOLT_INTENT_HOME}/bin/intent` and links it into `~/bin`. A brew install lands at `/opt/homebrew/bin/intent`, which wins on PATH over both `~/.local/bin` and `~/bin`. Needs a rewrite rather than a patch. Not scheduled; hv's call. When it happens, `~/bin/intent` should go so there is one source of truth.
+- **When Intent 3.2.1 reaches gyges, watch the first `molt upgrade` after the `brew upgrade`** (Intent 0527). The 3.2.0 gate home names a keg the upgrade deletes. The intent check should report "install is gone", install should run `intent bootstrap`, and the home should then name `opt/intent/libexec`. It is the one path of ST0004 not yet seen live. Until the fix is in, `intent bootstrap` once by hand also repairs it.
 - **Decide whether `desktop` should own more of GNOME than it does.** It manages the GTK stylesheet (3.0 and 4.0) and dock favourites; its gsettings block is still hardcoded.
 
 Carried, not this project's to fix:

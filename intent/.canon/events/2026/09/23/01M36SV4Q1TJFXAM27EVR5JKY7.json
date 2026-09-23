@@ -1,0 +1,14 @@
+{
+  "id": "01M36SV4Q1TJFXAM27EVR5JKY7",
+  "ts": "2026-09-23T09:34:11.169Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0004/AC005"
+  },
+  "payload": {
+    "evidence": "gyges-infra, 2026-09-23, with hv's approval: ~/bin/intent, ~/.local/bin/intent and ~/Devel/prj/Intent all 'No such file or directory'; login and non-login zsh resolve /opt/homebrew/bin/intent, intent 3.2.0 (4e2f908a5)"
+  }
+}

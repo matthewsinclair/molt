@@ -1,5 +1,16 @@
 # Done
 
+## 020: Intent comes from Homebrew, and Molt keeps off rhadamanth's Intent (DONE)
+
+- **gyges printed `intent: ✓ ok` under a warning that nothing used the link** (ST0004). The link reached Intent 2.6.0, the v2 script in a frozen pre-rewrite checkout. A login shell ran Homebrew's 3.2.0 and an interactive non-login shell ran the 2.6.0. The check asked whether its `~/bin` link was sound, never which Intent anything ran, and its shadow warning went quiet in exactly the shell where v2 ran. v2.6.0 refuses a v3 project with an error and writes nothing, so nothing was damaged.
+- **The intent liberator is brew-only.** It installs from `matthewsinclair/intent/intent` and fails, naming the path, when `intent` on PATH is not Homebrew's, or when the pre-commit gate's home is missing, names an install that is gone, or names another one. Install runs `intent bootstrap` only for a missing or dangling home. Gone: repo discovery, the v2 fallback, the `~/bin/intent` link, the `git pull` of the checkout, `molt git` over it, and `MOLT_INTENT_HOME`.
+- **hv's rulings, 23 Sep.** gyges is the test bed for Intent from brew with no local dev tree, and Intent-from-brew problems go to intent-vc. Nothing to do with Intent on rhadamanth is to be touched, so its manifest disables the liberator, which had been running `git pull --ff-only` in the Intent dev checkout on every full `molt upgrade`. kovacs has no Intent, and hv says it will not for now.
+- **gyges cleaned by gyges-infra with hv's approval.** `~/bin/intent` and the checkout were removed, and `~/.local/bin/intent` had already gone. All 189 local commits in that checkout were already upstream under rewritten hashes. Then `molt upgrade` there: `intent: ✓ ok` naming Homebrew's 3.2.0, and no warnings.
+- **Found on the test bed, filed by intent-vc as Intent 0527 (high, for 3.2.1).** `intent bootstrap` records the versioned keg (`Cellar/intent/3.2.0/libexec`) as the gate home, `brew upgrade` deletes that keg, and the gate then refuses every commit until bootstrap runs again. The new check reports that state and install repairs it.
+- Suite 200 -> 189 (15 checkout-era tests and one `molt git` test out, 5 in), under `/bin/bash` 3.2 and Homebrew bash 5.3.
+- `.claude/restart.md` is an entry point again. It had carried 27 Aug state into every wake prompt since.
+- Commits: `70504ca` and this fold's (molt); `857d49c` (molt-{user})
+
 ## 019: Config repos moved to `~/Devel/cfg`, and two liberators that checked less than they installed (DONE)
 
 - **Config repos live in `~/Devel/cfg`, not `~/Devel/prj`** (issue 0005). hv's call: Molt-matts, Molt-flynn and Gtools-geodica are configuration, not projects. Molt searched only `MOLT_PRJ_DIR` and `$HOME` for the user repo, so every command would have failed after the move. `MOLT_CFG_DIR` defaults to the `cfg/` sibling of `MOLT_PRJ_DIR` and is searched first; `MOLT_PRJ_DIR` stays in the list so an unmoved sleeve still resolves. `bootstrap.sh` clones the config repo there as `Molt-{user}` and `new-user` scaffolds there.

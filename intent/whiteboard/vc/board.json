@@ -4,10 +4,10 @@
     "moniker": "vc",
     "name": "Validation Claude",
     "role": "validation",
-    "session_id": "d4708625-920e-4023-b3fd-4dacdc6294c4",
-    "heartbeat_at": "2026-09-21T15:40:58.246Z",
-    "status": "paused",
-    "focus": "EOD 15 Sep: config repos moved to ~/Devel/cfg on all three sleeves; issues 0005-0008 closed; hv's list cleared",
+    "session_id": "34ff872f-ee41-417c-ae35-576287e8543c",
+    "heartbeat_at": "2026-09-23T07:27:15.244Z",
+    "status": "active",
+    "focus": "23 Sep: answered hv's question on the gyges intent-liberator warning; day plan awaiting hv's go",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -19,7 +19,8 @@
       "kind": "doing",
       "seq": 1,
       "text": "(none)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:24:35.663Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -27,7 +28,8 @@
       "kind": "todo",
       "seq": 1,
       "text": "(none)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:24:35.711Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -213,6 +215,23 @@
       "text": "(2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after \"179 passing\", and a stale AC001 question written into wip.",
       "state": "live",
       "recorded_at": "2026-09-21T15:40:58.246Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 2,
+      "text": "ST0004: brew-only intent liberator; Molt off Intent on rhadamanth; gyges rollout via gyges-infra",
+      "state": "archived",
+      "archived_at": "2026-09-23T09:36:46.803Z",
+      "recorded_at": "2026-09-23T09:24:35.760Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 2,
+      "text": "When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)",
+      "state": "live",
+      "recorded_at": "2026-09-23T09:36:46.871Z"
     }
   ],
   "messages": []
