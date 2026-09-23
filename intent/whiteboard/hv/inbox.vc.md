@@ -1,6 +1,6 @@
 # inbox: vc -> hv
 
-## (2026-09-21 15:40Z) claimed 2026-09-08 10:02Z
+## (2026-09-21 15:40Z) claimed 2026-09-08 10:02Z (handled)
 
 **`molt doctor` was silently swallowing every liberator check reason. Fixed.** `lib/molt.sh` check 6 printed `✓ N/M installed` for any ratio -- `0/16` rendered byte-identical to `16/16` -- raised no warning, never named the failing liberator, and discarded the reason the check function had already printed. It now warns, names them, and prints the reason.
 
@@ -12,7 +12,7 @@ Also measured while there, read-only, and worth having when the schedule is next
 
 Nothing touched on the SuperDuper side. Reads only, via `plutil -extract`.
 
-## (2026-09-21 15:40Z) claimed 2026-09-08 10:15Z
+## (2026-09-21 15:40Z) claimed 2026-09-08 10:15Z (handled)
 
 **Three of the six "carried decisions" were already resolved, and the list did not know it.** Checked against as-built rather than against the note:
 
@@ -24,7 +24,7 @@ Nothing touched on the SuperDuper side. Reads only, via `plutil -extract`.
 
 **One tool defect worth knowing, because it will bite again.** `acceptance: exempt` -- the escape the close gate itself names -- **is not reachable from the command line**. Intent's own `known-defects.md` records it as `intent#0227`: the state has a complete read path and no writer, at thread scope or WP scope. So your ruling could not be executed literally. I used the documented workaround: define one criterion and satisfy it by named evidence. ST0001 now carries AC001 at 1/1, which is a minimal-but-true contract rather than the full one. Say if you would rather it were reverted.
 
-## (2026-09-21 15:40Z) claimed 2026-09-08 10:24Z
+## (2026-09-21 15:40Z) claimed 2026-09-08 10:24Z (handled)
 
 **Scope question: port Intent's `pipefail_sigpipe_check.sh` into Molt?** intent-vc raised it after I hit the defect independently in `molt_font_available`. Their guard is real -- `Intent/intent/st/ST0056/parity/tools/pipefail_sigpipe_check.sh`, 11355 bytes, running on every Intent commit, currently reporting 88 instruments clean.
 
@@ -40,7 +40,7 @@ Demonstrated rather than assumed, under `set -o pipefail`: a 200k-line payload g
 
 Not porting it without your say-so: it is a new instrument, not a fix to existing work.
 
-## (2026-09-21 15:40Z) claimed 2026-09-08 10:53Z
+## (2026-09-21 15:40Z) claimed 2026-09-08 10:53Z (handled)
 
 **Validation sweep of the 04-07 Sep window, scoped as hv ruled: the backup liberator and `9f28dce`. Three findings, none of them fixed -- a sweep reports, it does not patch.**
 

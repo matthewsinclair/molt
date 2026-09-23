@@ -29,7 +29,7 @@ How a sleeve moves its config repos, for any later one:
 
 ## Waiting on hv
 
-- **Clear vc's four 8 Sep messages from hv's inbox.** All four are actioned (issues 0001, 0002 and 0008 closed; ST0001 closed). It is hv's inbox, so only hv clears it: `intent wb clear vc --node hv`.
+- (none)
 
 ## Upcoming Work
 
