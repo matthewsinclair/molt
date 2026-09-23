@@ -91,7 +91,7 @@ _intent_report_faults() {
 
 intent_check() {
   _intent_report_faults molt_warn "" || return 1
-  molt_info "intent: Homebrew's $(_intent_version "$(brew --prefix)/bin/intent") runs from PATH and the gate"
+  molt_info "intent: Homebrew's $(_intent_version "$(brew --prefix)/bin/intent") is what PATH and the pre-commit gate run"
 }
 
 intent_install() {
