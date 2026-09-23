@@ -1,0 +1,15 @@
+{
+  "id": "01M36XDZDWHP4J16QC43XZ28C8",
+  "ts": "2026-09-23T10:36:54.076Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "**Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-infra."
+  }
+}

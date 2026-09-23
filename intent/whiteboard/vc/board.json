@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "34ff872f-ee41-417c-ae35-576287e8543c",
-    "heartbeat_at": "2026-09-23T07:27:15.244Z",
-    "status": "active",
-    "focus": "23 Sep: answered hv's question on the gyges intent-liberator warning; day plan awaiting hv's go",
+    "heartbeat_at": "2026-09-23T10:38:03.823Z",
+    "status": "paused",
+    "focus": "EOD 23 Sep: ST0004 closed -- Intent from Homebrew on gyges, Molt off rhadamanth's Intent; next: watch Intent 3.2.1 reach gyges (Intent 0527)",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -133,7 +133,8 @@
       "kind": "watchout",
       "seq": 13,
       "text": "**Re-measure at pickup; do not quote a restart file.** The suite was 185 tests at `549678e`; count it again rather than trusting that figure.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-23T10:36:54.048Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -232,6 +233,14 @@
       "text": "When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)",
       "state": "live",
       "recorded_at": "2026-09-23T09:36:46.871Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 16,
+      "text": "**Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-infra.",
+      "state": "live",
+      "recorded_at": "2026-09-23T10:36:54.076Z"
     }
   ],
   "messages": []

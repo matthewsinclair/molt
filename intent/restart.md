@@ -19,7 +19,7 @@ Start here, then read the files below. This file is an index, not a record -- it
 
 ## Coordination
 
-- [`whiteboard/README.md`](whiteboard/README.md) -- node roster and who is obliged to read whose inbox. Two nodes: `hv` (human) and `vc`. Molt has no control node, so `vc` both validates and, when hv says so, builds. The nodes are not yet registered with `intent wb register`, so the boards are still hand-authored files.
+- [`whiteboard/README.md`](whiteboard/README.md) -- node roster and who is obliged to read whose inbox. Two nodes: `hv` (human) and `vc`. Molt has no control node, so `vc` both validates and, when hv says so, builds. Since 21 Sep the boards are generated views of the store: `intent wb` is the only way to change them, and a hand edit is skew that `intent doctor` reports.
 
 ## Project files outside intent/
 

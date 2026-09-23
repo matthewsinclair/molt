@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 34ff872f-ee41-417c-ae35-576287e8543c
-heartbeat_at: 2026-09-23 07:27Z
-status: active
-focus: "23 Sep: answered hv's question on the gyges intent-liberator warning; day plan awaiting hv's go"
+heartbeat_at: 2026-09-23 10:38Z
+status: paused
+focus: "EOD 23 Sep: ST0004 closed -- Intent from Homebrew on gyges, Molt off rhadamanth's Intent; next: watch Intent 3.2.1 reach gyges (Intent 0527)"
 claims: []
 ---
 
@@ -37,9 +37,9 @@ _(none)_
 - `fpath` and `autoload` are read at shell startup. A change under `config/zsh/functions/` needs a fresh shell; `source ~/.zshrc` is not enough, and testing in the current shell shows the old behaviour.
 - A negative control with ONE candidate cannot see a preference-order or list-formatting bug. Depth-1 failure cases prove the exit code and nothing about the output.
 - `molt doctor` check 12 (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.
-- **Re-measure at pickup; do not quote a restart file.** The suite was 185 tests at `549678e`; count it again rather than trusting that figure.
 - **After a config repo moves, every new shell starts with no zsh config until `molt resleeve` runs**, because `~/.zshenv` dangles. That includes an agent's next Bash call, which then has no `MOLT_PRJ_DIR` and so no `MOLT_CFG_DIR`. Run the mv and the resleeve in one command, with `MOLT_PRJ_DIR` set explicitly and molt called by absolute path.
 - **`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.
+- **Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-infra.
 
 ## Decisions
 
