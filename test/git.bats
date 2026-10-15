@@ -416,7 +416,7 @@ _git_full_repo() {
     ln -sfn "$BATS_TEST_TMPDIR/other_gitconfig" "$HOME/.gitconfig"
     run git_check
     assert_failure
-    assert_output_contains "not the user repo"
+    assert_output_contains "points at $BATS_TEST_TMPDIR/other_gitconfig, not $TEST_USER_REPO/config/git/gitconfig"
 }
 
 @test "git_install repairs every link git_check reports" {

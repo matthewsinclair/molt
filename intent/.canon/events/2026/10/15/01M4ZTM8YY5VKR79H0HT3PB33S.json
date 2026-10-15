@@ -1,0 +1,15 @@
+{
+  "id": "01M4ZTM8YY5VKR79H0HT3PB33S",
+  "ts": "2026-10-15T13:04:37.342Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0009"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "claude liberator does not manage the Claude Code status line"
+  }
+}

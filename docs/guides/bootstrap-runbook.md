@@ -20,10 +20,10 @@ it, and the reader has no way to tell which they are holding. The same principle
 the framework's own checks are held to.
 
 Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`,
-`desktop`, `dev-tools`, `ssh`, `intent`.
+`desktop`, `dev-tools`, `ssh`, `intent`, `claude`.
 
 **NOT documented here** — these arrived after the Phase 1 resleeve and their
-steps have never been captured: `backup`, `brew`, `claude`, `gnome-terminal`,
+steps have never been captured: `backup`, `brew`, `gnome-terminal`,
 `iterm2`, `local-bin`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`,
 `web`. Read the liberator source for those; each has a `_check` that states its
 own preconditions.
@@ -333,21 +333,28 @@ Claude Code configuration.
 
 - Config: `molt-{user}/config/claude/keybindings.json`
 
+### 12.2 Claude status line [agnostic]
+
+- Layout: `molt-{user}/config/ccstatusline/settings.json`, linked to `~/.config/ccstatusline/settings.json`. kovacs linked it by hand on 15 Oct 2026, before the liberator managed it, and the liberator adopts that link as it stands.
+- Command: `molt-{user}/config/claude/statusline.json` is written into the `statusLine` key of `~/.claude/settings.json`. No other key is touched, and the file is never linked: it holds each sleeve's own permissions, hooks and plugins.
+
 ---
 
 ## Config Symlink Summary
 
-| Source (molt-{user}/config/) | Target                             |
-| ---------------------------- | ---------------------------------- |
-| zsh/zshrc                    | ~/.zshrc                           |
-| zsh/zshenv                   | ~/.zshenv                          |
-| zsh/zprofile                 | ~/.zprofile                        |
-| git/gitconfig                | ~/.gitconfig                       |
-| tmux/tmux.conf               | ~/.tmux.conf                       |
-| doom/                        | ~/.config/doom                     |
-| alacritty/alacritty.toml     | ~/.config/alacritty/alacritty.toml |
-| starship/starship.toml       | ~/.config/starship.toml            |
-| ssh/config                   | ~/.ssh/config                      |
+| Source (molt-{user}/config/) | Target                               |
+| ---------------------------- | ------------------------------------ |
+| zsh/zshrc                    | ~/.zshrc                             |
+| zsh/zshenv                   | ~/.zshenv                            |
+| zsh/zprofile                 | ~/.zprofile                          |
+| git/gitconfig                | ~/.gitconfig                         |
+| tmux/tmux.conf               | ~/.tmux.conf                         |
+| doom/                        | ~/.config/doom                       |
+| alacritty/alacritty.toml     | ~/.config/alacritty/alacritty.toml   |
+| starship/starship.toml       | ~/.config/starship.toml              |
+| ssh/config                   | ~/.ssh/config                        |
+| claude/keybindings.json      | ~/.claude/keybindings.json           |
+| ccstatusline/settings.json   | ~/.config/ccstatusline/settings.json |
 
 Instance-specific config lives in `molt-{user}/instances/{hostname}/`.
 

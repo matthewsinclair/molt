@@ -1,12 +1,14 @@
 ---
-verblock: "23 Sep 2026:v0.22: Matthew Sinclair - ST0004: Intent from Homebrew on gyges; Molt off rhadamanth's Intent"
+verblock: "15 Oct 2026:v0.23: Matthew Sinclair - issue 0009: the claude liberator manages the Claude Code status line"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
+**In flight: issue 0009, the claude liberator manages the Claude Code status line** (gtools-vc's todo 92, hv's ruling of 15 Oct). Built and tested, NOT committed: it lands on hv's word. Molt: `liberators/claude.sh`, `lib/molt.sh` (`molt_report_link_faults` and `molt_link_all`, the link loops `git.sh` and `claude.sh` now share), `liberators/git.sh`, `test/liberators/claude.bats`, `test/git.bats`, `CHANGELOG.md`, `docs/guides/bootstrap-runbook.md`. Molt-matts: `config/claude/statusline.json`. Once it lands, `molt upgrade` on each sleeve applies it: rhadamanth's layout file is a copy and becomes a link (its statusLine already matches), kovacs's hand-made link and statusLine already match, and gyges has not been looked at: it is at home in the UK, out of ssh reach while hv is away.
+
+Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
 
 TODO:
 
@@ -33,6 +35,7 @@ How a sleeve moves its config repos, for any later one:
 
 ## Upcoming Work
 
+- **Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges, visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not on 15 Oct. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts.
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
 - **The ssh wrapper resets a tab to `#000000`, but rhadamanth's base iTerm2 profile is `#15191F`** -- separate light and dark colours, both `#15191F`, in the 10 Mar export (Molt-matts `config/iterm2/profile.json`; macOS is in Light mode). A tab comes back from ssh slightly blacker than it started. The reset is `liberators/zsh.sh:69`; resetting to the profile's colour is small. Not scheduled; hv's call. The live profile may differ from the export.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.

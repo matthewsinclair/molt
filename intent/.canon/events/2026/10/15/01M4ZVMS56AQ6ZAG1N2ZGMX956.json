@@ -1,0 +1,15 @@
+{
+  "id": "01M4ZVMS56AQ6ZAG1N2ZGMX956",
+  "ts": "2026-10-15T13:22:22.502Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges and make it visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not now. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts."
+  }
+}

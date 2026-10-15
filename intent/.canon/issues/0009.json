@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 9,
+  "slug": "claude-liberator-does-not-manage-the-claude-code",
+  "title": "claude liberator does not manage the Claude Code status line",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-15",
+  "reporter": "Matthew Sinclair",
+  "body": "hv's ruling, 15 Oct, relayed from gtools-vc (Gtools vc todo 92): Molt manages the Claude Code status line, so the ccstatusline bar is the same on every sleeve. On 15 Oct a /statusline run on rhadamanth replaced the statusLine in ~/.claude/settings.json with a Starship script that Claude Code's dimming made unreadable, and it was restored by hand (backup ~/.claude/settings.json.bak-20261015-starship). molt upgrade and molt maintain could not restore it, because liberators/claude.sh linked only keybindings.json.\n\nChange: the claude liberator links ~/.config/ccstatusline/settings.json from the user repo's config/ccstatusline/settings.json, and writes only the statusLine key of ~/.claude/settings.json from config/claude/statusline.json, leaving every other key alone. settings.json is never linked: it holds each sleeve's own permissions, hooks and plugins. check and verify report a link that is missing, broken or points elsewhere, and a statusLine that differs. The merge uses jq, which the dev-tools liberator already requires on every sleeve that enables claude. kovacs's hand-made link already points at the user repo, so the liberator adopts it as it stands.\n"
+}
