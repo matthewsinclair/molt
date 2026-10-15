@@ -151,6 +151,41 @@ molt_link_fault() {
   fi
 }
 
+# A liberator that links several files from the user repo lists them once, as
+# "source<TAB>target" lines under $HOME, and its check, install and verify all
+# read that list through these two. Each liberator had its own copy of these
+# loops, and the copies drifted.
+
+# Reports, through $1 (molt_info or molt_error) after the prefix $2, every line
+# of the list $3 whose target is not a link to its source. Returns non-zero when
+# it reported one. A link that resolves somewhere else is named with where it
+# points: molt_link_fault would call it "resolves", which reads as healthy.
+molt_report_link_faults() {
+  local log="$1" prefix="$2" links="$3" source target fault faulted=0
+  while IFS=$'\t' read -r source target; do
+    # An empty list still reads as one empty line.
+    [[ -n "$source" ]] || continue
+    molt_link_points_to "$target" "$source" && continue
+    if molt_link_healthy "$target"; then
+      fault="points at $(readlink "$target"), not $source"
+    else
+      fault="$(molt_link_fault "$target")"
+    fi
+    "$log" "${prefix}"'~'"${target#"$HOME"} $fault"
+    faulted=1
+  done <<< "$links"
+  return $faulted
+}
+
+# Links every line of the list $1, stopping at the first link that fails.
+molt_link_all() {
+  local source target
+  while IFS=$'\t' read -r source target; do
+    [[ -n "$source" ]] || continue
+    molt_link "$source" "$target" || return 1
+  done <<< "$1"
+}
+
 molt_link() {
   local source="$1"
   local target="$2"

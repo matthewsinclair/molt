@@ -2,11 +2,11 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 34ff872f-ee41-417c-ae35-576287e8543c
-heartbeat_at: 2026-09-23 10:38Z
-status: paused
-focus: "EOD 23 Sep: ST0004 closed -- Intent from Homebrew on gyges, Molt off rhadamanth's Intent; next: watch Intent 3.2.1 reach gyges (Intent 0527)"
-claims: []
+session_id: 35afc8cd-c16d-40d3-b609-4016a019d5ed
+heartbeat_at: 2026-10-15 13:38Z
+status: active
+focus: "Molt issue 0009 landing (gtools-vc todo 92); next: resleeve verdict fixes (bin/molt ((failed++)), molt_link) and the ssh wrapper exit status"
+claims: [ISSUE:0009]
 ---
 
 # Validation Claude (vc)
@@ -18,6 +18,7 @@ _(none)_
 ## TODO
 
 - When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)
+- **Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges and make it visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not now. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts.
 
 ## Holds
 
@@ -39,7 +40,7 @@ _(none)_
 - `molt doctor` check 12 (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.
 - **After a config repo moves, every new shell starts with no zsh config until `molt resleeve` runs**, because `~/.zshenv` dangles. That includes an agent's next Bash call, which then has no `MOLT_PRJ_DIR` and so no `MOLT_CFG_DIR`. Run the mv and the resleeve in one command, with `MOLT_PRJ_DIR` set explicitly and molt called by absolute path.
 - **`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.
-- **Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-infra.
+- **Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-sysadm (not kovacs-infra, hv 15 Oct). gyges is at home in the UK: while hv travels, ssh gyges cannot resolve gyges.lan, which is distance, not a fault. (edited)
 
 ## Decisions
 
