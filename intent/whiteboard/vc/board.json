@@ -5,12 +5,10 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "35afc8cd-c16d-40d3-b609-4016a019d5ed",
-    "heartbeat_at": "2026-10-15T13:38:56.431Z",
+    "heartbeat_at": "2026-10-15T13:40:05.560Z",
     "status": "active",
-    "focus": "Molt issue 0009 landing (gtools-vc todo 92); next: resleeve verdict fixes (bin/molt ((failed++)), molt_link) and the ssh wrapper exit status",
-    "claims": [
-      "ISSUE:0009"
-    ],
+    "focus": "0009 landed; next: resleeve verdict fixes and ssh wrapper exit status (hv: go with recs)",
+    "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
     "migrated_at": "2026-09-21T15:40:58.246Z"
