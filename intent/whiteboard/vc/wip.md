@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 35afc8cd-c16d-40d3-b609-4016a019d5ed
-heartbeat_at: 2026-10-15 14:05Z
+heartbeat_at: 2026-10-15 18:16Z
 status: paused
-focus: "0010, 0011, 0012 landed (2e7b07c, 34ef581; Molt-matts c185d6f); nothing in flight"
+focus: "back at home; nothing in flight"
 claims: []
 ---
 
@@ -18,7 +18,7 @@ _(none)_
 ## TODO
 
 - When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)
-- **Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges and make it visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not now. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts.
+- **Weekend, when hv starts it (gyges):** deploy the Gtools Sinclair estate on gyges, visible inside the house; declare gyges' [terminal] bg_color from its live iTerm2 profile and regenerate its ssh wrapper (nothing checks the rendered wrapper, so molt upgrade will not). Start Tailscale first: gyges.lan did not resolve on 15 Oct. Changes on gyges go through gyges-infra; Gtools is gtools-vc's pen. See wip.md. (edited)
 
 ## Holds
 
