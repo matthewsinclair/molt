@@ -52,7 +52,12 @@ setup() {
 # The wrapper reset the tab colour after ssh and returned the reset's status,
 # so a failed ssh (255) reported success to whatever ran it.
 @test "the generated iTerm2 ssh wrapper returns ssh's exit status" {
-    molt_instances_field() { echo "gyges:1a1a2e"; }
+    molt_instances_field() {
+        case "$1" in
+            ssh_bg_color) echo "gyges:1a1a2e" ;;
+            bg_color) echo "$(hostname -s 2>/dev/null || hostname):15191f" ;;
+        esac
+    }
     local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
     _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
     mkdir -p "$BATS_TEST_TMPDIR/bin"
@@ -62,4 +67,14 @@ setup() {
         bash -c 'source "$1" && ssh gyges' _ "$script"
     [ "$status" -eq 255 ]
     assert_output_contains "SetColors=bg=1a1a2e"
+    # The tab goes back to this sleeve's own background, not to black.
+    assert_output_contains "SetColors=bg=15191f"
+}
+
+@test "the generated iTerm2 ssh wrapper resets to black for a sleeve with no bg_color" {
+    molt_instances_field() { [[ "$1" == "ssh_bg_color" ]] && echo "gyges:1a1a2e"; return 0; }
+    local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
+    _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
+    run grep -c '_iterm2_set_bg 000000' "$script"
+    assert_output_contains "1"
 }

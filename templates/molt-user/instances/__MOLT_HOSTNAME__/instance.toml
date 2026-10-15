@@ -7,3 +7,4 @@ model = "TODO: your machine model"
 
 [terminal]
 ssh_bg_color = "1a1a2e"  # dark navy
+# bg_color = "15191f"  # this sleeve's own iTerm2 background; ssh resets the tab to it (default 000000)
