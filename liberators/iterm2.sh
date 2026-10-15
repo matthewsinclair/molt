@@ -57,7 +57,7 @@ iterm2_install() {
 
   local target_dir="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
   mkdir -p "$target_dir"
-  molt_link "$profile_src" "$target_dir/molt-profile.json"
+  molt_link "$profile_src" "$target_dir/molt-profile.json" || return 1
 
   molt_info "Liberator complete: iterm2"
 }

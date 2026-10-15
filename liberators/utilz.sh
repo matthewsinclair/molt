@@ -53,14 +53,14 @@ utilz_install() {
   mkdir -p "$MOLT_LOCAL_BIN"
 
   # Link the utilz dispatcher into ~/bin
-  molt_link "$repo/bin/utilz" "$MOLT_LOCAL_BIN/utilz"
+  molt_link "$repo/bin/utilz" "$MOLT_LOCAL_BIN/utilz" || return 1
 
   # Link all utility symlinks from the Utilz bin/ directory
   for link in "$repo/bin/"*; do
     [[ -L "$link" ]] || continue
     local name
     name="$(basename "$link")"
-    molt_link "$repo/bin/$name" "$MOLT_LOCAL_BIN/$name"
+    molt_link "$repo/bin/$name" "$MOLT_LOCAL_BIN/$name" || return 1
   done
 
   # Set UTILZ_HOME in environment if not already handled

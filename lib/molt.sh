@@ -201,23 +201,25 @@ molt_link() {
     return 0
   fi
 
+  # Each step is checked by hand: callers run this inside `if` and `||`, where
+  # set -e does not apply, so a failed step would otherwise run on to "Linked:".
   # If target exists and is not a symlink, back it up
   if [[ -e "$target" ]] && [[ ! -L "$target" ]]; then
     local backup
     backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
     molt_warn "Backing up existing file: $target -> $backup"
-    mv "$target" "$backup"
+    mv "$target" "$backup" || { molt_error "Could not back up $target, so it was not linked"; return 1; }
   fi
 
   # Remove existing symlink if it points elsewhere
   if [[ -L "$target" ]]; then
-    rm "$target"
+    rm "$target" || { molt_error "Could not remove the old link $target, so it was not linked"; return 1; }
   fi
 
   # Create parent directory if needed
-  mkdir -p "$(dirname "$target")"
+  mkdir -p "$(dirname "$target")" || { molt_error "Could not create $(dirname "$target"), so $target was not linked"; return 1; }
 
-  ln -s "$source" "$target"
+  ln -s "$source" "$target" || { molt_error "Could not link $target -> $source"; return 1; }
   molt_info "Linked: $target -> $source"
 }
 
@@ -529,7 +531,7 @@ molt_install_config() {
   if [[ -f "$template" ]]; then
     molt_render "$template" "$target"
   elif [[ -f "$full_source" ]]; then
-    molt_link "$full_source" "$target"
+    molt_link "$full_source" "$target" || return 1
   else
     molt_warn "Config not found: $source (checked template and static)"
     return 1

@@ -76,7 +76,7 @@ web_install() {
   molt_info "Found web binary: $bin"
 
   mkdir -p "$MOLT_LOCAL_BIN"
-  molt_link "$bin" "$MOLT_LOCAL_BIN/web"
+  molt_link "$bin" "$MOLT_LOCAL_BIN/web" || return 1
 
   molt_info "Liberator complete: web"
 }

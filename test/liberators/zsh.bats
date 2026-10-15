@@ -48,3 +48,18 @@ setup() {
     # Should not crash (127 = function/command not found)
     [[ "$status" -ne 127 ]]
 }
+
+# The wrapper reset the tab colour after ssh and returned the reset's status,
+# so a failed ssh (255) reported success to whatever ran it.
+@test "the generated iTerm2 ssh wrapper returns ssh's exit status" {
+    molt_instances_field() { echo "gyges:1a1a2e"; }
+    local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
+    _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    printf '#!/bin/sh\nexit 255\n' > "$BATS_TEST_TMPDIR/bin/ssh"
+    chmod +x "$BATS_TEST_TMPDIR/bin/ssh"
+    run env PATH="$BATS_TEST_TMPDIR/bin:$PATH" TERM_PROGRAM=iTerm.app \
+        bash -c 'source "$1" && ssh gyges' _ "$script"
+    [ "$status" -eq 255 ]
+    assert_output_contains "SetColors=bg=1a1a2e"
+}

@@ -28,7 +28,7 @@ tmux_install() {
 
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  molt_link "$user_repo/config/tmux/tmux.conf" "$HOME/.tmux.conf"
+  molt_link "$user_repo/config/tmux/tmux.conf" "$HOME/.tmux.conf" || return 1
 
   molt_info "Liberator complete: tmux"
 }
