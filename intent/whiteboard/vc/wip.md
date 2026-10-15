@@ -3,10 +3,10 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 35afc8cd-c16d-40d3-b609-4016a019d5ed
-heartbeat_at: 2026-10-15 13:38Z
+heartbeat_at: 2026-10-15 13:40Z
 status: active
-focus: "Molt issue 0009 landing (gtools-vc todo 92); next: resleeve verdict fixes (bin/molt ((failed++)), molt_link) and the ssh wrapper exit status"
-claims: [ISSUE:0009]
+focus: "0009 landed; next: resleeve verdict fixes and ssh wrapper exit status (hv: go with recs)"
+claims: []
 ---
 
 # Validation Claude (vc)

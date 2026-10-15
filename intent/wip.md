@@ -1,12 +1,14 @@
 ---
-verblock: "15 Oct 2026:v0.23: Matthew Sinclair - issue 0009: the claude liberator manages the Claude Code status line"
+verblock: "15 Oct 2026:v0.24: Matthew Sinclair - issue 0009 landed; resleeve and ssh wrapper fixes next"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**In flight: issue 0009, the claude liberator manages the Claude Code status line** (gtools-vc's todo 92, hv's ruling of 15 Oct). Built and tested, NOT committed: it lands on hv's word. Molt: `liberators/claude.sh`, `lib/molt.sh` (`molt_report_link_faults` and `molt_link_all`, the link loops `git.sh` and `claude.sh` now share), `liberators/git.sh`, `test/liberators/claude.bats`, `test/git.bats`, `CHANGELOG.md`, `docs/guides/bootstrap-runbook.md`. Molt-matts: `config/claude/statusline.json`. Once it lands, `molt upgrade` on each sleeve applies it: rhadamanth's layout file is a copy and becomes a link (its statusLine already matches), kovacs's hand-made link and statusLine already match, and gyges has not been looked at: it is at home in the UK, out of ssh reach while hv is away.
+**Nothing in flight.** Issue 0009 (claude liberator manages the Claude Code status line) landed 15 Oct in Molt a14555e and Molt-matts 2a5b268; applied on rhadamanth, kovacs already matched, gyges picks it up at its next `molt upgrade`.
+
+Next, on hv's ruling of 15 Oct ("go with your recs"): one issue for resleeve reporting what did not happen (`bin/molt:136` `((failed++))` exits under bash 5; `molt_link` returns 0 when its own steps fail), and one for the iTerm2 ssh wrapper returning 0 for a failed ssh (`liberators/zsh.sh:32-74`, with the `#000000`/`#15191F` reset).
 
 Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
 
