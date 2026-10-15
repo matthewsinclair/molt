@@ -1,5 +1,14 @@
 # Done
 
+## 021: The status line, and resleeve telling the truth about failures (DONE)
+
+- **The claude liberator manages the Claude Code status line** (issue 0009, gtools-vc's todo 92). It links the ccstatusline layout from Molt-matts and writes only the `statusLine` key of `~/.claude/settings.json`; the file itself is never linked. Another tool had replaced rhadamanth's statusLine and molt could not put it back. `molt_report_link_faults` and `molt_link_all` replaced six copies of the link loop.
+- **resleeve stopped at the first failed liberator under bash 5** (issue 0010): `((failed++))` from 0 returns 1 under `set -e`. CI's bash 3.2 carried on, so CI never saw it. resleeve now runs every liberator and exits 1 when one failed.
+- **`molt_link` said "Linked:" when it had not linked** (issue 0010), and 16 liberator call sites ignored its failure, so resleeve printed "installed". critic-shell found the call sites after the first fix.
+- **The iTerm2 ssh wrapper returned 0 for a failed ssh** (issue 0011), and reset a tab to black (issue 0012). It returns ssh's status and resets to the sleeve's own `[terminal] bg_color`, `15191f` on rhadamanth. hv tested xterm's OSC 111: iTerm2 ignores it after `SetColors`, so the colour has to be declared.
+- Suite 189 -> 202, under `/bin/bash` 3.2 and Homebrew bash 5.3; CI green including macOS (dispatched by hand, since a push skips it).
+- Commits: `a14555e`, `2e7b07c`, `34ef581` and the folds (molt); `2a5b268`, `c185d6f` (molt-{user})
+
 ## 020: Intent comes from Homebrew, and Molt keeps off rhadamanth's Intent (DONE)
 
 - **gyges reported the intent liberator ok under a warning that nothing used the link** (ST0004). The link reached Intent 2.6.0, the v2 script in a frozen pre-rewrite checkout. A login shell ran Homebrew's 3.2.0 and an interactive non-login shell ran the 2.6.0. The check asked whether its `~/bin` link was sound, never which Intent anything ran, and its shadow warning went quiet in exactly the shell where v2 ran. v2.6.0 refuses a v3 project with an error and writes nothing, so nothing was damaged.

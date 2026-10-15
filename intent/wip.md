@@ -1,22 +1,16 @@
 ---
-verblock: "15 Oct 2026:v0.26: Matthew Sinclair - issues 0010, 0011 and 0012 landed; localfold"
+verblock: "15 Oct 2026:v0.27: Matthew Sinclair - EOD fold; gyges items grouped for the weekend"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** Issues 0010 (resleeve stopped at the first failure under bash 5; `molt_link` said Linked when it failed, and 16 liberator call sites ignored its failure), 0011 (the iTerm2 ssh wrapper returned 0 for a failed ssh) and 0012 (the wrapper reset a tab to black; it now resets to the sleeve's own `[terminal] bg_color`) landed 15 Oct in Molt `2e7b07c` and `34ef581` and Molt-matts `c185d6f`, CI green including macOS. rhadamanth's rendered wrapper was regenerated and resets to `15191f`.
-
-Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
+**Nothing in flight.** Finished work lives in `done.md` (021 is the status line and the resleeve fixes), the closed issues (`intent issues list --kind all`) and git.
 
 TODO:
 
 - **Flynn's jormungandr: parked by hv (15 Sep), "ignore that for now".** It would move its config repo with the same steps (below). Molt-flynn on rhadamanth is clean but 5 commits ahead of its origin, unpushed; pushing is Flynn's call.
-
-Still open from the move:
-
-- The Gtools `README.md:15` still says both working trees live in `~/Devel/prj/`. Handed to gtools-vc on 15 Sep at hv's request; it is Gtools' pen, not Molt's.
 
 How a sleeve moves its config repos, for any later one:
 
@@ -31,20 +25,29 @@ How a sleeve moves its config repos, for any later one:
 
 ## Waiting on hv
 
-- (none)
+- **Molt-matts `e3af373` (pushed) carries a `Co-Authored-By: Claude` and a `Claude-Session:` trailer**, against the no-attribution rule. Rewriting pushed history is hv's call; vc has not touched it.
+- **The fleet sweep `intent claude upgrade --apply --skip-settings` is pending.** `intent doctor` on 15 Oct advised that CLAUDE.md and AGENTS.md are behind Intent 3.2.3's templates.
 
 ## Upcoming Work
 
-- **Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges, visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not on 15 Oct. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts.
-- **Nothing checks the rendered iTerm2 ssh wrapper** (`~/.config/molt/iterm2-ssh-colors.sh`), so it is regenerated only when `zsh_install` runs for some other reason. gyges and kovacs still carry the old wrapper (exit status lost, reset to black) until then. gyges has no `[terminal] bg_color` yet; read its live iTerm2 profile background before declaring one (rhadamanth's was read from the plist, `15191f`). Unscheduled; hv's call.
+### gyges, at the weekend, when hv starts it
+
+hv, 15 Oct: "a weekend project, not tonight". gyges is at home in the UK. On 15 Oct `gyges.lan` did not resolve from rhadamanth and Tailscale was stopped, so start Tailscale first; changes on gyges go through gyges-infra (board watchout 16).
+
+- **Deploy the Gtools Sinclair estate on gyges, visible inside the house to anyone at home.** A recreational hack-around; part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in.
+- **Declare gyges' `[terminal] bg_color` and regenerate its ssh wrapper.** Read the live iTerm2 profile background first (rhadamanth's came from the plist: `plutil -extract "New Bookmarks" json -o - ~/Library/Preferences/com.googlecode.iterm2.plist`). Nothing checks the rendered wrapper (`~/.config/molt/iterm2-ssh-colors.sh`), so `molt upgrade` will not refresh it: it is regenerated only when `zsh_install` runs. gyges and kovacs carry the old one (exit status lost, reset to black) until then.
+- **When Intent 3.2.1 reaches gyges, watch the first `molt upgrade` after the `brew upgrade`** (Intent 0527; the fix landed at Intent `9358663ff` and ships in 3.2.1). The 3.2.0 gate home names a keg the upgrade deletes. The intent check should report "install is gone", install should run `intent bootstrap`, and the home should then name `opt/intent/libexec`. It is the one path of ST0004 not yet seen live. No project on gyges has the pre-commit gate installed (hv: leave the hooks for now), so nothing is refused there meanwhile; `intent bootstrap` once by hand also repairs it.
+
+### Other
+
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
 - **Sidecars record the template path as of the last render, and nothing refreshes it.** `~/.ssh/config.molt-rendered` still names `~/Devel/prj/Molt-matts/config/ssh/config.tmpl`, the pre-move path, which no longer exists; starship's names `~/Devel/cfg/...`. The lowercase case-folding seen earlier is gone from both. Informational while the digest recomputes the path from its `source` argument.
-- **When Intent 3.2.1 reaches gyges, watch the first `molt upgrade` after the `brew upgrade`** (Intent 0527; the fix landed at Intent `9358663ff` and ships in 3.2.1). The 3.2.0 gate home names a keg the upgrade deletes. The intent check should report "install is gone", install should run `intent bootstrap`, and the home should then name `opt/intent/libexec`. It is the one path of ST0004 not yet seen live. No project on gyges has the pre-commit gate installed (hv: leave the hooks for now), so nothing is refused there meanwhile; `intent bootstrap` once by hand also repairs it.
 - **Decide whether `desktop` should own more of GNOME than it does.** It manages the GTK stylesheet (3.0 and 4.0) and dock favourites; its gsettings block is still hardcoded.
 
 Carried, not this project's to fix:
 
+- The Gtools `README.md:15` still says both working trees live in `~/Devel/prj/`. Handed to gtools-vc on 15 Sep; Gtools' pen.
 - Devbin's `README.md:60` snippet still carries both defects fixed in `a4e6cb2`; the `dvb` body lives in three places and has diverged; `devbin doctor` reports surviving retired aliases but nothing reports a MISSING replacement. All three are devbin-vc's pen.
 
 Carried from March, unverified from this sleeve -- confirm before acting:

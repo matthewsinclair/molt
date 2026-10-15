@@ -1,0 +1,16 @@
+{
+  "id": "01M50CF7X97G9Z804VCNKPA0R1",
+  "ts": "2026-10-15T18:16:26.793Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 3,
+    "text": "**Weekend, when hv starts it (gyges):** deploy the Gtools Sinclair estate on gyges, visible inside the house; declare gyges' [terminal] bg_color from its live iTerm2 profile and regenerate its ssh wrapper (nothing checks the rendered wrapper, so molt upgrade will not). Start Tailscale first: gyges.lan did not resolve on 15 Oct. Changes on gyges go through gyges-infra; Gtools is gtools-vc's pen. See wip.md."
+  }
+}
