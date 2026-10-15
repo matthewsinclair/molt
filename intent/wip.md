@@ -1,14 +1,12 @@
 ---
-verblock: "15 Oct 2026:v0.24: Matthew Sinclair - issue 0009 landed; resleeve and ssh wrapper fixes next"
+verblock: "15 Oct 2026:v0.25: Matthew Sinclair - issues 0010 and 0011 landed"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** Issue 0009 (claude liberator manages the Claude Code status line) landed 15 Oct in Molt a14555e and Molt-matts 2a5b268; applied on rhadamanth, kovacs already matched, gyges picks it up at its next `molt upgrade`.
-
-Next, on hv's ruling of 15 Oct ("go with your recs"): one issue for resleeve reporting what did not happen (`bin/molt:136` `((failed++))` exits under bash 5; `molt_link` returns 0 when its own steps fail), and one for the iTerm2 ssh wrapper returning 0 for a failed ssh (`liberators/zsh.sh:32-74`, with the `#000000`/`#15191F` reset).
+**Nothing in flight.** Issues 0010 (resleeve stopped at the first failure under bash 5; `molt_link` said Linked when it failed) and 0011 (the iTerm2 ssh wrapper returned 0 for a failed ssh) landed 15 Oct in Molt `2e7b07c`, CI green including macOS. rhadamanth's rendered wrapper was regenerated; gyges and kovacs pick it up at their next zsh install, since nothing checks the rendered wrapper.
 
 Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
 
@@ -39,7 +37,7 @@ How a sleeve moves its config repos, for any later one:
 
 - **Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges, visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not on 15 Oct. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts.
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
-- **The ssh wrapper resets a tab to `#000000`, but rhadamanth's base iTerm2 profile is `#15191F`** -- separate light and dark colours, both `#15191F`, in the 10 Mar export (Molt-matts `config/iterm2/profile.json`; macOS is in Light mode). A tab comes back from ssh slightly blacker than it started. The reset is `liberators/zsh.sh:69`; resetting to the profile's colour is small. Not scheduled; hv's call. The live profile may differ from the export.
+- **The ssh wrapper resets a tab to `#000000`, but rhadamanth's base iTerm2 profile is `#15191F`** -- separate light and dark colours, both `#15191F`, in the 10 Mar export (Molt-matts `config/iterm2/profile.json`; macOS is in Light mode). A tab comes back from ssh slightly blacker than it started. The reset is `liberators/zsh.sh:69`; resetting to the profile's colour is small. Not scheduled; hv's call. The live profile may differ from the export. Hardcoding `15191F` would put one user's colour in Molt; the candidates are a per-sleeve `[terminal]` field, or xterm's OSC 111 (reset background), which iTerm2 may honour after `SetColors` -- untested, and it needs a look in a real tab: `printf '\033]1337;SetColors=bg=550000\007'; sleep 1; printf '\033]111\007'`.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
 - **Sidecars record the template path as of the last render, and nothing refreshes it.** `~/.ssh/config.molt-rendered` still names `~/Devel/prj/Molt-matts/config/ssh/config.tmpl`, the pre-move path, which no longer exists; starship's names `~/Devel/cfg/...`. The lowercase case-folding seen earlier is gone from both. Informational while the digest recomputes the path from its `source` argument.
 - **When Intent 3.2.1 reaches gyges, watch the first `molt upgrade` after the `brew upgrade`** (Intent 0527; the fix landed at Intent `9358663ff` and ships in 3.2.1). The 3.2.0 gate home names a keg the upgrade deletes. The intent check should report "install is gone", install should run `intent bootstrap`, and the home should then name `opt/intent/libexec`. It is the one path of ST0004 not yet seen live. No project on gyges has the pre-commit gate installed (hv: leave the hooks for now), so nothing is refused there meanwhile; `intent bootstrap` once by hand also repairs it.
