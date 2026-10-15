@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 35afc8cd-c16d-40d3-b609-4016a019d5ed
-heartbeat_at: 2026-10-15 13:55Z
-status: active
-focus: "0010 and 0011 landed (2e7b07c); nothing in flight"
+heartbeat_at: 2026-10-15 14:05Z
+status: paused
+focus: "0010, 0011, 0012 landed (2e7b07c, 34ef581; Molt-matts c185d6f); nothing in flight"
 claims: []
 ---
 

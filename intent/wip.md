@@ -1,12 +1,12 @@
 ---
-verblock: "15 Oct 2026:v0.25: Matthew Sinclair - issues 0010 and 0011 landed"
+verblock: "15 Oct 2026:v0.26: Matthew Sinclair - issues 0010, 0011 and 0012 landed; localfold"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** Issues 0010 (resleeve stopped at the first failure under bash 5; `molt_link` said Linked when it failed) and 0011 (the iTerm2 ssh wrapper returned 0 for a failed ssh) landed 15 Oct in Molt `2e7b07c`, CI green including macOS. rhadamanth's rendered wrapper was regenerated; gyges and kovacs pick it up at their next zsh install, since nothing checks the rendered wrapper.
+**Nothing in flight.** Issues 0010 (resleeve stopped at the first failure under bash 5; `molt_link` said Linked when it failed, and 16 liberator call sites ignored its failure), 0011 (the iTerm2 ssh wrapper returned 0 for a failed ssh) and 0012 (the wrapper reset a tab to black; it now resets to the sleeve's own `[terminal] bg_color`) landed 15 Oct in Molt `2e7b07c` and `34ef581` and Molt-matts `c185d6f`, CI green including macOS. rhadamanth's rendered wrapper was regenerated and resets to `15191f`.
 
 Finished work lives in `done.md` (020 is ST0004, Intent from Homebrew), the closed issues (`intent issues list --kind all`) and git.
 
@@ -36,6 +36,7 @@ How a sleeve moves its config repos, for any later one:
 ## Upcoming Work
 
 - **Weekend, when hv starts it: deploy the Gtools Sinclair estate on gyges, visible inside the house to anyone at home.** hv, 15 Oct: a recreational hack-around, not for now. gyges is at home in the UK; hv can reach it from rhadamanth over Tailscale, though not on 15 Oct. Part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in when this starts.
+- **Nothing checks the rendered iTerm2 ssh wrapper** (`~/.config/molt/iterm2-ssh-colors.sh`), so it is regenerated only when `zsh_install` runs for some other reason. gyges and kovacs still carry the old wrapper (exit status lost, reset to black) until then. gyges has no `[terminal] bg_color` yet; read its live iTerm2 profile background before declaring one (rhadamanth's was read from the plist, `15191f`). Unscheduled; hv's call.
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
 - **Sidecars record the template path as of the last render, and nothing refreshes it.** `~/.ssh/config.molt-rendered` still names `~/Devel/prj/Molt-matts/config/ssh/config.tmpl`, the pre-move path, which no longer exists; starship's names `~/Devel/cfg/...`. The lowercase case-folding seen earlier is gone from both. Informational while the digest recomputes the path from its `source` argument.
