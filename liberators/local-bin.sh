@@ -38,7 +38,7 @@ local-bin_install() {
   fi
 
   if [[ -f "$molt_bin" ]]; then
-    molt_link "$molt_bin" "$MOLT_LOCAL_BIN/molt"
+    molt_link "$molt_bin" "$MOLT_LOCAL_BIN/molt" || return 1
   fi
 
   molt_info "Liberator complete: local-bin"

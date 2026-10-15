@@ -52,6 +52,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `molt resleeve` stopped at the first liberator that failed, under bash 4.1 and later: `((failed++))` from 0 returns 1 and `set -e` ended the script, so the remaining liberators never ran and no failure count was printed. bash 3.2, CI's, carried on, so CI could not see it. resleeve now also exits 1 when any liberator failed; it exited 0 (issue 0010)
+- `molt_link` said "Linked:" and returned 0 when its own `mv`, `rm`, `mkdir` or `ln` failed. Its callers run it inside `if` and `||`, where `set -e` does not apply. Each step is now checked, and every liberator that calls it partway through its install now stops on a failed link instead of going on to report itself installed (issue 0010)
+- The generated iTerm2 ssh wrapper returned the status of its colour reset, so a failed ssh (255) reported 0. It now returns ssh's own exit status (issue 0011)
 - `molt new-user` scaffolded a lowercase `molt-{user}` directory and a lowercase `user_repo`, against the capitalised convention every other project directory follows. A repo scaffolded this way resolved only through `constants.sh`'s compatibility fallback. The GitHub repo name stays lowercase -- the two conventions differ deliberately
 - `intent_check` reported ok about a symlink it does not govern. `~/bin/intent` resolved to a Rust release binary that `intent_install` never created, and PATH resolved a different copy again. It now says so instead of passing, without repairing a link something else placed
 - `desktop_verify` never checked the GTK stylesheet its own `_install` links

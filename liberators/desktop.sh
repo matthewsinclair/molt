@@ -153,7 +153,7 @@ desktop_install() {
     local gv
     for gv in $(_desktop_gtk_versions); do
       mkdir -p "$HOME/.config/$gv"
-      molt_link "$user_repo/config/gtk/gtk.css" "$HOME/.config/$gv/gtk.css"
+      molt_link "$user_repo/config/gtk/gtk.css" "$HOME/.config/$gv/gtk.css" || return 1
     done
   fi
 

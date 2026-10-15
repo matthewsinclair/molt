@@ -48,7 +48,7 @@ _zsh_generate_iterm2_ssh_colors() {
     echo '  _iterm2_set_bg() { printf "\033]1337;SetColors=bg=%s\007" "$1"; }'
     echo ''
     echo '  ssh() {'
-    echo '    local host'
+    echo '    local host rc'
     echo '    for arg in "$@"; do'
     echo '      case "$arg" in'
     echo '        -*) continue ;;'
@@ -66,7 +66,9 @@ _zsh_generate_iterm2_ssh_colors() {
     echo '    esac'
     echo ''
     echo '    command ssh "$@"'
+    echo '    rc=$?'
     echo '    _iterm2_set_bg 000000  # reset to default black'
+    echo '    return $rc'
     echo '  }'
     echo 'fi'
   } > "$target"
@@ -155,9 +157,9 @@ zsh_install() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
 
-  molt_link "$user_repo/config/zsh/zshrc" "$HOME/.zshrc"
-  molt_link "$user_repo/config/zsh/zshenv" "$HOME/.zshenv"
-  molt_link "$user_repo/config/zsh/zprofile" "$HOME/.zprofile"
+  molt_link "$user_repo/config/zsh/zshrc" "$HOME/.zshrc" || return 1
+  molt_link "$user_repo/config/zsh/zshenv" "$HOME/.zshenv" || return 1
+  molt_link "$user_repo/config/zsh/zprofile" "$HOME/.zprofile" || return 1
 
   molt_install_config "config/starship/starship.toml" "$HOME/.config/starship.toml"
 

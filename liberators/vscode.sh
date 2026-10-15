@@ -84,14 +84,14 @@ vscode_install() {
     local settings_dir
     settings_dir="$(_vscode_settings_dir)"
     mkdir -p "$settings_dir"
-    molt_link "$user_repo/config/vscode/settings.json" "$settings_dir/settings.json"
+    molt_link "$user_repo/config/vscode/settings.json" "$settings_dir/settings.json" || return 1
   fi
 
   # Symlink keybindings.json if present
   if [[ -f "$user_repo/config/vscode/keybindings.json" ]]; then
     local settings_dir
     settings_dir="$(_vscode_settings_dir)"
-    molt_link "$user_repo/config/vscode/keybindings.json" "$settings_dir/keybindings.json"
+    molt_link "$user_repo/config/vscode/keybindings.json" "$settings_dir/keybindings.json" || return 1
   fi
 
   # On Linux/GNOME, add to dock favorites

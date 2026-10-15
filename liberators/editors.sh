@@ -202,14 +202,14 @@ editors_install() {
   user_repo="$(molt_find_user_repo)" || return 1
 
   if [[ -d "$user_repo/config/doom" ]]; then
-    molt_link "$user_repo/config/doom" "$HOME/.config/doom"
+    molt_link "$user_repo/config/doom" "$HOME/.config/doom" || return 1
   fi
 
   # macOS: point /Applications/Emacs.app at the Homebrew keg via opt/
   if [[ "$(molt_platform)" == "macos" ]]; then
     local emacs_app
     if emacs_app="$(editors_emacs_app_source)" && [[ -e "$emacs_app" ]]; then
-      molt_link "$emacs_app" "/Applications/Emacs.app"
+      molt_link "$emacs_app" "/Applications/Emacs.app" || return 1
     else
       molt_warn "No installed emacs-plus@<n> found — /Applications/Emacs.app not linked"
     fi

@@ -133,7 +133,7 @@ cmd_resleeve() {
           echo "  $lib: ✓ installed"
         else
           molt_error "Liberator failed: $lib — continuing with remaining liberators"
-          ((failed++))
+          failed=$((failed + 1))
         fi
       fi
     else
@@ -151,6 +151,7 @@ cmd_resleeve() {
   else
     if [[ $failed -gt 0 ]]; then
       molt_error "$failed liberator(s) failed. Review errors above."
+      return 1
     else
       molt_info "Sleeve ready. Welcome back."
     fi
