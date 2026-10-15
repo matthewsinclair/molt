@@ -28,13 +28,20 @@ _zsh_current_shell() {
 
 # Generate iTerm2 SSH background colors script from instance.toml data.
 # Reads [terminal] ssh_bg_color from all instances and writes a shell script
-# that wraps ssh with per-host background color changes.
+# that wraps ssh with per-host background color changes. When ssh returns, the
+# tab goes back to this sleeve's own [terminal] bg_color, its iTerm2 profile's
+# background, or to black where the sleeve declares none.
 _zsh_generate_iterm2_ssh_colors() {
   local target="$1"
 
   local entries
   entries="$(molt_instances_field "ssh_bg_color" "terminal" 2>/dev/null)" || entries=""
   [[ -z "$entries" ]] && return 0
+
+  local this_host reset
+  this_host="$(hostname -s 2>/dev/null || hostname)"
+  reset="$(molt_instances_field "bg_color" "terminal" 2>/dev/null | awk -F: -v h="$this_host" '$1 == h { print $2 }')"
+  [[ -n "$reset" ]] || reset=000000
 
   mkdir -p "$(dirname "$target")"
   # Single quotes are intentional: we're writing a script, not expanding variables
@@ -67,7 +74,7 @@ _zsh_generate_iterm2_ssh_colors() {
     echo ''
     echo '    command ssh "$@"'
     echo '    rc=$?'
-    echo '    _iterm2_set_bg 000000  # reset to default black'
+    printf '    _iterm2_set_bg %s  # back to [terminal] bg_color\n' "$reset"
     echo '    return $rc'
     echo '  }'
     echo 'fi'
