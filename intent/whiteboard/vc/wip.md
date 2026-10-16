@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 366e0639-7ba1-415e-a92d-acb9d7aaa54a
-heartbeat_at: 2026-10-16 13:44Z
-status: active
+heartbeat_at: 2026-10-16 13:59Z
+status: paused
 focus: "0013 and 0014 landed (c5e9c11), checked on kovacs; 0015 and 0016 wait on hv"
 claims: []
 ---
@@ -23,7 +23,7 @@ _(none)_
 
 ## Holds
 
-- (none)
+_(none)_
 
 ## Watch-outs
 

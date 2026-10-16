@@ -1,5 +1,16 @@
 # Done
 
+## 022: Doom rebuilds after an Emacs upgrade, a failed hook fails the run, and Tactile's schema stays current (DONE)
+
+- **kovacs-sysadm found both on kovacs on 16 Oct**, after its release upgrade from Ubuntu 24.04 to 26.04.1 took Emacs from 29.3 to 30.2.
+- **doom sync asked to rebuild every package, read EOF and failed, and molt still said "Sleeve ready"** (issue 0013). `editors_upgrade` threw Doom's stderr away and warned, `molt upgrade` warned again and resleeved, and `molt maintain` exited 0. molt now compares the Emacs version Doom recorded at its last sync (`$DOOMLOCALDIR/etc/sync`) with the running one and passes `--rebuild` when they differ, warning when it cannot tell. Doom's own `-!`/`--force` is no fix: it skips the rebuild along with the prompt (board watch-out 17). A failed doom command fails the editors hook, a failed hook makes `molt upgrade` and `molt maintain` name it and exit 1, and the resleeve after a failed upgrade does not call the sleeve ready. resleeve's body moved into `lib/molt.sh` as `molt_resleeve`, beside the upgrade that calls it.
+- **Tactile's gsettings schema was copied into `/usr/share/glib-2.0/schemas` only when none was there** (issue 0014), so a Tactile update would never reach it, and the sudo, compile and gsettings calls were unchecked. Nothing had broken yet on kovacs (Tactile 38, GNOME Shell 50.1). Install now refreshes the copy whenever it differs, compiles the extension's schema under `--strict` first, takes out a copy the system compile rejects, and fails instead of reporting complete; check and verify report a stale copy. Refreshing needs sudo, so an unattended run without it fails the step out loud. The install hint asks extensions.gnome.org for the build that fits the running shell instead of pinning one; that URL is not yet confirmed live (wip.md).
+- **kovacs-sysadm's third report, the ccstatusline link, was already fixed** by `a14555e` (15 Oct), and kovacs had the link.
+- **Checked on kovacs by kovacs-sysadm:** `molt doctor` 13/13, `molt resleeve --dry-run` ok for all 14 liberators, and Doom's record and the running Emacs both read 30.2. The live `molt upgrade editors` there waits for hv.
+- critic-shell's review and test-check are applied, and eight deliberate breakages each turned a test red under both interpreters. Issues 0015 and 0016 record what the review found outside the change, for hv.
+- Suite 202 -> 223, under `/bin/bash` 3.2 and Homebrew bash 5.3; CI green on Ubuntu, with macOS skipped on push by design.
+- Commits: `c5e9c11`, `59ea142`, `ff716d7` and this fold's (molt)
+
 ## 021: The status line, and resleeve telling the truth about failures (DONE)
 
 - **The claude liberator manages the Claude Code status line** (issue 0009, gtools-vc's todo 92). It links the ccstatusline layout from Molt-matts and writes only the `statusLine` key of `~/.claude/settings.json`; the file itself is never linked. Another tool had replaced rhadamanth's statusLine and molt could not put it back. `molt_report_link_faults` and `molt_link_all` replaced six copies of the link loop.

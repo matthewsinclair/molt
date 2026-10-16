@@ -5,8 +5,8 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "366e0639-7ba1-415e-a92d-acb9d7aaa54a",
-    "heartbeat_at": "2026-10-16T13:44:18.362Z",
-    "status": "active",
+    "heartbeat_at": "2026-10-16T13:59:34.070Z",
+    "status": "paused",
     "focus": "0013 and 0014 landed (c5e9c11), checked on kovacs; 0015 and 0016 wait on hv",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
@@ -158,7 +158,8 @@
       "kind": "hold",
       "seq": 1,
       "text": "(none)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-16T13:59:34.047Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
