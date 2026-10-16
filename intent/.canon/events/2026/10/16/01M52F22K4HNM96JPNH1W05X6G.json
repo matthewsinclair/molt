@@ -1,0 +1,15 @@
+{
+  "id": "01M52F22K4HNM96JPNH1W05X6G",
+  "ts": "2026-10-16T13:40:09.956Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Confirm the Tactile install hint's URL live** (issue 0014): extensions.gnome.org resolved from neither rhadamanth (unsandboxed) nor kovacs on 16 Oct, while github.com did. From a plain terminal, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip."
+  }
+}
