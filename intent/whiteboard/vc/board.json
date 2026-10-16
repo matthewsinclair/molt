@@ -4,11 +4,14 @@
     "moniker": "vc",
     "name": "Validation Claude",
     "role": "validation",
-    "session_id": "35afc8cd-c16d-40d3-b609-4016a019d5ed",
-    "heartbeat_at": "2026-10-15T18:16:31.724Z",
-    "status": "paused",
-    "focus": "back at home; nothing in flight",
-    "claims": [],
+    "session_id": "366e0639-7ba1-415e-a92d-acb9d7aaa54a",
+    "heartbeat_at": "2026-10-16T12:57:06.543Z",
+    "status": "active",
+    "focus": "fixing kovacs-sysadm's Molt bugs: doom sync rebuild (0013), Tactile schema (0014)",
+    "claims": [
+      "ISSUE:0013",
+      "ISSUE:0014"
+    ],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
     "migrated_at": "2026-09-21T15:40:58.246Z"

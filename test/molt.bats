@@ -230,6 +230,93 @@ load "test_helper.bash"
     refute_output_contains "Sleeve ready"
 }
 
+# kovacs, 16 Oct: doom sync failed inside the editors upgrade hook, and molt
+# upgrade warned, resleeved and said "Sleeve ready" (issue 0013).
+@test "molt upgrade names a failed upgrade hook, exits non-zero and does not say Sleeve ready" {
+    local libs="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf 'aaa_check() { return 0; }\naaa_upgrade() { return 1; }\n' > "$libs/aaa.sh"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt upgrade aaa --resleeve
+    assert_failure
+    assert_output_contains "Upgrade failed: aaa"
+    assert_output_contains "aaa: ✓ ok"
+    assert_output_contains "Upgrade incomplete: the upgrade hook failed for aaa"
+    refute_output_contains "Sleeve ready"
+}
+
+# The control for the test above: with every hook passing, the verdict is the
+# one it must not print over a failure.
+@test "molt upgrade says Sleeve ready when its hooks and liberators pass" {
+    local libs="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf 'aaa_check() { return 0; }\naaa_upgrade() { return 0; }\n' > "$libs/aaa.sh"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt upgrade aaa --resleeve
+    assert_success
+    assert_output_contains "Sleeve ready. Welcome back."
+    refute_output_contains "Upgrade incomplete"
+}
+
+# The same through a full upgrade, the path hv ran. The repo pull is stubbed:
+# it is git against the real checkout, and the hooks are what is under test.
+@test "a full molt upgrade carries a failed hook to its verdict and runs the rest" {
+    local libs="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf 'aaa_check() { return 0; }\naaa_upgrade() { return 1; }\n' > "$libs/aaa.sh"
+    printf 'bbb_check() { return 0; }\nbbb_upgrade() { echo "bbb upgraded"; }\n' > "$libs/bbb.sh"
+    unset MOLT_PRJ_DIR
+    export HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" MOLT_LIBERATORS_DIR="$libs"
+    load_molt_libs
+    _upgrade_pull_repos() { :; }
+    run cmd_upgrade
+    assert_failure
+    assert_output_contains "Upgrade hook failed: aaa"
+    assert_output_contains "bbb upgraded"
+    assert_output_contains "aaa: ✓ ok"
+    assert_output_contains "Upgrade incomplete: the upgrade hook failed for aaa"
+    refute_output_contains "Sleeve ready"
+}
+
+# molt upgrade runs resleeve on the left of `||`, where set -e does not apply,
+# so a failed lookup inside it has to be caught by hand.
+@test "molt resleeve fails, and does not say Sleeve ready, when there are no liberators to run" {
+    mkdir -p "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    unset MOLT_PRJ_DIR
+    export HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" MOLT_LIBERATORS_DIR="$BATS_TEST_TMPDIR/nope"
+    load_molt_libs
+    run molt_resleeve false true
+    assert_failure
+    assert_output_contains "Liberators directory not found"
+    assert_output_contains "there are no liberators to run"
+    refute_output_contains "Sleeve ready"
+}
+
+@test "molt maintain names a failed maintain hook, runs the rest and exits non-zero" {
+    local libs="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf 'aaa_maintain() { return 1; }\n' > "$libs/aaa.sh"
+    printf 'bbb_maintain() { echo "bbb maintained"; }\n' > "$libs/bbb.sh"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt maintain
+    assert_failure
+    assert_output_contains "Maintain hook failed: aaa"
+    assert_output_contains "bbb maintained"
+    assert_output_contains "Maintenance incomplete: the maintain hook failed for aaa"
+    refute_output_contains "System maintenance complete"
+}
+
+@test "molt maintain says maintenance is complete when its hooks pass" {
+    local libs="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf 'aaa_maintain() { return 0; }\n' > "$libs/aaa.sh"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt maintain
+    assert_success
+    assert_output_contains "System maintenance complete."
+    refute_output_contains "Maintenance incomplete"
+}
+
 # --- Digest covers every input the render depends on ---
 
 # molt_config_digest RESOLVES vars.sh THROUGH molt_find_user_repo and returns 1

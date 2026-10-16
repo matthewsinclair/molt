@@ -1205,6 +1205,100 @@ _test_shellcheck() {
   molt_info "ShellCheck: all clean"
 }
 
+# --- Resleeve ---
+
+# The resleeve itself, for `molt resleeve` and the end of `molt upgrade`. $1 is
+# true for a dry run. $2 is false when the sleeve must not be called ready even
+# though every liberator is: molt upgrade passes it when an upgrade hook has
+# failed, and gives the verdict itself.
+#
+# Every failure here is checked by hand. molt upgrade calls this on the left of
+# `||`, where set -e does not apply, so a failed lookup would otherwise run on
+# to "Sleeve ready".
+molt_resleeve() {
+  local dry_run="$1" claim_ready="$2"
+
+  if $dry_run; then
+    echo "${MOLT_NAME} v${MOLT_VERSION} — Dry Run"
+  else
+    echo "${MOLT_NAME} v${MOLT_VERSION} — My Opinionated Local Terminal"
+    echo "Needlecasting stack to new sleeve..."
+  fi
+  echo "Sleeve: $(hostname -s 2>/dev/null || hostname) | Platform: $(molt_platform)"
+  echo ""
+
+  local user_repo
+  if ! user_repo="$(molt_find_user_repo)"; then
+    molt_error "Cannot resleeve without a user config repo."
+    return 1
+  fi
+
+  molt_info "Stack found: $user_repo"
+  molt_info "Loading liberators..."
+
+  # Use manifest if available, otherwise fall back to directory scan
+  local liberators
+  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
+    local manifest
+    if ! manifest="$(molt_find_manifest)"; then
+      molt_error "Cannot resleeve: the manifest that names the liberators could not be found."
+      return 1
+    fi
+    molt_info "Manifest: $manifest"
+  else
+    # liberator_list reports on stdout, so its error is in what was captured.
+    if ! liberators="$(liberator_list)"; then
+      echo "$liberators"
+      molt_error "Cannot resleeve: there are no liberators to run."
+      return 1
+    fi
+    molt_info "No manifest found, using all available liberators"
+  fi
+
+  local would_install=0
+  local failed=0
+  echo ""
+
+  while IFS= read -r lib; do
+    [[ -z "$lib" ]] && continue
+    if ! liberator_load "$lib" 2>/dev/null; then
+      molt_warn "Skipping unknown liberator: $lib"
+      continue
+    fi
+    if ! liberator_check "$lib" 2>/dev/null; then
+      if $dry_run; then
+        echo "  $lib: WOULD INSTALL"
+        would_install=$((would_install + 1))
+      else
+        if liberator_run "$lib" install; then
+          echo "  $lib: ✓ installed"
+        else
+          molt_error "Liberator failed: $lib — continuing with remaining liberators"
+          failed=$((failed + 1))
+        fi
+      fi
+    else
+      echo "  $lib: ✓ ok"
+    fi
+  done <<< "$liberators"
+
+  echo ""
+  if $dry_run; then
+    if [[ $would_install -eq 0 ]]; then
+      molt_info "All liberators are installed. Nothing to do."
+    else
+      molt_info "$would_install liberator(s) would be installed. Run \`molt resleeve\` to apply."
+    fi
+  else
+    if [[ $failed -gt 0 ]]; then
+      molt_error "$failed liberator(s) failed. Review errors above."
+      return 1
+    elif $claim_ready; then
+      molt_info "Sleeve ready. Welcome back."
+    fi
+  fi
+}
+
 # --- Upgrade ---
 
 _upgrade_check_clean() {
@@ -1310,6 +1404,34 @@ _upgrade_pull_repos() {
   fi
 }
 
+# Ends an upgrade: resleeves when asked, then gives the verdict. $3 lists the
+# upgrade hooks that failed. A sleeve whose upgrade hooks failed is not ready,
+# whatever resleeve then finds, so resleeve is told not to say it is: on kovacs
+# doom sync failed inside the editors hook, and molt upgrade still said "Sleeve
+# ready" (issue 0013).
+_upgrade_finish() {
+  local dry_run="$1" do_resleeve="$2" failed_hooks="$3" status=0 claim_ready=true
+  if [[ "$do_resleeve" == "yes" ]]; then
+    echo ""
+    if $dry_run; then
+      molt_info "Dry run — showing what resleeve would do:"
+      echo ""
+      molt_resleeve true true || status=1
+    else
+      molt_info "Running resleeve..."
+      echo ""
+      [[ -z "$failed_hooks" ]] || claim_ready=false
+      molt_resleeve false "$claim_ready" || status=1
+    fi
+  fi
+  if [[ -n "$failed_hooks" ]]; then
+    echo ""
+    molt_error "Upgrade incomplete: the upgrade hook failed for $failed_hooks. The sleeve is not ready; review the errors above."
+    return 1
+  fi
+  return $status
+}
+
 cmd_upgrade() {
   local dry_run=false
   local do_resleeve=""  # "" = use default, "yes" = forced, "no" = suppressed
@@ -1352,7 +1474,7 @@ cmd_upgrade() {
 
   if [[ -n "$target_liberators" ]]; then
     # --- Targeted upgrade: run _upgrade() on specified liberators only ---
-    local failed=0
+    local failed=0 failed_hooks=""
     # Split comma-separated list
     IFS=',' read -ra targets <<< "$target_liberators"
     for lib in "${targets[@]}"; do
@@ -1373,7 +1495,7 @@ cmd_upgrade() {
         else
           if ! liberator_upgrade "$lib"; then
             molt_error "Upgrade failed: $lib"
-            failed=1
+            failed_hooks="${failed_hooks:+$failed_hooks, }$lib"
           fi
         fi
       else
@@ -1381,19 +1503,7 @@ cmd_upgrade() {
       fi
     done
 
-    if [[ "$do_resleeve" == "yes" ]]; then
-      echo ""
-      if $dry_run; then
-        molt_info "Dry run — showing what resleeve would do:"
-        echo ""
-        cmd_resleeve --dry-run
-      else
-        molt_info "Running resleeve..."
-        echo ""
-        cmd_resleeve
-      fi
-    fi
-
+    _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks" || failed=1
     return $failed
   fi
 
@@ -1411,7 +1521,7 @@ cmd_upgrade() {
     liberators="$(liberator_list)"
   fi
 
-  local upgrade_count=0
+  local upgrade_count=0 failed_hooks=""
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
     if ! liberator_load "$lib" 2>/dev/null; then
@@ -1420,8 +1530,9 @@ cmd_upgrade() {
     if liberator_has_upgrade "$lib"; then
       if $dry_run; then
         echo "  $lib: WOULD UPGRADE"
-      else
-        liberator_upgrade "$lib" || molt_warn "Upgrade hook failed: $lib — continuing"
+      elif ! liberator_upgrade "$lib"; then
+        molt_error "Upgrade hook failed: $lib — continuing"
+        failed_hooks="${failed_hooks:+$failed_hooks, }$lib"
       fi
       upgrade_count=$((upgrade_count + 1))
     fi
@@ -1431,19 +1542,8 @@ cmd_upgrade() {
     molt_info "No liberators have upgrade hooks."
   fi
 
-  # 7. Resleeve (unless suppressed)
-  if [[ "$do_resleeve" == "yes" ]]; then
-    echo ""
-    if $dry_run; then
-      molt_info "Dry run — showing what resleeve would do:"
-      echo ""
-      cmd_resleeve --dry-run
-    else
-      molt_info "Running resleeve..."
-      echo ""
-      cmd_resleeve
-    fi
-  fi
+  # 7. Resleeve (unless suppressed), then the verdict
+  _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks"
 }
 
 # --- Maintain ---
@@ -1508,8 +1608,10 @@ cmd_maintain() {
   fi
 
   # --- Full maintain: run _maintain() on all enabled liberators ---
-  local maintain_count=0
-  local failed=0
+  # A failed hook is reported and the rest still run, but maintain exits
+  # non-zero: it used to warn, say maintenance was complete and exit 0, which
+  # is how kovacs's failed doom sync passed (issue 0013).
+  local maintain_count=0 failed_hooks=""
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
     if ! liberator_load "$lib" 2>/dev/null; then
@@ -1518,11 +1620,9 @@ cmd_maintain() {
     if liberator_has_maintain "$lib"; then
       if $dry_run; then
         echo "  $lib: WOULD MAINTAIN"
-      else
-        if ! liberator_maintain "$lib"; then
-          molt_warn "Maintain hook failed: $lib — continuing"
-          failed=1
-        fi
+      elif ! liberator_maintain "$lib"; then
+        molt_error "Maintain hook failed: $lib — continuing"
+        failed_hooks="${failed_hooks:+$failed_hooks, }$lib"
       fi
       maintain_count=$((maintain_count + 1))
     fi
@@ -1532,11 +1632,11 @@ cmd_maintain() {
     molt_info "No liberators have maintain hooks."
   elif ! $dry_run; then
     echo ""
-    if [[ "$failed" -eq 0 ]]; then
-      molt_info "System maintenance complete."
-    else
-      molt_warn "Maintenance complete with warnings. Review above."
+    if [[ -n "$failed_hooks" ]]; then
+      molt_error "Maintenance incomplete: the maintain hook failed for $failed_hooks. Review the errors above."
+      return 1
     fi
+    molt_info "System maintenance complete."
   fi
 }
 

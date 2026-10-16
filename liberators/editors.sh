@@ -76,7 +76,6 @@ editors_doom_profile_stale() {
   [[ ! -f "$doom_local/etc/@/init.$v.el" ]]
 }
 
-# major.minor as Doom names it: 31.1 -> 31.1, 31.0.91 -> 31.0
 # emacs-plus built --with-imagemagick hard-links libMagickWand/libMagickCore by
 # exact soname, and imagemagick bumps that soname often and in both directions.
 # Every bump then breaks Emacs at launch with a DYLD "Library not loaded" abort
@@ -109,8 +108,20 @@ editors_warn_emacs_imagemagick() {
   return 0
 }
 
+# The running Emacs's full version, as Doom records it: 30.2, 31.0.91. Every
+# question about which Emacs is running comes here. MOLT_EMACS_VERSION stands
+# in for it in tests.
+_editors_emacs_version() {
+  if [[ -n "${MOLT_EMACS_VERSION:-}" ]]; then
+    echo "$MOLT_EMACS_VERSION"
+  else
+    emacs -Q --batch --eval '(princ emacs-version)' 2>/dev/null
+  fi
+}
+
+# major.minor as Doom names it: 31.1 -> 31.1, 31.0.91 -> 31.0
 editors_emacs_series() {
-  emacs --version 2>/dev/null | head -1 | awk '{print $3}' | cut -d. -f1,2
+  _editors_emacs_version | cut -d. -f1,2
 }
 
 editors_check() {
@@ -246,6 +257,53 @@ editors_install() {
   molt_info "Liberator complete: editors"
 }
 
+# --- Doom sync ----------------------------------------------------------------
+# doom sync asks "Installed packages must be rebuilt. Do so now?" when the
+# Emacs running it is not the one it last synced under. molt runs it with
+# nobody to answer, so the question reads EOF and doom fails. kovacs hit this
+# when a release upgrade took Emacs from 29.3 to 30.2 (issue 0013). Doom's -!
+# (--force) is no way round it: in bin/doom-sync it skips the rebuild along with
+# the question, and leaves the record naming the old Emacs.
+#
+# So molt asks the question first and passes --rebuild itself. Doom also asks
+# when its system hash changes, eg a moved doom-local-dir, which molt cannot
+# recompute; that run still fails, and now says so.
+
+# The Emacs version Doom recorded at its last sync. Doom writes
+# ("30.2" . "<system hash>") to $DOOMLOCALDIR/etc/sync. Prints nothing when
+# Doom has no record yet, and returns non-zero when it has one molt cannot read.
+_editors_doom_synced_version() {
+  local sync_file="${DOOMLOCALDIR:-$HOME/.config/emacs/.local}/etc/sync" version
+  [[ -f "$sync_file" ]] || return 0
+  version="$(sed -n '1s/^("\([^"]*\)".*/\1/p' "$sync_file")" || return 1
+  [[ -n "$version" ]] || return 1
+  echo "$version"
+}
+
+# Runs doom sync with the arguments given, adding --rebuild when the Emacs has
+# changed since Doom last synced. Doom's output, errors included, goes to the
+# terminal. Returns doom's exit status. When molt cannot make the comparison it
+# says so, rather than letting the run fall back to Doom's unanswerable question.
+_editors_doom_sync() {
+  local synced running
+  local args=(sync "$@")
+  if ! synced="$(_editors_doom_synced_version)"; then
+    molt_warn "editors: Doom's sync record names no Emacs version, so molt cannot tell whether every package must be rebuilt"
+    synced=""
+  fi
+  if [[ -n "$synced" ]]; then
+    running="$(_editors_emacs_version)" || running=""
+    if [[ -z "$running" ]]; then
+      molt_warn "editors: the running Emacs's version cannot be read, so molt cannot tell whether every package must be rebuilt"
+    elif [[ "$synced" != "$running" ]]; then
+      molt_info "editors: Doom last synced under Emacs $synced and this is $running, so every package is rebuilt"
+      args+=(--rebuild)
+    fi
+  fi
+  molt_info "Running doom ${args[*]}..."
+  "$HOME/.config/emacs/bin/doom" "${args[@]}"
+}
+
 editors_upgrade() {
   # Pull Doom Emacs config repo (reuse editors_repo for discovery)
   local doom_repo
@@ -261,24 +319,29 @@ editors_upgrade() {
   fi
 
   # Sync Doom packages if doom binary exists
-  if [[ -f "$HOME/.config/emacs/bin/doom" ]]; then
-    molt_info "Running doom sync..."
-    "$HOME/.config/emacs/bin/doom" sync 2>/dev/null || molt_warn "doom sync had warnings (review above)"
+  if [[ -f "$HOME/.config/emacs/bin/doom" ]] && ! _editors_doom_sync; then
+    molt_error "editors: doom sync failed -- review Doom's output above"
+    return 1
   fi
 }
 
 editors_maintain() {
-  # Upgrade Doom Emacs framework itself (heavier than doom sync).
-  # Uses --force to auto-accept prompts (doom's y-or-n-p reads from
-  # Emacs's internal stdin, not the terminal, so interactive prompts
-  # fail when called from a shell script).
+  # Upgrade Doom Emacs framework itself (heavier than doom sync). --force is
+  # Doom's global -!, which suppresses its prompts so that it can run with
+  # nobody to answer them. Whether a changed Emacs's rebuild then happens
+  # depends on the path the upgrade takes, so the sync below checks Doom's own
+  # record and rebuilds when it is still due (see _editors_doom_sync).
+  local failed=0
   if [[ ! -f "$HOME/.config/emacs/bin/doom" ]]; then
     molt_debug "Doom binary not found — skipping doom upgrade"
     return 0
   fi
 
   molt_info "Running doom upgrade (this may take a while)..."
-  "$HOME/.config/emacs/bin/doom" upgrade --force || molt_warn "doom upgrade had warnings (review above)"
+  if ! "$HOME/.config/emacs/bin/doom" upgrade --force; then
+    molt_error "editors: doom upgrade failed -- review its output above"
+    failed=1
+  fi
 
   # `doom upgrade` short-circuits on "Doom is already up-to-date!" and returns
   # BEFORE the package sync. So when Doom itself is current but a previous run
@@ -292,12 +355,16 @@ editors_maintain() {
   # skipped the remaining ten every time; only a hand-run `doom sync -u`
   # recovered them.
   #
-  # So always sync afterwards. It is cheap when there is nothing to do, and it
-  # is the only step that actually reconciles the package set.
-  molt_info "Running doom sync -u..."
-  "$HOME/.config/emacs/bin/doom" sync -u || molt_warn "doom sync -u had warnings (review above)"
+  # So always sync afterwards, whether or not the upgrade succeeded. It is cheap
+  # when there is nothing to do, and it is the only step that actually
+  # reconciles the package set.
+  if ! _editors_doom_sync -u; then
+    molt_error "editors: doom sync -u failed -- review Doom's output above"
+    failed=1
+  fi
 
   _editors_warn_stale_straight_links
+  return $failed
 }
 
 # Warn when straight.el has left dangling links in the ACTIVE build tree.
@@ -327,7 +394,7 @@ _editors_warn_stale_straight_links() {
   # Only the build dir for the running Emacs matters. Dirs for older versions
   # are orphaned and nothing loads them.
   local version build
-  version="${MOLT_EMACS_VERSION:-$(emacs --batch --eval '(princ emacs-version)' 2>/dev/null)}"
+  version="$(_editors_emacs_version)" || version=""
   [[ -n "$version" ]] || return 0
   build="$straight/build-${version}"
   [[ -d "$build" ]] || return 0
