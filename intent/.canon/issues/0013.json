@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 13,
+  "slug": "doom-sync-cannot-answer-doom-s-rebuild-prompt-an",
+  "title": "doom sync cannot answer Doom's rebuild prompt, and molt reports the failure as a warning",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-16",
+  "reporter": "Matthew Sinclair",
+  "body": "Reported by kovacs-sysadm on 16 Oct. kovacs's release upgrade from Ubuntu 24.04 to 26.04 moved Emacs from 29.3 to 30.2. On the next `molt upgrade && molt maintain`, `doom sync` asked \"Installed packages must be rebuilt. Do so now?\", read EOF because nobody was there to answer, and failed. Molt printed a warning, then \"Sleeve ready. Welcome back.\" Doom's packages stayed byte-compiled for 29.3 until kovacs-sysadm ran `doom sync --rebuild` by hand.\n\nThree layers turned the failure into a pass:\n\n- `editors_upgrade` ran `doom sync 2>/dev/null || molt_warn ...`, so Doom's error was thrown away and the hook returned 0. `editors_maintain` did the same with `doom upgrade --force` and `doom sync -u`.\n- `molt upgrade` reported a failed upgrade hook as a warning and went on to resleeve, which said the sleeve was ready.\n- `molt maintain` said \"Maintenance complete with warnings\" and exited 0 when a hook failed.\n\nDoom's own `-!`/`--force` is no fix. In `bin/doom-sync` (Doom 59cdaa32) it skips the rebuild along with the prompt, and leaves the sync record naming the old Emacs.\n\nFix: molt reads the Emacs version Doom recorded at its last sync (`$DOOMLOCALDIR/etc/sync`) and passes `--rebuild` when it is not the running Emacs, and warns when it cannot make that comparison. Doom's output is kept. A failed doom command fails the editors hook, and a failed hook fails `molt upgrade` and `molt maintain`: each names it and exits non-zero, and the resleeve after an upgrade does not say \"Sleeve ready\" over it. The resleeve body moved into `lib/molt.sh` as `molt_resleeve` and checks its own lookups, because upgrade calls it where `set -e` does not apply.\n"
+}

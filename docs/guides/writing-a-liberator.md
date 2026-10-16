@@ -47,6 +47,7 @@ myapp_maintain() {
 
 - **`_upgrade()`** = config sync (fast, safe, daily) — pull repos, `doom sync`
 - **`_maintain()`** = system maintenance (slow, heavier, weekly/monthly) — `brew upgrade`, `doom upgrade`
+- Both return non-zero when what they ran failed. `molt upgrade` and `molt maintain` name the hook, run the rest and exit 1, and the resleeve after a failed upgrade hook does not call the sleeve ready. A hook that warns and returns 0 has them report success over the failure (issue 0013).
 
 ## Rules
 

@@ -2,11 +2,11 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 35afc8cd-c16d-40d3-b609-4016a019d5ed
-heartbeat_at: 2026-10-15 18:16Z
-status: paused
-focus: "back at home; nothing in flight"
-claims: []
+session_id: 366e0639-7ba1-415e-a92d-acb9d7aaa54a
+heartbeat_at: 2026-10-16 12:57Z
+status: active
+focus: "fixing kovacs-sysadm's Molt bugs: doom sync rebuild (0013), Tactile schema (0014)"
+claims: [ISSUE:0013, ISSUE:0014]
 ---
 
 # Validation Claude (vc)

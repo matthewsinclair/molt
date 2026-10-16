@@ -52,3 +52,100 @@ _make_straight() {
     [ "$status" -eq 0 ]
     [ -z "$output" ]
 }
+
+# --- doom sync (issue 0013) ---
+
+# A doom that records each call and fails the subcommand FAKE_DOOM_FAIL names,
+# saying so on stderr as Doom would, in a HOME and DOOMLOCALDIR of the test's
+# own. %q keeps one argument with a space in it apart from two arguments.
+_fake_doom() {
+    export HOME="$BATS_TEST_TMPDIR/home"
+    export DOOMLOCALDIR="$HOME/.config/emacs/.local"
+    mkdir -p "$HOME/.config/emacs/bin" "$DOOMLOCALDIR/etc"
+    cat > "$HOME/.config/emacs/bin/doom" <<'DOOM'
+#!/usr/bin/env bash
+{ printf 'doom'; printf ' %q' "$@"; echo; } >> "$HOME/doom.calls"
+if [ "$1" = "${FAKE_DOOM_FAIL:-}" ]; then
+    echo "doom: $1 failed" >&2
+    exit 1
+fi
+DOOM
+    chmod +x "$HOME/.config/emacs/bin/doom"
+}
+
+# Doom's record of the Emacs it last synced under, in Doom's own format.
+_doom_synced_under() {
+    printf '("%s" . "bfd10121412b33d1dd5a0109e56d1cb6")' "$1" > "$DOOMLOCALDIR/etc/sync"
+}
+
+# kovacs, 16 Oct: Emacs went from 29.3 to 30.2, doom sync asked whether to
+# rebuild, read EOF and failed.
+@test "doom sync rebuilds when Emacs has changed since Doom last synced" {
+    _fake_doom
+    _doom_synced_under "29.3"
+    load_liberator editors
+    MOLT_EMACS_VERSION="30.2" run _editors_doom_sync
+    assert_success
+    [ "$(cat "$HOME/doom.calls")" = "doom sync --rebuild" ]
+}
+
+@test "doom sync does not rebuild when Emacs is unchanged, or when Doom has no record yet" {
+    _fake_doom
+    load_liberator editors
+    MOLT_EMACS_VERSION="30.2" run _editors_doom_sync -u
+    assert_success
+    _doom_synced_under "30.2"
+    MOLT_EMACS_VERSION="30.2" run _editors_doom_sync -u
+    assert_success
+    [ "$(cat "$HOME/doom.calls")" = "$(printf 'doom sync -u\ndoom sync -u')" ]
+}
+
+@test "doom sync says so when Doom's record names no Emacs version" {
+    _fake_doom
+    printf 'not a record' > "$DOOMLOCALDIR/etc/sync"
+    load_liberator editors
+    MOLT_EMACS_VERSION="30.2" run _editors_doom_sync
+    assert_success
+    assert_output_contains "names no Emacs version"
+    [ "$(cat "$HOME/doom.calls")" = "doom sync" ]
+}
+
+# kovacs, 16 Oct: the hook ran doom sync with its stderr thrown away, warned and
+# returned 0.
+@test "the editors upgrade hook rebuilds after an Emacs change, and fails with Doom's own error" {
+    _fake_doom
+    _doom_synced_under "29.3"
+    load_liberator editors
+    MOLT_EMACS_VERSION="30.2" run editors_upgrade
+    assert_success
+    export FAKE_DOOM_FAIL=sync
+    MOLT_EMACS_VERSION="30.2" run editors_upgrade
+    assert_failure
+    assert_output_contains "doom: sync failed"
+    assert_output_contains "editors: doom sync failed"
+    [ "$(cat "$HOME/doom.calls")" = "$(printf 'doom sync --rebuild\ndoom sync --rebuild')" ]
+}
+
+@test "the editors maintain hook fails when doom upgrade fails, and still syncs" {
+    _fake_doom
+    _doom_synced_under "29.3"
+    load_liberator editors
+    export FAKE_DOOM_FAIL=upgrade
+    MOLT_EMACS_VERSION="30.2" run editors_maintain
+    assert_failure
+    assert_output_contains "doom: upgrade failed"
+    assert_output_contains "editors: doom upgrade failed"
+    [ "$(cat "$HOME/doom.calls")" = "$(printf 'doom upgrade --force\ndoom sync -u --rebuild')" ]
+}
+
+@test "the editors maintain hook fails when doom sync -u fails" {
+    _fake_doom
+    load_liberator editors
+    MOLT_EMACS_VERSION="30.2" run editors_maintain
+    assert_success
+    export FAKE_DOOM_FAIL=sync
+    MOLT_EMACS_VERSION="30.2" run editors_maintain
+    assert_failure
+    assert_output_contains "doom: sync failed"
+    assert_output_contains "editors: doom sync -u failed"
+}
