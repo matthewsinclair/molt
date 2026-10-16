@@ -1,12 +1,12 @@
 ---
-verblock: "16 Oct 2026:v0.29: Matthew Sinclair - the Tactile URL check needs another network"
+verblock: "16 Oct 2026:v0.30: Matthew Sinclair - EOD fold for 16 Oct; done 022"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Nothing in flight.** Finished work lives in `done.md` (021 is the status line and the resleeve fixes), the closed issues (`intent issues list --kind all`) and git.
+**Nothing in flight.** Finished work lives in `done.md` (022 is the Doom and Tactile fixes kovacs found), the closed issues (`intent issues list --kind all`) and git.
 
 TODO:
 
