@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "366e0639-7ba1-415e-a92d-acb9d7aaa54a",
-    "heartbeat_at": "2026-10-16T13:40:09.987Z",
+    "heartbeat_at": "2026-10-16T13:44:18.362Z",
     "status": "active",
     "focus": "0013 and 0014 landed (c5e9c11), checked on kovacs; 0015 and 0016 wait on hv",
     "claims": [],
@@ -264,9 +264,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 4,
-      "text": "**Confirm the Tactile install hint's URL live** (issue 0014): extensions.gnome.org resolved from neither rhadamanth (unsandboxed) nor kovacs on 16 Oct, while github.com did. From a plain terminal, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip.",
+      "text": "**Confirm the Tactile install hint's URL live** (issue 0014). Plain DNS for extensions.gnome.org fails from here: on 16 Oct it resolved on neither rhadamanth nor kovacs, and timed out when rhadamanth asked 1.1.1.1 and 8.8.8.8 directly, though both answer github.com; Cloudflare's DNS over HTTPS answers it (54.221.220.94, TTL 60). From another network, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip. Here it needs `--resolve extensions.gnome.org:443:<address>`, which Claude Code's auto-mode classifier refused to vc, so it is hv's to run.",
       "state": "live",
-      "recorded_at": "2026-10-16T13:40:09.956Z"
+      "recorded_at": "2026-10-16T13:40:09.956Z",
+      "edited_at": "2026-10-16T13:48:48.130Z"
     }
   ],
   "messages": []

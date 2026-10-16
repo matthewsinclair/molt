@@ -1,5 +1,5 @@
 ---
-verblock: "16 Oct 2026:v0.28: Matthew Sinclair - issues 0013 and 0014 landed; 0015 and 0016 wait on hv"
+verblock: "16 Oct 2026:v0.29: Matthew Sinclair - the Tactile URL check needs another network"
 ---
 
 # Work In Progress
@@ -43,7 +43,7 @@ hv, 15 Oct: "a weekend project, not tonight". gyges is at home in the UK. On 15 
 
 ### Other
 
-- **Confirm the Tactile install hint's URL live** (issue 0014). On 16 Oct extensions.gnome.org resolved from neither rhadamanth (even unsandboxed) nor kovacs, while github.com did. From a plain terminal, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should answer 302 with a versioned zip. It is GNOME Shell's own installer endpoint, and it appears only in the hint printed when Tactile is missing.
+- **Confirm the Tactile install hint's URL live** (issue 0014). Plain DNS for extensions.gnome.org fails from here. On 16 Oct the name resolved on neither rhadamanth (even unsandboxed) nor kovacs, and timed out when rhadamanth asked 1.1.1.1 and 8.8.8.8 directly, though both answer github.com. Cloudflare's DNS over HTTPS answers it (CNAME `ingress.openshift.gnome.org`, 54.221.220.94, TTL 60), so something on this network's path drops DNS for that name. From another network, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should answer 302 with a versioned zip. On this one it needs `--resolve extensions.gnome.org:443:<address>`, with the address looked up again over DNS over HTTPS; Claude Code's auto-mode classifier refused that to vc, so it is hv's to run. It is GNOME Shell's own installer endpoint, and it appears only in the hint printed when Tactile is missing.
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
 - **Sidecars record the template path as of the last render, and nothing refreshes it.** `~/.ssh/config.molt-rendered` still names `~/Devel/prj/Molt-matts/config/ssh/config.tmpl`, the pre-move path, which no longer exists; starship's names `~/Devel/cfg/...`. The lowercase case-folding seen earlier is gone from both. Informational while the digest recomputes the path from its `source` argument.
