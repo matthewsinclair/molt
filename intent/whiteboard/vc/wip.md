@@ -3,10 +3,10 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 366e0639-7ba1-415e-a92d-acb9d7aaa54a
-heartbeat_at: 2026-10-16 12:57Z
+heartbeat_at: 2026-10-16 13:40Z
 status: active
-focus: "fixing kovacs-sysadm's Molt bugs: doom sync rebuild (0013), Tactile schema (0014)"
-claims: [ISSUE:0013, ISSUE:0014]
+focus: "0013 and 0014 landed (c5e9c11), checked on kovacs; 0015 and 0016 wait on hv"
+claims: []
 ---
 
 # Validation Claude (vc)
@@ -19,6 +19,7 @@ _(none)_
 
 - When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)
 - **Weekend, when hv starts it (gyges):** deploy the Gtools Sinclair estate on gyges, visible inside the house; declare gyges' [terminal] bg_color from its live iTerm2 profile and regenerate its ssh wrapper (nothing checks the rendered wrapper, so molt upgrade will not). Start Tailscale first: gyges.lan did not resolve on 15 Oct. Changes on gyges go through gyges-infra; Gtools is gtools-vc's pen. See wip.md. (edited)
+- **Confirm the Tactile install hint's URL live** (issue 0014): extensions.gnome.org resolved from neither rhadamanth (unsandboxed) nor kovacs on 16 Oct, while github.com did. From a plain terminal, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip.
 
 ## Holds
 
@@ -41,6 +42,7 @@ _(none)_
 - **After a config repo moves, every new shell starts with no zsh config until `molt resleeve` runs**, because `~/.zshenv` dangles. That includes an agent's next Bash call, which then has no `MOLT_PRJ_DIR` and so no `MOLT_CFG_DIR`. Run the mv and the resleeve in one command, with `MOLT_PRJ_DIR` set explicitly and molt called by absolute path.
 - **`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.
 - **Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-sysadm (not kovacs-infra, hv 15 Oct). gyges is at home in the UK: while hv travels, ssh gyges cannot resolve gyges.lan, which is distance, not a fault. (edited)
+- **Doom's `-!`/`--force` suppresses the rebuild along with the prompt** (`bin/doom-sync`, Doom 59cdaa32): after an Emacs version change it neither asks nor rebuilds, and leaves `$DOOMLOCALDIR/etc/sync` naming the old Emacs. Never answer a doom prompt with --force. Molt compares Doom's recorded version with the running Emacs and passes `--rebuild` itself (`_editors_doom_sync`, issue 0013).
 
 ## Decisions
 

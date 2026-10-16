@@ -5,13 +5,10 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "366e0639-7ba1-415e-a92d-acb9d7aaa54a",
-    "heartbeat_at": "2026-10-16T12:57:06.543Z",
+    "heartbeat_at": "2026-10-16T13:40:09.987Z",
     "status": "active",
-    "focus": "fixing kovacs-sysadm's Molt bugs: doom sync rebuild (0013), Tactile schema (0014)",
-    "claims": [
-      "ISSUE:0013",
-      "ISSUE:0014"
-    ],
+    "focus": "0013 and 0014 landed (c5e9c11), checked on kovacs; 0015 and 0016 wait on hv",
+    "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
     "migrated_at": "2026-09-21T15:40:58.246Z"
@@ -254,6 +251,22 @@
       "state": "live",
       "recorded_at": "2026-10-15T13:22:22.502Z",
       "edited_at": "2026-10-15T18:16:26.793Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 17,
+      "text": "**Doom's `-!`/`--force` suppresses the rebuild along with the prompt** (`bin/doom-sync`, Doom 59cdaa32): after an Emacs version change it neither asks nor rebuilds, and leaves `$DOOMLOCALDIR/etc/sync` naming the old Emacs. Never answer a doom prompt with --force. Molt compares Doom's recorded version with the running Emacs and passes `--rebuild` itself (`_editors_doom_sync`, issue 0013).",
+      "state": "live",
+      "recorded_at": "2026-10-16T13:39:21.532Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 4,
+      "text": "**Confirm the Tactile install hint's URL live** (issue 0014): extensions.gnome.org resolved from neither rhadamanth (unsandboxed) nor kovacs on 16 Oct, while github.com did. From a plain terminal, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip.",
+      "state": "live",
+      "recorded_at": "2026-10-16T13:40:09.956Z"
     }
   ],
   "messages": []

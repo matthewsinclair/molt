@@ -1,5 +1,5 @@
 ---
-verblock: "15 Oct 2026:v0.27: Matthew Sinclair - EOD fold; gyges items grouped for the weekend"
+verblock: "16 Oct 2026:v0.28: Matthew Sinclair - issues 0013 and 0014 landed; 0015 and 0016 wait on hv"
 ---
 
 # Work In Progress
@@ -27,6 +27,9 @@ How a sleeve moves its config repos, for any later one:
 
 - **Molt-matts `e3af373` (pushed) carries a `Co-Authored-By: Claude` and a `Claude-Session:` trailer**, against the no-attribution rule. Rewriting pushed history is hv's call; vc has not touched it.
 - **The fleet sweep `intent claude upgrade --apply --skip-settings` is pending.** `intent doctor` on 15 Oct advised that CLAUDE.md and AGENTS.md are behind Intent 3.2.3's templates.
+- **Issue 0015: what an offline `molt upgrade` should do.** A failed git pull (framework, user config, Doom config) is reported as "skipped", with a cause that cannot be true: an up-to-date pull exits 0. git's own reason goes to /dev/null. Making it fail needs a ruling: either stop the upgrade, or run the hooks on the trees it has and fail at the end.
+- **Issue 0016, a separate pass if wanted:** `molt_error` writes to stdout, so a captured call's diagnostics never reach the user, eg the search-path help when no config repo is found. Sending error lines to stderr changes what every captured call collects.
+- **`molt upgrade editors` on kovacs, when hv chooses.** The plain-sync path of 0013 has not run live there. Doom's record and the running Emacs both read 30.2, so it should run `doom sync` without `--rebuild`, show Doom's output and exit 0.
 
 ## Upcoming Work
 
@@ -40,6 +43,7 @@ hv, 15 Oct: "a weekend project, not tonight". gyges is at home in the UK. On 15 
 
 ### Other
 
+- **Confirm the Tactile install hint's URL live** (issue 0014). On 16 Oct extensions.gnome.org resolved from neither rhadamanth (even unsandboxed) nor kovacs, while github.com did. From a plain terminal, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should answer 302 with a versioned zip. It is GNOME Shell's own installer endpoint, and it appears only in the hint printed when Tactile is missing.
 - **Confirm iTerm2 keeps session GUIDs across a restart.** Per-session zsh history (Molt-matts `389ef6f`) is keyed on them, and only iTerm2's saved window state suggests they survive. iTerm2 on rhadamanth last restarted 2026-09-22 21:40Z; whether the test was run then is not known, and a passive look at the history files (one born before that restart and written after it, within the same minute) proves nothing. Test at the next relaunch: run a distinctive command in one tab, quit and relaunch iTerm2, then press up-arrow in that tab (present) and in another (absent). If restored sessions get new GUIDs, key the files on window position instead.
 - **Claude Code's iTerm2 triggers are not in the Molt dynamic profile** (still none, 23 Sep). If wanted, add them to `config/iterm2/molt-profile.json` by hand so the change shows in git.
 - **Sidecars record the template path as of the last render, and nothing refreshes it.** `~/.ssh/config.molt-rendered` still names `~/Devel/prj/Molt-matts/config/ssh/config.tmpl`, the pre-move path, which no longer exists; starship's names `~/Devel/cfg/...`. The lowercase case-folding seen earlier is gone from both. Informational while the digest recomputes the path from its `source` argument.
