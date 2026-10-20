@@ -184,9 +184,9 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
 | dev-tools      | CLI tools (bat, rg, fd, fzf) + mise             | linux, macos |
 | ssh            | SSH key detection, config rendering + fragments | linux, macos |
-| utilz          | Utilz framework, bats-core, `~/bin` symlinks    | linux, macos |
+| utilz          | Utilz, from a checkout or Homebrew, per sleeve  | linux, macos |
 | brew           | Homebrew maintenance and upgrade                | macos        |
-| intent         | Intent framework config and linking             | linux, macos |
+| intent         | Intent from Homebrew, what PATH and gate run    | linux, macos |
 | pplr           | Pplr framework config and linking               | linux, macos |
 | web            | Web browser config and linking                  | linux, macos |
 
@@ -217,6 +217,8 @@ os = ["linux"]
 ```
 
 Instance-specific manifests can override the repo-level one. MOLT checks `instances/{hostname}/molt.toml` first, then falls back to the repo root.
+
+A liberator may also read keys of its own from its entry. `utilz` takes `source = "checkout"`, the default, or `source = "brew"`.
 
 ## Your config repo layout
 

@@ -34,41 +34,14 @@ _intent_gate_root() {
   head -n 1 "$file"
 }
 
-# First line of a binary's --version, captured then trimmed (no pipe to head).
-_intent_version() {
-  local v
-  v="$("$1" --version 2>/dev/null)" || v="version unknown"
-  echo "${v%%$'\n'*}"
-}
-
 # Everything standing between this machine and "Homebrew's Intent is what
-# runs", one fault per line. No output means nothing to report.
+# runs", one fault per line. No output means nothing to report. Homebrew's half
+# is the check every Homebrew liberator shares; the gate home is Intent's own.
 _intent_faults() {
-  local prefix
-  if ! prefix="$(brew --prefix 2>/dev/null)"; then
-    echo "Homebrew not found; Intent installs with: brew install $MOLT_INTENT_FORMULA"
-    return 0
-  fi
-  if ! brew list --versions intent &>/dev/null; then
-    echo "not installed; run: brew install $MOLT_INTENT_FORMULA"
-    return 0
-  fi
+  molt_brew_faults "$MOLT_INTENT_FORMULA" intent || return 0
 
-  local brew_intent="$prefix/bin/intent"
-  if [[ ! -x "$brew_intent" ]]; then
-    echo "installed but not linked into $prefix/bin"
-    return 0
-  fi
-
-  local on_path
-  on_path="$(command -v intent 2>/dev/null)" || on_path=""
-  if [[ -z "$on_path" ]]; then
-    echo "no intent on PATH: $prefix/bin is not on it"
-  elif [[ "$(_molt_realpath "$on_path")" != "$(_molt_realpath "$brew_intent")" ]]; then
-    echo "PATH runs $on_path ($(_intent_version "$on_path")), not Homebrew's $brew_intent"
-  fi
-
-  local root
+  local prefix root
+  prefix="$(brew --prefix)"
   if ! root="$(_intent_gate_root)"; then
     echo "the pre-commit gate has no install: $(_intent_home_file) is missing; run: intent bootstrap"
   elif [[ ! -d "$root/lib/templates" ]]; then
@@ -78,36 +51,13 @@ _intent_faults() {
   fi
 }
 
-# Log each fault through $1 with the lead $2. True when there are none.
-_intent_report_faults() {
-  local log="$1" lead="$2" faults fault
-  faults="$(_intent_faults)"
-  [[ -z "$faults" ]] && return 0
-  while IFS= read -r fault; do
-    "$log" "${lead}intent: $fault"
-  done <<<"$faults"
-  return 1
-}
-
 intent_check() {
-  _intent_report_faults molt_warn "" || return 1
-  molt_info "intent: Homebrew's $(_intent_version "$(brew --prefix)/bin/intent") is what PATH and the pre-commit gate run"
+  molt_report_faults molt_warn "" intent "$(_intent_faults)" || return 1
+  molt_info "intent: Homebrew's $(molt_cmd_version "$(brew --prefix)/bin/intent") is what PATH and the pre-commit gate run"
 }
 
 intent_install() {
-  local prefix
-  if ! prefix="$(brew --prefix 2>/dev/null)"; then
-    molt_error "Intent installs from Homebrew, and brew is not on PATH"
-    return 1
-  fi
-
-  if ! brew list --versions intent &>/dev/null; then
-    molt_info "Installing Intent: brew install $MOLT_INTENT_FORMULA"
-    brew install "$MOLT_INTENT_FORMULA" || {
-      molt_error "brew install $MOLT_INTENT_FORMULA failed"
-      return 1
-    }
-  fi
+  molt_brew_install "$MOLT_INTENT_FORMULA" || return 1
 
   # Only a MISSING or DANGLING gate home is repaired. bootstrap repoints
   # whatever is there, and a gate deliberately pointed at another install is
@@ -116,7 +66,7 @@ intent_install() {
   local root
   if ! root="$(_intent_gate_root)" || [[ ! -d "$root/lib/templates" ]]; then
     molt_info "Pointing Intent's pre-commit gate at the Homebrew install: intent bootstrap"
-    "$prefix/bin/intent" bootstrap || {
+    "$(brew --prefix)/bin/intent" bootstrap || {
       molt_error "intent bootstrap failed"
       return 1
     }
@@ -126,6 +76,6 @@ intent_install() {
 }
 
 intent_verify() {
-  _intent_report_faults molt_error "VERIFY FAIL: " || return 1
+  molt_report_faults molt_error "VERIFY FAIL: " intent "$(_intent_faults)" || return 1
   molt_info "Verified: Homebrew's Intent is what PATH and the pre-commit gate run"
 }

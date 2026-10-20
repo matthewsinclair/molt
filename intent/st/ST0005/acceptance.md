@@ -33,6 +33,26 @@ title: Utilz liberator: a checkout or Homebrew, per sleeve
 
 - AC005 (non-test) On kovacs, with its utilz entry set to brew, `molt doctor` check 6 passes and names Homebrew's utilz. -- satisfied: no
 
+### Group AT001
+
+_(no criteria in this group)_
+
+### Group AT002
+
+_(no criteria in this group)_
+
+### Group AT003
+
+_(no criteria in this group)_
+
+### Group AT004
+
+_(no criteria in this group)_
+
+### Group AT005
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -54,6 +74,26 @@ _(no tests in this group)_
 ### Group AC005
 
 _(no tests in this group)_
+
+### Group AT001
+
+- AT001 `test/liberators/utilz.bats` -- covers AC001 -- status: to-write
+
+### Group AT002
+
+- AT002 `test/liberators/utilz.bats` -- covers AC002 -- status: to-write
+
+### Group AT003
+
+- AT003 `test/liberators/utilz.bats` -- covers AC002 -- status: to-write
+
+### Group AT004
+
+- AT004 `test/liberators/utilz.bats` -- covers AC003 -- status: to-write
+
+### Group AT005
+
+- AT005 `test/liberators/utilz.bats` -- covers AC004 -- status: to-write
 
 ---
 

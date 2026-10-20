@@ -144,6 +144,58 @@ TOML
 }
 
 # ============================================================================
+# FAKE HOMEBREW
+# ============================================================================
+
+# A Homebrew prefix in the test directory holding one installed formula, and a
+# brew stub first on PATH that answers from it. Nothing reaches the real brew.
+# Usage: fake_brew_formula <name> <version> <command> [<utility>...]
+# The command is the formula's own, printing "<command>:<version>" for
+# --version; each utility is a symlink to it in the keg, as Utilz's are to its
+# dispatcher. All of them are linked into the prefix's bin, as the formula's
+# install_symlink does. Exports FAKE_PREFIX, FAKE_KEG (the keg's libexec) and
+# FAKE_LOG, where the stub records install and trust calls. The stub has no
+# trust gate until `touch "$FAKE_PREFIX/.gate"`; trust.json is its trust store
+# and starts empty.
+fake_brew_formula() {
+    local name="$1" version="$2" cmd="$3" util
+    shift 3
+    export FAKE_PREFIX="$BATS_TEST_TMPDIR/brew"
+    export FAKE_LOG="$BATS_TEST_TMPDIR/calls.log"
+    export FAKE_KEG="$FAKE_PREFIX/Cellar/$name/$version/libexec"
+    mkdir -p "$BATS_TEST_TMPDIR/stub" "$FAKE_PREFIX/bin" "$FAKE_PREFIX/opt" "$FAKE_KEG/bin"
+    ln -s "../Cellar/$name/$version" "$FAKE_PREFIX/opt/$name"
+    printf '#!/bin/bash\n[[ "$1" == --version ]] && echo "%s:%s"\n' "$cmd" "$version" > "$FAKE_KEG/bin/$cmd"
+    chmod +x "$FAKE_KEG/bin/$cmd"
+    ln -s "../Cellar/$name/$version/libexec/bin/$cmd" "$FAKE_PREFIX/bin/$cmd"
+    for util in "$@"; do
+        ln -s "$cmd" "$FAKE_KEG/bin/$util"
+        ln -s "../Cellar/$name/$version/libexec/bin/$util" "$FAKE_PREFIX/bin/$util"
+    done
+    touch "$FAKE_PREFIX/.installed"
+    echo '{"taps":[],"formulae":[]}' > "$FAKE_PREFIX/trust.json"
+    cat > "$BATS_TEST_TMPDIR/stub/brew" <<'EOF'
+#!/bin/bash
+case "$1" in
+  --prefix) echo "$FAKE_PREFIX" ;;
+  list)     [[ -e "$FAKE_PREFIX/.installed" ]] ;;
+  install)  echo "brew $*" >> "$FAKE_LOG"; touch "$FAKE_PREFIX/.installed" ;;
+  trust)
+    case "$2" in
+      --help)    [[ -e "$FAKE_PREFIX/.gate" ]] ;;
+      --json=v1) cat "$FAKE_PREFIX/trust.json" ;;
+      --formula) echo "brew $*" >> "$FAKE_LOG"
+                 printf '{"taps":[],"formulae":["%s"]}\n' "$3" > "$FAKE_PREFIX/trust.json" ;;
+      *)         exit 1 ;;
+    esac ;;
+  *)        exit 1 ;;
+esac
+EOF
+    chmod +x "$BATS_TEST_TMPDIR/stub/brew"
+    export PATH="$BATS_TEST_TMPDIR/stub:$FAKE_PREFIX/bin:$PATH"
+}
+
+# ============================================================================
 # ASSERTION HELPERS
 # ============================================================================
 

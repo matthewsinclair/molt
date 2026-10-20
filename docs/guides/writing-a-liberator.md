@@ -51,7 +51,7 @@ myapp_maintain() {
 
 ## Rules
 
-1. **Never install packages.** Check that prerequisites exist and fail with a hint if they're missing. The user installs packages; liberators handle configuration.
+1. **Never install packages, except a liberator's own subject from a Homebrew tap.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. The exception is a tool that is the liberator's subject and comes from a Homebrew tap, as Intent does and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves.
 
 2. **Use `molt_link` for static config.** It handles backup, mkdir, and idempotency.
 
@@ -128,22 +128,27 @@ myapp_verify() {
 
 ## Framework functions available to liberators
 
-| Function                      | Purpose                                                                                                                             |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `molt_link src dst`           | Symlink `src` to `dst`, backup existing, mkdir parent                                                                               |
-| `molt_link_healthy dst`       | True only when `dst` is a symlink that actually resolves. Use instead of `[[ -L ]]`, which passes on dangling links                 |
-| `molt_link_fault dst`         | Names the fault for messages: `is missing`, `is not a symlink`, `is a broken symlink` (or `resolves`)                               |
-| `molt_link_points_to dst src` | True when `dst` is a healthy symlink pointing at `src`. A link that resolves to the _wrong_ target still passes `molt_link_healthy` |
-| `molt_render tmpl dst`        | Render template via `envsubst` with instance vars                                                                                   |
-| `molt_install_config`         | Auto-pick render (`.tmpl`) or link (static)                                                                                         |
-| `molt_config_stale`           | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check`                   |
-| `molt_find_user_repo`         | Return path to the user's config repo                                                                                               |
-| `molt_platform`               | Return `linux` or `macos`                                                                                                           |
-| `molt_distro`                 | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                                                 |
-| `molt_arch`                   | Return architecture (eg `arm64`, `x86_64`)                                                                                          |
-| `molt_info msg`               | Print info message (prefixed with `Zen:`)                                                                                           |
-| `molt_warn msg`               | Print warning                                                                                                                       |
-| `molt_error msg`              | Print error                                                                                                                         |
+| Function                                   | Purpose                                                                                                                                                         |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `molt_link src dst`                        | Symlink `src` to `dst`, backup existing, mkdir parent                                                                                                           |
+| `molt_link_healthy dst`                    | True only when `dst` is a symlink that actually resolves. Use instead of `[[ -L ]]`, which passes on dangling links                                             |
+| `molt_link_fault dst`                      | Names the fault for messages: `is missing`, `is not a symlink`, `is a broken symlink` (or `resolves`)                                                           |
+| `molt_link_points_to dst src`              | True when `dst` is a healthy symlink pointing at `src`. A link that resolves to the _wrong_ target still passes `molt_link_healthy`                             |
+| `molt_render tmpl dst`                     | Render template via `envsubst` with instance vars                                                                                                               |
+| `molt_install_config`                      | Auto-pick render (`.tmpl`) or link (static)                                                                                                                     |
+| `molt_config_stale`                        | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check`                                               |
+| `molt_find_user_repo`                      | Return path to the user's config repo                                                                                                                           |
+| `molt_liberator_field name key`            | This sleeve's value of `key` on the `[[liberator]]` entry `name` in molt.toml. Fails when there is none                                                         |
+| `molt_brew_faults formula cmd`             | One line per fault between the sleeve and "Homebrew's `cmd` is what PATH runs", an untrusted formula included. Fails when nothing past the fault can be checked |
+| `molt_brew_install formula`                | `brew install` by full formula name, and `brew trust --formula` for an installed formula Homebrew does not trust                                                |
+| `molt_path_runs_fault cmd path label`      | Names what PATH runs for `cmd` when it is not `path`                                                                                                            |
+| `molt_report_faults log lead label faults` | Logs each line of `faults` through `log`; true when there are none                                                                                              |
+| `molt_platform`                            | Return `linux` or `macos`                                                                                                                                       |
+| `molt_distro`                              | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                                                                             |
+| `molt_arch`                                | Return architecture (eg `arm64`, `x86_64`)                                                                                                                      |
+| `molt_info msg`                            | Print info message (prefixed with `Zen:`)                                                                                                                       |
+| `molt_warn msg`                            | Print warning                                                                                                                                                   |
+| `molt_error msg`                           | Print error                                                                                                                                                     |
 
 ## Adding to the manifest
 
@@ -156,6 +161,8 @@ enabled = true
 os = ["linux", "macos"]
 depends = ["zsh"]           # optional: run after these liberators
 ```
+
+A liberator can take settings of its own from its entry with `molt_liberator_field`. `utilz` reads `source`, which is `"checkout"` (the default) or `"brew"`.
 
 ## Platform-specific behavior
 

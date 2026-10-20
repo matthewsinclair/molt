@@ -648,6 +648,154 @@ molt_enabled_liberators() {
   ' "$manifest"
 }
 
+# Prints the value of key $2 in the [[liberator]] block named $1 of this
+# sleeve's molt.toml, read the way molt_enabled_liberators reads name, enabled
+# and os, and only below the block's name line. A quoted value loses its
+# quotes; a bare one is printed as written, so a liberator can refuse it by
+# name rather than mistake it for no value. Fails when there is no manifest,
+# no such block or no such key.
+molt_liberator_field() {
+  local manifest value
+  manifest="$(molt_find_manifest 2>/dev/null)" || return 1
+  value="$(awk -v want="$1" -v key="$2" '
+    /^\[/ { name = ""; next }
+    /^name[[:space:]]*=/ {
+      v = $0
+      sub(/^name[[:space:]]*=[[:space:]]*"/, "", v)
+      sub(/".*/, "", v)
+      name = v
+      next
+    }
+    name == want && index($0, key) == 1 && substr($0, length(key) + 1) ~ /^[[:space:]]*=/ {
+      v = substr($0, index($0, "=") + 1)
+      sub(/^[[:space:]]+/, "", v)
+      if (v ~ /^"/) {
+        v = substr(v, 2)
+        sub(/".*/, "", v)
+      } else {
+        sub(/[[:space:]]*(#.*)?$/, "", v)
+      }
+      print v
+      exit
+    }
+  ' "$manifest")" || return 1
+  [[ -n "$value" ]] || return 1
+  echo "$value"
+}
+
+# --- Homebrew installs ---
+#
+# A liberator whose tool comes from a Homebrew tap asks these, so every such
+# liberator reads the same state the same way. intent had its own copy until
+# ST0005, when utilz needed the same answers.
+
+# First line of a command's --version, captured then trimmed (no pipe to head).
+molt_cmd_version() {
+  local v
+  v="$("$1" --version 2>/dev/null)" || v="version unknown"
+  echo "${v%%$'\n'*}"
+}
+
+# Names what PATH runs for the command $1 when it is not $2, which $3 describes
+# (eg "Homebrew's /opt/homebrew/bin/intent"). No output when PATH runs $2.
+molt_path_runs_fault() {
+  local cmd="$1" expected="$2" label="$3" on_path
+  on_path="$(command -v "$cmd" 2>/dev/null)" || on_path=""
+  if [[ -z "$on_path" ]]; then
+    echo "no $cmd on PATH, so $label does not run"
+  elif [[ "$(_molt_realpath "$on_path")" != "$(_molt_realpath "$expected")" ]]; then
+    echo "PATH runs $on_path ($(molt_cmd_version "$on_path")), not $label"
+  fi
+}
+
+# The commands in the list $2 (one per line) that PATH does not run from the
+# directory $1, on one line. No output when PATH runs every one of them there.
+molt_path_misses() {
+  local dir="$1" names="$2" name on missed=""
+  while IFS= read -r name; do
+    [[ -n "$name" ]] || continue
+    on="$(command -v "$name" 2>/dev/null)" || on=""
+    if [[ -z "$on" || "$(_molt_realpath "$on")" != "$(_molt_realpath "$dir/$name")" ]]; then
+      missed="${missed:+$missed }$name"
+    fi
+  done <<< "$names"
+  if [[ -n "$missed" ]]; then
+    echo "$missed"
+  fi
+}
+
+# True when a plain brew upgrade includes the formula $1 (tap/name): this
+# Homebrew has no trust gate, or its trust store names the formula or its tap.
+# Homebrew 7.0.10 skips an installed formula from an untrusted tap with only a
+# warning and exits 0, so one installed before the gate arrived stops being
+# upgraded while molt maintain reports success.
+molt_brew_trusted() {
+  local formula="$1" store
+  brew trust --help &>/dev/null || return 0
+  store="$(brew trust --json=v1 2>/dev/null)" || return 1
+  [[ "$store" == *"\"$formula\""* || "$store" == *"\"${formula%/*}\""* ]]
+}
+
+# Everything standing between this machine and "Homebrew's $2 is what PATH
+# runs", for the formula $1 (tap/name), one fault per line. Fails, having named
+# the fault, when nothing past it can be checked: no Homebrew, the formula not
+# installed, or its command not linked.
+molt_brew_faults() {
+  local formula="$1" cmd="$2" prefix
+  if ! prefix="$(brew --prefix 2>/dev/null)"; then
+    echo "Homebrew not found; $cmd installs with: brew install $formula"
+    return 1
+  fi
+  if ! brew list --versions "$formula" &>/dev/null; then
+    echo "not installed; run: brew install $formula"
+    return 1
+  fi
+  if ! molt_brew_trusted "$formula"; then
+    echo "Homebrew does not trust $formula, so brew upgrade skips it; run: brew trust --formula $formula"
+  fi
+  if [[ ! -x "$prefix/bin/$cmd" ]]; then
+    echo "installed but not linked into $prefix/bin"
+    return 1
+  fi
+  molt_path_runs_fault "$cmd" "$prefix/bin/$cmd" "Homebrew's $prefix/bin/$cmd"
+}
+
+# Installs the formula $1 (tap/name) by its full name, which Homebrew 7.0.10
+# takes as trusting it, and trusts exactly that formula when it is installed but
+# not trusted, as one installed before the trust gate arrived is.
+molt_brew_install() {
+  local formula="$1"
+  if ! brew --prefix &>/dev/null; then
+    molt_error "${formula##*/} installs from Homebrew, and brew is not on PATH"
+    return 1
+  fi
+  if ! brew list --versions "$formula" &>/dev/null; then
+    molt_info "Installing ${formula##*/}: brew install $formula"
+    if ! brew install "$formula"; then
+      molt_error "brew install $formula failed"
+      return 1
+    fi
+  fi
+  if ! molt_brew_trusted "$formula"; then
+    molt_info "Trusting $formula, so brew upgrade includes it: brew trust --formula $formula"
+    if ! brew trust --formula "$formula"; then
+      molt_error "brew trust --formula $formula failed"
+      return 1
+    fi
+  fi
+}
+
+# Logs each line of the faults $4 through $1 (molt_info, molt_warn or
+# molt_error), after the lead $2 and the label $3. True when there are none.
+molt_report_faults() {
+  local log="$1" lead="$2" label="$3" faults="$4" fault
+  [[ -n "$faults" ]] || return 0
+  while IFS= read -r fault; do
+    "$log" "${lead}${label}: $fault"
+  done <<< "$faults"
+  return 1
+}
+
 # --- CLI Commands ---
 
 cmd_version() {

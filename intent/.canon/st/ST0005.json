@@ -79,5 +79,52 @@
         "is": "unsatisfied"
       }
     }
+  ],
+  "tests": [
+    {
+      "id": "AT001",
+      "kind": "test",
+      "file": "test/liberators/utilz.bats",
+      "covers": [
+        "AC001"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT002",
+      "kind": "test",
+      "file": "test/liberators/utilz.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT003",
+      "kind": "test",
+      "file": "test/liberators/utilz.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT004",
+      "kind": "test",
+      "file": "test/liberators/utilz.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT005",
+      "kind": "test",
+      "file": "test/liberators/utilz.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "to-write"
+    }
   ]
 }
