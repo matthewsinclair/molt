@@ -60,6 +60,38 @@ _use_test_repo() {
     refute_output_contains "keys"
 }
 
+# ST0005. molt_enabled_liberators, molt_liberator_field and molt list read one
+# parser, so a key counts wherever it sits in its entry, a key below a later
+# table belongs to no entry, and enabled is read from its value, not its line.
+@test "a liberator entry's keys are read wherever they sit, and from that entry only" {
+    _use_test_repo
+    cat >> "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" <<'TOML'
+
+[[liberator]]
+source = "brew"
+enabled = true   # was false
+name = "utilz"
+
+[[liberator]]
+name = "tmux"
+source = "checkout"
+
+[extras]
+source = "nobody's"
+TOML
+    run molt_liberator_field utilz source
+    assert_success
+    [ "$output" = "brew" ]
+    run molt_liberator_field tmux source
+    assert_success
+    [ "$output" = "checkout" ]
+    run molt_liberator_field zsh source
+    assert_failure
+    run molt_enabled_liberators
+    assert_success
+    assert_output_contains "utilz"
+}
+
 @test "OS filtering works — linux liberators on linux" {
     _use_test_repo
     local platform

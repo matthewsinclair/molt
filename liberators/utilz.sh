@@ -64,16 +64,23 @@ _utilz_keg_utilities() {
   done
 }
 
+# An empty list of utilities is a fault, not a pass: "none runs from elsewhere"
+# over no utilities would vouch for commands it never looked at.
 _utilz_checkout_faults() {
-  local repo missed
+  local repo utilities missed
   if ! repo="$(_utilz_find_repo)"; then
     echo "checkout not found at ${MOLT_UTILZ_HOME}"
     return 0
   fi
   molt_path_runs_fault utilz "$repo/bin/utilz" "the checkout's $repo/bin/utilz"
-  missed="$(molt_path_misses "$repo/bin" "$(_utilz_checkout_utilities "$repo")")"
-  if [[ -n "$missed" ]]; then
-    echo "PATH runs these from somewhere other than the checkout, or not at all: $missed"
+  utilities="$(_utilz_checkout_utilities "$repo")"
+  if [[ -z "$utilities" ]]; then
+    echo "found no utilities in $repo/bin, so none was checked"
+  else
+    missed="$(molt_path_misses "$repo/bin" "$utilities")"
+    if [[ -n "$missed" ]]; then
+      echo "PATH runs these from somewhere other than the checkout, or not at all: $missed"
+    fi
   fi
   if ! command -v bats &>/dev/null; then
     echo "bats-core not installed (utilz test needs it)"
@@ -82,9 +89,18 @@ _utilz_checkout_faults() {
 
 _utilz_brew_faults() {
   molt_brew_faults "$MOLT_UTILZ_FORMULA" utilz || return 0
-  local prefix missed
-  prefix="$(brew --prefix)"
-  missed="$(molt_path_misses "$prefix/bin" "$(_utilz_keg_utilities "$prefix/opt/utilz/libexec/bin")")"
+  local prefix keg utilities missed
+  if ! prefix="$(brew --prefix 2>/dev/null)"; then
+    echo "brew --prefix failed, so no utility was checked"
+    return 0
+  fi
+  keg="$prefix/opt/utilz/libexec/bin"
+  utilities="$(_utilz_keg_utilities "$keg")"
+  if [[ -z "$utilities" ]]; then
+    echo "found no utilities in $keg, so none was checked"
+    return 0
+  fi
+  missed="$(molt_path_misses "$prefix/bin" "$utilities")"
   if [[ -n "$missed" ]]; then
     echo "PATH runs these from somewhere other than Homebrew's install, or not at all: $missed"
   fi
@@ -154,6 +170,11 @@ utilz_install() {
       return 1
       ;;
   esac
+  # install puts in place what Molt owns: the checkout's links, or Homebrew's
+  # formula and its trust. It cannot reorder PATH, so it names whatever still
+  # stands between this sleeve and its utilz running rather than report
+  # complete over it, which would let resleeve say "Sleeve ready".
+  molt_report_faults molt_error "" "utilz ($source)" "$(_utilz_faults)" || return 1
   molt_info "Liberator complete: utilz"
 }
 

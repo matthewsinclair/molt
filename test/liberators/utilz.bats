@@ -2,8 +2,9 @@
 # utilz.bats — utilz liberator: Utilz from a checkout or from Homebrew, as each
 # sleeve declares, and a verdict that names the utilz that actually runs
 #
-# brew is a stub (fake_brew_formula), HOME is a sandbox and molt.toml is a test
-# repo's, so nothing here reaches the real Homebrew, ~/bin or manifest.
+# brew is a stub that refuses everything until fake_brew_formula replaces it,
+# HOME is a sandbox and molt.toml is a test repo's, so nothing here reaches the
+# real Homebrew, ~/bin or manifest.
 
 load "../test_helper.bash"
 
@@ -13,8 +14,12 @@ _utilz_sleeve() {
     export HOME="$BATS_TEST_TMPDIR/home"
     export MOLT_LOCAL_BIN="$HOME/bin"
     export UTILZ_HOME="$BATS_TEST_TMPDIR/Utilz"
+    export FAKE_LOG="$BATS_TEST_TMPDIR/calls.log"
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
-    mkdir -p "$HOME/bin" "$repo/config"
+    mkdir -p "$HOME/bin" "$repo/config" "$BATS_TEST_TMPDIR/stub"
+    printf '#!/bin/bash\necho "unfaked brew $*" >> "$FAKE_LOG"\nexit 1\n' > "$BATS_TEST_TMPDIR/stub/brew"
+    chmod +x "$BATS_TEST_TMPDIR/stub/brew"
+    export PATH="$BATS_TEST_TMPDIR/stub:$PATH"
     printf '[[liberator]]\nname = "utilz"\nenabled = true\n%s\n' "${1:-}" > "$repo/molt.toml"
     load_liberator utilz
     MOLT_USER_REPO_SEARCH_PATHS=("$repo")
@@ -42,10 +47,14 @@ _utilz_checkout() {
     _utilz_sleeve 'source = "tarball"'
     run utilz_check
     assert_failure
-    assert_output_contains 'source = "tarball"'
+    assert_output_contains 'source = "tarball" on its molt.toml entry is neither checkout nor brew'
     run utilz_install
     assert_failure
-    assert_output_contains "nothing installed"
+    assert_output_contains 'source = "tarball" on its molt.toml entry is neither checkout nor brew; nothing installed'
+    run utilz_upgrade
+    assert_failure
+    assert_output_contains 'source = "tarball" on its molt.toml entry is neither checkout nor brew; not upgraded'
+    [ ! -e "$FAKE_LOG" ]
 }
 
 @test "brew: utilz_check passes when Homebrew's utilz runs, and names a command that runs from elsewhere" {
@@ -66,6 +75,11 @@ _utilz_checkout() {
     assert_output_contains "other than Homebrew's install, or not at all: cleanz"
     run utilz_verify
     assert_failure
+    # install cannot reorder PATH, so it fails rather than report complete,
+    # which would let resleeve say "Sleeve ready".
+    run utilz_install
+    assert_failure
+    assert_output_contains "or not at all: cleanz"
 }
 
 @test "brew: utilz_install installs by full name and links nothing, and upgrade leaves it to brew" {
@@ -78,12 +92,25 @@ _utilz_checkout() {
     run utilz_install
     assert_success
     grep -qx "brew install matthewsinclair/utilz/utilz" "$FAKE_LOG"
-    [ ! -e "$HOME/bin/utilz" ] && [ ! -e "$HOME/bin/cleanz" ]
+    [ ! -e "$HOME/bin/utilz" ]
+    [ ! -e "$HOME/bin/cleanz" ]
     run utilz_upgrade
     assert_success
     assert_output_contains "brew upgrade"
     run grep -q "^git" "$FAKE_LOG"
     assert_failure
+    run grep -q "^brew upgrade" "$FAKE_LOG"
+    assert_failure
+}
+
+@test "brew: a keg whose utilities cannot be listed is reported, not passed over" {
+    # AT006 (ST0005 AC002). "None runs from elsewhere" over an empty list would
+    # vouch for commands the check never looked at.
+    _utilz_sleeve 'source = "brew"'
+    fake_brew_formula utilz 9.9.9 utilz
+    run utilz_check
+    assert_failure
+    assert_output_contains "found no utilities in $FAKE_PREFIX/opt/utilz/libexec/bin, so none was checked"
 }
 
 @test "checkout: utilz_check passes when the checkout's utilz runs, and names Homebrew's when it runs instead" {
@@ -101,6 +128,9 @@ _utilz_checkout() {
     assert_failure
     assert_output_contains "PATH runs $FAKE_PREFIX/bin/utilz (utilz:9.9.9), not the checkout's $UTILZ_HOME/bin/utilz"
     assert_output_contains "other than the checkout, or not at all: cleanz"
+    run utilz_install
+    assert_failure
+    assert_output_contains "PATH runs $FAKE_PREFIX/bin/utilz"
 }
 
 @test "a formula Homebrew does not trust is reported, and install trusts exactly that formula" {
@@ -117,6 +147,11 @@ _utilz_checkout() {
     grep -qx "brew trust --formula matthewsinclair/utilz/utilz" "$FAKE_LOG"
     run grep -q "^brew install" "$FAKE_LOG"
     assert_failure
+    run utilz_check
+    assert_success
+
+    # Trusting the tap covers its formulae too.
+    echo '{"taps":["matthewsinclair/utilz"],"formulae":[]}' > "$FAKE_PREFIX/trust.json"
     run utilz_check
     assert_success
 }

@@ -41,12 +41,15 @@ _intent_faults() {
   molt_brew_faults "$MOLT_INTENT_FORMULA" intent || return 0
 
   local prefix root
-  prefix="$(brew --prefix)"
+  if ! prefix="$(brew --prefix 2>/dev/null)"; then
+    echo "brew --prefix failed, so the pre-commit gate was not checked"
+    return 0
+  fi
   if ! root="$(_intent_gate_root)"; then
     echo "the pre-commit gate has no install: $(_intent_home_file) is missing; run: intent bootstrap"
   elif [[ ! -d "$root/lib/templates" ]]; then
     echo "the pre-commit gate's install is gone: $(_intent_home_file) names $root; run: intent bootstrap"
-  elif [[ "$(_molt_realpath "$root")" != "$(_molt_realpath "$prefix/opt/intent/libexec")" ]]; then
+  elif ! molt_same_file "$root" "$prefix/opt/intent/libexec"; then
     echo "the pre-commit gate runs $root, not Homebrew's install"
   fi
 }

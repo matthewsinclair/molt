@@ -154,12 +154,14 @@ TOML
 # --version; each utility is a symlink to it in the keg, as Utilz's are to its
 # dispatcher. All of them are linked into the prefix's bin, as the formula's
 # install_symlink does. Exports FAKE_PREFIX, FAKE_KEG (the keg's libexec) and
-# FAKE_LOG, where the stub records install and trust calls. The stub has no
-# trust gate until `touch "$FAKE_PREFIX/.gate"`; trust.json is its trust store
-# and starts empty.
+# FAKE_LOG, where the stub records every call that would change Homebrew. list
+# answers only for this formula, by its name or tap/name. The stub has no trust
+# gate until `touch "$FAKE_PREFIX/.gate"`; trust.json is its trust store and
+# starts empty.
 fake_brew_formula() {
     local name="$1" version="$2" cmd="$3" util
     shift 3
+    export FAKE_NAME="$name"
     export FAKE_PREFIX="$BATS_TEST_TMPDIR/brew"
     export FAKE_LOG="$BATS_TEST_TMPDIR/calls.log"
     export FAKE_KEG="$FAKE_PREFIX/Cellar/$name/$version/libexec"
@@ -178,8 +180,11 @@ fake_brew_formula() {
 #!/bin/bash
 case "$1" in
   --prefix) echo "$FAKE_PREFIX" ;;
-  list)     [[ -e "$FAKE_PREFIX/.installed" ]] ;;
+  list)     [[ -e "$FAKE_PREFIX/.installed" ]] || exit 1
+            case "$3" in "$FAKE_NAME" | */"$FAKE_NAME") ;; *) exit 1 ;; esac ;;
   install)  echo "brew $*" >> "$FAKE_LOG"; touch "$FAKE_PREFIX/.installed" ;;
+  upgrade | reinstall | uninstall | link | unlink | tap | untap | pin | unpin)
+            echo "brew $*" >> "$FAKE_LOG" ;;
   trust)
     case "$2" in
       --help)    [[ -e "$FAKE_PREFIX/.gate" ]] ;;

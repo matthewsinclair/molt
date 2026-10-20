@@ -125,7 +125,7 @@ molt_link_healthy() {
 molt_link_points_to() {
   local target="$1" expected="$2"
   molt_link_healthy "$target" || return 1
-  [[ "$(_molt_realpath "$target")" == "$(_molt_realpath "$expected")" ]]
+  molt_same_file "$target" "$expected"
 }
 
 # realpath(1) is not on every macOS; readlink -f is not on every BSD.
@@ -136,6 +136,11 @@ _molt_realpath() {
   else
     python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$p" 2>/dev/null || echo "$p"
   fi
+}
+
+# True when the paths $1 and $2 resolve to the same file.
+molt_same_file() {
+  [[ "$(_molt_realpath "$1")" == "$(_molt_realpath "$2")" ]]
 }
 
 molt_link_fault() {
@@ -603,6 +608,43 @@ molt_find_manifest() {
   return 1
 }
 
+# The one reader of molt.toml's [[liberator]] blocks. Prints a line per key of
+# every block, "name<TAB>key<TAB>value", the block's name line first whatever
+# order its keys are written in. A block ends at the next table header of any
+# kind, so a key below [stack] or [sleeve] belongs to no liberator. A quoted
+# value loses its quotes; a bare one loses a trailing comment and is otherwise
+# kept as written, so a caller can refuse a value by name rather than mistake
+# it for none. Keys are read from the start of a line, as molt.toml writes them.
+_molt_liberator_entries() {
+  awk '
+    function flush(   k) {
+      if (inblock && name != "") {
+        print name "\tname\t" name
+        for (k in val) print name "\t" k "\t" val[k]
+      }
+      for (k in val) delete val[k]
+      name = ""
+    }
+    /^\[\[liberator\]\]/ { flush(); inblock = 1; next }
+    /^\[/ { flush(); inblock = 0; next }
+    inblock && /^[A-Za-z0-9_-]+[[:space:]]*=/ {
+      key = $0
+      sub(/[[:space:]]*=.*/, "", key)
+      v = substr($0, index($0, "=") + 1)
+      sub(/^[[:space:]]+/, "", v)
+      if (v ~ /^"/) {
+        v = substr(v, 2)
+        sub(/".*/, "", v)
+      } else {
+        sub(/[[:space:]]*(#.*)?$/, "", v)
+      }
+      if (key == "name") name = v
+      else val[key] = v
+    }
+    END { flush() }
+  ' "$1"
+}
+
 # Parse enabled liberators from molt.toml.
 # Returns one liberator name per line for enabled liberators on this platform.
 # If no manifest found, returns empty (caller falls back to directory scan).
@@ -614,71 +656,31 @@ molt_enabled_liberators() {
   local platform
   platform="$(molt_platform)"
 
-  # Simple TOML parser for [[liberator]] blocks.
-  # Reads name, enabled, and os fields from each block.
-  awk -v platform="$platform" '
-    /^\[\[liberator\]\]/ {
-      if (name != "" && enabled == "true" && os_match) {
-        print name
-      }
-      name = ""
-      enabled = "true"  # default to enabled if not specified
-      os_match = 1       # default to all platforms if not specified
-      os_seen = 0
-    }
-    /^name[[:space:]]*=/ {
-      gsub(/^name[[:space:]]*=[[:space:]]*"/, "")
-      gsub(/".*/, "")
-      name = $0
-    }
-    /^enabled[[:space:]]*=/ {
-      if ($0 ~ /false/) enabled = "false"
-      else enabled = "true"
-    }
-    /^os[[:space:]]*=/ {
-      os_seen = 1
-      if ($0 ~ platform) os_match = 1
-      else os_match = 0
-    }
+  # In manifest order. enabled defaults to true, os to every platform.
+  _molt_liberator_entries "$manifest" | awk -F'\t' -v platform="$platform" '
+    $2 == "name" { order[++n] = $1; enabled[$1] = "true"; os[$1] = "" }
+    $2 == "enabled" { enabled[$1] = ($3 == "false") ? "false" : "true" }
+    $2 == "os" { os[$1] = $3 }
     END {
-      if (name != "" && enabled == "true" && os_match) {
-        print name
+      for (i = 1; i <= n; i++) {
+        lib = order[i]
+        if (enabled[lib] == "true" && (os[lib] == "" || os[lib] ~ platform)) print lib
       }
     }
-  ' "$manifest"
+  '
 }
 
-# Prints the value of key $2 in the [[liberator]] block named $1 of this
-# sleeve's molt.toml, read the way molt_enabled_liberators reads name, enabled
-# and os, and only below the block's name line. A quoted value loses its
-# quotes; a bare one is printed as written, so a liberator can refuse it by
-# name rather than mistake it for no value. Fails when there is no manifest,
-# no such block or no such key.
+# Prints the value of key $2 on the [[liberator]] entry named $1 in this
+# sleeve's molt.toml, read by _molt_liberator_entries like every other key.
+# Fails when there is no manifest, no such entry or no such key.
 molt_liberator_field() {
   local manifest value
   manifest="$(molt_find_manifest 2>/dev/null)" || return 1
-  value="$(awk -v want="$1" -v key="$2" '
-    /^\[/ { name = ""; next }
-    /^name[[:space:]]*=/ {
-      v = $0
-      sub(/^name[[:space:]]*=[[:space:]]*"/, "", v)
-      sub(/".*/, "", v)
-      name = v
-      next
-    }
-    name == want && index($0, key) == 1 && substr($0, length(key) + 1) ~ /^[[:space:]]*=/ {
-      v = substr($0, index($0, "=") + 1)
-      sub(/^[[:space:]]+/, "", v)
-      if (v ~ /^"/) {
-        v = substr(v, 2)
-        sub(/".*/, "", v)
-      } else {
-        sub(/[[:space:]]*(#.*)?$/, "", v)
-      }
-      print v
-      exit
-    }
-  ' "$manifest")" || return 1
+  # Reads every line rather than exiting at the first match, so the writer
+  # upstream never meets a closed pipe (issue 0008).
+  value="$(_molt_liberator_entries "$manifest" | awk -F'\t' -v want="$1" -v key="$2" '
+    $1 == want && $2 == key && !found { print $3; found = 1 }
+  ')" || return 1
   [[ -n "$value" ]] || return 1
   echo "$value"
 }
@@ -703,7 +705,7 @@ molt_path_runs_fault() {
   on_path="$(command -v "$cmd" 2>/dev/null)" || on_path=""
   if [[ -z "$on_path" ]]; then
     echo "no $cmd on PATH, so $label does not run"
-  elif [[ "$(_molt_realpath "$on_path")" != "$(_molt_realpath "$expected")" ]]; then
+  elif ! molt_same_file "$on_path" "$expected"; then
     echo "PATH runs $on_path ($(molt_cmd_version "$on_path")), not $label"
   fi
 }
@@ -715,7 +717,7 @@ molt_path_misses() {
   while IFS= read -r name; do
     [[ -n "$name" ]] || continue
     on="$(command -v "$name" 2>/dev/null)" || on=""
-    if [[ -z "$on" || "$(_molt_realpath "$on")" != "$(_molt_realpath "$dir/$name")" ]]; then
+    if [[ -z "$on" ]] || ! molt_same_file "$on" "$dir/$name"; then
       missed="${missed:+$missed }$name"
     fi
   done <<< "$names"
@@ -824,7 +826,7 @@ cmd_list() {
     manifest="$(molt_find_manifest 2>/dev/null || echo "")"
     if [[ -n "$manifest" ]]; then
       local all_names
-      all_names="$(awk '/^name[[:space:]]*=/ { gsub(/^name[[:space:]]*=[[:space:]]*"/, ""); gsub(/".*/, ""); print }' "$manifest")"
+      all_names="$(_molt_liberator_entries "$manifest" | awk -F'\t' '$2 == "name" { print $1 }')"
       while IFS= read -r lib; do
         [[ -z "$lib" ]] && continue
         if [[ "$enabled_list" != *" ${lib} "* ]]; then
