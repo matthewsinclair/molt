@@ -14,7 +14,7 @@
       "seq": 1,
       "title": "Shared Homebrew check, trust gate included",
       "scope": "S",
-      "status": "wip",
+      "status": "done",
       "objective": "",
       "body": "",
       "preamble": ""
@@ -23,7 +23,7 @@
       "seq": 2,
       "title": "utilz: a checkout or Homebrew, per sleeve",
       "scope": "S",
-      "status": "not-started",
+      "status": "done",
       "objective": "",
       "body": "",
       "preamble": ""
@@ -32,9 +32,9 @@
       "seq": 3,
       "title": "Roll out: kovacs on brew, rhadamanth and gyges as hv chooses",
       "scope": "S",
-      "status": "not-started",
+      "status": "wip",
       "objective": "",
-      "body": "",
+      "body": "Roll out the per-sleeve `source` for the utilz liberator.\n\n- **kovacs: brew.** kovacs-sysadm set it in Molt-matts `9c92ca4`, pushed with hv's go on 20 Oct. `molt doctor` there shows check 6 at 15/15 installed, utilz included, and check 10 passes.\n- **rhadamanth: brew**, hv's choice on 20 Oct, set in Molt-matts `e567a83`. utilz check and verify pass, and report utilz:2.14.1 as what PATH runs.\n- **gyges: brew, agreed by hv, not yet set.** It waits for the next time Tailscale is on and gyges can be reached, and goes through gyges-infra (vc board todo 5).\n- **farcaster and pihole:** utilz is disabled on both, so there is nothing to do.\n\nThis package stays open until gyges is done.\n",
       "preamble": ""
     }
   ],
@@ -73,10 +73,11 @@
     },
     {
       "id": "AC005",
-      "text": "On kovacs, with its utilz entry set to brew, `molt doctor` check 6 passes and names Homebrew's utilz.",
+      "text": "On kovacs, with its utilz entry set to brew, `molt doctor` check 6 counts utilz installed.",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "kovacs-sysadm, 20 Oct: after Molt-matts 9c92ca4 (source = brew), molt doctor check 6 15/15 installed with utilz and check 10 none; molt list shows utilz installed"
       }
     }
   ],
@@ -88,7 +89,8 @@
       "covers": [
         "AC001"
       ],
-      "status": "to-write"
+      "status": "green",
+      "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
     },
     {
       "id": "AT002",
@@ -97,7 +99,8 @@
       "covers": [
         "AC002"
       ],
-      "status": "to-write"
+      "status": "green",
+      "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
     },
     {
       "id": "AT003",
@@ -106,7 +109,8 @@
       "covers": [
         "AC002"
       ],
-      "status": "to-write"
+      "status": "green",
+      "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
     },
     {
       "id": "AT004",
@@ -115,7 +119,8 @@
       "covers": [
         "AC003"
       ],
-      "status": "to-write"
+      "status": "green",
+      "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
     },
     {
       "id": "AT005",
@@ -124,7 +129,18 @@
       "covers": [
         "AC004"
       ],
-      "status": "to-write"
+      "status": "green",
+      "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
+    },
+    {
+      "id": "AT006",
+      "kind": "test",
+      "file": "test/liberators/utilz.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "green",
+      "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
     }
   ]
 }

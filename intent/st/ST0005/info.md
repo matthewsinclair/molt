@@ -24,11 +24,11 @@ Not in scope: making the brew liberator run on Linux, so that `molt maintain` up
 
 ## Work Packages
 
-| WP    | Title                                                        | Size | Status      |
-| ----- | ------------------------------------------------------------ | ---- | ----------- |
-| WP-01 | Shared Homebrew check, trust gate included                   | S    | WIP         |
-| WP-02 | utilz: a checkout or Homebrew, per sleeve                    | S    | Not Started |
-| WP-03 | Roll out: kovacs on brew, rhadamanth and gyges as hv chooses | S    | Not Started |
+| WP    | Title                                                        | Size | Status |
+| ----- | ------------------------------------------------------------ | ---- | ------ |
+| WP-01 | Shared Homebrew check, trust gate included                   | S    | Done   |
+| WP-02 | utilz: a checkout or Homebrew, per sleeve                    | S    | Done   |
+| WP-03 | Roll out: kovacs on brew, rhadamanth and gyges as hv chooses | S    | WIP    |
 
 ## Acceptance
 

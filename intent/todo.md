@@ -9,9 +9,9 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 ## DOING
 
 - [-] ST0005: Utilz liberator: a checkout or Homebrew, per sleeve
-  - [-] 01: Shared Homebrew check, trust gate included
-  - [ ] 02: utilz: a checkout or Homebrew, per sleeve
-  - [ ] 03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
+  - [x] 01: Shared Homebrew check, trust gate included
+  - [x] 02: utilz: a checkout or Homebrew, per sleeve
+  - [-] 03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
 
 ## TODO
 

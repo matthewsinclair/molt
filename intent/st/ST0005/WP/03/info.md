@@ -2,7 +2,7 @@
 wp_id: WP-03
 title: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
 scope: S
-status: Not Started
+status: WIP
 ---
 
 # WP-03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
@@ -10,6 +10,15 @@ status: Not Started
 ## Objective
 
 _(not yet written)_
+
+Roll out the per-sleeve `source` for the utilz liberator.
+
+- **kovacs: brew.** kovacs-sysadm set it in Molt-matts `9c92ca4`, pushed with hv's go on 20 Oct. `molt doctor` there shows check 6 at 15/15 installed, utilz included, and check 10 passes.
+- **rhadamanth: brew**, hv's choice on 20 Oct, set in Molt-matts `e567a83`. utilz check and verify pass, and report utilz:2.14.1 as what PATH runs.
+- **gyges: brew, agreed by hv, not yet set.** It waits for the next time Tailscale is on and gyges can be reached, and goes through gyges-infra (vc board todo 5).
+- **farcaster and pihole:** utilz is disabled on both, so there is nothing to do.
+
+This package stays open until gyges is done.
 
 ## Acceptance
 

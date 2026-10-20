@@ -15,23 +15,23 @@ title: Utilz liberator: a checkout or Homebrew, per sleeve
 
 ### Group AC001
 
-- AC001 A sleeve's utilz entry in molt.toml selects `source = "checkout"` or `source = "brew"`. With no `source` the sleeve gets checkout. Any other value makes check, verify and install refuse, naming the value. -- satisfied: no (computed)
+- AC001 A sleeve's utilz entry in molt.toml selects `source = "checkout"` or `source = "brew"`. With no `source` the sleeve gets checkout. Any other value makes check, verify and install refuse, naming the value. -- satisfied: yes (computed)
 
 ### Group AC002
 
-- AC002 With `source = "brew"`, check and verify pass only when Homebrew's utilz, and every command its keg links, is what PATH runs, and they name whatever runs instead. install installs `matthewsinclair/utilz/utilz` by its full name and makes no links. Nothing in brew mode runs `git pull`, `utilz use` or `utilz relink`. -- satisfied: no (computed)
+- AC002 With `source = "brew"`, check and verify pass only when Homebrew's utilz, and every command its keg links, is what PATH runs, and they name whatever runs instead. install installs `matthewsinclair/utilz/utilz` by its full name and makes no links. Nothing in brew mode runs `git pull`, `utilz use` or `utilz relink`. -- satisfied: yes (computed)
 
 ### Group AC003
 
-- AC003 With `source = "checkout"`, check and verify pass only when the checkout's utilz, and every command it links, is what PATH runs, and they name whatever runs instead, Homebrew's copy included. -- satisfied: no (computed)
+- AC003 With `source = "checkout"`, check and verify pass only when the checkout's utilz, and every command it links, is what PATH runs, and they name whatever runs instead, Homebrew's copy included. -- satisfied: yes (computed)
 
 ### Group AC004
 
-- AC004 intent and utilz share one Homebrew check in lib/molt.sh, and intent's existing tests pass unchanged. A formula that is installed but not trusted is reported by check, and install trusts exactly that formula with `brew trust --formula`, saying so. -- satisfied: no (computed)
+- AC004 intent and utilz share one Homebrew check in lib/molt.sh, and intent's existing tests pass unchanged. A formula that is installed but not trusted is reported by check, and install trusts exactly that formula with `brew trust --formula`, saying so. -- satisfied: yes (computed)
 
 ### Group AC005
 
-- AC005 (non-test) On kovacs, with its utilz entry set to brew, `molt doctor` check 6 passes and names Homebrew's utilz. -- satisfied: no
+- AC005 (non-test) On kovacs, with its utilz entry set to brew, `molt doctor` check 6 counts utilz installed. -- evidence: kovacs-sysadm, 20 Oct: after Molt-matts 9c92ca4 (source = brew), molt doctor check 6 15/15 installed with utilz and check 10 none; molt list shows utilz installed -- satisfied: yes
 
 ### Group AT001
 
@@ -50,6 +50,10 @@ _(no criteria in this group)_
 _(no criteria in this group)_
 
 ### Group AT005
+
+_(no criteria in this group)_
+
+### Group AT006
 
 _(no criteria in this group)_
 
@@ -77,23 +81,27 @@ _(no tests in this group)_
 
 ### Group AT001
 
-- AT001 `test/liberators/utilz.bats` -- covers AC001 -- status: to-write
+- AT001 `test/liberators/utilz.bats` -- covers AC001 -- status: green -- green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)
 
 ### Group AT002
 
-- AT002 `test/liberators/utilz.bats` -- covers AC002 -- status: to-write
+- AT002 `test/liberators/utilz.bats` -- covers AC002 -- status: green -- green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)
 
 ### Group AT003
 
-- AT003 `test/liberators/utilz.bats` -- covers AC002 -- status: to-write
+- AT003 `test/liberators/utilz.bats` -- covers AC002 -- status: green -- green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)
 
 ### Group AT004
 
-- AT004 `test/liberators/utilz.bats` -- covers AC003 -- status: to-write
+- AT004 `test/liberators/utilz.bats` -- covers AC003 -- status: green -- green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)
 
 ### Group AT005
 
-- AT005 `test/liberators/utilz.bats` -- covers AC004 -- status: to-write
+- AT005 `test/liberators/utilz.bats` -- covers AC004 -- status: green -- green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)
+
+### Group AT006
+
+- AT006 `test/liberators/utilz.bats` -- covers AC002 -- status: green -- green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)
 
 ---
 

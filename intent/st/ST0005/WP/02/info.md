@@ -2,7 +2,7 @@
 wp_id: WP-02
 title: utilz: a checkout or Homebrew, per sleeve
 scope: S
-status: Not Started
+status: Done
 ---
 
 # WP-02: utilz: a checkout or Homebrew, per sleeve

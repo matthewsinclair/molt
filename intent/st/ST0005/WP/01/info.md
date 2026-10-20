@@ -2,7 +2,7 @@
 wp_id: WP-01
 title: Shared Homebrew check, trust gate included
 scope: S
-status: WIP
+status: Done
 ---
 
 # WP-01: Shared Homebrew check, trust gate included
