@@ -1,0 +1,12 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 17,
+  "slug": "doctor-check-10-flags-homebrew-s-linux-prefix-ho",
+  "title": "doctor check 10 flags Homebrew's Linux prefix /home/linuxbrew as another user's home",
+  "status": "closed",
+  "severity": "low",
+  "created": "2026-10-20",
+  "closed": "2026-10-20",
+  "reporter": "Matthew Sinclair",
+  "body": "`molt doctor` check 10 warns `found in: zsh/zprofile` on every sleeve, because the user repo's `config/zsh/zprofile` now starts Homebrew on Linux with `eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"`.\n\n`molt_foreign_home_paths` (`lib/molt.sh`) reports any `/Users/<x>` or `/home/<x>` whose `<x>` is not the current user. `/home/linuxbrew/.linuxbrew` is Homebrew's documented default prefix on Linux. It sits in `/home/linuxbrew`, a system account's home rather than a person's, the same on every machine. kovacs-sysadm saw the warning on kovacs on 2026-10-20, and rhadamanth's doctor shows it too.\n\nA warning that fires on every sleeve over a correct file teaches the reader to skip check 10, which is the failure the check exists to prevent.\n\nFix: exempt exactly `/home/linuxbrew`. Any other user's home is still reported, a near-miss name such as `/home/linuxbrewer` and another home named in the same file included.\n"
+}

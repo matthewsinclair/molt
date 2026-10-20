@@ -711,7 +711,6 @@ cmd_list() {
   done
 }
 
-# Report config files that bake in another user's absolute home path
 # Filesystem type for a path, as a short name ("apfs", "ext4", "fuse.prl_fsd").
 # Linux and BSD/macOS disagree on how to ask, so try both.
 molt_fstype() {
@@ -740,10 +739,15 @@ molt_fstype() {
   mount 2>/dev/null | grep "^${dev} on " | sed -n 's/.*(\([^,)]*\).*/\1/p' | head -1
 }
 
+# Report config files that bake in another user's absolute home path
 # (/Users/<x> or /home/<x>, including JSON-escaped \/Users\/<x>, where <x> is
 # not the current user). Echoes offending paths relative to dir, one per line.
 # Empty output means clean. This catches non-portable configs like a raw iTerm2
 # or VS Code export committed with hardcoded paths.
+#
+# /home/linuxbrew is not a foreign home (issue 0017). It holds Homebrew's default
+# Linux prefix, /home/linuxbrew/.linuxbrew, and is a system account's home, the
+# same on every machine, named by any shell file that starts Homebrew there.
 molt_foreign_home_paths() {
   local dir="$1"
   [[ -d "$dir" ]] || return 0
@@ -762,7 +766,7 @@ molt_foreign_home_paths() {
     # its one blank line and would report it.
     homes="$(tr -d '\134' < "$f" 2>/dev/null \
                | grep -oE '/(Users|home)/[A-Za-z0-9_.-]+' || true)"
-    if [[ -n "$homes" ]] && grep -qvE "/(Users|home)/${me}(/|$)" <<< "$homes"; then
+    if [[ -n "$homes" ]] && grep -qvE "/(Users|home)/${me}(/|$)|^/home/linuxbrew$" <<< "$homes"; then
       echo "${f#"$dir"/}"
     fi
   done < <(grep -rIlE '(Users|home)' "$dir" 2>/dev/null)

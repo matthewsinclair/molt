@@ -143,6 +143,24 @@ load "test_helper.bash"
     [ -z "$output" ]
 }
 
+# Issue 0017. /home/linuxbrew is a system account's home holding Homebrew's
+# default Linux prefix, /home/linuxbrew/.linuxbrew, and a cross-platform
+# zprofile names it. The exemption is that one home: not a name that starts
+# with it, and not a file that also names another user's home.
+@test "molt_foreign_home_paths exempts Homebrew's Linux prefix and nothing more" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/cfg5"; mkdir -p "$d"
+    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' > "$d/zprofile"
+    echo 'P=/home/linuxbrewer/bin' > "$d/near.conf"
+    echo 'P=/home/linuxbrew/.linuxbrew/bin:/home/someoneelse/bin' > "$d/both.conf"
+
+    run molt_foreign_home_paths "$d"
+    assert_success
+    refute_output_contains "zprofile"
+    assert_output_contains "near.conf"
+    assert_output_contains "both.conf"
+}
+
 # --- Symlink state helpers ---
 
 @test "molt_link_fault distinguishes all four states" {
