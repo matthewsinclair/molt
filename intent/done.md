@@ -1,15 +1,36 @@
 # Done
 
+## 023: AI attribution purged from history, utilz from a checkout or Homebrew per sleeve, and check 10's false alarm on Homebrew's Linux home (DONE)
+
+- **The AI-attribution trailers were purged from Molt's and Molt-matts' history on hv's order** ("STRICTLY FORBIDDEN. Purge that from the git record immediately").
+  - Molt-matts had 28 commits carrying `Co-Authored-By` or `Claude-Session` lines, back to 8 Mar. Molt had 36 `Claude-Session` lines, from 4-7 Sep.
+  - `git filter-repo` rewrote only the messages that carried a trailer. Every commit kept its tree, author and dates, and Molt's commits before 4 Sep and its two tags kept their ids.
+  - GitHub, both Dropbox mirrors, rhadamanth and kovacs are on the new histories, with the old objects gone. gyges and the Pis wait (board todos 5 and 6).
+  - `intent/ref/2026-10-20-history-purge-commit-maps.md` translates old ids, and this file, `wip.md` and `CHANGELOG.md` were translated.
+  - A first pass trimmed trailing newlines from every message, which gave a 9 Mar commit with no trailer a new id and moved both tags. It was caught before any push, because the tags moved.
+- **kovacs's Claude Code no longer writes attribution.** It now has the attribution keys in `~/.claude/settings.json` (hv ran the merge) and the "## Git Commits" rule in `~/.claude/CLAUDE.md`, as rhadamanth does. The October trailers came from kovacs sessions.
+- **`molt doctor` check 10 warned on every sleeve** (issue 0017). It counted `/home/linuxbrew`, the system account's home that holds Homebrew's Linux prefix and that the user repo's zprofile names, as another user's home. That one home is exempt; a near-miss name, and another home in the same file, are still reported.
+- **ST0005: the utilz liberator takes Utilz from a checkout or from Homebrew, as each sleeve declares** (WP01 and WP02 done, all five criteria met, WP03 open for gyges).
+  - kovacs-sysadm reported "utilz: repo not found" on kovacs, which hv made brew-only on 19 Oct. On rhadamanth the same check passed while Homebrew's utilz ran ahead of the checkout's links, which is the defect ST0004 fixed for intent.
+  - hv ruled for a per-sleeve `source` over brew-only. Both modes now check which utilz, and which of its utilities, PATH runs. Brew mode installs by full formula name, links nothing, and leaves upgrades to `brew upgrade` rather than `molt upgrade`.
+  - The Homebrew half of the check is shared with intent in `lib/molt.sh`.
+  - rhadamanth (Molt-matts `e567a83`) and kovacs (`9c92ca4`, kovacs-sysadm's) are on brew. kovacs's doctor shows check 6 at 15/15.
+- **Homebrew 7.0.10's trust gate, measured against an empty trust store.** An install by full name trusts the formula; a short name is refused; a plain `brew upgrade` skips an untrusted tap's formula with only a warning, and exits 0. Molt installs by full name, its check reports an installed formula Homebrew does not trust, and install trusts exactly that one.
+- **critic-shell reviewed ST0005.** It found 1 critical (an assertion errexit could not see fail), 3 warnings and 8 recommendations, all answered in `092384c`. That includes one parser for `molt.toml`'s `[[liberator]]` blocks where there had been three, which gives the same, non-empty answer on all five instance manifests, on linux and macos.
+- Filed: issue 0018 (the manifest's `depends` key is documented, and nothing reads it), and devbin issue 0203 (its README says the tap does not exist, and installs by a short name), committed in devbin and not pushed.
+- Suite 223 -> 231, under `/bin/bash` 3.2 and Homebrew bash 5.3; CI green on every push.
+- Commits: `0c9f2e5`, `fe17190`, `94d04df`, `b44d3cc`, `6ba41db`, `092384c`, `342b774` and this fold's (molt); `e567a83`, `9c92ca4` (molt-{user}); `6ba65d73` (devbin)
+
 ## 022: Doom rebuilds after an Emacs upgrade, a failed hook fails the run, and Tactile's schema stays current (DONE)
 
 - **kovacs-sysadm found both on kovacs on 16 Oct**, after its release upgrade from Ubuntu 24.04 to 26.04.1 took Emacs from 29.3 to 30.2.
 - **doom sync asked to rebuild every package, read EOF and failed, and molt still said "Sleeve ready"** (issue 0013). `editors_upgrade` threw Doom's stderr away and warned, `molt upgrade` warned again and resleeved, and `molt maintain` exited 0. molt now compares the Emacs version Doom recorded at its last sync (`$DOOMLOCALDIR/etc/sync`) with the running one and passes `--rebuild` when they differ, warning when it cannot tell. Doom's own `-!`/`--force` is no fix: it skips the rebuild along with the prompt (board watch-out 17). A failed doom command fails the editors hook, a failed hook makes `molt upgrade` and `molt maintain` name it and exit 1, and the resleeve after a failed upgrade does not call the sleeve ready. resleeve's body moved into `lib/molt.sh` as `molt_resleeve`, beside the upgrade that calls it.
 - **Tactile's gsettings schema was copied into `/usr/share/glib-2.0/schemas` only when none was there** (issue 0014), so a Tactile update would never reach it, and the sudo, compile and gsettings calls were unchecked. Nothing had broken yet on kovacs (Tactile 38, GNOME Shell 50.1). Install now refreshes the copy whenever it differs, compiles the extension's schema under `--strict` first, takes out a copy the system compile rejects, and fails instead of reporting complete; check and verify report a stale copy. Refreshing needs sudo, so an unattended run without it fails the step out loud. The install hint asks extensions.gnome.org for the build that fits the running shell instead of pinning one; that URL is not yet confirmed live (wip.md).
-- **kovacs-sysadm's third report, the ccstatusline link, was already fixed** by `a14555e` (15 Oct), and kovacs had the link.
+- **kovacs-sysadm's third report, the ccstatusline link, was already fixed** by `12a613d` (15 Oct), and kovacs had the link.
 - **Checked on kovacs by kovacs-sysadm:** `molt doctor` 13/13, `molt resleeve --dry-run` ok for all 14 liberators, and Doom's record and the running Emacs both read 30.2. The live `molt upgrade editors` there waits for hv.
 - critic-shell's review and test-check are applied, and eight deliberate breakages each turned a test red under both interpreters. Issues 0015 and 0016 record what the review found outside the change, for hv.
 - Suite 202 -> 223, under `/bin/bash` 3.2 and Homebrew bash 5.3; CI green on Ubuntu, with macOS skipped on push by design.
-- Commits: `c5e9c11`, `59ea142`, `ff716d7` and this fold's (molt)
+- Commits: `b7ea054`, `d15e178`, `3c8f6ef` and this fold's (molt)
 
 ## 021: The status line, and resleeve telling the truth about failures (DONE)
 
@@ -18,7 +39,7 @@
 - **`molt_link` said "Linked:" when it had not linked** (issue 0010), and 16 liberator call sites ignored its failure, so resleeve printed "installed". critic-shell found the call sites after the first fix.
 - **The iTerm2 ssh wrapper returned 0 for a failed ssh** (issue 0011), and reset a tab to black (issue 0012). It returns ssh's status and resets to the sleeve's own `[terminal] bg_color`, `15191f` on rhadamanth. hv tested xterm's OSC 111: iTerm2 ignores it after `SetColors`, so the colour has to be declared.
 - Suite 189 -> 202, under `/bin/bash` 3.2 and Homebrew bash 5.3; CI green including macOS (dispatched by hand, since a push skips it).
-- Commits: `a14555e`, `2e7b07c`, `34ef581` and the folds (molt); `2a5b268`, `c185d6f` (molt-{user})
+- Commits: `12a613d`, `a6ac811`, `6e0a1ac` and the folds (molt); `f158572`, `9376363` (molt-{user})
 
 ## 020: Intent comes from Homebrew, and Molt keeps off rhadamanth's Intent (DONE)
 
@@ -30,8 +51,8 @@
 - Suite 200 -> 189 (15 checkout-era tests and one `molt git` test out, 5 in), under `/bin/bash` 3.2 and Homebrew bash 5.3.
 - `.claude/restart.md` is an entry point again. It had carried 27 Aug state into every wake prompt since.
 - What Molt learned about Intent went to intent-vc: v2.6.0 refuses a v3 project; pre-rewrite clones cannot fast-forward; `~/.local/bin/intent` is a dev-machine convention that other machines kept stale; release and dev builds print the same version; Molt now copies the shim's gate-home resolution. intent-vc landed the 0527 fix at Intent `9358663ff` for 3.2.1 and put a supported gate-root query on its post-3.2.1 backlog.
-- Retired from `wip.md` after checking the machines: the rewritable iTerm2 profile (iTerm2 on rhadamanth restarted 2026-09-22 21:40Z, after the 15 Sep fix, and the profile in git has no `Rewritable` flag), and the March item to export the iTerm2 and Terminal.app profiles (done 10 Mar, Molt-matts `dd5dd19`). The March background-colour item is now a measured one.
-- Commits: `70504ca`, `06652c5`, `4d703f9` and this fold's (molt); `857d49c` (molt-{user})
+- Retired from `wip.md` after checking the machines: the rewritable iTerm2 profile (iTerm2 on rhadamanth restarted 2026-09-22 21:40Z, after the 15 Sep fix, and the profile in git has no `Rewritable` flag), and the March item to export the iTerm2 and Terminal.app profiles (done 10 Mar, Molt-matts `ce0a168`). The March background-colour item is now a measured one.
+- Commits: `4fec7a7`, `e3c3391`, `8972f27` and this fold's (molt); `710f135` (molt-{user})
 
 ## 019: Config repos moved to `~/Devel/cfg`, and two liberators that checked less than they installed (DONE)
 
@@ -39,10 +60,10 @@
 - **Moved on all three sleeves, 15 Sep.** gyges first, where its Claude auto mode refused the mv and hv ran it. Then rhadamanth, once hv stopped the Gtools CMS and Gtools.app: `~/.config/gtools/{config.yaml,env}` repointed, Intent registry roots swapped (`intent discover ~/Devel/cfg`, old roots removed by hand as there is no remove verb), and gtools-vc/cc/ic told. Then kovacs, Molt-matts only, 13/13 doctor. The mv and `molt resleeve` must run as ONE command with `MOLT_PRJ_DIR` set and molt called by absolute path, because `~/.zshenv` dangles in between.
 - **`git_check` and `git_verify` tested only `~/.gitconfig`** (issue 0006). `~/.gitignore_global` was a stale regular file on rhadamanth and gyges and nothing said so until the move broke `~/.gitconfig` and install ran. One `_git_links` list now feeds check, install and verify, each link must point into the user repo, and verify fails when it cannot find the repo. Closing it surfaced a formatter/renderer clash: `.prettierignore` predated issue views, so prettier rewrote `intent/issues/0006.md` and doctor refused the commit. Issue views are now fenced; the skewed 0006 view was removed (no verb re-renders a closed issue's view; doctor is clean without it).
 - **`alacritty` never flagged a template-form config** (issue 0007), found by kovacs. It passed `molt_config_stale` an absolute `.tmpl` path, which looked for `.tmpl.tmpl` and answered "not stale", so kovacs's `~/.config/alacritty/alacritty.toml` dangled from 8 Sep while resleeve said ok. Fixed, `molt_config_stale` now rejects that call shape loudly, and the liberator has its first 7 tests. Landed on kovacs the same day: resleeve re-rendered the config over the dangling link, a second run reports ok without re-rendering, and no link points into `~/Devel/prj/Molt-matts`.
-- **hv's leftovers from the move, all fixed at hv's request.** The Claude allow rule for `mail-recent` now names `~/Devel/cfg/Gtools-geodica`. hv restarted the Gtools CMS and Gtools.app, and the CMS serves from `~/Devel/cfg`. The move's backups on rhadamanth are deleted after diffing each against its live file, and gyges deleted its own, plus an older one from 10 Mar, and pulled Molt-matts to `de8156d`. Molt-matts stops ignoring `*.sql` globally (it un-hid nothing: every matched file is also ignored by its own repo), and Doom projectile searches `~/Devel/cfg`.
+- **hv's leftovers from the move, all fixed at hv's request.** The Claude allow rule for `mail-recent` now names `~/Devel/cfg/Gtools-geodica`. hv restarted the Gtools CMS and Gtools.app, and the CMS serves from `~/Devel/cfg`. The move's backups on rhadamanth are deleted after diffing each against its live file, and gyges deleted its own, plus an older one from 10 Mar, and pulled Molt-matts to `f0ae8a3`. Molt-matts stops ignoring `*.sql` globally (it un-hid nothing: every matched file is also ignored by its own repo), and Doom projectile searches `~/Devel/cfg`.
 - **The pipefail question is closed by hv's ruling: convert, don't port the guard** (issue 0008). All six pipelines ending in `grep -q` now capture, then match. `molt_foreign_home_paths` could already lose (a foreign path at the top of a large file went unreported under SIGPIPE); its conversion tests for an empty capture explicitly, and the large-file test fails against the old code.
 - Suite 179 -> 200, every run under both `/bin/bash` 3.2 and Homebrew bash 5.3, with negative controls against the pre-fix code for 0006, 0007 and 0008.
-- Commits: `549678e`, `5e99235`, `6e0e4bf`, `cd660db`, `cb907e9`, `8c3bd5a`, `5269fab` (molt); `28deabb`, `de8156d` (molt-{user})
+- Commits: `06ca019`, `5016253`, `7e8f23b`, `da345cb`, `445760d`, `e08733b`, `5032d00` (molt); `fb29758`, `f0ae8a3` (molt-{user})
 
 ## 018: Backup liberator verdicts, CI on bash 3.2, and iTerm2 profile and history (DONE)
 
@@ -50,12 +71,12 @@
 - **Run history was misreported** (issue 0002). An empty history was stated as "no backup exists", which a recreated job disproves, and a failed latest run hid when the last good copy was. Check and verify now share `_backup_run_assess` instead of two copies that already disagreed about cancelled runs.
 - **A running copy was invisible** (issue 0003). `recentRuns` records only finished runs, so both commands reported a failed run while hv's copy was 11% done. `_backup_copying` is the one probe, also used by `backup_maintain`. A running copy is always named, and it clears a cancelled or failed latest run only when the last successful copy is within `BACKUP_MAX_AGE_DAYS`.
 - `test/liberators/backup.bats`: 31 tests, the liberator's first. 17 of the first 23 fail on the pre-fix liberator. Suite 148 -> 179.
-- **Molt-matts was stuck mid-rebase** after a 15 Sep pull. iTerm2 3.7.1 had rewritten `config/iterm2/molt-profile.json` on two machines within three minutes: once in its own serialisation (`cc8028c`), once down to a 4-key stub (`da54ef3`). Resolved by skipping the stub, whose keys were all in `cc8028c`. Cause: iTerm2's Claude Code onboarding offers "Mark Rewritable & Install" for dynamic profiles, which adds `"Rewritable": true` and lets iTerm2 write settings changes back through the symlink into git. hv ruled iTerm2 does not write into terminal config unannounced; the profile was restored byte-for-byte to `11f8476`, without the flag.
+- **Molt-matts was stuck mid-rebase** after a 15 Sep pull. iTerm2 3.7.1 had rewritten `config/iterm2/molt-profile.json` on two machines within three minutes: once in its own serialisation (`2209489`), once down to a 4-key stub (`da54ef3`). Resolved by skipping the stub, whose keys were all in `2209489`. Cause: iTerm2's Claude Code onboarding offers "Mark Rewritable & Install" for dynamic profiles, which adds `"Rewritable": true` and lets iTerm2 write settings changes back through the symlink into git. hv ruled iTerm2 does not write into terminal config unannounced; the profile was restored byte-for-byte to `a92970b`, without the flag.
 - Retired from vc's 8 Sep escalations: the SuperDuper schedule mismatch. rhadamanth's job runs at 03:00, inside its `03:00-05:00` window.
-- **CI was red for two pushes after `445067c`** (issue 0004). GitHub's `macos-26-arm64` runner has only bash 3.2, which keeps the backslash in `${VAR:-{...\}}`, so a `backup.bats` fixture was invalid JSON there and 22 tests failed. The suite had only been run under Homebrew bash 5.3. Fixed with a plain assignment: 179/179 under bash 3.2 and 5.3 locally, and CI green with the backup tests running, not skipping, on the macOS runner.
+- **CI was red for two pushes after `ac8e1a1`** (issue 0004). GitHub's `macos-26-arm64` runner has only bash 3.2, which keeps the backslash in `${VAR:-{...\}}`, so a `backup.bats` fixture was invalid JSON there and 22 tests failed. The suite had only been run under Homebrew bash 5.3. Fixed with a plain assignment: 179/179 under bash 3.2 and 5.3 locally, and CI green with the backup tests running, not skipping, on the macOS runner.
 - Retired from `wip.md`: the ST0001 AC001 revert question, overtaken on 8 Sep when ST0001 closed with AC001-AC007 all satisfied.
 - **Per-session zsh history in iTerm2** (Molt-matts). Each iTerm2 session keeps its own history file under `~/.local/state/zsh/sessions`, keyed on the session GUID, so a restored window gets its own history back. New sessions start from `~/.zsh_history`, and at exit a session's commands are appended to both. Same mechanism as `/etc/zshrc_Apple_Terminal`: the shell writes to a scratch file because `fc -AI` writes only new commands when appending to the current `HISTFILE`. The shared file is append-only, because quitting iTerm2 closes every pane at once. Verified with expect-driven shells; GUID persistence across an iTerm2 restart is not yet verified.
-- Commits: `445067c`, `fb4cc3f`, `2e7dba9`, `c5bffa4` (molt); `b58e0d4`, `389ef6f` (molt-{user})
+- Commits: `ac8e1a1`, `6a5f57d`, `2ceb2ac`, `dee6510` (molt); `ffcbad5`, `e96d3c5` (molt-{user})
 
 ## 017: Honest-instrument sweep, ST0001 closed (DONE)
 
@@ -67,9 +88,9 @@ One defect class, 8 Sep: an instrument that reports success while the condition 
 - `molt doctor` check 13: the declared font must be one fontconfig resolves. Not `fc-match`, which returns Verdana for a font that does not exist.
 - `e` in Molt-matts had always discarded its filename argument: an alias appends arguments after a body ending in `&`.
 - **ST0001 closed after six months**, 15/15 work packages. WP-07 was half met and was split; its VM-build half became ST0003, since fiat-closed by hv. WP-04's runbook was three months stale and was brought current.
-- kovacs moved onto its own ext4 clones. Running one sleeve case-sensitive found three defects APFS had hidden: dangling links passing `[[ -L ]]` (`568e620`), renders compared by mtime (`9f28dce`), and a stack running from another machine's checkout (check 11). Keep one sleeve case-sensitive for this reason.
-- **Resolved, not to be re-opened.** Font vars are wired, not deleted: `alacritty.toml` is a template fed from `vars.sh`. Fonts get a check, not an installer. gyges already had key access to rhadamanth (`26ff1ef`). gyges's branch was merged (`048d06f`). A kovacs ProxyJump is correctly deferred while kovacs is unreachable. From 4 Sep: repo directory case normalised to `Molt-{user}`; `user_repo` asserted by doctor check 4; remote naming (`local`/`upstream` vs `origin`) is not a defect; the `claude` liberator owns `~/.claude/keybindings.json`; `desktop` links gtk-3.0 and gtk-4.0; doctor check 12 warns on `core.ignorecase`; `intent_check` tells "resolves" from "resolves to what we installed".
-- Commits: `200a8d3`, `0f6ac17`, `1adef9b`, `d8c7c67` (molt)
+- kovacs moved onto its own ext4 clones. Running one sleeve case-sensitive found three defects APFS had hidden: dangling links passing `[[ -L ]]` (`e8b929c`), renders compared by mtime (`687df61`), and a stack running from another machine's checkout (check 11). Keep one sleeve case-sensitive for this reason.
+- **Resolved, not to be re-opened.** Font vars are wired, not deleted: `alacritty.toml` is a template fed from `vars.sh`. Fonts get a check, not an installer. gyges already had key access to rhadamanth (`4d68bbb`). gyges's branch was merged (`82432ea`). A kovacs ProxyJump is correctly deferred while kovacs is unreachable. From 4 Sep: repo directory case normalised to `Molt-{user}`; `user_repo` asserted by doctor check 4; remote naming (`local`/`upstream` vs `origin`) is not a defect; the `claude` liberator owns `~/.claude/keybindings.json`; `desktop` links gtk-3.0 and gtk-4.0; doctor check 12 warns on `core.ignorecase`; `intent_check` tells "resolves" from "resolves to what we installed".
+- Commits: `06e240b`, `2fb3f02`, `b7c2e6b`, `13d2fcc` (molt)
 
 ## 016: NAS backup migration, and four silent-success bugs in the framework (DONE)
 
@@ -84,7 +105,7 @@ One defect class, 8 Sep: an instrument that reports success while the condition 
 - **Emacs rebuilt on both Macs** after `brew upgrade` moved tree-sitter 0.26 -> 0.27; emacs-plus hard-links keg-only libs by exact soname. gyges also dropped `--with-imagemagick`, retiring that recurrence at source, and `editors_check` now warns on any machine still carrying the linkage.
 - `.gitignore`'s `Icon\r` matched a file literally named `Iconr`, never the Finder stub -- the source of the perpetual "1 untracked file" warning. rhadamanth's `lan-hosts.conf` had drifted well behind its live `~/.ssh/config`, missing the bare aliases and a `kovacs` block entirely; kovacs was about to clone an ssh config with no `kovacs` entry.
 - rhadamanth's VS Code was **1.111.0 from March**, neither brew-managed nor self-updating; brought under the cask at 1.136.1 to match gyges.
-- Commits: `1c980c6`, `53b75fc`, `7d1508b`, `9f28dce` (molt); `0e57e83`, `4a64ca1`, `79299dc`, `ca77942`, `cd319fd`, `7ebf26f` (molt-{user})
+- Commits: `5f01655`, `8bc901e`, `a9e8813`, `687df61` (molt); `5d8537e`, `c495df5`, `0c628d3`, `fed1c0a`, `72a8b42`, `b45bd22` (molt-{user})
 
 ## 015: `dvb` shell function, whiteboard roster, snapshot re-cut (DONE)
 
@@ -97,7 +118,7 @@ One defect class, 8 Sep: an instrument that reports success while the condition 
 - **Snapshots re-cut off March**: `intent/wip.md` and `intent/restart.md` claimed 83 tests / 19 liberators / v0.1.0 and were five months stale. Measured 2026-08-27: 112 tests, ShellCheck clean over 27 scripts, 22 liberators, VERSION 0.1.1, `intent doctor` 0 findings. March's gyges/kovacs items carried forward marked unverifiable from this sleeve rather than silently re-asserted.
 - Fixed the unsubstituted `{user}` author placeholder in wip.md's verblock that `fc20931` missed.
 - ST0001 checked and found correct: WP-04 and WP-07 genuinely Not Started; the earlier "Phase 1-6 COMPLETE" was a different axis (phases map to focus items, not WP numbers).
-- Commits: `131642d` (molt); `a4e6cb2` (molt-{user})
+- Commits: `131642d` (molt); `5f51520` (molt-{user})
 
 ## 014: Intent v3 port (DONE)
 
@@ -126,7 +147,7 @@ One defect class, 8 Sep: an instrument that reports success while the condition 
   - zshrc sources it (only on iTerm2)
 - Tagged v0.1.0
 - 83 tests passing, 19 liberators
-- Commits: `c38a284`, `37ff0bc` (molt); `57e00c5` (molt-{user})
+- Commits: `c38a284`, `37ff0bc` (molt); `ce00951` (molt-{user})
 
 ## 012: molt upgrade --self — self-update before upgrade (DONE)
 

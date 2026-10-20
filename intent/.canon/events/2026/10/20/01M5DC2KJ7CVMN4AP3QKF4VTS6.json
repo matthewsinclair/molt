@@ -1,0 +1,15 @@
+{
+  "id": "01M5DC2KJ7CVMN4AP3QKF4VTS6",
+  "ts": "2026-10-20T19:19:40.359Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Read or rerun critic-shell's second review of ST0005's follow-up, `092384c`.** It was still running at the 20 Oct close. The first review's findings were all answered there, and the suite is 231/231 on both bash and green in CI. Any finding goes to the owner, which is vc."
+  }
+}

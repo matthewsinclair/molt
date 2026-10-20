@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-20 17:48Z
-status: active
-focus: "kovacs-sysadm's ask: utilz liberator from Homebrew, the ST0004 shape; check 10 flags /home/linuxbrew on every sleeve. Plan with hv, awaiting rulings"
+heartbeat_at: 2026-10-20 19:19Z
+status: paused
+focus: "EOD 20 Oct: ST0005 open for gyges only (WP03); attribution purged from Molt and Molt-matts on GitHub, the mirrors, rhadamanth and kovacs; gyges and the Pis to resync"
 claims: [ST0005]
 ---
 
@@ -22,6 +22,7 @@ _(none)_
 - **Confirm the Tactile install hint's URL live** (issue 0014). Plain DNS for extensions.gnome.org fails from here: on 16 Oct it resolved on neither rhadamanth nor kovacs, and timed out when rhadamanth asked 1.1.1.1 and 8.8.8.8 directly, though both answer github.com; Cloudflare's DNS over HTTPS answers it (54.221.220.94, TTL 60). From another network, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip. Here it needs `--resolve extensions.gnome.org:443:<address>`, which Claude Code's auto-mode classifier refused to vc, so it is hv's to run. (edited)
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
+- **Read or rerun critic-shell's second review of ST0005's follow-up, `092384c`.** It was still running at the 20 Oct close. The first review's findings were all answered there, and the suite is 231/231 on both bash and green in CI. Any finding goes to the owner, which is vc.
 
 ## Holds
 
@@ -55,6 +56,7 @@ _(none)_
 - (2026-09-15) **A verdict must say what it checked.** A skipped check reported as a pass is the defect; `backup_verify` now has a distinct exit for "passed what it could reach".
 - (2026-09-15) **iTerm2 does not write into terminal config without hv knowing.** hv's ruling. No dynamic profile in Molt-matts carries `"Rewritable": true`; profile changes are made in git.
 - (2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after "179 passing", and a stale AC001 question written into wip.
+- **AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: "STRICTLY FORBIDDEN. Purge that from the git record immediately"). Molt-matts `e3af373`'s trailers had been carried for days as "rewriting pushed history is hv's call". The purge recipe is in done 023 and vc's memory. Every sleeve whose Claude Code commits needs the attribution keys in `~/.claude/settings.json` and the Git Commits rule in `~/.claude/CLAUDE.md`. rhadamanth and kovacs have both; gyges is unchecked.
 
 ---
 
