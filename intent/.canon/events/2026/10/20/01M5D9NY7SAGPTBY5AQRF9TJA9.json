@@ -1,0 +1,15 @@
+{
+  "id": "01M5D9NY7SAGPTBY5AQRF9TJA9",
+  "ts": "2026-10-20T18:37:48.153Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0018"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "manifest depends is documented as ordering liberators, but nothing reads it"
+  }
+}

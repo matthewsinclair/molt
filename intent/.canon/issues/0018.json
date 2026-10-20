@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 18,
+  "slug": "manifest-depends-is-documented-as-ordering-liber",
+  "title": "manifest depends is documented as ordering liberators, but nothing reads it",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-20",
+  "reporter": "Matthew Sinclair",
+  "body": "Every instance manifest carries `depends = [...]` on its `[[liberator]]` entries, and `docs/guides/writing-a-liberator.md` tells authors it is \"optional: run after these liberators\". The README's manifest example shows it too. Nothing reads it. `molt_enabled_liberators` (`lib/molt.sh`) parses `name`, `enabled` and `os` only, and no other code in `lib/`, `bin/` or `liberators/` mentions the key. Liberators run in the manifest's own order.\n\nFound on 2026-10-20 while working out what the utilz entries need for ST0005. Molt-matts `e68e4dc` (since rewritten) chose `depends = [\"system\"]` over `[\"brew\"]` for kovacs's intent entry, \"because the brew liberator is macOS only\". The choice could make no difference either way.\n\nA key that is never read drifts silently: it reads as a working dependency and is only prose. `user_repo` was the same until doctor check 4 began asserting it.\n\nOptions, hv's to choose: make molt honour it (order by it, and refuse a dependency that is disabled or absent on this OS); assert it in doctor, as check 4 does for `user_repo`; or drop it from the manifests and the docs.\n"
+}
