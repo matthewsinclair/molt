@@ -2,11 +2,11 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 366e0639-7ba1-415e-a92d-acb9d7aaa54a
-heartbeat_at: 2026-10-16 13:59Z
-status: paused
-focus: "0013 and 0014 landed (c5e9c11), checked on kovacs; 0015 and 0016 wait on hv"
-claims: []
+session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
+heartbeat_at: 2026-10-20 17:48Z
+status: active
+focus: "kovacs-sysadm's ask: utilz liberator from Homebrew, the ST0004 shape; check 10 flags /home/linuxbrew on every sleeve. Plan with hv, awaiting rulings"
+claims: [ST0005]
 ---
 
 # Validation Claude (vc)

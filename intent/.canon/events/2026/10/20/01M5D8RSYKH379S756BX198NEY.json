@@ -1,0 +1,14 @@
+{
+  "id": "01M5D8RSYKH379S756BX198NEY",
+  "ts": "2026-10-20T18:21:53.491Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "st.new",
+  "subject": {
+    "type": "thread",
+    "id": "ST0005"
+  },
+  "payload": {
+    "title": "Utilz liberator: a checkout or Homebrew, per sleeve"
+  }
+}
