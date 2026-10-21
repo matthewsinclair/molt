@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-21 09:08Z
+heartbeat_at: 2026-10-21 09:11Z
 status: active
-focus: "21 Oct: ST0006 WP04 runbook at a1fe844, with vc for review"
+focus: "21 Oct: ST0006 WP04 at 41a096e, with vc for review; holding for vc's relay of kovacs-sysadm's A and C specifics"
 claims: [ST0006/04]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/04]
 
 ## DOING
 
-- ST0006 WP04: runbook written into WP04's body at a1fe844, with vc for review (edited)
+- ST0006 WP04: runbook and objective in WP04's record (a1fe844, 41a096e), with vc for review; vc relays kovacs-sysadm's phase A and C specifics after its compact (edited)
 
 ## TODO
 
