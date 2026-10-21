@@ -19,7 +19,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
   - [ ] 04: Move kovacs-sysadm into its home; then rhadamanth, then gyges
   - [-] 05: docs/guides/sleeve-agents.md: naming, roles, layers, the move
   - [ ] 06: Managed deny floor for sysadm
-  - [-] 07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
+  - [x] 07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
 
 ## TODO
 
