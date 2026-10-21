@@ -59,9 +59,9 @@
       "seq": 6,
       "title": "Managed deny floor for sysadm",
       "scope": "S",
-      "status": "not-started",
-      "objective": "",
-      "body": "Owner: molt-cc, after WP01 to WP05. molt-vc reviews.\n\nThe `sysadm` role cannot be sandboxed, so its home's deny list is a fence the agent could edit. This package renders the role's `permissions.deny` into the root-owned managed-settings file (`/Library/Application Support/ClaudeCode/managed-settings.d/molt-sysadm.json` on macOS, `/etc/claude-code/managed-settings.d/molt-sysadm.json` on Linux), through the sudo path the `system` liberator already uses, with a digest sidecar beside it. `molt agent config <name>` already tags each rule's layer, so a managed rule shows as managed. `molt doctor` reports the floor missing or stale. hv decides the floor's contents; the mechanism is this package.\n",
+      "status": "wip",
+      "objective": "A sysadm sleeve agent's credential denies hold at a layer the agent cannot edit: Molt renders hv's floor, the two Read denies for `~/.ssh/id_*` and `~/.aws/credentials`, into Claude Code's managed drop-in on every sleeve whose manifest enables a sysadm agent, through sudo, and removes a floor it rendered from a sleeve that no longer does, so `molt agent config` shows the rules as managed and `molt doctor` says when a sleeve carries the wrong thing.",
+      "body": "## Ruling\n\nhv, 21 Oct 2026, via cc: the floor's contents are credentials only, the two rules the role fence carries today, `Read(~/.ssh/id_*)` and `Read(~/.aws/credentials)`; nothing else (not a fence lock, not destructive-Bash denies, not \"whatever the role's deny is\"). Its scope is every sleeve whose `molt.toml` declares an enabled `[[agent]]` with `role = \"sysadm\"` (kovacs today); elsewhere Molt removes a floor file it rendered earlier. A managed file binds every Claude Code session on the sleeve, and deny always wins, so the floor also binds hv's own sessions there: that is the point, and the guide says so.\n\n## Where things live\n\n- **Contents, in Molt-matts**: `config/agents/roles/sysadm/floor.json`, one JSON object `{\"permissions\": {\"deny\": [...]}}` holding exactly the two rules. It sits beside the role's `AGENTS.md.tmpl` and `settings.json.tmpl`, which carry the same two rules as the fence hv can see in the home. The duplication is deliberate: the fence is the agent's own view of its limits; the floor is the same limits where the agent cannot reach them. Molt derives nothing: the file is hv's.\n- **Mechanism, in Molt**: the agents liberator, which already knows which `[[agent]]` roles are enabled, renders the floor beside the homes and removes one it rendered earlier. Two lib helpers in `lib/molt.sh`, after tiling.sh's shape: render to a user tmp as `molt_render` does, then `sudo install -m 644` into `<managed dir>/managed-settings.d/molt-sysadm.json`, with a `.molt-rendered` sidecar beside it, root-owned 644, written the same way; and a remove that takes both. `molt_claude_managed_dir` (`lib/molt.sh:1154`) names the dir per platform; its comment changes from \"nothing in molt writes it\" to \"molt writes molt-sysadm.json there through sudo, and nothing else\". Tests fake sudo (`FAKE_SUDO_STATUS`, as `tiling.bats`) and override the managed dir (as `agents.bats` does); no test touches the real one.\n- **Removal rule**: only a drop-in whose sidecar molt wrote is removed; a `molt-sysadm.json` with no molt sidecar is left alone and reported, since somebody else put it there.\n- **Faults**: a sleeve with an enabled sysadm agent and no `floor.json`, or a `floor.json` that is not one object with `permissions.deny`, fails check and install naming the file, as a missing role template does. sudo absent or refusing fails install naming it; nothing is written unprivileged into the managed dir.\n- **Visibility**: `molt agent config <host>-sysadm` already lists the managed layer above local, home and user (`lib/agent.sh:389`); on a sleeve carrying the floor its two rules show tagged managed. `molt doctor` gains check 14: a sysadm sleeve whose floor is missing or stale, and a sleeve with no sysadm agent carrying a molt-written floor, each warn; otherwise pass.\n- **Docs**: the guide gains a Managed floor section (what it is, where, that a sudo prompt may come mid `molt upgrade` on a sysadm sleeve, how to see it, the removal rule, that it binds hv's sessions too). Molt-matts' `roles/sysadm/AGENTS.md.tmpl` credential sentence stops saying \"until a managed floor (Molt ST0006 WP06) walls them off\" and says the floor is in place.\n\n## Rollout\n\nMolt first (cc, worktree `issue`-style branch `st0006-wp06`), CI green, vc merges; then Molt-matts (`floor.json` and the role text); then `molt upgrade` on kovacs, where hv answers the sudo prompt, and `molt agent config kovacs-sysadm` and doctor give AC020's evidence. rhadamanth and gyges declare no sysadm agent today and get nothing.\n\n## Out of scope\n\nAny further floor contents (hv's call, later); a floor for ops or docs; the kovacs sandbox (bubblewrap) decision; the fence lock hv did not choose.\n",
       "preamble": ""
     },
     {
@@ -204,6 +204,46 @@
       "kind": "test",
       "state": {
         "is": "computed"
+      }
+    },
+    {
+      "id": "AC017",
+      "text": "On a sleeve whose manifest declares no enabled sysadm agent, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC018",
+      "text": "The floor's contents come verbatim from Molt-matts config/agents/roles/sysadm/floor.json; a sysadm sleeve with no floor.json, or one that is not a single object with permissions.deny, fails check and install naming the file, and nothing is written",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC019",
+      "text": "molt doctor check 14 warns on a sysadm sleeve whose floor is missing or stale and on a sleeve with no sysadm agent carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC020",
+      "text": "kovacs carries the floor: after molt upgrade, molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the user layer, the drop-in and its sidecar are root-owned 644, and doctor check 14 passes",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    },
+    {
+      "id": "AC021",
+      "text": "The guide has a Managed floor section (what, where, the sudo prompt mid-upgrade, how to see it, the removal rule, that it binds every session on the sleeve), and Molt-matts' sysadm AGENTS.md.tmpl no longer says the floor is still to come",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
       }
     }
   ],
@@ -884,6 +924,86 @@
       ],
       "status": "green",
       "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"a re-render that would write a home's files as they are backs nothing up, with a preamble, an overlay and settings.json's memory dir in place, and one over a hand edit backs the edit up\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
+    },
+    {
+      "id": "AT068",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC010"
+      ],
+      "status": "to-write",
+      "note": "to-write: WP06 spec 21 Oct; agents install on a sleeve with an enabled sysadm agent renders managed-settings.d/molt-sysadm.json through faked sudo with exactly floor.json's deny list, mode 644, with a sidecar; a second run writes nothing"
+    },
+    {
+      "id": "AT069",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC010"
+      ],
+      "status": "to-write",
+      "note": "to-write: molt agent config <host>-sysadm shows the floor's two rules tagged managed above the user layer on a sleeve carrying the floor, and no managed rule on one that does not"
+    },
+    {
+      "id": "AT070",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC017"
+      ],
+      "status": "to-write",
+      "note": "to-write: with no enabled sysadm agent, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported"
+    },
+    {
+      "id": "AT071",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC018"
+      ],
+      "status": "to-write",
+      "note": "to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written"
+    },
+    {
+      "id": "AT072",
+      "kind": "test",
+      "file": "test/molt.bats",
+      "covers": [
+        "AC019"
+      ],
+      "status": "to-write",
+      "note": "to-write: doctor check 14 warns on a sysadm sleeve with a missing or stale floor and on a non-sysadm sleeve carrying a molt-written floor; passes otherwise"
+    },
+    {
+      "id": "AT073",
+      "kind": "test",
+      "file": "test/molt.bats",
+      "covers": [
+        "AC019"
+      ],
+      "status": "to-write",
+      "note": "to-write: the sudo helpers render to a user tmp first, refuse when sudo is absent or FAKE_SUDO_STATUS fails, and never write the managed dir unprivileged"
+    },
+    {
+      "id": "AT074",
+      "kind": "non-test",
+      "prose": "kovacs after the WP06 upgrade: molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed; ls -l of molt-sysadm.json and its sidecar root-owned 644; doctor check 14 passes",
+      "covers": [
+        "AC020"
+      ],
+      "status": "n-a",
+      "note": "to-write: evidence from kovacs-sysadm after the upgrade"
+    },
+    {
+      "id": "AT075",
+      "kind": "non-test",
+      "prose": "docs/guides/sleeve-agents.md has a Managed floor section covering what, where, the sudo prompt, how to see it, the removal rule and that it binds every session; Molt-matts roles/sysadm/AGENTS.md.tmpl's credential sentence says the floor is in place",
+      "covers": [
+        "AC021"
+      ],
+      "status": "n-a",
+      "note": "to-write: dc and vc check the text"
     }
   ]
 }
