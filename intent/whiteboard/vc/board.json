@@ -391,9 +391,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 15,
-      "text": "ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct): dc tests with a scratch HOME and CLAUDE_CONFIG_DIR, reports the table, then adds the entries to the ops and docs settings.json.tmpl on Molt-matts branch agents-creds; vc reviews and merges; dc then updates the guide's fence-and-wall paragraph on main.",
+      "text": "ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct): the test needs a logged-in interactive Claude under a scratch HOME, so hv runs dc's harness (dc's scratchpad creds-test/run.sh) from a plain terminal on rhadamanth (Seatbelt), and the same on kovacs after phase B (bubblewrap is the one that counts for kovacs-ops). dc tables the results; then dc adds the entries to ops and docs settings.json.tmpl on Molt-matts branch agents-creds; vc reviews and merges; dc updates the guide's fence-and-wall paragraph. Nothing changes in Molt-matts before the table.",
       "state": "live",
-      "recorded_at": "2026-10-21T15:22:26.678Z"
+      "recorded_at": "2026-10-21T15:22:26.678Z",
+      "edited_at": "2026-10-21T17:54:42.398Z"
     }
   ],
   "messages": [

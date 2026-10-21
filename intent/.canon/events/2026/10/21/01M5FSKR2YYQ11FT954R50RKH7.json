@@ -1,0 +1,16 @@
+{
+  "id": "01M5FSKR2YYQ11FT954R50RKH7",
+  "ts": "2026-10-21T17:54:42.398Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct): the test needs a logged-in interactive Claude under a scratch HOME, so hv runs dc's harness (dc's scratchpad creds-test/run.sh) from a plain terminal on rhadamanth (Seatbelt), and the same on kovacs after phase B (bubblewrap is the one that counts for kovacs-ops). dc tables the results; then dc adds the entries to ops and docs settings.json.tmpl on Molt-matts branch agents-creds; vc reviews and merges; dc updates the guide's fence-and-wall paragraph. Nothing changes in Molt-matts before the table."
+  }
+}
