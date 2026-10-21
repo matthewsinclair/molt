@@ -9,7 +9,7 @@ status: Not Started
 
 ## Objective
 
-_(not yet written)_
+Move each sleeve, kovacs first, then rhadamanth, then gyges on hv's date, so that Claude Code's state sits in the sleeve's declared config dir with none of it left in `$HOME`, and its sysadm agent runs from its own home with its memory there, following the runbook below, which hv executes at the keyboard.
 
 ## How this runs
 
@@ -61,7 +61,7 @@ If it refuses, a dirty checkout is P4's case. An `agents:` report is a row of th
 - an archive of `~/.claude/projects/-home-matts-setup` (one `MEMORY.md` from 2026-03-10, stale Phase 1 notes), once its two live facts are carried into WP03's kovacs overlay;
 - the plan and the verify script, which live in the home from now on.
 
-Where in the home each lands, `memory/` apart, is the plan's call.
+Where in the home each lands, `memory/` apart, is per kovacs-sysadm's plan, relayed by vc.
 
 **A3. Fold and quit.** kovacs-sysadm folds and quits. From here no Claude Code runs on kovacs until B9.
 
@@ -168,8 +168,8 @@ Accept the workspace trust dialog: the home's allow rules, its hooks and its `au
 **C3. Remove, on hv's word:**
 
 - `~/work` and `~/prov`, copied into the home in A2;
-- the orphan slugs A2 archived, `-home-matts-work-o7h-proj` and `-home-matts-setup`, from `~/.config/claude/projects/`, where the move put them;
-- the two user-scope allow rules hv dropped, from `~/.config/claude/settings.json` (plan H4), among them the `Bash(bash /home/matts/work/...)` rule, which points into the `~/work` this step removes;
+- the orphan slugs A2 archived, `-home-matts-work-o7h-proj` and `-home-matts-setup` (per kovacs-sysadm's plan, relayed by vc), from `~/.config/claude/projects/`, where the move put them;
+- the two user-scope allow rules hv dropped, for intent-vc and devbin-vc (the second is `Bash(bash /home/matts/work/devbin-vc/*)`, verbatim from kovacs-sysadm, relayed by vc), from `~/.config/claude/settings.json` (plan H4); both point into the `~/work` this step removes;
 - the npm-era leftovers `~/.cache/claude-cli-nodejs` and `~/.npm` (hv: kill).
 
 `-home-matts` itself, kovacs-sysadm's old slug, whose memory A2 copied, is not on that list, and it stays unless hv says otherwise. The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
@@ -214,7 +214,7 @@ On a Mac the copy is `cp -cRp "$b/.claude" "$b/.claude.json" ~/`, an APFS clone.
 
 After kovacs has passed C4, the same three phases, with these differences:
 
-- A: the first `molt upgrade` after WP02 and WP03 renders `~/Devel/agt/rhadamanth-sysadm`, `rhadamanth-ops` and `rhadamanth-docs`, as A1 does on kovacs. Nobody has yet listed what a `$HOME`-launched agent here must copy into a home before its state moves: kovacs-sysadm planned kovacs only, and vc assigns this inventory.
+- A: the first `molt upgrade` after WP02 and WP03 renders `~/Devel/agt/rhadamanth-sysadm`, `rhadamanth-ops` and `rhadamanth-docs`, as A1 does on kovacs. Then hv copies the memory of the sessions launched in `$HOME`, which are sysadm memories, into rhadamanth-sysadm's home, and confirms the destination: `cp -Rp ~/.claude/projects/-Users-matts/memory/. ~/Devel/agt/rhadamanth-sysadm/memory/`. vc's inventory on 21 Oct found `MEMORY.md` and four notes there (doom-emacs-version-profile-miss, emacs-plus31-dylib-crash, launchd-agents-tcc-network-volumes, nas-smb-share-wedges-emfile), so `ls ~/Devel/agt/rhadamanth-sysadm/memory/` should list those. The slug's one session transcript stays where it is, and moves with the state.
 - B1: the line goes in `instances/rhadamanth/vars.sh`, with the same value, which here is `/Users/matts/.config/claude`.
 - B2: skip it when B1's commit is made in rhadamanth's own Molt-matts checkout, the one molt reads. B5: P4's refusal is the likely one here, because the shared Molt checkout usually has uncommitted board files. Every session's fold commits its own board before B4, so that `git status` in both checkouts shows no modified or staged file when B5 runs.
 - B4 quits every Claude Code on the machine, which on rhadamanth is every session hv runs: molt-vc, molt-cc, molt-dc and molt-ac, and every other project's, such as geodica-vc. Each folds first. Quit Chrome as well: while it runs with the extension, its native host (`~/.local/bin/claude --chrome-native-host`) is a `claude` process, and B5 refuses on it. Quit the Claude desktop app if it is open.
@@ -228,7 +228,7 @@ Later, on a date hv sets, and through gyges-infra, whose sleeve agent becomes `g
 
 ## Not decided here
 
-WP06's deny floor for sysadm, which is hv's; gyges' date; when each backup and each set-aside dir is removed; and who inventories rhadamanth's phase A.
+WP06's deny floor for sysadm, which is hv's; gyges' date; and when each backup and each set-aside dir is removed.
 
 ## Acceptance
 
