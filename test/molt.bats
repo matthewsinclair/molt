@@ -57,11 +57,7 @@ load "test_helper.bash"
     require_command git
     local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
     create_test_repo "$repo"
-    # user_repo is there because doctor's manifest step stops without it.
-    cat > "$repo/molt.toml" <<TOML
-[stack]
-user_repo = "Molt-$(whoami)"
-
+    cat > "$repo/molt.toml" <<'TOML'
 [[liberator]]
 name = "git"
 enabled = true
@@ -72,6 +68,28 @@ TOML
     assert_output_contains "         not installed: git"
     assert_output_matches $'(^|\n)         Zen: git: '
     refute_output_contains "git: Zen:"
+}
+
+@test "molt doctor runs every step for a manifest that declares no user_repo (issue 0028)" {
+    local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
+    MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
+    assert_output_contains "Checking manifest... ✓ $repo/molt.toml"
+    assert_output_contains "[13/13]"
+}
+
+@test "molt doctor reports a manifest it cannot read, and carries on (issue 0028)" {
+    [[ "$(id -u)" != 0 ]] || skip "root reads a mode-000 file"
+    local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
+    chmod 000 "$repo/molt.toml"
+    MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
+    chmod 600 "$repo/molt.toml"
+    assert_output_contains "Checking manifest... ⚠ $repo/molt.toml"
+    assert_output_contains "could not be read"
+    assert_output_contains "[13/13]"
 }
 
 # --- Unknown command ---

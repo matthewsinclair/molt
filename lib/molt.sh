@@ -1331,10 +1331,21 @@ cmd_doctor() {
     # the repo to find the manifest inside it. Left as prose it silently drifts
     # out of date, which is how a lowercase declaration survived the rename. So
     # assert it instead: dead documentation becomes a live check.
-    local declared_repo
-    declared_repo="$(grep -E '^[[:space:]]*user_repo[[:space:]]*=' "$manifest" 2>/dev/null \
-                     | head -n 1 | sed -E 's/.*=[[:space:]]*"?([^"]*)"?.*/\1/')"
-    if [[ -n "$declared_repo" && -n "${real_repo:-}" && "$declared_repo" != "$real_repo" ]]; then
+    #
+    # grep is asked on its own, for its status: 1 is a manifest that declares
+    # no user_repo, which passes, and anything above is a manifest grep could
+    # not read. In the pipeline it was, either ended doctor here, without a
+    # word, under bin/molt's pipefail (issue 0028).
+    local declared_repo="" declared_lines grep_status=0
+    declared_lines="$(grep -E '^[[:space:]]*user_repo[[:space:]]*=' "$manifest" 2>&1)" || grep_status=$?
+    if [[ $grep_status -eq 0 ]]; then
+      declared_repo="$(printf '%s\n' "$declared_lines" | head -n 1 | sed -E 's/.*=[[:space:]]*"?([^"]*)"?.*/\1/')"
+    fi
+    if [[ $grep_status -gt 1 ]]; then
+      echo "[$step/$total] Checking manifest... ⚠ $manifest"
+      echo "         It could not be read for its user_repo declaration: ${declared_lines:-grep exited $grep_status}"
+      warnings=$((warnings + 1))
+    elif [[ -n "$declared_repo" && -n "${real_repo:-}" && "$declared_repo" != "$real_repo" ]]; then
       echo "[$step/$total] Checking manifest... ⚠ $manifest"
       echo "         Declares user_repo = '${declared_repo}' but the directory is '${real_repo}'."
       echo "         Nothing reads this key, so the mismatch is silent -- fix it before"
