@@ -208,8 +208,8 @@ JSON
 
 # --- ST0006: the config dir ---
 
-# AC001
 @test "with CLAUDE_CONFIG_DIR set, claude_install, check and verify use only it, and write nothing into ~/.claude" {
+    # AT001 (ST0006 AC001).
     setup_claude
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/xdg/claude"
     run claude_install
@@ -224,9 +224,10 @@ JSON
     [ -z "$(ls -A "$HOME/.claude")" ]
 }
 
-# AC001. The mkdir -p "$HOME/.claude" this replaced would have recreated exactly
+# The mkdir -p "$HOME/.claude" this replaced would have recreated exactly
 # what doctor faults.
 @test "with CLAUDE_CONFIG_DIR set and no ~/.claude, claude_install creates none" {
+    # AT002 (ST0006 AC001).
     setup_claude
     rm -rf "$HOME/.claude"
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/xdg/claude"
@@ -236,8 +237,9 @@ JSON
     [ ! -e "$HOME/.claude" ]
 }
 
-# AC001. molt can run in a shell that has not sourced env.sh yet.
+# molt can run in a shell that has not sourced env.sh yet.
 @test "on a sleeve whose state has moved, claude_install writes only the config dir though this shell lacks CLAUDE_CONFIG_DIR" {
+    # AT003 (ST0006 AC001).
     setup_moved
     run claude_install
     assert_success
@@ -248,8 +250,8 @@ JSON
     [ "$(jq -cS .statusLine "$CONFIG/settings.json")" = "$(jq -cS . <<<"$STATUSLINE")" ]
 }
 
-# AC002, AC011
 @test "the move refuses while Claude Code runs, names each process, and moves and publishes nothing" {
+    # AT004 (ST0006 AC002, AC011).
     setup_declared
     fake_processes "4242 claude --name kovacs-sysadm" "4243 /Users/x/.local/bin/claude --chrome-native-host" "77 -zsh"
     run claude_install
@@ -266,8 +268,8 @@ JSON
     [ ! -e "$(gui_file)" ]
 }
 
-# AC002, AC011
 @test "the move takes ~/.claude and ~/.claude.json into the config dir, copies both beside it first, then publishes it" {
+    # AT005 (ST0006 AC002, AC011).
     setup_declared
     run claude_install
     assert_success
@@ -286,9 +288,10 @@ JSON
     [ ! -e "$HOME/.claude" ]
 }
 
-# AC002. kovacs-sysadm's review: a command that merely names the package is not
+# kovacs-sysadm's review: a command that merely names the package is not
 # Claude Code, and procps prints only a name for pgrep -l.
 @test "a native or node-run Claude Code counts as running; a grep, npm ls, ls or molt run naming it does not" {
+    # AT006 (ST0006 AC002).
     setup_claude
     fake_processes "9 grep -r @anthropic-ai/claude-code ." \
         "10 node /usr/lib/node_modules/npm/bin/npm-cli.js ls @anthropic-ai/claude-code" \
@@ -315,9 +318,10 @@ JSON
         "20 node /usr/local/bin/claude --continue")" ]
 }
 
-# AC002. Found live on rhadamanth, 21 Oct: run without -a, macOS's pgrep did not
+# Found live on rhadamanth, 21 Oct: run without -a, macOS's pgrep did not
 # list the Claude Code session it was run from.
 @test "on macOS the process check counts molt's own ancestors, which pgrep leaves out unless asked; procps is not asked" {
+    # AT023 (ST0006 AC002).
     setup_claude
     eval 'molt_platform() { echo macos; }'
     run _claude_processes
@@ -333,6 +337,7 @@ JSON
 # critic-shell, 21 Oct: a failure after the copies were taken must not also say
 # that nothing was changed.
 @test "a move that fails after its copies are taken names them, and does not say nothing was changed" {
+    # AT024 (ST0006 AC002, AC011).
     setup_declared
     printf '#!/bin/bash\nexit 1\n' > "$BATS_TEST_TMPDIR/stub/cp"
     chmod +x "$BATS_TEST_TMPDIR/stub/cp"
@@ -346,8 +351,8 @@ JSON
     [ ! -e "$CONFIG" ]
 }
 
-# AC011
 @test "a config dir that already holds anything is refused, named with its contents, and nothing is merged or published" {
+    # AT007 (ST0006 AC011).
     setup_declared
     mkdir -p "$CONFIG/plugins"
     echo '{}' > "$CONFIG/settings.json"
@@ -364,8 +369,8 @@ JSON
     [ ! -e "$(gui_file)" ]
 }
 
-# AC011
 @test "an empty config dir counts as absent, and the move goes ahead" {
+    # AT008 (ST0006 AC011).
     setup_declared
     mkdir -p "$CONFIG"
     run claude_install
@@ -374,8 +379,8 @@ JSON
     [ ! -e "$HOME/.claude" ]
 }
 
-# AC011
 @test "a ~/.claude that is a symlink is not moved, and nothing is published" {
+    # AT009 (ST0006 AC011).
     setup_declared
     mv "$HOME/.claude" "$BATS_TEST_TMPDIR/elsewhere"
     ln -s "$BATS_TEST_TMPDIR/elsewhere" "$HOME/.claude"
@@ -388,9 +393,10 @@ JSON
     [ ! -e "$(gui_file)" ]
 }
 
-# AC011. A Claude Code once run with CLAUDE_CONFIG_DIR=~/.claude keeps its own
+# A Claude Code once run with CLAUDE_CONFIG_DIR=~/.claude keeps its own
 # .claude.json inside it, which the move would overwrite with ~/.claude.json.
 @test "a ~/.claude holding its own .claude.json beside ~/.claude.json is not moved, and nothing is published" {
+    # AT025 (ST0006 AC011).
     setup_declared
     echo '{"userID": "inner"}' > "$HOME/.claude/.claude.json"
     run claude_install
@@ -402,9 +408,10 @@ JSON
     [ ! -e "$HOME/.config" ]
 }
 
-# AC011, critic-shell, 21 Oct: after a move, declaring a new dir leaves the state
+# , critic-shell, 21 Oct: after a move, declaring a new dir leaves the state
 # in the old one, and publishing the new, empty one would start Claude afresh.
 @test "a newly declared, empty config dir is not published while the variable names another dir that exists" {
+    # AT026 (ST0006 AC011, AC004).
     setup_moved
     run claude_install
     assert_success
@@ -424,6 +431,7 @@ JSON
 # critic-shell, 21 Oct: vars.sh is read as leniently as molt_render reads it,
 # and only what it declares counts, not what molt's own shell inherited.
 @test "a vars.sh ending in a false test, or a MOLT_CLAUDE_CONFIG_DIR only inherited, leaves a sleeve undeclared" {
+    # AT027 (ST0006 AC011).
     setup_claude
     local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)"
     mkdir -p "$vars"
@@ -437,8 +445,9 @@ JSON
     [ ! -e "$HOME/.config/molt" ]
 }
 
-# AC011. Each value is written into env.sh, a plist and an environment.d file.
+# Each value is written into env.sh, a plist and an environment.d file.
 @test "a declared config dir that is relative, holds a quote, or is ~/.claude itself is refused before anything moves" {
+    # AT010 (ST0006 AC011).
     setup_declared
     declare_config_dir "relative/claude"
     run claude_install
@@ -457,8 +466,9 @@ JSON
     [ ! -e "$(gui_file)" ]
 }
 
-# AC011. No state anywhere, so nothing to split.
+# No state anywhere, so nothing to split.
 @test "on a sleeve Claude Code has not run on, install creates the config dir and publishes it" {
+    # AT011 (ST0006 AC011).
     setup_declared
     rm -rf "$HOME/.claude" "$HOME/.claude.json"
     run claude_install
@@ -469,8 +479,9 @@ JSON
     [ -z "$(ls -d "$CONFIG".molt-backup.* 2>/dev/null)" ]
 }
 
-# AC011, and hv's ruling that nothing anti-brew is rendered (WP01 4b).
+# , and hv's ruling that nothing anti-brew is rendered (WP01 4b).
 @test "the GUI file is a LaunchAgent on macOS and an environment.d file on Linux, and nothing published names Molt's checkout" {
+    # AT012 (ST0006 AC011).
     setup_moved
     eval 'molt_platform() { echo macos; }'
     run claude_install
@@ -499,8 +510,8 @@ JSON
 
 # --- ST0006: the home guard ---
 
-# AC003
 @test "the home guard exits 2 with the agent-home message when cwd is \$HOME, and 0 anywhere else" {
+    # AT013 (ST0006 AC003).
     setup_moved
     run claude_install
     assert_success
@@ -520,8 +531,9 @@ JSON
     [ -z "$output" ]
 }
 
-# AC003. Exit 1 blocks nothing, and Claude Code shows what it printed.
+# Exit 1 blocks nothing, and Claude Code shows what it printed.
 @test "the home guard exits 1, saying so, when jq is missing, or the input is not JSON or names no cwd" {
+    # AT014 (ST0006 AC003).
     setup_moved
     run claude_install
     assert_success
@@ -537,8 +549,8 @@ JSON
     assert_output_contains "jq is not on PATH"
 }
 
-# AC003
 @test "the hook merge adds the guard once, keeps every other key and hook as it was, and a second install writes nothing" {
+    # AT015 (ST0006 AC003).
     setup_moved
     cat > "$CONFIG/settings.json" <<'JSON'
 {
@@ -566,8 +578,8 @@ JSON
 
 # --- ST0006: what doctor reports ---
 
-# AC004
 @test "check reports CLAUDE_CONFIG_DIR unset where molt runs, or naming another dir, and passes once it names the config dir" {
+    # AT016 (ST0006 AC004).
     setup_moved
     run claude_install
     assert_success
@@ -585,8 +597,9 @@ JSON
     assert_success
 }
 
-# AC004. The sign that a launch path missed the variable.
+# The sign that a launch path missed the variable.
 @test "check reports ~/.claude or ~/.claude.json present while the config dir is elsewhere, whether a directory, a file or a link" {
+    # AT017 (ST0006 AC004).
     setup_moved
     run claude_install
     assert_success
@@ -610,9 +623,10 @@ JSON
     assert_output_contains "claude: ~/.claude is a symlink to $CONFIG"
 }
 
-# AC004. The native installer keeps its binary and versions under ~/.local and
+# The native installer keeps its binary and versions under ~/.local and
 # ~/.cache, wherever the config dir is.
 @test "the native installer's own paths under ~/.local and ~/.cache are not faults" {
+    # AT018 (ST0006 AC004).
     setup_moved
     run claude_install
     assert_success
@@ -623,8 +637,8 @@ JSON
     assert_success
 }
 
-# AC004
 @test "check and verify report env.sh, the GUI file or the guard missing or stale, and the hook missing from settings.json" {
+    # AT019 (ST0006 AC004).
     setup_moved
     run claude_install
     assert_success
@@ -662,8 +676,8 @@ JSON
     assert_success
 }
 
-# AC004
 @test "check and verify report a move still pending, naming what is in \$HOME" {
+    # AT020 (ST0006 AC004).
     setup_declared
     run claude_check
     assert_failure
@@ -676,8 +690,8 @@ JSON
 
 # --- ST0006: the user-scope rules ---
 
-# AC012
 @test "CLAUDE.md and AGENTS.md are linked into the config dir, and a regular file there is backed up first" {
+    # AT021 (ST0006 AC012).
     setup_claude
     echo "# rules" > "$TEST_USER_REPO/config/claude/CLAUDE.md"
     echo "# contract" > "$TEST_USER_REPO/config/claude/AGENTS.md"
@@ -696,8 +710,8 @@ JSON
     assert_success
 }
 
-# AC012
 @test "check and verify report a CLAUDE.md link that is broken" {
+    # AT022 (ST0006 AC012).
     setup_claude
     echo "# rules" > "$TEST_USER_REPO/config/claude/CLAUDE.md"
     claude_install >/dev/null
