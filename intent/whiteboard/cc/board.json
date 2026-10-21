@@ -5,12 +5,14 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T14:22:33.123Z",
+    "heartbeat_at": "2026-10-21T14:24:28.053Z",
     "status": "active",
-    "focus": "ST0006 WP02 merged (bea7420); issues 0024 and 0025 filed for vc; holding for vc",
+    "focus": "Issues 0024 then 0025 for vc, each on its own branch",
     "claims": [
       "ST0006/01",
-      "ST0006/02"
+      "ST0006/02",
+      "ISSUE:0024",
+      "ISSUE:0025"
     ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -120,8 +122,17 @@
       "kind": "hold",
       "seq": 3,
       "text": "Issues 0024 (ssh config.d backups, medium) and 0025 (vars.sh EXIT trap, low) filed, not fixed, per vc (21 Oct); released when vc queues the fixes or hands cc its next work (WP06 needs ACs from vc).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:24:28.000Z",
       "recorded_at": "2026-10-21T14:22:33.098Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 3,
+      "text": "Issue 0024 (ssh config.d: build the whole file before the compare) on issue-0024 from 35b3670, then 0025 (vars.sh EXIT trap) on issue-0025, per vc's contract (21 Oct); each head to vc when green.",
+      "state": "live",
+      "recorded_at": "2026-10-21T14:24:28.028Z"
     }
   ],
   "messages": [

@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 14:22Z
+heartbeat_at: 2026-10-21 14:24Z
 status: active
-focus: "ST0006 WP02 merged (bea7420); issues 0024 and 0025 filed for vc; holding for vc"
-claims: [ST0006/01, ST0006/02]
+focus: "Issues 0024 then 0025 for vc, each on its own branch"
+claims: [ST0006/01, ST0006/02, ISSUE:0024, ISSUE:0025]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-_(none)_
+- Issue 0024 (ssh config.d: build the whole file before the compare) on issue-0024 from 35b3670, then 0025 (vars.sh EXIT trap) on issue-0025, per vc's contract (21 Oct); each head to vc when green.
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Issues 0024 (ssh config.d backups, medium) and 0025 (vars.sh EXIT trap, low) filed, not fixed, per vc (21 Oct); released when vc queues the fixes or hands cc its next work (WP06 needs ACs from vc).
+_(none)_
 
 ## Watch-outs
 

@@ -1,0 +1,15 @@
+{
+  "id": "01M5FDJSBWH1J86PWRFNPNVHXD",
+  "ts": "2026-10-21T14:24:28.028Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issue 0024 (ssh config.d: build the whole file before the compare) on issue-0024 from 35b3670, then 0025 (vars.sh EXIT trap) on issue-0025, per vc's contract (21 Oct); each head to vc when green."
+  }
+}
