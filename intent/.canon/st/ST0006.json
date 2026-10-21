@@ -644,6 +644,16 @@
       ],
       "status": "red",
       "note": "vc's WP01 review C1: molt_render refuses a vars.sh that does not parse or cannot be read; red on 41ef6b1"
+    },
+    {
+      "id": "AT047",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats"
     }
   ]
 }

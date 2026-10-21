@@ -249,6 +249,10 @@ _(no criteria in this group)_
 
 _(no criteria in this group)_
 
+### Group AT047
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -486,6 +490,10 @@ _(no tests in this group)_
 ### Group AT046
 
 - AT046 `test/templates.bats` -- covers AC011 -- status: red -- vc's WP01 review C1: molt_render refuses a vars.sh that does not parse or cannot be read; red on 41ef6b1
+
+### Group AT047
+
+- AT047 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats
 
 ---
 
