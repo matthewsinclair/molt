@@ -166,6 +166,7 @@ TOML
 # name, each table's keys apart from the other's, a key below a later table in
 # neither, and an entry with no key of its own still seen.
 @test "[[agent]] entries are read by the one table parser, keyed on role, and kept apart from [[liberator]] entries" {
+    # AT041 (ST0006 AC005).
     _use_test_repo
     cat >> "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" <<'TOML'
 
@@ -192,13 +193,16 @@ TOML
     refute_output_contains "ops"
     refute_output_contains "sysadm"
     # The [[liberator]] entry with no name names no liberator, not an empty one.
-    [ -z "$(printf '%s\n' "$output" | grep -x '')" ]
+    # Counted in the function's own output: run drops a trailing empty line.
+    molt_enabled_liberators > "$BATS_TEST_TMPDIR/enabled"
+    [ "$(grep -cx '' "$BATS_TEST_TMPDIR/enabled")" = 0 ]
     run _molt_table_entries liberator name "$BATS_TEST_TMPDIR/molt-testuser/molt.toml"
     assert_success
     refute_output_contains "role"
 }
 
 @test "molt_agent_manifest_faults names an entry with no role, a role declared twice, a written name and a harness other than claude" {
+    # AT042 (ST0006 AC005).
     _use_test_repo
     cat >> "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" <<'TOML'
 

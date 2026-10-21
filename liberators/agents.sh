@@ -5,12 +5,40 @@
 # MOLT_AGT_DIR, rendered from the role the user repo defines (ST0006). The
 # model, and molt agent list|config, are in lib/agent.sh.
 
+# Sets autoMemoryDirectory to $2 in the rendered settings.json $1, which must
+# hold one JSON object: jq passes an empty render through as nothing and turns
+# null into an object, and either would leave settings that read current but
+# are not the role's. Fails, printing why instead, with $1 as it was.
+_agents_memory_dir_set() {
+  local target="$1" dir="$2" tmp
+  if ! command -v jq &>/dev/null; then
+    echo "jq is not installed"
+    return 1
+  fi
+  if ! tmp="$(mktemp "${target}.XXXXXX")"; then
+    echo "no temporary file could be made beside it"
+    return 1
+  fi
+  if ! jq -s --arg dir "$dir" \
+      'if length == 1 and (.[0] | type) == "object" then .[0] | .autoMemoryDirectory = $dir else error("not one JSON object") end' \
+      "$target" > "$tmp" 2>/dev/null; then
+    rm -f "$tmp"
+    echo "the template does not render to one JSON object"
+    return 1
+  fi
+  if ! mv -f "$tmp" "$target"; then
+    rm -f "$tmp"
+    echo "it could not be replaced"
+    return 1
+  fi
+}
+
 # Renders the file $3 of the home of the agent named $1, with the role $2, from
 # the template $4, then what follows the render: the overlay $5 appended to
 # AGENTS.md, and autoMemoryDirectory set in settings.json, so the agent's memory
 # lives in its home and travels with it.
 _agents_render_file() {
-  local name="$1" role="$2" file="$3" template="$4" extra="$5" home host target tmp
+  local name="$1" role="$2" file="$3" template="$4" extra="$5" home host target why
   home="$(molt_agent_home "$name")"
   host="$(molt_hostname)"
   target="$home/$file"
@@ -34,17 +62,11 @@ _agents_render_file() {
       # or removing one makes the home stale.
       molt_config_record_digest "$target" "$template" ${extra:+"$extra"} ;;
     .claude/settings.json)
-      tmp="$(mktemp "${target}.XXXXXX")" || return 1
-      if ! jq --arg dir "$home/memory" '.autoMemoryDirectory = $dir' "$target" > "$tmp" 2>/dev/null; then
-        rm -f "$tmp"
-        # Without its sidecar the file reads as stale, not as rendered.
+      if ! why="$(_agents_memory_dir_set "$target" "$home/memory")"; then
+        # Without its sidecar the file reads as stale, not as rendered, and the
+        # next install renders it again.
         rm -f "${target}.molt-rendered"
-        molt_error "agents: role $role's settings.json.tmpl does not render to a JSON object, so $name's settings are not usable"
-        return 1
-      fi
-      if ! mv -f "$tmp" "$target"; then
-        rm -f "$tmp"
-        molt_error "agents: could not set autoMemoryDirectory in $name's settings.json"
+        molt_error "agents: $name's settings.json, from role $role's settings.json.tmpl, is not usable: $why"
         return 1
       fi ;;
   esac
@@ -56,11 +78,11 @@ _agents_render_file() {
 # kovacs-sysadm is still live and the move is refused, so it can copy its files
 # in before hv runs the move (ST0006).
 _agents_render() {
-  local name="$1" role="$2" home role_dir file template extra dir
+  local name="$1" role="$2" home fault file template extra dir
   home="$(molt_agent_home "$name")"
-  role_dir="$(molt_agent_role_dir "$role")" || return 1
-  if [[ ! -d "$role_dir" ]]; then
-    molt_error "agents: $name: role $role is not defined: there is no $(molt_tilde "$role_dir")"
+  fault="$(molt_agent_role_fault "$role")"
+  if [[ -n "$fault" ]]; then
+    molt_error "agents: $name: $fault"
     return 1
   fi
   while IFS=$'\t' read -r file template extra; do
@@ -85,12 +107,16 @@ _agents_render() {
 # standing between this sleeve's agents and current homes. Returns non-zero
 # when it reported anything.
 _agents_report_faults() {
-  local log="$1" prefix="$2" name role enabled harness ok=0
+  local log="$1" prefix="$2" agents name role ok=0
   molt_report_faults "$log" "$prefix" "molt.toml" "$(molt_agent_manifest_faults)" || ok=1
-  while IFS=$'\t' read -r name role enabled harness; do
-    [[ -n "$name" && "$enabled" == "true" && "$harness" == "claude" ]] || continue
+  if ! agents="$(molt_homed_agents)"; then
+    "$log" "${prefix}the [[agent]] entries in molt.toml could not be read"
+    return 1
+  fi
+  while IFS=$'\t' read -r name role; do
+    [[ -n "$name" ]] || continue
     molt_report_faults "$log" "$prefix" "$name" "$(molt_agent_faults "$name" "$role")" || ok=1
-  done <<< "$(molt_agents)"
+  done <<< "$agents"
   return $ok
 }
 
@@ -99,12 +125,16 @@ agents_check() {
 }
 
 agents_install() {
-  local name role enabled harness failed=0
+  local agents name role failed=0
   molt_report_faults molt_error "agents: " "molt.toml" "$(molt_agent_manifest_faults)" || failed=1
-  while IFS=$'\t' read -r name role enabled harness; do
-    [[ -n "$name" && "$enabled" == "true" && "$harness" == "claude" ]] || continue
+  if ! agents="$(molt_homed_agents)"; then
+    molt_error "agents: the [[agent]] entries in molt.toml could not be read"
+    return 1
+  fi
+  while IFS=$'\t' read -r name role; do
+    [[ -n "$name" ]] || continue
     _agents_render "$name" "$role" || failed=1
-  done <<< "$(molt_agents)"
+  done <<< "$agents"
   if [[ $failed -ne 0 ]]; then
     return 1
   fi

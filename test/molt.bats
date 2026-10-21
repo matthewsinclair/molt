@@ -105,6 +105,7 @@ load "test_helper.bash"
 
 # ST0006
 @test "molt help lists the agent command, and molt agent alone prints its usage and fails" {
+    # AT043 (ST0006 AC006).
     run_molt help
     assert_success
     assert_output_contains "agent list"
@@ -427,6 +428,7 @@ _use_digest_test_repo() {
 # absent last extra, so a home with no overlay read stale however often it was
 # rendered.
 @test "molt_config_digest counts an absent extra input as none, and its arrival as a change" {
+    # AT044 (ST0006 AC005).
     load_molt_libs
     _use_digest_test_repo
     local d="$BATS_TEST_TMPDIR/dg3"

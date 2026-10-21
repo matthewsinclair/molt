@@ -32,7 +32,9 @@ EOF
   "permissions": { "allow": ["Bash(uptime)"], "deny": ["Bash(rm -rf:*)"] }
 }
 EOF
-    printf 'export MOLT_HOSTNAME="%s"\n' "$SLEEVE" > "$INSTANCE/vars.sh"
+    # No MOLT_HOSTNAME here: the liberator exports it, so a sleeve whose vars.sh
+    # does not declare it renders its name all the same.
+    echo 'export MOLT_FONT_SIZE=12' > "$INSTANCE/vars.sh"
     write_manifest '[[agent]]' 'role = "sysadm"'
 
     export NAME="$SLEEVE-sysadm"
@@ -52,12 +54,16 @@ permission_line() {
 # --- The home (AC005) ---
 
 @test "an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/" {
+    # AT028 (ST0006 AC005).
     setup_agents
     run agents_check
     assert_failure
     assert_output_contains "agents: $NAME: $AGENT_HOME/AGENTS.md is missing"
     run agents_install
     assert_success
+    assert_output_contains "Rendered: $ROLE/AGENTS.md.tmpl -> $AGENT_HOME/AGENTS.md"
+    assert_output_contains "Rendered: $MOLT_ROOT/templates/agents/CLAUDE.md.tmpl -> $AGENT_HOME/CLAUDE.md"
+    assert_output_contains "Rendered: $ROLE/settings.json.tmpl -> $AGENT_HOME/.claude/settings.json"
     [ "$(cat "$AGENT_HOME/AGENTS.md")" = "$(printf '# %s\n\nThe sysadm agent for %s, at home in %s.' "$NAME" "$SLEEVE" "$AGENT_HOME")" ]
     [ "$(cat "$AGENT_HOME/CLAUDE.md")" = "@AGENTS.md" ]
     [ "$(jq -r .autoMemoryDirectory "$AGENT_HOME/.claude/settings.json")" = "$AGENT_HOME/memory" ]
@@ -71,6 +77,7 @@ permission_line() {
 }
 
 @test "re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's" {
+    # AT029 (ST0006 AC005).
     setup_agents
     agents_install >/dev/null
     echo "remembered" > "$AGENT_HOME/memory/MEMORY.md"
@@ -84,6 +91,7 @@ permission_line() {
 }
 
 @test "a changed role template makes the home stale, and install renders it again" {
+    # AT030 (ST0006 AC005).
     setup_agents
     agents_install >/dev/null
     echo "Patch on Tuesdays." >> "$ROLE/AGENTS.md.tmpl"
@@ -100,6 +108,7 @@ permission_line() {
 # kovacs-sysadm: the role's template is one file for every host, so a fact true
 # of one machine needs a place of its own.
 @test "the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale" {
+    # AT031 (ST0006 AC005).
     setup_agents
     agents_install >/dev/null
     [ "$(tail -n 1 "$AGENT_HOME/AGENTS.md")" = "The sysadm agent for $SLEEVE, at home in $AGENT_HOME." ]
@@ -124,6 +133,7 @@ permission_line() {
 }
 
 @test "a role the user repo does not define is a fault naming the role and where it was looked for" {
+    # AT032 (ST0006 AC005).
     setup_agents
     write_manifest '[[agent]]' 'role = "ops"'
     run agents_check
@@ -136,6 +146,7 @@ permission_line() {
 }
 
 @test "an agent that is not enabled is not rendered" {
+    # AT033 (ST0006 AC005).
     setup_agents
     write_manifest '[[agent]]' 'role = "sysadm"' 'enabled = false'
     run agents_check
@@ -148,7 +159,10 @@ permission_line() {
 # kovacs-sysadm H2: the first upgrade renders the home while the agent is still
 # live from $HOME, so it can copy its files in before hv runs the move.
 @test "a home renders while Claude Code's state is still in \$HOME, waiting on nothing the claude liberator does" {
+    # AT034 (ST0006 AC005).
     setup_agents
+    # Before the move nothing has published CLAUDE_CONFIG_DIR.
+    unset CLAUDE_CONFIG_DIR
     printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" >> "$INSTANCE/vars.sh"
     mkdir -p "$HOME/.claude"
     echo '{}' > "$HOME/.claude.json"
@@ -159,12 +173,29 @@ permission_line() {
     [ ! -e "$HOME/.config/claude" ]
 }
 
-@test "a settings template that does not render to JSON fails the install and leaves the file reading stale" {
+# critic-shell, 21 Oct: jq passed an empty render through as nothing and turned
+# null into an object, so either read current.
+@test "a settings template that does not render to one JSON object, being broken, empty or null, fails the install and leaves the file reading stale" {
+    # AT035 (ST0006 AC005).
     setup_agents
     echo '{"permissions": ' > "$ROLE/settings.json.tmpl"
     run agents_install
     assert_failure
-    assert_output_contains "role sysadm's settings.json.tmpl does not render to a JSON object"
+    assert_output_contains "agents: $NAME's settings.json, from role sysadm's settings.json.tmpl, is not usable: the template does not render to one JSON object"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
+    printf '\n  \n' > "$ROLE/settings.json.tmpl"
+    run agents_install
+    assert_failure
+    assert_output_contains "is not usable: the template does not render to one JSON object"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
+    echo 'null' > "$ROLE/settings.json.tmpl"
+    run agents_install
+    assert_failure
+    assert_output_contains "is not usable: the template does not render to one JSON object"
     run agents_check
     assert_failure
     assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
@@ -173,6 +204,7 @@ permission_line() {
 # --- molt agent (AC006) ---
 
 @test "molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home" {
+    # AT036 (ST0006 AC006).
     setup_agents
     write_manifest '[[agent]]' 'role = "sysadm"' '' '[[agent]]' 'role = "ops"' 'enabled = false'
     agents_install >/dev/null
@@ -189,6 +221,7 @@ permission_line() {
 # The three layers the contract names, the home's settings.local.json, where
 # Claude Code records what was approved in the home, and managed drop-ins.
 @test "the permissions in effect are every rule from every layer, deny first, each tagged with its layer" {
+    # AT037 (ST0006 AC006).
     setup_agents
     agents_install >/dev/null
     mkdir -p "$BATS_TEST_TMPDIR/managed/managed-settings.d" "$CLAUDE_CONFIG_DIR"
@@ -209,6 +242,7 @@ permission_line() {
 }
 
 @test "molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules" {
+    # AT038 (ST0006 AC006).
     setup_agents
     agents_install >/dev/null
     mkdir -p "$CLAUDE_CONFIG_DIR"
@@ -230,6 +264,7 @@ permission_line() {
 }
 
 @test "molt agent config fails on an undeclared name, listing the declared ones" {
+    # AT039 (ST0006 AC006).
     setup_agents
     write_manifest '[[agent]]' 'role = "sysadm"' '' '[[agent]]' 'role = "ops"'
     run cmd_agent config kovacs-docs
@@ -238,6 +273,7 @@ permission_line() {
 }
 
 @test "molt agent config fails, naming the file, when a settings layer is not JSON" {
+    # AT040 (ST0006 AC006).
     setup_agents
     agents_install >/dev/null
     mkdir -p "$CLAUDE_CONFIG_DIR"
@@ -245,4 +281,22 @@ permission_line() {
     run cmd_agent config "$NAME"
     assert_failure
     assert_output_contains "$CLAUDE_CONFIG_DIR/settings.json cannot be read as Claude Code settings"
+}
+
+# critic-shell, 21 Oct: every other molt agent test calls cmd_agent in the
+# test's own shell; this one runs bin/molt, as hv does. It stops short of
+# molt agent config on a declared agent, which reads this machine's managed
+# settings.
+@test "molt agent list and molt agent config run through bin/molt" {
+    # AT047 (ST0006 AC006).
+    setup_agents
+    agents_install >/dev/null
+    mkdir -p "$BATS_TEST_TMPDIR/cfg"
+    ln -s "$TEST_USER_REPO" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent list
+    assert_success
+    assert_output_contains "$(printf '%-28s %-8s %-8s %-14s %s' "$NAME" sysadm true current "$AGENT_HOME")"
+    run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent config kovacs-docs
+    assert_failure
+    assert_output_contains "kovacs-docs is not declared on this sleeve; declared: $NAME"
 }

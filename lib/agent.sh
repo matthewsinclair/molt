@@ -36,6 +36,22 @@ molt_agents() {
   '
 }
 
+# The agents this sleeve gives a home, one "name<TAB>role" line each: those
+# enabled, with the one harness molt renders a home for, claude.
+molt_homed_agents() {
+  local agents
+  agents="$(molt_agents)" || return 1
+  printf '%s\n' "$agents" | awk -F'\t' '$3 == "true" && $4 == "claude" { print $1 "\t" $2 }'
+}
+
+# The entry of the agent named $1, as molt_agents prints it. Fails, printing
+# nothing, when this sleeve declares no agent of that name.
+molt_agent_named() {
+  local agents
+  agents="$(molt_agents)" || return 1
+  printf '%s\n' "$agents" | awk -F'\t' -v want="$1" '$1 == want { print; found = 1; exit } END { exit !found }'
+}
+
 # Names, a line each, what is wrong with this sleeve's [[agent]] entries: an
 # entry with no role; a role two entries declare, which would give two agents
 # one name; a name written in, which is derived and never written; a harness
@@ -73,6 +89,17 @@ molt_agent_role_dir() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
   echo "${user_repo}/config/agents/roles/$1"
+}
+
+# Why the role $1 cannot give an agent a home, or nothing when it can: the user
+# repo cannot be found, or does not define the role.
+molt_agent_role_fault() {
+  local role_dir
+  if ! role_dir="$(molt_agent_role_dir "$1")"; then
+    echo "the user repo cannot be found, so role $1 cannot be read"
+  elif [[ ! -d "$role_dir" ]]; then
+    echo "role $1 is not defined: there is no $(molt_tilde "$role_dir")"
+  fi
 }
 
 # This sleeve's overlay for the role $1, whether or not it has one: facts true
@@ -124,14 +151,11 @@ molt_agent_file_states() {
 # and a current home: a role the user repo does not define, a template the role
 # lacks, and a file or directory of the home missing or stale.
 molt_agent_faults() {
-  local name="$1" role="$2" home role_dir file state template dir
+  local name="$1" role="$2" home fault file state template dir
   home="$(molt_agent_home "$name")"
-  if ! role_dir="$(molt_agent_role_dir "$role")"; then
-    echo "the user repo cannot be found, so role $role cannot be read"
-    return 0
-  fi
-  if [[ ! -d "$role_dir" ]]; then
-    echo "role $role is not defined: there is no $(molt_tilde "$role_dir")"
+  fault="$(molt_agent_role_fault "$role")"
+  if [[ -n "$fault" ]]; then
+    echo "$fault"
     return 0
   fi
   while IFS=$'\t' read -r file state template; do
@@ -149,9 +173,8 @@ molt_agent_faults() {
 # One word or two for the home of the agent named $1, with the role $2:
 # current, stale, not rendered, or role undefined.
 molt_agent_currency() {
-  local name="$1" role="$2" role_dir
-  role_dir="$(molt_agent_role_dir "$role")" || role_dir=""
-  if [[ -z "$role_dir" || ! -d "$role_dir" ]]; then
+  local name="$1" role="$2"
+  if [[ -n "$(molt_agent_role_fault "$role")" ]]; then
     echo "role undefined"
   elif [[ ! -d "$(molt_agent_home "$name")" ]]; then
     echo "not rendered"
@@ -189,6 +212,10 @@ molt_agent_settings_layers() {
 # JSON with permissions lists.
 molt_agent_permissions() {
   local home="$1" layers list layer file
+  if ! command -v jq &>/dev/null; then
+    echo "molt agent: jq is not installed, so the permission rules cannot be read" >&2
+    return 1
+  fi
   layers="$(molt_agent_settings_layers "$home")"
   for list in deny ask allow; do
     while IFS=$'\t' read -r layer file; do
@@ -217,7 +244,10 @@ _agent_list() {
     molt_error "molt agent: this sleeve has no molt.toml, so it declares no agents"
     return 1
   fi
-  agents="$(molt_agents)"
+  if ! agents="$(molt_agents)"; then
+    molt_error "molt agent: the [[agent]] entries in molt.toml could not be read"
+    return 1
+  fi
   if [[ -z "$agents" ]]; then
     echo "No agents: this sleeve's molt.toml has no [[agent]] entries."
   else
@@ -234,22 +264,16 @@ _agent_list() {
 # settings files read for it, and the permission rules in effect there, each
 # tagged with its layer. An undeclared name fails, listing the declared ones.
 _agent_config() {
-  local want="${1:-}" agents name role enabled harness found="" home file state template layer path rules
+  local want="${1:-}" entry name role enabled harness home file state template layer path rules
   if [[ -z "$want" ]]; then
     _agent_usage
     return 1
   fi
-  agents="$(molt_agents)"
-  while IFS=$'\t' read -r name role enabled harness; do
-    if [[ -n "$name" && "$name" == "$want" ]]; then
-      found=1
-      break
-    fi
-  done <<< "$agents"
-  if [[ -z "$found" ]]; then
-    molt_error "molt agent: $want is not declared on this sleeve; declared: $(printf '%s\n' "$agents" | cut -f1 | paste -sd, - | sed 's/,/, /g; s/^$/none/')"
+  if ! entry="$(molt_agent_named "$want")"; then
+    molt_error "molt agent: $want is not declared on this sleeve; declared: $(printf '%s\n' "$(molt_agents)" | cut -f1 | paste -sd, - | sed 's/,/, /g; s/^$/none/')"
     return 1
   fi
+  IFS=$'\t' read -r name role enabled harness <<< "$entry"
 
   home="$(molt_agent_home "$name")"
   echo "$name"
