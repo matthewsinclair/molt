@@ -1,0 +1,15 @@
+{
+  "id": "01M5ET87ADV3B8KG9BS3W4YAJE",
+  "ts": "2026-10-21T08:46:38.925Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ST0006/05: rebase st0006-wp05 (e4f857d) onto main, check the agents, AC014 and AC016 passages against the merged code with the scratchpad checklist, then the head to vc. Released when WP02 is merged to main."
+  }
+}

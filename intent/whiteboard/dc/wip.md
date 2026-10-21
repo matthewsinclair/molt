@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 07:56Z
+heartbeat_at: 2026-10-21 08:46Z
 status: active
-focus: "21 Oct: 0019-0021 merged; WP05 at e4f857d and WP03 items 1-3 at Molt-matts 769c2e6 wait for WP02; issue 0022 drafted for hv's word"
+focus: "21 Oct: banked for hv's compact. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 merges; 0022's untracking until Intent's canon carries its settings"
 claims: [ST0006/05, ST0006/03, ISSUE:0022]
 ---
 
@@ -17,12 +17,13 @@ _(none)_
 
 ## TODO
 
-- ST0006/03 with vc: items 4 and 5 on Molt-matts main (eb8a9fc, 660a118); items 1-3 on Molt-matts st0006-wp03 at 769c2e6 (the AC016 preamble split in), checked against st0006-wp02 86cb827. Re-render against the merged WP02, with AC016, before the head goes back to vc; they merge after WP02 lands. vc pushes Molt-matts. (edited)
-- ISSUE:0022 (Molt's tracked .claude/settings.local.json), after 0021: draft from its body. It changes this project's Claude Code permission settings, so apply nothing until hv says so in this session, not relayed.
+_(none)_
 
 ## Holds
 
-_(none)_
+- ST0006/05: rebase st0006-wp05 (e4f857d) onto main, check the agents, AC014 and AC016 passages against the merged code with the scratchpad checklist, then the head to vc. Released when WP02 is merged to main.
+- ST0006/03 items 1-3: Molt-matts st0006-wp03 (769c2e6, preamble split in) re-rendered with the merged WP02 as rhadamanth and kovacs (scratch HOME and MOLT_AGT_DIR), then the head to vc; items 4 and 5 are on Molt-matts main and pushed. Released when WP02, with AC016, is merged to main.
+- ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.
 
 ## Watch-outs
 
