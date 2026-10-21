@@ -31,6 +31,11 @@ export TERM=dumb
 # dir, whatever it did to HOME (ST0006). No test starts with either set.
 unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 
+# Nor with the agents root the shell running bats exports, which the user
+# repo's zshenv sets: a resleeve of an [[agent]] fixture would make homes there.
+# A test that wants a root of its own sets one.
+export MOLT_AGT_DIR="${BATS_TMPDIR:-/tmp}/molt-test-agt"
+
 # ============================================================================
 # SETUP AND TEARDOWN
 # ============================================================================

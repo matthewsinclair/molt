@@ -81,11 +81,15 @@ _agents_render_file() {
 # kovacs-sysadm is still live and the move is refused, so it can copy its files
 # in before hv runs the move (ST0006).
 _agents_render() {
-  local name="$1" role="$2" home fault file template extra dir
+  local name="$1" role="$2" home fault files file template extra dir
   home="$(molt_agent_home "$name")"
   fault="$(molt_agent_role_fault "$role")"
   if [[ -n "$fault" ]]; then
     molt_error "agents: $name: $fault"
+    return 1
+  fi
+  if ! files="$(molt_agent_files "$role")"; then
+    molt_error "agents: $name: the files of role $role cannot be listed"
     return 1
   fi
   while IFS=$'\t' read -r file template extra; do
@@ -97,7 +101,7 @@ _agents_render() {
     if molt_render_stale "$template" "$home/$file" ${extra:+"$extra"}; then
       _agents_render_file "$name" "$role" "$file" "$template" "$extra" || return 1
     fi
-  done <<< "$(molt_agent_files "$role")"
+  done <<< "$files"
   for dir in "${_MOLT_AGENT_DIRS[@]}"; do
     if [[ ! -d "$home/$dir" ]] && ! mkdir -p "$home/$dir"; then
       molt_error "agents: could not create $(molt_tilde "$home/$dir")"
@@ -108,12 +112,18 @@ _agents_render() {
 
 # Reports, through $1 (molt_info or molt_error) after the prefix $2, everything
 # standing between this sleeve's agents and current homes. Returns non-zero
-# when it reported anything.
+# when it reported anything. An agents root that cannot hold homes is the whole
+# answer for a sleeve with agents to home.
 _agents_report_faults() {
-  local log="$1" prefix="$2" agents name role ok=0
+  local log="$1" prefix="$2" agents fault name role ok=0
   molt_report_faults "$log" "$prefix" "molt.toml" "$(molt_agent_manifest_faults)" || ok=1
   if ! agents="$(molt_homed_agents)"; then
     "$log" "${prefix}the [[agent]] entries in molt.toml could not be read"
+    return 1
+  fi
+  fault="$(molt_agt_dir_fault)"
+  if [[ -n "$agents" && -n "$fault" ]]; then
+    "$log" "${prefix}$fault"
     return 1
   fi
   while IFS=$'\t' read -r name role; do
@@ -128,10 +138,16 @@ agents_check() {
 }
 
 agents_install() {
-  local agents name role failed=0
+  local agents fault name role failed=0
   molt_report_faults molt_error "agents: " "molt.toml" "$(molt_agent_manifest_faults)" || failed=1
   if ! agents="$(molt_homed_agents)"; then
     molt_error "agents: the [[agent]] entries in molt.toml could not be read"
+    return 1
+  fi
+  # No home is made under a root that cannot hold one.
+  fault="$(molt_agt_dir_fault)"
+  if [[ -n "$agents" && -n "$fault" ]]; then
+    molt_error "agents: $fault"
     return 1
   fi
   while IFS=$'\t' read -r name role; do

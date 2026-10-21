@@ -174,8 +174,9 @@ permission_line() {
 }
 
 # critic-shell, 21 Oct: jq passed an empty render through as nothing and turned
-# null into an object, so either read current.
-@test "a settings template that does not render to one JSON object, being broken, empty or null, fails the install and leaves the file reading stale" {
+# null into an object, so either read current; two objects would have
+# installed the first and dropped the second without a word.
+@test "a settings template that does not render to one JSON object, being broken, empty, null or two objects, fails the install and leaves the file reading stale" {
     # AT035 (ST0006 AC005).
     setup_agents
     echo '{"permissions": ' > "$ROLE/settings.json.tmpl"
@@ -199,6 +200,48 @@ permission_line() {
     run agents_check
     assert_failure
     assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
+    printf '{"permissions": {}}\n{"model": "opus"}\n' > "$ROLE/settings.json.tmpl"
+    run agents_install
+    assert_failure
+    assert_output_contains "is not usable: the template does not render to one JSON object"
+}
+
+# critic-shell, 21 Oct: only the claude liberator checked the root, while this
+# one, which makes the homes, made them under whatever it was given: a quoted ~
+# put them in a directory named ~ wherever molt ran.
+@test "agents check and install refuse an agents root that is unset, relative, untidy, at or above HOME or a project root, or set apart in vars.sh, and make no home" {
+    # AT059 (ST0006 AC005, AC014).
+    setup_agents
+    local root="$MOLT_AGT_DIR"
+    export MOLT_AGT_DIR=""
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR is not set, and neither is MOLT_PRJ_DIR"
+    export MOLT_AGT_DIR="~/Devel/agt"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR is not an absolute path (a quoted ~ is not expanded): ~/Devel/agt"
+    export MOLT_AGT_DIR="$root/"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR is not a canonical path, with no trailing slash, // or . or .. component: $root/"
+    export MOLT_AGT_DIR="$HOME"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, ~, is at or above ~: the home guard would refuse"
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/Devel/prj" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/Devel"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/Devel, is at or above $BATS_TEST_TMPDIR/Devel/prj"
+    export MOLT_AGT_DIR="$root"
+    printf 'export MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$INSTANCE/vars.sh"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: this sleeve's vars.sh exports MOLT_AGT_DIR as $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $root"
+    [ ! -e "$root" ]
+    [ ! -e "$BATS_TEST_TMPDIR/~" ]
+    [ ! -e "$HOME/$NAME" ]
+    [ ! -e "$BATS_TEST_TMPDIR/Devel/$NAME" ]
 }
 
 # --- molt agent (AC006) ---

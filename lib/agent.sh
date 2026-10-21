@@ -17,8 +17,8 @@
 # it. Prints nothing when the sleeve has no manifest.
 molt_agents() {
   local manifest host
-  manifest="$(molt_find_manifest 2>/dev/null)" || return 0
   host="$(molt_hostname)" || return 1
+  manifest="$(molt_find_manifest 2>/dev/null)" || return 0
   _molt_table_entries agent role "$manifest" | awk -F'\t' -v host="$host" '
     $2 == "role" {
       skip = ($1 == "" || ($1 in seen))
@@ -46,11 +46,13 @@ molt_homed_agents() {
 }
 
 # The entry of the agent named $1, as molt_agents prints it. Fails, printing
-# nothing, when this sleeve declares no agent of that name.
+# nothing: with status 1 when this sleeve declares no agent of that name, and 2
+# when its [[agent]] entries cannot be read. awk reads to the end, so the
+# writer never meets a closed pipe under pipefail (issue 0008).
 molt_agent_named() {
   local agents
-  agents="$(molt_agents)" || return 1
-  printf '%s\n' "$agents" | awk -F'\t' -v want="$1" '$1 == want { print; found = 1; exit } END { exit !found }'
+  agents="$(molt_agents)" || return 2
+  printf '%s\n' "$agents" | awk -F'\t' -v want="$1" '!found && $1 == want { print; found = 1 } END { exit !found }'
 }
 
 # Names, a line each, what is wrong with this sleeve's [[agent]] entries: an
@@ -72,6 +74,76 @@ molt_agent_manifest_faults() {
     $2 == "harness" && $3 != "claude" { print "the " $1 " entry names harness " $3 "; claude is the only one" }
     $2 == "enabled" && $3 != "true" && $3 != "false" { print "the " $1 " entry has enabled = " $3 ", not true or false" }
   '
+}
+
+# --- The agents root ---
+
+# Why the agents root $1 cannot hold homes, or nothing when it can. It reads
+# nothing but its argument and HOME, MOLT_PRJ_DIR and MOLT_CFG_DIR. Homes are
+# made under the root as it is spelt, and the claude liberator renders its home
+# guard with that spelling and reads it back to tell whether it has drifted,
+# so a root is refused rather than tidied (AC014):
+#   - empty, as constants.sh leaves it when MOLT_PRJ_DIR is not set either;
+#   - relative, a quoted ~ among them, which would land wherever molt runs;
+#   - untidy (a trailing slash, //, . or ..), a second spelling of a directory
+#     the drift check would take for another, and after a symlink a .. that cd
+#     and mkdir resolve to different places;
+#   - holding a line break, where the guard's here-document read stops;
+#   - at or above HOME, MOLT_PRJ_DIR or MOLT_CFG_DIR: the guard refuses a
+#     launch two levels below the root that is not in a home, so such a root
+#     would refuse every project.
+_molt_agt_root_fault() {
+  local root="$1" dir
+  case "$root" in
+    "")
+      echo "MOLT_AGT_DIR is not set, and neither is MOLT_PRJ_DIR, whose agt/ sibling it would be"
+      return ;;
+    /*) ;;
+    *)
+      echo "MOLT_AGT_DIR is not an absolute path (a quoted ~ is not expanded): $root"
+      return ;;
+  esac
+  case "$root/" in
+    *//* | */./* | */../*)
+      echo "MOLT_AGT_DIR is not a canonical path, with no trailing slash, // or . or .. component: $root"
+      return ;;
+  esac
+  case "$root" in
+    *$'\n'*)
+      echo "MOLT_AGT_DIR holds a line break: $root"
+      return ;;
+  esac
+  for dir in "$HOME" "${MOLT_PRJ_DIR:-}" "${MOLT_CFG_DIR:-}"; do
+    [[ -n "$dir" ]] || continue
+    case "$dir/" in
+      "$root"/*)
+        echo "MOLT_AGT_DIR, $(molt_tilde "$root"), is at or above $(molt_tilde "$dir"): the home guard would refuse a launch in any directory two levels below it that is not an agent home"
+        return ;;
+    esac
+  done
+}
+
+# Why this sleeve's agents root cannot hold homes, or nothing when it can:
+# _molt_agt_root_fault's answer for MOLT_AGT_DIR, or a vars.sh that exports a
+# MOLT_AGT_DIR of its own. constants.sh is the one resolver; molt_render
+# sources vars.sh before it renders, so a value there would render the claude
+# liberator's guard with one root while the homes are made under the other.
+molt_agt_dir_fault() {
+  local fault declared status=0
+  fault="$(_molt_agt_root_fault "${MOLT_AGT_DIR:-}")"
+  if [[ -n "$fault" ]]; then
+    echo "$fault"
+    return 0
+  fi
+  declared="$(molt_instance_var MOLT_AGT_DIR)" || status=$?
+  case "$status" in
+    0)
+      if [[ -n "$declared" && "$declared" != "$MOLT_AGT_DIR" ]]; then
+        echo "this sleeve's vars.sh exports MOLT_AGT_DIR as $(molt_tilde "$declared"), but molt resolves it as $(molt_tilde "$MOLT_AGT_DIR"): drop it from vars.sh, and set MOLT_PRJ_DIR or MOLT_AGT_DIR where molt runs"
+      fi ;;
+    3) ;;
+    *) echo "MOLT_AGT_DIR could not be checked against this sleeve's vars.sh: $declared" ;;
+  esac
 }
 
 # --- A home ---
@@ -130,10 +202,12 @@ molt_agent_files() {
 
 # Each file in the home of the agent named $1, with the role $2, one
 # "file<TAB>state<TAB>template" line each, where the state is current, stale,
-# missing, or untemplated when the role has no template for it.
+# missing, or untemplated when the role has no template for it. Fails when the
+# role's files cannot be listed.
 molt_agent_file_states() {
-  local home file template extra state
+  local home files file template extra state
   home="$(molt_agent_home "$1")"
+  files="$(molt_agent_files "$2")" || return 1
   while IFS=$'\t' read -r file template extra; do
     [[ -n "$file" ]] || continue
     if [[ ! -f "$template" ]]; then
@@ -146,18 +220,22 @@ molt_agent_file_states() {
       state=current
     fi
     printf '%s\t%s\t%s\n' "$file" "$state" "$template"
-  done <<< "$(molt_agent_files "$2")"
+  done <<< "$files"
 }
 
 # Names, a line each, what stands between the agent named $1, with the role $2,
 # and a current home: a role the user repo does not define, a template the role
 # lacks, and a file or directory of the home missing or stale.
 molt_agent_faults() {
-  local name="$1" role="$2" home fault file state template dir
+  local name="$1" role="$2" home fault states file state template dir
   home="$(molt_agent_home "$name")"
   fault="$(molt_agent_role_fault "$role")"
   if [[ -n "$fault" ]]; then
     echo "$fault"
+    return 0
+  fi
+  if ! states="$(molt_agent_file_states "$name" "$role")"; then
+    echo "the files of role $role cannot be listed"
     return 0
   fi
   while IFS=$'\t' read -r file state template; do
@@ -166,7 +244,7 @@ molt_agent_faults() {
       untemplated) echo "role $role has no $(molt_tilde "$template")" ;;
       *) echo "$(molt_tilde "$home/$file") is $state" ;;
     esac
-  done <<< "$(molt_agent_file_states "$name" "$role")"
+  done <<< "$states"
   for dir in "${_MOLT_AGENT_DIRS[@]}"; do
     [[ -d "$home/$dir" ]] || echo "$(molt_tilde "$home/$dir") is missing"
   done
@@ -266,25 +344,35 @@ _agent_list() {
 # settings files read for it, and the permission rules in effect there, each
 # tagged with its layer. An undeclared name fails, listing the declared ones.
 _agent_config() {
-  local want="${1:-}" entry name role enabled harness home file state template layer path rules
+  local want="${1:-}" entry status=0 name role enabled harness home states file state template layer path rules
   if [[ -z "$want" ]]; then
     _agent_usage
     return 1
   fi
-  if ! entry="$(molt_agent_named "$want")"; then
-    molt_error "molt agent: $want is not declared on this sleeve; declared: $(printf '%s\n' "$(molt_agents)" | cut -f1 | paste -sd, - | sed 's/,/, /g; s/^$/none/')"
-    return 1
-  fi
+  entry="$(molt_agent_named "$want")" || status=$?
+  case "$status" in
+    0) ;;
+    1)
+      molt_error "molt agent: $want is not declared on this sleeve; declared: $(printf '%s\n' "$(molt_agents)" | cut -f1 | paste -sd, - | sed 's/,/, /g; s/^$/none/')"
+      return 1 ;;
+    *)
+      molt_error "molt agent: the [[agent]] entries in molt.toml could not be read"
+      return 1 ;;
+  esac
   IFS=$'\t' read -r name role enabled harness <<< "$entry"
 
   home="$(molt_agent_home "$name")"
   echo "$name"
   printf '  %-9s %s\n' role "$role" harness "$harness" enabled "$enabled" home "$(molt_tilde "$home")"
+  if ! states="$(molt_agent_file_states "$name" "$role")"; then
+    molt_error "molt agent: the files of role $role cannot be listed"
+    return 1
+  fi
   echo "  files"
   while IFS=$'\t' read -r file state template; do
     [[ "$state" != untemplated ]] || state="role $role has no $(basename "$template")"
     printf '    %-24s %s\n' "$file" "$state"
-  done <<< "$(molt_agent_file_states "$name" "$role")"
+  done <<< "$states"
 
   echo "  settings, highest first"
   while IFS=$'\t' read -r layer path; do

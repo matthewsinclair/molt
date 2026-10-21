@@ -24,12 +24,13 @@ MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
 # --- Agent directory ---
 # Where sleeve agents live, a home each, named <hostname>-<role> (ST0006). The
 # agt/ sibling of MOLT_PRJ_DIR, like MOLT_CFG_DIR, so ~/Devel/prj gives
-# ~/Devel/agt; and ~/Devel/agt when MOLT_PRJ_DIR is not set either, since an
-# agent's home must never land at /<name>.
+# ~/Devel/agt: the value the user repo's zshenv gives shells, from the same
+# MOLT_PRJ_DIR. Empty when MOLT_PRJ_DIR is not set either, rather than a guess
+# that would disagree with a sleeve whose projects live elsewhere;
+# molt_agt_dir_fault refuses it then, so no home lands at /<name>. This is the
+# one resolver of MOLT_AGT_DIR. It is exported, so molt_render substitutes it
+# into the claude liberator's home guard (AC014).
 MOLT_AGT_DIR="${MOLT_AGT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/agt}}"
-MOLT_AGT_DIR="${MOLT_AGT_DIR:-$HOME/Devel/agt}"
-# Exported, so molt_render substitutes it into the claude liberator's home
-# guard, which refuses a launch under it that is not in an agent home (AC014).
 export MOLT_AGT_DIR
 
 # --- User config repo ---
