@@ -5,22 +5,28 @@
 # MOLT_AGT_DIR, rendered from the role the user repo defines (ST0006). The
 # model, and molt agent list|config, are in lib/agent.sh.
 
-# Sets autoMemoryDirectory to $2 in the rendered settings.json $1, which must
+# Sets autoMemoryDirectory to $2 in the rendered settings.json $1, and, when $3
+# names the home guard's hook entry, writes it in as the claude liberator writes
+# it into the user settings, keeping every other hook (issue 0030). $1 must
 # hold one JSON object: jq passes an empty render through as nothing and turns
 # null into an object, and either would leave settings that read current but
 # are not the role's. Fails, printing why instead, with $1 as it was.
-_agents_memory_dir_set() {
-  local target="$1" dir="$2" tmp
+_agents_settings_set() {
+  local target="$1" dir="$2" hook="$3" want=null tmp
   if ! command -v jq &>/dev/null; then
     echo "jq is not installed"
+    return 1
+  fi
+  if [[ -n "$hook" ]] && ! want="$(jq -eS 'select(type == "object")' "$hook" 2>/dev/null)"; then
+    echo "$(molt_tilde "$hook") holds no hook object"
     return 1
   fi
   if ! tmp="$(mktemp "${target}.XXXXXX")"; then
     echo "no temporary file could be made beside it"
     return 1
   fi
-  if ! jq -s --arg dir "$dir" \
-      'if length == 1 and (.[0] | type) == "object" then .[0] | .autoMemoryDirectory = $dir else error("not one JSON object") end' \
+  if ! jq -s --arg dir "$dir" --argjson want "$want" \
+      'if length == 1 and (.[0] | type) == "object" then .[0] | .autoMemoryDirectory = $dir | if $want == null then . else '"$MOLT_CLAUDE_HOOK_SET"' end else error("not one JSON object") end' \
       "$target" > "$tmp" 2>/dev/null; then
     rm -f "$tmp"
     echo "the template does not render to one JSON object"
@@ -70,15 +76,20 @@ _agents_build() {
 # Renders the file $3 of the home of the agent named $1, with the role $2, from
 # the template $4, with what goes around it: the template $5 rendered and put
 # ahead of it, the file $6 appended after it, and autoMemoryDirectory set in
-# settings.json, so the agent's memory lives in its home and travels with it.
-# All of it is built before molt_render_place sees it, settings.json's memory
-# dir included, which was set after the compare and backed the file up at
-# every render.
+# settings.json, so the agent's memory lives in its home and travels with it,
+# with the home guard's hook where molt_agent_guard_hook names it. All of it
+# is built before molt_render_place sees it, settings.json's memory dir
+# included, which was set after the compare and backed the file up at every
+# render.
 _agents_render_file() {
-  local name="$1" role="$2" file="$3" template="$4" before="$5" after="$6" home host target why
+  local name="$1" role="$2" file="$3" template="$4" before="$5" after="$6" home host target hook why
   home="$(molt_agent_home "$name")"
   if ! host="$(molt_hostname)"; then
     molt_error "agents: this host gives no name, so $name's $file was not rendered"
+    return 1
+  fi
+  if ! hook="$(molt_agent_guard_hook "$file")"; then
+    molt_error "agents: $name's $file was not rendered: $hook"
     return 1
   fi
   target="$home/$file"
@@ -92,14 +103,15 @@ _agents_render_file() {
   fi
   case "$file" in
     .claude/settings.json)
-      if ! why="$(_agents_memory_dir_set "${target}.molt-tmp" "$home/memory")"; then
+      if ! why="$(_agents_settings_set "${target}.molt-tmp" "$home/memory" "$hook")"; then
         rm -f "${target}.molt-tmp"
         molt_error "agents: $name's settings.json, from role $role's settings.json.tmpl, is not usable: $why"
         return 1
       fi ;;
   esac
-  # The digest covers what went around the template, present or not.
-  molt_render_place "$template" "$target" ${before:+"$before"} ${after:+"$after"}
+  # The digest covers what went around the template, present or not, and the
+  # hook entry, so a home rendered without it is stale.
+  molt_render_place "$template" "$target" ${before:+"$before"} ${after:+"$after"} ${hook:+"$hook"}
 }
 
 # Renders the home of the agent named $1, with the role $2: each file that is
@@ -125,7 +137,7 @@ _agents_render() {
       molt_error "agents: $name: role $role has no $(molt_tilde "$template")"
       return 1
     fi
-    if molt_render_stale "$template" "$home/$file" ${before:+"$before"} ${after:+"$after"}; then
+    if molt_agent_file_stale "$home" "$file" "$template" "$before" "$after"; then
       _agents_render_file "$name" "$role" "$file" "$template" "$before" "$after" || return 1
     fi
   done <<< "$files"

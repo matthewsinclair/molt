@@ -1129,6 +1129,25 @@ molt_claude_config_dir() {
   echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 }
 
+# The settings entry that runs the home guard, as a file holding the JSON object
+# molt writes. One of Molt's own files, the same on every sleeve: it names the
+# guard as ~/.config/molt/claude-home-guard.sh, outside any Claude config dir,
+# so it holds no machine's path and runs whichever config dir a session read.
+# The claude liberator writes it into the user settings, and the agents
+# liberator into each home's (issue 0030).
+molt_claude_hook_entry() {
+  echo "${MOLT_ROOT}/templates/claude/home-guard-hook.json"
+}
+
+# The jq filters that read and write that entry, with it bound to $want. It is
+# the one UserPromptSubmit entry that runs the guard's command; any other entry
+# is somebody else's, and is kept. GET gives null when there is none. Read by
+# liberators/claude.sh and lib/agent.sh, and so unused here.
+# shellcheck disable=SC2016,SC2034 # $want is jq's, not the shell's
+MOLT_CLAUDE_HOOK_GET='first(.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command))) // null'
+# shellcheck disable=SC2016,SC2034
+MOLT_CLAUDE_HOOK_SET='.hooks.UserPromptSubmit = ([.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command) | not)] + [$want])'
+
 # Where Claude Code reads its managed settings, which nothing a user or an agent
 # writes can override: managed-settings.json, and the drop-ins beside it in
 # managed-settings.d/. Root-owned; nothing in molt writes it.

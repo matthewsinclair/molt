@@ -218,6 +218,104 @@ permission_line() {
     [ ! -e "$HOME/.config/claude" ]
 }
 
+# --- Issue 0030: the home guard's hook in the home ---
+#
+# A session started without the config dir reads only project settings, so the
+# home's settings.json runs the guard too, with the same entry the claude
+# liberator writes into the user settings.
+
+# The guard's command, as templates/claude/home-guard-hook.json names it.
+GUARD='~/.config/molt/claude-home-guard.sh'
+
+# This sleeve declares its config dir, as hv does sleeve by sleeve.
+declare_config_dir() {
+    printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" >> "$INSTANCE/vars.sh"
+}
+
+@test "on a sleeve that declares its config dir, a home's settings.json runs the home guard once, beside the role's own hooks, however often it renders (issue 0030)" {
+    setup_agents
+    declare_config_dir
+    cat > "$ROLE/settings.json.tmpl" <<'JSON'
+{
+  "permissions": { "deny": ["Bash(rm -rf:*)"] },
+  "hooks": { "UserPromptSubmit": [ { "hooks": [ { "type": "command", "command": "role-hook.sh" } ] } ] }
+}
+JSON
+    run agents_install
+    assert_success
+    local settings="$AGENT_HOME/.claude/settings.json"
+    [ "$(jq -c '[.hooks.UserPromptSubmit[].hooks[].command]' "$settings")" = "[\"role-hook.sh\",\"$GUARD\"]" ]
+    [ "$(jq -r .autoMemoryDirectory "$settings")" = "$AGENT_HOME/memory" ]
+    [ "$(jq -c .permissions.deny "$settings")" = '["Bash(rm -rf:*)"]' ]
+    run agents_check
+    assert_success
+    run agents_install
+    assert_success
+    refute_output_contains "Rendered"
+    echo '{"permissions": {}}' > "$ROLE/settings.json.tmpl"
+    run agents_install
+    assert_success
+    [ "$(jq -c '[.hooks.UserPromptSubmit[].hooks[].command]' "$settings")" = "[\"$GUARD\"]" ]
+}
+
+@test "on a sleeve that declares no config dir, a home's settings.json runs no home guard, and molt agent config says why (issue 0030)" {
+    setup_agents
+    run agents_install
+    assert_success
+    [ "$(jq -c .hooks "$AGENT_HOME/.claude/settings.json")" = null ]
+    run cmd_agent config "$NAME"
+    assert_success
+    assert_output_contains "$(printf '  %-9s %s' guard 'none: this sleeve declares no config dir for Claude Code')"
+}
+
+# kovacs and rhadamanth have homes rendered before this change: their digests
+# covered the template and vars.sh, neither of which it touches.
+@test "a home rendered without the guard's hook on a declaring sleeve, or with the hook taken out by hand, is stale, and install puts the hook in (issue 0030)" {
+    setup_agents
+    declare_config_dir
+    agents_install >/dev/null
+    local settings="$AGENT_HOME/.claude/settings.json"
+    run cmd_agent config "$NAME"
+    assert_output_contains "$(printf '  %-9s %s' guard "$GUARD, which is missing or not executable: the claude liberator publishes it once the move is done")"
+    mkdir -p "$HOME/.config/molt"
+    printf '#!/bin/sh\nexit 0\n' > "$HOME/.config/molt/claude-home-guard.sh"
+    chmod 755 "$HOME/.config/molt/claude-home-guard.sh"
+    run cmd_agent config "$NAME"
+    assert_output_contains "$(printf '  %-9s %s\n' guard "$GUARD")"
+    jq 'del(.hooks)' "$settings" > "$settings.new"
+    mv "$settings.new" "$settings"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $settings is stale"
+    run cmd_agent config "$NAME"
+    assert_output_contains "$(printf '    %-24s %s' .claude/settings.json stale)"
+    assert_output_contains "$(printf '  %-9s %s' guard 'missing from .claude/settings.json: re-run molt upgrade')"
+    run agents_install
+    assert_success
+    [ "$(jq -c '[.hooks.UserPromptSubmit[].hooks[].command]' "$settings")" = "[\"$GUARD\"]" ]
+    # The guard's command in an entry that is otherwise not the guard's is not
+    # the hook, as the claude liberator reads the user settings.
+    jq '.hooks.UserPromptSubmit[0].hooks[0].timeout = 1' "$settings" > "$settings.new"
+    mv "$settings.new" "$settings"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $settings is stale"
+    run agents_install
+    assert_success
+    [ "$(jq -c '.hooks.UserPromptSubmit[0].hooks[0] | has("timeout")' "$settings")" = false ]
+    # The hook in place, and the digest a render before issue 0030 wrote, of
+    # the template and vars.sh alone: stale on the digest by itself.
+    printf 'digest %s\n' "$(cat "$ROLE/settings.json.tmpl" "$INSTANCE/vars.sh" | shasum -a 256 | awk '{print $1}')" > "$settings.molt-rendered"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $settings is stale"
+    run agents_install
+    assert_success
+    [ "$(jq -c '[.hooks.UserPromptSubmit[].hooks[].command]' "$settings")" = "[\"$GUARD\"]" ]
+    run agents_check
+    assert_success
+}
+
 # critic-shell, 21 Oct: jq passed an empty render through as nothing and turned
 # null into an object, so either read current; two objects would have
 # installed the first and dropped the second without a word. The file is built

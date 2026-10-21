@@ -594,16 +594,16 @@ JSON
     assert_success
     local guard="$HOME/.config/molt/claude-home-guard.sh"
     [ -x "$guard" ]
-    run env CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME/work\", \"prompt\": \"hello\"}"
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME/work\", \"prompt\": \"hello\"}"
     [ "$status" -eq 2 ]
     [ "$output" = "launch from an agent home: molt agent list" ]
-    run env CLAUDE_PROJECT_DIR="$HOME/" "$guard" <<< '{"prompt": "a trailing slash is still home"}'
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$HOME/" "$guard" <<< '{"prompt": "a trailing slash is still home"}'
     [ "$status" -eq 2 ]
     ln -s "$HOME" "$BATS_TEST_TMPDIR/home-link"
-    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/home-link" "$guard" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/home-link" "$guard" < /dev/null
     [ "$status" -eq 2 ]
     mkdir -p "$BATS_TEST_TMPDIR/agt/kovacs-sysadm"
-    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/agt/kovacs-sysadm" "$guard" <<< "{\"cwd\": \"$HOME\", \"prompt\": \"after a cd into \$HOME\"}"
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/agt/kovacs-sysadm" "$guard" <<< "{\"cwd\": \"$HOME\", \"prompt\": \"after a cd into \$HOME\"}"
     assert_success
     [ -z "$output" ]
 }
@@ -619,7 +619,7 @@ JSON
     run env -u CLAUDE_PROJECT_DIR "$guard" <<< "{\"cwd\": \"$HOME\"}"
     [ "$status" -eq 1 ]
     [ "$output" = "claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked" ]
-    run env CLAUDE_PROJECT_DIR= "$guard" <<< "{\"cwd\": \"$HOME\"}"
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR= "$guard" <<< "{\"cwd\": \"$HOME\"}"
     [ "$status" -eq 1 ]
     assert_output_contains "the hook has no CLAUDE_PROJECT_DIR"
     run env PATH=/nonexistent CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME\"}"
@@ -655,7 +655,7 @@ JSON
     assert_success
     local agent_home="$MOLT_AGT_DIR/kovacs-sysadm"
     mkdir -p "$agent_home/work/x"
-    run env CLAUDE_PROJECT_DIR="$agent_home" "$HOME/.config/molt/claude-home-guard.sh" <<< "{\"cwd\": \"$agent_home/work/x\", \"prompt\": \"hello\"}"
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home" "$HOME/.config/molt/claude-home-guard.sh" <<< "{\"cwd\": \"$agent_home/work/x\", \"prompt\": \"hello\"}"
     assert_success
     [ -z "$output" ]
 }
@@ -666,7 +666,7 @@ JSON
     run claude_install
     assert_success
     mkdir -p "$MOLT_AGT_DIR"
-    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
     [ "$output" = "launch from an agent home, not the agents root: molt agent list" ]
 }
@@ -678,11 +678,11 @@ JSON
     assert_success
     local agent_home="$MOLT_AGT_DIR/kovacs-sysadm"
     mkdir -p "$agent_home/work/x"
-    run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
     [ "$output" = "launch from the agent home itself: cd $agent_home" ]
     ln -s "$agent_home/work" "$BATS_TEST_TMPDIR/work-link"
-    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/work-link" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/work-link" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
     [ "$output" = "launch from the agent home itself: cd $agent_home" ]
 }
@@ -700,7 +700,7 @@ JSON
     export MOLT_AGT_DIR="$upper"
     run claude_install
     assert_success
-    run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
     [ "$output" = "launch from the agent home itself: cd $upper/kovacs-sysadm" ]
     export MOLT_AGT_DIR="${HOME%/*}/FAKEHOME"
@@ -714,10 +714,10 @@ JSON
     run claude_install
     assert_success
     mkdir -p "$MOLT_AGT_DIR" "$BATS_TEST_TMPDIR/projects/molt" "$MOLT_AGT_DIR-old/kovacs-sysadm/work"
-    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/projects/molt" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/projects/molt" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     assert_success
     [ -z "$output" ]
-    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR-old/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR-old/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     assert_success
     [ -z "$output" ]
     # The root is data to the guard, never a pattern or an expansion: a root
@@ -727,11 +727,11 @@ JSON
     mkdir -p "$MOLT_AGT_DIR/kovacs-sysadm/work" "$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work"
     run claude_install
     assert_success
-    [ "$(_claude_guard_agt_dir "$HOME/.config/molt/claude-home-guard.sh")" = "$MOLT_AGT_DIR" ]
-    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$(_claude_guard_line "$HOME/.config/molt/claude-home-guard.sh" MOLT_AGENTS_ROOT)" = "$MOLT_AGT_DIR" ]
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     assert_success
     [ -z "$output" ]
-    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
 }
 
@@ -801,7 +801,112 @@ JSON
     assert_output_contains "claude: ~/.config/molt/claude-home-guard.sh refuses launches under $old, but MOLT_AGT_DIR is $MOLT_AGT_DIR: re-run molt upgrade"
     run claude_install
     assert_success
-    [ "$(_claude_guard_agt_dir "$guard")" = "$MOLT_AGT_DIR" ]
+    [ "$(_claude_guard_line "$guard" MOLT_AGENTS_ROOT)" = "$MOLT_AGT_DIR" ]
+    run claude_check
+    assert_success
+}
+
+# --- Issue 0030: the home guard and the config dir ---
+#
+# A session started from a shell opened before the move gets no
+# CLAUDE_CONFIG_DIR and starts Claude Code afresh in $HOME; the user settings
+# that run the guard are in the config dir it missed, so only an agent home's
+# copy of the hook runs, and the guard has to tell (kovacs, 21 Oct).
+
+@test "the home guard refuses a session that did not get this sleeve's config dir, or got another, and passes one naming it by any spelling, under sh too (issue 0030)" {
+    setup_moved
+    run claude_install
+    assert_success
+    local guard="$HOME/.config/molt/claude-home-guard.sh" agent_home="$MOLT_AGT_DIR/kovacs-sysadm" shell
+    local missed="this Claude Code did not get CLAUDE_CONFIG_DIR (want $CONFIG): quit it, open a new shell, or log out and in, and relaunch from the home"
+    mkdir -p "$agent_home"
+    run env -u CLAUDE_CONFIG_DIR CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "$missed" ]
+    run env CLAUDE_CONFIG_DIR= CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "$missed" ]
+    run env CLAUDE_CONFIG_DIR="$HOME/.claude" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "this Claude Code has CLAUDE_CONFIG_DIR $HOME/.claude, not $CONFIG: quit it, open a new shell, or log out and in, and relaunch from the home" ]
+    run env CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/nowhere" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    [ "$status" -eq 2 ]
+    run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    assert_success
+    [ -z "$output" ]
+    run env CLAUDE_CONFIG_DIR="$CONFIG/" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    assert_success
+    ln -s "$CONFIG" "$BATS_TEST_TMPDIR/config-link"
+    run env CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/config-link" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+    assert_success
+    [ -z "$output" ]
+    for shell in sh dash; do
+        command -v "$shell" >/dev/null || continue
+        run env -u CLAUDE_CONFIG_DIR CLAUDE_PROJECT_DIR="$agent_home" "$shell" "$guard" < /dev/null
+        [ "$status" -eq 2 ]
+        [ "$output" = "$missed" ]
+        run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home" "$shell" "$guard" < /dev/null
+        assert_success
+    done
+}
+
+@test "a home guard rendered with no config dir passes a session whatever CLAUDE_CONFIG_DIR holds (issue 0030)" {
+    setup_claude
+    local guard="$BATS_TEST_TMPDIR/guard.sh" agent_home="$MOLT_AGT_DIR/kovacs-sysadm" value
+    mkdir -p "$agent_home"
+    # Undeclared, envsubst leaves the reference as it is; declared empty, it
+    # renders an empty line. Neither is an absolute path.
+    for value in unset empty; do
+        if [ "$value" = empty ]; then
+            export MOLT_CLAUDE_CONFIG_DIR=
+        else
+            unset MOLT_CLAUDE_CONFIG_DIR
+        fi
+        run molt_render "$MOLT_ROOT/templates/claude/claude-home-guard.sh.tmpl" "$guard"
+        assert_success
+        chmod 755 "$guard"
+        run env -u CLAUDE_CONFIG_DIR CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+        assert_success
+        [ -z "$output" ]
+        run env CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/anywhere" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
+        assert_success
+        [ -z "$output" ]
+    done
+}
+
+# The digest covers the template and vars.sh, and vars.sh can build the config
+# dir from XDG_CONFIG_HOME, so a guard can name a dir no digest change shows.
+@test "check reports a home guard rendered with another config dir, or none, and install renders it again (issue 0030)" {
+    setup_moved
+    run claude_install
+    assert_success
+    local guard="$HOME/.config/molt/claude-home-guard.sh"
+    export CLAUDE_CONFIG_DIR="$CONFIG"
+    run claude_check
+    assert_success
+    [ "$(_claude_guard_line "$guard" MOLT_CLAUDE_CONFIG_DIR)" = "$CONFIG" ]
+    awk -v old="$CONFIG" -v new="$BATS_TEST_TMPDIR/elsewhere" '$0 == old { $0 = new } { print }' "$guard" > "$guard.new"
+    mv "$guard.new" "$guard"
+    chmod 755 "$guard"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.config/molt/claude-home-guard.sh checks sessions for config dir $BATS_TEST_TMPDIR/elsewhere, but this sleeve's is ~/.config/claude: re-run molt upgrade"
+    run claude_install
+    assert_success
+    [ "$(_claude_guard_line "$guard" MOLT_CLAUDE_CONFIG_DIR)" = "$CONFIG" ]
+    run claude_check
+    assert_success
+    # A guard rendered before issue 0030 has no such line.
+    awk '/<<.MOLT_CLAUDE_CONFIG_DIR.$/ { skip = 3 } skip { skip--; next } { print }' "$guard" > "$guard.new"
+    mv "$guard.new" "$guard"
+    chmod 755 "$guard"
+    run grep -q MOLT_CLAUDE_CONFIG_DIR "$guard"
+    assert_failure
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.config/molt/claude-home-guard.sh checks sessions for no config dir, but this sleeve's is ~/.config/claude: re-run molt upgrade"
+    run claude_install
+    assert_success
     run claude_check
     assert_success
 }
