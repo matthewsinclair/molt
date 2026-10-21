@@ -21,6 +21,14 @@ MOLT_OPT_DIR="${MOLT_OPT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/opt}}"
 # parent, like MOLT_OPT_DIR, so ~/Devel/prj gives ~/Devel/cfg.
 MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
 
+# --- Agent directory ---
+# Where sleeve agents live, a home each, named <hostname>-<role> (ST0006). The
+# agt/ sibling of MOLT_PRJ_DIR, like MOLT_CFG_DIR, so ~/Devel/prj gives
+# ~/Devel/agt; and ~/Devel/agt when MOLT_PRJ_DIR is not set either, since an
+# agent's home must never land at /<name>.
+MOLT_AGT_DIR="${MOLT_AGT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/agt}}"
+MOLT_AGT_DIR="${MOLT_AGT_DIR:-$HOME/Devel/agt}"
+
 # --- User config repo ---
 # The Molt-{user} repo location. Searched in order.
 # MOLT_CFG_DIR and MOLT_PRJ_DIR paths only included if set.

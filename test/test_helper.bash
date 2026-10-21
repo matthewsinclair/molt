@@ -83,6 +83,7 @@ load_molt_libs() {
     source "$MOLT_LIB_DIR/constants.sh"
     source "$MOLT_LIB_DIR/molt.sh"
     source "$MOLT_LIB_DIR/liberator.sh"
+    source "$MOLT_LIB_DIR/agent.sh"
 }
 
 # Load a specific liberator for function-level testing

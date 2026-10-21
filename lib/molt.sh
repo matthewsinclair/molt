@@ -529,13 +529,17 @@ molt_config_digest() {
       < <(printf '%s\n' "$@" | sort)
   fi
 
+  # An absent input contributes nothing, so adding it later changes the digest.
+  # Each test is an `if`: a bare `[[ -f ]] && ...` as the group's last command
+  # fails it for an absent last extra, pipefail carries that out of the
+  # pipeline, and the file then reads stale however often it is rendered.
   {
     cat "$template"
-    [[ -f "$vars_file" ]] && cat "$vars_file"
+    if [[ -f "$vars_file" ]]; then cat "$vars_file"; fi
     local x
     for x in ${extras+"${extras[@]}"}; do
       # Name as well as content: renaming a fragment changes the sentinel.
-      [[ -f "$x" ]] && { basename "$x"; cat "$x"; }
+      if [[ -f "$x" ]]; then basename "$x"; cat "$x"; fi
     done
   } 2>/dev/null | molt_hash
 }
@@ -759,24 +763,27 @@ molt_find_manifest() {
   return 1
 }
 
-# The one reader of molt.toml's [[liberator]] blocks. Prints a line per key of
-# every block, "name<TAB>key<TAB>value", the block's name line first whatever
-# order its keys are written in. A block ends at the next table header of any
-# kind, so a key below [stack] or [sleeve] belongs to no liberator. A quoted
-# value loses its quotes; a bare one loses a trailing comment and is otherwise
-# kept as written, so a caller can refuse a value by name rather than mistake
-# it for none. Keys are read from the start of a line, as molt.toml writes them.
-_molt_liberator_entries() {
-  awk '
+# The one reader of molt.toml's array tables, [[liberator]] and [[agent]]: the
+# blocks headed [[$1]] in the manifest $3. Prints a line per key of every block,
+# "id<TAB>key<TAB>value", where the id is the value of the block's $2 key and
+# its own line comes first whatever order the keys are written in. A block with
+# no $2 key is printed with an empty id, so a caller can refuse it rather than
+# never see it. A block ends at the next table header of any kind, so a key
+# below [stack] or [sleeve] belongs to no block. A quoted value loses its
+# quotes; a bare one loses a trailing comment and is otherwise kept as written,
+# so a caller can refuse a value by name rather than mistake it for none. Keys
+# are read from the start of a line, as molt.toml writes them.
+_molt_table_entries() {
+  awk -v header="[[$1]]" -v idkey="$2" '
     function flush(   k) {
-      if (inblock && name != "") {
-        print name "\tname\t" name
-        for (k in val) print name "\t" k "\t" val[k]
+      if (inblock) {
+        print id "\t" idkey "\t" id
+        for (k in val) print id "\t" k "\t" val[k]
       }
       for (k in val) delete val[k]
-      name = ""
+      id = ""
     }
-    /^\[\[liberator\]\]/ { flush(); inblock = 1; next }
+    index($0, header) == 1 { flush(); inblock = 1; next }
     /^\[/ { flush(); inblock = 0; next }
     inblock && /^[A-Za-z0-9_-]+[[:space:]]*=/ {
       key = $0
@@ -789,11 +796,11 @@ _molt_liberator_entries() {
       } else {
         sub(/[[:space:]]*(#.*)?$/, "", v)
       }
-      if (key == "name") name = v
+      if (key == idkey) id = v
       else val[key] = v
     }
     END { flush() }
-  ' "$1"
+  ' "$3"
 }
 
 # Parse enabled liberators from molt.toml.
@@ -807,8 +814,10 @@ molt_enabled_liberators() {
   local platform
   platform="$(molt_platform)"
 
-  # In manifest order. enabled defaults to true, os to every platform.
-  _molt_liberator_entries "$manifest" | awk -F'\t' -v platform="$platform" '
+  # In manifest order. enabled defaults to true, os to every platform. An entry
+  # with no name names no liberator.
+  _molt_table_entries liberator name "$manifest" | awk -F'\t' -v platform="$platform" '
+    $1 == "" { next }
     $2 == "name" { order[++n] = $1; enabled[$1] = "true"; os[$1] = "" }
     $2 == "enabled" { enabled[$1] = ($3 == "false") ? "false" : "true" }
     $2 == "os" { os[$1] = $3 }
@@ -822,14 +831,14 @@ molt_enabled_liberators() {
 }
 
 # Prints the value of key $2 on the [[liberator]] entry named $1 in this
-# sleeve's molt.toml, read by _molt_liberator_entries like every other key.
+# sleeve's molt.toml, read by _molt_table_entries like every other key.
 # Fails when there is no manifest, no such entry or no such key.
 molt_liberator_field() {
   local manifest value
   manifest="$(molt_find_manifest 2>/dev/null)" || return 1
   # Reads every line rather than exiting at the first match, so the writer
   # upstream never meets a closed pipe (issue 0008).
-  value="$(_molt_liberator_entries "$manifest" | awk -F'\t' -v want="$1" -v key="$2" '
+  value="$(_molt_table_entries liberator name "$manifest" | awk -F'\t' -v want="$1" -v key="$2" '
     $1 == want && $2 == key && !found { print $3; found = 1 }
   ')" || return 1
   [[ -n "$value" ]] || return 1
@@ -966,6 +975,16 @@ molt_claude_config_dir() {
   echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 }
 
+# Where Claude Code reads its managed settings, which nothing a user or an agent
+# writes can override: managed-settings.json, and the drop-ins beside it in
+# managed-settings.d/. Root-owned; nothing in molt writes it.
+molt_claude_managed_dir() {
+  case "$(molt_platform)" in
+    macos) echo "/Library/Application Support/ClaudeCode" ;;
+    *)     echo "/etc/claude-code" ;;
+  esac
+}
+
 # --- CLI Commands ---
 
 cmd_version() {
@@ -994,7 +1013,7 @@ cmd_list() {
     manifest="$(molt_find_manifest 2>/dev/null || echo "")"
     if [[ -n "$manifest" ]]; then
       local all_names
-      all_names="$(_molt_liberator_entries "$manifest" | awk -F'\t' '$2 == "name" { print $1 }')"
+      all_names="$(_molt_table_entries liberator name "$manifest" | awk -F'\t' '$1 != "" && $2 == "name" { print $1 }')"
       while IFS= read -r lib; do
         [[ -z "$lib" ]] && continue
         if [[ "$enabled_list" != *" ${lib} "* ]]; then

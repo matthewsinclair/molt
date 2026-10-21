@@ -117,6 +117,8 @@ molt maintain brew         # Maintain specific liberators only
 molt new-user <user>       # Scaffold a new molt-{user} config repo (prompts for details)
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
+molt agent list            # List this sleeve's agents: name, role, enabled, state, home
+molt agent config <name>   # An agent's home, its files' state, and its permission rules by layer
 molt doctor                # System diagnostics and health checks (12 checks)
 molt test [liberator]      # Run bats test suite (all or one liberator)
 molt version               # Show version
@@ -146,6 +148,7 @@ Where your config repo lives, kept apart from development projects. Defaults to 
 | `MOLT_PRJ_DIR`   | Where repos live              | _(none — must be set)_           |
 | `MOLT_CFG_DIR`   | Where your config repo lives  | `$(dirname "$MOLT_PRJ_DIR")/cfg` |
 | `MOLT_OPT_DIR`   | Where opt-style installs live | `$(dirname "$MOLT_PRJ_DIR")/opt` |
+| `MOLT_AGT_DIR`   | Where sleeve agents live      | `$(dirname "$MOLT_PRJ_DIR")/agt` |
 | `MOLT_LOCAL_BIN` | Where to symlink executables  | `~/bin`                          |
 | `UTILZ_HOME`     | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`            |
 | `INTENT_HOME`    | Override Intent repo location | `$MOLT_PRJ_DIR/Intent`           |
@@ -200,6 +203,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | pplr           | Pplr framework config and linking               | linux, macos |
 | web            | Web browser config and linking                  | linux, macos |
 | claude         | Claude Code config, and its state out of $HOME  | linux, macos |
+| agents         | A home for each sleeve agent, from its role     | linux, macos |
 
 ### molt.toml
 
@@ -230,6 +234,17 @@ os = ["linux"]
 Instance-specific manifests can override the repo-level one. MOLT checks `instances/{hostname}/molt.toml` first, then falls back to the repo root.
 
 A liberator may also read keys of its own from its entry. `utilz` takes `source = "checkout"`, the default, or `source = "brew"`.
+
+A sleeve declares its agents, the local agents that do machine work on it as you, in `[[agent]]` entries:
+
+```toml
+[[agent]]
+role = "sysadm"              # one of the roles under config/agents/roles/
+enabled = true               # the default
+harness = "claude"           # the default, and the only harness for now
+```
+
+An agent's name is derived, never written: `<hostname>-<role>`, eg `kovacs-sysadm`. The `agents` liberator renders its home at `$MOLT_AGT_DIR/<name>` from the role's `AGENTS.md.tmpl` and `settings.json.tmpl`, with `instances/<host>/agents/<role>.md` appended to `AGENTS.md` when the sleeve has one. The home is the agent's working directory: launch it from there.
 
 ## Your config repo layout
 
