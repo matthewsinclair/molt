@@ -55,7 +55,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC011
 
-- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: no (computed)
+- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: yes (computed)
 
 ### Group AC012
 
@@ -501,11 +501,11 @@ _(no tests in this group)_
 
 ### Group AT045
 
-- AT045 `test/liberators/claude.bats` -- covers AC011 -- status: red -- @test "a vars.sh that does not parse, or stops before its end when sourced, is refused, and a moved sleeve gets no ~/.claude back" (vc's WP01 review C1). Red on 41ef6b1, which read each as undeclared and recreated ~/.claude.
+- AT045 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a vars.sh that does not parse, or stops before its end when sourced, is refused, and a moved sleeve gets no ~/.claude back" (vc's WP01 review C1). Red on 41ef6b1, which read each as undeclared and recreated ~/.claude. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT046
 
-- AT046 `test/templates.bats` -- covers AC011 -- status: red -- @test "molt_render refuses a vars.sh that does not parse or stops before its end, and leaves the target as it was" (vc's WP01 review C1). Red on 41ef6b1, which rendered past the syntax error and, for a vars.sh that exits, backed the target up with nothing in its place.
+- AT046 `test/templates.bats` -- covers AC011 -- status: green -- @test "molt_render refuses a vars.sh that does not parse or stops before its end, and leaves the target as it was" (vc's WP01 review C1). Red on 41ef6b1, which rendered past the syntax error and, for a vars.sh that exits, backed the target up with nothing in its place. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT047
 
@@ -513,11 +513,11 @@ _(no tests in this group)_
 
 ### Group AT048
 
-- AT048 `test/liberators/claude.bats` -- covers AC011 -- status: red -- @test "a vars.sh that cannot be read is refused, and a moved sleeve gets no ~/.claude back" (vc's WP01 review C1; split from AT045 so a run as root skips only this half). Red on 41ef6b1.
+- AT048 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a vars.sh that cannot be read is refused, and a moved sleeve gets no ~/.claude back" (vc's WP01 review C1; split from AT045 so a run as root skips only this half). Red on 41ef6b1. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT049
 
-- AT049 `test/templates.bats` -- covers AC011 -- status: red -- @test "molt_render refuses a vars.sh that cannot be read, and leaves the target as it was" (split from AT046). Red on 41ef6b1.
+- AT049 `test/templates.bats` -- covers AC011 -- status: green -- @test "molt_render refuses a vars.sh that cannot be read, and leaves the target as it was" (split from AT046). Red on 41ef6b1. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
 
 ---
 
