@@ -104,7 +104,9 @@ enabled = false
 | `enabled` | no       | `true`     | `false` declares the agent without rendering its home                     |
 | `harness` | no       | `"claude"` | the only value Molt accepts                                               |
 
-Homes live under `MOLT_AGT_DIR`, which defaults to `$HOME/Devel/agt`: a peer of the `prj/` and `cfg/` directories that `MOLT_PRJ_DIR` and `MOLT_CFG_DIR` name. Export it from your `zshenv` beside `MOLT_PRJ_DIR`, so your shells and your agents see the same value. An agent runs as you, and Unix has no convention for an interactive agent that runs as its user: `/opt`, `/var/lib` and `/srv` are for software and for services under their own accounts.
+The `[[agent]]` entries render nothing without the `[[liberator]]` entry for `agents`, though `molt agent list` reads them either way.
+
+Homes live under `MOLT_AGT_DIR`. It defaults to the `agt/` sibling of `MOLT_PRJ_DIR`, the way `MOLT_CFG_DIR` defaults to `cfg/`, so `~/Devel/prj` gives `~/Devel/agt`; with `MOLT_PRJ_DIR` unset it is `$HOME/Devel/agt`. Export it from your `zshenv` beside `MOLT_PRJ_DIR`, so your shells and your agents see the same value. An agent runs as you, and Unix has no convention for an interactive agent that runs as its user: `/opt`, `/var/lib` and `/srv` are for software and for services under their own accounts.
 
 ## What Molt renders
 
@@ -141,11 +143,39 @@ molt agent list
 molt agent config <name>
 ```
 
-`molt agent list` prints each declared agent: its name, role and home, whether it is enabled, and whether its rendered files are current.
+`molt agent list` prints each declared agent. Every line molt prints carries its `Zen:` prefix, which the samples in this guide leave off:
 
-`molt agent config <name>` prints the agent's home and role, the currency of each rendered file, and its effective permissions: `permissions.allow`, `deny` and `ask` merged from the managed settings, the user settings and the home's `.claude/settings.json`, each rule tagged with the layer it came from. An undeclared name fails and lists the declared ones.
+```
+NAME                         ROLE     ENABLED  STATE          HOME
+kovacs-sysadm                sysadm   true     current        ~/Devel/agt/kovacs-sysadm
+kovacs-ops                   ops      false    role undefined ~/Devel/agt/kovacs-ops
+```
 
-**PLACEHOLDER (molt-cc, WP02): sample output of `molt agent list` and of `molt agent config kovacs-sysadm`.**
+`STATE` is one of `current`, `stale`, `not rendered` and `role undefined`. Faults in the `[[agent]]` entries follow the table as warnings, and the command then exits 1.
+
+`molt agent config <name>` prints one agent: its role, harness and home, and the currency of each rendered file; then the settings files Claude Code merges for a session in the home, highest precedence first; then the effective permissions, each rule tagged with the layer it came from:
+
+```
+kovacs-sysadm
+  role      sysadm
+  harness   claude
+  enabled   true
+  home      ~/Devel/agt/kovacs-sysadm
+  files
+    AGENTS.md                current
+    CLAUDE.md                current
+    .claude/settings.json    stale
+  settings, highest first
+    managed  /etc/claude-code/managed-settings.json (absent)
+    local    ~/Devel/agt/kovacs-sysadm/.claude/settings.local.json (absent)
+    home     ~/Devel/agt/kovacs-sysadm/.claude/settings.json
+    user     ~/.config/claude/settings.json
+  permissions, deny winning at every layer
+    deny   Bash(rm -rf:*)                               home
+    allow  Bash(uptime)                                 home
+```
+
+The managed layer also lists any drop-ins in `managed-settings.d/`. An undeclared name fails with `molt agent: <name> is not declared on this sleeve; declared: <the declared names>`.
 
 There is no launch command. To start an agent, start Claude in its home:
 
@@ -173,16 +203,28 @@ A live session cannot survive its own state moving: `mv ~/.claude` under a runni
 
 ### What the move does, and when it refuses
 
-When `~/.claude` is a real directory and the config dir does not exist yet, the claude liberator backs up `~/.claude` and `~/.claude.json`, then moves both into the config dir. The backup is a clone made beside the target, never in `$HOME`: `cp -cR` on APFS and `cp -a --reflink=auto` on Linux, so even a large `~/.claude` costs little or no extra space where the filesystem can clone.
+When `~/.claude` is a real directory and the config dir does not exist yet, the claude liberator backs up `~/.claude` and `~/.claude.json`, then moves both into the config dir. The backup sits beside the config dir, never in `$HOME`, named `<config dir>.molt-backup.<YYYYmmddHHMMSS>` in local time like every Molt backup, eg `~/.config/claude.molt-backup.20261021093000/`. It holds `.claude/` and `.claude.json` exactly as they were in `$HOME`, and Molt never removes it. It is a clone, `cp -cRp` on APFS and `cp -a --reflink=auto` on Linux, so even a large `~/.claude` costs little or no extra space where the filesystem can clone.
 
-**PLACEHOLDER (molt-cc, WP01): where the backup lands and what it is called.**
+It refuses, and moves nothing, while any Claude Code process is running. The refusal lists each one as `<pid> <command line>`, cut to 100 characters, including the session molt was started from, so an agent cannot move its own state:
 
-It refuses, and moves nothing, when:
+```
+claude: Claude Code is running, and a live session cannot survive its own state moving:
+  3741 /Users/you/.local/bin/claude --chrome-native-host
+  41859 claude
+claude: quit every Claude Code on this machine, then run molt resleeve from a plain terminal
+claude: CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written, and nothing else was changed
+```
 
-- any Claude Code process is running; the refusal names the processes
-- the config dir exists and is not empty; the refusal names what is in it, and Molt never merges the two
+It also refuses in these cases, each ending with the same not-published line. Here `~` is your home directory and `~/.config/claude` the declared config dir:
 
-**PLACEHOLDER (molt-cc, WP01): the exact text of each refusal.**
+| Refusal                                                                                                                                                              | When                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `~/.config/claude already holds <its first five entries>[ and N more], so ~/.claude and ~/.claude.json did not move into it; molt never merges the two`              | the config dir is not empty                  |
+| `~/.claude is a symlink to <target>, so Claude Code's state was not moved`                                                                                           | `~/.claude` is a link, not a real directory  |
+| `~/.claude/.claude.json and ~/.claude.json both exist, and molt will not choose between them`                                                                        | there are two `.claude.json` files           |
+| `<new dir> holds nothing, and CLAUDE_CONFIG_DIR named <old dir>, which exists: Claude Code's state may be there. Move it into <new> by hand, or declare <old> again` | the declared config dir changed after a move |
+
+If something fails after the backup was made, the not-published line drops ", and nothing else was changed", and the line before it names the copies.
 
 ### The variable follows the state
 
@@ -194,13 +236,11 @@ The order matters. Published first, the variable would start the next Claude emp
 
 ### Where the variable is published
 
-| File                                          | Reaches                                                                  |
-| --------------------------------------------- | ------------------------------------------------------------------------ |
-| `~/.config/molt/env.sh`                       | every zsh, through the `zshenv` line below, including ssh and TTY logins |
-| a LaunchAgent plist (macOS)                   | GUI apps: it runs `launchctl setenv CLAUDE_CONFIG_DIR` at login          |
-| `~/.config/environment.d/claude.conf` (Linux) | the user session: on GNOME, every GUI and terminal child                 |
-
-**PLACEHOLDER (molt-cc, WP01): the LaunchAgent's label and the plist's path.**
+| File                                                                                                  | Reaches                                                                    |
+| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `~/.config/molt/env.sh`, holding `export CLAUDE_CONFIG_DIR="<dir>"`                                   | every zsh, through the `zshenv` line below, including ssh and TTY logins   |
+| `~/Library/LaunchAgents/com.molt.claude-config-dir.plist` (macOS), label `com.molt.claude-config-dir` | GUI apps: at login it runs `/bin/launchctl setenv CLAUDE_CONFIG_DIR <dir>` |
+| `~/.config/environment.d/claude.conf` (Linux), holding `CLAUDE_CONFIG_DIR=<dir>`                      | the user session: on GNOME, every GUI and terminal child                   |
 
 Each carries a `.molt-rendered` digest sidecar. Your config repo's `zshenv` sources the env file when it exists, which is safe on a sleeve that has not moved:
 
@@ -216,37 +256,45 @@ Start each agent from its home, and accept workspace trust the first time. The n
 
 ### A Claude started in $HOME is refused
 
-Once the variable is published, Molt also merges a `UserPromptSubmit` hook into the user settings, changing that key and no other, as it does for the statusLine. The hook runs `~/.config/molt/claude-home-guard.sh`, a POSIX `sh` script that needs `jq` but not `molt`, so it does not depend on `molt` being on `PATH` when a prompt is sent. When the session's working directory is `$HOME`, it blocks the prompt with:
+Once the variable is published, Molt also merges a `UserPromptSubmit` hook into the user settings, changing that key and no other, as it does for the statusLine. The hook runs `~/.config/molt/claude-home-guard.sh`, a POSIX `sh` script that needs `jq` but not `molt`, so it does not depend on `molt` being on `PATH` when a prompt is sent. When the session's working directory is `$HOME`, it prints this on stderr and exits 2, which blocks the prompt:
 
 ```
 launch from an agent home: molt agent list
 ```
 
-Any other working directory passes, so project agents are unaffected.
+Any other working directory passes, so project agents are unaffected. If `jq` is missing, or the hook's input is not JSON or names no working directory, the script exits 1, which shows its message and blocks nothing.
 
 ## What molt doctor reports
 
-`molt doctor` reports these through the claude and agents liberators' checks.
-
-**PLACEHOLDER (molt-cc, WP01 and WP02): the exact wording of each report, to replace the descriptions in the first column of each table.**
+`molt doctor`'s check of the enabled liberators shows `not installed: claude`, followed by the first three of the claude liberator's reports, each as `claude: <report>`; the agents liberator's reports start `agents:`. Below, `~/.config/claude` stands for the sleeve's config dir, which is still `~/.claude` on a sleeve that has not moved.
 
 On a sleeve that has declared `MOLT_CLAUDE_CONFIG_DIR`, the claude liberator reports:
 
-| Report                                                                       | Means                                                                                                     | What to do                                                                                                          |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `CLAUDE_CONFIG_DIR` is unset in the environment molt runs in                 | the shell molt ran from did not get the variable: the env file is missing, or `zshenv` does not source it | open a new shell; if it persists, check the `zshenv` line and that `~/.config/molt/env.sh` exists                   |
-| `~/.claude` or `~/.claude.json` is present while the config dir is elsewhere | something started Claude without the variable, and it wrote fresh state in `$HOME`                        | find the launch path that missed it, eg a GUI app started before you logged back in, or a shell that skips `zshenv` |
-| the env file, GUI file or hook is missing or stale                           | what is published no longer matches what Molt would render                                                | `molt upgrade`                                                                                                      |
+| Report                                                                                                                                                                      | Means                                                                                                                                                 | What to do                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `Claude Code's state is still in ~/.claude and ~/.claude.json, and this sleeve's config dir is ~/.config/claude: quit every Claude Code, then run molt resleeve to move it` | the move is pending                                                                                                                                   | what it says, from a plain terminal                                                                                 |
+| `CLAUDE_CONFIG_DIR is not set where molt runs; ~/.config/molt/env.sh sets it in a shell that sources it`                                                                    | the state has moved, but the shell molt ran in did not get the variable                                                                               | open a new shell; if it persists, check the `zshenv` line                                                           |
+| `CLAUDE_CONFIG_DIR is <X>, not this sleeve's config dir <dir>`                                                                                                              | the environment carries another value, eg one from before the declared dir changed                                                                    | open a new shell after `molt upgrade`; if it persists, find what else sets it                                       |
+| `~/.claude is present while the config dir is ~/.config/claude: a launch path missed CLAUDE_CONFIG_DIR, or a move did not finish`                                           | something started Claude without the variable and it wrote fresh state in `$HOME`, or a move stopped part way; the same line reports `~/.claude.json` | find the launch path that missed it, eg a GUI app started before you logged back in, or a shell that skips `zshenv` |
+| `~/.claude is a symlink to <target>`                                                                                                                                        | a link sits at the old path, and Molt never makes one                                                                                                 | find what made it                                                                                                   |
+| `<path> is missing`, or `<path> differs from its template or this sleeve's vars.sh`                                                                                         | the env file, GUI file or hook script is not what Molt would render                                                                                   | `molt upgrade`                                                                                                      |
+| `~/.config/molt/claude-home-guard.sh is not executable`                                                                                                                     | the hook script cannot run                                                                                                                            | `molt upgrade`                                                                                                      |
+| `~/.config/claude/settings.json has no home-launch hook`, or `has a different home-launch hook`                                                                             | the user settings have lost the hook, or carry another                                                                                                | `molt upgrade`                                                                                                      |
 
-On a sleeve that has not declared it, `CLAUDE_CONFIG_DIR` is unset and nothing is published, and neither is a fault.
+While the move is pending, the claude liberator reports the pending move rather than the unset variable. Until a sleeve declares the variable it reports none of these, and an unset `CLAUDE_CONFIG_DIR` there is not a fault.
 
 On every sleeve, whether or not it has declared the variable:
 
-| Report                                          | Means                                                                                                           | What to do                                                           |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| a user-scope link is pending, broken or missing | your config repo has `config/claude/CLAUDE.md` or `AGENTS.md`, and the config dir does not link to it           | `molt upgrade` makes the link, backing up a regular file it replaces |
-| an agent home is missing or stale               | an enabled agent has not been rendered, or its role templates or host overlay changed since it was              | `molt upgrade`                                                       |
-| a role is undefined                             | an `[[agent]]` names a role with no directory under `config/agents/roles/`; the report names the path looked in | add the role, or fix the entry                                       |
+| Report                                                                                           | Means                                                                                      | What to do                                    |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| `~/.config/claude/CLAUDE.md is missing`, `is a broken symlink`, or `points at <X>, not <Y>`      | the user-scope link is not made yet, or is wrong; the same lines cover `AGENTS.md`         | `molt upgrade`                                |
+| `~/.config/claude/CLAUDE.md is not a symlink`                                                    | a regular file is where the link goes                                                      | `molt upgrade`, which backs the file up first |
+| `agents: <name>: <home>/AGENTS.md is missing`, `is stale`, or `<home>/memory is missing`         | the home has not been rendered, or its role templates or host overlay changed since it was | `molt upgrade`                                |
+| `agents: <name>: role <role> is not defined: there is no <user repo>/config/agents/roles/<role>` | the entry names a role your config repo does not define                                    | add the role, or fix the entry                |
+| `agents: molt.toml: an [[agent]] entry has no role`                                              | an entry without its one required key                                                      | add the role                                  |
+| `agents: molt.toml: role <role> is declared by more than one [[agent]] entry`                    | two entries for one role                                                                   | keep one                                      |
+| `agents: molt.toml: the <role> entry writes a name; an agent is named <hostname>-<role>`         | an entry sets the name Molt derives                                                        | remove the name                               |
+| `agents: molt.toml: the <role> entry names harness codex; claude is the only one`                | a harness Molt does not render for                                                         | remove `harness`, or set it to `"claude"`     |
 
 The native installer's paths listed above are not faults.
 
