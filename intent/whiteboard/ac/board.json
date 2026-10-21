@@ -1,0 +1,28 @@
+{
+  "schema": "intent/board@3.0",
+  "node": {
+    "moniker": "ac",
+    "name": "Authoring Claude",
+    "role": "authoring",
+    "session_id": "d1da0c2b-7939-45d0-b367-098542eec60e",
+    "heartbeat_at": "2026-10-21T06:07:10.290Z",
+    "status": "active",
+    "focus": "21 Oct: ST0006 WP07, the blog brief for hv's local-agent post, on st0006-wp07; plan shown to hv, holding for the go",
+    "claims": [
+      "ST0006/07"
+    ],
+    "recorded_at": "2026-10-21T05:20:09.410Z",
+    "migrated_at": "2026-10-21T05:20:09.410Z"
+  },
+  "items": [
+    {
+      "node": "ac",
+      "kind": "doing",
+      "seq": 1,
+      "text": "ST0006 WP07, the blog brief for hv's local-agent post: first draft of the notes (precis, audience, titles, nine sections with tagged bullets) on st0006-wp07 at ~/Devel/prj/Molt-wt/st0006-wp07/docs/blog/bl0001-so-you-want-to-run-a-local-agent.md. Next: verify every check: bullet against current Claude Code docs, critic-prose review, prettier, then hand to vc for review and merge; revise on hv's notes.",
+      "state": "live",
+      "recorded_at": "2026-10-21T06:07:10.263Z"
+    }
+  ],
+  "messages": []
+}
