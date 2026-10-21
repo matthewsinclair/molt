@@ -17,7 +17,7 @@ _(none)_
 
 ## TODO
 
-- WP06 managed deny floor: hv named it 21 Oct (credentials only; sysadm sleeves only). vc settled: contents in Molt-matts config/agents/roles/sysadm/floor.json; Molt renders it to managed-settings.d/molt-sysadm.json with a sidecar, removes one it rendered where no sysadm, agent config shows the managed layer, doctor reports. Read-ahead done. (edited)
+- WP06 managed deny floor (hv 21 Oct: credentials only, sysadm sleeves only). vc's design: contents in Molt-matts config/agents/roles/sysadm/floor.json; a put/remove helper pair in lib/molt.sh (user tmp, then sudo install -m 644; tiling.sh shape, FAKE_SUDO_STATUS in tests); the agents liberator owns it, renders molt-sysadm.json to managed-settings.d with a root-owned 644 sidecar beside it, removes only a drop-in whose sidecar molt wrote; molt_claude_managed_dir comment changes; AT: the two rules tagged managed in molt agent config, absent without the floor; doctor check 14 both ways; guide notes the sudo prompt. (edited)
 
 ## Holds
 
