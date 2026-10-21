@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 19:46Z
+heartbeat_at: 2026-10-21 19:59Z
 status: active
-focus: "21 Oct: 0031 merged, npm-liberator worktree and branch removed; 0022's untracking held; kovacs bubblewrap run blocked on hv's userns ruling"
+focus: "21 Oct, day called: WP06 guide draft on wp06-guide (1efde2c) waits on cc's head; Molt-matts st0006-wp06 1421034 ready; 0022 held; kovacs bubblewrap run waits on hv's userns ruling"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ST0006/06 AC021 for vc: Managed floor section in docs/guides/sleeve-agents.md (on main, commit held until cc's st0006-wp06 head so the wording matches the code); Molt-matts branch st0006-wp06 off 423b800 with roles/sysadm/floor.json (shape from cc) and the role's credential sentence
+- ST0006/06 AC021: guide draft on Molt branch wp06-guide at 1efde2c (worktree Molt-wt/wp06-guide), waiting on cc's st0006-wp06 head for the sidecar name, agent config output and doctor check 14 lines; Molt-matts st0006-wp06 at 1421034 ready for vc
 
 ## TODO
 
@@ -22,7 +22,6 @@ _(none)_
 ## Holds
 
 - ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.
-- ST0006/06 guide commit: Managed floor section drafted (scratchpad managed-floor-draft.md), held so its sidecar name, agent config output and doctor check 14 lines match cc's code. Released when cc's st0006-wp06 head carries the floor code; Molt-matts part done at 1421034
 
 ## Watch-outs
 
