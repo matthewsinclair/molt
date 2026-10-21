@@ -1,0 +1,16 @@
+{
+  "id": "01M5FC7KR011GDHXKPPGRQB7GJ",
+  "ts": "2026-10-21T14:00:53.248Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP02 at st0006-wp02 8bd28c2 on main c815d23, committed and clean, with vc for review; all tests pass under both bashes. 8bd28c2 answers critic-shell's review of 6caffe8+b897a23 (W1-W4 and its recommendations, per vc's rulings in todo 4) and the critic's two follow-up passes. AT053-AT058 green on main; AT059-AT067 to-write until the merge (AT062-AT067 created at 75a3a19). After the merge: AT028-AT040, AT047, AT059-AT067 green on main, and AT055, AT057 re-noted."
+  }
+}
