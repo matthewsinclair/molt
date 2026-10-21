@@ -118,7 +118,7 @@ A template may open with a marker:
 # Add your own entries ABOVE this line.
 ```
 
-When both the existing file and the new render carry `@@MOLT:BEGIN@@`, `molt_render` preserves everything above the marker from the current file and prepends it to the new render. Files without the marker — rendered scripts, plists — are replaced wholesale as before.
+When the existing file carries `@@MOLT:BEGIN@@` and the new render opens with it, on its first line, `molt_render` preserves everything above the marker from the current file and prepends it to the new render. A render with lines of its own above the marker keeps nothing, since those lines would be written again under the kept copy at every render; nor does a marker that is only mentioned further down. When lines above the marker are not kept and the file is backed up, molt warns how many of them the new render does not carry, and names the backup that holds them. Files without the marker — rendered scripts, plists — are replaced wholesale as before.
 
 Anything _below_ the marker is molt's to own and will be replaced. Content that must survive belongs either above the marker or in the template itself.
 
