@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 07:12Z
+heartbeat_at: 2026-10-21 08:19Z
 status: active
-focus: "ST0006: WP01 with vc at st0006-wp01 28062ea; WP02 rebasing onto it, with AC014 (guard under MOLT_AGT_DIR) on top"
+focus: "ST0006: WP01 merged (c815d23); WP02 at b897a23 with AC014 and AC016, suite and critic-shell running, then the head to vc; WP06 after"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -13,8 +13,8 @@ claims: [ST0006/01, ST0006/02]
 
 ## DOING
 
-- ST0006 WP01 with vc for re-read at st0006-wp01 28062ea (one fix commit on 41ef6b1; all tests pass under both bashes): one vars.sh reader, exit-0 data loss fixed, line break and non-canonical dir refused, tiling/backup/doctor on the reader, guard reads CLAUDE_PROJECT_DIR (no jq). AT045/AT046/AT048/AT049 green on main (aba2bd5); issue 0019 filed. critic-shell's second pass on the delta running. (edited)
-- ST0006 WP02 at st0006-wp02 483e343, still on 820827c: critic-shell's findings verified and fixed (C1 empty or null settings render, C2 a test that could not fail, W sidecar kept on failure, Highlander x2, lookup by name, jq, test gaps); AT028-AT044 and AT047 ids in the tests; AT047 to-write on main. Next: rebase onto WP01's final head (WP01's molt_hostname kept, WP02's dropped), suite under both bashes, critic-shell on the delta, then the head to vc with the deviations: the 4th settings layer, MOLT_AGT_DIR from MOLT_PRJ_DIR, the eight liberator hostname copies left (desktop.sh:23 drifted), molt_render backing up post-processed files on each re-render. (edited)
+- ST0006 WP01 merged into main: 28062ea and fb5bf7d at 695e961, the second follow-up 4cfe31a at c815d23 (critic-shell's second pass answered). Done on my side. (edited)
+- ST0006 WP02 at st0006-wp02 b897a23 on main c815d23: build, review fixes, AC014 (guard under MOLT_AGT_DIR), one root validator (molt_agt_dir_fault, no $HOME/Devel/agt guess), AC016 preamble layer (molt_render_text), guard compares the disk's spelling. AT053-AT058 red on main, AT059-AT061 to-write (897b46f). Suite under both bashes and critic-shell on 6caffe8+b897a23 running; then the head to vc. (edited)
 
 ## TODO
 

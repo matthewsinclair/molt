@@ -1,0 +1,16 @@
+{
+  "id": "01M5ERP9HYSG6J4N3PN04CR0KF",
+  "ts": "2026-10-21T08:19:22.814Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 1,
+    "text": "ST0006 WP01 merged into main: 28062ea and fb5bf7d at 695e961, the second follow-up 4cfe31a at c815d23 (critic-shell's second pass answered). Done on my side."
+  }
+}

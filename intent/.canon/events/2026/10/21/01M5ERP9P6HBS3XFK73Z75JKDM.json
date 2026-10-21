@@ -1,0 +1,16 @@
+{
+  "id": "01M5ERP9P6HBS3XFK73Z75JKDM",
+  "ts": "2026-10-21T08:19:22.950Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP02 at st0006-wp02 b897a23 on main c815d23: build, review fixes, AC014 (guard under MOLT_AGT_DIR), one root validator (molt_agt_dir_fault, no $HOME/Devel/agt guess), AC016 preamble layer (molt_render_text), guard compares the disk's spelling. AT053-AT058 red on main, AT059-AT061 to-write (897b46f). Suite under both bashes and critic-shell on 6caffe8+b897a23 running; then the head to vc."
+  }
+}

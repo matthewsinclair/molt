@@ -597,27 +597,27 @@ _(no tests in this group)_
 
 ### Group AT053
 
-- AT053 `test/liberators/claude.bats` -- covers AC014 -- status: red -- @test "the home guard passes a session launched in an agent home itself, wherever in the home it has cd'd since". Passes on c815d23 too: it guards the AC014 rule against refusing a home itself.
+- AT053 `test/liberators/claude.bats` -- covers AC014 -- status: green -- @test "the home guard passes a session launched in an agent home itself, wherever in the home it has cd'd since". Passes on c815d23 too: it guards the AC014 rule against refusing a home itself. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT054
 
-- AT054 `test/liberators/claude.bats` -- covers AC014 -- status: red -- @test "the home guard refuses a session launched in the agents root itself". Red on c815d23, whose guard had no agents-root rule.
+- AT054 `test/liberators/claude.bats` -- covers AC014 -- status: green -- @test "the home guard refuses a session launched in the agents root itself". Red on c815d23, whose guard had no agents-root rule. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT055
 
-- AT055 `test/liberators/claude.bats` -- covers AC014 -- status: red -- @test "the home guard refuses a session launched below an agent home, by any spelling, naming the home to launch from". Red on c815d23; its letter-case half red under the builtin pwd -P on APFS.
+- AT055 `test/liberators/claude.bats` -- covers AC014 -- status: green -- @test "the home guard refuses a session launched below an agent home, by any spelling, naming the home to launch from". Red on c815d23; its letter-case half red under the builtin pwd -P on APFS. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT056
 
-- AT056 `test/liberators/claude.bats` -- covers AC014 -- status: red -- @test "the home guard passes a session launched outside the agents root, a sibling sharing its name's start included". Red on c815d23 at its root with * and $ in it, which no guard there carried.
+- AT056 `test/liberators/claude.bats` -- covers AC014 -- status: green -- @test "the home guard passes a session launched outside the agents root, a sibling sharing its name's start included". Red on c815d23 at its root with * and $ in it, which no guard there carried. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT057
 
-- AT057 `test/liberators/claude.bats` -- covers AC014 -- status: red -- @test "an agents root molt_agt_dir_fault refuses is refused before anything moves". Red on c815d23, which had no root to refuse.
+- AT057 `test/liberators/claude.bats` -- covers AC014 -- status: green -- @test "an agents root molt_agt_dir_fault refuses is refused before anything moves". Red on c815d23, which had no root to refuse. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT058
 
-- AT058 `test/liberators/claude.bats` -- covers AC014 -- status: red -- @test "check reports a home guard rendered with an agents root that is no longer MOLT_AGT_DIR, and install renders it again". Red on c815d23.
+- AT058 `test/liberators/claude.bats` -- covers AC014 -- status: green -- @test "check reports a home guard rendered with an agents root that is no longer MOLT_AGT_DIR, and install renders it again". Red on c815d23. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT059
 
