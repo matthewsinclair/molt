@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 14:03Z
+heartbeat_at: 2026-10-21 14:22Z
 status: active
-focus: "ST0006 WP02: head 8bd28c2 under vc's review; holding for vc's verdict and hv's compact"
+focus: "ST0006 WP02 merged (bea7420); issues 0024 and 0025 filed for vc; holding for vc"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/01, ST0006/02]
 
 ## DOING
 
-- ST0006 WP02 at st0006-wp02 8bd28c2 on main c815d23, committed and clean, with vc for review; all tests pass under both bashes. 8bd28c2 answers critic-shell's review of 6caffe8+b897a23 (W1-W4 and its recommendations, per vc's rulings in todo 4) and the critic's two follow-up passes. AT053-AT058 green on main; AT059-AT067 to-write until the merge (AT062-AT067 created at 75a3a19). After the merge: AT028-AT040, AT047, AT059-AT067 green on main, and AT055, AT057 re-noted. (edited)
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- ST0006 WP02: nothing more on st0006-wp02 until vc's verdict on 8bd28c2 (vc, 21 Oct); released by that verdict, or by hv. Next after it: AT028-AT040, AT047, AT059-AT067 green on main once merged, AT055 and AT057 re-noted, then WP06 (no ACs yet; ask vc).
+- Issues 0024 (ssh config.d backups, medium) and 0025 (vars.sh EXIT trap, low) filed, not fixed, per vc (21 Oct); released when vc queues the fixes or hands cc its next work (WP06 needs ACs from vc).
 
 ## Watch-outs
 

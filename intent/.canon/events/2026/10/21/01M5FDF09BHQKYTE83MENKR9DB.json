@@ -1,0 +1,15 @@
+{
+  "id": "01M5FDF09BHQKYTE83MENKR9DB",
+  "ts": "2026-10-21T14:22:24.043Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0025"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "A vars.sh EXIT trap that prints makes molt_instance_var, and on stderr molt_instance_vars_fault, report the file stops before its end"
+  }
+}
