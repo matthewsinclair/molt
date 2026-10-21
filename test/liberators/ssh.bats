@@ -180,23 +180,77 @@ _ssh_backups() {
     [ "$(_ssh_backups)" = 1 ]
 }
 
-# A static config/ssh/config is linked, so the fragments went through the link
-# into the user repo. With fragments declared, the install refuses instead.
-@test "ssh_install refuses a static config/ssh/config when config.d declares fragments, and writes nothing" {
+# Issue 0027: a static config/ssh/config was linked, and check and verify
+# refuse a linked ~/.ssh/config, which sshd will not read, so the sleeve never
+# settled; fragments went through the link into the user repo. A static config
+# is refused instead: as config.tmpl it renders as it stands.
+STATIC_REFUSAL="ssh: config/ssh/config is static, and ssh refuses ~/.ssh/config as the link molt would make of it: rename it config/ssh/config.tmpl, which renders it as it stands"
+
+_ssh_static_env() {
     _ssh_env
-    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config"
+    printf 'Host *\n  ServerAliveInterval 60\n' > "$SSH_ROOT/repo/config/ssh/config"
     cp "$SSH_ROOT/repo/config/ssh/config" "$SSH_ROOT/static.before"
     printf 'Host mine\n' > "$HOME/.ssh/config"
     cp "$HOME/.ssh/config" "$SSH_ROOT/config.before"
+}
 
-    run ssh_install
-    assert_failure
-    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so 1 fragment(s) were not applied"
-    refute_output_contains "Liberator complete"
+_ssh_nothing_written() {
     cmp "$SSH_ROOT/static.before" "$SSH_ROOT/repo/config/ssh/config"
     [ ! -L "$HOME/.ssh/config" ]
     cmp "$SSH_ROOT/config.before" "$HOME/.ssh/config"
     [ -z "$(find "$HOME/.ssh" -name 'config.molt-*')" ]
+}
+
+@test "check, install and verify refuse a static config/ssh/config, and install writes nothing" {
+    require_command ssh "ssh_check needs ssh"
+    _ssh_static_env
+    rm "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+
+    run ssh_check
+    assert_failure
+    assert_output_contains "$STATIC_REFUSAL"
+    run ssh_install
+    assert_failure
+    assert_output_contains "$STATIC_REFUSAL"
+    refute_output_contains "Liberator complete"
+    _ssh_nothing_written
+    run ssh_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: $STATIC_REFUSAL"
+}
+
+@test "a static config/ssh/config with config.d fragments is refused, naming the fragments, and install writes nothing" {
+    _ssh_static_env
+
+    run ssh_install
+    assert_failure
+    assert_output_contains "$STATIC_REFUSAL; 1 config.d fragment(s) were not applied"
+    refute_output_contains "Liberator complete"
+    _ssh_nothing_written
+}
+
+@test "a static config/ssh/config renamed config.tmpl renders as it stands, and check then passes" {
+    require_command ssh "ssh_check needs ssh"
+    _ssh_static_env
+    rm "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+    mv "$SSH_ROOT/repo/config/ssh/config" "$SSH_ROOT/repo/config/ssh/config.tmpl"
+
+    run ssh_install
+    assert_success
+    cmp "$SSH_ROOT/static.before" "$HOME/.ssh/config"
+    run ssh_check
+    assert_success
+}
+
+# Both files, as Molt-matts has: the template is the config, as before.
+@test "a user repo with config/ssh/config.tmpl beside a static config/ssh/config renders the template" {
+    _ssh_static_env
+    printf 'Host *\n  ServerAliveInterval 30\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+
+    run ssh_install
+    assert_success
+    refute_output_contains "is static"
+    grep -qx '  ServerAliveInterval 30' "$HOME/.ssh/config"
 }
 
 # Fragments had been appended to a ~/.ssh/config of fragments alone when the
