@@ -685,6 +685,18 @@ JSON
     run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/work-link" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
     [ "$output" = "launch from the agent home itself: cd $agent_home" ]
+    # A root spelt in another letter case than the disk's is the same directory
+    # on a disk that ignores case, as APFS does by default; bash's own pwd -P
+    # kept the spelling it was given, and fenced nothing (critic-shell, 21 Oct).
+    local upper="${MOLT_AGT_DIR%/*}/AGT"
+    if [ -d "$upper" ]; then
+        export MOLT_AGT_DIR="$upper"
+        run claude_install
+        assert_success
+        run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+        [ "$status" -eq 2 ]
+        [ "$output" = "launch from the agent home itself: cd $upper/kovacs-sysadm" ]
+    fi
 }
 
 @test "the home guard passes a session launched outside the agents root, a sibling sharing its name's start included" {
@@ -699,21 +711,49 @@ JSON
     run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR-old/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     assert_success
     [ -z "$output" ]
+    # The root is data to the guard, never a pattern or an expansion: a root
+    # with * and $ in it fences itself and not a sibling that a pattern made of
+    # it would match (critic-shell, 21 Oct).
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/a*b\$c"
+    mkdir -p "$MOLT_AGT_DIR/kovacs-sysadm/work" "$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work"
+    run claude_install
+    assert_success
+    [ "$(_claude_guard_agt_dir "$HOME/.config/molt/claude-home-guard.sh")" = "$MOLT_AGT_DIR" ]
+    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    assert_success
+    [ -z "$output" ]
+    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
 }
 
-# vc, 21 Oct: the guard is rendered with the agents root as it stands, and one
-# that is relative or untidy would never match a launch below it.
-@test "a relative or non-canonical MOLT_AGT_DIR is refused before anything moves" {
+# vc, 21 Oct: the guard is rendered with the agents root as it stands, and
+# molt_agt_dir_fault, which the agents liberator asks too, refuses a root that
+# is relative, untidy, at or above HOME or a project root, where the guard
+# would refuse every project, or one vars.sh exports apart from constants.sh.
+@test "an agents root molt_agt_dir_fault refuses is refused before anything moves" {
     # AT057 (ST0006 AC014).
     setup_declared
     export MOLT_AGT_DIR="agt"
     run claude_install
     assert_failure
-    assert_output_contains "claude: MOLT_AGT_DIR is not an absolute path: agt"
+    assert_output_contains "claude: MOLT_AGT_DIR is not an absolute path (a quoted ~ is not expanded): agt"
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt/"
     run claude_install
     assert_failure
     assert_output_contains "claude: MOLT_AGT_DIR is not a canonical path, with no trailing slash, // or . or .. component: $BATS_TEST_TMPDIR/agt/"
+    export MOLT_AGT_DIR="$HOME"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR, ~, is at or above ~: the home guard would refuse"
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/Devel/prj" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/Devel"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/Devel, is at or above $BATS_TEST_TMPDIR/Devel/prj"
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
+    printf 'export MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: this sleeve's vars.sh exports MOLT_AGT_DIR as $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $BATS_TEST_TMPDIR/agt"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
     [ ! -e "$HOME/.config" ]
     [ ! -e "$(gui_file)" ]

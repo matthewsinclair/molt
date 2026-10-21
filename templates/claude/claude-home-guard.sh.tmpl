@@ -61,10 +61,17 @@ IFS= read -r agt <<'MOLT_AGENTS_ROOT'
 ${MOLT_AGT_DIR}
 MOLT_AGENTS_ROOT
 
-# Compare where each leads, so a symlinked spelling, or one with a trailing
-# slash, is still the same directory.
-here="$(cd "$CLAUDE_PROJECT_DIR" 2>/dev/null && pwd -P)" || here="$CLAUDE_PROJECT_DIR"
-home="$(cd "$HOME" 2>/dev/null && pwd -P)" || home="$HOME"
+# The directory $1 leads to, as the disk spells it, or nothing when it cannot
+# be entered: a symlinked spelling, or one with a trailing slash, is the same
+# directory. bash's builtin pwd -P keeps the letter case it was given, which on
+# a case-insensitive disk need not be the disk's, so /bin/pwd answers, and the
+# builtin only on a system without one.
+real_dir() {
+  (cd "$1" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })
+}
+
+here="$(real_dir "$CLAUDE_PROJECT_DIR")" || here="$CLAUDE_PROJECT_DIR"
+home="$(real_dir "$HOME")" || home="$HOME"
 
 if [ "$here" = "$home" ]; then
   echo "launch from an agent home: molt agent list" >&2
@@ -75,7 +82,7 @@ fi
 # empty or relative is a hand edit, and is not checked. A root that does not
 # exist holds no launch directory.
 case "$agt" in
-  /*) root="$(cd "$agt" 2>/dev/null && pwd -P)" || root="" ;;
+  /*) root="$(real_dir "$agt")" || root="" ;;
   *) root="" ;;
 esac
 if [ -n "$root" ]; then

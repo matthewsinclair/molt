@@ -185,19 +185,33 @@ molt_agent_overlay() {
   echo "${user_repo}/instances/${host}/agents/$1.md"
 }
 
+# The role-independent preamble every agent's AGENTS.md opens with, whether or
+# not the user repo has one: text common to every sleeve agent, which no role
+# template repeats (AC016). Fails when there is no user repo.
+molt_agent_preamble() {
+  local user_repo
+  user_repo="$(molt_find_user_repo)" || return 1
+  echo "${user_repo}/config/agents/AGENTS.md.tmpl"
+}
+
 # The files rendered into a home for the role $1, one
-# "file<TAB>template<TAB>extra" line each: the file's path in the home; its
-# template; and an input appended after rendering, which its digest covers too.
-# AGENTS.md is the role's contract followed by the sleeve's overlay; CLAUDE.md
-# is Molt's one-line import of it; .claude/settings.json is the role's
-# permission profile.
+# "file<TAB>template<TAB>before<TAB>after" line each: the file's path in the
+# home; its template; a template rendered and put ahead of it; and a file
+# appended after it. Their digests cover both, present or not, so adding,
+# changing or removing either makes the file stale. AGENTS.md is the
+# preamble, then the role's contract, then the sleeve's overlay, in that
+# order; CLAUDE.md is Molt's one-line import of it; .claude/settings.json is
+# the role's permission profile. An empty field comes only last: read takes
+# tabs as whitespace and closes up an empty one between two others. Fails when
+# the user repo or this host's name cannot be found.
 molt_agent_files() {
-  local role_dir overlay
+  local role_dir preamble overlay
   role_dir="$(molt_agent_role_dir "$1")" || return 1
+  preamble="$(molt_agent_preamble)" || return 1
   overlay="$(molt_agent_overlay "$1")" || return 1
-  printf '%s\t%s\t%s\n' AGENTS.md "$role_dir/AGENTS.md.tmpl" "$overlay"
-  printf '%s\t%s\t%s\n' CLAUDE.md "${MOLT_ROOT}/templates/agents/CLAUDE.md.tmpl" ""
-  printf '%s\t%s\t%s\n' .claude/settings.json "$role_dir/settings.json.tmpl" ""
+  printf '%s\t%s\t%s\t%s\n' AGENTS.md "$role_dir/AGENTS.md.tmpl" "$preamble" "$overlay"
+  printf '%s\t%s\t%s\t%s\n' CLAUDE.md "${MOLT_ROOT}/templates/agents/CLAUDE.md.tmpl" "" ""
+  printf '%s\t%s\t%s\t%s\n' .claude/settings.json "$role_dir/settings.json.tmpl" "" ""
 }
 
 # Each file in the home of the agent named $1, with the role $2, one
@@ -205,16 +219,16 @@ molt_agent_files() {
 # missing, or untemplated when the role has no template for it. Fails when the
 # role's files cannot be listed.
 molt_agent_file_states() {
-  local home files file template extra state
+  local home files file template before after state
   home="$(molt_agent_home "$1")"
   files="$(molt_agent_files "$2")" || return 1
-  while IFS=$'\t' read -r file template extra; do
+  while IFS=$'\t' read -r file template before after; do
     [[ -n "$file" ]] || continue
     if [[ ! -f "$template" ]]; then
       state=untemplated
     elif [[ ! -e "$home/$file" ]]; then
       state=missing
-    elif molt_render_stale "$template" "$home/$file" ${extra:+"$extra"}; then
+    elif molt_render_stale "$template" "$home/$file" ${before:+"$before"} ${after:+"$after"}; then
       state=stale
     else
       state=current

@@ -10,7 +10,7 @@ setup_agents() {
     mkdir -p "$HOME"
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
     export SLEEVE
-    SLEEVE="$(hostname -s 2>/dev/null || hostname)"
+    SLEEVE="$(test_hostname)"
 
     export TEST_USER_REPO="$BATS_TEST_TMPDIR/molt-testuser"
     export ROLE="$TEST_USER_REPO/config/agents/roles/sysadm"
@@ -130,6 +130,51 @@ permission_line() {
     run agents_install
     assert_success
     [ "$(tail -n 1 "$AGENT_HOME/AGENTS.md")" = "Kernel 6.8." ]
+}
+
+# vc, 21 Oct: text common to every sleeve agent lives in one role-independent
+# preamble, and in no role template (AC016).
+@test "an agent's AGENTS.md is the preamble, rendered, then the role's contract, then the sleeve's overlay, and a changed preamble makes it stale" {
+    # AT060 (ST0006 AC016).
+    setup_agents
+    mkdir -p "$TEST_USER_REPO/config/agents" "$INSTANCE/agents"
+    printf '# Every sleeve agent\n\nYour home is your working directory: %s.\n' '${MOLT_AGENT_HOME}' > "$TEST_USER_REPO/config/agents/AGENTS.md.tmpl"
+    printf 'A VM on ext4.\n' > "$INSTANCE/agents/sysadm.md"
+    run agents_install
+    assert_success
+    [ "$(cat "$AGENT_HOME/AGENTS.md")" = "$(printf '# Every sleeve agent\n\nYour home is your working directory: %s.\n\n# %s\n\nThe sysadm agent for %s, at home in %s.\n\nA VM on ext4.' "$AGENT_HOME" "$NAME" "$SLEEVE" "$AGENT_HOME")" ]
+    run agents_check
+    assert_success
+    echo "Mind the backups." >> "$TEST_USER_REPO/config/agents/AGENTS.md.tmpl"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $AGENT_HOME/AGENTS.md is stale"
+    run agents_install
+    assert_success
+    grep -qx "Mind the backups." "$AGENT_HOME/AGENTS.md"
+    [ "$(tail -n 1 "$AGENT_HOME/AGENTS.md")" = "A VM on ext4." ]
+}
+
+@test "with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last" {
+    # AT061 (ST0006 AC016).
+    setup_agents
+    mkdir -p "$INSTANCE/agents"
+    printf 'A VM on ext4.\n' > "$INSTANCE/agents/sysadm.md"
+    run agents_install
+    assert_success
+    [ "$(head -n 1 "$AGENT_HOME/AGENTS.md")" = "# $NAME" ]
+    [ "$(tail -n 1 "$AGENT_HOME/AGENTS.md")" = "A VM on ext4." ]
+    run agents_check
+    assert_success
+    mkdir -p "$TEST_USER_REPO/config/agents"
+    printf '# Every sleeve agent\n' > "$TEST_USER_REPO/config/agents/AGENTS.md.tmpl"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: $AGENT_HOME/AGENTS.md is stale"
+    run agents_install
+    assert_success
+    [ "$(head -n 1 "$AGENT_HOME/AGENTS.md")" = "# Every sleeve agent" ]
+    [ "$(tail -n 1 "$AGENT_HOME/AGENTS.md")" = "A VM on ext4." ]
 }
 
 @test "a role the user repo does not define is a fault naming the role and where it was looked for" {

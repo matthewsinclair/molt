@@ -184,7 +184,7 @@ role = "sysadm"
 role = "nobody's"
 TOML
     local host
-    host="$(hostname -s 2>/dev/null || hostname)"
+    host="$(test_hostname)"
     run molt_agents
     assert_success
     [ "$output" = "$(printf '%s\t%s\t%s\t%s\n' "$host-ops" ops false claude "$host-sysadm" sysadm true claude)" ]
@@ -225,7 +225,7 @@ TOML
     assert_output_contains "the ops entry names harness codex; claude is the only one"
     # The first ops entry stands; the second gives no second agent of that name.
     local host
-    host="$(hostname -s 2>/dev/null || hostname)"
+    host="$(test_hostname)"
     run molt_agents
     assert_success
     [ "$output" = "$(printf '%s\t%s\t%s\t%s' "$host-ops" ops true claude)" ]

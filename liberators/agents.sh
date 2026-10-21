@@ -33,12 +33,29 @@ _agents_memory_dir_set() {
   fi
 }
 
+# Puts the template $1, rendered as molt_render renders, ahead of the file $2,
+# a blank line between. Fails, saying why, with $2 as it was.
+_agents_prepend() {
+  local template="$1" target="$2" why
+  if ! why="$(molt_render_text "$template" "${target}.molt-before")"; then
+    molt_error "agents: could not render $(molt_tilde "$template")${why:+: $why}"
+    return 1
+  fi
+  if ! { cat "${target}.molt-before" && printf '\n' && cat "$target"; } > "${target}.molt-joined" \
+      || ! mv -f "${target}.molt-joined" "$target"; then
+    rm -f "${target}.molt-before" "${target}.molt-joined"
+    molt_error "agents: could not put $(molt_tilde "$template") ahead of $(molt_tilde "$target")"
+    return 1
+  fi
+  rm -f "${target}.molt-before"
+}
+
 # Renders the file $3 of the home of the agent named $1, with the role $2, from
-# the template $4, then what follows the render: the overlay $5 appended to
-# AGENTS.md, and autoMemoryDirectory set in settings.json, so the agent's memory
-# lives in its home and travels with it.
+# the template $4, with what goes around it: the template $5 rendered and put
+# ahead of it, the file $6 appended after it, and autoMemoryDirectory set in
+# settings.json, so the agent's memory lives in its home and travels with it.
 _agents_render_file() {
-  local name="$1" role="$2" file="$3" template="$4" extra="$5" home host target why
+  local name="$1" role="$2" file="$3" template="$4" before="$5" after="$6" home host target why
   home="$(molt_agent_home "$name")"
   if ! host="$(molt_hostname)"; then
     molt_error "agents: this host gives no name, so $name's $file was not rendered"
@@ -49,21 +66,25 @@ _agents_render_file() {
   # no further.
   if ! (
     export MOLT_HOSTNAME="$host" MOLT_AGENT_NAME="$name" MOLT_AGENT_ROLE="$role" MOLT_AGENT_HOME="$home"
-    molt_render "$template" "$target"
+    molt_render "$template" "$target" || exit
+    if [[ -n "$before" && -f "$before" ]]; then
+      _agents_prepend "$before" "$target"
+    fi
   ); then
     molt_error "agents: $name's $file was not rendered"
     return 1
   fi
 
+  if [[ -n "$after" && -f "$after" ]] && ! { printf '\n'; cat "$after"; } >> "$target"; then
+    molt_error "agents: $(molt_tilde "$after") was not appended to $name's $file"
+    return 1
+  fi
+  if [[ -n "$before" || -n "$after" ]]; then
+    # The digest covers what went around the template, present or not.
+    molt_config_record_digest "$target" "$template" ${before:+"$before"} ${after:+"$after"}
+  fi
+
   case "$file" in
-    AGENTS.md)
-      if [[ -n "$extra" && -f "$extra" ]] && ! { printf '\n'; cat "$extra"; } >> "$target"; then
-        molt_error "agents: $(molt_tilde "$extra") was not appended to $name's AGENTS.md"
-        return 1
-      fi
-      # The digest covers the overlay too, present or not, so adding, changing
-      # or removing one makes the home stale.
-      molt_config_record_digest "$target" "$template" ${extra:+"$extra"} ;;
     .claude/settings.json)
       if ! why="$(_agents_memory_dir_set "$target" "$home/memory")"; then
         # Without its sidecar the file reads as stale, not as rendered, and the
@@ -81,7 +102,7 @@ _agents_render_file() {
 # kovacs-sysadm is still live and the move is refused, so it can copy its files
 # in before hv runs the move (ST0006).
 _agents_render() {
-  local name="$1" role="$2" home fault files file template extra dir
+  local name="$1" role="$2" home fault files file template before after dir
   home="$(molt_agent_home "$name")"
   fault="$(molt_agent_role_fault "$role")"
   if [[ -n "$fault" ]]; then
@@ -92,14 +113,14 @@ _agents_render() {
     molt_error "agents: $name: the files of role $role cannot be listed"
     return 1
   fi
-  while IFS=$'\t' read -r file template extra; do
+  while IFS=$'\t' read -r file template before after; do
     [[ -n "$file" ]] || continue
     if [[ ! -f "$template" ]]; then
       molt_error "agents: $name: role $role has no $(molt_tilde "$template")"
       return 1
     fi
-    if molt_render_stale "$template" "$home/$file" ${extra:+"$extra"}; then
-      _agents_render_file "$name" "$role" "$file" "$template" "$extra" || return 1
+    if molt_render_stale "$template" "$home/$file" ${before:+"$before"} ${after:+"$after"}; then
+      _agents_render_file "$name" "$role" "$file" "$template" "$before" "$after" || return 1
     fi
   done <<< "$files"
   for dir in "${_MOLT_AGENT_DIRS[@]}"; do

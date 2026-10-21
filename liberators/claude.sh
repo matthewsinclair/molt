@@ -199,10 +199,9 @@ _claude_path_fault() {
 # Prints the config dir this sleeve declares, or nothing when it declares none.
 # Fails, printing why instead, when the value cannot be read or used: a path
 # _claude_path_fault refuses, or $HOME, ~/.claude or anything under it. It fails
-# too when MOLT_AGT_DIR is a path _claude_path_fault refuses: the home guard is
-# published with the config dir and rendered with the agents root as it stands,
-# and a guard with a relative or untidy root would never match a launch below
-# it (AC014).
+# too when molt_agt_dir_fault refuses MOLT_AGT_DIR: the home guard is published
+# with the config dir and rendered with the agents root, which the agents
+# liberator makes the homes under and asks the same of (AC014).
 _claude_declared_dir() {
   local dir fault
   if ! dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
@@ -212,7 +211,7 @@ _claude_declared_dir() {
   [[ -n "$dir" ]] || return 0
   fault="$(_claude_path_fault MOLT_CLAUDE_CONFIG_DIR "$dir")"
   if [[ -z "$fault" ]]; then
-    fault="$(_claude_path_fault MOLT_AGT_DIR "${MOLT_AGT_DIR:-}")"
+    fault="$(molt_agt_dir_fault)"
   fi
   if [[ -n "$fault" ]]; then
     echo "$fault"

@@ -362,6 +362,43 @@ molt_instance_var() {
 
 # --- Template Rendering ---
 
+# Renders the template $1 into the file $2 and nothing more: molt_render adds
+# the backup, the sidecar and the kept preamble. Only MOLT_* variables are
+# substituted, as this sleeve's vars.sh and the environment export them; other
+# $VAR references (like starship's $username, $path, etc.) are left untouched.
+# vars.sh is sourced in a subshell, so its exports don't leak into the
+# framework, and a declare -x in it is still in scope for envsubst. Fails,
+# printing why when vars.sh is the reason, with $2 not written: no render,
+# whatever the subshell's status, is a failure, and a file a crashed render
+# left goes first, or it would pass for this one.
+molt_render_text() {
+  local template="$1" out="$2" vars_file why
+  if ! vars_file="$(molt_instance_vars_file)"; then
+    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    return 1
+  fi
+  why="$(molt_instance_vars_fault "$vars_file")"
+  if [[ -n "$why" ]]; then
+    echo "$why"
+    return 1
+  fi
+  rm -f "$out"
+  if ! (
+    if [[ -e "$vars_file" ]]; then
+      set +eu
+      # shellcheck disable=SC1090
+      . "$vars_file" >/dev/null
+    fi
+    mkdir -p "$(dirname "$out")" || exit
+    local molt_vars
+    molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
+    envsubst "$molt_vars" < "$template" > "$out"
+  ) >/dev/null || [[ ! -f "$out" ]]; then
+    rm -f "$out"
+    return 1
+  fi
+}
+
 molt_render() {
   local template="$1"
   local target="$2"
@@ -381,37 +418,14 @@ molt_render() {
   fi
 
   local vars_file why
-  vars_file="$(molt_instance_vars_file)" || return 1
-  why="$(molt_instance_vars_fault "$vars_file")"
-  if [[ -n "$why" ]]; then
-    molt_error "Could not render $template -> $target: $why"
-    return 1
-  fi
-  if [[ ! -e "$vars_file" ]]; then
+  if vars_file="$(molt_instance_vars_file)" && [[ ! -e "$vars_file" ]]; then
     molt_warn "No vars.sh for instance $(molt_hostname) — rendering template with env only"
   fi
 
-  # Render in a subshell that sources vars.sh, so its exports don't leak into
-  # the framework, and a declare -x in it is still in scope for envsubst. Only
-  # substitute MOLT_* variables — leave other $VAR references (like starship's
-  # $username, $path, etc.) untouched. Everything below handles the render it
-  # finds, so no render, whatever the subshell's status, is a failure: the
-  # target would be backed up with nothing to take its place. A tmp a crashed
-  # render left goes first, or it would pass for this one.
-  rm -f "${target}.molt-tmp"
-  if ! (
-    if [[ -e "$vars_file" ]]; then
-      set +eu
-      # shellcheck disable=SC1090
-      . "$vars_file" >/dev/null
-    fi
-    mkdir -p "$(dirname "$target")" || exit
-    local molt_vars
-    molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
-    envsubst "$molt_vars" < "$template" > "${target}.molt-tmp"
-  ) || [[ ! -f "${target}.molt-tmp" ]]; then
-    rm -f "${target}.molt-tmp"
-    molt_error "Could not render $template -> $target"
+  # Everything below handles the render it finds, so no render is a failure:
+  # the target would be backed up with nothing to take its place.
+  if ! why="$(molt_render_text "$template" "${target}.molt-tmp")"; then
+    molt_error "Could not render $template -> $target${why:+: $why}"
     return 1
   fi
 
