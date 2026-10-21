@@ -6,7 +6,7 @@ session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
 heartbeat_at: 2026-10-21 07:56Z
 status: active
 focus: "21 Oct: 0019-0021 merged; WP05 at e4f857d and WP03 items 1-3 at Molt-matts 769c2e6 wait for WP02; issue 0022 drafted for hv's word"
-claims: [ST0006/05, ST0006/03]
+claims: [ST0006/05, ST0006/03, ISSUE:0022]
 ---
 
 # DevX Claude (dc)
