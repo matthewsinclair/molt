@@ -49,6 +49,33 @@ setup() {
     [[ "$status" -ne 127 ]]
 }
 
+# The install ignored molt_install_config's return, so a Starship render that
+# failed still ended on "Liberator complete" (issue 0019).
+@test "zsh_install fails when the Starship config render fails" {
+    local root="$BATS_TEST_TMPDIR"
+    export HOME="$root/home"
+    mkdir -p "$HOME" "$root/repo/config/zsh" "$root/repo/config/starship" "$root/bin"
+    touch "$root/repo/config/zsh/zshrc" "$root/repo/config/zsh/zshenv" "$root/repo/config/zsh/zprofile"
+    printf 'add_newline = false\n' > "$root/repo/config/starship/starship.toml.tmpl"
+    MOLT_USER_REPO_SEARCH_PATHS=("$root/repo")
+    printf '#!/bin/sh\nexit 0\n' > "$root/bin/zsh"
+    printf '#!/bin/sh\nexit 0\n' > "$root/bin/starship"
+    # chsh writes the account database, which the fake HOME does not cover. It
+    # must never run, so this one only leaves a mark if it does.
+    printf '#!/bin/sh\ntouch "%s/chsh-ran"\nexit 1\n' "$root" > "$root/bin/chsh"
+    chmod +x "$root/bin/zsh" "$root/bin/starship" "$root/bin/chsh"
+    export PATH="$root/bin:$PATH"
+    # Already the login shell, so chsh is not called.
+    _zsh_current_shell() { echo "$root/bin/zsh"; }
+    molt_render() { molt_error "render refused: $1"; return 1; }
+
+    run zsh_install
+    assert_failure
+    assert_output_contains "render refused"
+    refute_output_contains "Liberator complete"
+    [[ ! -e "$root/chsh-ran" ]]
+}
+
 # The wrapper reset the tab colour after ssh and returned the reset's status,
 # so a failed ssh (255) reported success to whatever ran it.
 @test "the generated iTerm2 ssh wrapper returns ssh's exit status" {
