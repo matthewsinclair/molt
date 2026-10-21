@@ -2,7 +2,7 @@
 wp_id: WP-05
 title: docs/guides/sleeve-agents.md: naming, roles, layers, the move
 scope: S
-status: Not Started
+status: WIP
 ---
 
 # WP-05: docs/guides/sleeve-agents.md: naming, roles, layers, the move

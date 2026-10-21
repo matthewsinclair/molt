@@ -1,7 +1,7 @@
 ---
 node: dc
-name: molt-dc
-role: dc
+name: DevX Claude
+role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
 heartbeat_at: 2026-10-21 04:54Z
 status: active
@@ -9,7 +9,7 @@ focus: "21 Oct: ST0006/05 claimed (the sleeve-agents guide), plan with hv; WP03 
 claims: [ST0006/05]
 ---
 
-# molt-dc (dc)
+# DevX Claude (dc)
 
 ## DOING
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- ST0006/03, my half: the role contracts config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl in Molt-matts, folding in the text of kovacs' ~/.claude/AGENTS.md from kovacs-sysadm (molt-cc writes the permission profiles). Released when WP02's renderer is merged to main AND vc gives dc the go.
+- ST0006/03, my half (prose, in Molt-matts on main): the role contracts config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl, the kovacs overlay instances/kovacs/agents/sysadm.md, and item 5's seeds config/claude/CLAUDE.md and AGENTS.md; molt-cc writes the permission profiles. kovacs' material is in hand, relayed by vc. Released when WP02's renderer is merged to main AND vc gives dc the go. (edited)
 
 ## Watch-outs
 
