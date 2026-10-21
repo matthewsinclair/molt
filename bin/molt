@@ -19,6 +19,8 @@ source "${MOLT_ROOT}/lib/molt.sh"
 source "${MOLT_ROOT}/lib/liberator.sh"
 # shellcheck disable=SC1091
 source "${MOLT_ROOT}/lib/newuser.sh"
+# shellcheck disable=SC1091
+source "${MOLT_ROOT}/lib/agent.sh"
 
 # --- Commands ---
 
@@ -46,6 +48,10 @@ Commands:
                         Prompts for anything not passed as a flag.
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
+  agent list  List this sleeve's agents: name, role, enabled, state, home
+  agent config <name>
+                        Show an agent's home, its files' state, the settings
+                        read for it and its permission rules, by layer
   git <cmd>    Run a git command across all managed repos
   doctor      System diagnostics and health checks
   test        Run bats test suite (molt test [liberator])
@@ -99,6 +105,7 @@ case "${1:-help}" in
   git)      shift; cmd_git "$@" ;;
   status)   cmd_status ;;
   list)     cmd_list ;;
+  agent)    shift; cmd_agent "$@" ;;
   doctor)   cmd_doctor ;;
   test)     shift; cmd_test "$@" ;;
   version)  cmd_version ;;

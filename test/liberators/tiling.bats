@@ -129,7 +129,7 @@ FAKE
     _tactile_sleeve
     cp "$TACTILE_EXT_DIR/schemas/$TACTILE_SCHEMA_XML" "$MOLT_SYSTEM_SCHEMA_DIR/"
     local repo="$BATS_TEST_TMPDIR/repo" host
-    host="$(hostname -s 2>/dev/null || hostname)"
+    host="$(test_hostname)"
     mkdir -p "$repo/config" "$repo/instances/$host"
     printf 'fi\nexport MOLT_TACTILE_ACTIVATE="<Super>t"\n' > "$repo/instances/$host/vars.sh"
     MOLT_USER_REPO_SEARCH_PATHS=("$repo")

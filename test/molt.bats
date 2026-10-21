@@ -103,6 +103,18 @@ load "test_helper.bash"
     [ -z "$output" ]
 }
 
+# ST0006
+@test "molt help lists the agent command, and molt agent alone prints its usage and fails" {
+    # AT043 (ST0006 AC006).
+    run_molt help
+    assert_success
+    assert_output_contains "agent list"
+    assert_output_contains "agent config <name>"
+    run_molt agent
+    assert_failure
+    assert_output_contains "Usage: molt agent list"
+}
+
 # --- Foreign home-path detection (doctor check 10) ---
 
 @test "molt_foreign_home_paths flags another user's home path (incl JSON-escaped)" {
@@ -459,6 +471,28 @@ _use_digest_test_repo() {
     ba="$(molt_config_digest "$d/config.tmpl" "$d/b.conf" "$d/a.conf" 2>/dev/null || true)"
     [ -n "$ab" ]
     [ "$ab" = "$ba" ]
+}
+
+# ST0006. An agent's AGENTS.md names the sleeve's overlay as an extra input
+# whether or not the sleeve has one. Before the fix the digest failed for an
+# absent last extra, so a home with no overlay read stale however often it was
+# rendered.
+@test "molt_config_digest counts an absent extra input as none, and its arrival as a change" {
+    # AT044 (ST0006 AC005).
+    load_molt_libs
+    _use_digest_test_repo
+    local d="$BATS_TEST_TMPDIR/dg3"
+    mkdir -p "$d"
+    printf 'template body\n' > "$d/config.tmpl"
+    local base absent arrived
+    base="$(molt_config_digest "$d/config.tmpl")"
+    run molt_config_digest "$d/config.tmpl" "$d/overlay.md"
+    assert_success
+    absent="$output"
+    [ "$absent" = "$base" ]
+    printf 'host facts\n' > "$d/overlay.md"
+    arrived="$(molt_config_digest "$d/config.tmpl" "$d/overlay.md")"
+    [ "$arrived" != "$base" ]
 }
 
 # ---------------------------------------------------------------------------

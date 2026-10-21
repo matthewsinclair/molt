@@ -173,21 +173,17 @@ _claude_settings_merge() {
 # environment.d file, and env.sh is read back, so a path is refused rather than
 # rewritten: a copy tidied here would be compared with files that hold the
 # untidied one, and a path spelt with . or .. would get past the comparison
-# with ~/.claude. Refused: anything but a canonical absolute path, a character
-# any of those files reads as syntax, and trailing whitespace, which
-# environment.d strips. environment.d expands $ and backslash escapes, never %
-# specifiers, which belong to unit files.
+# with ~/.claude. Refused: anything molt_path_fault refuses, a character any
+# of those files reads as syntax, and trailing whitespace, which environment.d
+# strips. environment.d expands $ and backslash escapes, never % specifiers,
+# which belong to unit files.
 _claude_path_fault() {
-  local name="$1" path="$2"
-  case "$path" in
-    /*) ;;
-    *) echo "$name is not an absolute path: $path"; return ;;
-  esac
-  case "$path/" in
-    *//* | */./* | */../*)
-      echo "$name is not a canonical path, with no trailing slash, // or . or .. component: $path"
-      return ;;
-  esac
+  local name="$1" path="$2" fault
+  fault="$(molt_path_fault "$name" "$path")"
+  if [[ -n "$fault" ]]; then
+    echo "$fault"
+    return
+  fi
   case "$path" in
     *[\"\'\$\`\\\<\>\&]* | *$'\n'*)
       echo "$name holds a character env.sh, a plist or environment.d would read as syntax: $path" ;;
@@ -198,7 +194,10 @@ _claude_path_fault() {
 
 # Prints the config dir this sleeve declares, or nothing when it declares none.
 # Fails, printing why instead, when the value cannot be read or used: a path
-# _claude_path_fault refuses, or $HOME, ~/.claude or anything under it.
+# _claude_path_fault refuses, or $HOME, ~/.claude or anything under it. It fails
+# too when molt_agt_dir_fault refuses MOLT_AGT_DIR: the home guard is published
+# with the config dir and rendered with the agents root, which the agents
+# liberator makes the homes under and asks the same of (AC014).
 _claude_declared_dir() {
   local dir fault
   if ! dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
@@ -207,6 +206,9 @@ _claude_declared_dir() {
   fi
   [[ -n "$dir" ]] || return 0
   fault="$(_claude_path_fault MOLT_CLAUDE_CONFIG_DIR "$dir")"
+  if [[ -z "$fault" ]]; then
+    fault="$(molt_agt_dir_fault)"
+  fi
   if [[ -n "$fault" ]]; then
     echo "$fault"
     return 1
@@ -448,7 +450,32 @@ _claude_published() {
   printf '%s\t%s\t%s\n' "$t/claude-home-guard.sh.tmpl" "$HOME/.config/molt/claude-home-guard.sh" 755
 }
 
-# Renders each published file that is missing or stale, then exports
+# The agents root the home guard at $1 was rendered with: the line after the
+# here-document opener templates/claude/claude-home-guard.sh.tmpl writes, found
+# only in that form. Nothing when there is no such line.
+_claude_guard_agt_dir() {
+  [[ -f "$1" ]] || return 0
+  awk -v opener="IFS= read -r agt <<'MOLT_AGENTS_ROOT'" 'found { print; exit } $0 == opener { found = 1 }' "$1"
+}
+
+# The state of the published file $2, rendered from the template $1: missing;
+# stale, when its template or this sleeve's vars.sh changed after it was
+# rendered; drifted, when it is the home guard and the agents root it was
+# rendered with is no longer MOLT_AGT_DIR, which no digest covers; or current.
+_claude_published_state() {
+  local template="$1" target="$2"
+  if [[ ! -e "$target" ]]; then
+    echo missing
+  elif molt_render_stale "$template" "$target"; then
+    echo stale
+  elif [[ "$template" == */claude-home-guard.sh.tmpl && "$(_claude_guard_agt_dir "$target")" != "${MOLT_AGT_DIR:-}" ]]; then
+    echo drifted
+  else
+    echo current
+  fi
+}
+
+# Renders each published file that is not current, then exports
 # CLAUDE_CONFIG_DIR as $1 for the rest of this run, so the links, statusLine and
 # hook written after it, and any liberator after this one, land in $1 and none
 # recreates ~/.claude. Called only once Claude Code's state is in $1. Nothing
@@ -457,7 +484,7 @@ _claude_publish() {
   local dir="$1" template target mode
   while IFS=$'\t' read -r template target mode; do
     [[ -n "$template" ]] || continue
-    if molt_render_stale "$template" "$target"; then
+    if [[ "$(_claude_published_state "$template" "$target")" != current ]]; then
       molt_render "$template" "$target" || return 1
     fi
     if ! chmod "$mode" "$target"; then
@@ -532,21 +559,26 @@ _claude_unpublished() {
   fi
 }
 
-# Reports, through $1 after the prefix $2, each published file that is missing,
-# stale, or not the mode it was given. Returns non-zero when it reported one.
+# Reports, through $1 after the prefix $2, each published file that is not
+# current, or not the mode it was given. Returns non-zero when it reported one.
 _claude_report_published_faults() {
   local log="$1" prefix="$2" template target mode faulted=0
   while IFS=$'\t' read -r template target mode; do
     [[ -n "$template" ]] || continue
-    if [[ ! -e "$target" ]]; then
-      "$log" "${prefix}$(molt_tilde "$target") is missing"
-    elif molt_render_stale "$template" "$target"; then
-      "$log" "${prefix}$(molt_tilde "$target") differs from its template or this sleeve's vars.sh"
-    elif [[ "$mode" == 755 && ! -x "$target" ]]; then
-      "$log" "${prefix}$(molt_tilde "$target") is not executable"
-    else
-      continue
-    fi
+    case "$(_claude_published_state "$template" "$target")" in
+      missing)
+        "$log" "${prefix}$(molt_tilde "$target") is missing" ;;
+      stale)
+        "$log" "${prefix}$(molt_tilde "$target") differs from its template or this sleeve's vars.sh" ;;
+      drifted)
+        "$log" "${prefix}$(molt_tilde "$target") refuses launches under $(molt_tilde "$(_claude_guard_agt_dir "$target")"), but MOLT_AGT_DIR is $(molt_tilde "${MOLT_AGT_DIR:-}"): re-run molt upgrade" ;;
+      *)
+        if [[ "$mode" == 755 && ! -x "$target" ]]; then
+          "$log" "${prefix}$(molt_tilde "$target") is not executable"
+        else
+          continue
+        fi ;;
+    esac
     faulted=1
   done <<< "$(_claude_published)"
   return $faulted

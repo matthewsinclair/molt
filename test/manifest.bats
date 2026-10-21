@@ -159,3 +159,74 @@ TOML
     assert_success
     [ "$output" = "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" ]
 }
+
+# --- [[agent]] (ST0006) ---
+
+# One parser reads both tables: [[agent]] keyed on role as [[liberator]] is on
+# name, each table's keys apart from the other's, a key below a later table in
+# neither, and an entry with no key of its own still seen.
+@test "[[agent]] entries are read by the one table parser, keyed on role, and kept apart from [[liberator]] entries" {
+    # AT041 (ST0006 AC005).
+    _use_test_repo
+    cat >> "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" <<'TOML'
+
+[[agent]]
+enabled = false   # parked
+role = "ops"
+
+[[liberator]]
+enabled = true
+
+[[agent]]
+role = "sysadm"
+
+[extras]
+role = "nobody's"
+TOML
+    local host
+    host="$(test_hostname)"
+    run molt_agents
+    assert_success
+    [ "$output" = "$(printf '%s\t%s\t%s\t%s\n' "$host-ops" ops false claude "$host-sysadm" sysadm true claude)" ]
+    run molt_enabled_liberators
+    assert_success
+    refute_output_contains "ops"
+    refute_output_contains "sysadm"
+    # The [[liberator]] entry with no name names no liberator, not an empty one.
+    # Counted in the function's own output: run drops a trailing empty line.
+    molt_enabled_liberators > "$BATS_TEST_TMPDIR/enabled"
+    [ "$(grep -cx '' "$BATS_TEST_TMPDIR/enabled")" = 0 ]
+    run _molt_table_entries liberator name "$BATS_TEST_TMPDIR/molt-testuser/molt.toml"
+    assert_success
+    refute_output_contains "role"
+}
+
+@test "molt_agent_manifest_faults names an entry with no role, a role declared twice, a written name and a harness other than claude" {
+    # AT042 (ST0006 AC005).
+    _use_test_repo
+    cat >> "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" <<'TOML'
+
+[[agent]]
+rol = "sysadm"
+
+[[agent]]
+role = "ops"
+name = "kovacs-ops"
+
+[[agent]]
+role = "ops"
+harness = "codex"
+TOML
+    run molt_agent_manifest_faults
+    assert_success
+    assert_output_contains "an [[agent]] entry has no role"
+    assert_output_contains "role ops is declared by more than one [[agent]] entry"
+    assert_output_contains "the ops entry writes a name; an agent is named <hostname>-<role>"
+    assert_output_contains "the ops entry names harness codex; claude is the only one"
+    # The first ops entry stands; the second gives no second agent of that name.
+    local host
+    host="$(test_hostname)"
+    run molt_agents
+    assert_success
+    [ "$output" = "$(printf '%s\t%s\t%s\t%s' "$host-ops" ops true claude)" ]
+}

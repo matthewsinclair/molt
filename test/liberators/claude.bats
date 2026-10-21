@@ -12,6 +12,9 @@ setup_claude() {
 
     export HOME="$BATS_TEST_TMPDIR/fakehome"
     mkdir -p "$HOME/.claude"
+    # The agents root the home guard is rendered with, in the test directory
+    # rather than the one constants.sh derived from this machine's MOLT_PRJ_DIR.
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
 
     export TEST_USER_REPO="$BATS_TEST_TMPDIR/molt-testuser"
     mkdir -p "$TEST_USER_REPO/config/claude" "$TEST_USER_REPO/config/ccstatusline"
@@ -568,11 +571,12 @@ JSON
     run claude_install
     assert_success
     grep -qxF "CLAUDE_CONFIG_DIR=$CONFIG" "$HOME/.config/environment.d/claude.conf"
-    # The templates take one value from the sleeve and nothing else of molt's,
-    # so no install of Molt can put its own path, or any other, into them.
+    # The templates take the sleeve's config dir and the agents root (AC014),
+    # and nothing else of molt's, so no install of Molt can put its own path
+    # into them.
     run grep -ohE '\$\{?MOLT_[A-Z_]*' "$MOLT_ROOT"/templates/claude/*
     assert_success
-    [ "$(printf '%s\n' "$output" | sort -u)" = '${MOLT_CLAUDE_CONFIG_DIR' ]
+    [ "$(printf '%s\n' "$output" | sort -u)" = "$(printf '%s\n' '${MOLT_AGT_DIR' '${MOLT_CLAUDE_CONFIG_DIR')" ]
     run grep -lE '\$\{?MOLT_|/Molt' "$HOME/.config/molt/env.sh" "$HOME/.config/molt/claude-home-guard.sh" \
         "$plist" "$HOME/.config/environment.d/claude.conf"
     assert_failure
@@ -636,6 +640,170 @@ JSON
     run bash -c 'cd "$1" && env CLAUDE_PROJECT_DIR=. "$2" < /dev/null' _ "$HOME" "$guard"
     [ "$status" -eq 1 ]
     assert_output_contains "claude-home-guard: CLAUDE_PROJECT_DIR is not an absolute path"
+}
+
+# --- ST0006 AC014: the home guard under MOLT_AGT_DIR ---
+#
+# Claude Code reads CLAUDE.md up the tree but project settings only from the
+# launch directory's .claude/, so a session launched below a home keeps the
+# home's contract and loses its fence (vc, 21 Oct).
+
+@test "the home guard passes a session launched in an agent home itself, wherever in the home it has cd'd since" {
+    # AT053 (ST0006 AC014).
+    setup_moved
+    run claude_install
+    assert_success
+    local agent_home="$MOLT_AGT_DIR/kovacs-sysadm"
+    mkdir -p "$agent_home/work/x"
+    run env CLAUDE_PROJECT_DIR="$agent_home" "$HOME/.config/molt/claude-home-guard.sh" <<< "{\"cwd\": \"$agent_home/work/x\", \"prompt\": \"hello\"}"
+    assert_success
+    [ -z "$output" ]
+}
+
+@test "the home guard refuses a session launched in the agents root itself" {
+    # AT054 (ST0006 AC014).
+    setup_moved
+    run claude_install
+    assert_success
+    mkdir -p "$MOLT_AGT_DIR"
+    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "launch from an agent home, not the agents root: molt agent list" ]
+}
+
+@test "the home guard refuses a session launched below an agent home, by any spelling, naming the home to launch from" {
+    # AT055 (ST0006 AC014).
+    setup_moved
+    run claude_install
+    assert_success
+    local agent_home="$MOLT_AGT_DIR/kovacs-sysadm"
+    mkdir -p "$agent_home/work/x"
+    run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "launch from the agent home itself: cd $agent_home" ]
+    ln -s "$agent_home/work" "$BATS_TEST_TMPDIR/work-link"
+    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/work-link" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "launch from the agent home itself: cd $agent_home" ]
+}
+
+# A root spelt in another letter case than the disk's is the same directory on
+# a disk that ignores case, as APFS does by default: bash's own pwd -P kept the
+# spelling it was given, and the guard fenced nothing; and molt_agt_dir_fault,
+# comparing spellings, passed HOME spelt so (critic-shell, 21 Oct).
+@test "on a disk that ignores letter case, the home guard and molt_agt_dir_fault take a root spelt in another case for the directory the disk names" {
+    # AT065 (ST0006 AC014).
+    setup_moved
+    local agent_home="$MOLT_AGT_DIR/kovacs-sysadm" upper="${MOLT_AGT_DIR%/*}/AGT"
+    mkdir -p "$agent_home/work/x"
+    [ -d "$upper" ] || skip "this disk tells letter case apart"
+    export MOLT_AGT_DIR="$upper"
+    run claude_install
+    assert_success
+    run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "launch from the agent home itself: cd $upper/kovacs-sysadm" ]
+    export MOLT_AGT_DIR="${HOME%/*}/FAKEHOME"
+    run molt_agt_dir_fault
+    assert_output_contains "MOLT_AGT_DIR, ${HOME%/*}/FAKEHOME, is at or above ~: the home guard would refuse"
+}
+
+@test "the home guard passes a session launched outside the agents root, a sibling sharing its name's start included" {
+    # AT056 (ST0006 AC014).
+    setup_moved
+    run claude_install
+    assert_success
+    mkdir -p "$MOLT_AGT_DIR" "$BATS_TEST_TMPDIR/projects/molt" "$MOLT_AGT_DIR-old/kovacs-sysadm/work"
+    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/projects/molt" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    assert_success
+    [ -z "$output" ]
+    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR-old/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    assert_success
+    [ -z "$output" ]
+    # The root is data to the guard, never a pattern or an expansion: a root
+    # with * and $ in it fences itself and not a sibling that a pattern made of
+    # it would match (critic-shell, 21 Oct).
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/a*b\$c"
+    mkdir -p "$MOLT_AGT_DIR/kovacs-sysadm/work" "$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work"
+    run claude_install
+    assert_success
+    [ "$(_claude_guard_agt_dir "$HOME/.config/molt/claude-home-guard.sh")" = "$MOLT_AGT_DIR" ]
+    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/aXb\$c/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    assert_success
+    [ -z "$output" ]
+    run env CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR/kovacs-sysadm/work" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
+}
+
+# vc, 21 Oct: the guard is rendered with the agents root as it stands, and
+# molt_agt_dir_fault, which the agents liberator asks too, refuses a root that
+# is relative, untidy, at or above HOME or a project root, where the guard
+# would refuse every project, or one vars.sh exports apart from constants.sh.
+@test "an agents root molt_agt_dir_fault refuses is refused before anything moves" {
+    # AT057 (ST0006 AC014).
+    setup_declared
+    export MOLT_AGT_DIR="agt"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR is not an absolute path: agt"
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt/"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR is not a canonical path, with no trailing slash, // or . or .. component: $BATS_TEST_TMPDIR/agt/"
+    export MOLT_AGT_DIR="$HOME"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR, ~, is at or above ~: the home guard would refuse"
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/Devel/prj" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/Devel"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/Devel, is at or above $BATS_TEST_TMPDIR/Devel/prj"
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
+    local vars="$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
+    printf 'export MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: this sleeve's vars.sh sets MOLT_AGT_DIR to $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $BATS_TEST_TMPDIR/agt"
+    # Without an export it still reached the guard, since MOLT_AGT_DIR is
+    # exported where molt renders (critic-shell, 21 Oct).
+    declare_config_dir "$CONFIG"
+    printf 'MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: this sleeve's vars.sh sets MOLT_AGT_DIR to $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $BATS_TEST_TMPDIR/agt"
+    # Asked on a sleeve with no agents too: a Molt sleeve always has
+    # MOLT_PRJ_DIR (vc, 21 Oct).
+    declare_config_dir "$CONFIG"
+    unset MOLT_PRJ_DIR
+    export MOLT_AGT_DIR=""
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset"
+    [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
+    [ ! -e "$HOME/.config" ]
+    [ ! -e "$(gui_file)" ]
+}
+
+# vc, 21 Oct: the guard's digest covers its template and vars.sh, not the
+# agents root, so a root that moved after the render would go unnoticed.
+@test "check reports a home guard rendered with an agents root that is no longer MOLT_AGT_DIR, and install renders it again" {
+    # AT058 (ST0006 AC014).
+    setup_moved
+    run claude_install
+    assert_success
+    local old="$MOLT_AGT_DIR" guard="$HOME/.config/molt/claude-home-guard.sh"
+    export CLAUDE_CONFIG_DIR="$CONFIG"
+    run claude_check
+    assert_success
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agents"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.config/molt/claude-home-guard.sh refuses launches under $old, but MOLT_AGT_DIR is $MOLT_AGT_DIR: re-run molt upgrade"
+    run claude_install
+    assert_success
+    [ "$(_claude_guard_agt_dir "$guard")" = "$MOLT_AGT_DIR" ]
+    run claude_check
+    assert_success
 }
 
 @test "the hook merge adds the guard once, keeps every other key and hook as it was, and a second install writes nothing" {
