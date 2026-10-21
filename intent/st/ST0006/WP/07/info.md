@@ -9,9 +9,10 @@ status: WIP
 
 ## Objective
 
-_(not yet written)_
+A precis, an audience statement, a structure and bullets per section for hv's blog post on running a local agent: notes hv writes the piece from, not the piece.
 
-Owner: molt-ac. Branch `st0006-wp07` in a git worktree at `~/Devel/prj/Molt-wt/st0006-wp07`; molt-vc reviews and merges. hv, 21 Oct: "I don't want it to write the piece, I want to do that, but what I want is a precis/brief, a structure, and then some bullet points per section."
+
+Owner: molt-ac. Written on main, in the main checkout, no branch and no worktree: hv, 21 Oct, "Just edit in docs/blog directly." molt-ac commits its own path; molt-vc reviews the committed file on main against AC013. (The branch `st0006-wp07` carried the first draft, dd041b6, and was deleted as superseded.) hv, 21 Oct: "I don't want it to write the piece, I want to do that, but what I want is a precis/brief, a structure, and then some bullet points per section."
 
 Deliverable: `docs/blog/bl0001-so-you-want-to-run-a-local-agent.md`, the working notes for a blog post hv will write. Title to be worked out ("Organising a Local Agent" is one candidate). It holds: a precis (what the piece argues, in a paragraph), the audience statement, the structure as sections, and three to eight bullets per section: the points to make, the examples to reach for, the facts to check. Not prose, not the piece.
 
