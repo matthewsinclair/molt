@@ -354,10 +354,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 11,
-      "text": "Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium (ssh_install backs ~/.ssh/config up on every install when a config.d fragment exists) and 0025 low (a vars.sh EXIT trap that prints reads as 'stops before its end'): cc queued, 0024 first, branches issue-0024 and issue-0025. 0026 low (doctor prefixes a failing liberator's check lines with its name though they carry molt's own Zen: <lib>: prefix): dc after WP05, branch issue-0026. vc reviews and merges each.",
+      "text": "Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium and 0025 low: cc, branches issue-0024 then issue-0025. 0027 low (ssh links a static config its own check refuses; cc's follow-up from 0024): cc after 0025. 0026 low (doctor doubled prefix): dc, at bb80d2b under vc's review. 0028 low (doctor stops silently at its manifest step without user_repo; dc found it in 0026's test): dc after 0026. vc reviews and merges each.",
       "state": "live",
       "recorded_at": "2026-10-21T14:20:47.047Z",
-      "edited_at": "2026-10-21T14:37:57.082Z"
+      "edited_at": "2026-10-21T14:47:29.681Z"
     },
     {
       "node": "vc",

@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 28,
+  "slug": "molt-doctor-stops-silently-with-exit-1-at-its-ma",
+  "title": "molt doctor stops silently with exit 1 at its manifest step when molt.toml has no user_repo key",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-21",
+  "reporter": "Matthew Sinclair",
+  "body": "## What happens\n\n`molt doctor` stops after its third step, printing nothing more and exiting 1, when this sleeve's `molt.toml` has no `user_repo` key. No message names the key or the manifest; the output ends at `[3/13]`.\n\n## Repro (main at 8c124e6)\n\nA user repo whose `molt.toml` carries only a `[[liberator]]` table (dc met it writing issue 0026's test; the test declares `user_repo` with a comment saying why, and that line can go once this is fixed):\n\n```\nmolt doctor\n...\n[3/13] Checking user config repo... ✓ ...\n```\n\nand then the shell prompt, status 1.\n\n## Cause\n\n`lib/molt.sh`, `cmd_doctor`, the manifest step (about line 1333):\n\n```\ndeclared_repo=\"$(grep -E '^[[:space:]]*user_repo[[:space:]]*=' \"$manifest\" 2>/dev/null \\\n                 | head -n 1 | sed -E 's/.*=[[:space:]]*\"?([^\"]*)\"?.*/\\1/')\"\n```\n\nA bare assignment of a pipeline under `bin/molt`'s `set -euo pipefail`. When the key is absent, grep exits 1, pipefail makes that the pipeline's status, the assignment's status is 1, and `set -e` ends doctor there. The `2>/dev/null` also hides a grep that could not read the manifest (status 2).\n\n## Fix\n\nNot `|| true`: that would read an unreadable manifest as one with no declaration (No Silent Errors). Capture grep on its own and read its status: 1 is no declaration, which is fine and the step passes as today; 2 or more is an error, reported in the step's output as a warning naming the manifest. Then `head` and `sed` on the capture. A test in `test/molt.bats`: a manifest with no `user_repo` runs all of doctor's steps, and one that cannot be read is reported, not skipped. Severity low: every real manifest in Molt-matts declares `user_repo`, so this shows only on a scratch or new manifest; still, doctor exiting without a word is the class of fault doctor exists to catch.\n"
+}

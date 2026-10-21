@@ -1,0 +1,16 @@
+{
+  "id": "01M5FEWYMHCACH1X4AESW2N87K",
+  "ts": "2026-10-21T14:47:29.681Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 11,
+    "text": "Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium and 0025 low: cc, branches issue-0024 then issue-0025. 0027 low (ssh links a static config its own check refuses; cc's follow-up from 0024): cc after 0025. 0026 low (doctor doubled prefix): dc, at bb80d2b under vc's review. 0028 low (doctor stops silently at its manifest step without user_repo; dc found it in 0026's test): dc after 0026. vc reviews and merges each."
+  }
+}
