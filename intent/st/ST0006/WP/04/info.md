@@ -208,12 +208,12 @@ AC008 should now pass: kovacs-sysadm runs from `~/Devel/agt/kovacs-sysadm` with 
 **C3. Remove, on hv's word:**
 
 - `~/work` and `~/prov`, both copied into the home in A2; `~/work/tmp/doom-rebuild.log`, which A2 left out, goes with them (hv: not needed);
-- `memory/` under `~/.config/claude/projects/-home-matts/`, a stale second copy of the home's memory after A2 (hv: not needed);
+- the whole `~/.config/claude/projects/-home-matts` slug, kovacs-sysadm's old transcripts and its `memory/`, a stale second copy of the home's memory after A2 (hv: remove the whole folder);
 - the orphan slugs A2 archived, `-home-matts-work-o7h-proj` and `-home-matts-setup` (per kovacs-sysadm's plan, relayed by vc), from `~/.config/claude/projects/`, where the move put them;
 - the two user-scope allow rules hv dropped, `Bash(bash /home/matts/work/intent-vc/*)` and `Bash(bash /home/matts/work/devbin-vc/*)` (verbatim from kovacs-sysadm, relayed by vc), from `~/.config/claude/settings.json` (plan H4); both point into the `~/work` this step removes;
 - the npm-era leftovers `~/.cache/claude-cli-nodejs` and `~/.npm` (hv: kill).
 
-The rest of `-home-matts`, kovacs-sysadm's old transcripts, stays unless hv says otherwise. The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
+The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
 
 **C4. Verify again:** `work/verify-wp04.sh c4`, which requires C3's items gone, then `molt doctor`, which should name no claude or agents report.
 
