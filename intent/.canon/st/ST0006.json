@@ -23,8 +23,8 @@
       "seq": 2,
       "title": "[[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config",
       "scope": "S",
-      "status": "not-started",
-      "objective": "",
+      "status": "done",
+      "objective": "Declare sleeve agents as `[[agent]]` tables in the sleeve's manifest, resolve one agents root (`MOLT_AGT_DIR`) through one validator, render each enabled agent's home (`AGENTS.md` from preamble, role and host overlay; `CLAUDE.md`; `.claude/settings.json`; `memory/`; `work/`) from the user repo's role, report and inspect them with `molt agent list` and `molt agent config`, and have the home-launch guard refuse a launch anywhere under the root that is not an agent home.",
       "body": "\nOwner: molt-cc. Branch `st0006-wp02` in a git worktree, on top of WP01; molt-vc reviews and merges.\n\n## Contract\n\n1. **Manifest.** `instances/<host>/molt.toml` gains `[[agent]]` tables: `role = \"sysadm\"` (required; one of the roles the user repo defines), `enabled = true` (default), `harness = \"claude\"` (default, the only value this thread accepts). The name is derived, never written: `<hostname>-<role>`, so the convention cannot be mistyped. The parser is the existing `[[liberator]]` one, generalised to take the table name (`_molt_liberator_entries` becomes one table parser; Highlander), and `test/manifest.bats` covers `[[agent]]` as it covers `[[liberator]]`.\n2. **`MOLT_AGT_DIR`.** Default: the `agt/` sibling of `MOLT_PRJ_DIR`, computed exactly as Molt-matts' zshenv computes it (`${MOLT_PRJ_DIR:h}/agt`), defined where `MOLT_PRJ_DIR` and `MOLT_CFG_DIR` are, and that is the one resolver: a `vars.sh` that exports a different `MOLT_AGT_DIR` is refused, as is a root that is relative or untidy, or at or above `$HOME`, `MOLT_PRJ_DIR` or `MOLT_CFG_DIR` (one validator in `lib/agent.sh`, called by both liberators; critic-shell, 21 Oct). Exported from zshenv by Molt-matts (WP03). An agent's home is `$MOLT_AGT_DIR/<name>`.\n3. **The `agents` liberator.** For each enabled agent, `agents_install` renders the home from the user repo's `config/agents/roles/<role>/`: `AGENTS.md` from three layers in order: the config repo's role-independent `config/agents/AGENTS.md.tmpl` when it has one (AC016: text common to every sleeve agent lives there and in no role template), the role's `AGENTS.md.tmpl`, and, when the sleeve has one, the instance overlay `instances/<host>/agents/<role>.md` (host facts that are true on this machine only: its stack layout, what is installed, known issues; the role template is one file for every host, so kovacs' \"this VM, ext4, `~/mac`\" cannot live in it: kovacs-sysadm), `CLAUDE.md` as the `@AGENTS.md` stub, `.claude/settings.json` from `settings.json.tmpl` with `autoMemoryDirectory` set to `<home>/memory`; creates `memory/` and `work/`. Rendering is Molt's `envsubst` with `MOLT_HOSTNAME`, `MOLT_AGENT_NAME`, `MOLT_AGENT_ROLE`, `MOLT_AGENT_HOME` available; `.molt-rendered` digest sidecars decide re-rendering, as for ssh. `memory/` and `work/` are the agent's and are never written by Molt after creation. A role the user repo does not define is a fault naming the role and the path looked in. Rendering a home does not depend on the harness state having moved (WP01): the first `molt upgrade` on kovacs renders the home while kovacs-sysadm is still live and WP01's move is refused, so that it can copy its files in before hv runs the move (kovacs-sysadm H2). `agents_check` and `agents_verify` report missing or stale homes; `agents_upgrade` re-renders stale ones.\n4. **`molt agent list`** prints each declared agent: name, role, home, enabled, and whether its rendered files are current. **`molt agent config <name>`** prints the home, the role, each rendered file's currency, and the effective permissions: `permissions.allow/deny/ask` merged from the managed file, the user settings and the home's `.claude/settings.json`, each rule tagged with the layer it came from. An undeclared name fails and lists the declared ones.\n5. **The home-launch guard's second rule (AC014).** WP01's `claude-home-guard.sh.tmpl` gains, with the resolved `MOLT_AGT_DIR` rendered in as a literal: a session whose `CLAUDE_PROJECT_DIR` lies under `MOLT_AGT_DIR` without being an agent home itself (the agents root, or anything below a home) is refused, naming the home to launch from; a session started exactly in a home passes. The claude liberator exports the resolved root for its renders and refuses to render the hook with a missing or relative one, and doctor compares the root baked into the rendered hook with the resolved one, reporting a mismatch as \"re-run molt upgrade\" (the install re-renders, so that is true).\n\n## Tests\n\nFake user repo with a role dir; fake `$MOLT_AGT_DIR`; render, re-render no-op, stale after the template changes or the instance overlay changes; render with and without an overlay; undefined role fault; derived name; `agent config` merging three fake settings layers and tagging each rule's source; the `[[agent]]` parser cases in `manifest.bats`; the guard's four AC014 cases, the render-time root refusal and the doctor row (AT053 to AT058); the preamble present and absent, the overlay still last (AC016).\n\n## Out of scope\n\nCodex renderer. Launch verb. The role contents themselves (WP03).\n",
       "preamble": ""
     },
@@ -487,8 +487,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT029",
@@ -497,8 +497,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT030",
@@ -507,8 +507,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"a changed role template makes the home stale, and install renders it again\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"a changed role template makes the home stale, and install renders it again\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT031",
@@ -517,8 +517,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT032",
@@ -527,8 +527,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"a role the user repo does not define is a fault naming the role and where it was looked for\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"a role the user repo does not define is a fault naming the role and where it was looked for\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT033",
@@ -537,8 +537,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"an agent that is not enabled is not rendered\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"an agent that is not enabled is not rendered\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT034",
@@ -547,8 +547,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"a home renders while Claude Code's state is still in $HOME, waiting on nothing the claude liberator does\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"a home renders while Claude Code's state is still in $HOME, waiting on nothing the claude liberator does\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT035",
@@ -557,8 +557,8 @@
       "covers": [
         "AC005"
       ],
-      "status": "to-write",
-      "note": "@test \"a settings template that does not render to JSON fails the install and leaves the file reading stale\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"a settings template that does not render to JSON fails the install and leaves the file reading stale\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). The test is now @test \"a settings template that does not render to one JSON object, being broken, empty, null or two objects, fails the install and leaves the file as it was: missing on a first install, as last rendered after\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT036",
@@ -567,8 +567,8 @@
       "covers": [
         "AC006"
       ],
-      "status": "to-write",
-      "note": "@test \"molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT037",
@@ -577,8 +577,8 @@
       "covers": [
         "AC006"
       ],
-      "status": "to-write",
-      "note": "@test \"the permissions in effect are every rule from every layer, deny first, each tagged with its layer\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"the permissions in effect are every rule from every layer, deny first, each tagged with its layer\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT038",
@@ -587,8 +587,8 @@
       "covers": [
         "AC006"
       ],
-      "status": "to-write",
-      "note": "@test \"molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT039",
@@ -597,8 +597,8 @@
       "covers": [
         "AC006"
       ],
-      "status": "to-write",
-      "note": "@test \"molt agent config fails on an undeclared name, listing the declared ones\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"molt agent config fails on an undeclared name, listing the declared ones\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT040",
@@ -607,8 +607,8 @@
       "covers": [
         "AC006"
       ],
-      "status": "to-write",
-      "note": "@test \"molt agent config fails, naming the file, when a settings layer is not JSON\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+      "status": "green",
+      "note": "@test \"molt agent config fails, naming the file, when a settings layer is not JSON\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT041",
@@ -677,8 +677,8 @@
       "covers": [
         "AC006"
       ],
-      "status": "to-write",
-      "note": "critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats"
+      "status": "green",
+      "note": "critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats. @test \"molt agent list and molt agent config run through bin/molt\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT048",
@@ -798,8 +798,8 @@
         "AC005",
         "AC014"
       ],
-      "status": "to-write",
-      "note": "@test \"agents check and install refuse an agents root that is unset, relative, untidy, at or above HOME or a project root, or set apart in vars.sh, and make no home\". To-write until the WP02 merge brings agents.bats."
+      "status": "green",
+      "note": "@test \"agents check and install refuse an agents root that is unset, relative, untidy, at or above HOME or a project root, or set apart in vars.sh, and make no home\". To-write until the WP02 merge brings agents.bats. The test is now @test \"agents check and install refuse an agents root that is unset, relative, untidy or holds a line break, that reaches HOME or a parent of a project or config root by any spelling, or that is in Claude Code's config dir, and make no home\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT060",
@@ -808,8 +808,8 @@
       "covers": [
         "AC016"
       ],
-      "status": "to-write",
-      "note": "@test \"an agent's AGENTS.md is the preamble, rendered, then the role's contract, then the sleeve's overlay, and a changed preamble makes it stale\". To-write until the WP02 merge brings agents.bats; red on 6caffe8, which had no preamble layer."
+      "status": "green",
+      "note": "@test \"an agent's AGENTS.md is the preamble, rendered, then the role's contract, then the sleeve's overlay, and a changed preamble makes it stale\". To-write until the WP02 merge brings agents.bats; red on 6caffe8, which had no preamble layer. Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT061",
@@ -818,8 +818,8 @@
       "covers": [
         "AC016"
       ],
-      "status": "to-write",
-      "note": "@test \"with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last\". To-write until the WP02 merge brings agents.bats; red on 6caffe8."
+      "status": "green",
+      "note": "@test \"with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last\". To-write until the WP02 merge brings agents.bats; red on 6caffe8. Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT062",
@@ -828,8 +828,8 @@
       "covers": [
         "AC014"
       ],
-      "status": "to-write",
-      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+      "status": "green",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"agents install refuses a vars.sh that sets, appends to or unsets MOLT_AGT_DIR, or cannot be read, and a declared config dir holding the root, and makes no home\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT063",
@@ -839,8 +839,8 @@
         "AC005",
         "AC006"
       ],
-      "status": "to-write",
-      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+      "status": "green",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"on a host with no name, or with a role's files unlisted, check, install and molt agent config fail and say which, rather than reading as no agents or no files\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT064",
@@ -849,8 +849,8 @@
       "covers": [
         "AC016"
       ],
-      "status": "to-write",
-      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+      "status": "green",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"a layer of AGENTS.md that cannot be rendered fails the install, names it, and leaves AGENTS.md as it was\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT065",
@@ -859,8 +859,8 @@
       "covers": [
         "AC014"
       ],
-      "status": "to-write",
-      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+      "status": "green",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"on a disk that ignores letter case, the home guard and molt_agt_dir_fault take a root spelt in another case for the directory the disk names\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT066",
@@ -869,8 +869,8 @@
       "covers": [
         "AC016"
       ],
-      "status": "to-write",
-      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+      "status": "green",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"a role whose contract carries @@MOLT:BEGIN@@ keeps one copy of the preamble however often its home renders\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     },
     {
       "id": "AT067",
@@ -880,8 +880,8 @@
         "AC005",
         "AC016"
       ],
-      "status": "to-write",
-      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+      "status": "green",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"a re-render that would write a home's files as they are backs nothing up, with a preamble, an overlay and settings.json's memory dir in place, and one over a hand edit backs the edit up\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
     }
   ]
 }

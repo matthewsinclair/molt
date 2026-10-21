@@ -73,7 +73,7 @@ The agent home is both the agent's config and its runtime directory: Claude Code
 | WP    | Title                                                                                                                  | Size | Status      |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | ---- | ----------- |
 | WP-01 | Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches | S    | Done        |
-| WP-02 | [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list/config                                | S    | Not Started |
+| WP-02 | [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list/config                                | S    | Done        |
 | WP-03 | Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs         | S    | Not Started |
 | WP-04 | Move kovacs-sysadm into its home; then rhadamanth, then gyges                                                          | S    | Not Started |
 | WP-05 | docs/guides/sleeve-agents.md: naming, roles, layers, the move                                                          | S    | WIP         |
