@@ -55,7 +55,7 @@ fake_processes() {
 # Declares $1 as this sleeve's config dir in its vars.sh, as hv does sleeve by
 # sleeve (ST0006 WP04).
 declare_config_dir() {
-    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)"
+    local vars="$TEST_USER_REPO/instances/$(test_hostname)"
     mkdir -p "$vars"
     printf 'export MOLT_CLAUDE_CONFIG_DIR=%q\n' "$1" > "$vars/vars.sh"
 }
@@ -433,7 +433,7 @@ JSON
 @test "a vars.sh ending in a false test, or a MOLT_CLAUDE_CONFIG_DIR only inherited, leaves a sleeve undeclared" {
     # AT027 (ST0006 AC011).
     setup_claude
-    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)"
+    local vars="$TEST_USER_REPO/instances/$(test_hostname)"
     mkdir -p "$vars"
     printf 'export MOLT_FONT_SIZE=12\n[[ -d /nonexistent ]] && export MOLT_EXTRA=1\n' > "$vars/vars.sh"
     export MOLT_CLAUDE_CONFIG_DIR="$HOME/.config/claude"
@@ -453,7 +453,7 @@ JSON
     setup_moved
     run claude_install
     assert_success
-    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    local vars="$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
     printf 'fi\nexport MOLT_CLAUDE_CONFIG_DIR=%q\n' "$CONFIG" > "$vars"
     run claude_install
     assert_failure
@@ -481,7 +481,7 @@ JSON
     setup_moved
     run claude_install
     assert_success
-    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    local vars="$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
     chmod 000 "$vars"
     [ ! -r "$vars" ] || skip "this user can read a file whatever its mode"
     run claude_install
@@ -501,7 +501,7 @@ JSON
     declare_config_dir "$HOME/.config/claude"$'\n'
     run claude_install
     assert_failure
-    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR could not be read: $TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh exports MOLT_CLAUDE_CONFIG_DIR with a line break in it"
+    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR could not be read: $TEST_USER_REPO/instances/$(test_hostname)/vars.sh exports MOLT_CLAUDE_CONFIG_DIR with a line break in it"
     declare_config_dir "relative/claude"
     run claude_install
     assert_failure
@@ -719,7 +719,7 @@ JSON
     assert_output_contains "claude: $(molt_tilde "$gui") is missing"
     run claude_install
     assert_success
-    echo 'export MOLT_FONT_SIZE=12' >> "$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    echo 'export MOLT_FONT_SIZE=12' >> "$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
     run claude_check
     assert_failure
     assert_output_contains "claude: ~/.config/molt/env.sh differs from its template or this sleeve's vars.sh"

@@ -128,7 +128,7 @@ TOML
 
 @test "instance manifest takes priority over repo manifest" {
     local hostname
-    hostname="$(hostname -s 2>/dev/null || hostname)"
+    hostname="$(test_hostname)"
     local instance_dir="$BATS_TEST_TMPDIR/molt-testuser/instances/$hostname"
     mkdir -p "$instance_dir"
 

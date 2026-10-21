@@ -12,7 +12,7 @@ load "../test_helper.bash"
 _alac_env() {
     load_liberator alacritty
     local root="$BATS_TEST_TMPDIR"
-    local host; host="$(hostname -s 2>/dev/null || hostname)"
+    local host; host="$(test_hostname)"
 
     export HOME="$root/home"
     mkdir -p "$HOME" "$root/repo/config/alacritty" "$root/repo/instances/$host" "$root/bin"
