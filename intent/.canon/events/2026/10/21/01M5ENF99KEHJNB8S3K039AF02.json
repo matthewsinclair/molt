@@ -1,0 +1,16 @@
+{
+  "id": "01M5ENF99KEHJNB8S3K039AF02",
+  "ts": "2026-10-21T07:23:07.443Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP02 at st0006-wp02 86cb827, rebased onto merged main 695e961: build, review fixes, AC014 (guard refuses a launch under MOLT_AGT_DIR outside an agent home; root refused at render; drifted-root doctor row). Suite under both bashes and critic-shell on b9e6759 and 86cb827 running. Next: AT053-AT058 (AC014) on main, then the head to vc."
+  }
+}
