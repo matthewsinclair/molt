@@ -1,0 +1,16 @@
+{
+  "id": "01M5FW43KJHA5QTED9RB70JBX5",
+  "ts": "2026-10-21T18:38:35.634Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "ops/docs sandbox.credentials.files denies: on Molt-matts main 45e344c; rhadamanth and kovacs homes rendered against it (kovacs at hv's 22:26 upgrade; five backup diffs exactly 45e344c). The guide's Fence and wall paragraph as tested on rhadamanth (f57ee55). kovacs bubblewrap run A (21 Oct 22:xx, dc's kovacs-creds.sh): the sandbox cannot start on kovacs, every sandboxed Bash fails with 'apply-seccomp: write /proc/self/setgroups (nested userns is capability-restricted; caller must provide CAP_SYS_ADMIN)', so kovacs-ops and kovacs-docs fail closed and can run no command; Read() denies and the Read tool behave as on rhadamanth. Likely Ubuntu 24.04's apparmor_restrict_unprivileged_userns; hv's host decision (AppArmor profile for bwrap, or sysctl); the guide's 'still owed' sentence stays and needs a Linux line once hv decides."
+  }
+}
