@@ -1390,9 +1390,12 @@ cmd_doctor() {
         installed_count=$((installed_count + 1))
       else
         not_installed="${not_installed:+$not_installed }$lib"
+        # As the check printed them: molt's prefix already names the
+        # liberator, and the not installed: line names it for a line without
+        # one (issue 0026).
         while IFS= read -r line; do
           [[ -z "$line" ]] && continue
-          not_installed_why="${not_installed_why}         ${lib}: ${line}"$'\n'
+          not_installed_why="${not_installed_why}         ${line}"$'\n'
         done <<< "$(echo "$why" | head -3)"
       fi
     done <<< "$enabled"

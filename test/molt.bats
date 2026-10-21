@@ -53,6 +53,27 @@ load "test_helper.bash"
     assert_output_contains "Checking"
 }
 
+@test "molt doctor prints a failing liberator's check lines as the check printed them (issue 0026)" {
+    require_command git
+    local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    # user_repo is there because doctor's manifest step stops without it.
+    cat > "$repo/molt.toml" <<TOML
+[stack]
+user_repo = "Molt-$(whoami)"
+
+[[liberator]]
+name = "git"
+enabled = true
+TOML
+    mkdir -p "$BATS_TEST_TMPDIR/home"
+    # git's check fails: nothing in this HOME is linked to the repo's gitconfig.
+    HOME="$BATS_TEST_TMPDIR/home" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
+    assert_output_contains "         not installed: git"
+    assert_output_matches $'(^|\n)         Zen: git: '
+    refute_output_contains "git: Zen:"
+}
+
 # --- Unknown command ---
 
 @test "unknown command returns error" {
