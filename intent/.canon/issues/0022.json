@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 22,
+  "slug": "molt-tracks-claude-settings-local-json-a-persona",
+  "title": "Molt tracks .claude/settings.local.json, a personal file, with rules hardcoded to rhadamanth paths",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-21",
+  "reporter": "Matthew Sinclair",
+  "body": "Molt's `.claude/settings.local.json` is tracked in git, although `.gitignore` line 12 already names it and Claude Code treats a `.local` settings file as personal. It was committed before the ignore, or force-added, and git keeps tracking an ignored file once it is in the index.\n\nWhat it carries: three allow rules that hardcode `/Users/matts/Devel/prj/Molt` and the pre-15-Sep path `/Users/matts/Devel/prj/Molt-matts/instances`, so on kovacs two of the three are dead (kovacs-sysadm, 21 Oct, read-only); a `PostToolUse` hook that advises when an edited file is not in `intent/llm/MODULES.md`; and `enabledMcpjsonServers: [\"intent\"]`.\n\nFix: anything every sleeve wants (the hook and the MCP enablement, and `Bash(intent wp:*)` if hv wants it) moves into the tracked `.claude/settings.json`, with paths relative to the project; the dead Molt-matts/instances rule is dropped; then `git rm --cached .claude/settings.local.json`, leaving each sleeve's copy in place and ignored from then on. hv confirms which rules are wanted. Owner: molt-dc, after issue 0021.\n"
+}

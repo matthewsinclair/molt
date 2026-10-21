@@ -1,0 +1,15 @@
+{
+  "id": "01M5EPYT2KGYAVG2XVFZNVNZ4G",
+  "ts": "2026-10-21T07:49:04.723Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0022"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "Molt tracks .claude/settings.local.json, a personal file, with rules hardcoded to rhadamanth paths"
+  }
+}
