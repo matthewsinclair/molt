@@ -70,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `molt upgrade` restarts itself, as `molt upgrade --no-pull`, when its pull moved the framework, so the upgrade hooks and the resleeve run on the pulled library. The first upgrade after a pull that changed `lib/` had run the library it started with against the liberators it had just pulled, and with ST0006 WP02 it failed in `claude` and `agents` until a second run (issue 0023)
 - `backup` reads its `MOLT_BACKUP_*` values through `molt_instance_var`, as the file exports them, empty included, and stops, saying why, when the file cannot be read. It had sourced `vars.sh` into molt's own shell, where an unset name in the file ended molt under its nounset, and from `backup_check`, whose stderr molt discards, without a word (ST0006)
 - `tiling` fails, saying why, when `vars.sh` cannot be read, rather than setting the default activation binding (ST0006)
 - `molt doctor` reads the declared font from this sleeve's `instances/<host>/vars.sh`. It had looked beside the manifest, which is the repo root on a sleeve with no instance `molt.toml`, and reported a `vars.sh` it could not read as declaring no font (ST0006)

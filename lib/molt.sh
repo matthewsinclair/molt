@@ -1757,16 +1757,47 @@ _upgrade_finish() {
   return $status
 }
 
+# The framework commit, or nothing, with a warning, when it cannot be read: an
+# upgrade that cannot tell whether its pull moved the framework says so rather
+# than carry on as if it had not.
+_upgrade_framework_head() {
+  git -C "$MOLT_ROOT" rev-parse HEAD 2>/dev/null || {
+    molt_warn "Cannot read the framework commit in $MOLT_ROOT; a pull that changes lib/ needs a second molt upgrade."
+    return 0
+  }
+}
+
+# This process sourced lib/ before the pull, but liberator_load reads each
+# liberator from disk after it, so a pull that moved the framework would run
+# the old library against the new liberators: with ST0006 WP02, the first
+# upgrade on every sleeve failed in claude and agents (issue 0023). Only a new
+# process knows which library files the pulled bin/molt sources, so the rest
+# of the upgrade runs in one, without pulling again.
+_upgrade_restart_if_pulled() {
+  local head_before="$1" do_resleeve="$2" head_after
+  [[ -n "$head_before" ]] || return 0
+  head_after="$(_upgrade_framework_head)"
+  [[ -n "$head_after" && "$head_after" != "$head_before" ]] || return 0
+  echo ""
+  molt_info "Framework updated (${head_before:0:7} -> ${head_after:0:7}); restarting on the new code."
+  if [[ "$do_resleeve" == "yes" ]]; then
+    exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --resleeve
+  fi
+  exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --no-resleeve
+}
+
 cmd_upgrade() {
   local dry_run=false
   local do_resleeve=""  # "" = use default, "yes" = forced, "no" = suppressed
   local target_liberators=""
   local self_only=false
+  local pull=true
 
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --self)        self_only=true; shift ;;
+      --no-pull)     pull=false; shift ;;
       --dry-run)     dry_run=true; shift ;;
       --resleeve)    do_resleeve="yes"; shift ;;
       --no-resleeve) do_resleeve="no"; shift ;;
@@ -1786,6 +1817,11 @@ cmd_upgrade() {
     else
       do_resleeve="yes"
     fi
+  fi
+
+  if $self_only && ! $pull; then
+    molt_error "--self pulls and does nothing else, so it cannot take --no-pull."
+    return 1
   fi
 
   echo "${MOLT_NAME} v${MOLT_VERSION} — Upgrade"
@@ -1834,7 +1870,12 @@ cmd_upgrade() {
 
   # --- Full upgrade: pull repos, run all _upgrade() hooks, then resleeve ---
 
-  _upgrade_pull_repos "$dry_run" || return 1
+  if $pull; then
+    local head_before
+    head_before="$(_upgrade_framework_head)"
+    _upgrade_pull_repos "$dry_run" || return 1
+    $dry_run || _upgrade_restart_if_pulled "$head_before" "$do_resleeve"
+  fi
 
   # Run _upgrade() hooks on all enabled liberators that define one
   echo ""

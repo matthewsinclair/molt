@@ -312,6 +312,40 @@ load "test_helper.bash"
     refute_output_contains "Sleeve ready"
 }
 
+# bin/molt sources lib/ once, before the pull, and liberator_load reads each
+# liberator from disk after it. A pull that brought a liberator calling a new
+# library function failed in that liberator until a second run (issue 0023).
+@test "a full molt upgrade whose pull changes the framework runs the hooks on the pulled code" {
+    local origin="$BATS_TEST_TMPDIR/origin" fw="$BATS_TEST_TMPDIR/fw" cfg="$BATS_TEST_TMPDIR/cfg"
+    local g=(git -c user.name=test -c user.email=test@example.com)
+    mkdir -p "$origin/liberators" "$cfg/Molt-$(whoami)/config"
+    cp -R "$MOLT_ROOT/bin" "$MOLT_ROOT/lib" "$MOLT_ROOT/VERSION" "$origin/"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { echo "zzz on the old code"; }\n' > "$origin/liberators/zzz.sh"
+    "${g[@]}" -C "$origin" init -q
+    "${g[@]}" -C "$origin" add -A
+    "${g[@]}" -C "$origin" commit -qm old
+    git clone -q "$origin" "$fw"
+    printf '\nmolt_pulled_only() { echo "zzz on the pulled lib"; }\n' >> "$origin/lib/molt.sh"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { molt_pulled_only; }\n' > "$origin/liberators/zzz.sh"
+    "${g[@]}" -C "$origin" commit -qam new
+    "${g[@]}" -C "$cfg/Molt-$(whoami)" init -q
+    run env -u MOLT_PRJ_DIR -u MOLT_LIBERATORS_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$cfg" \
+        "$fw/bin/molt" upgrade
+    assert_success
+    assert_output_contains "Framework updated"
+    assert_output_contains "zzz on the pulled lib"
+    refute_output_contains "Upgrade hook failed"
+    assert_output_contains "Running resleeve"
+    assert_output_contains "Sleeve ready"
+    [ "$(git -C "$fw" rev-parse HEAD)" = "$(git -C "$origin" rev-parse HEAD)" ]
+}
+
+@test "molt upgrade refuses --self with --no-pull" {
+    run_molt upgrade --self --no-pull
+    assert_failure
+    assert_output_contains "cannot take --no-pull"
+}
+
 # molt upgrade runs resleeve on the left of `||`, where set -e does not apply,
 # so a failed lookup inside it has to be caught by hand.
 @test "molt resleeve fails, and does not say Sleeve ready, when there are no liberators to run" {
