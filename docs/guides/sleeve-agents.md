@@ -76,7 +76,7 @@ A session started in a home reads three layers of instructions, widest first:
 
 The home's `CLAUDE.md` is a one-line `@AGENTS.md` stub. Put each instruction in exactly one layer: a rule that holds everywhere belongs in user scope, and the role contract does not repeat it.
 
-When your config repo has `config/claude/CLAUDE.md` and `AGENTS.md`, Molt links them into the config dir on every sleeve, moved or not, so the cross-session rules are the same everywhere; a regular file already at either path is backed up before the link replaces it. Project agents read these files too.
+When your config repo has `config/claude/CLAUDE.md` and `AGENTS.md`, Molt links them into the config dir on every sleeve, moved or not (on a sleeve that has not moved, the config dir is still `~/.claude`), so the cross-session rules are the same everywhere; a regular file already at either path is backed up before the link replaces it. Project agents read these files too.
 
 ## Declaring an agent
 
@@ -228,16 +228,25 @@ Any other working directory passes, so project agents are unaffected.
 
 `molt doctor` reports these through the claude and agents liberators' checks.
 
-**PLACEHOLDER (molt-cc, WP01 and WP02): the exact wording of each report, to replace the descriptions in the first column.**
+**PLACEHOLDER (molt-cc, WP01 and WP02): the exact wording of each report, to replace the descriptions in the first column of each table.**
 
-| Report                                                                       | Means                                                                                                           | What to do                                                                                                          |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `CLAUDE_CONFIG_DIR` is unset in the environment molt runs in                 | the shell molt ran from did not get the variable: the env file is missing, or `zshenv` does not source it       | open a new shell; if it persists, check the `zshenv` line and that `~/.config/molt/env.sh` exists                   |
-| `~/.claude` or `~/.claude.json` is present while the config dir is elsewhere | something started Claude without the variable, and it wrote fresh state in `$HOME`                              | find the launch path that missed it, eg a GUI app started before you logged back in, or a shell that skips `zshenv` |
-| the env file, GUI file or hook is missing or stale                           | what is published no longer matches what Molt would render                                                      | `molt upgrade`                                                                                                      |
-| a user-scope link is pending, broken or missing                              | your config repo has `config/claude/CLAUDE.md` or `AGENTS.md`, and the config dir does not link to it           | `molt upgrade` makes the link, backing up a regular file it replaces                                                |
-| an agent home is missing or stale                                            | an enabled agent has not been rendered, or its role templates or host overlay changed since it was              | `molt upgrade`                                                                                                      |
-| a role is undefined                                                          | an `[[agent]]` names a role with no directory under `config/agents/roles/`; the report names the path looked in | add the role, or fix the entry                                                                                      |
+On a sleeve that has declared `MOLT_CLAUDE_CONFIG_DIR`, the claude liberator reports:
+
+| Report                                                                       | Means                                                                                                     | What to do                                                                                                          |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `CLAUDE_CONFIG_DIR` is unset in the environment molt runs in                 | the shell molt ran from did not get the variable: the env file is missing, or `zshenv` does not source it | open a new shell; if it persists, check the `zshenv` line and that `~/.config/molt/env.sh` exists                   |
+| `~/.claude` or `~/.claude.json` is present while the config dir is elsewhere | something started Claude without the variable, and it wrote fresh state in `$HOME`                        | find the launch path that missed it, eg a GUI app started before you logged back in, or a shell that skips `zshenv` |
+| the env file, GUI file or hook is missing or stale                           | what is published no longer matches what Molt would render                                                | `molt upgrade`                                                                                                      |
+
+On a sleeve that has not declared it, `CLAUDE_CONFIG_DIR` is unset and nothing is published, and neither is a fault.
+
+On every sleeve, whether or not it has declared the variable:
+
+| Report                                          | Means                                                                                                           | What to do                                                           |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| a user-scope link is pending, broken or missing | your config repo has `config/claude/CLAUDE.md` or `AGENTS.md`, and the config dir does not link to it           | `molt upgrade` makes the link, backing up a regular file it replaces |
+| an agent home is missing or stale               | an enabled agent has not been rendered, or its role templates or host overlay changed since it was              | `molt upgrade`                                                       |
+| a role is undefined                             | an `[[agent]]` names a role with no directory under `config/agents/roles/`; the report names the path looked in | add the role, or fix the entry                                       |
 
 The native installer's paths listed above are not faults.
 
