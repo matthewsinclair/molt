@@ -1,0 +1,15 @@
+{
+  "id": "01M5EHDW4X5T4YSZ6TKA15KXZ9",
+  "ts": "2026-10-21T06:12:26.909Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0006 WP02 critic-shell findings (at 14e09d1), to verify, then fix, after the compact and the rebase onto WP01's fixes. C1: agents.sh:38's jq passes an empty, whitespace-only or null settings render, leaving a settings.json with no autoMemoryDirectory that reads current; use jq -e with select(type == \"object\"), consider -s for a single document, and test an empty template. C2: manifest.bats:185 can never fail, because $output loses its trailing empty line; count empty lines from the function's own output, or put the nameless block before a named one, and watch it go red with the guard removed. W: the mktemp and mv failure paths in agents.sh:37-45 keep molt_render's sidecar; remove it on every failure path through one shared cleanup. Recs: check for jq before reading settings (agent.sh:197, agents.sh:38); 'is the role defined' is decided in three places and 'which agents get a home' in two (Highlander); the lookup by name inside _agent_config; test gaps (the MOLT_HOSTNAME export, CLAUDE_CONFIG_DIR set in the pre-move test, molt agent never run through bin/molt, no positive 'Rendered' check); record the deferral of the eight hostname copies in liberators/ (desktop.sh:23 has drifted)."
+  }
+}
