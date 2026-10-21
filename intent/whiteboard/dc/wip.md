@@ -3,25 +3,26 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 07:04Z
+heartbeat_at: 2026-10-21 07:28Z
 status: active
-focus: "21 Oct: WP05 on st0006-wp05 (92ebce8), vc's three docs facts and its guard ruling folded in; rebase after the WP01 and WP02 merges, then the head to vc; WP03 contracts held for vc's go"
-claims: [ST0006/05]
+focus: "21 Oct: issue 0019 at issue-0019 7449919 on main 695e961 (critic-shell reviewing); WP05 at 3afda1d, rebased and checked against merged WP01; next issue 0020, then WP03 both halves"
+claims: [ST0006/05, ISSUE:0019, ST0006/03, ISSUE:0020]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- ISSUE:0019 on branch issue-0019 (worktree ~/Devel/prj/Molt-wt/issue-0019): ssh, alacritty and zsh install check molt_install_config's return (|| return 1, the tmux/git shape); one bats test per site, red on main and green on the branch; suite under both bashes; head to vc.
 
 ## TODO
 
-_(none)_
+- ST0006/03, both halves (vc, 21 Oct): items 4 (zshenv) and 5 (config/claude seeds) straight onto Molt-matts main; items 1-3 (role contracts, settings.json.tmpl profiles, [[agent]] entries) on branch st0006-wp03 in ~/Devel/cfg/Molt-matts-wt/st0006-wp03, checked against cc's st0006-wp02 and re-checked against the merged WP02 before the head goes to vc.
+- ISSUE:0020: the hostname lookup's copies onto WP01's molt_hostname (now in lib/molt.sh) in one branch, with a test for desktop.sh:23, which drifted to unknown; the issue lists the sites; after 0019. (edited)
 
 ## Holds
 
-- ST0006/03, my half (prose, in Molt-matts on main): the role contracts config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl, the kovacs overlay instances/kovacs/agents/sysadm.md, and item 5's seeds config/claude/CLAUDE.md and AGENTS.md; molt-cc writes the permission profiles. kovacs' material is in hand, relayed by vc. Released when WP02's renderer is merged to main AND vc gives dc the go. (edited)
+_(none)_
 
 ## Watch-outs
 

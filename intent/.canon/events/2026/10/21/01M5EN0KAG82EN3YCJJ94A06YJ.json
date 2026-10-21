@@ -1,0 +1,15 @@
+{
+  "id": "01M5EN0KAG82EN3YCJJ94A06YJ",
+  "ts": "2026-10-21T07:15:06.192Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ISSUE:0019 on branch issue-0019 (worktree ~/Devel/prj/Molt-wt/issue-0019): ssh, alacritty and zsh install check molt_install_config's return (|| return 1, the tmux/git shape); one bats test per site, red on main and green on the branch; suite under both bashes; head to vc."
+  }
+}
