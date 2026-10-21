@@ -1,0 +1,16 @@
+{
+  "id": "01M5FGWY6HBA6CP06BTSTQKZNQ",
+  "ts": "2026-10-21T15:22:26.385Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 committed to Molt-matts main 9f1fa46 and pushed (hv: 'Now'). Phase B2-B9 is hv's, on kovacs, from a plain terminal; kovacs-sysadm is quit at B4 and relaunched from its home at B9. After B9: vc checks verify-wp04.sh c4 output from kovacs-sysadm, then C-phase cleanup per the runbook; AC008 evidence from that. Runbook final at 5a21904 + 1f931a8."
+  }
+}

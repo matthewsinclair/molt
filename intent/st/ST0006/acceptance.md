@@ -39,7 +39,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC007
 
-- AC007 (non-test) sysadm, ops and docs contracts and profiles exist in Molt-matts and are declared on rhadamanth, gyges and kovacs; molt doctor is green on each reachable host with its homes rendered -- satisfied: no
+- AC007 (non-test) sysadm, ops and docs contracts and profiles exist in Molt-matts and are declared on rhadamanth, gyges and kovacs; molt doctor is green on each reachable host with its homes rendered -- evidence: Molt-matts d48886f (roles sysadm/ops/docs, preamble, kovacs overlay, [[agent]] entries on rhadamanth, gyges, kovacs). kovacs: A1 by kovacs-sysadm, 21 Oct: molt upgrade rendered kovacs-{sysadm,ops,docs}, agent list all current, doctor 13/13 all passed. rhadamanth: molt resleeve by molt-vc, 21 Oct 19:21: rhadamanth-{sysadm,ops,docs} rendered, agent list all current, doctor exit 0 with two standing warnings unrelated to agents (backup copy age and schedule; core.ignorecase). gyges unreachable until hv is home (hv: later). -- satisfied: yes
 
 ### Group AC008
 

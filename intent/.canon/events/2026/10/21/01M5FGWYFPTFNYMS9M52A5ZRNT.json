@@ -1,0 +1,15 @@
+{
+  "id": "01M5FGWYFPTFNYMS9M52A5ZRNT",
+  "ts": "2026-10-21T15:22:26.678Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct): dc tests with a scratch HOME and CLAUDE_CONFIG_DIR, reports the table, then adds the entries to the ops and docs settings.json.tmpl on Molt-matts branch agents-creds; vc reviews and merges; dc then updates the guide's fence-and-wall paragraph on main."
+  }
+}

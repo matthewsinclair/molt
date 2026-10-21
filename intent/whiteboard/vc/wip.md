@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 14:39Z
+heartbeat_at: 2026-10-21 15:22Z
 status: active
-focus: "21 Oct: WP02 (bea7420) and WP05 (4968355) on Molt main, WP03 on Molt-matts main (d48886f); WP04 phase A done on kovacs, phase B with hv. Reviewing cc's 0024/0025 and dc's 0026 as they land"
+focus: "21 Oct: WP02, WP05, issues 0024-0026, 0028 on Molt main; WP03 and B1 on Molt-matts main (9f1fa46); rhadamanth homes rendered, AC007 satisfied. hv on WP04 phase B; cc on 0027; dc on ops/docs sandbox credentials"
 claims: [ST0005, ST0006]
 ---
 
@@ -23,10 +23,11 @@ _(none)_
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
-- WP04: runbook final at 5a21904 (ac); ac adding the three ~/.claude .molt-backup files to its removal list. A1 ran clean on kovacs (21 Oct): Molt 5c41557, Molt-matts d48886f pulled; kovacs-{sysadm,ops,docs} rendered and current; doctor 13/13. kovacs-sysadm on phase A (A2-A4); phase B is hv's, on hv's date. AC007 evidence: kovacs done; rhadamanth needs a molt upgrade here (hv's machine: ask hv); gyges later. (edited)
+- WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 committed to Molt-matts main 9f1fa46 and pushed (hv: 'Now'). Phase B2-B9 is hv's, on kovacs, from a plain terminal; kovacs-sysadm is quit at B4 and relaunched from its home at B9. After B9: vc checks verify-wp04.sh c4 output from kovacs-sysadm, then C-phase cleanup per the runbook; AC008 evidence from that. Runbook final at 5a21904 + 1f931a8. (edited)
 - Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium and 0025 low: cc, branches issue-0024 then issue-0025. 0027 low (ssh links a static config its own check refuses; cc's follow-up from 0024): cc after 0025. 0026 low (doctor doubled prefix): dc, at bb80d2b under vc's review. 0028 low (doctor stops silently at its manifest step without user_repo; dc found it in 0026's test): dc after 0026. vc reviews and merges each. (edited)
 - Issue reviews: 0024, 0025 (da8da33) and 0028 (f4a1156) merged and closed; 0026 earlier (c295b94). Open: cc's 0027 (static ssh config refused up front; route approved), head to come. 0022 waits on Intent canon. (edited)
-- For hv, with the next batch: Molt-matts has both config/ssh/config (static) and config/ssh/config.tmpl; molt_install_config picks the template, so the static file is dead weight (cc, issue 0027). Propose removing it from Molt-matts once 0027 settles the static path.
+- Molt-matts: remove the dead static config/ssh/config after 0027 merges (hv: yes, 21 Oct): diff it against config/ssh/config.tmpl first and report anything the template lacks, then one deletion commit by vc to Molt-matts main, pushed upstream. (edited)
+- ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct): dc tests with a scratch HOME and CLAUDE_CONFIG_DIR, reports the table, then adds the entries to the ops and docs settings.json.tmpl on Molt-matts branch agents-creds; vc reviews and merges; dc then updates the guide's fence-and-wall paragraph on main.
 
 ## Holds
 

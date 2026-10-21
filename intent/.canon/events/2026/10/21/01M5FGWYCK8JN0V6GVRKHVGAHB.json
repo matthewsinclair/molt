@@ -1,0 +1,16 @@
+{
+  "id": "01M5FGWYCK8JN0V6GVRKHVGAHB",
+  "ts": "2026-10-21T15:22:26.579Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 14,
+    "text": "Molt-matts: remove the dead static config/ssh/config after 0027 merges (hv: yes, 21 Oct): diff it against config/ssh/config.tmpl first and report anything the template lacks, then one deletion commit by vc to Molt-matts main, pushed upstream."
+  }
+}

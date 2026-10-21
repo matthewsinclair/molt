@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-21T14:39:54.992Z",
+    "heartbeat_at": "2026-10-21T15:22:26.708Z",
     "status": "active",
-    "focus": "21 Oct: WP02 (bea7420) and WP05 (4968355) on Molt main, WP03 on Molt-matts main (d48886f); WP04 phase A done on kovacs, phase B with hv. Reviewing cc's 0024/0025 and dc's 0026 as they land",
+    "focus": "21 Oct: WP02, WP05, issues 0024-0026, 0028 on Molt main; WP03 and B1 on Molt-matts main (9f1fa46); rhadamanth homes rendered, AC007 satisfied. hv on WP04 phase B; cc on 0027; dc on ops/docs sandbox credentials",
     "claims": [
       "ST0005",
       "ST0006"
@@ -336,10 +336,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 9,
-      "text": "WP04: runbook final at 5a21904 (ac); ac adding the three ~/.claude .molt-backup files to its removal list. A1 ran clean on kovacs (21 Oct): Molt 5c41557, Molt-matts d48886f pulled; kovacs-{sysadm,ops,docs} rendered and current; doctor 13/13. kovacs-sysadm on phase A (A2-A4); phase B is hv's, on hv's date. AC007 evidence: kovacs done; rhadamanth needs a molt upgrade here (hv's machine: ask hv); gyges later.",
+      "text": "WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 committed to Molt-matts main 9f1fa46 and pushed (hv: 'Now'). Phase B2-B9 is hv's, on kovacs, from a plain terminal; kovacs-sysadm is quit at B4 and relaunched from its home at B9. After B9: vc checks verify-wp04.sh c4 output from kovacs-sysadm, then C-phase cleanup per the runbook; AC008 evidence from that. Runbook final at 5a21904 + 1f931a8.",
       "state": "live",
       "recorded_at": "2026-10-21T09:34:08.997Z",
-      "edited_at": "2026-10-21T14:34:12.799Z"
+      "edited_at": "2026-10-21T15:22:26.385Z"
     },
     {
       "node": "vc",
@@ -381,9 +381,18 @@
       "node": "vc",
       "kind": "todo",
       "seq": 14,
-      "text": "For hv, with the next batch: Molt-matts has both config/ssh/config (static) and config/ssh/config.tmpl; molt_install_config picks the template, so the static file is dead weight (cc, issue 0027). Propose removing it from Molt-matts once 0027 settles the static path.",
+      "text": "Molt-matts: remove the dead static config/ssh/config after 0027 merges (hv: yes, 21 Oct): diff it against config/ssh/config.tmpl first and report anything the template lacks, then one deletion commit by vc to Molt-matts main, pushed upstream.",
       "state": "live",
-      "recorded_at": "2026-10-21T15:04:05.986Z"
+      "recorded_at": "2026-10-21T15:04:05.986Z",
+      "edited_at": "2026-10-21T15:22:26.579Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 15,
+      "text": "ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct): dc tests with a scratch HOME and CLAUDE_CONFIG_DIR, reports the table, then adds the entries to the ops and docs settings.json.tmpl on Molt-matts branch agents-creds; vc reviews and merges; dc then updates the guide's fence-and-wall paragraph on main.",
+      "state": "live",
+      "recorded_at": "2026-10-21T15:22:26.678Z"
     }
   ],
   "messages": [
