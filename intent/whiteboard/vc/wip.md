@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 05:10Z
+heartbeat_at: 2026-10-21 06:03Z
 status: active
-focus: "21 Oct: ST0006 sleeve agents specified (c215907); cc builds WP01 then WP02, dc WP05, kovacs-sysadm holds WP04 plan; vc reviews and merges; ST0005 open for gyges only"
+focus: "21 Oct: ST0006 WP01 (41ef6b1) under vc review, awaiting critic-shell; WP02 built, WP05 reviewed, WP07 (blog brief) with ac; fleet localfold+compact in progress"
 claims: [ST0005, ST0006]
 ---
 
