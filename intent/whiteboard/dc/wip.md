@@ -3,10 +3,10 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 08:46Z
+heartbeat_at: 2026-10-21 09:37Z
 status: active
-focus: "21 Oct: banked for hv's compact. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 merges; 0022's untracking until Intent's canon carries its settings"
-claims: [ST0006/05, ST0006/03, ISSUE:0022]
+focus: "21 Oct: quiesced for hv's move and travel; nothing starts until hv resumes, even if WP02 merges. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 merges; 0022's untracking until Intent's canon carries its settings. Queued, not started: issue 0023"
+claims: [ST0006/05, ST0006/03, ISSUE:0022, ISSUE:0023]
 ---
 
 # DevX Claude (dc)
@@ -17,7 +17,7 @@ _(none)_
 
 ## TODO
 
-_(none)_
+- ISSUE:0023 (medium; not started, hv quiesced for the move and travel): the first `molt upgrade` after a pull that changes lib/ runs the old library against the new liberators. bin/molt sources lib/ at start, cmd_upgrade re-sources only constants.sh after _upgrade_pull_repos, and liberator_load sources the pulled liberators, so with WP02 merged the first upgrade on every sleeve ends `2 liberator(s) failed` and renders no home; the second run works. Fix in cmd_upgrade's full path: record the framework HEAD before _upgrade_pull_repos; when it changed and the run is not a dry run, say so on one line and re-exec `"$MOLT_ROOT/bin/molt" upgrade` with an option that skips the pull (eg --no-pull), carrying the resleeve flags through, so the hooks and the resleeve run on the new code. Re-sourcing lib/*.sh in place is not enough: the old bin/molt does not know which new library files to source. One test: a scratch framework repo whose pull brings a liberator calling a function only the pulled lib/ defines; assert the liberator ran on the new code. Both bashes. Branch issue-0023 from main in a worktree, head to vc. Should land before rhadamanth moves; WP04's runbook works around it meanwhile (A1: `molt upgrade --self`, then `molt upgrade`). Full text: intent issues show 0023.
 
 ## Holds
 
