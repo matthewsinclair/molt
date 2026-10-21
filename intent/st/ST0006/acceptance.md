@@ -23,7 +23,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC003
 
-- AC003 The UserPromptSubmit hook exits 2 with the launch-from-an-agent-home message when cwd is $HOME and exits 0 for any other cwd; merging it leaves every other user settings key byte-identical -- satisfied: yes (computed)
+- AC003 The UserPromptSubmit hook exits 2 with the launch-from-an-agent-home message when the session started in $HOME and exits 0 for any other start directory; it tests CLAUDE_PROJECT_DIR, the directory the session started in, never the hook input's cwd, which follows Claude's cd; merging it leaves every other user settings key byte-identical -- satisfied: yes (computed)
 
 ### Group AC004
 
@@ -67,7 +67,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC014
 
-- AC014 The home-launch guard refuses a prompt whose cwd lies under MOLT_AGT_DIR without being an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a cwd that is exactly an agent home passes, as does any other directory but $HOME. Project settings load from the cwd's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence. -- satisfied: no (computed)
+- AC014 The home-launch guard refuses a prompt whose session started under MOLT_AGT_DIR without starting in an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a session started exactly in an agent home passes, as does one started anywhere else but $HOME. The guard tests CLAUDE_PROJECT_DIR, the directory the session started in, never the hook input's cwd, which follows Claude's cd. Project settings load from the start directory's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence. -- satisfied: no (computed)
 
 ### Group AT001
 
