@@ -327,9 +327,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 8,
-      "text": "Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly.",
+      "text": "Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers [\"intent\"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct).",
       "state": "live",
-      "recorded_at": "2026-10-21T06:22:54.726Z"
+      "recorded_at": "2026-10-21T06:22:54.726Z",
+      "edited_at": "2026-10-21T08:47:33.690Z"
     }
   ],
   "messages": [
