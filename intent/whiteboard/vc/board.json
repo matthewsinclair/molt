@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-21T15:22:26.708Z",
+    "heartbeat_at": "2026-10-21T18:12:43.933Z",
     "status": "active",
-    "focus": "21 Oct: WP02, WP05, issues 0024-0026, 0028 on Molt main; WP03 and B1 on Molt-matts main (9f1fa46); rhadamanth homes rendered, AC007 satisfied. hv on WP04 phase B; cc on 0027; dc on ops/docs sandbox credentials",
+    "focus": "21 Oct (banked before hv's compact): ST0006 WP01/02/05/07 done, WP03 and credential denies on Molt-matts main (45e344c); issues 0023-0028 closed; WP04 phase A done on kovacs, phase B with hv. Next: kovacs-sysadm's c4 after B9, phase C, AC008; hv's bubblewrap run; WP06 floor",
     "claims": [
       "ST0005",
       "ST0006"
@@ -355,7 +355,8 @@
       "kind": "todo",
       "seq": 11,
       "text": "Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium and 0025 low: cc, branches issue-0024 then issue-0025. 0027 low (ssh links a static config its own check refuses; cc's follow-up from 0024): cc after 0025. 0026 low (doctor doubled prefix): dc, at bb80d2b under vc's review. 0028 low (doctor stops silently at its manifest step without user_repo; dc found it in 0026's test): dc after 0026. vc reviews and merges each.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T18:12:43.872Z",
       "recorded_at": "2026-10-21T14:20:47.047Z",
       "edited_at": "2026-10-21T14:47:29.681Z"
     },
@@ -373,7 +374,8 @@
       "kind": "todo",
       "seq": 13,
       "text": "Issue reviews: 0024, 0025 (da8da33), 0026 (c295b94), 0027 (a1ec2e1) and 0028 (f4a1156) merged and closed. 0022 waits on Intent canon. Nothing in review.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T18:12:43.902Z",
       "recorded_at": "2026-10-21T14:39:54.958Z",
       "edited_at": "2026-10-21T15:28:31.973Z"
     },

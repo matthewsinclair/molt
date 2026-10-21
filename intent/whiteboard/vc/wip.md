@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 15:22Z
+heartbeat_at: 2026-10-21 18:12Z
 status: active
-focus: "21 Oct: WP02, WP05, issues 0024-0026, 0028 on Molt main; WP03 and B1 on Molt-matts main (9f1fa46); rhadamanth homes rendered, AC007 satisfied. hv on WP04 phase B; cc on 0027; dc on ops/docs sandbox credentials"
+focus: "21 Oct (banked before hv's compact): ST0006 WP01/02/05/07 done, WP03 and credential denies on Molt-matts main (45e344c); issues 0023-0028 closed; WP04 phase A done on kovacs, phase B with hv. Next: kovacs-sysadm's c4 after B9, phase C, AC008; hv's bubblewrap run; WP06 floor"
 claims: [ST0005, ST0006]
 ---
 
@@ -24,8 +24,6 @@ _(none)_
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
 - WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 committed to Molt-matts main 9f1fa46 and pushed (hv: 'Now'). Phase B2-B9 is hv's, on kovacs, from a plain terminal; kovacs-sysadm is quit at B4 and relaunched from its home at B9. After B9: vc checks verify-wp04.sh c4 output from kovacs-sysadm, then C-phase cleanup per the runbook; AC008 evidence from that. Runbook final at 5a21904 + 1f931a8. (edited)
-- Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium and 0025 low: cc, branches issue-0024 then issue-0025. 0027 low (ssh links a static config its own check refuses; cc's follow-up from 0024): cc after 0025. 0026 low (doctor doubled prefix): dc, at bb80d2b under vc's review. 0028 low (doctor stops silently at its manifest step without user_repo; dc found it in 0026's test): dc after 0026. vc reviews and merges each. (edited)
-- Issue reviews: 0024, 0025 (da8da33), 0026 (c295b94), 0027 (a1ec2e1) and 0028 (f4a1156) merged and closed. 0022 waits on Intent canon. Nothing in review. (edited)
 - ops/docs sandbox.credentials.files denies: on Molt-matts main 45e344c; rhadamanth homes re-rendered and current; the guide's Fence and wall paragraph corrected as tested (f57ee55). Owed by hv: dc's harness on kovacs under bubblewrap after B9 (then the guide's 'still owed' sentence goes). kovacs homes re-render at B5. (edited)
 
 ## Holds
