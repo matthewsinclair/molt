@@ -1,0 +1,14 @@
+{
+  "id": "01M5ED03Z42G2HB53D5N29FDW5",
+  "ts": "2026-10-21T04:55:01.860Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.edit",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC004"
+  },
+  "payload": {
+    "text": "molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere (the XDG paths the native installer owns are not faults), and the env file, GUI file or hook missing or stale"
+  }
+}

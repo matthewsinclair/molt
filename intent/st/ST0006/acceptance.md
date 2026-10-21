@@ -27,7 +27,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC004
 
-- AC004 molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere, and the env file, GUI file or hook missing or stale -- satisfied: no (computed)
+- AC004 molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere (the XDG paths the native installer owns are not faults), and the env file, GUI file or hook missing or stale -- satisfied: no (computed)
 
 ### Group AC005
 
@@ -43,7 +43,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC008
 
-- AC008 (non-test) kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home and nothing of Claude's left in $HOME; the verify script says so -- satisfied: no
+- AC008 (non-test) kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home; ~/.claude and ~/.claude.json are gone from $HOME and the verify script says so -- satisfied: no
 
 ### Group AC009
 
@@ -52,6 +52,10 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 ### Group AC010
 
 - AC010 sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed -- satisfied: no (computed)
+
+### Group AC011
+
+- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: no (computed)
 
 ## Acceptance Tests
 
@@ -92,6 +96,10 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC010
+
+_(no tests in this group)_
+
+### Group AC011
 
 _(no tests in this group)_
 

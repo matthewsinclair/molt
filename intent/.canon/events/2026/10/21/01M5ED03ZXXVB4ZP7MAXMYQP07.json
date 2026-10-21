@@ -1,0 +1,14 @@
+{
+  "id": "01M5ED03ZXXVB4ZP7MAXMYQP07",
+  "ts": "2026-10-21T04:55:01.885Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.edit",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC008"
+  },
+  "payload": {
+    "text": "kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home; ~/.claude and ~/.claude.json are gone from $HOME and the verify script says so"
+  }
+}

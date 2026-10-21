@@ -5,13 +5,25 @@
     "name": "molt-cc",
     "role": "cc",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T04:49:53.740Z",
+    "heartbeat_at": "2026-10-21T04:54:10.658Z",
     "status": "active",
-    "focus": "booted 21 Oct, baseline green; holding for instructions from vc",
-    "claims": [],
+    "focus": "ST0006 WP01 (then WP02) for vc: worktree ~/Devel/scratch/molt-cc/st0006-wp01, branch st0006-wp01",
+    "claims": [
+      "ST0006/01",
+      "ST0006/02"
+    ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
-  "items": [],
+  "items": [
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 1,
+      "text": "ST0006 WP01: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches; branch st0006-wp01",
+      "state": "live",
+      "recorded_at": "2026-10-21T04:54:10.680Z"
+    }
+  ],
   "messages": []
 }

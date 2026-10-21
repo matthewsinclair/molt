@@ -13,7 +13,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
   - [x] 02: utilz: a checkout or Homebrew, per sleeve
   - [-] 03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
 - [-] ST0006: Sleeve agents: a named, role-bound home for a machine's local agent
-  - [ ] 01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
+  - [-] 01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
   - [ ] 02: [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config
   - [ ] 03: Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs
   - [ ] 04: Move kovacs-sysadm into its home; then rhadamanth, then gyges

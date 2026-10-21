@@ -2,7 +2,7 @@
 wp_id: WP-01
 title: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
 scope: S
-status: Not Started
+status: WIP
 ---
 
 # WP-01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
@@ -16,14 +16,15 @@ Owner: molt-cc. Branch `st0006-wp01` in a git worktree; molt-vc reviews and merg
 ## Contract
 
 1. **One accessor for the config dir.** `molt_claude_config_dir` in `lib/molt.sh` answers `${CLAUDE_CONFIG_DIR:-$HOME/.claude}`; every `$HOME/.claude` in `liberators/claude.sh` (five today) goes through it. WP02's agents liberator uses the same accessor.
-2. **One value, rendered twice.** The sleeve's `instances/<host>/vars.sh` carries `MOLT_CLAUDE_CONFIG_DIR` (default `${XDG_CONFIG_HOME:-$HOME/.config}/claude`). Molt renders it into an env file the shell sources (the `~/.config/molt/` pattern the iTerm2 ssh wrapper already uses) and into the GUI environment path: a LaunchAgent plist running `launchctl setenv CLAUDE_CONFIG_DIR` on macOS, `~/.config/environment.d/claude.conf` on Linux. Both carry `.molt-rendered` digest sidecars. The zshenv change that sources the env file is Molt-matts work (WP03).
-3. **The move, once.** When `$HOME/.claude` is a real directory and the config dir does not exist, `claude_install` backs up and moves `~/.claude` and `~/.claude.json` into place. It refuses, naming the processes, when any Claude Code is running (`pgrep -f`, never `pgrep -x`: board watchout 6), because a live session cannot survive its own state moving. It refuses when both exist, and says what it found.
+2. **One value, rendered twice.** The sleeve's `instances/<host>/vars.sh` carries `MOLT_CLAUDE_CONFIG_DIR` (default `${XDG_CONFIG_HOME:-$HOME/.config}/claude`). Molt renders it into an env file the shell sources (`~/.config/molt/env.sh`, the pattern the iTerm2 ssh wrapper already uses) and into the GUI environment path: a LaunchAgent plist running `launchctl setenv CLAUDE_CONFIG_DIR` on macOS, `~/.config/environment.d/claude.conf` on Linux. Both carry `.molt-rendered` digest sidecars. `~/.zshenv` is a symlink into Molt-matts, not a render, so the value never appears in it as a literal; the zshenv line that sources the env file is Molt-matts work (WP03). On GNOME, `environment.d` reaches every GUI and terminal child; zshenv matters for ssh and TTY logins.
+3. **The move, once.** When `$HOME/.claude` is a real directory and the config dir does not exist, `claude_install` backs up and moves `~/.claude` and `~/.claude.json` into place. It refuses, naming the processes, when any Claude Code is running (`pgrep -f`, never `pgrep -x`: board watchout 6), because a live session cannot survive its own state moving. It refuses a non-empty config dir, naming its contents, and never merges the two. `claude_install`'s `mkdir -p "$HOME/.claude"` (line 141 today) is the most dangerous of the five hardcoded sites: with the variable set it would recreate exactly what doctor faults.
+3a. **The variable is published only once the state is where it points.** The env file and the GUI file are written only when the config dir holds the state (the move succeeded in this run, or `~/.claude` is already absent and the config dir present). When the move is refused for any reason, neither file is written in that run, and the refusal says so. Otherwise the next Claude starts empty in the new dir (new login, new `.claude.json`) and the later move meets a non-empty target: split brain (kovacs-sysadm H1).
 4. **Refuse `$HOME` launches.** A `UserPromptSubmit` hook, merged into the user `settings.json` the way the statusLine already is (generalise `_claude_statusline_install` into one merge-a-key function; Highlander), runs a script Molt renders into `~/.config/molt/`. The script reads the hook's JSON on stdin, and when `cwd` is `$HOME` exits 2 with "launch from an agent home: molt agent list". Any other cwd passes. The hook must not depend on `molt` being on PATH at prompt time.
 5. **Doctor.** `claude_check` reports: `CLAUDE_CONFIG_DIR` unset in the environment molt runs in; `~/.claude` or `~/.claude.json` present (file, dir or link) while the config dir is elsewhere, as the sign a launch path missed the variable; the env file, GUI file or hook missing or stale.
 
 ## Tests (bats, both bash 5 and `/bin/bash` 3.2)
 
-Fake `$HOME` and fake config dir; a `pgrep` stub for the running-Claude refusal; the hook script fed JSON with cwd = `$HOME` (exit 2, message) and cwd elsewhere (exit 0); the merge function leaving every other settings key byte-identical (`jq -S` compare). No test may touch the real `~/.claude`.
+Fake `$HOME` and fake config dir; a `pgrep` stub for the running-Claude refusal; a non-empty target refused and nothing merged; env and GUI files absent after any refusal and present after a successful move; the hook script fed JSON with cwd = `$HOME` (exit 2, message) and cwd elsewhere (exit 0); the merge function leaving every other settings key byte-identical (`jq -S` compare). No test may touch the real `~/.claude`.
 
 ## Out of scope
 

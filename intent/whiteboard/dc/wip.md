@@ -3,10 +3,10 @@ node: dc
 name: molt-dc
 role: dc
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 04:45Z
+heartbeat_at: 2026-10-21 04:54Z
 status: active
-focus: ""
-claims: []
+focus: "21 Oct: ST0006/05 claimed (the sleeve-agents guide), plan with hv; WP03 role contracts held for vc's go"
+claims: [ST0006/05]
 ---
 
 # molt-dc (dc)
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- ST0006/03, my half: the role contracts config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl in Molt-matts, folding in the text of kovacs' ~/.claude/AGENTS.md from kovacs-sysadm (molt-cc writes the permission profiles). Released when WP02's renderer is merged to main AND vc gives dc the go.
 
 ## Watch-outs
 

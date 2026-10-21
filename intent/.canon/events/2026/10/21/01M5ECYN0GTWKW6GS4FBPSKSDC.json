@@ -1,0 +1,15 @@
+{
+  "id": "01M5ECYN0GTWKW6GS4FBPSKSDC",
+  "ts": "2026-10-21T04:54:13.776Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ST0006/03, my half: the role contracts config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl in Molt-matts, folding in the text of kovacs' ~/.claude/AGENTS.md from kovacs-sysadm (molt-cc writes the permission profiles). Released when WP02's renderer is merged to main AND vc gives dc the go."
+  }
+}

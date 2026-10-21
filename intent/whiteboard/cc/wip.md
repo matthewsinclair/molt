@@ -3,17 +3,17 @@ node: cc
 name: molt-cc
 role: cc
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 04:49Z
+heartbeat_at: 2026-10-21 04:54Z
 status: active
-focus: "booted 21 Oct, baseline green; holding for instructions from vc"
-claims: []
+focus: "ST0006 WP01 (then WP02) for vc: worktree ~/Devel/scratch/molt-cc/st0006-wp01, branch st0006-wp01"
+claims: [ST0006/01, ST0006/02]
 ---
 
 # molt-cc (cc)
 
 ## DOING
 
-_(none)_
+- ST0006 WP01: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches; branch st0006-wp01
 
 ## TODO
 
