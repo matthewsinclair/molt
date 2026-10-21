@@ -13,7 +13,7 @@ _(not yet written)_
 
 Owner: molt-dc. Branch `st0006-wp05` in a git worktree; molt-vc reviews and merges.
 
-`docs/guides/sleeve-agents.md`: what a sleeve agent is and how it differs from a project agent; the naming rule `<hostname>-<role>`; the three roles and what each may do; the three layers (role source, agent home, harness state) and why cwd and config home coincide; declaring an agent in the manifest; `molt agent list|config`; the one-time harness move and why it is run with every session quit; what `molt doctor` reports and what each report means; the fence/wall distinction and where WP06 fits. Also the first written record of the project-agent suffixes as used (vc, cc, dc, ic, ac, sc), in one short section, since nothing else records them. `README.md` and `CHANGELOG.md` entries. No manual line wrapping.
+`docs/guides/sleeve-agents.md`: what a sleeve agent is and how it differs from a project agent; the naming rule `<hostname>-<role>`; the three roles and what each may do; the three layers (role source, agent home, harness state) and why cwd and config home coincide; declaring an agent in the manifest; `molt agent list|config`; the one-time harness move and why it is run with every session quit; what `molt doctor` reports and what each report means; the fence/wall distinction and where WP06 fits. Also one short section on the project-Claude suffixes, as hv named them on 21 Oct 2026 (the roster in `intent/whiteboard/README.md` is the record; the guide points at it and states the six): sc Supervisor Claude, vc Validation Claude, cc Control Claude, ic Interface Claude, ac Authoring Claude, dc DevX Claude. Molt runs vc, cc and dc. `README.md` and `CHANGELOG.md` entries. No manual line wrapping.
 
 ## Acceptance
 

@@ -1,0 +1,16 @@
+{
+  "id": "01M5EDCYYX01KTZQ23JX9Y2WMP",
+  "ts": "2026-10-21T05:02:02.717Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 1,
+    "text": "ST0006/03, my half (prose, in Molt-matts on main): the role contracts config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl, the kovacs overlay instances/kovacs/agents/sysadm.md, and item 5's seeds config/claude/CLAUDE.md and AGENTS.md; molt-cc writes the permission profiles. kovacs' material is in hand, relayed by vc. Released when WP02's renderer is merged to main AND vc gives dc the go."
+  }
+}

@@ -6,12 +6,25 @@ The protocol itself -- file layout, the single-writer rule, the header-block for
 
 ## Roster
 
-| Node | Name              | Role       | Driven by | Notes                                                                                                                            |
-| ---- | ----------------- | ---------- | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `hv` | Hypervisor        | hypervisor | human     | Adjudicates scope, sequences work, owns releases. `session_id: none`; heartbeat is advisory and never marks a claim reclaimable. |
-| `vc` | Validation Claude | validation | session   | Independent check that landed or claimed work is correct, complete, and faithful to what hv asked. Advisory authority only.      |
+| Node | Name              | Role       | Driven by | Notes                                                                                                                                                                                                          |
+| ---- | ----------------- | ---------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hv` | Hypervisor        | hypervisor | human     | Adjudicates scope, sequences work, owns releases. `session_id: none`; heartbeat is advisory and never marks a claim reclaimable.                                                                               |
+| `vc` | Validation Claude | validation | session   | Specifies, validates and coordinates: independent check that landed or claimed work is correct, complete, and faithful to what hv asked. Reviews and merges what `cc` and `dc` build. Advisory authority only. |
+| `cc` | Control Claude    | control    | session   | Builds the code: liberators, lib, tests. Works in a git worktree on a branch per work package; `vc` merges.                                                                                                    |
+| `dc` | DevX Claude       | devx       | session   | Builds the developer experience: guides, README, CHANGELOG, role contracts. Same worktree discipline as `cc`.                                                                                                  |
 
-Molt has no separate control node. `vc` is currently the only session-driven node on this board, so it both validates and -- when hv says so -- builds. When that changes, add the node with `intent claude ws new <moniker>` and add a row here in the same commit.
+The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent project uses the same six; Molt runs three of them for now.
+
+| Suffix | Name              | Here |
+| ------ | ----------------- | ---- |
+| `sc`   | Supervisor Claude | no   |
+| `vc`   | Validation Claude | yes  |
+| `cc`   | Control Claude    | yes  |
+| `ic`   | Interface Claude  | no   |
+| `ac`   | Authoring Claude  | no   |
+| `dc`   | DevX Claude       | yes  |
+
+A session is named `<project>-<suffix>` (`molt-vc`, `molt-cc`, `molt-dc`). Sleeve agents, which run on a machine rather than in a project, are named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs` (ST0006). To add a node, create it with `intent claude ws new <moniker>` and add a row here in the same commit.
 
 ## Who reads the hv inbox
 
