@@ -49,10 +49,10 @@ A role is a directory under your config repo's `config/agents/roles/`, so the se
 | Role     | For                          | Sandbox                     |
 | -------- | ---------------------------- | --------------------------- |
 | `sysadm` | system administration        | off: it cannot be sandboxed |
-| `ops`    | operations and monitoring    | on                          |
-| `docs`   | documentation of the machine | on                          |
+| `ops`    | operations and monitoring    | on, escape hatches closed   |
+| `docs`   | documentation of the machine | on, escape hatches closed   |
 
-`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. Every agent's work goes in its home's `work/` directory. What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it.
+`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, which the agent reaches by path from its home rather than by starting a session there. What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it.
 
 ## Three layers
 
@@ -62,7 +62,7 @@ A role is a directory under your config repo's `config/agents/roles/`, so the se
 | Agent home    | `$MOLT_AGT_DIR/<hostname>-<role>/`                | Molt, rendered | `AGENTS.md`, `CLAUDE.md`, `.claude/settings.json`, `memory/`, `work/`                         |
 | Harness state | `$XDG_CONFIG_HOME/claude`, as `CLAUDE_CONFIG_DIR` | Claude Code    | credentials, transcripts, plugins and user settings: one per machine, shared by every session |
 
-The agent home is both the agent's config and the directory it runs in. Claude Code reads project-level settings from `.claude/` in its working directory, so starting the agent in its home is what applies the home's settings: the two coincide by construction. The home's settings set `autoMemoryDirectory` to `<home>/memory`, so the agent's memory lives in its home rather than under a working-directory slug in the harness state.
+The agent home is both the agent's config and the directory it runs in. Claude Code reads project-level settings from `.claude/` in the directory a session starts in, and from no directory above it, so starting the agent in its home is what applies the home's settings: the two coincide by construction (see [Starting an agent](#starting-an-agent)). The home's settings set `autoMemoryDirectory` to `<home>/memory`, so the agent's memory lives in its home rather than in the harness state, where Claude Code keys auto memory by git repository, or by the project root outside one.
 
 ### What a session in the home reads
 
@@ -134,8 +134,6 @@ Each rendered file has a `.molt-rendered` sidecar recording a digest of its sour
 
 A home renders whether or not the sleeve's Claude Code state has moved (see below). That is deliberate: on a sleeve whose agent still runs from `$HOME`, the home can be rendered first, so the agent can copy its own files in before its state moves.
 
-The first time you start Claude in a home, accept the workspace-trust prompt: Claude Code ignores a project-level `autoMemoryDirectory` until the workspace is trusted.
-
 ## Listing and inspecting agents
 
 ```bash
@@ -177,11 +175,17 @@ kovacs-sysadm
 
 The managed layer also lists any drop-ins in `managed-settings.d/`. An undeclared name fails with `molt agent: <name> is not declared on this sleeve; declared: <the declared names>`.
 
+## Starting an agent
+
 There is no launch command. To start an agent, start Claude in its home:
 
 ```bash
 cd "$MOLT_AGT_DIR/kovacs-sysadm" && claude
 ```
+
+Start it in the home itself, never in a directory below it. Claude Code reads project settings only from `.claude/` in the directory a session starts in, with no fallback to a parent, while it reads `CLAUDE.md` from that directory and every one above it. An agent started in its `work/` therefore keeps its contract and loses its fence, its sandbox and its memory setting. On a sleeve whose state has moved, the home-launch guard blocks the prompts of a session started below a home (see [A Claude started in $HOME, or below a home, is refused](#a-claude-started-in-home-or-below-a-home-is-refused)).
+
+Accept the trust prompt at the first launch in each home. The home's `permissions.allow` rules, hooks in settings files and the home's `autoMemoryDirectory` wait for that prompt, which an interactive session shows once per directory. A `claude -p` run never shows it: it uses the hooks and the memory setting but not the home's allow rules, and warns on stderr.
 
 ## Moving Claude Code's state out of $HOME
 
@@ -252,9 +256,9 @@ The GUI file takes effect at the next login, because Molt does not call `launchc
 
 ### After the move
 
-Start each agent from its home, and accept workspace trust the first time. The native installer's own paths stay where they are and are not clutter: `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`. `CLAUDE_CONFIG_DIR` does not move them. Leftovers from an npm-era install, `~/.cache/claude-cli-nodejs` and `~/.npm`, are not Claude Code's state either; the move leaves them, and removing them is a separate step.
+Start each agent from its home, as [Starting an agent](#starting-an-agent) says. The native installer's own paths stay where they are and are not clutter: `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`. `CLAUDE_CONFIG_DIR` does not move them. Leftovers from an npm-era install, `~/.cache/claude-cli-nodejs` and `~/.npm`, are not Claude Code's state either; the move leaves them, and removing them is a separate step.
 
-### A Claude started in $HOME is refused
+### A Claude started in $HOME, or below a home, is refused
 
 Once the variable is published, Molt also merges a `UserPromptSubmit` hook into the user settings, changing that key and no other, as it does for the statusLine. The hook runs `~/.config/molt/claude-home-guard.sh`, a POSIX `sh` script that needs `jq` but not `molt`, so it does not depend on `molt` being on `PATH` when a prompt is sent. When the session's working directory is `$HOME`, it prints this on stderr and exits 2, which blocks the prompt:
 
@@ -262,7 +266,13 @@ Once the variable is published, Molt also merges a `UserPromptSubmit` hook into 
 launch from an agent home: molt agent list
 ```
 
-Any other working directory passes, so project agents are unaffected. If `jq` is missing, or the hook's input is not JSON or names no working directory, the script exits 1, which shows its message and blocks nothing.
+It blocks, the same way, a working directory in `MOLT_AGT_DIR` that is not an agent home itself: the agents root, or a directory below a home, such as its `work/`. Below a home it names the home to launch from:
+
+```
+launch from the agent home itself: cd <home>
+```
+
+An agent home itself passes, as does any other working directory, so project agents are unaffected. If `jq` is missing, or the hook's input is not JSON or names no working directory, the script exits 1, which shows its message and blocks nothing.
 
 ## What molt doctor reports
 
@@ -306,7 +316,7 @@ Claude Code merges settings from several levels. From the highest precedence dow
 
 The home's `.claude/settings.json` is a fence: it carries the role's permission profile, but it sits in a directory the agent works in, and the agent could edit it. The managed-settings file is the wall: root owns it, so the agent cannot change it, and since a deny wins at every level, a deny there holds whatever the levels below allow. It lives at `/Library/Application Support/ClaudeCode/managed-settings.json` on macOS and `/etc/claude-code/managed-settings.json` on Linux, with drop-in files in `managed-settings.d/` beside it.
 
-`ops` and `docs` get the fence and the sandbox. With `sandbox.enabled`, sandboxed Bash cannot write any `.claude` settings, hooks, shell rc files, `.git` config or the config dir, with no exemption. Edit and Write are not sandboxed; they prompt instead.
+`ops` and `docs` get the fence and the sandbox. With `sandbox.enabled`, sandboxed Bash cannot write any `.claude` settings, hooks, shell rc files, `.git` config or the config dir, with no exemption. The sandbox binds sandboxed commands only, and it has two escape hatches, which the `ops` and `docs` profiles both close. A command matching `sandbox.excludedCommands` runs with no filesystem restrictions and no network proxy, so the profiles list no excluded commands. A command that fails in the sandbox can be retried outside it on approval unless `sandbox.allowUnsandboxedCommands` is `false`, so the profiles set it to `false`. Hooks, Edit and Write run outside the sandbox, and Edit and Write only prompt.
 
 `sysadm` cannot be sandboxed, because changing the machine is its job, so for now its permissions live only in the fence. A managed deny floor for `sysadm` is planned (ST0006 WP06): Molt will render the role's `permissions.deny` into a root-owned drop-in, `managed-settings.d/molt-sysadm.json`, through the `sudo` path the `system` liberator already uses, and `molt agent config` will show those rules as managed. What the floor denies is the user's decision; WP06 supplies the mechanism.
 
