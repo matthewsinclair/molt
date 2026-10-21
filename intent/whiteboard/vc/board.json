@@ -391,10 +391,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 15,
-      "text": "ops/docs sandbox.credentials.files denies (hv: yes, tested first, 21 Oct). Tested by hv on rhadamanth (Seatbelt, Claude Code 2.1.306): deny entries hold for sandboxed Bash with no Read() rule in front; Read() denies also refuse a cat naming the path at the permission layer; ~/.ssh hidden whole, ssh -G still runs. dc now adds the entries to ops and docs settings.json.tmpl plus one tested sentence in the ops/docs role text and a reworded sysadm sentence, on Molt-matts branch agents-creds; vc reviews and merges; dc then updates the guide on Molt main. Owed: the same harness run on kovacs under bubblewrap after B9 (hv).",
+      "text": "ops/docs sandbox.credentials.files denies: merged to Molt-matts main 45e344c (dc's agents-creds; hv's Seatbelt test 21 Oct). Next: dc corrects the guide's fence-and-wall paragraph on Molt main (Read() denies also refuse a cat naming the path; sandbox hides ~/.ssh whole; bubblewrap run owed). Owed by hv: the same harness on kovacs after B9; then the next molt upgrade on kovacs and rhadamanth re-renders ops and docs homes (stale until then).",
       "state": "live",
       "recorded_at": "2026-10-21T15:22:26.678Z",
-      "edited_at": "2026-10-21T18:05:34.714Z"
+      "edited_at": "2026-10-21T18:07:06.179Z"
     }
   ],
   "messages": [
