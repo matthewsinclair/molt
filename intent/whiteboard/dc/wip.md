@@ -6,7 +6,7 @@ session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
 heartbeat_at: 2026-10-21 07:38Z
 status: active
 focus: "21 Oct: 0019 with vc (a9049fd), WP05 with vc (3afda1d); 0020 in build on issue-0020; then WP03 items 1-3 (4 and 5 on Molt-matts main)"
-claims: [ST0006/05, ISSUE:0019, ST0006/03, ISSUE:0020]
+claims: [ST0006/05, ISSUE:0019, ST0006/03, ISSUE:0020, ISSUE:0021]
 ---
 
 # DevX Claude (dc)
