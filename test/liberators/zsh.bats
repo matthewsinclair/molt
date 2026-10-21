@@ -82,7 +82,7 @@ setup() {
     molt_instances_field() {
         case "$1" in
             ssh_bg_color) echo "gyges:1a1a2e" ;;
-            bg_color) echo "$(hostname -s 2>/dev/null || hostname):15191f" ;;
+            bg_color) echo "$(test_hostname):15191f" ;;
         esac
     }
     local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"

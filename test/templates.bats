@@ -45,7 +45,7 @@ _use_test_repo() {
 create_test_vars() {
     local repo="$1"
     local hostname
-    hostname="$(hostname -s 2>/dev/null || hostname)"
+    hostname="$(test_hostname)"
     local vars_dir="$repo/instances/$hostname"
     mkdir -p "$vars_dir"
     cat > "$vars_dir/vars.sh" <<'VARS'
@@ -128,7 +128,7 @@ create_test_template() {
     # AT046 (ST0006 AC011).
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
-    local vars="$repo/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    local vars="$repo/instances/$(test_hostname)/vars.sh"
     create_test_vars "$repo"
     echo 'fi' >> "$vars"
     create_test_template "$repo" "config/test/app.conf" 'value = ${MOLT_TEST_VAR}'
@@ -153,7 +153,7 @@ create_test_template() {
     # AT049 (ST0006 AC011).
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
-    local vars="$repo/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    local vars="$repo/instances/$(test_hostname)/vars.sh"
     create_test_vars "$repo"
     create_test_template "$repo" "config/test/app.conf" 'value = ${MOLT_TEST_VAR}'
     local target="$HOME/.config/test/app.conf"
@@ -193,7 +193,7 @@ create_test_template() {
     # AT051 (ST0006 AC015).
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
-    local vars_dir="$repo/instances/$(hostname -s 2>/dev/null || hostname)"
+    local vars_dir="$repo/instances/$(test_hostname)"
     mkdir -p "$vars_dir"
     printf 'echo chatter\nexport MOLT_A=one\nexport MOLT_B="$MOLT_TEST_UNSET"\nexport MOLT_C=three\n' > "$vars_dir/vars.sh"
     create_test_template "$repo" "config/test/lenient.conf" 'a = ${MOLT_A} c = ${MOLT_C}'

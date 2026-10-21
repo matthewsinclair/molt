@@ -100,6 +100,17 @@ load_liberator() {
 # TEST DATA CREATION
 # ============================================================================
 
+# This sleeve's short hostname, the name of its instances/ directory, for a
+# test to build the path it expects. Worked out here, not by molt_hostname: a
+# test that computed its expected path with the code under test would agree
+# with a wrong answer (issue 0020).
+# Usage: vars="$repo/instances/$(test_hostname)/vars.sh"
+test_hostname() {
+    local name
+    name="$(hostname -s 2>/dev/null || hostname)"
+    echo "${name%%.*}"
+}
+
 # Create a mock molt-{user} repo with config/ directory
 # Usage: create_test_repo "$BATS_TEST_TMPDIR/molt-testuser"
 create_test_repo() {

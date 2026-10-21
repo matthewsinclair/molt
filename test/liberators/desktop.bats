@@ -35,6 +35,24 @@ load "../test_helper.bash"
     [ "$status" -ne 0 ] || [ -f "$output" ]
 }
 
+# This lookup fell back to "unknown" where molt_hostname falls back to the long
+# hostname, so a host whose hostname -s failed read instances/unknown/ (issue 0020).
+@test "_desktop_favorites_file finds the instance by molt_hostname when hostname -s fails" {
+    load_liberator desktop
+    local root="$BATS_TEST_TMPDIR"
+    mkdir -p "$root/bin" "$root/repo/config" "$root/repo/instances/testhost/desktop"
+    # A hostname whose -s fails, as on a host with no short name to give.
+    printf '#!/bin/sh\n[ "$1" = -s ] && exit 1\necho testhost.example.org\n' > "$root/bin/hostname"
+    chmod +x "$root/bin/hostname"
+    printf 'org.gnome.Nautilus.desktop\n' > "$root/repo/instances/testhost/desktop/favorite-apps"
+    MOLT_USER_REPO_SEARCH_PATHS=("$root/repo")
+    export PATH="$root/bin:$PATH"
+
+    run _desktop_favorites_file
+    assert_success
+    [ "$output" = "$root/repo/instances/testhost/desktop/favorite-apps" ]
+}
+
 @test "_desktop_favorites_empty detects a file with no usable entries" {
     load_liberator desktop
     local d="$BATS_TEST_TMPDIR"

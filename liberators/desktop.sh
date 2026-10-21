@@ -20,7 +20,10 @@ _desktop_favorites_file() {
   local user_repo hostname
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")" || return 1
   [[ -n "$user_repo" ]] || return 1
-  hostname="$(hostname -s 2>/dev/null || echo "unknown")"
+  # molt_hostname, as every reader of instances/ asks. This copy fell back to
+  # "unknown" where the others fall back to the long hostname, so a host whose
+  # hostname -s failed looked in instances/unknown/ (issue 0020).
+  hostname="$(molt_hostname)" || return 1
   local f="$user_repo/instances/$hostname/desktop/favorite-apps"
   [[ -f "$f" ]] || return 1
   echo "$f"

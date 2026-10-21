@@ -19,7 +19,7 @@ _backup_env() {
     require_command plutil "the backup liberator reads SuperDuper state with plutil (macOS)"
     load_liberator backup
     local root="$BATS_TEST_TMPDIR"
-    local host; host="$(hostname -s 2>/dev/null || hostname)"
+    local host; host="$(test_hostname)"
     mkdir -p "$root/repo/config" "$root/repo/instances/$host" "$root/share/img.sparsebundle"
     cat > "$root/repo/instances/$host/vars.sh" <<VARS
 export MOLT_BACKUP_HOST="nas.test"
@@ -101,7 +101,7 @@ _strict() {
 @test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt" {
     # AT052 (ST0006 AC015).
     _backup_env
-    local host; host="$(hostname -s 2>/dev/null || hostname)"
+    local host; host="$(test_hostname)"
     echo 'export MOLT_BACKUP_NOTE="$MOLT_NOT_DECLARED"' >> "$BATS_TEST_TMPDIR/repo/instances/$host/vars.sh"
     run _backup_vars
     assert_success
