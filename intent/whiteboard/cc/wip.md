@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 14:00Z
+heartbeat_at: 2026-10-21 14:03Z
 status: active
-focus: "ST0006 WP02: 8bd28c2 with vc for review (critic-shell's fixes done); then the ATs green on main after the merge; WP06 after"
+focus: "ST0006 WP02: head 8bd28c2 under vc's review; holding for vc's verdict and hv's compact"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- ST0006 WP02: nothing more on st0006-wp02 until vc's verdict on 8bd28c2 (vc, 21 Oct); released by that verdict, or by hv. Next after it: AT028-AT040, AT047, AT059-AT067 green on main once merged, AT055 and AT057 re-noted, then WP06 (no ACs yet; ask vc).
 
 ## Watch-outs
 
