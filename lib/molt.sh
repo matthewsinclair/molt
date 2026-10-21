@@ -730,11 +730,12 @@ molt_path_misses() {
 # Homebrew has no trust gate, or its trust store names the formula or its tap.
 # Homebrew 7.0.10 skips an installed formula from an untrusted tap with only a
 # warning and exits 0, so one installed before the gate arrived stops being
-# upgraded while molt maintain reports success.
+# upgraded while molt maintain reports success. Returns 2 when the trust store
+# cannot be read, so a caller can say that rather than "does not trust".
 molt_brew_trusted() {
   local formula="$1" store
   brew trust --help &>/dev/null || return 0
-  store="$(brew trust --json=v1 2>/dev/null)" || return 1
+  store="$(brew trust --json=v1 2>/dev/null)" || return 2
   [[ "$store" == *"\"$formula\""* || "$store" == *"\"${formula%/*}\""* ]]
 }
 
@@ -752,9 +753,13 @@ molt_brew_faults() {
     echo "not installed; run: brew install $formula"
     return 1
   fi
-  if ! molt_brew_trusted "$formula"; then
-    echo "Homebrew does not trust $formula, so brew upgrade skips it; run: brew trust --formula $formula"
-  fi
+  local trusted=0
+  molt_brew_trusted "$formula" || trusted=$?
+  case "$trusted" in
+    0) ;;
+    2) echo "brew trust --json=v1 failed, so whether brew upgrade includes $formula is unknown" ;;
+    *) echo "Homebrew does not trust $formula, so brew upgrade skips it; run: brew trust --formula $formula" ;;
+  esac
   if [[ ! -x "$prefix/bin/$cmd" ]]; then
     echo "installed but not linked into $prefix/bin"
     return 1

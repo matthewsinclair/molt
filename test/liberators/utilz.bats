@@ -154,4 +154,10 @@ _utilz_checkout() {
     echo '{"taps":["matthewsinclair/utilz"],"formulae":[]}' > "$FAKE_PREFIX/trust.json"
     run utilz_check
     assert_success
+
+    # A trust store that cannot be read is reported as that, not passed as trusted.
+    touch "$FAKE_PREFIX/.store-unreadable"
+    run utilz_check
+    assert_failure
+    assert_output_contains "brew trust --json=v1 failed, so whether brew upgrade includes matthewsinclair/utilz/utilz is unknown"
 }

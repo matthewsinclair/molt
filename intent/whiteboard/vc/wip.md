@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-20 19:19Z
-status: paused
+heartbeat_at: 2026-10-21 03:58Z
+status: active
 focus: "EOD 20 Oct: ST0005 open for gyges only (WP03); attribution purged from Molt and Molt-matts on GitHub, the mirrors, rhadamanth and kovacs; gyges and the Pis to resync"
 claims: [ST0005]
 ---
@@ -22,7 +22,6 @@ _(none)_
 - **Confirm the Tactile install hint's URL live** (issue 0014). Plain DNS for extensions.gnome.org fails from here: on 16 Oct it resolved on neither rhadamanth nor kovacs, and timed out when rhadamanth asked 1.1.1.1 and 8.8.8.8 directly, though both answer github.com; Cloudflare's DNS over HTTPS answers it (54.221.220.94, TTL 60). From another network, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip. Here it needs `--resolve extensions.gnome.org:443:<address>`, which Claude Code's auto-mode classifier refused to vc, so it is hv's to run. (edited)
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
-- **Read or rerun critic-shell's second review of ST0005's follow-up, `092384c`.** It was still running at the 20 Oct close. The first review's findings were all answered there, and the suite is 231/231 on both bash and green in CI. Any finding goes to the owner, which is vc.
 
 ## Holds
 

@@ -157,7 +157,7 @@ TOML
 # FAKE_LOG, where the stub records every call that would change Homebrew. list
 # answers only for this formula, by its name or tap/name. The stub has no trust
 # gate until `touch "$FAKE_PREFIX/.gate"`; trust.json is its trust store and
-# starts empty.
+# starts empty, and `touch "$FAKE_PREFIX/.store-unreadable"` makes reading it fail.
 fake_brew_formula() {
     local name="$1" version="$2" cmd="$3" util
     shift 3
@@ -188,7 +188,7 @@ case "$1" in
   trust)
     case "$2" in
       --help)    [[ -e "$FAKE_PREFIX/.gate" ]] ;;
-      --json=v1) cat "$FAKE_PREFIX/trust.json" ;;
+      --json=v1) [[ ! -e "$FAKE_PREFIX/.store-unreadable" ]] && cat "$FAKE_PREFIX/trust.json" ;;
       --formula) echo "brew $*" >> "$FAKE_LOG"
                  printf '{"taps":[],"formulae":["%s"]}\n' "$3" > "$FAKE_PREFIX/trust.json" ;;
       *)         exit 1 ;;

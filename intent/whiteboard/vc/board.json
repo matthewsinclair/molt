@@ -5,8 +5,8 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-20T19:19:40.400Z",
-    "status": "paused",
+    "heartbeat_at": "2026-10-21T03:58:36.965Z",
+    "status": "active",
     "focus": "EOD 20 Oct: ST0005 open for gyges only (WP03); attribution purged from Molt and Molt-matts on GitHub, the mirrors, rhadamanth and kovacs; gyges and the Pis to resync",
     "claims": [
       "ST0005"
@@ -301,7 +301,8 @@
       "kind": "todo",
       "seq": 7,
       "text": "**Read or rerun critic-shell's second review of ST0005's follow-up, `092384c`.** It was still running at the 20 Oct close. The first review's findings were all answered there, and the suite is 231/231 on both bash and green in CI. Any finding goes to the owner, which is vc.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T04:01:30.015Z",
       "recorded_at": "2026-10-20T19:19:40.359Z"
     }
   ],
