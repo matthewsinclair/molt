@@ -3,9 +3,10 @@
   "number": 19,
   "slug": "ssh-alacritty-and-zsh-install-report-complete-ov",
   "title": "ssh, alacritty and zsh install report complete over a molt_install_config that failed",
-  "status": "open",
+  "status": "closed",
   "severity": "medium",
   "created": "2026-10-21",
+  "closed": "2026-10-21",
   "reporter": "Matthew Sinclair",
   "body": "Three install functions call `molt_install_config` without checking it, then finish on `molt_info`, so each returns 0 after a render that failed:\n\n- `liberators/ssh.sh:108`, `ssh_install`. It also carries on to append the fragments and re-stamps the sidecar (`ssh.sh:146-151`) from the inputs that failed, so `ssh_check` reports ok on every later run until vars.sh or a fragment changes again.\n- `liberators/alacritty.sh:93`, `alacritty_install`.\n- `liberators/zsh.sh:171`, `zsh_install` (the Starship config).\n\nEach prints \"Could not render ...\" and then \"Liberator complete\", and `molt resleeve` shows the liberator installed. `claude` is the only caller that checks.\n\nFix: `molt_install_config ... || return 1` at the three sites. In ssh that also keeps the fragment append and the re-stamp from running after a refused render.\n\ncritic-shell found these while reviewing ST0006 WP01 on 21 Oct. They predate WP01, and vc left them out of its branch by ruling. WP01's `molt_render` refuses a vars.sh that cannot be read, does not parse, or stops before its end when sourced, so a user can now cause the failure these callers swallow.\n"
 }
