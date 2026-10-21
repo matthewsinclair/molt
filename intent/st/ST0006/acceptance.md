@@ -405,7 +405,7 @@ _(no tests in this group)_
 
 ### Group AT014
 
-- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when the hook has no CLAUDE_PROJECT_DIR, and needs nothing on PATH". Red on main and on 41ef6b1. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
+- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when the hook has no CLAUDE_PROJECT_DIR or HOME, or a relative one, and needs nothing on PATH". Red on main and on 41ef6b1; its HOME and relative cases red on fb5bf7d (critic-shell's second pass). Green on branch st0006-wp01 at 4cfe31a under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT015
 
@@ -553,11 +553,11 @@ _(no tests in this group)_
 
 ### Group AT051
 
-- AT051 `test/templates.bats` -- covers AC015 -- status: green -- @test "molt_render renders past an unset variable in vars.sh, and leaves out what vars.sh prints". Red on 41ef6b1, where nounset stopped the render and the file's output was moved in as the rendered file. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2.
+- AT051 `test/templates.bats` -- covers AC015 -- status: green -- @test "molt_render renders past an unset variable in vars.sh, reads what it declare -x's, and leaves out what it prints". Red on 41ef6b1, where nounset stopped the render and the file's output was moved in as the rendered file; its declare -x case red on fb5bf7d, where the sourcing helper made it a local. Green on branch st0006-wp01 at 4cfe31a under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT052
 
-- AT052 `test/liberators/backup.bats` -- covers AC015 -- status: green -- @test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt". Red on 41ef6b1, which sourced vars.sh into molt's own shell. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2.
+- AT052 `test/liberators/backup.bats` -- covers AC015 -- status: green -- @test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt, and one molt cannot read stops backup, saying why". Red on 41ef6b1, which sourced vars.sh into molt's own shell. Green on branch st0006-wp01 at 4cfe31a under bash 5.3 and /bin/bash 3.2.
 
 ---
 
