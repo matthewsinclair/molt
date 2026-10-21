@@ -340,7 +340,9 @@ molt_instance_vars_fault() {
     echo "$(molt_tilde "$vars_file") could not be checked: no temporary file could be made"
     return 0
   fi
-  { cat "$vars_file"; printf '\n\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
+  # An EXIT trap the file set would speak after the answer, so the answer
+  # clears it first (issue 0025).
+  { cat "$vars_file"; printf '\n\nbuiltin trap - EXIT\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
   # The answer decides, not the status, which is the file's own. The $1 is the
   # fresh bash's own, so it stays in single quotes.
   # shellcheck disable=SC2016
@@ -396,6 +398,9 @@ molt_instance_var() {
       set +eu
       # shellcheck disable=SC1090
       . "$vars_file" >/dev/null
+      # An EXIT trap the file set would print after the closing line
+      # (issue 0025).
+      builtin trap - EXIT
     fi
     if printenv "$1" >/dev/null; then
       printf '%s' "${!1}"
@@ -451,6 +456,9 @@ molt_render_text() {
       set +eu
       # shellcheck disable=SC1090
       . "$vars_file" >/dev/null
+      # An EXIT trap the file set would print on stderr, which is not
+      # the subshell's to keep quiet (issue 0025).
+      builtin trap - EXIT
     fi
     mkdir -p "$(dirname "$out")" || exit
     local molt_vars

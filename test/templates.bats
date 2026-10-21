@@ -413,6 +413,45 @@ size ${MOLT_FONT_SIZE}'
     refute_output_contains "vars-trap-said"
 }
 
+# Issue 0025: an EXIT trap in vars.sh runs as the sourcing shell exits, after
+# the line each reader takes as the file's end, so a trap that printed made a
+# file sourced to its end read as one that stopped before it: on stdout to
+# molt_instance_var, on stderr to molt_instance_vars_fault's probe too, which
+# refused the render as well. Each reader clears the trap before its end line.
+_vars_with_trap() {
+    printf 'export MOLT_TEST_VAR=bar\n%s\n' "$1" > "$VARS"
+}
+
+_vars_read_whole() {
+    run molt_instance_vars_fault "$VARS"
+    assert_success
+    [ -z "$output" ]
+    run molt_instance_var MOLT_TEST_VAR
+    assert_success
+    [ "$output" = bar ]
+    run molt_render_text "$TMPL" "$BATS_TEST_TMPDIR/out"
+    assert_success
+    [ -z "$output" ]
+    [ "$(cat "$BATS_TEST_TMPDIR/out")" = "value = bar" ]
+}
+
+@test "a vars.sh whose EXIT trap prints, on stdout or stderr, is read to its end by every reader" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/trap.conf" 'value = ${MOLT_TEST_VAR}'
+    VARS="$repo/instances/$(test_hostname)/vars.sh"
+    TMPL="$repo/config/test/trap.conf.tmpl"
+    _vars_with_trap ''
+    _vars_read_whole
+    _vars_with_trap 'trap "echo bye" EXIT'
+    _vars_read_whole
+    _vars_with_trap 'trap "echo bye >&2" EXIT'
+    _vars_read_whole
+    _vars_with_trap 'trap ":" EXIT'
+    _vars_read_whole
+}
+
 # A backup is named for its second, and a second render in the same second took
 # the first one's name, and mv put the newer backup over the older with no word
 # (critic-shell, 21 Oct).
