@@ -73,6 +73,10 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 - AC015 molt_render fails loud and leaves the target as it was: a vars.sh the one reader refuses, or an envsubst that fails, writes nothing, backs nothing up and leaves no temp file; an unset name in a template renders rather than aborting the render; what vars.sh prints never reaches the rendered file; and a liberator reading vars.sh through the reader (backup) survives an unset name under nounset. -- satisfied: yes (computed)
 
+### Group AC016
+
+- AC016 A sleeve agent's AGENTS.md renders from three layers in order: the config repo's role-independent preamble config/agents/AGENTS.md.tmpl when it has one, the role's roles/<role>/AGENTS.md.tmpl, and the host overlay instances/<host>/agents/<role>.md when it has one; no paragraph common to every sleeve agent is written in a role template (Highlander). -- satisfied: no (computed)
+
 ### Group AT001
 
 _(no criteria in this group)_
@@ -340,6 +344,10 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC015
+
+_(no tests in this group)_
+
+### Group AC016
 
 _(no tests in this group)_
 
