@@ -168,27 +168,51 @@ _claude_settings_merge() {
 # published before the move would start the next Claude empty in the new dir,
 # and the move would then meet a dir that is no longer empty.
 
+# Why the path $2, named $1, cannot be written as it stands into the files that
+# publish it, or nothing when it can. They are env.sh, a plist and an
+# environment.d file, and env.sh is read back, so a path is refused rather than
+# rewritten: a copy tidied here would be compared with files that hold the
+# untidied one, and a path spelt with . or .. would get past the comparison
+# with ~/.claude. Refused: anything but a canonical absolute path, a character
+# any of those files reads as syntax, and trailing whitespace, which
+# environment.d strips. environment.d expands $ and backslash escapes, never %
+# specifiers, which belong to unit files.
+_claude_path_fault() {
+  local name="$1" path="$2"
+  case "$path" in
+    /*) ;;
+    *) echo "$name is not an absolute path: $path"; return ;;
+  esac
+  case "$path/" in
+    *//* | */./* | */../*)
+      echo "$name is not a canonical path, with no trailing slash, // or . or .. component: $path"
+      return ;;
+  esac
+  case "$path" in
+    *[\"\'\$\`\\\<\>\&]* | *$'\n'*)
+      echo "$name holds a character env.sh, a plist or environment.d would read as syntax: $path" ;;
+    *[[:space:]])
+      echo "$name ends in whitespace, which environment.d would strip: '$path'" ;;
+  esac
+}
+
 # Prints the config dir this sleeve declares, or nothing when it declares none.
-# Fails, printing why instead, when the value cannot be read or used. It is
-# written into env.sh, a plist and an environment.d file, so a character any of
-# them reads as syntax is refused rather than escaped.
+# Fails, printing why instead, when the value cannot be read or used: a path
+# _claude_path_fault refuses, or $HOME, ~/.claude or anything under it.
 _claude_declared_dir() {
-  local dir
-  if ! dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
-    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: the user config repo cannot be found"
+  local dir status=0 fault
+  dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)" || status=$?
+  case "$status" in
+    0) ;;
+    3) echo "MOLT_CLAUDE_CONFIG_DIR could not be read: the user config repo cannot be found"; return 1 ;;
+    *) echo "MOLT_CLAUDE_CONFIG_DIR could not be read: ${dir:-reading vars.sh failed with status $status}"; return 1 ;;
+  esac
+  [[ -n "$dir" ]] || return 0
+  fault="$(_claude_path_fault MOLT_CLAUDE_CONFIG_DIR "$dir")"
+  if [[ -n "$fault" ]]; then
+    echo "$fault"
     return 1
   fi
-  [[ -n "$dir" ]] || return 0
-  dir="${dir%/}"
-  case "$dir" in
-    /*) ;;
-    *) echo "MOLT_CLAUDE_CONFIG_DIR is not an absolute path: $dir"; return 1 ;;
-  esac
-  case "$dir" in
-    *[\"\'\$\`\\\<\>\&]* | *$'\n'*)
-      echo "MOLT_CLAUDE_CONFIG_DIR holds a character env.sh, a plist or environment.d would read as syntax: $dir"
-      return 1 ;;
-  esac
   case "$dir" in
     "$HOME" | "$HOME/.claude" | "$HOME/.claude/"*)
       echo "MOLT_CLAUDE_CONFIG_DIR must be a directory of its own, not $(molt_tilde "$dir")"
@@ -385,7 +409,8 @@ _claude_env_file() {
   echo "$HOME/.config/molt/env.sh"
 }
 
-# The config dir the env file last published, when there is one.
+# The config dir the env file last published, when there is one: the value of
+# the export line templates/claude/env.sh.tmpl writes, found only in that form.
 _claude_env_dir() {
   local env_file
   env_file="$(_claude_env_file)"

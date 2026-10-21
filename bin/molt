@@ -56,7 +56,7 @@ EOF
 cmd_status() {
   echo "${MOLT_NAME} v${MOLT_VERSION}"
   echo ""
-  echo "Sleeve: $(hostname -s 2>/dev/null || hostname)"
+  echo "Sleeve: $(molt_hostname)"
   echo "Platform: $(molt_platform)"
   echo "Distro: $(molt_distro)"
   echo "Arch: $(molt_arch)"

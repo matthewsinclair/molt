@@ -59,21 +59,31 @@ BACKUP_MAX_AGE_DAYS=3
 MOLT_SD_TILES="${MOLT_SD_TILES:-/Library/Application Support/SuperDuper4/tiles.json}"
 MOLT_SD_SCHEDULER_LOG="${MOLT_SD_SCHEDULER_LOG:-/Library/Logs/SuperDuper 4/scheduler.log}"
 
+# Sets the MOLT_BACKUP_* values this sleeve's vars.sh declares, and fails,
+# saying which, when one of the four it needs is not set. They are read through
+# molt_instance_var, in a subshell: sourced into molt's own shell, an unset name
+# in vars.sh ended molt under its nounset, and backup_check, whose stderr molt
+# discards, died without a word.
 _backup_vars() {
-  local repo hostname vars
-  repo="$(molt_find_user_repo)" || return 1
-  hostname="$(hostname -s 2>/dev/null || hostname)"
-  vars="$repo/instances/$hostname/vars.sh"
-  [[ -f "$vars" ]] || { molt_error "backup: no vars.sh for instance $hostname"; return 1; }
-  # shellcheck disable=SC1090
-  source "$vars"
-  local missing=()
-  local v
+  local vars v value status=0 missing=()
+  if ! vars="$(molt_instance_vars_file)"; then
+    molt_error "backup: the user config repo cannot be found"
+    return 1
+  fi
+  [[ -f "$vars" ]] || { molt_error "backup: no vars.sh for instance $(molt_hostname)"; return 1; }
+  for v in MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT MOLT_BACKUP_IMAGE MOLT_BACKUP_WINDOW; do
+    value="$(molt_instance_var "$v")" || status=$?
+    if [[ $status -ne 0 ]]; then
+      molt_error "backup: $v could not be read: ${value:-reading vars.sh failed with status $status}"
+      return 1
+    fi
+    [[ -z "$value" ]] || printf -v "$v" '%s' "$value"
+  done
   for v in MOLT_BACKUP_HOST MOLT_BACKUP_SHARE MOLT_BACKUP_MOUNT MOLT_BACKUP_IMAGE; do
     [[ -n "${!v:-}" ]] || missing+=("$v")
   done
   if [[ ${#missing[@]} -gt 0 ]]; then
-    molt_error "backup: vars.sh for $hostname is missing: ${missing[*]}"
+    molt_error "backup: vars.sh for $(molt_hostname) is missing: ${missing[*]}"
     return 1
   fi
 }

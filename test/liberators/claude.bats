@@ -408,7 +408,7 @@ JSON
     [ ! -e "$HOME/.config" ]
 }
 
-# , critic-shell, 21 Oct: after a move, declaring a new dir leaves the state
+# critic-shell, 21 Oct: after a move, declaring a new dir leaves the state
 # in the old one, and publishing the new, empty one would start Claude afresh.
 @test "a newly declared, empty config dir is not published while the variable names another dir that exists" {
     # AT026 (ST0006 AC011, AC004).
@@ -445,18 +445,83 @@ JSON
     [ ! -e "$HOME/.config/molt" ]
 }
 
-# Each value is written into env.sh, a plist and an environment.d file.
-@test "a declared config dir that is relative, holds a quote, or is ~/.claude itself is refused before anything moves" {
+# vc, 21 Oct: sourcing stops at a syntax error, at an exit, and at an error
+# under the file's own set -u, so each read as undeclared after that point, and
+# install then recreated ~/.claude on a sleeve whose state had moved.
+@test "a vars.sh that does not parse, or stops before its end when sourced, is refused, and a moved sleeve gets no ~/.claude back" {
+    # AT045 (ST0006 AC011).
+    setup_moved
+    run claude_install
+    assert_success
+    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    printf 'fi\nexport MOLT_CLAUDE_CONFIG_DIR=%q\n' "$CONFIG" > "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars does not parse (line 1: syntax error"
+    [ ! -e "$HOME/.claude" ]
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars does not parse"
+    printf 'set -u\nexport MOLT_FONT_SIZE="$MOLT_NOT_DECLARED"\nexport MOLT_CLAUDE_CONFIG_DIR=%q\n' "$CONFIG" > "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars stops before its end when sourced (line 2: MOLT_NOT_DECLARED: unbound variable)"
+    [ ! -e "$HOME/.claude" ]
+    printf '[ -n "$MOLT_ANYTHING" ] || exit 0\nexport MOLT_CLAUDE_CONFIG_DIR=%q\n' "$CONFIG" > "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars stops before its end when sourced"
+    [ ! -e "$HOME/.claude" ]
+    [ "$(cat "$CONFIG/projects/session.jsonl")" = "transcript" ]
+}
+
+# As root every file can be read, so this half has a test of its own to skip.
+@test "a vars.sh that cannot be read is refused, and a moved sleeve gets no ~/.claude back" {
+    # AT048 (ST0006 AC011).
+    setup_moved
+    run claude_install
+    assert_success
+    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    chmod 000 "$vars"
+    [ ! -r "$vars" ] || skip "this user can read a file whatever its mode"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars cannot be read"
+    [ ! -e "$HOME/.claude" ]
+    [ "$(cat "$CONFIG/projects/session.jsonl")" = "transcript" ]
+}
+
+# Each value is written as it stands into env.sh, a plist and an environment.d
+# file, and read back from env.sh (vc, 21 Oct: a trailing slash trimmed in the
+# reader alone matched none of them, and $() trimmed a trailing line break the
+# files kept).
+@test "a declared config dir that is relative, not canonical, holds a quote or a line break, ends in a space, or is ~/.claude itself is refused before anything moves" {
     # AT010 (ST0006 AC011).
     setup_declared
+    declare_config_dir "$HOME/.config/claude"$'\n'
+    run claude_install
+    assert_failure
+    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR could not be read: $TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh exports MOLT_CLAUDE_CONFIG_DIR with a line break in it"
     declare_config_dir "relative/claude"
     run claude_install
     assert_failure
     assert_output_contains "MOLT_CLAUDE_CONFIG_DIR is not an absolute path: relative/claude"
+    declare_config_dir "$HOME/.config/claude/"
+    run claude_install
+    assert_failure
+    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR is not a canonical path, with no trailing slash, // or . or .. component: $HOME/.config/claude/"
+    declare_config_dir "$HOME/.config/../.claude"
+    run claude_install
+    assert_failure
+    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR is not a canonical path, with no trailing slash, // or . or .. component: $HOME/.config/../.claude"
     declare_config_dir "$HOME/.config/cl\"aude"
     run claude_install
     assert_failure
     assert_output_contains "MOLT_CLAUDE_CONFIG_DIR holds a character env.sh, a plist or environment.d would read as syntax"
+    declare_config_dir "$HOME/.config/claude "
+    run claude_install
+    assert_failure
+    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR ends in whitespace, which environment.d would strip: '$HOME/.config/claude '"
     declare_config_dir "$HOME/.claude"
     run claude_install
     assert_failure
@@ -510,43 +575,45 @@ JSON
 
 # --- ST0006: the home guard ---
 
-@test "the home guard exits 2 with the agent-home message when cwd is \$HOME, and 0 anywhere else" {
+# Where the session was launched is CLAUDE_PROJECT_DIR, which stays put; the cwd
+# in the hook's input follows every cd (vc, 21 Oct), and is not what is tested.
+@test "the home guard exits 2 with the agent-home message for a session launched in \$HOME, wherever it has cd'd since, and 0 for one launched anywhere else" {
     # AT013 (ST0006 AC003).
     setup_moved
     run claude_install
     assert_success
     local guard="$HOME/.config/molt/claude-home-guard.sh"
     [ -x "$guard" ]
-    run "$guard" <<< "{\"cwd\": \"$HOME\", \"prompt\": \"hello\"}"
+    run env CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME/work\", \"prompt\": \"hello\"}"
     [ "$status" -eq 2 ]
     [ "$output" = "launch from an agent home: molt agent list" ]
-    run "$guard" <<< "{\"cwd\": \"$HOME/\", \"prompt\": \"a trailing slash is still home\"}"
+    run env CLAUDE_PROJECT_DIR="$HOME/" "$guard" <<< '{"prompt": "a trailing slash is still home"}'
     [ "$status" -eq 2 ]
     ln -s "$HOME" "$BATS_TEST_TMPDIR/home-link"
-    run "$guard" <<< "{\"cwd\": \"$BATS_TEST_TMPDIR/home-link\"}"
+    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/home-link" "$guard" < /dev/null
     [ "$status" -eq 2 ]
     mkdir -p "$BATS_TEST_TMPDIR/agt/kovacs-sysadm"
-    run "$guard" <<< "{\"cwd\": \"$BATS_TEST_TMPDIR/agt/kovacs-sysadm\", \"prompt\": \"hello\"}"
+    run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/agt/kovacs-sysadm" "$guard" <<< "{\"cwd\": \"$HOME\", \"prompt\": \"after a cd into \$HOME\"}"
     assert_success
     [ -z "$output" ]
 }
 
-# Exit 1 blocks nothing, and Claude Code shows what it printed.
-@test "the home guard exits 1, saying so, when jq is missing, or the input is not JSON or names no cwd" {
+# Exit 1 blocks nothing, and Claude Code shows what it printed. The guard needs
+# nothing on PATH: with none it still refuses $HOME.
+@test "the home guard exits 1, saying so, when the hook has no CLAUDE_PROJECT_DIR, and needs nothing on PATH" {
     # AT014 (ST0006 AC003).
     setup_moved
     run claude_install
     assert_success
     local guard="$HOME/.config/molt/claude-home-guard.sh"
-    run "$guard" <<< '{"prompt": "no cwd"}'
+    run env -u CLAUDE_PROJECT_DIR "$guard" <<< "{\"cwd\": \"$HOME\"}"
     [ "$status" -eq 1 ]
-    assert_output_contains "the hook input names no cwd"
-    run "$guard" <<< '{"cwd": '
+    [ "$output" = "claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked" ]
+    run env CLAUDE_PROJECT_DIR= "$guard" <<< "{\"cwd\": \"$HOME\"}"
     [ "$status" -eq 1 ]
-    assert_output_contains "the hook input is not JSON"
-    run env PATH=/nonexistent "$guard" <<< "{\"cwd\": \"$HOME\"}"
-    [ "$status" -eq 1 ]
-    assert_output_contains "jq is not on PATH"
+    assert_output_contains "the hook has no CLAUDE_PROJECT_DIR"
+    run env PATH=/nonexistent CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME\"}"
+    [ "$status" -eq 2 ]
 }
 
 @test "the hook merge adds the guard once, keeps every other key and hook as it was, and a second install writes nothing" {
