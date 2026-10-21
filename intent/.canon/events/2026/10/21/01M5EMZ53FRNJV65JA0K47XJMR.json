@@ -1,0 +1,15 @@
+{
+  "id": "01M5EMZ53FRNJV65JA0K47XJMR",
+  "ts": "2026-10-21T07:14:18.864Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0020"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "the hostname lookup is copied nine times across lib and liberators, and desktop.sh has drifted"
+  }
+}
