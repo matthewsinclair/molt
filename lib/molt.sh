@@ -462,7 +462,10 @@ molt_render_text() {
   fi
 }
 
-molt_render() {
+# Renders the template $1 into ${2}.molt-tmp, for molt_render_place to put in
+# place at $2: what molt_render does before placing, for a caller that adds to
+# the file between the two, as the ssh liberator does its config.d fragments.
+molt_render_tmp() {
   local template="$1"
   local target="$2"
 
@@ -482,7 +485,10 @@ molt_render() {
     molt_error "Could not render $template -> $target${why:+: $why}"
     return 1
   fi
-  molt_render_place "$template" "$target"
+}
+
+molt_render() {
+  molt_render_tmp "$1" "$2" && molt_render_place "$1" "$2"
 }
 
 # A path to move $1 aside to, named for this second, that nothing holds yet: a
@@ -613,7 +619,8 @@ molt_render_place() {
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
   local parent_perms
-  parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null || echo "755")"
+  parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null \
+    || stat -f '%Lp' "$(dirname "$target")" 2>/dev/null || echo "755")"
   if [[ "$parent_perms" == "700" ]]; then
     chmod 600 "$target" "${target}.molt-rendered"
   fi

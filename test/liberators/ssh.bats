@@ -48,9 +48,10 @@ _ssh_env() {
 
 # A repo with no ssh config is allowed, and ssh_check passes it, so the install
 # passes it too rather than failing on molt_install_config's "Config not found".
-@test "ssh_install passes a user repo with no ssh config, as ssh_check does" {
+@test "ssh_install passes a user repo with no ssh config and no config.d fragments, as ssh_check does" {
     require_command ssh "ssh_check needs ssh"
     _ssh_env
+    rm "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
 
     run ssh_install
     assert_success
@@ -105,7 +106,7 @@ _ssh_backups() {
     find "$HOME/.ssh" -name 'config.molt-backup.*' | wc -l | tr -d ' '
 }
 
-@test "a second ssh_install with nothing changed writes nothing and backs nothing up" {
+@test "a second ssh_install with nothing changed backs nothing up and leaves the file as it was" {
     require_command ssh "ssh_check needs ssh"
     _ssh_env
     printf 'Host *\n  ServerAliveInterval 60\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
@@ -113,7 +114,6 @@ _ssh_backups() {
     ssh_install >/dev/null
     printf 'Host *\n  ServerAliveInterval 60\n\n# --- molt config.d: gyges.conf ---\nHost gyges\n  HostName gyges.local\n\n# --- molt config.d: kovacs.conf ---\nHost kovacs\n  HostName kovacs.local\n' > "$SSH_ROOT/expected"
     cmp "$SSH_ROOT/expected" "$HOME/.ssh/config"
-    cp "$HOME/.ssh/config.molt-rendered" "$SSH_ROOT/sidecar.before"
 
     run ssh_install
     assert_success
@@ -121,6 +121,7 @@ _ssh_backups() {
     [ "$(_ssh_backups)" = 0 ]
     cmp "$SSH_ROOT/expected" "$HOME/.ssh/config"
     [ "$(stat -f '%Lp' "$HOME/.ssh/config" 2>/dev/null || stat -c '%a' "$HOME/.ssh/config")" = 600 ]
+    [ "$(stat -f '%Lp' "$HOME/.ssh/config.molt-rendered" 2>/dev/null || stat -c '%a' "$HOME/.ssh/config.molt-rendered")" = 600 ]
     run ssh_check
     assert_success
 }
@@ -149,7 +150,8 @@ _ssh_backups() {
     [ "$(_ssh_backups)" = 2 ]
     grep -qx '  HostName gyges.lan' "$HOME/.ssh/config"
     [ "$(grep -c 'molt config.d: gyges.conf' "$HOME/.ssh/config")" = 1 ]
-    ! grep -q 'gyges.local' "$HOME/.ssh/config"
+    run grep -q 'gyges.local' "$HOME/.ssh/config"
+    assert_failure
 
     run ssh_install
     assert_success
@@ -169,7 +171,8 @@ _ssh_backups() {
     assert_output_contains "Rendered file changed since last render, backing up: $HOME/.ssh/config -> $HOME/.ssh/config.molt-backup."
     [ "$(_ssh_backups)" = 1 ]
     grep -qx "Host by-hand" "$HOME"/.ssh/config.molt-backup.*
-    ! grep -q "Host by-hand" "$HOME/.ssh/config"
+    run grep -q "Host by-hand" "$HOME/.ssh/config"
+    assert_failure
 
     run ssh_install
     assert_success
@@ -194,4 +197,30 @@ _ssh_backups() {
     [ ! -L "$HOME/.ssh/config" ]
     cmp "$SSH_ROOT/config.before" "$HOME/.ssh/config"
     [ -z "$(find "$HOME/.ssh" -name 'config.molt-*')" ]
+}
+
+# Fragments had been appended to a ~/.ssh/config of fragments alone when the
+# repo had no ssh config; building the file from its template, they would be
+# dropped without a word. Check and install both say so instead.
+@test "ssh_check and ssh_install refuse config.d fragments when the user repo has no ssh config" {
+    require_command ssh "ssh_check needs ssh"
+    _ssh_env
+
+    run ssh_check
+    assert_failure
+    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; the user repo has no ssh config, so 1 fragment(s) were not applied"
+    run ssh_install
+    assert_failure
+    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; the user repo has no ssh config, so 1 fragment(s) were not applied"
+    refute_output_contains "Liberator complete"
+    [ ! -e "$HOME/.ssh/config" ]
+}
+
+@test "with no vars.sh, ssh_install warns as every render does" {
+    _ssh_env
+    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+
+    run ssh_install
+    assert_success
+    assert_output_contains "No vars.sh for instance $(test_hostname)"
 }

@@ -33,8 +33,10 @@ _ssh_fragments() {
   config_d="$user_repo/instances/$hostname/ssh/config.d"
   [[ -d "$config_d" ]] || return 0
   local f
+  # An if, not an &&: the loop's status is its last command's, and an
+  # unmatched glob or a last entry that is not a file would fail the pipeline.
   for f in "$config_d"/*.conf; do
-    [[ -f "$f" ]] && printf '%s\n' "$f"
+    if [[ -f "$f" ]]; then printf '%s\n' "$f"; fi
   done | sort
 }
 
@@ -61,12 +63,9 @@ _ssh_config_present() {
 # time, so a fragment lands once because the compare finds nothing to change,
 # not because its sentinel is already there.
 _ssh_render() {
-  local template="$1" target="$2" tmp="${2}.molt-tmp" why
+  local template="$1" target="$2" tmp="${2}.molt-tmp"
   shift 2
-  if ! why="$(molt_render_text "$template" "$tmp")"; then
-    molt_error "Could not render $template -> $target${why:+: $why}"
-    return 1
-  fi
+  molt_render_tmp "$template" "$target" || return 1
   local fragment content
   for fragment in "$@"; do
     # Read before the sentinel is written: a fragment that cannot be read
@@ -83,6 +82,22 @@ _ssh_render() {
     fi
   done
   molt_render_place "$template" "$target" ${1+"$@"}
+}
+
+# Why the config.d fragments, $1 of them, cannot be applied, or nothing when
+# they can: only a rendered config has a file of molt's own to put them in. A
+# fragment declared but not applied is a sleeve that is not as declared, so
+# check and install both ask here.
+_ssh_fragments_fault() {
+  local n="$1" user_repo
+  [[ "$n" -gt 0 ]] || return 0
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  [[ -n "$user_repo" && ! -f "$user_repo/config/ssh/config.tmpl" ]] || return 0
+  if [[ -f "$user_repo/config/ssh/config" ]]; then
+    echo "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so $n fragment(s) were not applied"
+  else
+    echo "ssh: config.d fragments need config/ssh/config.tmpl; the user repo has no ssh config, so $n fragment(s) were not applied"
+  fi
 }
 
 ssh_check() {
@@ -105,9 +120,17 @@ ssh_check() {
 
   # Read into an array rather than splitting a command substitution: a fragment
   # path can contain spaces, and word splitting would silently pass fragments.
-  local _ssh_frags=() _f
-  while IFS= read -r _f; do [[ -n "$_f" ]] && _ssh_frags+=("$_f"); done \
-    < <(_ssh_fragments)
+  local _ssh_frags=() _f _list _fault
+  if ! _list="$(_ssh_fragments)"; then
+    molt_info "ssh: this host gives no hostname, so its config.d fragments cannot be found"
+    return 1
+  fi
+  while IFS= read -r _f; do [[ -n "$_f" ]] && _ssh_frags+=("$_f"); done <<< "$_list"
+  _fault="$(_ssh_fragments_fault "${#_ssh_frags[@]}")"
+  if [[ -n "$_fault" ]]; then
+    molt_info "$_fault"
+    ok=1
+  fi
 
   if [[ -n "$user_repo" ]]; then
     if _ssh_config_present; then
@@ -152,29 +175,24 @@ ssh_install() {
   # Install config from user repo (template or static), when it has one
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  if _ssh_config_present; then
-    local hostname
-    if ! hostname="$(molt_hostname)"; then
-      molt_error "ssh: this host gives no hostname, so its config.d fragments cannot be found"
-      return 1
-    fi
-    local frags=() f
-    while IFS= read -r f; do [[ -n "$f" ]] && frags+=("$f"); done < <(_ssh_fragments)
-    local template="$user_repo/config/ssh/config.tmpl"
-    local target="$HOME/.ssh/config"
-    if [[ -f "$template" ]]; then
-      # A refused render stops the install here, with the config and its
-      # sidecar as they were, so ssh_check goes on calling it stale.
-      _ssh_render "$template" "$target" ${frags+"${frags[@]}"} || return 1
-    elif [[ ${#frags[@]} -gt 0 ]]; then
-      # A static config is linked, not rendered, so there is no file of molt's
-      # own to put the fragments in; a fragment declared but not applied is a
-      # sleeve that is not as declared.
-      molt_error "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so ${#frags[@]} fragment(s) were not applied"
-      return 1
-    else
-      molt_install_config "config/ssh/config" "$target" || return 1
-    fi
+  local list frags=() f fault
+  if ! list="$(_ssh_fragments)"; then
+    molt_error "ssh: this host gives no hostname, so its config.d fragments cannot be found"
+    return 1
+  fi
+  while IFS= read -r f; do [[ -n "$f" ]] && frags+=("$f"); done <<< "$list"
+  fault="$(_ssh_fragments_fault "${#frags[@]}")"
+  if [[ -n "$fault" ]]; then
+    molt_error "$fault"
+    return 1
+  fi
+  local template="$user_repo/config/ssh/config.tmpl"
+  if [[ -f "$template" ]]; then
+    # A refused render stops the install here, with the config and its
+    # sidecar as they were, so ssh_check goes on calling it stale.
+    _ssh_render "$template" "$HOME/.ssh/config" ${frags+"${frags[@]}"} || return 1
+  elif _ssh_config_present; then
+    molt_install_config "config/ssh/config" "$HOME/.ssh/config" || return 1
   fi
 
   # ssh refuses a config that others can write, so a chmod that fails is an
