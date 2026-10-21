@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 15:09Z
+heartbeat_at: 2026-10-21 18:05Z
 status: active
-focus: "21 Oct: 0028 merged (f4a1156); nothing queued until hv answers on WP06's floor and the ops/docs sandbox.credentials question; 0022's untracking held"
+focus: "21 Oct: Molt-matts agents-creds (2e13def) with vc; guide edit after its merge; 0022's untracking held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-_(none)_
+- ops/docs sandbox.credentials deny entries (hv's ruling): tested on rhadamanth, Molt-matts agents-creds at 2e13def with vc; after its merge, the guide's Fence and wall paragraph on main by pathspec
 
 ## TODO
 
