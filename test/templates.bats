@@ -170,6 +170,7 @@ create_test_template() {
 # The render goes to a temporary file first, so an envsubst that fails part way
 # through leaves the target as it was, and no temporary file behind.
 @test "molt_render leaves the target as it was, and no temporary file, when envsubst fails" {
+    # AT050 (ST0006 AC015).
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
     create_test_vars "$repo"
@@ -189,6 +190,7 @@ create_test_template() {
 # vars.sh is sourced as a profile is. Under molt's nounset an unset variable in
 # it stopped the render, and what it had printed was moved in as the file.
 @test "molt_render renders past an unset variable in vars.sh, and leaves out what vars.sh prints" {
+    # AT051 (ST0006 AC015).
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
     local vars_dir="$repo/instances/$(hostname -s 2>/dev/null || hostname)"

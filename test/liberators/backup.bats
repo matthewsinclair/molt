@@ -99,6 +99,7 @@ _strict() {
 # name in it ended molt under its nounset, and backup_check, whose stderr molt
 # discards, died without a word.
 @test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt" {
+    # AT052 (ST0006 AC015).
     _backup_env
     local host; host="$(hostname -s 2>/dev/null || hostname)"
     echo 'export MOLT_BACKUP_NOTE="$MOLT_NOT_DECLARED"' >> "$BATS_TEST_TMPDIR/repo/instances/$host/vars.sh"
