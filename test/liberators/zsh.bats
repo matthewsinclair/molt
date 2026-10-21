@@ -60,15 +60,20 @@ setup() {
     MOLT_USER_REPO_SEARCH_PATHS=("$root/repo")
     printf '#!/bin/sh\nexit 0\n' > "$root/bin/zsh"
     printf '#!/bin/sh\nexit 0\n' > "$root/bin/starship"
-    chmod +x "$root/bin/zsh" "$root/bin/starship"
+    # chsh writes the account database, which the fake HOME does not cover. It
+    # must never run, so this one only leaves a mark if it does.
+    printf '#!/bin/sh\ntouch "%s/chsh-ran"\nexit 1\n' "$root" > "$root/bin/chsh"
+    chmod +x "$root/bin/zsh" "$root/bin/starship" "$root/bin/chsh"
     export PATH="$root/bin:$PATH"
-    # Already the login shell, so chsh never runs.
+    # Already the login shell, so chsh is not called.
     _zsh_current_shell() { echo "$root/bin/zsh"; }
     molt_render() { molt_error "render refused: $1"; return 1; }
 
     run zsh_install
     assert_failure
+    assert_output_contains "render refused"
     refute_output_contains "Liberator complete"
+    [[ ! -e "$root/chsh-ran" ]]
 }
 
 # The wrapper reset the tab colour after ssh and returned the reset's status,

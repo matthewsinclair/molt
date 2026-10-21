@@ -38,6 +38,16 @@ _ssh_fragments() {
   done | sort
 }
 
+# Whether the user repo has an ssh config, as a template or a static file. A
+# repo without one is allowed, and the liberator then manages only the key, so
+# check and install ask this one test and agree on it.
+_ssh_config_present() {
+  local user_repo
+  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  [[ -n "$user_repo" ]] || return 1
+  [[ -f "$user_repo/config/ssh/config.tmpl" ]] || [[ -f "$user_repo/config/ssh/config" ]]
+}
+
 ssh_check() {
   local ok=0
 
@@ -63,7 +73,7 @@ ssh_check() {
     < <(_ssh_fragments)
 
   if [[ -n "$user_repo" ]]; then
-    if [[ -f "$user_repo/config/ssh/config.tmpl" ]] || [[ -f "$user_repo/config/ssh/config" ]]; then
+    if _ssh_config_present; then
       if [[ -L "$HOME/.ssh/config" ]]; then
         molt_info "ssh: ~/.ssh/config is a symlink (sshd requires regular files)"
         ok=1
@@ -102,13 +112,15 @@ ssh_install() {
     molt_info "SSH key found: $existing_key"
   fi
 
-  # Install config from user repo (template or static)
+  # Install config from user repo (template or static), when it has one
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  # A refused render stops the install here. The append and the re-stamp below
-  # would otherwise record the inputs that failed as installed, and ssh_check
-  # would pass on every later run.
-  molt_install_config "config/ssh/config" "$HOME/.ssh/config" || return 1
+  if _ssh_config_present; then
+    # A refused render stops the install here. The append and the re-stamp
+    # below would otherwise record the inputs that failed as installed, and
+    # ssh_check would pass on every later run.
+    molt_install_config "config/ssh/config" "$HOME/.ssh/config" || return 1
+  fi
 
   # THE RENDER AND THE APPEND MUST STAY IN THIS FUNCTION, IN THIS ORDER.
   # molt_render preserves only the region ABOVE @@MOLT:BEGIN@@; fragments are

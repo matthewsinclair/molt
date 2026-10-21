@@ -102,6 +102,7 @@ _alac_template() {
 
     run alacritty_install
     assert_failure
+    assert_output_contains "render refused"
     refute_output_contains "Liberator complete"
 }
 
