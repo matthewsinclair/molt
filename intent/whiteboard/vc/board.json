@@ -354,9 +354,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 11,
-      "text": "Follow-up issues from cc's WP02 review (hv, 21 Oct: sort issues out as we go): cc checks and files (a) ssh config.d render-then-append backs up every render? (b) a vars.sh EXIT trap that echoes makes molt_instance_var say 'stops before its end'. Then vc queues the fixes (dc if cc is busy).",
+      "text": "Issues from cc's WP02 review (hv, 21 Oct: sort issues out as we go): 0024 medium (ssh_install backs ~/.ssh/config up on every install when a config.d fragment exists: compare runs before the append) and 0025 low (a vars.sh EXIT trap that prints reads as 'stops before its end' in molt_instance_var and the fault probe). cc queued on both, 0024 first, branches issue-0024 and issue-0025; vc reviews and merges.",
       "state": "live",
-      "recorded_at": "2026-10-21T14:20:47.047Z"
+      "recorded_at": "2026-10-21T14:20:47.047Z",
+      "edited_at": "2026-10-21T14:24:22.316Z"
     }
   ],
   "messages": [
