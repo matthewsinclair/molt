@@ -815,8 +815,8 @@ molt_font_available() {
 }
 
 molt_install_config() {
-  local source="$1"    # relative path: "config/ssh/config"
-  local target="$2"    # absolute path: "$HOME/.ssh/config"
+  local source="$1"    # relative path: "config/starship/starship.toml"
+  local target="$2"    # absolute path: "$HOME/.config/starship.toml"
 
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1

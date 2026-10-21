@@ -18,7 +18,8 @@ _ssh_find_key() {
   return 1
 }
 
-# The instance config.d fragments, as a sorted list (empty if none).
+# The instance config.d fragments in the user repo $1, as a sorted list (empty
+# if none, or there is no repo).
 #
 # These are inputs to the rendered ~/.ssh/config, so they belong in the digest.
 # Adding a fragment changes neither config.tmpl nor vars.sh, so without this
@@ -26,8 +27,7 @@ _ssh_find_key() {
 # lands -- which is what happened on gyges. Editing one has the same shape and
 # is the six-month drift seen on rhadamanth.
 _ssh_fragments() {
-  local user_repo hostname config_d
-  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
+  local user_repo="$1" hostname config_d
   [[ -n "$user_repo" ]] || return 0
   hostname="$(molt_hostname)" || return 1
   config_d="$user_repo/instances/$hostname/ssh/config.d"
@@ -100,6 +100,23 @@ _ssh_config_fault() {
   return 0
 }
 
+# What check, install and verify each read before they look at ~/.ssh/config,
+# read here once for all three: _SSH_FRAGS, this host's config.d fragments in
+# sorted order, and _SSH_FAULT, why the ssh config of the user repo $1 cannot
+# be installed, or empty when it can. File-scoped rather than printed: a $()
+# would keep the array in its subshell, and bash 3.2 has no nameref.
+_ssh_inputs() {
+  local user_repo="$1" list f
+  _SSH_FRAGS=()
+  _SSH_FAULT=""
+  if ! list="$(_ssh_fragments "$user_repo")"; then
+    _SSH_FAULT="ssh: this host gives no hostname, so its config.d fragments cannot be found"
+    return 0
+  fi
+  while IFS= read -r f; do [[ -n "$f" ]] && _SSH_FRAGS+=("$f"); done <<< "$list"
+  _SSH_FAULT="$(_ssh_config_fault "$user_repo" "${#_SSH_FRAGS[@]}")"
+}
+
 ssh_check() {
   local ok=0
 
@@ -118,17 +135,9 @@ ssh_check() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
 
-  # Read into an array rather than splitting a command substitution: a fragment
-  # path can contain spaces, and word splitting would silently pass fragments.
-  local _ssh_frags=() _f _list _fault
-  if ! _list="$(_ssh_fragments)"; then
-    molt_info "ssh: this host gives no hostname, so its config.d fragments cannot be found"
-    return 1
-  fi
-  while IFS= read -r _f; do [[ -n "$_f" ]] && _ssh_frags+=("$_f"); done <<< "$_list"
-  _fault="$(_ssh_config_fault "$user_repo" "${#_ssh_frags[@]}")"
-  if [[ -n "$_fault" ]]; then
-    molt_info "$_fault"
+  _ssh_inputs "$user_repo"
+  if [[ -n "$_SSH_FAULT" ]]; then
+    molt_info "$_SSH_FAULT"
     ok=1
   fi
 
@@ -138,7 +147,7 @@ ssh_check() {
         molt_info "ssh: ~/.ssh/config is a symlink (sshd requires regular files)"
         ok=1
       elif molt_config_stale "config/ssh/config" "$HOME/.ssh/config" \
-             ${_ssh_frags+"${_ssh_frags[@]}"}; then
+             ${_SSH_FRAGS+"${_SSH_FRAGS[@]}"}; then
         molt_info "ssh: ~/.ssh/config differs from its template, instance vars or config.d fragments — re-rendering"
         ok=1
       elif [[ ! -f "$HOME/.ssh/config.molt-rendered" ]]; then
@@ -175,22 +184,16 @@ ssh_install() {
   # Render the config from the user repo's template, when it has one
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  local list frags=() f fault
-  if ! list="$(_ssh_fragments)"; then
-    molt_error "ssh: this host gives no hostname, so its config.d fragments cannot be found"
-    return 1
-  fi
-  while IFS= read -r f; do [[ -n "$f" ]] && frags+=("$f"); done <<< "$list"
-  fault="$(_ssh_config_fault "$user_repo" "${#frags[@]}")"
-  if [[ -n "$fault" ]]; then
-    molt_error "$fault"
+  _ssh_inputs "$user_repo"
+  if [[ -n "$_SSH_FAULT" ]]; then
+    molt_error "$_SSH_FAULT"
     return 1
   fi
   local template="$user_repo/config/ssh/config.tmpl"
   if [[ -f "$template" ]]; then
     # A refused render stops the install here, with the config and its
     # sidecar as they were, so ssh_check goes on calling it stale.
-    _ssh_render "$template" "$HOME/.ssh/config" ${frags+"${frags[@]}"} || return 1
+    _ssh_render "$template" "$HOME/.ssh/config" ${_SSH_FRAGS+"${_SSH_FRAGS[@]}"} || return 1
   fi
 
   # ssh refuses a config that others can write, so a chmod that fails is an
@@ -211,16 +214,11 @@ ssh_verify() {
     errors=1
   fi
 
-  local user_repo list frags=() f fault
+  local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
-  if ! list="$(_ssh_fragments)"; then
-    molt_error "VERIFY FAIL: ssh: this host gives no hostname, so its config.d fragments cannot be found"
-    errors=1
-  fi
-  while IFS= read -r f; do [[ -n "$f" ]] && frags+=("$f"); done <<< "$list"
-  fault="$(_ssh_config_fault "$user_repo" "${#frags[@]}")"
-  if [[ -n "$fault" ]]; then
-    molt_error "VERIFY FAIL: $fault"
+  _ssh_inputs "$user_repo"
+  if [[ -n "$_SSH_FAULT" ]]; then
+    molt_error "VERIFY FAIL: $_SSH_FAULT"
     errors=1
   fi
 
@@ -234,7 +232,9 @@ ssh_verify() {
   elif [[ -f "$HOME/.ssh/config" ]]; then
     # shellcheck disable=SC2088
     molt_warn "~/.ssh/config exists but is not molt-managed"
-  else
+  elif [[ -f "$user_repo/config/ssh/config.tmpl" ]]; then
+    # A repo with no ssh config leaves ~/.ssh/config alone, as check and
+    # install do.
     molt_error "VERIFY FAIL: ~/.ssh/config not found"
     errors=1
   fi
