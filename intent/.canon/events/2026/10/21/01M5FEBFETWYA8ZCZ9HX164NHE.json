@@ -1,0 +1,16 @@
+{
+  "id": "01M5FEBFETWYA8ZCZ9HX164NHE",
+  "ts": "2026-10-21T14:37:57.082Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 11,
+    "text": "Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium (ssh_install backs ~/.ssh/config up on every install when a config.d fragment exists) and 0025 low (a vars.sh EXIT trap that prints reads as 'stops before its end'): cc queued, 0024 first, branches issue-0024 and issue-0025. 0026 low (doctor prefixes a failing liberator's check lines with its name though they carry molt's own Zen: <lib>: prefix): dc after WP05, branch issue-0026. vc reviews and merges each."
+  }
+}
