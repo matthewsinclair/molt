@@ -59,6 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `web` liberator test (`test/liberators/web.bats`)
 - `test/liberators/backup.bats`: the `backup` liberator's first tests (31). Fixtures stand in for SuperDuper's state through `MOLT_SD_TILES` and `MOLT_SD_SCHEDULER_LOG`, and the errexit arms run in a fresh `bash` under `set -euo pipefail`, where a failing assignment would abort
 
+- An `npm` liberator keeps npm's cache out of `$HOME`: it renders `~/.npmrc` from `templates/npm/npmrc.tmpl`, naming `${XDG_CACHE_HOME:-$HOME/.cache}/npm` as the cache, so npx, which the status line runs at every refresh, no longer fills `~/.npm` on every sleeve. Lines of the user's above the marker are kept, those of an `~/.npmrc` molt has not rendered among them, the file is mode 600, and verify asks npm which cache it reads. A sleeve with no npm passes with nothing to configure. Nothing removes `~/.npm`: check names it as the old cache, left for the user (issue 0031)
+
 ### Changed
 
 - `molt_render` refuses a `vars.sh` that cannot be read, does not parse or stops before its end when sourced, and a render that fails or never ran, and leaves the target as it was. It had rendered what the file exported before a syntax error, or nothing from a file it could not read, and moved a failed render into place; a `vars.sh` that exited as it was sourced left the target backed up with nothing in its place. It is sourced as a profile is, with nounset off and its output discarded: under molt's nounset an unset variable in it had stopped the render, and whatever the file had printed was moved in as the rendered file (ST0006)

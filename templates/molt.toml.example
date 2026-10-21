@@ -72,6 +72,11 @@ os = ["linux", "macos"]
 depends = ["zsh"]
 
 [[liberator]]
+name = "npm"
+enabled = true
+os = ["linux", "macos"]
+
+[[liberator]]
 name = "ssh"
 enabled = true
 os = ["linux", "macos"]

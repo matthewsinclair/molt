@@ -203,6 +203,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | pplr           | Pplr framework config and linking               | linux, macos |
 | web            | Web browser config and linking                  | linux, macos |
 | claude         | Claude Code config, and its state out of $HOME  | linux, macos |
+| npm            | ~/.npmrc, with npm's cache under XDG            | linux, macos |
 | agents         | A home for each sleeve agent, from its role     | linux, macos |
 
 ### molt.toml
@@ -308,6 +309,7 @@ molt/
     tiling.sh              # Tactile grid tiling
     vscode.sh              # VS Code
     dev-tools.sh           # CLI tools + mise
+    npm.sh                 # npm cache under XDG
     ssh.sh                 # SSH
     local-bin.sh           # ~/bin setup
     utilz.sh               # Utilz framework

@@ -72,6 +72,11 @@ os = ["linux", "macos"]
 depends = ["zsh"]
 
 [[liberator]]
+name = "npm"
+enabled = true
+os = ["linux", "macos"]
+
+[[liberator]]
 name = "brew"
 enabled = false
 os = ["macos"]
