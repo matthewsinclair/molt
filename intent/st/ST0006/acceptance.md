@@ -63,7 +63,11 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC013
 
-- AC013 (non-test) docs/blog/bl0001-so-you-want-to-run-a-local-agent.md holds a precis, an audience statement, the structure following hv's nine-point arc, and bullets per section; it is notes for hv to write from, not the piece -- satisfied: no
+- AC013 (non-test) docs/blog/bl0001-so-you-want-to-run-a-local-agent.md holds a precis, an audience statement, the structure following hv's nine-point arc, and bullets per section; it is notes for hv to write from, not the piece -- evidence: docs/blog/bl0001-so-you-want-to-run-a-local-agent.md at 159d205: precis, audience, nine sections on hv's arc, three to nine tagged bullets each, Molt: marking where the example begins; reviewed by vc 21 Oct -- satisfied: yes
+
+### Group AC014
+
+- AC014 The home-launch guard refuses a prompt whose cwd lies under MOLT_AGT_DIR without being an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a cwd that is exactly an agent home passes, as does any other directory but $HOME. Project settings load from the cwd's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence. -- satisfied: no (computed)
 
 ### Group AT001
 
@@ -304,6 +308,10 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC013
+
+_(no tests in this group)_
+
+### Group AC014
 
 _(no tests in this group)_
 
