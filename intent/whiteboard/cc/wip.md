@@ -3,7 +3,7 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 09:36Z
+heartbeat_at: 2026-10-21 13:19Z
 status: active
 focus: "ST0006 WP02: critic-shell's fixes (todos 3 to 5) designed, not started in code; st0006-wp02 at b897a23; on hold for hv's travel"
 claims: [ST0006/01, ST0006/02]
@@ -23,7 +23,7 @@ claims: [ST0006/01, ST0006/02]
 
 ## Holds
 
-- ST0006 WP02's fixes (todos 3 to 5), for hv's travel and the move: released when hv or vc says work resumes. st0006-wp02 stays at b897a23 until then.
+_(none)_
 
 ## Watch-outs
 

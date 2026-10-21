@@ -5,7 +5,7 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T09:36:58.951Z",
+    "heartbeat_at": "2026-10-21T13:19:06.893Z",
     "status": "active",
     "focus": "ST0006 WP02: critic-shell's fixes (todos 3 to 5) designed, not started in code; st0006-wp02 at b897a23; on hold for hv's travel",
     "claims": [
@@ -98,7 +98,8 @@
       "kind": "hold",
       "seq": 1,
       "text": "ST0006 WP02's fixes (todos 3 to 5), for hv's travel and the move: released when hv or vc says work resumes. st0006-wp02 stays at b897a23 until then.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T13:20:22.428Z",
       "recorded_at": "2026-10-21T09:36:53.279Z"
     }
   ],

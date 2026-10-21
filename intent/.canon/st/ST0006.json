@@ -820,6 +820,68 @@
       ],
       "status": "to-write",
       "note": "@test \"with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last\". To-write until the WP02 merge brings agents.bats; red on 6caffe8."
+    },
+    {
+      "id": "AT062",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC014"
+      ],
+      "status": "to-write",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+    },
+    {
+      "id": "AT063",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005",
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+    },
+    {
+      "id": "AT064",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC016"
+      ],
+      "status": "to-write",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+    },
+    {
+      "id": "AT065",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC014"
+      ],
+      "status": "to-write",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+    },
+    {
+      "id": "AT066",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC016"
+      ],
+      "status": "to-write",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
+    },
+    {
+      "id": "AT067",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005",
+        "AC016"
+      ],
+      "status": "to-write",
+      "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet"
     }
   ]
 }

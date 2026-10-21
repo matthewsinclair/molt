@@ -321,6 +321,30 @@ _(no criteria in this group)_
 
 _(no criteria in this group)_
 
+### Group AT062
+
+_(no criteria in this group)_
+
+### Group AT063
+
+_(no criteria in this group)_
+
+### Group AT064
+
+_(no criteria in this group)_
+
+### Group AT065
+
+_(no criteria in this group)_
+
+### Group AT066
+
+_(no criteria in this group)_
+
+### Group AT067
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -630,6 +654,30 @@ _(no tests in this group)_
 ### Group AT061
 
 - AT061 `test/liberators/agents.bats` -- covers AC016 -- status: to-write -- @test "with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last". To-write until the WP02 merge brings agents.bats; red on 6caffe8.
+
+### Group AT062
+
+- AT062 `test/liberators/agents.bats` -- covers AC014 -- status: to-write -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet
+
+### Group AT063
+
+- AT063 `test/liberators/agents.bats` -- covers AC005, AC006 -- status: to-write -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet
+
+### Group AT064
+
+- AT064 `test/liberators/agents.bats` -- covers AC016 -- status: to-write -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet
+
+### Group AT065
+
+- AT065 `test/liberators/claude.bats` -- covers AC014 -- status: to-write -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet
+
+### Group AT066
+
+- AT066 `test/liberators/agents.bats` -- covers AC016 -- status: to-write -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet
+
+### Group AT067
+
+- AT067 `test/liberators/agents.bats` -- covers AC005, AC016 -- status: to-write -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet
 
 ---
 
