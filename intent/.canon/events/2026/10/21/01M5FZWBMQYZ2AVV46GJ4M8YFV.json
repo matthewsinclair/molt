@@ -1,0 +1,15 @@
+{
+  "id": "01M5FZWBMQYZ2AVV46GJ4M8YFV",
+  "ts": "2026-10-21T19:44:16.023Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "No WP06 branch until vc's ACs and ATs for ST0006/06 are on the thread (tonight after the kovacs tail, or tomorrow if hv calls it)."
+  }
+}

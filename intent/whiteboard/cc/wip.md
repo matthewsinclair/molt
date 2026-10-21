@@ -3,25 +3,25 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 18:50Z
+heartbeat_at: 2026-10-21 20:08Z
 status: active
-focus: "Idle: 0024, 0025, 0027 merged; holding for hv to name WP06's floor"
-claims: []
+focus: "WP06 at 7bd3038 on st0006-wp06; left: both-bash suite, mutations, critic, hand-over"
+claims: [ST0006/06]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-_(none)_
+- WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: full suite under both bashes, mutation pass, critic-shell, hand-over to vc, then dc's floor.json lands. Flag for hv: rhadamanth and gyges also declare an enabled sysadm agent, so the floor lands there too, binding every session on them.
 
 ## TODO
 
-- WP06 managed deny floor (hv 21 Oct: credentials only, sysadm sleeves only). vc's design: contents in Molt-matts config/agents/roles/sysadm/floor.json; a put/remove helper pair in lib/molt.sh (user tmp, then sudo install -m 644; tiling.sh shape, FAKE_SUDO_STATUS in tests); the agents liberator owns it, renders molt-sysadm.json to managed-settings.d with a root-owned 644 sidecar beside it, removes only a drop-in whose sidecar molt wrote; molt_claude_managed_dir comment changes; AT: the two rules tagged managed in molt agent config, absent without the floor; doctor check 14 both ways; guide notes the sudo prompt. (edited)
+_(none)_
 
 ## Holds
 
-- No WP06 branch until vc's ACs and ATs for ST0006/06 are on the thread (tonight after the kovacs tail, or tomorrow if hv calls it).
+_(none)_
 
 ## Watch-outs
 
