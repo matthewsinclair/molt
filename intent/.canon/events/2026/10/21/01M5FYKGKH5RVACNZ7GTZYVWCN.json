@@ -1,0 +1,15 @@
+{
+  "id": "01M5FYKGKH5RVACNZ7GTZYVWCN",
+  "ts": "2026-10-21T19:21:57.617Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ISSUE:0031 Molt-matts npm-liberator (9465369, worktree ~/Devel/cfg/Molt-matts-wt/npm-liberator) and guide d377d81 on main wait on vc's merge order: cc's issue-0031 into Molt with CI green first. Released when vc has merged npm-liberator; then remove that worktree and branch."
+  }
+}
