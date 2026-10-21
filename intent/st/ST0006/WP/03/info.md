@@ -2,14 +2,14 @@
 wp_id: WP-03
 title: Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs
 scope: S
-status: Not Started
+status: Done
 ---
 
 # WP-03: Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs
 
 ## Objective
 
-_(not yet written)_
+Define the three sleeve-agent roles in Molt-matts, `sysadm`, `ops` and `docs`, each as a contract (`AGENTS.md.tmpl`) and a Claude Code profile (`settings.json.tmpl`) under `config/agents/roles/<role>/`, with a role-independent preamble ahead of every contract and a per-host overlay beside each instance, and declare the `[[agent]]` entries for rhadamanth, gyges and kovacs so the agents liberator renders `<host>-<role>` homes from them.
 
 Owners: molt-dc for both halves, the role contracts and the permission profiles (vc, 21 Oct); in Molt-matts (`~/Devel/cfg/Molt-matts`), items 4 and 5 on main, items 1 to 3 on branch st0006-wp03, re-checked against the merged WP02 before review. molt-vc reviews and pushes.
 
