@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 19:04Z
+heartbeat_at: 2026-10-21 19:19Z
 status: active
-focus: "21 Oct: 0030 ready at b45b24b (branch issue-0030) for vc; 0022's untracking held"
-claims: [ISSUE:0022, ISSUE:0030]
+focus: "21 Oct: 0031 parts ready for vc (Molt-matts npm-liberator 9465369, Molt guide d377d81); 0022's untracking held"
+claims: [ISSUE:0022]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ISSUE:0030 home guard refuses a launch that missed CLAUDE_CONFIG_DIR: worktree issue-0030 off 9fe9bc2
+_(none)_
 
 ## TODO
 
