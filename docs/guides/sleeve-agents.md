@@ -264,7 +264,7 @@ The GUI file takes effect at the next login, because Molt does not call `launchc
 
 ### After the move
 
-Start each agent from its home, as [Starting an agent](#starting-an-agent) says. The native installer's own paths stay where they are and are not clutter: `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`. `CLAUDE_CONFIG_DIR` does not move them. Leftovers from an npm-era install, `~/.cache/claude-cli-nodejs` and `~/.npm`, are not Claude Code's state either; the move leaves them, and removing them is a separate step.
+Start each agent from its home, as [Starting an agent](#starting-an-agent) says. The native installer's own paths stay where they are and are not clutter: `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`. `CLAUDE_CONFIG_DIR` does not move them. Leftovers from an npm-era install, `~/.cache/claude-cli-nodejs` and `~/.npm`, are not Claude Code's state either; the move leaves them, and removing them is a separate step. npm's own cache lives in `~/.cache/npm`, under `XDG_CACHE_HOME` where that is set, through the `~/.npmrc` the npm liberator renders, because the status line runs through `npx`, which would otherwise write `~/.npm` again at every refresh, so once `~/.npmrc` names the new cache, `~/.npm` can be removed for good.
 
 ### A Claude started in $HOME, below a home, or without the config dir, is refused
 
