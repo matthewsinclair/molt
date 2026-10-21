@@ -61,6 +61,10 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 - AC012 When the user repo has config/claude/CLAUDE.md and AGENTS.md, the claude liberator links them into the config dir, backing up a regular file found there; check reports the link pending and doctor reports it broken or missing -- satisfied: yes (computed)
 
+### Group AC013
+
+- AC013 (non-test) docs/blog/bl0001-so-you-want-to-run-a-local-agent.md holds a precis, an audience statement, the structure following hv's nine-point arc, and bullets per section; it is notes for hv to write from, not the piece -- satisfied: no
+
 ### Group AT001
 
 _(no criteria in this group)_
@@ -216,6 +220,10 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC012
+
+_(no tests in this group)_
+
+### Group AC013
 
 _(no tests in this group)_
 

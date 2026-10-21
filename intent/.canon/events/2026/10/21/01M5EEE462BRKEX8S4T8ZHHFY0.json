@@ -1,0 +1,15 @@
+{
+  "id": "01M5EEE462BRKEX8S4T8ZHHFY0",
+  "ts": "2026-10-21T05:20:09.410Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.register",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "name": "molt-ac",
+    "role": "ac"
+  }
+}
