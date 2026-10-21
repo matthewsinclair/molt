@@ -173,6 +173,74 @@ _(no criteria in this group)_
 
 _(no criteria in this group)_
 
+### Group AT028
+
+_(no criteria in this group)_
+
+### Group AT029
+
+_(no criteria in this group)_
+
+### Group AT030
+
+_(no criteria in this group)_
+
+### Group AT031
+
+_(no criteria in this group)_
+
+### Group AT032
+
+_(no criteria in this group)_
+
+### Group AT033
+
+_(no criteria in this group)_
+
+### Group AT034
+
+_(no criteria in this group)_
+
+### Group AT035
+
+_(no criteria in this group)_
+
+### Group AT036
+
+_(no criteria in this group)_
+
+### Group AT037
+
+_(no criteria in this group)_
+
+### Group AT038
+
+_(no criteria in this group)_
+
+### Group AT039
+
+_(no criteria in this group)_
+
+### Group AT040
+
+_(no criteria in this group)_
+
+### Group AT041
+
+_(no criteria in this group)_
+
+### Group AT042
+
+_(no criteria in this group)_
+
+### Group AT043
+
+_(no criteria in this group)_
+
+### Group AT044
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -334,6 +402,74 @@ _(no tests in this group)_
 ### Group AT027
 
 - AT027 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a vars.sh ending in a false test, or a MOLT_CLAUDE_CONFIG_DIR only inherited, leaves a sleeve undeclared". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT028
+
+- AT028 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT029
+
+- AT029 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT030
+
+- AT030 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a changed role template makes the home stale, and install renders it again". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT031
+
+- AT031 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT032
+
+- AT032 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a role the user repo does not define is a fault naming the role and where it was looked for". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT033
+
+- AT033 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "an agent that is not enabled is not rendered". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT034
+
+- AT034 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a home renders while Claude Code's state is still in $HOME, waiting on nothing the claude liberator does". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT035
+
+- AT035 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a settings template that does not render to JSON fails the install and leaves the file reading stale". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT036
+
+- AT036 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT037
+
+- AT037 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "the permissions in effect are every rule from every layer, deny first, each tagged with its layer". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT038
+
+- AT038 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT039
+
+- AT039 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent config fails on an undeclared name, listing the declared ones". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT040
+
+- AT040 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent config fails, naming the file, when a settings layer is not JSON". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+
+### Group AT041
+
+- AT041 `test/manifest.bats` -- covers AC005 -- status: green -- @test "[[agent]] entries are read by the one table parser, keyed on role, and kept apart from [[liberator]] entries". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT042
+
+- AT042 `test/manifest.bats` -- covers AC005 -- status: green -- @test "molt_agent_manifest_faults names an entry with no role, a role declared twice, a written name and a harness other than claude". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT043
+
+- AT043 `test/molt.bats` -- covers AC006 -- status: green -- @test "molt help lists the agent command, and molt agent alone prints its usage and fails". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT044
+
+- AT044 `test/molt.bats` -- covers AC005 -- status: green -- @test "molt_config_digest counts an absent extra input as none, and its arrival as a change". Red on WP01's head (st0006-wp01 820827c): an absent extra input failed the digest under pipefail (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2.
 
 ---
 

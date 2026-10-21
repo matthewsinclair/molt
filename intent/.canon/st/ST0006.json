@@ -68,7 +68,7 @@
       "seq": 7,
       "title": "Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)",
       "scope": "S",
-      "status": "not-started",
+      "status": "wip",
       "objective": "",
       "body": "Owner: molt-ac. Branch `st0006-wp07` in a git worktree at `~/Devel/prj/Molt-wt/st0006-wp07`; molt-vc reviews and merges. hv, 21 Oct: \"I don't want it to write the piece, I want to do that, but what I want is a precis/brief, a structure, and then some bullet points per section.\"\n\nDeliverable: `docs/blog/bl0001-so-you-want-to-run-a-local-agent.md`, the working notes for a blog post hv will write. Title to be worked out (\"Organising a Local Agent\" is one candidate). It holds: a precis (what the piece argues, in a paragraph), the audience statement, the structure as sections, and three to eight bullets per section: the points to make, the examples to reach for, the facts to check. Not prose, not the piece.\n\nThe narrative arc, hv's:\n\n1. So you want to run an agent on your machine.\n2. Why is that a good thing?\n3. What are the risks of doing this?\n4. What are some good ways to manage these risks?\n5. How do I set up and configure the agent?\n6. What if I have multiple different (scoped) things I want my agent(s) to do?\n7. What if I have multiple machines?\n8. Who is this advice for? Compare and contrast \"just use the agent app\" at one extreme (this piece is not for you) with \"I run tens of coding agents in multiple swarms simultaneously and know what I am doing\" at the other. This sits in the middle: not for the agent-app-only reader, useful for anyone with slightly more ambitious requirements right up to the swarm-master class.\n9. Etc: whatever the material demands.\n\nSource material, all in this repo or its thread: ST0006's context (`intent st show ST0006`: the three layers, the naming, the roles, the fence/wall, the verified Claude Code facts), the guide molt-dc is writing on branch `st0006-wp05` (`docs/guides/sleeve-agents.md`), and the whiteboard roster's six project-Claude suffixes. The post is about the idea and the practice, not about Molt: Molt is one worked example of the practice, and the notes should say where the general advice ends and the example begins.\n",
       "preamble": ""
@@ -454,6 +454,176 @@
       ],
       "status": "green",
       "note": "@test \"a vars.sh ending in a false test, or a MOLT_CLAUDE_CONFIG_DIR only inherited, leaves a sleeve undeclared\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT028",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT029",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT030",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"a changed role template makes the home stale, and install renders it again\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT031",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT032",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"a role the user repo does not define is a fault naming the role and where it was looked for\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT033",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"an agent that is not enabled is not rendered\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT034",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"a home renders while Claude Code's state is still in $HOME, waiting on nothing the claude liberator does\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT035",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "to-write",
+      "note": "@test \"a settings template that does not render to JSON fails the install and leaves the file reading stale\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT036",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "@test \"molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT037",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "@test \"the permissions in effect are every rule from every layer, deny first, each tagged with its layer\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT038",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "@test \"molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT039",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "@test \"molt agent config fails on an undeclared name, listing the declared ones\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT040",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "to-write",
+      "note": "@test \"molt agent config fails, naming the file, when a settings layer is not JSON\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct)."
+    },
+    {
+      "id": "AT041",
+      "kind": "test",
+      "file": "test/manifest.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "green",
+      "note": "@test \"[[agent]] entries are read by the one table parser, keyed on role, and kept apart from [[liberator]] entries\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT042",
+      "kind": "test",
+      "file": "test/manifest.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "green",
+      "note": "@test \"molt_agent_manifest_faults names an entry with no role, a role declared twice, a written name and a harness other than claude\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT043",
+      "kind": "test",
+      "file": "test/molt.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "green",
+      "note": "@test \"molt help lists the agent command, and molt agent alone prints its usage and fails\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT044",
+      "kind": "test",
+      "file": "test/molt.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "green",
+      "note": "@test \"molt_config_digest counts an absent extra input as none, and its arrival as a change\". Red on WP01's head (st0006-wp01 820827c): an absent extra input failed the digest under pipefail (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
     }
   ]
 }

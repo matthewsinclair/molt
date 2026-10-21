@@ -2,7 +2,7 @@
 wp_id: WP-07
 title: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
 scope: S
-status: Not Started
+status: WIP
 ---
 
 # WP-07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
