@@ -269,7 +269,7 @@ Later, on a date hv sets, and through gyges-infra, whose sleeve agent becomes `g
 
 ## Not decided here
 
-WP06's deny floor for sysadm, which is hv's; gyges' date; and when each backup and each set-aside dir is removed.
+WP06's deny floor for sysadm, which is hv's; gyges' date; and when each backup and each set-aside dir is removed. Until hv says, each stays. That includes three Molt backups A1 left in kovacs' `~/.claude`, which B5 carries into `~/.config/claude` and C3 does not remove: `AGENTS.md.molt-backup.20261021183245` and `CLAUDE.md.molt-backup.20261021183245`, made when A1 linked the user-scope files over kovacs' own, and `settings.json.molt-backup.20261020230015`, from 20 Oct.
 
 ## Acceptance
 
