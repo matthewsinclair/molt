@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-21 09:11Z
+heartbeat_at: 2026-10-21 09:35Z
 status: active
-focus: "21 Oct: ST0006 WP04 at 41a096e, with vc for review; holding for vc's relay of kovacs-sysadm's A and C specifics"
+focus: "21 Oct: held for hv's travel; WP04 revision per vc's review queued as a todo"
 claims: [ST0006/04]
 ---
 
@@ -13,11 +13,11 @@ claims: [ST0006/04]
 
 ## DOING
 
-- ST0006 WP04: runbook and objective in WP04's record (a1fe844, 41a096e), with vc for review; vc relays kovacs-sysadm's phase A and C specifics after its compact (edited)
+- ST0006 WP04: runbook and objective in WP04's record (a1fe844, 41a096e); vc's review is in, the revision is queued as a todo; held for hv's travel (edited)
 
 ## TODO
 
-_(none)_
+- ST0006 WP04: revise the body per vc's review of a1fe844+41a096e (verbatim at /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/d1da0c2b-7939-45d0-b367-098542eec60e/scratchpad/wp04/vc-review-r1-r11.md; vc holds the original). R1 A1 and rhadamanth's first upgrade become `molt upgrade --self` then `molt upgrade` in a fresh command (issue 0023), the rule stated once; R2 A2's five commands verbatim from kovacs-sysadm (memory/ copy, rsync ~/work excluding tmp/, ~/prov to work/prov, the two slugs to work/archive/projects/); R3 drop the WP03 gate on -home-matts-setup; R4 new A3 fixes the two ~/work references in the home's memory/kovacs-sysadm-role.md (lines 18 and 27); R5 new A4 diff -r each copy; R6 A5's fold writes the home's work/FOLD-kovacs-sysadm.md, ~/work untouched after A2; R7 A1's check adds ls of the home and jq .autoMemoryDirectory; R8 B9 is `claude --name kovacs-sysadm`, new bridge address to molt-vc, intent-vc and devbin-vc at C1; R9 `verify-wp04.sh c1` and `c4`, and C1's role-memory recall; R10 C3's rm of ~/work waits on hv (~/work/tmp/doom-rebuild.log), and hv's -home-matts memory/ question; R11 one line: a rollback leaves the home; M1 B4's optional pgrep; M2 cite the guide by branch and section; M3 P4: untracked files and unpushed commits only warn; M4 about 9G; M5 A1 links CLAUDE.md and AGENTS.md, backing up kovacs' own. Plus C3's first rule, Bash(bash /home/matts/work/intent-vc/*), already in the scratchpad draft.
 
 ## Holds
 
