@@ -155,7 +155,7 @@ Zen: Liberator complete: claude
   claude: ✓ installed
 ```
 
-The run should end `Zen: Sleeve ready. Welcome back.` The first line is the check reporting the pending move, just before the install carries it out. The first warning is expected, because this shell started before `env.sh` existed. If the statusLine changed too, a second backup line and `Zen: claude: statusLine written into ~/.config/claude/settings.json` come before the hook's. Note the backup's path: the rollback starts from it.
+The run should end `Zen: Sleeve ready. Welcome back.` The first line is the check reporting the pending move, just before the install carries it out. The first warning is expected, because this shell started before `env.sh` existed. A Claude Code started from a shell that predates this run has no `CLAUDE_CONFIG_DIR` and rebuilds `~/.claude` in `$HOME` as a fresh install, login included; nothing moved is harmed, but the stray copies have to be removed by hand before C1 passes. If the statusLine changed too, a second backup line and `Zen: claude: statusLine written into ~/.config/claude/settings.json` come before the hook's. Note the backup's path: the rollback starts from it.
 
 If it refuses, the refusal ends with a `Zen [error]: claude: CLAUDE_CONFIG_DIR was not published` line and `Zen [error]: Liberator failed: claude`, and the run ends `Zen [error]: 1 liberator(s) failed. Review errors above.` The other liberators still run, the agent homes among them. By the first error line:
 
@@ -185,7 +185,13 @@ molt doctor
 
 The enabled-liberators step should name no claude report. A `claude:` line there is a row of the guide's "What molt doctor reports", which says what to do.
 
-**B9. Launch kovacs-sysadm from its home**, by name, so peers and `ListAgents` see it:
+**B9. Launch kovacs-sysadm from its home**, by name, so peers and `ListAgents` see it. In the B6 terminal, or any shell opened after B7, never one opened before B5:
+
+```bash
+echo "$CLAUDE_CONFIG_DIR"
+```
+
+It must print `/home/matts/.config/claude`; if it prints nothing, this shell predates the move: close it and open another. Then:
 
 ```bash
 cd ~/Devel/agt/kovacs-sysadm && claude --name kovacs-sysadm
@@ -261,7 +267,7 @@ After kovacs has passed C4, the same three phases, with these differences:
 - B4 quits every Claude Code on the machine, which on rhadamanth is every session hv runs: molt-vc, molt-cc, molt-dc and molt-ac, and every other project's, such as geodica-vc. Each folds first. Quit Chrome as well: while it runs with the extension, its native host (`~/.local/bin/claude --chrome-native-host`) is a `claude` process, and B5 refuses on it. Quit the Claude desktop app if it is open.
 - B5: the lines are kovacs' with `/Users/matts` for `/home/matts`. `~/.claude` is about 9G, and the backup is an APFS clone (`cp -cRp`), so it costs next to no space.
 - B7: the GUI file is `~/Library/LaunchAgents/com.molt.claude-config-dir.plist`, which runs `/bin/launchctl setenv CLAUDE_CONFIG_DIR` at login, so this step is a macOS log out and in.
-- B9 and C: each agent starts from its home, and each project session from its project, with the transcripts and memory that moved with the state. What C removes on rhadamanth is the inventory's to say.
+- B9 and C: as on kovacs, each Claude starts from a shell opened after B7, where `echo "$CLAUDE_CONFIG_DIR"` prints `/Users/matts/.config/claude`. Each agent starts from its home, and each project session from its project, with the transcripts and memory that moved with the state. What C removes on rhadamanth is the inventory's to say.
 
 ## gyges
 
