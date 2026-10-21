@@ -173,21 +173,17 @@ _claude_settings_merge() {
 # environment.d file, and env.sh is read back, so a path is refused rather than
 # rewritten: a copy tidied here would be compared with files that hold the
 # untidied one, and a path spelt with . or .. would get past the comparison
-# with ~/.claude. Refused: anything but a canonical absolute path, a character
-# any of those files reads as syntax, and trailing whitespace, which
-# environment.d strips. environment.d expands $ and backslash escapes, never %
-# specifiers, which belong to unit files.
+# with ~/.claude. Refused: anything molt_path_fault refuses, a character any
+# of those files reads as syntax, and trailing whitespace, which environment.d
+# strips. environment.d expands $ and backslash escapes, never % specifiers,
+# which belong to unit files.
 _claude_path_fault() {
-  local name="$1" path="$2"
-  case "$path" in
-    /*) ;;
-    *) echo "$name is not an absolute path: $path"; return ;;
-  esac
-  case "$path/" in
-    *//* | */./* | */../*)
-      echo "$name is not a canonical path, with no trailing slash, // or . or .. component: $path"
-      return ;;
-  esac
+  local name="$1" path="$2" fault
+  fault="$(molt_path_fault "$name" "$path")"
+  if [[ -n "$fault" ]]; then
+    echo "$fault"
+    return
+  fi
   case "$path" in
     *[\"\'\$\`\\\<\>\&]* | *$'\n'*)
       echo "$name holds a character env.sh, a plist or environment.d would read as syntax: $path" ;;

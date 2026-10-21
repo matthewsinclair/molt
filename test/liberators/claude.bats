@@ -685,18 +685,27 @@ JSON
     run env CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/work-link" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
     [ "$output" = "launch from the agent home itself: cd $agent_home" ]
-    # A root spelt in another letter case than the disk's is the same directory
-    # on a disk that ignores case, as APFS does by default; bash's own pwd -P
-    # kept the spelling it was given, and fenced nothing (critic-shell, 21 Oct).
-    local upper="${MOLT_AGT_DIR%/*}/AGT"
-    if [ -d "$upper" ]; then
-        export MOLT_AGT_DIR="$upper"
-        run claude_install
-        assert_success
-        run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
-        [ "$status" -eq 2 ]
-        [ "$output" = "launch from the agent home itself: cd $upper/kovacs-sysadm" ]
-    fi
+}
+
+# A root spelt in another letter case than the disk's is the same directory on
+# a disk that ignores case, as APFS does by default: bash's own pwd -P kept the
+# spelling it was given, and the guard fenced nothing; and molt_agt_dir_fault,
+# comparing spellings, passed HOME spelt so (critic-shell, 21 Oct).
+@test "on a disk that ignores letter case, the home guard and molt_agt_dir_fault take a root spelt in another case for the directory the disk names" {
+    # AT065 (ST0006 AC014).
+    setup_moved
+    local agent_home="$MOLT_AGT_DIR/kovacs-sysadm" upper="${MOLT_AGT_DIR%/*}/AGT"
+    mkdir -p "$agent_home/work/x"
+    [ -d "$upper" ] || skip "this disk tells letter case apart"
+    export MOLT_AGT_DIR="$upper"
+    run claude_install
+    assert_success
+    run env CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
+    [ "$status" -eq 2 ]
+    [ "$output" = "launch from the agent home itself: cd $upper/kovacs-sysadm" ]
+    export MOLT_AGT_DIR="${HOME%/*}/FAKEHOME"
+    run molt_agt_dir_fault
+    assert_output_contains "MOLT_AGT_DIR, ${HOME%/*}/FAKEHOME, is at or above ~: the home guard would refuse"
 }
 
 @test "the home guard passes a session launched outside the agents root, a sibling sharing its name's start included" {
@@ -736,7 +745,7 @@ JSON
     export MOLT_AGT_DIR="agt"
     run claude_install
     assert_failure
-    assert_output_contains "claude: MOLT_AGT_DIR is not an absolute path (a quoted ~ is not expanded): agt"
+    assert_output_contains "claude: MOLT_AGT_DIR is not an absolute path: agt"
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt/"
     run claude_install
     assert_failure
@@ -750,10 +759,26 @@ JSON
     assert_failure
     assert_output_contains "claude: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/Devel, is at or above $BATS_TEST_TMPDIR/Devel/prj"
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
-    printf 'export MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
+    local vars="$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
+    printf 'export MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$vars"
     run claude_install
     assert_failure
-    assert_output_contains "claude: this sleeve's vars.sh exports MOLT_AGT_DIR as $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $BATS_TEST_TMPDIR/agt"
+    assert_output_contains "claude: this sleeve's vars.sh sets MOLT_AGT_DIR to $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $BATS_TEST_TMPDIR/agt"
+    # Without an export it still reached the guard, since MOLT_AGT_DIR is
+    # exported where molt renders (critic-shell, 21 Oct).
+    declare_config_dir "$CONFIG"
+    printf 'MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: this sleeve's vars.sh sets MOLT_AGT_DIR to $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $BATS_TEST_TMPDIR/agt"
+    # Asked on a sleeve with no agents too: a Molt sleeve always has
+    # MOLT_PRJ_DIR (vc, 21 Oct).
+    declare_config_dir "$CONFIG"
+    unset MOLT_PRJ_DIR
+    export MOLT_AGT_DIR=""
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
     [ ! -e "$HOME/.config" ]
     [ ! -e "$(gui_file)" ]

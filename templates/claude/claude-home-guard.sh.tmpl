@@ -65,7 +65,9 @@ MOLT_AGENTS_ROOT
 # be entered: a symlinked spelling, or one with a trailing slash, is the same
 # directory. bash's builtin pwd -P keeps the letter case it was given, which on
 # a case-insensitive disk need not be the disk's, so /bin/pwd answers, and the
-# builtin only on a system without one.
+# builtin only on a system without one. molt_disk_path in molt's lib/molt.sh
+# resolves the same way, so molt_agt_dir_fault refuses a root this guard would
+# take for HOME or for a parent of the projects.
 real_dir() {
   (cd "$1" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })
 }

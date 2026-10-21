@@ -78,72 +78,114 @@ molt_agent_manifest_faults() {
 
 # --- The agents root ---
 
+# True when the absolute path $1 is the absolute path $2, or under it, as the
+# disk spells both (molt_disk_path), which is how the home guard compares
+# them. A relative path is under nothing and holds nothing: the root is
+# refused before it is asked about, and a relative HOME, MOLT_PRJ_DIR,
+# MOLT_CFG_DIR or config dir names no directory to compare, which the guard
+# and the claude liberator refuse in their turn.
+_molt_disk_within() {
+  local path under
+  [[ "$1" == /* && "$2" == /* ]] || return 1
+  path="$(molt_disk_path "$1")" && under="$(molt_disk_path "$2")" || return 1
+  [[ "$under" == / || "$path" == "$under" || "$path" == "$under"/* ]]
+}
+
 # Why the agents root $1 cannot hold homes, or nothing when it can. It reads
-# nothing but its argument and HOME, MOLT_PRJ_DIR and MOLT_CFG_DIR. Homes are
-# made under the root as it is spelt, and the claude liberator renders its home
-# guard with that spelling and reads it back to tell whether it has drifted,
-# so a root is refused rather than tidied (AC014):
-#   - empty, as constants.sh leaves it when MOLT_PRJ_DIR is not set either;
-#   - relative, a quoted ~ among them, which would land wherever molt runs;
-#   - untidy (a trailing slash, //, . or ..), a second spelling of a directory
-#     the drift check would take for another, and after a symlink a .. that cd
-#     and mkdir resolve to different places;
+# its argument, HOME, MOLT_PRJ_DIR, MOLT_CFG_DIR and molt_claude_config_dir,
+# and the disk to resolve them. Homes are made under the root as it is spelt,
+# and the claude liberator renders its home guard with that spelling and reads
+# it back to tell whether it has drifted, so a root is refused rather than
+# tidied (AC014):
+#   - empty, as constants.sh leaves it when MOLT_PRJ_DIR is not set either
+#     (vc, 21 Oct: a Molt sleeve always has MOLT_PRJ_DIR);
+#   - a path molt_path_fault refuses: relative, or a second spelling;
 #   - holding a line break, where the guard's here-document read stops;
 #   - at or above HOME, MOLT_PRJ_DIR or MOLT_CFG_DIR: the guard refuses a
 #     launch two levels below the root that is not in a home, so such a root
-#     would refuse every project.
+#     would refuse every project. The disk decides, as it does for the guard:
+#     a root reaching HOME through a symlink, or in another letter case, is
+#     HOME to the guard;
+#   - at or under ~/.claude or Claude Code's config dir: a home made there
+#     moves with Claude Code's state, or brings ~/.claude back once it has
+#     moved.
+# A root constants.sh derived from MOLT_PRJ_DIR is named so, since nobody set
+# it as MOLT_AGT_DIR; / is above everything, and is not called untidy.
 _molt_agt_root_fault() {
-  local root="$1" dir
-  case "$root" in
-    "")
-      echo "MOLT_AGT_DIR is not set, and neither is MOLT_PRJ_DIR, whose agt/ sibling it would be"
-      return ;;
-    /*) ;;
-    *)
-      echo "MOLT_AGT_DIR is not an absolute path (a quoted ~ is not expanded): $root"
-      return ;;
-  esac
-  case "$root/" in
-    *//* | */./* | */../*)
-      echo "MOLT_AGT_DIR is not a canonical path, with no trailing slash, // or . or .. component: $root"
-      return ;;
-  esac
+  local root="$1" name=MOLT_AGT_DIR fault shown dir
+  if [[ -z "$root" ]]; then
+    echo "MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset"
+    return 0
+  fi
+  if [[ -n "${MOLT_PRJ_DIR:-}" && "$root" == "$(molt_agt_dir_derived)" ]]; then
+    name="MOLT_AGT_DIR, the agt/ sibling of MOLT_PRJ_DIR $MOLT_PRJ_DIR,"
+  fi
+  if [[ "$root" != / ]]; then
+    fault="$(molt_path_fault "$name" "$root")"
+    if [[ -n "$fault" ]]; then
+      echo "$fault"
+      return 0
+    fi
+  fi
   case "$root" in
     *$'\n'*)
-      echo "MOLT_AGT_DIR holds a line break: $root"
-      return ;;
+      echo "$name holds a line break: $root"
+      return 0 ;;
   esac
+  shown="MOLT_AGT_DIR, $(molt_tilde "$root"),"
+  if [[ "$name" != MOLT_AGT_DIR ]]; then
+    shown="$shown the agt/ sibling of MOLT_PRJ_DIR $(molt_tilde "$MOLT_PRJ_DIR"),"
+  fi
   for dir in "$HOME" "${MOLT_PRJ_DIR:-}" "${MOLT_CFG_DIR:-}"; do
-    [[ -n "$dir" ]] || continue
-    case "$dir/" in
-      "$root"/*)
-        echo "MOLT_AGT_DIR, $(molt_tilde "$root"), is at or above $(molt_tilde "$dir"): the home guard would refuse a launch in any directory two levels below it that is not an agent home"
-        return ;;
-    esac
+    if _molt_disk_within "$dir" "$root"; then
+      echo "$shown is at or above $(molt_tilde "$dir"): the home guard would refuse a launch in any directory two levels below it that is not an agent home"
+      return 0
+    fi
+  done
+  for dir in "$HOME/.claude" "$(molt_claude_config_dir)"; do
+    if _molt_disk_within "$root" "$dir"; then
+      echo "$shown is at or under $(molt_tilde "$dir"), where Claude Code keeps its state: a home there would move with that state, or bring ~/.claude back once it has moved"
+      return 0
+    fi
   done
 }
 
 # Why this sleeve's agents root cannot hold homes, or nothing when it can:
-# _molt_agt_root_fault's answer for MOLT_AGT_DIR, or a vars.sh that exports a
-# MOLT_AGT_DIR of its own. constants.sh is the one resolver; molt_render
-# sources vars.sh before it renders, so a value there would render the claude
-# liberator's guard with one root while the homes are made under the other.
+# _molt_agt_root_fault's answer for MOLT_AGT_DIR; a vars.sh that changes
+# MOLT_AGT_DIR; or a root at or under the config dir the sleeve declares,
+# before Claude Code's state has moved there. constants.sh is the one
+# resolver, and molt_render_text sources vars.sh with MOLT_AGT_DIR exported as
+# it resolved it, so an assignment, a += or an unset there would render the
+# claude liberator's guard with another root, or none, while the homes are
+# made under this one: vars.sh is read here the same way.
 molt_agt_dir_fault() {
-  local fault declared status=0
+  local fault declared config status=0
   fault="$(_molt_agt_root_fault "${MOLT_AGT_DIR:-}")"
   if [[ -n "$fault" ]]; then
     echo "$fault"
     return 0
   fi
-  declared="$(molt_instance_var MOLT_AGT_DIR)" || status=$?
+  declared="$(molt_instance_var MOLT_AGT_DIR "$MOLT_AGT_DIR")" || status=$?
   case "$status" in
-    0)
-      if [[ -n "$declared" && "$declared" != "$MOLT_AGT_DIR" ]]; then
-        echo "this sleeve's vars.sh exports MOLT_AGT_DIR as $(molt_tilde "$declared"), but molt resolves it as $(molt_tilde "$MOLT_AGT_DIR"): drop it from vars.sh, and set MOLT_PRJ_DIR or MOLT_AGT_DIR where molt runs"
-      fi ;;
-    3) ;;
-    *) echo "MOLT_AGT_DIR could not be checked against this sleeve's vars.sh: $declared" ;;
+    0) ;;
+    3) return 0 ;;
+    *)
+      echo "MOLT_AGT_DIR could not be checked against this sleeve's vars.sh: $declared"
+      return 0 ;;
   esac
+  if [[ -z "$declared" ]]; then
+    echo "this sleeve's vars.sh unsets MOLT_AGT_DIR, empties it or stops exporting it, while molt resolves it as $(molt_tilde "$MOLT_AGT_DIR"): drop that from vars.sh"
+    return 0
+  fi
+  if [[ "$declared" != "$MOLT_AGT_DIR" ]]; then
+    echo "this sleeve's vars.sh sets MOLT_AGT_DIR to $(molt_tilde "$declared"), but molt resolves it as $(molt_tilde "$MOLT_AGT_DIR"): drop it from vars.sh, and set MOLT_PRJ_DIR or MOLT_AGT_DIR where molt runs"
+    return 0
+  fi
+  if ! config="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
+    echo "MOLT_AGT_DIR could not be checked against this sleeve's MOLT_CLAUDE_CONFIG_DIR: $config"
+  elif _molt_disk_within "$MOLT_AGT_DIR" "$config"; then
+    echo "MOLT_AGT_DIR, $(molt_tilde "$MOLT_AGT_DIR"), is at or under $(molt_tilde "$config"), the config dir this sleeve declares for Claude Code: a home there would block the move into it, or move with Claude Code's state"
+  fi
 }
 
 # --- A home ---

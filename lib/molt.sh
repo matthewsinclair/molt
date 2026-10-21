@@ -204,6 +204,52 @@ molt_tilde() {
   esac
 }
 
+# The absolute path $1 as the disk spells it: the directory it leads to, as
+# /bin/pwd -P names it, or, where it does not exist yet, its nearest ancestor
+# that does, so named, with the rest of $1 after it, as mkdir -p would make
+# it. A symlinked spelling, or one in another letter case on a disk that
+# ignores case, is the same directory. bash's builtin pwd -P keeps the letter
+# case it was given, so /bin/pwd answers, and the builtin only on a system
+# without one. The claude liberator's home guard resolves a directory the same
+# way (real_dir), so molt_agt_dir_fault and the guard never disagree about
+# which directories are one (ST0006 AC014). Fails for a relative path, and
+# when not even / can be entered.
+molt_disk_path() {
+  local path="$1" rest="" real
+  # ${path%/*} of a relative path is itself, and the loop below would not end.
+  [[ "$path" == /* ]] || return 1
+  until real="$(cd "${path:-/}" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })"; do
+    [[ -n "$path" ]] || return 1
+    rest="/${path##*/}$rest"
+    path="${path%/*}"
+  done
+  real="${real%/}$rest"
+  echo "${real:-/}"
+}
+
+# Why the path $2, named $1, is not an absolute, canonical path, or nothing
+# when it is. A relative one would land wherever molt runs, and a ~ quoted in a
+# shell or in vars.sh is not expanded. A trailing slash, //, or a . or ..
+# component is a second spelling of a directory, which a comparison of
+# spellings takes for another, and after a symlink a .. that cd and mkdir
+# resolve to different places. Its callers add what their own use refuses.
+molt_path_fault() {
+  local name="$1" path="$2"
+  case "$path" in
+    /*) ;;
+    "~"*)
+      echo "$name is not an absolute path (a quoted ~ is not expanded): $path"
+      return ;;
+    *)
+      echo "$name is not an absolute path: $path"
+      return ;;
+  esac
+  case "$path/" in
+    *//* | */./* | */../*)
+      echo "$name is not a canonical path, with no trailing slash, // or . or .. component: $path" ;;
+  esac
+}
+
 # Links every line of the list $1, stopping at the first link that fails.
 molt_link_all() {
   local source target
@@ -253,12 +299,14 @@ molt_link() {
 # --- Instance Vars ---
 
 # The path of this sleeve's instances/<host>/vars.sh in the user repo, whether
-# or not it exists. Fails, as molt_find_user_repo does, when there is no repo,
-# and when this host has no name.
+# or not it exists. Fails, printing why instead, when there is no repo, and
+# when this host has no name.
 molt_instance_vars_file() {
   local user_repo host
-  user_repo="$(molt_find_user_repo)" || return 1
-  host="$(molt_hostname)" || return 1
+  if ! user_repo="$(molt_find_user_repo)" || ! host="$(molt_hostname)"; then
+    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    return 1
+  fi
   echo "${user_repo}/instances/${host}/vars.sh"
 }
 
@@ -314,15 +362,19 @@ molt_instance_vars_fault() {
 # file does not export it, or there is no file. Only exported variables count,
 # because molt_render substitutes only those: a value it could not render is
 # not declared. Nor does a value this process inherited: the file declares, not
-# the environment molt runs in. Fails, printing why instead: with status 2 when
-# molt_instance_vars_fault refuses the file, when the sourcing here stops
-# before its end, or when the value holds a line break or a carriage return,
-# which the caller's $() would cut or keep unseen; and with status 3 when this
-# sleeve's vars.sh cannot be found, as when there is no user repo.
+# the environment molt runs in, so $1 starts unset. Given $2, it starts
+# exported with that value instead, as a variable molt's own shell exports
+# reaches molt_render_text's subshell: there an assignment, a += or an unset in
+# the file changes what envsubst sees, and so it does here. Fails, printing why
+# instead: with status 2 when molt_instance_vars_fault refuses the file, when
+# the sourcing here stops before its end, or when the value holds a line break
+# or a carriage return, which the caller's $() would cut or keep unseen; and
+# with status 3 when this sleeve's vars.sh cannot be found, as when there is no
+# user repo.
 molt_instance_var() {
   local vars_file fault out
   if ! vars_file="$(molt_instance_vars_file)"; then
-    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    echo "$vars_file"
     return 3
   fi
   fault="$(molt_instance_vars_fault "$vars_file")"
@@ -335,7 +387,11 @@ molt_instance_var() {
   # closing line, so a sourcing that ends early, or a value that ends in a line
   # break, shows here.
   out="$(
-    unset "$1"
+    if [[ $# -gt 1 ]]; then
+      export "$1=$2"
+    else
+      unset "$1"
+    fi
     if [[ -e "$vars_file" ]]; then
       set +eu
       # shellcheck disable=SC1090
@@ -362,19 +418,26 @@ molt_instance_var() {
 
 # --- Template Rendering ---
 
-# Renders the template $1 into the file $2 and nothing more: molt_render adds
-# the backup, the sidecar and the kept preamble. Only MOLT_* variables are
-# substituted, as this sleeve's vars.sh and the environment export them; other
-# $VAR references (like starship's $username, $path, etc.) are left untouched.
-# vars.sh is sourced in a subshell, so its exports don't leak into the
-# framework, and a declare -x in it is still in scope for envsubst. Fails,
-# printing why when vars.sh is the reason, with $2 not written: no render,
-# whatever the subshell's status, is a failure, and a file a crashed render
-# left goes first, or it would pass for this one.
+# Renders the template $1 into the file $2 and nothing more: molt_render_place
+# adds the region kept above @@MOLT:BEGIN@@, the backup and the sidecar. Only
+# MOLT_* variables are substituted, as this sleeve's vars.sh and the
+# environment export them; other $VAR references (like starship's $username,
+# $path, etc.) are left untouched. vars.sh is sourced in a subshell, so its
+# exports don't leak into the framework, and a declare -x in it is still in
+# scope for envsubst. Fails, printing why when envsubst or vars.sh is the
+# reason, with $2 not written: no render, whatever the subshell's status, is a
+# failure, and a file a crashed render left goes first, or it would pass for
+# this one.
 molt_render_text() {
   local template="$1" out="$2" vars_file why
+  # Asked first, before anything else here runs a command: without envsubst a
+  # render would leave the ${VARS} as they are, and the caller report success.
+  if ! command -v envsubst &>/dev/null; then
+    echo "envsubst not found; install gettext (macOS: brew install gettext && brew link --force gettext; linux: apt install gettext), then re-run"
+    return 1
+  fi
   if ! vars_file="$(molt_instance_vars_file)"; then
-    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    echo "$vars_file"
     return 1
   fi
   why="$(molt_instance_vars_fault "$vars_file")"
@@ -408,15 +471,6 @@ molt_render() {
     return 1
   fi
 
-  # envsubst (from gettext) is required to render templates. Without this guard
-  # a missing envsubst leaves the target with un-substituted ${VARS} while the
-  # liberator still reports success — a silent failure.
-  if ! command -v envsubst &>/dev/null; then
-    molt_error "envsubst not found — cannot render $template"
-    molt_error "Install gettext (macOS: brew install gettext && brew link --force gettext; linux: apt install gettext) then re-run."
-    return 1
-  fi
-
   local vars_file why
   if vars_file="$(molt_instance_vars_file)" && [[ ! -e "$vars_file" ]]; then
     molt_warn "No vars.sh for instance $(molt_hostname) — rendering template with env only"
@@ -428,6 +482,36 @@ molt_render() {
     molt_error "Could not render $template -> $target${why:+: $why}"
     return 1
   fi
+  molt_render_place "$template" "$target"
+}
+
+# A path to move $1 aside to, named for this second, that nothing holds yet: a
+# second render in the same second took the first one's name, and mv put the
+# newer backup over the older without a word (critic-shell, 21 Oct).
+_molt_backup_path() {
+  local backup n=1
+  backup="${1}.molt-backup.$(date +%Y%m%d%H%M%S)"
+  while [[ -e "$backup" || -L "$backup" ]]; do
+    backup="${1}.molt-backup.$(date +%Y%m%d%H%M%S).$n"
+    n=$((n + 1))
+  done
+  echo "$backup"
+}
+
+# Puts ${2}.molt-tmp in place as $2: the file rendered from the template $1,
+# with whatever its caller built into it from the extra inputs after $1. A
+# caller builds the whole file there first, and changes nothing in $2 after,
+# and the region kept above @@MOLT:BEGIN@@ goes in before the compare: $2 is
+# backed up whenever what molt would write differs from what is there, so a
+# file finished after the compare would be compared as part of a file and
+# backed up at every render (ST0006: an agent's AGENTS.md and settings.json,
+# and any file with lines above the marker). The sidecar records the digest of
+# $1, this sleeve's vars.sh and the extra inputs, so molt_render_stale, asked
+# with the same inputs, reads $2 current.
+molt_render_place() {
+  local template="$1"
+  local target="$2"
+  shift 2
 
   # Honour the @@MOLT:BEGIN@@ contract. Templates carrying the marker tell the
   # user "add your own entries ABOVE this line" -- but rendering replaced the
@@ -436,15 +520,41 @@ molt_render() {
   # templates rarely changed; molt_config_stale makes renders routine, which
   # turns a latent bug into a frequent one.
   #
-  # Capture the region above the marker from the CURRENT file BEFORE the backup
-  # logic below moves it aside. Only applies when both the existing file and the
-  # new render carry the marker, so rendered scripts and plists are untouched.
+  # Take the region above the marker from the CURRENT file BEFORE the backup
+  # logic below moves it aside. Only applies when the new render opens with the
+  # marker, as the templates that carry it do, and the existing file carries it
+  # too, so rendered scripts and plists are untouched. A render with lines of
+  # its own above the marker would have them kept here and written again under
+  # them, one more copy each time, as a preamble put ahead of a role's contract
+  # that carried the marker was (critic-shell, 21 Oct); and a marker that is
+  # only mentioned, below the first line, is only text. Lines above a marker
+  # the new render no longer opens with are not kept, and those it does not
+  # carry itself are named when the file they were in is backed up.
   local marker='@@MOLT:BEGIN@@'
-  local preamble=""
-  if [[ -f "$target" ]] \
-     && grep -qF "$marker" "$target" 2>/dev/null \
-     && grep -qF "$marker" "${target}.molt-tmp" 2>/dev/null; then
-    preamble="$(awk -v m="$marker" 'index($0, m) { exit } { print }' "$target")"
+  local kept="" dropped=""
+  if [[ -f "$target" ]] && grep -qF "$marker" "$target" 2>/dev/null; then
+    kept="$(awk -v m="$marker" 'index($0, m) { exit } { print }' "$target")"
+    if [[ -n "$kept" ]] \
+       && ! awk -v m="$marker" 'NR == 1 { found = index($0, m) } END { exit !found }' "${target}.molt-tmp" 2>/dev/null; then
+      # Only lines the new render does not carry above its own marker: a
+      # template's own text there is in it already (critic-shell, 21 Oct).
+      dropped="$(awk -v m="$marker" '
+        FNR == 1 { file++ }
+        file == 1 { if (index($0, m)) done = 1; if (!done) have[$0] = 1; next }
+        index($0, m) { exit }
+        /./ && !($0 in have) { n++ }
+        END { if (n) print n }
+      ' "${target}.molt-tmp" "$target")"
+      kept=""
+    fi
+  fi
+  if [[ -n "$kept" ]]; then
+    if ! { printf '%s\n' "$kept" && cat "${target}.molt-tmp"; } > "${target}.molt-tmp2" \
+        || ! mv -f "${target}.molt-tmp2" "${target}.molt-tmp"; then
+      rm -f "${target}.molt-tmp" "${target}.molt-tmp2"
+      molt_error "Could not keep the lines above ${marker} in $target, so it was not rendered"
+      return 1
+    fi
   fi
 
   # Handle existing file before replacing
@@ -458,34 +568,46 @@ molt_render() {
       # Previously rendered by molt — check if content actually changed
       if ! diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
         local backup
-        backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+        backup="$(_molt_backup_path "$target")"
         molt_warn "Rendered file changed since last render, backing up: $target -> $backup"
-        mv "$target" "$backup"
+        if [[ -n "$dropped" ]]; then
+          molt_warn "$dropped line(s) above ${marker} in $target are not kept: the new render does not open with the marker, so they are in $backup"
+        fi
+        if ! mv "$target" "$backup"; then
+          rm -f "${target}.molt-tmp"
+          molt_error "Could not back up $target, so it was not rendered"
+          return 1
+        fi
       fi
     else
       # Regular file that wasn't rendered by molt — back up
       local backup
-      backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+      backup="$(_molt_backup_path "$target")"
       molt_warn "Backing up existing file: $target -> $backup"
-      mv "$target" "$backup"
+      if ! mv "$target" "$backup"; then
+        rm -f "${target}.molt-tmp"
+        molt_error "Could not back up $target, so it was not rendered"
+        return 1
+      fi
     fi
   fi
 
-  if [[ -n "$preamble" ]]; then
-    printf '%s\n' "$preamble" > "${target}.molt-tmp2"
-    cat "${target}.molt-tmp" >> "${target}.molt-tmp2"
-    mv "${target}.molt-tmp2" "${target}.molt-tmp"
-    molt_info "Preserved $(printf '%s\n' "$preamble" | grep -c .) line(s) above ${marker}"
+  if [[ -n "$kept" ]]; then
+    molt_info "Preserved $(printf '%s\n' "$kept" | grep -c .) line(s) above ${marker}"
   fi
 
-  mv "${target}.molt-tmp" "$target"
+  if ! mv "${target}.molt-tmp" "$target"; then
+    rm -f "${target}.molt-tmp"
+    molt_error "Could not move the render of $template into place at $target"
+    return 1
+  fi
 
   # Leave a marker so we know this file was rendered (not symlinked), carrying
   # the digest of the inputs so molt_config_stale can tell whether they moved.
   {
     echo "rendered $(date -Iseconds) from $template"
     local d
-    d="$(molt_config_digest "$template")" && [[ -n "$d" ]] && echo "digest $d"
+    d="$(molt_config_digest "$template" ${1+"$@"})" && [[ -n "$d" ]] && echo "digest $d"
   } > "${target}.molt-rendered"
 
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms

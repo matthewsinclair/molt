@@ -29,8 +29,13 @@ MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
 # that would disagree with a sleeve whose projects live elsewhere;
 # molt_agt_dir_fault refuses it then, so no home lands at /<name>. This is the
 # one resolver of MOLT_AGT_DIR. It is exported, so molt_render substitutes it
-# into the claude liberator's home guard (AC014).
-MOLT_AGT_DIR="${MOLT_AGT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/agt}}"
+# into the claude liberator's home guard (AC014). molt_agt_dir_derived is the
+# derivation alone, which molt_agt_dir_fault names in a refusal: a sleeve that
+# never set MOLT_AGT_DIR would not know where a value it refuses came from.
+molt_agt_dir_derived() {
+  [[ -z "${MOLT_PRJ_DIR:-}" ]] || echo "$(dirname "$MOLT_PRJ_DIR")/agt"
+}
+MOLT_AGT_DIR="${MOLT_AGT_DIR:-$(molt_agt_dir_derived)}"
 export MOLT_AGT_DIR
 
 # --- User config repo ---

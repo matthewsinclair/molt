@@ -220,73 +220,266 @@ permission_line() {
 
 # critic-shell, 21 Oct: jq passed an empty render through as nothing and turned
 # null into an object, so either read current; two objects would have
-# installed the first and dropped the second without a word.
-@test "a settings template that does not render to one JSON object, being broken, empty, null or two objects, fails the install and leaves the file reading stale" {
+# installed the first and dropped the second without a word. The file is built
+# whole before it is put in place, so a failed one leaves what was there.
+@test "a settings template that does not render to one JSON object, being broken, empty, null or two objects, fails the install and leaves the file as it was: missing on a first install, as last rendered after" {
     # AT035 (ST0006 AC005).
     setup_agents
+    local bad
+    cp "$ROLE/settings.json.tmpl" "$BATS_TEST_TMPDIR/settings.json.tmpl"
     echo '{"permissions": ' > "$ROLE/settings.json.tmpl"
     run agents_install
     assert_failure
     assert_output_contains "agents: $NAME's settings.json, from role sysadm's settings.json.tmpl, is not usable: the template does not render to one JSON object"
-    run agents_check
-    assert_failure
-    assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
-    printf '\n  \n' > "$ROLE/settings.json.tmpl"
-    run agents_install
-    assert_failure
-    assert_output_contains "is not usable: the template does not render to one JSON object"
-    run agents_check
-    assert_failure
-    assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
-    echo 'null' > "$ROLE/settings.json.tmpl"
-    run agents_install
-    assert_failure
-    assert_output_contains "is not usable: the template does not render to one JSON object"
-    run agents_check
-    assert_failure
-    assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
-    printf '{"permissions": {}}\n{"model": "opus"}\n' > "$ROLE/settings.json.tmpl"
-    run agents_install
-    assert_failure
-    assert_output_contains "is not usable: the template does not render to one JSON object"
+    [ ! -e "$AGENT_HOME/.claude/settings.json" ]
+    cp "$BATS_TEST_TMPDIR/settings.json.tmpl" "$ROLE/settings.json.tmpl"
+    agents_install >/dev/null
+    cp "$AGENT_HOME/.claude/settings.json" "$BATS_TEST_TMPDIR/installed.json"
+    for bad in '{"permissions": ' '\n  \n' 'null' '{"permissions": {}}\n{"model": "opus"}'; do
+        printf '%b\n' "$bad" > "$ROLE/settings.json.tmpl"
+        run agents_install
+        assert_failure
+        assert_output_contains "is not usable: the template does not render to one JSON object"
+        cmp "$BATS_TEST_TMPDIR/installed.json" "$AGENT_HOME/.claude/settings.json"
+        run agents_check
+        assert_failure
+        assert_output_contains "agents: $NAME: $AGENT_HOME/.claude/settings.json is stale"
+    done
+    [ -z "$(find "$AGENT_HOME" -name '*.molt-tmp*' -o -name '*.molt-backup.*')" ]
 }
 
 # critic-shell, 21 Oct: only the claude liberator checked the root, while this
 # one, which makes the homes, made them under whatever it was given: a quoted ~
-# put them in a directory named ~ wherever molt ran.
-@test "agents check and install refuse an agents root that is unset, relative, untidy, at or above HOME or a project root, or set apart in vars.sh, and make no home" {
+# put them in a directory named ~ wherever molt ran. The root is compared as
+# the disk spells it, as the home guard compares it: a spelling of HOME through
+# a symlink passed a comparison of spellings, and the guard then refused every
+# project.
+@test "agents check and install refuse an agents root that is unset, relative, untidy or holds a line break, that reaches HOME or a parent of a project or config root by any spelling, or that is in Claude Code's config dir, and make no home" {
     # AT059 (ST0006 AC005, AC014).
     setup_agents
     local root="$MOLT_AGT_DIR"
     export MOLT_AGT_DIR=""
     run agents_install
     assert_failure
-    assert_output_contains "agents: MOLT_AGT_DIR is not set, and neither is MOLT_PRJ_DIR"
+    assert_output_contains "agents: MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset"
     export MOLT_AGT_DIR="~/Devel/agt"
     run agents_install
     assert_failure
     assert_output_contains "agents: MOLT_AGT_DIR is not an absolute path (a quoted ~ is not expanded): ~/Devel/agt"
+    # Derived, it is named so, and no ~ is blamed.
+    export MOLT_PRJ_DIR="Devel/prj" MOLT_AGT_DIR="Devel/agt"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, the agt/ sibling of MOLT_PRJ_DIR Devel/prj, is not an absolute path: Devel/agt"
+    unset MOLT_PRJ_DIR
     export MOLT_AGT_DIR="$root/"
     run agents_check
     assert_failure
     assert_output_contains "agents: MOLT_AGT_DIR is not a canonical path, with no trailing slash, // or . or .. component: $root/"
+    export MOLT_AGT_DIR="$root"$'\n'"x"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR holds a line break"
+    export MOLT_AGT_DIR=/
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, /, is at or above ~: the home guard would refuse"
     export MOLT_AGT_DIR="$HOME"
     run agents_install
     assert_failure
     assert_output_contains "agents: MOLT_AGT_DIR, ~, is at or above ~: the home guard would refuse"
+    ln -s "$HOME" "$BATS_TEST_TMPDIR/home-link"
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/home-link"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/home-link, is at or above ~: the home guard would refuse"
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/Devel/prj" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/Devel"
     run agents_install
     assert_failure
     assert_output_contains "agents: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/Devel, is at or above $BATS_TEST_TMPDIR/Devel/prj"
-    export MOLT_AGT_DIR="$root"
-    printf 'export MOLT_AGT_DIR=%q\n' "$BATS_TEST_TMPDIR/elsewhere" >> "$INSTANCE/vars.sh"
+    unset MOLT_PRJ_DIR
+    export MOLT_CFG_DIR="$BATS_TEST_TMPDIR/Devel/cfg"
     run agents_install
     assert_failure
-    assert_output_contains "agents: this sleeve's vars.sh exports MOLT_AGT_DIR as $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $root"
+    assert_output_contains "agents: MOLT_AGT_DIR, $BATS_TEST_TMPDIR/Devel, is at or above $BATS_TEST_TMPDIR/Devel/cfg"
+    unset MOLT_CFG_DIR
+    export MOLT_AGT_DIR="$HOME/.claude/agt"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, ~/.claude/agt, is at or under ~/.claude, where Claude Code keeps its state"
+    export MOLT_AGT_DIR="$CLAUDE_CONFIG_DIR/agt"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, $CLAUDE_CONFIG_DIR/agt, is at or under $CLAUDE_CONFIG_DIR, where Claude Code keeps its state"
     [ ! -e "$root" ]
     [ ! -e "$BATS_TEST_TMPDIR/~" ]
+    [ ! -e "$BATS_TEST_TMPDIR/Devel" ]
     [ ! -e "$HOME/$NAME" ]
-    [ ! -e "$BATS_TEST_TMPDIR/Devel/$NAME" ]
+    [ ! -e "$HOME/.claude" ]
+    [ ! -e "$CLAUDE_CONFIG_DIR" ]
+}
+
+# critic-shell, 21 Oct: molt_render_text sources vars.sh with MOLT_AGT_DIR
+# exported already, so a plain assignment, a += or an unset there reached the
+# guard's envsubst, while the check counted only an export.
+@test "agents install refuses a vars.sh that sets, appends to or unsets MOLT_AGT_DIR, or cannot be read, and a declared config dir holding the root, and makes no home" {
+    # AT062 (ST0006 AC014).
+    setup_agents
+    local vars="$INSTANCE/vars.sh" line
+    cp "$vars" "$BATS_TEST_TMPDIR/vars.sh"
+    for line in "export MOLT_AGT_DIR=$BATS_TEST_TMPDIR/elsewhere" "MOLT_AGT_DIR=$BATS_TEST_TMPDIR/elsewhere"; do
+        { cat "$BATS_TEST_TMPDIR/vars.sh"; echo "$line"; } > "$vars"
+        run agents_install
+        assert_failure
+        assert_output_contains "agents: this sleeve's vars.sh sets MOLT_AGT_DIR to $BATS_TEST_TMPDIR/elsewhere, but molt resolves it as $MOLT_AGT_DIR: drop it from vars.sh"
+    done
+    { cat "$BATS_TEST_TMPDIR/vars.sh"; echo 'MOLT_AGT_DIR+=/sub'; } > "$vars"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: this sleeve's vars.sh sets MOLT_AGT_DIR to $MOLT_AGT_DIR/sub, but molt resolves it as $MOLT_AGT_DIR"
+    { cat "$BATS_TEST_TMPDIR/vars.sh"; echo 'unset MOLT_AGT_DIR'; } > "$vars"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: this sleeve's vars.sh unsets MOLT_AGT_DIR, empties it or stops exporting it, while molt resolves it as $MOLT_AGT_DIR"
+    { cat "$BATS_TEST_TMPDIR/vars.sh"; echo 'if then'; } > "$vars"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR could not be checked against this sleeve's vars.sh: $vars does not parse"
+    { cat "$BATS_TEST_TMPDIR/vars.sh"; printf 'export MOLT_CLAUDE_CONFIG_DIR=%q\n' "$BATS_TEST_TMPDIR"; } > "$vars"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: MOLT_AGT_DIR, $MOLT_AGT_DIR, is at or under $BATS_TEST_TMPDIR, the config dir this sleeve declares for Claude Code"
+    [ ! -e "$MOLT_AGT_DIR" ]
+    [ ! -e "$BATS_TEST_TMPDIR/elsewhere" ]
+}
+
+# Runs $@ on a host that gives no name.
+on_a_host_with_no_name() {
+    molt_hostname() { return 1; }
+    "$@"
+}
+
+# Runs $@ with the role's files unlisted.
+with_role_files_unlisted() {
+    molt_agent_files() { return 1; }
+    "$@"
+}
+
+# critic-shell, 21 Oct: no test went red with these answers taken away.
+@test "on a host with no name, or with a role's files unlisted, check, install and molt agent config fail and say which, rather than reading as no agents or no files" {
+    # AT063 (ST0006 AC005, AC006).
+    setup_agents
+    run on_a_host_with_no_name agents_install
+    assert_failure
+    assert_output_contains "agents: the [[agent]] entries in molt.toml could not be read"
+    run on_a_host_with_no_name agents_check
+    assert_failure
+    assert_output_contains "agents: the [[agent]] entries in molt.toml could not be read"
+    run on_a_host_with_no_name cmd_agent config "$NAME"
+    assert_failure
+    assert_output_contains "molt agent: the [[agent]] entries in molt.toml could not be read"
+    [ ! -e "$AGENT_HOME" ]
+    agents_install >/dev/null
+    run with_role_files_unlisted agents_check
+    assert_failure
+    assert_output_contains "agents: $NAME: the files of role sysadm cannot be listed"
+    run with_role_files_unlisted agents_install
+    assert_failure
+    assert_output_contains "agents: $NAME: the files of role sysadm cannot be listed"
+    run with_role_files_unlisted cmd_agent config "$NAME"
+    assert_failure
+    assert_output_contains "molt agent: the files of role sysadm cannot be listed"
+}
+
+# critic-shell, 21 Oct: AGENTS.md was the role's layer, put in place, and then
+# the rest around it, so a layer that failed after it left a live agent's
+# contract half-built, and one the || exit missed doubled the preamble.
+@test "a layer of AGENTS.md that cannot be rendered fails the install, names it, and leaves AGENTS.md as it was" {
+    # AT064 (ST0006 AC016).
+    setup_agents
+    [ "$(id -u)" -ne 0 ] || skip "root reads a file whatever its mode"
+    local preamble="$TEST_USER_REPO/config/agents/AGENTS.md.tmpl"
+    mkdir -p "$TEST_USER_REPO/config/agents" "$INSTANCE/agents"
+    printf '# Every sleeve agent\n' > "$preamble"
+    printf 'A VM on ext4.\n' > "$INSTANCE/agents/sysadm.md"
+    agents_install >/dev/null
+    cp "$AGENT_HOME/AGENTS.md" "$BATS_TEST_TMPDIR/AGENTS.md"
+    echo "Patch on Tuesdays." >> "$ROLE/AGENTS.md.tmpl"
+    chmod 000 "$ROLE/AGENTS.md.tmpl"
+    run agents_install
+    chmod 644 "$ROLE/AGENTS.md.tmpl"
+    assert_failure
+    assert_output_contains "agents: $NAME's AGENTS.md was not rendered: $ROLE/AGENTS.md.tmpl could not be rendered"
+    cmp "$BATS_TEST_TMPDIR/AGENTS.md" "$AGENT_HOME/AGENTS.md"
+    chmod 000 "$preamble"
+    run agents_install
+    chmod 644 "$preamble"
+    assert_failure
+    assert_output_contains "agents: $NAME's AGENTS.md was not rendered: $preamble could not be rendered"
+    cmp "$BATS_TEST_TMPDIR/AGENTS.md" "$AGENT_HOME/AGENTS.md"
+    chmod 000 "$INSTANCE/agents/sysadm.md"
+    run agents_install
+    chmod 644 "$INSTANCE/agents/sysadm.md"
+    assert_failure
+    assert_output_contains "agents: $NAME's AGENTS.md was not rendered: $INSTANCE/agents/sysadm.md could not be put after it"
+    cmp "$BATS_TEST_TMPDIR/AGENTS.md" "$AGENT_HOME/AGENTS.md"
+    [ -z "$(find "$AGENT_HOME" -name '*.molt-tmp*' -o -name '*.molt-before' -o -name '*.molt-joined')" ]
+    run agents_install
+    assert_success
+    [ "$(grep -c '^# Every sleeve agent$' "$AGENT_HOME/AGENTS.md")" -eq 1 ]
+    grep -qx "Patch on Tuesdays." "$AGENT_HOME/AGENTS.md"
+}
+
+# critic-shell, 21 Oct: molt_render kept what was above the marker, the
+# preamble now among it, and the preamble was then put ahead again: 2, 3, then
+# 4 copies.
+@test "a role whose contract carries @@MOLT:BEGIN@@ keeps one copy of the preamble however often its home renders" {
+    # AT066 (ST0006 AC016).
+    setup_agents
+    mkdir -p "$TEST_USER_REPO/config/agents"
+    printf '# Every sleeve agent\n' > "$TEST_USER_REPO/config/agents/AGENTS.md.tmpl"
+    { echo '# @@MOLT:BEGIN@@ managed by molt'; cat "$ROLE/AGENTS.md.tmpl"; } > "$BATS_TEST_TMPDIR/role.tmpl"
+    mv "$BATS_TEST_TMPDIR/role.tmpl" "$ROLE/AGENTS.md.tmpl"
+    local size
+    for size in 11 12 13; do
+        echo "export MOLT_FONT_SIZE=$size" > "$INSTANCE/vars.sh"
+        run agents_install
+        assert_success
+        assert_output_contains "Rendered: $ROLE/AGENTS.md.tmpl -> $AGENT_HOME/AGENTS.md"
+        refute_output_contains "are not kept"
+    done
+    [ "$(grep -c '^# Every sleeve agent$' "$AGENT_HOME/AGENTS.md")" -eq 1 ]
+    [ "$(head -n 1 "$AGENT_HOME/AGENTS.md")" = "# Every sleeve agent" ]
+}
+
+# critic-shell, 21 Oct: molt_render compared the bare role layer with the whole
+# AGENTS.md, and the rendered settings.json with the one jq had since given its
+# memory dir, so each re-render backed both up and warned of a change, and a
+# real hand edit hid among the false ones. A file is backed up whenever it
+# differs from what molt would write, so a hand edit is.
+@test "a re-render that would write a home's files as they are backs nothing up, with a preamble, an overlay and settings.json's memory dir in place, and one over a hand edit backs the edit up" {
+    # AT067 (ST0006 AC005, AC016).
+    setup_agents
+    mkdir -p "$TEST_USER_REPO/config/agents" "$INSTANCE/agents"
+    printf '# Every sleeve agent\n' > "$TEST_USER_REPO/config/agents/AGENTS.md.tmpl"
+    printf 'A VM on ext4.\n' > "$INSTANCE/agents/sysadm.md"
+    agents_install >/dev/null
+    echo 'export MOLT_FONT_SIZE=13' > "$INSTANCE/vars.sh"
+    run agents_install
+    assert_success
+    assert_output_contains "Rendered: $ROLE/AGENTS.md.tmpl -> $AGENT_HOME/AGENTS.md"
+    assert_output_contains "Rendered: $ROLE/settings.json.tmpl -> $AGENT_HOME/.claude/settings.json"
+    refute_output_contains "backing up"
+    [ -z "$(find "$AGENT_HOME" -name '*.molt-backup.*')" ]
+    run agents_check
+    assert_success
+    echo "A note of the agent's own." >> "$AGENT_HOME/AGENTS.md"
+    echo 'export MOLT_FONT_SIZE=14' > "$INSTANCE/vars.sh"
+    run agents_install
+    assert_success
+    assert_output_contains "Rendered file changed since last render, backing up: $AGENT_HOME/AGENTS.md -> $AGENT_HOME/AGENTS.md.molt-backup."
+    [ "$(find "$AGENT_HOME" -name '*.molt-backup.*' | wc -l | tr -d ' ')" = 1 ]
+    grep -qx "A note of the agent's own." "$AGENT_HOME"/AGENTS.md.molt-backup.*
 }
 
 # --- molt agent (AC006) ---

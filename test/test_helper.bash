@@ -33,8 +33,9 @@ unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 
 # Nor with the agents root the shell running bats exports, which the user
 # repo's zshenv sets: a resleeve of an [[agent]] fixture would make homes there.
-# A test that wants a root of its own sets one.
-export MOLT_AGT_DIR="${BATS_TMPDIR:-/tmp}/molt-test-agt"
+# setup gives each test a root of its own; this one, removed with the run, is
+# for the files whose setup replaces it.
+export MOLT_AGT_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-agt"
 
 # ============================================================================
 # SETUP AND TEARDOWN
@@ -57,6 +58,8 @@ teardown_file() {
 setup() {
     export BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
     mkdir -p "$BATS_TEST_TMPDIR"
+    # A root no other test, run or worktree shares (critic-shell, 21 Oct).
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
     export ORIGINAL_PWD="$(pwd)"
     cd "$BATS_TEST_TMPDIR"
 }

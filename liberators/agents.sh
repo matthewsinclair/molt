@@ -33,27 +33,47 @@ _agents_memory_dir_set() {
   fi
 }
 
-# Puts the template $1, rendered as molt_render renders, ahead of the file $2,
-# a blank line between. Fails, saying why, with $2 as it was.
-_agents_prepend() {
-  local template="$1" target="$2" why
-  if ! why="$(molt_render_text "$template" "${target}.molt-before")"; then
-    molt_error "agents: could not render $(molt_tilde "$template")${why:+: $why}"
+# Builds the whole of the file $2 of a home in ${2}.molt-tmp, from the template
+# $1: the template $3 rendered and put ahead of it, and the file $4 after it, a
+# blank line before each, where they are there. molt_render_place then
+# compares, backs up and moves the whole, so a re-render is compared with what
+# is on disk, and a layer that fails leaves $2 as it was (critic-shell, 21
+# Oct: built in two places, AGENTS.md was backed up at every render once it
+# had a preamble or an overlay). Fails, printing why, with no .molt-tmp left.
+_agents_build() {
+  local template="$1" target="$2" before="$3" after="$4" tmp="${2}.molt-tmp" why
+  if ! why="$(molt_render_text "$template" "$tmp")"; then
+    echo "$(molt_tilde "$template") could not be rendered${why:+: $why}"
     return 1
   fi
-  if ! { cat "${target}.molt-before" && printf '\n' && cat "$target"; } > "${target}.molt-joined" \
-      || ! mv -f "${target}.molt-joined" "$target"; then
-    rm -f "${target}.molt-before" "${target}.molt-joined"
-    molt_error "agents: could not put $(molt_tilde "$template") ahead of $(molt_tilde "$target")"
+  if [[ -n "$before" && -f "$before" ]]; then
+    if ! why="$(molt_render_text "$before" "${target}.molt-before")"; then
+      rm -f "$tmp"
+      echo "$(molt_tilde "$before") could not be rendered${why:+: $why}"
+      return 1
+    fi
+    if ! { cat "${target}.molt-before" && printf '\n' && cat "$tmp"; } > "${target}.molt-joined" \
+        || ! mv -f "${target}.molt-joined" "$tmp"; then
+      rm -f "$tmp" "${target}.molt-before" "${target}.molt-joined"
+      echo "$(molt_tilde "$before") could not be put ahead of it"
+      return 1
+    fi
+    rm -f "${target}.molt-before"
+  fi
+  if [[ -n "$after" && -f "$after" ]] && ! { printf '\n'; cat "$after"; } >> "$tmp"; then
+    rm -f "$tmp"
+    echo "$(molt_tilde "$after") could not be put after it"
     return 1
   fi
-  rm -f "${target}.molt-before"
 }
 
 # Renders the file $3 of the home of the agent named $1, with the role $2, from
 # the template $4, with what goes around it: the template $5 rendered and put
 # ahead of it, the file $6 appended after it, and autoMemoryDirectory set in
 # settings.json, so the agent's memory lives in its home and travels with it.
+# All of it is built before molt_render_place sees it, settings.json's memory
+# dir included, which was set after the compare and backed the file up at
+# every render.
 _agents_render_file() {
   local name="$1" role="$2" file="$3" template="$4" before="$5" after="$6" home host target why
   home="$(molt_agent_home "$name")"
@@ -62,38 +82,24 @@ _agents_render_file() {
     return 1
   fi
   target="$home/$file"
-  # In a subshell, so the agent's variables reach molt_render's envsubst and go
-  # no further.
-  if ! (
+  # In a subshell, so the agent's variables reach envsubst and go no further.
+  if ! why="$(
     export MOLT_HOSTNAME="$host" MOLT_AGENT_NAME="$name" MOLT_AGENT_ROLE="$role" MOLT_AGENT_HOME="$home"
-    molt_render "$template" "$target" || exit
-    if [[ -n "$before" && -f "$before" ]]; then
-      _agents_prepend "$before" "$target"
-    fi
-  ); then
-    molt_error "agents: $name's $file was not rendered"
+    _agents_build "$template" "$target" "$before" "$after"
+  )"; then
+    molt_error "agents: $name's $file was not rendered: $why"
     return 1
   fi
-
-  if [[ -n "$after" && -f "$after" ]] && ! { printf '\n'; cat "$after"; } >> "$target"; then
-    molt_error "agents: $(molt_tilde "$after") was not appended to $name's $file"
-    return 1
-  fi
-  if [[ -n "$before" || -n "$after" ]]; then
-    # The digest covers what went around the template, present or not.
-    molt_config_record_digest "$target" "$template" ${before:+"$before"} ${after:+"$after"}
-  fi
-
   case "$file" in
     .claude/settings.json)
-      if ! why="$(_agents_memory_dir_set "$target" "$home/memory")"; then
-        # Without its sidecar the file reads as stale, not as rendered, and the
-        # next install renders it again.
-        rm -f "${target}.molt-rendered"
+      if ! why="$(_agents_memory_dir_set "${target}.molt-tmp" "$home/memory")"; then
+        rm -f "${target}.molt-tmp"
         molt_error "agents: $name's settings.json, from role $role's settings.json.tmpl, is not usable: $why"
         return 1
       fi ;;
   esac
+  # The digest covers what went around the template, present or not.
+  molt_render_place "$template" "$target" ${before:+"$before"} ${after:+"$after"}
 }
 
 # Renders the home of the agent named $1, with the role $2: each file that is

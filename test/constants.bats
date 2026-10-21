@@ -112,7 +112,7 @@ load "test_helper.bash"
     unset MOLT_AGT_DIR
     export MOLT_PRJ_DIR="/tmp/test-projects"
     load_molt_libs
-    [[ "$MOLT_AGT_DIR" == "/tmp/agt" ]]
+    [ "$MOLT_AGT_DIR" = "/tmp/agt" ]
     [ "$(printenv MOLT_AGT_DIR)" = "/tmp/agt" ]
 }
 
@@ -121,7 +121,7 @@ load "test_helper.bash"
 @test "MOLT_AGT_DIR is empty when MOLT_PRJ_DIR unset, and respects an override" {
     unset MOLT_AGT_DIR MOLT_PRJ_DIR
     load_molt_libs
-    [[ -z "$MOLT_AGT_DIR" ]]
+    [ -z "$MOLT_AGT_DIR" ]
     export MOLT_AGT_DIR="/custom/agt" MOLT_PRJ_DIR="/tmp/test-projects"
     source "$MOLT_LIB_DIR/constants.sh"
     [[ "$MOLT_AGT_DIR" == "/custom/agt" ]]
