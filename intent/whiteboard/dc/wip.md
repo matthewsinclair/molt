@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 14:34Z
+heartbeat_at: 2026-10-21 14:45Z
 status: active
-focus: "21 Oct: WP05 (43ce34e) with vc, rebase held for its quote check; WP03 items 1-3 merged (Molt-matts d48886f); 0022's untracking held"
-claims: [ST0006/05, ST0006/03, ISSUE:0022]
+focus: "21 Oct: WP05 merged (4968355); 0026 at bb80d2b with vc; 0022's untracking held"
+claims: [ISSUE:0022, ISSUE:0026]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ST0006/05 at 43ce34e (vc's four findings fixed) with vc; rebase held for vc's quote check. WP03 items 1-3 merged to Molt-matts main at d48886f
+- ISSUE:0026 at bb80d2b (branch issue-0026) with vc for review; after its merge, delete the guide's 'Until issue 0026' sentence on main by pathspec, on vc's word
 
 ## TODO
 
