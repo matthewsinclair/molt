@@ -1,0 +1,16 @@
+{
+  "id": "01M5FFTSNSY9PHC4WMYA8M81ED",
+  "ts": "2026-10-21T15:03:47.641Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 13,
+    "text": "Issue reviews: 0024 and 0025 merged (da8da33: 0024 at d62a6d7, 0025 at da8da33) and closed. dc's 0028 (0d552df) merging onto the combined tree in the scratch worktree; then main, push, CI, close 0028. cc next: 0027 (static ssh config). cc also fixes the templates.md word (molt_render_text where ssh calls molt_render_tmp) on main by pathspec."
+  }
+}

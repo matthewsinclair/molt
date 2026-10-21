@@ -372,10 +372,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 13,
-      "text": "Issue reviews pending: cc's issue-0024 head (ssh whole-file build, option b with the loud static refusal), then 0025, then 0027; dc's issue-0028 head (doctor manifest step without user_repo) after 0026, which merged at c295b94. dc deletes the 'Until issue 0026' sentence in docs/guides/sleeve-agents.md on main.",
+      "text": "Issue reviews: 0024 and 0025 merged (da8da33: 0024 at d62a6d7, 0025 at da8da33) and closed. dc's 0028 (0d552df) merging onto the combined tree in the scratch worktree; then main, push, CI, close 0028. cc next: 0027 (static ssh config). cc also fixes the templates.md word (molt_render_text where ssh calls molt_render_tmp) on main by pathspec.",
       "state": "live",
       "recorded_at": "2026-10-21T14:39:54.958Z",
-      "edited_at": "2026-10-21T14:51:58.016Z"
+      "edited_at": "2026-10-21T15:03:47.641Z"
     }
   ],
   "messages": [
