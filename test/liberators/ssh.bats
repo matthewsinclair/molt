@@ -126,9 +126,8 @@ _ssh_backups() {
     assert_success
 }
 
-# molt_render_place backs a file up whenever it differs from what molt would
-# write, so a changed input takes one backup, of the render before it; the
-# install after that, with nothing changed, takes none.
+# A changed input re-renders molt's own untouched file with no backup: only a
+# hand edit is backed up (issue 0029).
 @test "a changed template or fragment re-renders ~/.ssh/config once, with each fragment once" {
     require_command ssh "ssh_check needs ssh"
     _ssh_env
@@ -140,14 +139,14 @@ _ssh_backups() {
     run ssh_check
     assert_failure
     ssh_install >/dev/null
-    [ "$(_ssh_backups)" = 1 ]
+    [ "$(_ssh_backups)" = 0 ]
     grep -qx '  ServerAliveInterval 30' "$HOME/.ssh/config"
 
     printf 'Host gyges\n  HostName gyges.lan\n' > "$frag"
     run ssh_check
     assert_failure
     ssh_install >/dev/null
-    [ "$(_ssh_backups)" = 2 ]
+    [ "$(_ssh_backups)" = 0 ]
     grep -qx '  HostName gyges.lan' "$HOME/.ssh/config"
     [ "$(grep -c 'molt config.d: gyges.conf' "$HOME/.ssh/config")" = 1 ]
     run grep -q 'gyges.local' "$HOME/.ssh/config"
@@ -155,7 +154,7 @@ _ssh_backups() {
 
     run ssh_install
     assert_success
-    [ "$(_ssh_backups)" = 2 ]
+    [ "$(_ssh_backups)" = 0 ]
     run ssh_check
     assert_success
 }

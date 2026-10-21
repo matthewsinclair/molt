@@ -586,8 +586,18 @@ molt_render_place() {
       molt_info "Removing existing symlink: $target"
       rm "$target"
     elif [[ -f "${target}.molt-rendered" ]]; then
-      # Previously rendered by molt — check if content actually changed
-      if ! diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
+      # Previously rendered by molt. A file that is still what molt wrote, by
+      # the sidecar's output digest, is replaced with no backup: only a hand
+      # edit is backed up, and lines above the marker the new render drops are
+      # kept in a backup either way (issue 0029).
+      local wrote now
+      wrote="$(sed -n 's/^output //p' "${target}.molt-rendered" 2>/dev/null)"
+      now="$(molt_hash < "$target" 2>/dev/null)" || now=""
+      if diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
+        :   # the same file again: nothing to keep
+      elif [[ -n "$wrote" && "$now" == "$wrote" && -z "$dropped" ]]; then
+        molt_info "Replacing molt's own render, unchanged since it was written: $target"
+      else
         local backup
         backup="$(_molt_backup_path "$target")"
         molt_warn "Rendered file changed since last render, backing up: $target -> $backup"
@@ -624,11 +634,17 @@ molt_render_place() {
   fi
 
   # Leave a marker so we know this file was rendered (not symlinked), carrying
-  # the digest of the inputs so molt_config_stale can tell whether they moved.
+  # the digest of the inputs so molt_config_stale can tell whether they moved,
+  # and of the file written, so the next render can tell a hand edit from it.
   {
     echo "rendered $(date -Iseconds) from $template"
     local d
-    d="$(molt_config_digest "$template" ${1+"$@"})" && [[ -n "$d" ]] && echo "digest $d"
+    if d="$(molt_config_digest "$template" ${1+"$@"})" && [[ -n "$d" ]]; then
+      echo "digest $d"
+    fi
+    if d="$(molt_hash < "$target")" && [[ -n "$d" ]]; then
+      echo "output $d"
+    fi
   } > "${target}.molt-rendered"
 
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms

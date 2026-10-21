@@ -305,6 +305,51 @@ create_test_template() {
     [[ "$content" == *"new content"* ]]
 }
 
+# The sidecar carries the digest of what molt wrote, so a template change over
+# molt's own untouched render replaces it with no backup, and a hand edit is
+# still backed up with the warning (issue 0029).
+@test "a template change replaces molt's own untouched render with no backup, and a hand edit is still backed up" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser" target="$HOME/.config/test/moved.conf"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/moved.conf" 'v = ${MOLT_TEST_VAR}'
+    molt_render "$repo/config/test/moved.conf.tmpl" "$target" >/dev/null
+    create_test_template "$repo" "config/test/moved.conf" 'v = ${MOLT_TEST_VAR} changed'
+    run molt_render "$repo/config/test/moved.conf.tmpl" "$target"
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(cat "$target")" = "v = hello-world changed" ]
+    [ -z "$(find "$HOME/.config/test" -name 'moved.conf.molt-backup.*')" ]
+
+    echo "by hand" >> "$target"
+    create_test_template "$repo" "config/test/moved.conf" 'v = ${MOLT_TEST_VAR} again'
+    run molt_render "$repo/config/test/moved.conf.tmpl" "$target"
+    assert_success
+    assert_output_contains "Rendered file changed since last render, backing up: $target -> $target.molt-backup."
+    [ "$(cat "$target")" = "v = hello-world again" ]
+    grep -qx "by hand" "$target".molt-backup.*
+}
+
+# A sidecar written before it carried the output digest cannot vouch for the
+# file, so the first render after the change backs it up once, as before.
+@test "a render over a sidecar with no output digest backs the file up once" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser" target="$HOME/.config/test/old.conf"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/old.conf" 'v = ${MOLT_TEST_VAR}'
+    molt_render "$repo/config/test/old.conf.tmpl" "$target" >/dev/null
+    sed -i.bak '/^output /d' "$target.molt-rendered"
+    create_test_template "$repo" "config/test/old.conf" 'v = ${MOLT_TEST_VAR} changed'
+    run molt_render "$repo/config/test/old.conf.tmpl" "$target"
+    assert_success
+    assert_output_contains "Rendered file changed since last render, backing up"
+    create_test_template "$repo" "config/test/old.conf" 'v = ${MOLT_TEST_VAR} again'
+    run molt_render "$repo/config/test/old.conf.tmpl" "$target"
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(find "$HOME/.config/test" -name 'old.conf.molt-backup.*' | wc -l | tr -d ' ')" = 1 ]
+}
+
 # --- molt_install_config tests ---
 
 @test "molt_install_config picks render for .tmpl file" {
