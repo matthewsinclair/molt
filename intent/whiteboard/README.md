@@ -12,8 +12,9 @@ The protocol itself -- file layout, the single-writer rule, the header-block for
 | `vc` | Validation Claude | validation | session   | Specifies, validates and coordinates: independent check that landed or claimed work is correct, complete, and faithful to what hv asked. Reviews and merges what `cc` and `dc` build. Advisory authority only. |
 | `cc` | Control Claude    | control    | session   | Builds the code: liberators, lib, tests. Works in a git worktree on a branch per work package; `vc` merges.                                                                                                    |
 | `dc` | DevX Claude       | devx       | session   | Builds the developer experience: guides, README, CHANGELOG, role contracts. Same worktree discipline as `cc`.                                                                                                  |
+| `ac` | Authoring Claude  | authoring  | session   | Authors prose for hv: briefs, structures and notes hv writes from (the blog brief, ST0006 WP07). Same worktree discipline as `cc`.                                                                             |
 
-The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent project uses the same six; Molt runs three of them for now.
+The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent project uses the same six; Molt runs four of them for now.
 
 | Suffix | Name              | Here |
 | ------ | ----------------- | ---- |
@@ -21,10 +22,10 @@ The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent proje
 | `vc`   | Validation Claude | yes  |
 | `cc`   | Control Claude    | yes  |
 | `ic`   | Interface Claude  | no   |
-| `ac`   | Authoring Claude  | no   |
+| `ac`   | Authoring Claude  | yes  |
 | `dc`   | DevX Claude       | yes  |
 
-A session is named `<project>-<suffix>` (`molt-vc`, `molt-cc`, `molt-dc`). Sleeve agents, which run on a machine rather than in a project, are named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs` (ST0006). To add a node, create it with `intent claude ws new <moniker>` and add a row here in the same commit.
+A session is named `<project>-<suffix>` (`molt-vc`, `molt-cc`, `molt-dc`, `molt-ac`). Sleeve agents, which run on a machine rather than in a project, are named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs` (ST0006). To add a node, create it with `intent claude ws new <moniker>` and add a row here in the same commit.
 
 ## Who reads the hv inbox
 

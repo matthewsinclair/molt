@@ -19,7 +19,7 @@ Start here, then read the files below. This file is an index, not a record -- it
 
 ## Coordination
 
-- [`whiteboard/README.md`](whiteboard/README.md) -- node roster, the six project-Claude suffixes, and who is obliged to read whose inbox. Four nodes since 21 Oct: `hv` (human), `vc` (specifies, validates, merges), `cc` (builds code), `dc` (builds the developer experience). Since 21 Sep the boards are generated views of the store: `intent wb` is the only way to change them, and a hand edit is skew that `intent doctor` reports.
+- [`whiteboard/README.md`](whiteboard/README.md) -- node roster, the six project-Claude suffixes, and who is obliged to read whose inbox. Five nodes since 21 Oct: `hv` (human), `vc` (specifies, validates, merges), `cc` (builds code), `dc` (builds the developer experience), `ac` (authors briefs for hv). Since 21 Sep the boards are generated views of the store: `intent wb` is the only way to change them, and a hand edit is skew that `intent doctor` reports.
 
 ## Project files outside intent/
 
