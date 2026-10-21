@@ -144,19 +144,31 @@ ssh_install() {
       local sentinel="# --- molt config.d: ${fragment_name} ---"
       # Only append if sentinel not already present
       if ! grep -qF "$sentinel" "$HOME/.ssh/config" 2>/dev/null; then
+        # Read before the sentinel is written: a fragment that cannot be read
+        # would leave its sentinel with nothing under it, and every later run
+        # would take the fragment as appended.
+        local content
+        if ! content="$(cat "$fragment")"; then
+          molt_error "ssh: config.d fragment $fragment_name cannot be read, so it was not appended"
+          return 1
+        fi
         molt_info "Appending SSH config fragment: $fragment_name"
-        {
-          echo ""
-          echo "$sentinel"
-          cat "$fragment"
-        } >> "$HOME/.ssh/config"
+        if ! printf '\n%s\n%s\n' "$sentinel" "$content" >> "$HOME/.ssh/config"; then
+          molt_error "ssh: config.d fragment $fragment_name could not be appended to ~/.ssh/config"
+          return 1
+        fi
       else
         molt_debug "SSH config fragment already present: $fragment_name"
       fi
     done
   fi
 
-  chmod 600 "$HOME/.ssh/config"
+  # ssh refuses a config that others can write, so a chmod that fails is an
+  # install that failed.
+  if [[ -f "$HOME/.ssh/config" ]] && ! chmod 600 "$HOME/.ssh/config"; then
+    molt_error "ssh: ~/.ssh/config could not be made mode 600, which ssh requires"
+    return 1
+  fi
 
   # Re-stamp the sidecar so its digest covers the fragments too. Without this
   # the check (which digests fragments) and the sidecar (which did not) never

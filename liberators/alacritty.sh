@@ -101,7 +101,10 @@ alacritty_install() {
       # Append Alacritty.desktop to the favorites list
       local new_favorites
       new_favorites="${favorites/]/, \'Alacritty.desktop\']}"
-      gsettings set org.gnome.shell favorite-apps "$new_favorites"
+      if ! gsettings set org.gnome.shell favorite-apps "$new_favorites"; then
+        molt_error "alacritty: gsettings could not add Alacritty to the GNOME dock favorites"
+        return 1
+      fi
       molt_info "Added Alacritty to GNOME dock favorites"
     fi
   fi

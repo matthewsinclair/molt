@@ -43,7 +43,10 @@ _zsh_generate_iterm2_ssh_colors() {
   reset="$(molt_instances_field "bg_color" "terminal" 2>/dev/null | awk -F: -v h="$this_host" '$1 == h { print $2 }')"
   [[ -n "$reset" ]] || reset=000000
 
-  mkdir -p "$(dirname "$target")"
+  if ! mkdir -p "$(dirname "$target")"; then
+    molt_error "zsh: $(molt_tilde "$(dirname "$target")") could not be made, so the iTerm2 SSH colors were not generated"
+    return 1
+  fi
   # Single quotes are intentional: we're writing a script, not expanding variables
   # shellcheck disable=SC2016,SC2028
   {
@@ -78,7 +81,10 @@ _zsh_generate_iterm2_ssh_colors() {
     echo '    return $rc'
     echo '  }'
     echo 'fi'
-  } > "$target"
+  } > "$target" || {
+    molt_error "zsh: $(molt_tilde "$target") could not be written, so the iTerm2 SSH colors were not generated"
+    return 1
+  }
   molt_info "Generated iTerm2 SSH colors: $target ($(echo "$entries" | wc -l | tr -d ' ') hosts)"
 }
 
@@ -151,7 +157,10 @@ zsh_install() {
   current_shell="$(_zsh_current_shell)"
   if [[ "$current_shell" != *"zsh"* ]]; then
     molt_info "Setting zsh as default shell..."
-    chsh -s "$zsh_path"
+    if ! chsh -s "$zsh_path"; then
+      molt_error "zsh: chsh could not make $zsh_path the login shell"
+      return 1
+    fi
   fi
 
   # Verify Starship is installed
@@ -171,7 +180,7 @@ zsh_install() {
   molt_install_config "config/starship/starship.toml" "$HOME/.config/starship.toml" || return 1
 
   # Generate iTerm2 SSH colors from instance config (cross-instance aggregation)
-  _zsh_generate_iterm2_ssh_colors "$HOME/.config/molt/iterm2-ssh-colors.sh"
+  _zsh_generate_iterm2_ssh_colors "$HOME/.config/molt/iterm2-ssh-colors.sh" || return 1
 
   molt_info "Liberator complete: zsh"
 }
