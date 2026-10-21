@@ -217,11 +217,11 @@ AC008 should now pass: kovacs-sysadm runs from `~/Devel/agt/kovacs-sysadm` with 
 - the whole `~/.config/claude/projects/-home-matts` slug, kovacs-sysadm's old transcripts and its `memory/`, a stale second copy of the home's memory after A2 (hv: remove the whole folder);
 - the orphan slugs A2 archived, `-home-matts-work-o7h-proj` and `-home-matts-setup` (per kovacs-sysadm's plan, relayed by vc), from `~/.config/claude/projects/`, where the move put them;
 - the two user-scope allow rules hv dropped, `Bash(bash /home/matts/work/intent-vc/*)` and `Bash(bash /home/matts/work/devbin-vc/*)` (verbatim from kovacs-sysadm, relayed by vc), from `~/.config/claude/settings.json` (plan H4); both point into the `~/work` this step removes;
-- the npm-era leftovers `~/.cache/claude-cli-nodejs` and `~/.npm` (hv: kill).
+- the npm-era leftover `~/.cache/claude-cli-nodejs` (hv: kill); and `~/.npm`, which is not a leftover but the status line's npx cache, recreated on every refresh while npm's cache is `~/.npm`: it goes only after the npm liberator (Molt issue 0031) has rendered `~/.npmrc` on this sleeve, by `molt upgrade`, and then stays gone, in `~/.cache/npm` from the next refresh.
 
 The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
 
-**C4. Verify again:** `work/verify-wp04.sh c4`, which requires C3's items gone, then `molt doctor`, which should name no claude or agents report.
+**C4. Verify again:** `work/verify-wp04.sh c4`, which requires C3's items gone, and so fails on `~/.npm` until the npm liberator has rendered `~/.npmrc` and `~/.npm` is removed, then `molt doctor`, which should name no claude or agents report.
 
 **C5. Fold.** kovacs-sysadm folds.
 
@@ -276,6 +276,8 @@ Later, on a date hv sets, and through gyges-infra, whose sleeve agent becomes `g
 ## Not decided here
 
 WP06's deny floor for sysadm, which is hv's; gyges' date; and when each backup and each set-aside dir is removed. Until hv says, each stays. That includes three Molt backups A1 left in kovacs' `~/.claude`, which B5 carries into `~/.config/claude` and C3 does not remove: `AGENTS.md.molt-backup.20261021183245` and `CLAUDE.md.molt-backup.20261021183245`, made when A1 linked the user-scope files over kovacs' own, and `settings.json.molt-backup.20261020230015`, from 20 Oct.
+
+The guard change in issue 0030 and the npm cache in 0031 reach kovacs at the `molt upgrade` after they merge; no re-login is needed for either.
 
 ## Acceptance
 
