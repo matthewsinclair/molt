@@ -462,7 +462,10 @@ molt_render_text() {
   fi
 }
 
-molt_render() {
+# Renders the template $1 into ${2}.molt-tmp, for molt_render_place to put in
+# place at $2: what molt_render does before placing, for a caller that adds to
+# the file between the two, as the ssh liberator does its config.d fragments.
+molt_render_tmp() {
   local template="$1"
   local target="$2"
 
@@ -482,7 +485,10 @@ molt_render() {
     molt_error "Could not render $template -> $target${why:+: $why}"
     return 1
   fi
-  molt_render_place "$template" "$target"
+}
+
+molt_render() {
+  molt_render_tmp "$1" "$2" && molt_render_place "$1" "$2"
 }
 
 # A path to move $1 aside to, named for this second, that nothing holds yet: a
@@ -613,12 +619,19 @@ molt_render_place() {
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
   local parent_perms
-  parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null || echo "755")"
+  parent_perms="$(molt_file_mode "$(dirname "$target")" || echo "755")"
   if [[ "$parent_perms" == "700" ]]; then
     chmod 600 "$target" "${target}.molt-rendered"
   fi
 
   molt_info "Rendered: $template -> $target"
+}
+
+# The permission bits of $1 in octal, eg 700, on Linux and macOS. GNU stat is
+# asked first, and BSD's only when it fails: GNU's -f means --file-system, and
+# takes BSD's format for a file to report on.
+molt_file_mode() {
+  stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1" 2>/dev/null
 }
 
 # SHA-256 of a string on stdin, portable across macOS and Linux.
@@ -706,32 +719,6 @@ molt_config_digest() {
 # re-rendering costs a moment and skipping it is the failure mode above.
 #
 # Liberators that render configs should fold this into their check.
-# Re-stamp a rendered file's digest to include extra inputs.
-#
-# molt_render records molt_config_digest(template) only. When a liberator also
-# post-processes the rendered file from other inputs -- ssh appending its
-# config.d fragments -- the check computes a digest WITH those inputs and the
-# sidecar holds one WITHOUT, so they can never match and the liberator
-# reinstalls on every single run. Call this after the post-processing, with the
-# same extra inputs the _check passes to molt_config_stale.
-molt_config_record_digest() {
-  local target="$1" template="$2"
-  shift 2
-  local sidecar="${target}.molt-rendered"
-  [[ -f "$sidecar" ]] || return 0
-
-  local digest
-  digest="$(molt_config_digest "$template" ${1+"$@"})" || return 0
-  [[ -n "$digest" ]] || return 0
-
-  local tmp="${sidecar}.tmp.$$"
-  { grep -v '^digest ' "$sidecar" 2>/dev/null; echo "digest ${digest}"; } > "$tmp" \
-    && mv "$tmp" "$sidecar"
-  # Match the sidecar's permissions to the rendered file (eg 600 under ~/.ssh).
-  chmod --reference="$target" "$sidecar" 2>/dev/null \
-    || chmod "$(stat -f '%Lp' "$target" 2>/dev/null || echo 644)" "$sidecar" 2>/dev/null || true
-}
-
 molt_config_stale() {
   local source="$1"    # relative path, no .tmpl: "config/backup/backup-mount.sh"
   local target="$2"    # absolute path of the rendered file

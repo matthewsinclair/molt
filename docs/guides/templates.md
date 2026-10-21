@@ -143,8 +143,6 @@ Some liberators read per-machine files from `instances/<hostname>/` rather than 
 | `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                         |
 | `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored |
 
-If a liberator post-processes the rendered file from one of these (as `ssh` does, appending its fragments), those files are inputs to the result and **must** be passed to `molt_config_stale` in `_check` and to `molt_config_record_digest` after the post-processing. Pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run.
-
-Note also that `molt_render` preserves only the region _above_ `@@MOLT:BEGIN@@`. Anything appended below `@@MOLT:END@@` is wiped by the next render, so the render and the re-append must stay in the same function, in that order.
+A liberator that builds a rendered file from one of these as well (as `ssh` does, putting its fragments after the template's render) builds the whole file before it is placed: `molt_render_text` into `<target>.molt-tmp`, its own additions there, then `molt_render_place` with those files as extra inputs, so the sidecar's digest covers them. It passes the same files to `molt_config_stale` in `_check`; pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run. A file added to after it is placed differs from every new render, so each install backs it up.
 
 Prefer this over a `vars.sh` variable when the value is a list, when ordering matters, or when it is really a config file in its own format. Prefer `vars.sh` for scalars that a template needs to interpolate.
