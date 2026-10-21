@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 23,
+  "slug": "molt-upgrade-runs-the-library-it-started-with-ag",
+  "title": "molt upgrade runs the library it started with against the liberators it has just pulled",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-21",
+  "reporter": "Matthew Sinclair",
+  "body": "`bin/molt` sources `lib/molt.sh`, `lib/liberator.sh` and `lib/newuser.sh` when it starts. `cmd_upgrade` then pulls the framework repo (`_upgrade_pull_repos`) and re-sources only `lib/constants.sh`, so the rest of the run, the `_upgrade()` hooks and the resleeve, is the library the process started with. `liberator_load`, however, sources each liberator from disk, which after the pull is the new file. So the first `molt upgrade` after a pull that changes `lib/` runs the old library against the new liberators.\n\nWith ST0006 WP02 merged, `liberators/claude.sh` and `liberators/agents.sh` call `molt_agt_dir_fault`, `molt_agent_home` and the other functions of the new `lib/agent.sh`, which WP02's `bin/molt` sources and the old one does not. On a sleeve pulling WP02, the first `molt upgrade` therefore ends with `command not found` inside both liberators, `Liberator failed: claude`, `Liberator failed: agents` and `2 liberator(s) failed. Review errors above.`; the agent homes are not rendered, and the move, if armed, is refused. The second run, a fresh process, works. The same holds for any later change that adds a library function a liberator uses, so it is not a WP02 defect.\n\nWP04's runbook works around it: A1 is `molt upgrade --self` (pull only) and then `molt upgrade` as a second command, and the same for rhadamanth. The fix belongs in `cmd_upgrade`: record the framework HEAD before the pull and, when it changed and the run is not a dry run, re-exec `\"$MOLT_ROOT/bin/molt\" upgrade` for the hooks and the resleeve with an option that skips the pull (eg `--no-pull`), saying so on one line first. Re-sourcing `lib/*.sh` in place is not enough: the old `bin/molt` does not know which new library files to source. One test: a scratch framework repo whose pull brings a liberator calling a function only the pulled `lib/` defines, asserting the liberator runs on the new code; run under both bashes.\n\nFound by molt-vc reviewing WP04's runbook against `lib/molt.sh` at aa670cd, 21 Oct. Owner: molt-dc (cc is on WP02).\n"
+}

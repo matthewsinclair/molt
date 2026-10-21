@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 09:34Z
+heartbeat_at: 2026-10-21 09:35Z
 status: active
 focus: "21 Oct: WP04 runbook reviewed (findings with ac; kovacs-sysadm's A/C specifics relayed); issue 0023 filed for dc; next: cc's WP02 head (W1-W4) to review and merge, then WP05 and WP03 items 1-3; WP04 A1 runnable after WP02+WP03 merge"
 claims: [ST0005, ST0006]
