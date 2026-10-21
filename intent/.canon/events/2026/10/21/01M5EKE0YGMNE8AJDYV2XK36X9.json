@@ -1,0 +1,16 @@
+{
+  "id": "01M5EKE0YGMNE8AJDYV2XK36X9",
+  "ts": "2026-10-21T06:47:28.976Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 1,
+    "text": "ST0006 WP07, the blog brief for hv's local-agent post: committed on main at 159d205 (docs/blog/bl0001-so-you-want-to-run-a-local-agent.md), with vc for review against AC013. Every check: bullet read against the Claude Code docs on 21 Oct 2026; critic-prose clean. Next: revise on vc's and hv's notes."
+  }
+}

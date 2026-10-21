@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-21 06:07Z
+heartbeat_at: 2026-10-21 06:47Z
 status: active
-focus: "21 Oct: ST0006 WP07, the blog brief for hv's local-agent post, on st0006-wp07; plan shown to hv, holding for the go"
+focus: "21 Oct: ST0006 WP07, the blog brief, committed on main at 159d205 and with vc for review; revising on vc's and hv's notes"
 claims: [ST0006/07]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/07]
 
 ## DOING
 
-- ST0006 WP07, the blog brief for hv's local-agent post: first draft of the notes (precis, audience, titles, nine sections with tagged bullets) on st0006-wp07 at ~/Devel/prj/Molt-wt/st0006-wp07/docs/blog/bl0001-so-you-want-to-run-a-local-agent.md. Next: verify every check: bullet against current Claude Code docs, critic-prose review, prettier, then hand to vc for review and merge; revise on hv's notes.
+- ST0006 WP07, the blog brief for hv's local-agent post: committed on main at 159d205 (docs/blog/bl0001-so-you-want-to-run-a-local-agent.md), with vc for review against AC013. Every check: bullet read against the Claude Code docs on 21 Oct 2026; critic-prose clean. Next: revise on vc's and hv's notes. (edited)
 
 ## TODO
 
