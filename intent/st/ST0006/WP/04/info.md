@@ -11,17 +11,224 @@ status: Not Started
 
 _(not yet written)_
 
-Owner: kovacs-sysadm plans and verifies; hv executes the move at the keyboard. molt-vc reviews the plan.
+## How this runs
 
-kovacs-sysadm cannot move itself: `mv ~/.claude` under a running session moves its transcript, credentials and state out from under it.
+Owner: kovacs-sysadm plans and verifies kovacs; hv executes each move at the keyboard; molt-vc reviews. molt-ac wrote these steps down on 21 Oct from three sources: kovacs-sysadm's plan as this work package summarised it; the merged claude liberator, `liberators/claude.sh` and `templates/claude/` (main at c815d23); and dc's guide, `docs/guides/sleeve-agents.md` (st0006-wp05 at 3afda1d). The guide explains the mechanism, and this runbook names its sections rather than repeating them.
 
-The plan and verify script exist (kovacs `~/work/ST0006-WP04-move-plan.md`, `~/work/verify-wp04.sh`, read-only; dry run on 21 Oct: AC008 FAIL as expected, doctor already green). Three phases, with a rollback for anything done before C3:
+No agent can move its own state: `mv ~/.claude` under a running session moves its transcript, credentials and state out from under it. So each sleeve moves in three phases. In A, the sleeve's agent, still live, copies what it keeps into its new home. In B, hv, at a plain terminal with no Claude running, declares the config dir and runs the move. In C, the agent, in a new session started in its home, verifies and cleans up. Until C3, the first deletion, everything can be rolled back from the backup the move takes (see Rollback).
 
-- **A, kovacs-sysadm, live, copy-only**, once the first `molt upgrade` has rendered `~/Devel/agt/kovacs-sysadm/` (WP03's `[[agent]]` entries without `MOLT_CLAUDE_CONFIG_DIR` declared, so WP01's move is not yet armed on kovacs and the session stays whole): copy `~/work`, `~/prov` and `~/.claude/projects/-home-matts/memory/` into the home; archive `projects/-home-matts-work-o7h-proj` (3 transcripts, memory) into the home; `-home-matts-setup` (one MEMORY.md from 2026-03-10, stale Phase 1 notes) is archived after its two live facts are carried into WP03. Move the plan and verify script into the home.
-- **B, hv, plain terminal, no Claude running:** declare `MOLT_CLAUDE_CONFIG_DIR` in `instances/kovacs/vars.sh` (commit, push, pull on kovacs: this arms the move), then `molt upgrade` (the move runs: `~/.claude` and `~/.claude.json` to the config dir, with backups; the env and GUI files are then written), GNOME re-login so GUI children get the variable (H6), launch Claude from `~/Devel/agt/kovacs-sysadm`, accept workspace trust (`autoMemoryDirectory` at project scope is ignored until then).
-- **C, kovacs-sysadm, new session:** run the verify script; on hv's word remove `~/work`, `~/prov` and the orphan slugs, drop the dead `Bash(bash /home/matts/work/...)` allow rule from the user settings (H4); the user-scope `CLAUDE.md` and `AGENTS.md` are by then WP01's links into Molt-matts (H5); remove the npm-era leftovers `~/.cache/claude-cli-nodejs` and `~/.npm` (hv: kill); verify again; FOLD.
+kovacs-sysadm's plan and verify script are on kovacs, read-only: `~/work/ST0006-WP04-move-plan.md` and `~/work/verify-wp04.sh`. Their dry run on 21 Oct gave AC008 FAIL, as expected before the move, with `molt doctor` already green. H4, H5 and H6 below are the plan's labels.
 
-`~/tmp` (root-owned, hv's handover note) is hv's and is not touched. The XDG paths the native installer owns (`~/.local/{bin,share,state}/claude`, `~/.cache/claude`) stay: `CLAUDE_CONFIG_DIR` does not move them and they are not clutter. Then rhadamanth, where Chrome must be quit as well: its Claude native host (`~/.local/bin/claude --chrome-native-host`) is a `claude` process the running check catches, and `~/.claude` there is 8.9G (the backup is an APFS clone, free). gyges is later, not today (hv): when WP04 reaches it, through gyges-infra, its sleeve agent becomes `gyges-sysadm`.
+How molt's output is quoted here: molt prefixes its lines `Zen:`, its warnings `Zen [warning]:` and its errors `Zen [error]:`. `<stamp>` is `YYYYmmddHHMMSS` in local time, the declared config dir is `~/.config/claude`, and `/home/matts` is kovacs' home directory.
+
+## Before any sleeve
+
+**P1. The code is merged and pushed.** WP02 in Molt: the agents liberator, `molt agent list` and `molt agent config`, and the guard's refusal below a home (AC014). WP03 in Molt-matts: the roles, kovacs' sysadm overlay and the `[[agent]]` entries (branch `st0006-wp03`, at 769c2e6 when this was written). The `[[agent]]` entries reach a sleeve only once WP02's parser is on it.
+
+**P2. Intent follows the move.** From 3.2.4 (issue 0604), Intent reads `CLAUDE_CONFIG_DIR`: `intent claude skills` and `subagents`, the prompt gate and `/in-session` look where it points, so the skills under `~/.claude/skills/` move with the state and are found there. kovacs ran Intent 3.2.4 from Homebrew as of 17 Oct. The move does not touch Intent itself, which on rhadamanth is off limits.
+
+**P3. The time is hv's.** hv picks when each sleeve moves, once vc has reviewed this runbook.
+
+**P4. A dirty checkout stops `molt upgrade`.** Every `molt upgrade` in this runbook, `--self` included, first checks the sleeve's Molt and Molt-matts checkouts, and refuses while either has uncommitted changes: `Zen [error]: Framework repo has uncommitted changes. Commit or stash before upgrading.`, or the same with `User config`. Nothing has run: commit or stash, then run the step again.
+
+## kovacs
+
+### Phase A: kovacs-sysadm, live, copies only
+
+Nothing in A declares the variable or touches `~/.claude`, so kovacs-sysadm's session stays whole. kovacs-sysadm runs its plan's phase A; these are its steps as this work package records them.
+
+**A1. Render the homes.** kovacs-sysadm or hv runs, on kovacs:
+
+```bash
+molt upgrade
+```
+
+With `MOLT_CLAUDE_CONFIG_DIR` not declared, the claude liberator moves nothing, and the agents liberator renders `~/Devel/agt/kovacs-sysadm`, `kovacs-ops` and `kovacs-docs`. The run should end:
+
+```
+Zen: Sleeve ready. Welcome back.
+```
+
+Then `molt agent list` shows kovacs-sysadm with STATE `current` and HOME `~/Devel/agt/kovacs-sysadm` (guide: "Listing and inspecting agents").
+
+If it refuses, a dirty checkout is P4's case. An `agents:` report is a row of the guide's "What molt doctor reports" and is WP02's or WP03's to fix: stop and tell vc.
+
+**A2. Copy into the home**, leaving every original in place until C3:
+
+- `~/work` and `~/prov`;
+- `~/.claude/projects/-home-matts/memory/`, into the home's `memory/`, which the home's settings name as `autoMemoryDirectory`;
+- an archive of `~/.claude/projects/-home-matts-work-o7h-proj` (three transcripts and its memory);
+- an archive of `~/.claude/projects/-home-matts-setup` (one `MEMORY.md` from 2026-03-10, stale Phase 1 notes), once its two live facts are carried into WP03's kovacs overlay;
+- the plan and the verify script, which live in the home from now on.
+
+Where in the home each lands, `memory/` apart, is the plan's call.
+
+**A3. Fold and quit.** kovacs-sysadm folds and quits. From here no Claude Code runs on kovacs until B9.
+
+### Phase B: hv, at a plain terminal, with no Claude running
+
+**B1. Declare the config dir.** In Molt-matts on main, add to `instances/kovacs/vars.sh`:
+
+```bash
+export MOLT_CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/claude"
+```
+
+Commit, ending the message `(C) hello@matthewsinclair.com`, and push. Molt-matts' zsh config leaves `XDG_CONFIG_HOME` unset, so the value is `/home/matts/.config/claude`; B3 shows what molt reads. This arms the move: the next `molt upgrade` or `molt resleeve` on kovacs runs it.
+
+**B2. Pull on kovacs**, without resleeving (P4 applies):
+
+```bash
+molt upgrade --self
+```
+
+**B3. Check the declaration arrived:**
+
+```bash
+molt doctor
+```
+
+Its enabled-liberators step must report the pending move. Doctor puts the liberator's name before each report, so `claude:` appears twice:
+
+```
+         not installed: claude
+         claude: Zen: claude: Claude Code's state is still in ~/.claude and ~/.claude.json, and this sleeve's config dir is ~/.config/claude: quit every Claude Code, then run molt resleeve to move it
+```
+
+`not installed` may name other liberators as well. Anything else in claude's report means stop; nothing has changed yet:
+
+- a line naming `MOLT_CLAUDE_CONFIG_DIR`, eg `MOLT_CLAUDE_CONFIG_DIR is not a canonical path, with no trailing slash, // or . or .. component: <path>`: fix B1's line, push, and repeat from B2;
+- `~/.claude and ~/.claude.json are present while the config dir is ~/.config/claude: a launch path missed CLAUDE_CONFIG_DIR, or a move did not finish`: `~/.config/claude` already holds something, which the move will not merge with; tell vc and kovacs-sysadm;
+- no claude report at all: the declaration did not arrive; check that B2 pulled Molt-matts.
+
+**B4. Quit every Claude Code on kovacs**: every terminal session, kovacs-sysadm's included, and any started from the GUI. The move checks for itself and names any it finds.
+
+**B5. Run the move:**
+
+```bash
+molt upgrade
+```
+
+Claude's part of the resleeve prints these lines in this order, among molt's other lines:
+
+```
+Zen: claude: Claude Code's state is still in ~/.claude and ~/.claude.json, and this sleeve's config dir is ~/.config/claude: quit every Claude Code, then run molt resleeve to move it
+Zen: Running liberator: claude (install)
+Zen: claude: moved Claude Code's state into ~/.config/claude; the copies taken first are in ~/.config/claude.molt-backup.<stamp>
+Zen [warning]: claude: CLAUDE_CONFIG_DIR is not ~/.config/claude in this shell. Start Claude Code only from a new shell that sources ~/.config/molt/env.sh, and log out and in for apps started from the GUI
+Zen [warning]: Backing up existing file: /home/matts/.config/claude/settings.json -> /home/matts/.config/claude/settings.json.molt-backup.<stamp>
+Zen: claude: home-launch hook written into ~/.config/claude/settings.json
+Zen: Liberator complete: claude
+  claude: ✓ installed
+```
+
+The run should end `Zen: Sleeve ready. Welcome back.` The first line is the check reporting the pending move, just before the install carries it out. The first warning is expected, because this shell started before `env.sh` existed. If the statusLine changed too, a second backup line and `Zen: claude: statusLine written into ~/.config/claude/settings.json` come before the hook's. Note the backup's path: the rollback starts from it.
+
+If it refuses, the refusal ends with a `Zen [error]: claude: CLAUDE_CONFIG_DIR was not published` line and `Zen [error]: Liberator failed: claude`, and the run ends `Zen [error]: 1 liberator(s) failed. Review errors above.` The other liberators still run, the agent homes among them. By the first error line:
+
+- `Zen [error]: claude: Claude Code is running, and a live session cannot survive its own state moving:`, then one `Zen [error]:   <pid> <command>` line per process, then `Zen [error]: claude: quit every Claude Code on this machine, then run molt resleeve from a plain terminal`: nothing moved. Quit each process named and run B5 again; `molt resleeve`, which the line names, runs the same move.
+- `Zen [error]: claude: pgrep could not list processes, so whether Claude Code is running is unknown`: nothing moved. Run B5 again, and if it repeats, stop and tell vc.
+- a line containing `already holds`, `is a symlink to`, `both exist`, `holds nothing, and CLAUDE_CONFIG_DIR named` or `is not a`, with the not-published line ending `and nothing else was changed`: nothing moved. Stop and tell vc and kovacs-sysadm, and change nothing by hand until they have looked; the guide's "What the move does, and when it refuses" says what each means.
+- a line naming the copies, `the copies are in ~/.config/claude.molt-backup.<stamp>`, with the not-published line ending `no env.sh or GUI file was written`: the move failed after the copying began. If the line says `nothing was moved`, the state is still in `$HOME`: deal with the cause it names, then run B5 again. If it says the state `is split`, start no Claude: either move `~/.claude.json` to `~/.config/claude/.claude.json` by hand, as the line says, or roll back. Tell vc either way.
+- P4's dirty-checkout line, with no claude line after it: nothing ran, and P4 says what to do.
+
+**B6. Check from a new shell.** Open a new terminal:
+
+```bash
+echo "$CLAUDE_CONFIG_DIR"
+ls -d ~/.claude ~/.claude.json
+ls -A ~/.config/claude.molt-backup.<stamp>
+```
+
+The first prints `/home/matts/.config/claude`; the second finds neither; the third lists `.claude` and `.claude.json`, the copies a rollback needs.
+
+**B7. Log out of GNOME and back in**, so every GUI and terminal child gets the variable from `~/.config/environment.d/claude.conf` (plan H6). Molt does not call `systemctl`; the file takes effect at login.
+
+**B8. Check the sleeve:**
+
+```bash
+molt doctor
+```
+
+The enabled-liberators step should name no claude report. A `claude:` line there is a row of the guide's "What molt doctor reports", which says what to do.
+
+**B9. Launch kovacs-sysadm from its home:**
+
+```bash
+cd ~/Devel/agt/kovacs-sysadm && claude
+```
+
+Accept the workspace trust dialog: the home's allow rules, its hooks and its `autoMemoryDirectory` wait for it (guide: "Starting an agent"). If Claude Code asks you to log in, log in. The first prompt passes the home-launch guard, because the session started in a home.
+
+### Phase C: kovacs-sysadm, in its new session
+
+**C1. Verify.** kovacs-sysadm runs `verify-wp04.sh` from where A2 put it. AC008 should now pass: kovacs-sysadm runs from `~/Devel/agt/kovacs-sysadm` with its memory in the home, and `~/.claude` and `~/.claude.json` are gone from `$HOME`. If anything fails, stop here, while the rollback is still whole.
+
+**C2. hv's word.** kovacs-sysadm removes nothing until hv says so. From C3 on, a rollback still puts Claude Code's state back from the backup, but `~/work` and `~/prov` come back only from their copies in the home.
+
+**C3. Remove, on hv's word:**
+
+- `~/work` and `~/prov`, copied into the home in A2;
+- the orphan slugs A2 archived, `-home-matts-work-o7h-proj` and `-home-matts-setup`, from `~/.config/claude/projects/`, where the move put them;
+- the two user-scope allow rules hv dropped, from `~/.config/claude/settings.json` (plan H4), among them the `Bash(bash /home/matts/work/...)` rule, which points into the `~/work` this step removes;
+- the npm-era leftovers `~/.cache/claude-cli-nodejs` and `~/.npm` (hv: kill).
+
+`-home-matts` itself, kovacs-sysadm's old slug, whose memory A2 copied, is not on that list, and it stays unless hv says otherwise. The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
+
+**C4. Verify again:** `verify-wp04.sh`, then `molt doctor`, which should name no claude or agents report.
+
+**C5. Fold.** kovacs-sysadm folds.
+
+Left alone throughout: `~/tmp`, which is root-owned and holds hv's handover note; and the native installer's own paths, `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`, which `CLAUDE_CONFIG_DIR` does not move and which are not clutter. Molt never removes the backup.
+
+## Rollback
+
+From the backup the move took, for anything before C3, or for a move that stopped part way. Quit every Claude first, as in B4.
+
+**R1. Disarm.** Take the `MOLT_CLAUDE_CONFIG_DIR` line out of `instances/<host>/vars.sh`, commit and push, then on the sleeve run `molt upgrade --self`. While the line stands, the next `molt upgrade` tries the move again.
+
+**R2. Unpublish.** Once a sleeve declares nothing, molt leaves these files as they are, and `env.sh` would go on exporting the variable to every zsh. On kovacs:
+
+```bash
+rm ~/.config/molt/env.sh ~/.config/molt/env.sh.molt-rendered
+rm ~/.config/molt/claude-home-guard.sh ~/.config/molt/claude-home-guard.sh.molt-rendered
+rm ~/.config/environment.d/claude.conf ~/.config/environment.d/claude.conf.molt-rendered
+```
+
+On a Mac, `~/Library/LaunchAgents/com.molt.claude-config-dir.plist` and its `.molt-rendered` take the place of the `environment.d` pair.
+
+**R3. Put the state back** from the backup B5 named. Set the moved dir aside rather than deleting it, since it holds whatever ran after the move:
+
+```bash
+b=~/.config/claude.molt-backup.<stamp>
+mv ~/.config/claude ~/.config/claude.rolled-back
+cp -a --reflink=auto "$b/.claude" "$b/.claude.json" ~/
+```
+
+On a Mac the copy is `cp -cRp "$b/.claude" "$b/.claude.json" ~/`, an APFS clone. A move that stopped part way may have left `~/.claude` or `~/.claude.json` in `$HOME`: set it aside the same way before the copy. The backup's `settings.json` predates the hook, so the restored user settings carry none.
+
+**R4. Log out and back in**, so no GUI app keeps the variable. Then, in a new shell, `echo "${CLAUDE_CONFIG_DIR-unset}"` prints `unset`.
+
+**R5. Check and report.** `molt doctor` should name no claude report about a config dir, since the sleeve declares none. Tell vc. The set-aside dir stays until hv decides what becomes of it.
+
+## rhadamanth
+
+After kovacs has passed C4, the same three phases, with these differences:
+
+- A: the first `molt upgrade` after WP02 and WP03 renders `~/Devel/agt/rhadamanth-sysadm`, `rhadamanth-ops` and `rhadamanth-docs`, as A1 does on kovacs. Nobody has yet listed what a `$HOME`-launched agent here must copy into a home before its state moves: kovacs-sysadm planned kovacs only, and vc assigns this inventory.
+- B1: the line goes in `instances/rhadamanth/vars.sh`, with the same value, which here is `/Users/matts/.config/claude`.
+- B2: skip it when B1's commit is made in rhadamanth's own Molt-matts checkout, the one molt reads. B5: P4's refusal is the likely one here, because the shared Molt checkout usually has uncommitted board files. Every session's fold commits its own board before B4, so that `git status` in both checkouts shows no modified or staged file when B5 runs.
+- B4 quits every Claude Code on the machine, which on rhadamanth is every session hv runs: molt-vc, molt-cc, molt-dc and molt-ac, and every other project's, such as geodica-vc. Each folds first. Quit Chrome as well: while it runs with the extension, its native host (`~/.local/bin/claude --chrome-native-host`) is a `claude` process, and B5 refuses on it. Quit the Claude desktop app if it is open.
+- B5: the lines are kovacs' with `/Users/matts` for `/home/matts`. `~/.claude` is 8.9G, and the backup is an APFS clone (`cp -cRp`), so it costs next to no space.
+- B7: the GUI file is `~/Library/LaunchAgents/com.molt.claude-config-dir.plist`, which runs `/bin/launchctl setenv CLAUDE_CONFIG_DIR` at login, so this step is a macOS log out and in.
+- B9 and C: each agent starts from its home, and each project session from its project, with the transcripts and memory that moved with the state. What C removes on rhadamanth is the inventory's to say.
+
+## gyges
+
+Later, on a date hv sets, and through gyges-infra, whose sleeve agent becomes `gyges-sysadm` when WP04 reaches it. gyges is a Mac, so rhadamanth's differences apply, and gyges-infra inventories its phase A.
+
+## Not decided here
+
+WP06's deny floor for sysadm, which is hv's; gyges' date; when each backup and each set-aside dir is removed; and who inventories rhadamanth's phase A.
 
 ## Acceptance
 
