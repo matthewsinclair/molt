@@ -1,0 +1,14 @@
+{
+  "id": "01M5FEF2DSFSXNNT7JBPNGDRCA",
+  "ts": "2026-10-21T14:39:54.809Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC009"
+  },
+  "payload": {
+    "evidence": "docs/guides/sleeve-agents.md at 4968355 (WP05 merge): naming, roles, three layers, declaring and rendering, molt agent list|config, the move and its refusals, where the variable is published, the guard, doctor reports, fence and wall; README and CHANGELOG entries; 101 quoted items checked against the code by molt-vc"
+  }
+}

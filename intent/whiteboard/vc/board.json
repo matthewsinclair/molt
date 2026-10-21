@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-21T14:32:12.373Z",
+    "heartbeat_at": "2026-10-21T14:39:54.992Z",
     "status": "active",
-    "focus": "21 Oct: WP02 on Molt main (bea7420), WP03 on Molt-matts main (d48886f), A1 runnable for kovacs-sysadm. Reviewing dc's WP05 guide; cc on issues 0024 then 0025",
+    "focus": "21 Oct: WP02 (bea7420) and WP05 (4968355) on Molt main, WP03 on Molt-matts main (d48886f); WP04 phase A done on kovacs, phase B with hv. Reviewing cc's 0024/0025 and dc's 0026 as they land",
     "claims": [
       "ST0005",
       "ST0006"
@@ -364,8 +364,17 @@
       "kind": "todo",
       "seq": 12,
       "text": "WP05 review (dc, st0006-wp05 8d7921e on bea7420, no conflicts): guide read in full; four findings sent to dc (ac in the roster, 'every Intent project' softened, sources for the claude -p and sandbox.credentials claims); subagent quote check against code pending. Then dc fixes, vc merges, satisfies AC009 (non-test) with the merge sha, wp done ST0006/05.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:39:54.923Z",
       "recorded_at": "2026-10-21T14:32:12.343Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 13,
+      "text": "Issue reviews pending: cc's issue-0024 head (ssh whole-file build, option b with the loud static refusal) then issue-0025; dc's issue-0026 head (doctor prefix). On 0026's merge, tell dc to delete the 'Until issue 0026' sentence in docs/guides/sleeve-agents.md.",
+      "state": "live",
+      "recorded_at": "2026-10-21T14:39:54.958Z"
     }
   ],
   "messages": [

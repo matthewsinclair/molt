@@ -47,7 +47,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC009
 
-- AC009 (non-test) docs/guides/sleeve-agents.md records the naming, roles, layers, move and doctor reports; README and CHANGELOG updated -- satisfied: no
+- AC009 (non-test) docs/guides/sleeve-agents.md records the naming, roles, layers, move and doctor reports; README and CHANGELOG updated -- evidence: docs/guides/sleeve-agents.md at 4968355 (WP05 merge): naming, roles, three layers, declaring and rendering, molt agent list|config, the move and its refusals, where the variable is published, the guard, doctor reports, fence and wall; README and CHANGELOG entries; 101 quoted items checked against the code by molt-vc -- satisfied: yes
 
 ### Group AC010
 

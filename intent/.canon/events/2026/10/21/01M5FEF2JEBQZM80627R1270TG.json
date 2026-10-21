@@ -1,0 +1,15 @@
+{
+  "id": "01M5FEF2JEBQZM80627R1270TG",
+  "ts": "2026-10-21T14:39:54.958Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Issue reviews pending: cc's issue-0024 head (ssh whole-file build, option b with the loud static refusal) then issue-0025; dc's issue-0026 head (doctor prefix). On 0026's merge, tell dc to delete the 'Until issue 0026' sentence in docs/guides/sleeve-agents.md."
+  }
+}

@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 14:32Z
+heartbeat_at: 2026-10-21 14:39Z
 status: active
-focus: "21 Oct: WP02 on Molt main (bea7420), WP03 on Molt-matts main (d48886f), A1 runnable for kovacs-sysadm. Reviewing dc's WP05 guide; cc on issues 0024 then 0025"
+focus: "21 Oct: WP02 (bea7420) and WP05 (4968355) on Molt main, WP03 on Molt-matts main (d48886f); WP04 phase A done on kovacs, phase B with hv. Reviewing cc's 0024/0025 and dc's 0026 as they land"
 claims: [ST0005, ST0006]
 ---
 
@@ -25,7 +25,7 @@ _(none)_
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
 - WP04: runbook final at 5a21904 (ac); ac adding the three ~/.claude .molt-backup files to its removal list. A1 ran clean on kovacs (21 Oct): Molt 5c41557, Molt-matts d48886f pulled; kovacs-{sysadm,ops,docs} rendered and current; doctor 13/13. kovacs-sysadm on phase A (A2-A4); phase B is hv's, on hv's date. AC007 evidence: kovacs done; rhadamanth needs a molt upgrade here (hv's machine: ask hv); gyges later. (edited)
 - Issues from the WP02 and WP05 reviews (hv, 21 Oct: sort issues out as we go): 0024 medium (ssh_install backs ~/.ssh/config up on every install when a config.d fragment exists) and 0025 low (a vars.sh EXIT trap that prints reads as 'stops before its end'): cc queued, 0024 first, branches issue-0024 and issue-0025. 0026 low (doctor prefixes a failing liberator's check lines with its name though they carry molt's own Zen: <lib>: prefix): dc after WP05, branch issue-0026. vc reviews and merges each. (edited)
-- WP05 review (dc, st0006-wp05 8d7921e on bea7420, no conflicts): guide read in full; four findings sent to dc (ac in the roster, 'every Intent project' softened, sources for the claude -p and sandbox.credentials claims); subagent quote check against code pending. Then dc fixes, vc merges, satisfies AC009 (non-test) with the merge sha, wp done ST0006/05.
+- Issue reviews pending: cc's issue-0024 head (ssh whole-file build, option b with the loud static refusal) then issue-0025; dc's issue-0026 head (doctor prefix). On 0026's merge, tell dc to delete the 'Until issue 0026' sentence in docs/guides/sleeve-agents.md.
 
 ## Holds
 
