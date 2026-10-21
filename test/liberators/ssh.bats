@@ -60,3 +60,38 @@ _ssh_env() {
     run ssh_check
     assert_success
 }
+
+# A fragment that could not be read was appended as its sentinel alone, so every
+# later run took it as present (issue 0021).
+@test "ssh_install fails on a config.d fragment it cannot read, and appends nothing" {
+    [[ "$(id -u)" -ne 0 ]] || skip "root reads any file"
+    _ssh_env
+    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    molt_render() { printf 'Host *\n' > "$2"; }
+    chmod 000 "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+
+    run ssh_install
+    assert_failure
+    assert_output_contains "gyges.conf cannot be read"
+    refute_output_contains "Liberator complete"
+    run grep -cF 'molt config.d: gyges.conf' "$HOME/.ssh/config"
+    [ "$output" = 0 ]
+}
+
+# The chmod 600's status was dropped, so a config ssh refuses still ended on
+# "Liberator complete" (issue 0021).
+@test "ssh_install fails when ~/.ssh/config cannot be made mode 600" {
+    _ssh_env
+    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    molt_render() { printf 'Host *\n' > "$2"; }
+    mkdir -p "$SSH_ROOT/bin"
+    # A chmod that refuses this one call and passes every other through.
+    printf '#!/bin/sh\n[ "$1" = 600 ] && [ "$2" = "%s/.ssh/config" ] && exit 1\nexec /bin/chmod "$@"\n' "$HOME" > "$SSH_ROOT/bin/chmod"
+    /bin/chmod +x "$SSH_ROOT/bin/chmod"
+    export PATH="$SSH_ROOT/bin:$PATH"
+
+    run ssh_install
+    assert_failure
+    assert_output_contains "could not be made mode 600"
+    refute_output_contains "Liberator complete"
+}

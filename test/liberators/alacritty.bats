@@ -106,6 +106,25 @@ _alac_template() {
     refute_output_contains "Liberator complete"
 }
 
+# gsettings set's status was dropped, so a dock favourite that was never added
+# was reported added, and the install complete (issue 0021).
+@test "alacritty_install fails when gsettings cannot add the dock favourite" {
+    _alac_env
+    molt_platform() { echo "linux"; }
+    # get answers with a favourites list; set fails.
+    cat > "$BATS_TEST_TMPDIR/bin/gsettings" <<'EOF'
+#!/bin/sh
+[ "$1" = get ] && { echo "['org.gnome.Nautilus.desktop']"; exit 0; }
+exit 1
+EOF
+    chmod +x "$BATS_TEST_TMPDIR/bin/gsettings"
+
+    run alacritty_install
+    assert_failure
+    assert_output_contains "gsettings could not add Alacritty"
+    refute_output_contains "Liberator complete"
+}
+
 # --- Linked form ---
 
 @test "alacritty_check passes a healthy link and flags a dangling one" {
