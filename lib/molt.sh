@@ -340,7 +340,9 @@ molt_instance_vars_fault() {
     echo "$(molt_tilde "$vars_file") could not be checked: no temporary file could be made"
     return 0
   fi
-  { cat "$vars_file"; printf '\n\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
+  # An EXIT or RETURN trap the file set would speak after the answer, and a
+  # DEBUG trap before it, so the answer clears them first (issue 0025).
+  { cat "$vars_file"; printf '\n\nbuiltin trap - EXIT RETURN DEBUG\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
   # The answer decides, not the status, which is the file's own. The $1 is the
   # fresh bash's own, so it stays in single quotes.
   # shellcheck disable=SC2016
@@ -394,8 +396,16 @@ molt_instance_var() {
     fi
     if [[ -e "$vars_file" ]]; then
       set +eu
-      # shellcheck disable=SC1090
-      . "$vars_file" >/dev/null
+      # An EXIT trap the file set would print after the closing line, a
+      # RETURN trap as the . returns, and a DEBUG trap before each command
+      # after the file, the one that clears it included, so the file is
+      # quiet here, its stderr too: molt_instance_vars_fault has already
+      # said what was wrong with it (issue 0025).
+      {
+        # shellcheck disable=SC1090
+        . "$vars_file"
+        builtin trap - EXIT RETURN DEBUG
+      } >/dev/null 2>&1
     fi
     if printenv "$1" >/dev/null; then
       printf '%s' "${!1}"
@@ -449,8 +459,13 @@ molt_render_text() {
   if ! (
     if [[ -e "$vars_file" ]]; then
       set +eu
-      # shellcheck disable=SC1090
-      . "$vars_file" >/dev/null
+      # The traps molt_instance_var clears, cleared alike, so the two read
+      # the file the same way (issue 0025).
+      {
+        # shellcheck disable=SC1090
+        . "$vars_file"
+        builtin trap - EXIT RETURN DEBUG
+      } >/dev/null 2>&1
     fi
     mkdir -p "$(dirname "$out")" || exit
     local molt_vars
