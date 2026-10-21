@@ -31,7 +31,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC005
 
-- AC005 An enabled [[agent]] entry renders its home (AGENTS.md, CLAUDE.md, .claude/settings.json with autoMemoryDirectory=<home>/memory, memory/, work/) with a name derived as <hostname>-<role>; re-render is a no-op while digests match and happens when the role source changes; an undefined role is a fault naming it -- satisfied: no (computed)
+- AC005 An enabled [[agent]] entry renders its home (AGENTS.md from the role template plus the instance overlay when the sleeve has one, CLAUDE.md, .claude/settings.json with autoMemoryDirectory=<home>/memory, memory/, work/) with a name derived as <hostname>-<role>; re-render is a no-op while digests match and happens when the template or overlay changes; an undefined role is a fault naming it -- satisfied: no (computed)
 
 ### Group AC006
 
