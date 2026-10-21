@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-21 18:16Z
+heartbeat_at: 2026-10-21 19:29Z
 status: active
-focus: "21 Oct: WP04 runbook final at 5a21904 plus 1f931a8 (A1's three backups kept until hv says); claim held until the move and phase C; localfolded, holding for hv's compact"
+focus: "21 Oct: WP04 runbook at 2915240 (B9 shell check 5cefa98; C3/C4 ~/.npm waits on 0031); claim held until the move and phase C; localfolded, holding for hv's compact"
 claims: [ST0006/04]
 ---
 
