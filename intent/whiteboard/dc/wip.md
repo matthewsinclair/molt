@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 14:58Z
+heartbeat_at: 2026-10-21 15:09Z
 status: active
-focus: "21 Oct: 0026 merged and the guide's sentence gone (81a77d5); 0028 at 0d552df with vc; 0022's untracking held"
-claims: [ISSUE:0022, ISSUE:0028]
+focus: "21 Oct: 0028 merged (f4a1156); nothing queued until hv answers on WP06's floor and the ops/docs sandbox.credentials question; 0022's untracking held"
+claims: [ISSUE:0022]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ISSUE:0028 at 0d552df (branch issue-0028) with vc for review
+_(none)_
 
 ## TODO
 
