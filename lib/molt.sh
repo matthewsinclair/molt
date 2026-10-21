@@ -1757,14 +1757,11 @@ _upgrade_finish() {
   return $status
 }
 
-# The framework commit, or nothing, with a warning, when it cannot be read: an
-# upgrade that cannot tell whether its pull moved the framework says so rather
-# than carry on as if it had not.
+# The framework commit, or nothing and a failure when git cannot read it. It
+# prints only the commit, since its callers capture it; they say what an
+# unread commit means.
 _upgrade_framework_head() {
-  git -C "$MOLT_ROOT" rev-parse HEAD 2>/dev/null || {
-    molt_warn "Cannot read the framework commit in $MOLT_ROOT; a pull that changes lib/ needs a second molt upgrade."
-    return 0
-  }
+  git -C "$MOLT_ROOT" rev-parse HEAD 2>/dev/null
 }
 
 # This process sourced lib/ before the pull, but liberator_load reads each
@@ -1776,8 +1773,11 @@ _upgrade_framework_head() {
 _upgrade_restart_if_pulled() {
   local head_before="$1" do_resleeve="$2" head_after
   [[ -n "$head_before" ]] || return 0
-  head_after="$(_upgrade_framework_head)"
-  [[ -n "$head_after" && "$head_after" != "$head_before" ]] || return 0
+  head_after="$(_upgrade_framework_head)" || {
+    molt_warn "Cannot read the framework commit in $MOLT_ROOT after the pull; if it changed lib/, run molt upgrade again."
+    return 0
+  }
+  [[ "$head_after" != "$head_before" ]] || return 0
   echo ""
   molt_info "Framework updated (${head_before:0:7} -> ${head_after:0:7}); restarting on the new code."
   if [[ "$do_resleeve" == "yes" ]]; then
@@ -1872,7 +1872,10 @@ cmd_upgrade() {
 
   if $pull; then
     local head_before
-    head_before="$(_upgrade_framework_head)"
+    head_before="$(_upgrade_framework_head)" || {
+      head_before=""
+      molt_warn "Cannot read the framework commit in $MOLT_ROOT; a pull that changes lib/ needs a second molt upgrade."
+    }
     _upgrade_pull_repos "$dry_run" || return 1
     $dry_run || _upgrade_restart_if_pulled "$head_before" "$do_resleeve"
   fi

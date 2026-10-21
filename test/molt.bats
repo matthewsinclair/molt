@@ -340,6 +340,22 @@ load "test_helper.bash"
     [ "$(git -C "$fw" rev-parse HEAD)" = "$(git -C "$origin" rev-parse HEAD)" ]
 }
 
+# The commit is captured, so a warning printed inside the capture became its
+# value and reached nobody.
+@test "a full molt upgrade that cannot read the framework commit says so and carries on without restarting" {
+    local fw="$BATS_TEST_TMPDIR/fw" cfg="$BATS_TEST_TMPDIR/cfg"
+    mkdir -p "$fw/liberators" "$cfg/Molt-$(whoami)/config"
+    cp -R "$MOLT_ROOT/bin" "$MOLT_ROOT/lib" "$MOLT_ROOT/VERSION" "$fw/"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { echo "zzz upgraded"; }\n' > "$fw/liberators/zzz.sh"
+    git -C "$cfg/Molt-$(whoami)" init -q
+    run env -u MOLT_PRJ_DIR -u MOLT_LIBERATORS_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$cfg" \
+        GIT_CEILING_DIRECTORIES="$BATS_TEST_TMPDIR" "$fw/bin/molt" upgrade --no-resleeve
+    assert_success
+    assert_output_contains "Cannot read the framework commit in $fw; a pull that changes lib/ needs a second molt upgrade."
+    assert_output_contains "zzz upgraded"
+    refute_output_contains "restarting on the new code"
+}
+
 @test "molt upgrade refuses --self with --no-pull" {
     run_molt upgrade --self --no-pull
     assert_failure
