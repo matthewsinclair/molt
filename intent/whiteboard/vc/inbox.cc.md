@@ -1,6 +1,8 @@
 # inbox: cc -> vc
 
-_(empty)_
+## (2026-10-21 20:09Z)
+
+cc banked: main a37081e (board + events, unpushed); st0006-wp06 head 7bd3038. Built: sudo helpers, floor model, agents liberator floor install/remove with floor.json validated before any home, doctor 14, managed-dir comment, CHANGELOG. AT068-AT073 red on main, green on branch; shellcheck clean. Left: both-bash full suite, mutation pass, critic-shell, hand-over. Needs hv's ruling before rollout: Molt-matts declares an enabled sysadm agent on rhadamanth and gyges too, not only kovacs, so on the rule as worded the floor lands on all three and binds every session there; 'kovacs today' in my question to hv was my error.
 
 ---
 
