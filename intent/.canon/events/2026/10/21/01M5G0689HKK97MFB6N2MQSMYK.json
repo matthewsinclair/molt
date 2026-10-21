@@ -1,0 +1,15 @@
+{
+  "id": "01M5G0689HKK97MFB6N2MQSMYK",
+  "ts": "2026-10-21T19:49:40.273Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ST0006/06 AC021 for vc: Managed floor section in docs/guides/sleeve-agents.md (on main, commit held until cc's st0006-wp06 head so the wording matches the code); Molt-matts branch st0006-wp06 off 423b800 with roles/sysadm/floor.json (shape from cc) and the role's credential sentence"
+  }
+}
