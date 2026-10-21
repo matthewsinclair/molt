@@ -26,6 +26,11 @@ export PATH="$MOLT_BIN_DIR:$PATH"
 export NO_COLOR=1
 export TERM=dumb
 
+# Claude Code keeps its state wherever CLAUDE_CONFIG_DIR says, so a test that
+# inherited it from the shell running bats would read and write the real config
+# dir, whatever it did to HOME (ST0006). No test starts with either set.
+unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
+
 # ============================================================================
 # SETUP AND TEARDOWN
 # ============================================================================

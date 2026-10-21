@@ -22,17 +22,16 @@ TACTILE_SYSTEM_SCHEMA_DIR="${MOLT_SYSTEM_SCHEMA_DIR:-/usr/share/glib-2.0/schemas
 # nowhere else.
 TACTILE_ACTIVATE_DEFAULT="<Shift><Alt><Super>t"
 
-# Runs in a subshell via command substitution, so sourcing vars.sh here cannot
-# leak the instance's other exports into the caller.
+# The activation binding this sleeve's vars.sh declares, or the default when it
+# declares none or there is no user repo. Fails, printing why instead, when
+# vars.sh cannot be read: a broken file is not a sleeve that wants the default.
 _tiling_activate() {
-  local repo hostname vars
-  if repo="$(molt_find_user_repo 2>/dev/null)"; then
-    hostname="$(hostname -s 2>/dev/null || hostname)"
-    vars="$repo/instances/$hostname/vars.sh"
-    # shellcheck disable=SC1090
-    [[ -f "$vars" ]] && source "$vars"
-  fi
-  echo "${MOLT_TACTILE_ACTIVATE:-$TACTILE_ACTIVATE_DEFAULT}"
+  local activate status=0
+  activate="$(molt_instance_var MOLT_TACTILE_ACTIVATE)" || status=$?
+  case "$status" in
+    0 | 3) echo "${activate:-$TACTILE_ACTIVATE_DEFAULT}" ;;
+    *) echo "$activate"; return 1 ;;
+  esac
 }
 
 # Names why the system copy of Tactile's schema is not the installed
@@ -200,7 +199,10 @@ tiling_install() {
   # MOLT_TACTILE_ACTIVATE above), the window gap and maximize. Every write is
   # checked: resleeve runs install inside an `if`, where set -e does not apply.
   local activate setting
-  activate="$(_tiling_activate)"
+  if ! activate="$(_tiling_activate)"; then
+    molt_error "tiling: the activation binding could not be read: $activate"
+    return 1
+  fi
   molt_info "Configuring Tactile: 7x3 grid (QWERTYU/ASDFGHJ/ZXCVBNM)..."
   for setting in col-0=1 col-1=1 col-2=1 col-3=1 col-4=1 col-5=1 col-6=1 \
       grid-cols=7 grid-rows=3 row-0=1 row-1=1 row-2=1 row-3=0 row-4=0 \

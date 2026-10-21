@@ -66,6 +66,17 @@ molt_arch() {
   esac
 }
 
+# This sleeve's name: its short hostname, which names its directory under the
+# user repo's instances/ and every agent it runs (<hostname>-<role>, ST0006).
+# Fails, printing nothing, when the host has no name to give.
+molt_hostname() {
+  local name
+  name="$(hostname -s 2>/dev/null || hostname 2>/dev/null)" || name="${HOSTNAME:-}"
+  name="${name%%.*}"
+  [[ -n "$name" ]] || return 1
+  echo "$name"
+}
+
 # --- Dependency Checks ---
 
 molt_require() {
@@ -176,10 +187,21 @@ molt_report_link_faults() {
     else
       fault="$(molt_link_fault "$target")"
     fi
-    "$log" "${prefix}"'~'"${target#"$HOME"} $fault"
+    "$log" "${prefix}$(molt_tilde "$target") $fault"
     faulted=1
   done <<< "$links"
   return $faulted
+}
+
+# $1 for a message: a path under $HOME is written from ~, any other as it is.
+# Writing '~' before whatever follows $HOME named a target outside $HOME as if
+# it were inside it, and Claude Code's config dir may be anywhere (ST0006).
+molt_tilde() {
+  case "$1" in
+    "$HOME") echo '~' ;;
+    "$HOME"/*) echo '~'"${1#"$HOME"}" ;;
+    *) echo "$1" ;;
+  esac
 }
 
 # Links every line of the list $1, stopping at the first link that fails.
@@ -228,6 +250,88 @@ molt_link() {
   molt_info "Linked: $target -> $source"
 }
 
+# --- Instance Vars ---
+
+# The path of this sleeve's instances/<host>/vars.sh in the user repo, whether
+# or not it exists. Fails, as molt_find_user_repo does, when there is no repo.
+molt_instance_vars_file() {
+  local user_repo host
+  user_repo="$(molt_find_user_repo)" || return 1
+  host="$(molt_hostname)" || return 1
+  echo "${user_repo}/instances/${host}/vars.sh"
+}
+
+# Sources the vars.sh at $1 into the calling shell, which must be a subshell so
+# that nothing it exports leaks into the framework; with no file there, it
+# sources nothing. This is the one reader of vars.sh: molt_render and
+# molt_instance_var source it through here, and everything else reads it
+# through molt_instance_var. It sources as leniently as a shell sources a
+# profile: errexit and nounset off, so a file whose last line is a false test
+# still counts, with the file's stdout discarded and its stderr left to reach
+# the operator. Fails with status 2, printing why instead, when the file is
+# there but cannot be read, does not parse, or stops before its end when
+# sourced: an exit, or an error under a set -u or set -e of its own. Each of
+# those would read as though the file declared nothing after the point it
+# stopped at, and on a sleeve whose Claude Code state has moved that recreates
+# ~/.claude (ST0006).
+molt_source_instance_vars() {
+  local vars_file="$1" err _molt_sourced_mark="molt: vars.sh sourced to its end"
+  if (( BASH_SUBSHELL == 0 )); then
+    echo "molt_source_instance_vars sources only into a subshell"
+    return 2
+  fi
+  [[ -e "$vars_file" || -L "$vars_file" ]] || return 0
+  if [[ ! -f "$vars_file" || ! -r "$vars_file" ]]; then
+    echo "$(molt_tilde "$vars_file") cannot be read"
+    return 2
+  fi
+  # BASH_ENV would be read first, and its errors blamed on vars.sh.
+  if ! err="$(BASH_ENV='' "$BASH" -n "$vars_file" 2>&1)"; then
+    err="${err%%$'\n'*}"
+    echo "$(molt_tilde "$vars_file") does not parse (${err#"$vars_file": })"
+    return 2
+  fi
+  # Sourced first in a throwaway subshell, keeping what it says on stderr: what
+  # stops it there stops it in this shell too, and says why.
+  # shellcheck disable=SC1090
+  err="$(set +eu; . "$vars_file" 2>&1 >/dev/null; echo "$_molt_sourced_mark")" || true
+  if [[ "$err" != *"$_molt_sourced_mark" ]]; then
+    err="${err##*$'\n'}"
+    echo "$(molt_tilde "$vars_file") stops before its end when sourced${err:+ (${err#"$vars_file": })}"
+    return 2
+  fi
+  set +eu
+  # shellcheck disable=SC1090
+  . "$vars_file" >/dev/null
+  return 0
+}
+
+# Prints the variable $1 as this sleeve's vars.sh exports it; nothing when the
+# file does not export it, or there is no file. Only exported variables count,
+# because molt_render substitutes only those: a value it could not render is
+# not declared. Nor does a value this process inherited: the file declares, not
+# the environment molt runs in. Fails with status 2, printing why instead, when
+# molt_source_instance_vars refuses the file, or when the value holds a line
+# break, which the caller's $() would cut from its end; and with status 3 when
+# this sleeve's vars.sh cannot be located, as when there is no user repo.
+molt_instance_var() {
+  local vars_file
+  vars_file="$(molt_instance_vars_file)" || return 3
+  # The name is $1 throughout: vars.sh can assign any variable, this function's
+  # locals among them, but not its arguments.
+  (
+    unset "$1"
+    molt_source_instance_vars "$vars_file" || exit
+    printenv "$1" >/dev/null || exit 0
+    case "${!1}" in
+      *$'\n'*)
+        echo "$(molt_tilde "$vars_file") exports $1 with a line break in it"
+        exit 2 ;;
+    esac
+    printf '%s\n' "${!1}"
+  )
+}
+
 # --- Template Rendering ---
 
 molt_render() {
@@ -248,32 +352,30 @@ molt_render() {
     return 1
   fi
 
-  # Load instance vars
-  local user_repo
-  user_repo="$(molt_find_user_repo)" || return 1
-  local hostname
-  hostname="$(hostname -s 2>/dev/null || hostname)"
-  local vars_file="$user_repo/instances/$hostname/vars.sh"
+  local vars_file why
+  vars_file="$(molt_instance_vars_file)" || return 1
+  # Only for the warning; molt_source_instance_vars decides what is read.
+  if [[ ! -e "$vars_file" && ! -L "$vars_file" ]]; then
+    molt_warn "No vars.sh for instance $(molt_hostname) — rendering template with env only"
+  fi
 
-  # Create parent directory if needed
-  mkdir -p "$(dirname "$target")"
-
-  if [[ -f "$vars_file" ]]; then
-    # Source vars in a subshell so exports don't leak into framework.
-    # Only substitute MOLT_* variables — leave other $VAR references
-    # (like starship's $username, $path, etc.) untouched.
-    (
-      # shellcheck disable=SC1090
-      source "$vars_file"
-      local molt_vars
-      molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
-      envsubst "$molt_vars" < "$template"
-    ) > "${target}.molt-tmp"
-  else
-    molt_warn "No vars.sh for instance $hostname — rendering template with env only"
+  # Render in a subshell that has sourced vars.sh, so its exports don't leak
+  # into the framework, and nothing is written when vars.sh cannot be read.
+  # Only substitute MOLT_* variables — leave other $VAR references (like
+  # starship's $username, $path, etc.) untouched. Everything below handles the
+  # render it finds, so no render, whatever the subshell's status, is a failure:
+  # the target would be backed up with nothing to take its place.
+  rm -f "${target}.molt-tmp"
+  if ! why="$(
+    molt_source_instance_vars "$vars_file" || exit
+    mkdir -p "$(dirname "$target")" || exit
     local molt_vars
     molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
     envsubst "$molt_vars" < "$template" > "${target}.molt-tmp"
+  )" || [[ ! -f "${target}.molt-tmp" ]]; then
+    rm -f "${target}.molt-tmp"
+    molt_error "Could not render $template -> $target${why:+: $why}"
+    return 1
   fi
 
   # Honour the @@MOLT:BEGIN@@ contract. Templates carrying the marker tell the
@@ -370,10 +472,8 @@ molt_config_digest() {
   shift
   [[ -f "$template" ]] || return 1
 
-  local user_repo hostname vars_file
-  user_repo="$(molt_find_user_repo)" || return 1
-  hostname="$(hostname -s 2>/dev/null || hostname)"
-  vars_file="${user_repo}/instances/${hostname}/vars.sh"
+  local vars_file
+  vars_file="$(molt_instance_vars_file)" || return 1
 
   # Any remaining arguments are extra inputs that also determine the rendered
   # result -- ssh's instance config.d fragments, for one. A fragment ADDED or
@@ -481,6 +581,18 @@ molt_config_stale() {
   template="${user_repo}/${source}.tmpl"
 
   [[ -f "$template" ]] || return 1      # static/linked config: nothing to render
+  molt_render_stale "$template" "$target" ${1+"$@"}
+}
+
+# molt_config_stale for a template named by its path, as Molt's own templates
+# under templates/ are (the claude liberator's, ST0006): true when the file $2
+# rendered from the template $1 is missing, or no longer matches the template,
+# this sleeve's vars.sh or the extra inputs after them. Fails closed, a missing
+# template included: a template that is not there cannot be called rendered.
+molt_render_stale() {
+  local template="$1" target="$2"
+  shift 2
+  [[ -f "$template" ]] || return 0
   [[ -e "$target" ]]   || return 0      # never rendered: trivially stale
 
   local want have
@@ -488,7 +600,7 @@ molt_config_stale() {
   [[ -n "$want" ]] || return 0
   have="$(sed -n 's/^digest //p' "${target}.molt-rendered" 2>/dev/null)"
 
-  [[ "$want" == "$have" ]] && return 1 || return 0
+  [[ "$want" != "$have" ]]
 }
 
 # --- Fonts ---
@@ -588,11 +700,10 @@ molt_find_manifest() {
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   [[ -z "$user_repo" ]] && return 1
 
-  local hostname
-  hostname="$(hostname -s 2>/dev/null || hostname)"
-
   # Instance-specific overrides repo-level
-  local instance_manifest="$user_repo/instances/$hostname/molt.toml"
+  local host instance_manifest
+  host="$(molt_hostname)" || return 1
+  instance_manifest="$user_repo/instances/$host/molt.toml"
   if [[ -f "$instance_manifest" ]]; then
     echo "$instance_manifest"
     return 0
@@ -801,6 +912,18 @@ molt_report_faults() {
     "$log" "${lead}${label}: $fault"
   done <<< "$faults"
   return 1
+}
+
+# --- Claude Code ---
+
+# Where Claude Code keeps its state on this machine: CLAUDE_CONFIG_DIR when it
+# is set, which moves every ~/.claude path and ~/.claude.json too, and
+# ~/.claude when it is not. Every liberator that reads or writes Claude Code's
+# files asks this, so none of them recreates ~/.claude once the state has moved
+# (ST0006). Asked at each call, never captured, because the claude liberator
+# exports CLAUDE_CONFIG_DIR partway through a run.
+molt_claude_config_dir() {
+  echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 }
 
 # --- CLI Commands ---
@@ -1229,13 +1352,12 @@ cmd_doctor() {
   # Same shape as the dangling-symlink and mtime defects: everything reports
   # success, the result is wrong.
   step=$((step + 1))
-  local font_family="" font_vars=""
-  [[ -n "${manifest:-}" ]] && font_vars="$(dirname "$manifest")/vars.sh"
-  if [[ -n "$font_vars" && -f "$font_vars" ]]; then
-    # shellcheck disable=SC1090
-    font_family="$( . "$font_vars" >/dev/null 2>&1; printf '%s' "${MOLT_FONT_FAMILY:-}" )"
-  fi
-  if [[ -z "$font_family" ]]; then
+  local font_family="" font_status=0
+  font_family="$(molt_instance_var MOLT_FONT_FAMILY)" || font_status=$?
+  if [[ $font_status -eq 2 ]]; then
+    echo "[$step/$total] Checking declared font... ⚠ $font_family"
+    warnings=$((warnings + 1))
+  elif [[ -z "$font_family" ]]; then
     echo "[$step/$total] Checking declared font... ⚠ this instance declares no MOLT_FONT_FAMILY"
     warnings=$((warnings + 1))
   else
@@ -1383,7 +1505,7 @@ molt_resleeve() {
     echo "${MOLT_NAME} v${MOLT_VERSION} — My Opinionated Local Terminal"
     echo "Needlecasting stack to new sleeve..."
   fi
-  echo "Sleeve: $(hostname -s 2>/dev/null || hostname) | Platform: $(molt_platform)"
+  echo "Sleeve: $(molt_hostname) | Platform: $(molt_platform)"
   echo ""
 
   local user_repo

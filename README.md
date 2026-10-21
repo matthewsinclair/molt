@@ -150,6 +150,16 @@ Where your config repo lives, kept apart from development projects. Defaults to 
 | `UTILZ_HOME`     | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`            |
 | `INTENT_HOME`    | Override Intent repo location | `$MOLT_PRJ_DIR/Intent`           |
 
+### MOLT_CLAUDE_CONFIG_DIR
+
+Declared per sleeve, in `instances/<host>/vars.sh`, to keep Claude Code's state out of `$HOME`:
+
+```bash
+export MOLT_CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/claude"
+```
+
+On a sleeve that declares it, the `claude` liberator moves `~/.claude` and `~/.claude.json` into that directory once, copying both beside it first. It refuses while any Claude Code runs, so run the move from a plain terminal with every session quit. Only once the state is there does it write `~/.config/molt/env.sh`, which `~/.zshenv` sources to set `CLAUDE_CONFIG_DIR`, and the GUI environment (a LaunchAgent on macOS, `~/.config/environment.d/claude.conf` on Linux), which takes effect at the next login. It also installs a hook that refuses a Claude Code session launched in `$HOME`. A sleeve that declares nothing keeps `~/.claude`.
+
 ## Liberators
 
 A liberator is a config module that frees you from one default. Each liberator implements a lifecycle of functions:
@@ -189,6 +199,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | intent         | Intent from Homebrew, what PATH and gate run    | linux, macos |
 | pplr           | Pplr framework config and linking               | linux, macos |
 | web            | Web browser config and linking                  | linux, macos |
+| claude         | Claude Code config, and its state out of $HOME  | linux, macos |
 
 ### molt.toml
 

@@ -121,6 +121,88 @@ create_test_template() {
     [[ "$content" == *"from-env"* ]]
 }
 
+# vc, 21 Oct: sourcing stops at a syntax error, so a vars.sh that does not parse
+# rendered only what it exported before the error; and one that exited as it
+# was sourced left the target backed up with nothing in its place.
+@test "molt_render refuses a vars.sh that does not parse or stops before its end, and leaves the target as it was" {
+    # AT046 (ST0006 AC011).
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    local vars="$repo/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    create_test_vars "$repo"
+    echo 'fi' >> "$vars"
+    create_test_template "$repo" "config/test/app.conf" 'value = ${MOLT_TEST_VAR}'
+    local target="$HOME/.config/test/app.conf"
+    mkdir -p "$(dirname "$target")"
+    echo "as it was" > "$target"
+    run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "Could not render $repo/config/test/app.conf.tmpl -> $target: $vars does not parse (line 4: syntax error"
+    [ "$(cat "$target")" = "as it was" ]
+    create_test_vars "$repo"
+    echo 'exit 0' >> "$vars"
+    run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "Could not render $repo/config/test/app.conf.tmpl -> $target: $vars stops before its end when sourced"
+    [ "$(cat "$target")" = "as it was" ]
+    [ -z "$(find "$(dirname "$target")" -name '*.molt-backup.*')" ]
+}
+
+# As root every file can be read, so this half has a test of its own to skip.
+@test "molt_render refuses a vars.sh that cannot be read, and leaves the target as it was" {
+    # AT049 (ST0006 AC011).
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    local vars="$repo/instances/$(hostname -s 2>/dev/null || hostname)/vars.sh"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/app.conf" 'value = ${MOLT_TEST_VAR}'
+    local target="$HOME/.config/test/app.conf"
+    mkdir -p "$(dirname "$target")"
+    echo "as it was" > "$target"
+    chmod 000 "$vars"
+    [ ! -r "$vars" ] || skip "this user can read a file whatever its mode"
+    run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "Could not render $repo/config/test/app.conf.tmpl -> $target: $vars cannot be read"
+    [ "$(cat "$target")" = "as it was" ]
+}
+
+# The render goes to a temporary file first, so an envsubst that fails part way
+# through leaves the target as it was, and no temporary file behind.
+@test "molt_render leaves the target as it was, and no temporary file, when envsubst fails" {
+    # AT050 (ST0006 AC015).
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/app.conf" 'value = ${MOLT_TEST_VAR}'
+    local target="$HOME/.config/test/app.conf"
+    mkdir -p "$(dirname "$target")" "$BATS_TEST_TMPDIR/stub"
+    echo "as it was" > "$target"
+    printf '#!/bin/sh\necho partial\nexit 1\n' > "$BATS_TEST_TMPDIR/stub/envsubst"
+    chmod +x "$BATS_TEST_TMPDIR/stub/envsubst"
+    PATH="$BATS_TEST_TMPDIR/stub:$PATH" run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "Could not render $repo/config/test/app.conf.tmpl -> $target"
+    [ "$(cat "$target")" = "as it was" ]
+    [ ! -e "$target.molt-tmp" ]
+}
+
+# vars.sh is sourced as a profile is. Under molt's nounset an unset variable in
+# it stopped the render, and what it had printed was moved in as the file.
+@test "molt_render renders past an unset variable in vars.sh, and leaves out what vars.sh prints" {
+    # AT051 (ST0006 AC015).
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    local vars_dir="$repo/instances/$(hostname -s 2>/dev/null || hostname)"
+    mkdir -p "$vars_dir"
+    printf 'echo chatter\nexport MOLT_A=one\nexport MOLT_B="$MOLT_TEST_UNSET"\nexport MOLT_C=three\n' > "$vars_dir/vars.sh"
+    create_test_template "$repo" "config/test/lenient.conf" 'a = ${MOLT_A} c = ${MOLT_C}'
+    local target="$HOME/.config/test/lenient.conf"
+    run molt_render "$repo/config/test/lenient.conf.tmpl" "$target"
+    assert_success
+    [ "$(cat "$target")" = "a = one c = three" ]
+}
+
 @test "molt_render idempotent re-render produces same output without duplicate backups" {
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
