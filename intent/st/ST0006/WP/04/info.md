@@ -75,7 +75,7 @@ mkdir -p "$h/work/archive/projects"
 cp -a ~/.claude/projects/-home-matts-work-o7h-proj ~/.claude/projects/-home-matts-setup "$h/work/archive/projects/"
 ```
 
-So the memory lands in `$h/memory/`, which the home's settings name as `autoMemoryDirectory`. `~/work`'s contents land in `$h/work/`: the FOLD note, `intent-vc/`, `devbin-vc/`, the empty `utilz-vc/`, `order2.sh`, `order2.log`, and the plan and verify script, at `$h/work/ST0006-WP04-move-plan.md` and `$h/work/verify-wp04.sh`. `intent-vc/` and `devbin-vc/` are not checkouts: they hold order scripts, logs and `.rc` files from 14-17 Oct. `~/prov` lands in `$h/work/prov/`, and the two slugs, `-home-matts-work-o7h-proj` (three transcripts and its memory) and `-home-matts-setup` (one `MEMORY.md` from 2026-03-10, stale Phase 1 notes, whose two live facts Molt-matts' user-scope `AGENTS.md` already carries), under `$h/work/archive/projects/`. `~/work/tmp/` is left out: it holds hv's `doom-rebuild.log`, which is hv's to rule on.
+So the memory lands in `$h/memory/`, which the home's settings name as `autoMemoryDirectory`. `~/work`'s contents land in `$h/work/`: the FOLD note, `intent-vc/`, `devbin-vc/`, the empty `utilz-vc/`, `order2.sh`, `order2.log`, and the plan and verify script, at `$h/work/ST0006-WP04-move-plan.md` and `$h/work/verify-wp04.sh`. `intent-vc/` and `devbin-vc/` are not checkouts: they hold order scripts, logs and `.rc` files from 14-17 Oct. `~/prov` lands in `$h/work/prov/`, and the two slugs, `-home-matts-work-o7h-proj` (three transcripts and its memory) and `-home-matts-setup` (one `MEMORY.md` from 2026-03-10, stale Phase 1 notes, whose two live facts Molt-matts' user-scope `AGENTS.md` already carries), under `$h/work/archive/projects/`. `~/work/tmp/` is left out: it holds hv's `doom-rebuild.log`, which hv does not need kept, so it goes with `~/work` at C3.
 
 **A3. Point the memory at the home.** Two lines in `$h/memory/kovacs-sysadm-role.md` name `~/work`, and they are the only ones in the memory; find them by their text, since line numbers drift if the memory changes before A2. In the line reading "Read ~/work/FOLD-kovacs-sysadm.md first", the path becomes `$h/work/FOLD-kovacs-sysadm.md`. The bullet quoting the allow rule hv dropped is reworded. Left alone, the verify script fails with "memory still names ~/work".
 
@@ -207,12 +207,13 @@ AC008 should now pass: kovacs-sysadm runs from `~/Devel/agt/kovacs-sysadm` with 
 
 **C3. Remove, on hv's word:**
 
-- `~/work`, once hv has ruled on `~/work/tmp/doom-rebuild.log`, which A2 left out, and `~/prov`, both copied into the home in A2;
+- `~/work` and `~/prov`, both copied into the home in A2; `~/work/tmp/doom-rebuild.log`, which A2 left out, goes with them (hv: not needed);
+- `memory/` under `~/.config/claude/projects/-home-matts/`, a stale second copy of the home's memory after A2 (hv: not needed);
 - the orphan slugs A2 archived, `-home-matts-work-o7h-proj` and `-home-matts-setup` (per kovacs-sysadm's plan, relayed by vc), from `~/.config/claude/projects/`, where the move put them;
 - the two user-scope allow rules hv dropped, `Bash(bash /home/matts/work/intent-vc/*)` and `Bash(bash /home/matts/work/devbin-vc/*)` (verbatim from kovacs-sysadm, relayed by vc), from `~/.config/claude/settings.json` (plan H4); both point into the `~/work` this step removes;
 - the npm-era leftovers `~/.cache/claude-cli-nodejs` and `~/.npm` (hv: kill).
 
-`-home-matts` itself, kovacs-sysadm's old slug, is not on that list, and it stays unless hv says otherwise. After A2 its `memory/` is a stale second copy of the home's memory, so hv's question is whether to keep the whole slug or remove only its `memory/`. The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
+The rest of `-home-matts`, kovacs-sysadm's old transcripts, stays unless hv says otherwise. The user-scope `CLAUDE.md` and `AGENTS.md` in `~/.config/claude` are by now links into Molt-matts' `config/claude/` (plan H5) and need nothing.
 
 **C4. Verify again:** `work/verify-wp04.sh c4`, which requires C3's items gone, then `molt doctor`, which should name no claude or agents report.
 
@@ -268,7 +269,7 @@ Later, on a date hv sets, and through gyges-infra, whose sleeve agent becomes `g
 
 ## Not decided here
 
-WP06's deny floor for sysadm, which is hv's; gyges' date; when each backup and each set-aside dir is removed; and hv's two open questions from C3: `~/work/tmp/doom-rebuild.log`, and whether `-home-matts` keeps its stale `memory/`.
+WP06's deny floor for sysadm, which is hv's; gyges' date; and when each backup and each set-aside dir is removed.
 
 ## Acceptance
 
