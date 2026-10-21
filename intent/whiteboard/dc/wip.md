@@ -3,21 +3,21 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 07:53Z
+heartbeat_at: 2026-10-21 07:56Z
 status: active
-focus: "21 Oct: 0021 with vc (6de6663); WP05 (3afda1d) and WP03 items 1-3 (Molt-matts 2525c0e) wait for WP02; next issue 0022, drafted and held for hv"
-claims: [ST0006/05, ST0006/03, ISSUE:0021]
+focus: "21 Oct: 0019-0021 merged; WP05 at e4f857d and WP03 items 1-3 at Molt-matts 769c2e6 wait for WP02; issue 0022 drafted for hv's word"
+claims: [ST0006/05, ST0006/03]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ISSUE:0021 with vc at issue-0021 6de6663 (on 0020 f73670e, merged at 2675064): five statuses checked, one test per site red on main, suite under both bashes. Next: vc's verdict.
+_(none)_
 
 ## TODO
 
-- ST0006/03 with vc: items 4 and 5 on Molt-matts main (eb8a9fc, 660a118); items 1-3 on Molt-matts st0006-wp03 at 2525c0e, checked against st0006-wp02 86cb827. They merge after WP02 lands, re-checked against the merged renderer then. vc pushes Molt-matts. (edited)
+- ST0006/03 with vc: items 4 and 5 on Molt-matts main (eb8a9fc, 660a118); items 1-3 on Molt-matts st0006-wp03 at 769c2e6 (the AC016 preamble split in), checked against st0006-wp02 86cb827. Re-render against the merged WP02, with AC016, before the head goes back to vc; they merge after WP02 lands. vc pushes Molt-matts. (edited)
 - ISSUE:0022 (Molt's tracked .claude/settings.local.json), after 0021: draft from its body. It changes this project's Claude Code permission settings, so apply nothing until hv says so in this session, not relayed.
 
 ## Holds
