@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 18:12Z
+heartbeat_at: 2026-10-21 18:18Z
 status: active
 focus: "21 Oct (banked before hv's compact): ST0006 WP01/02/05/07 done, WP03 and credential denies on Molt-matts main (45e344c); issues 0023-0028 closed; WP04 phase A done on kovacs, phase B with hv. Next: kovacs-sysadm's c4 after B9, phase C, AC008; hv's bubblewrap run; WP06 floor"
 claims: [ST0005, ST0006]
@@ -23,7 +23,7 @@ _(none)_
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
-- WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 committed to Molt-matts main 9f1fa46 and pushed (hv: 'Now'). Phase B2-B9 is hv's, on kovacs, from a plain terminal; kovacs-sysadm is quit at B4 and relaunched from its home at B9. After B9: vc checks verify-wp04.sh c4 output from kovacs-sysadm, then C-phase cleanup per the runbook; AC008 evidence from that. Runbook final at 5a21904 + 1f931a8. (edited)
+- WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 on Molt-matts main 9f1fa46, in 45e344c on upstream. kovacs-sysadm's c1 after hv's relaunch (10 FAIL, 21 Oct evening): B9 ran without B2-B8, so $HOME is untouched, CLAUDE_CONFIG_DIR unset, kovacs' Molt-matts still d48886f. Phase B2-B9 is hv's, on kovacs, from a plain terminal, kovacs-sysadm quit at B4 and relaunched at B9. Then c1 again, hv's C3 go, C3, c4, AC008 evidence. Runbook final at 5a21904 + 1f931a8. (edited)
 - ops/docs sandbox.credentials.files denies: on Molt-matts main 45e344c; rhadamanth homes re-rendered and current; the guide's Fence and wall paragraph corrected as tested (f57ee55). Owed by hv: dc's harness on kovacs under bubblewrap after B9 (then the guide's 'still owed' sentence goes). kovacs homes re-render at B5. (edited)
 
 ## Holds
