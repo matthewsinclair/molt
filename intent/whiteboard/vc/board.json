@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-21T04:09:21.192Z",
+    "heartbeat_at": "2026-10-21T05:10:26.066Z",
     "status": "active",
-    "focus": "21 Oct: E5 fixed (93999c8, CI green); ST0005 open for gyges only (WP03); gyges and Pi resyncs wait on reachability",
+    "focus": "21 Oct: ST0006 sleeve agents specified (c215907); cc builds WP01 then WP02, dc WP05, kovacs-sysadm holds WP04 plan; vc reviews and merges; ST0005 open for gyges only",
     "claims": [
       "ST0005",
       "ST0006"
@@ -313,6 +313,14 @@
       "text": "(2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).",
       "state": "live",
       "recorded_at": "2026-10-21T05:09:43.960Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 10,
+      "text": "(2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).",
+      "state": "live",
+      "recorded_at": "2026-10-21T05:10:15.645Z"
     }
   ],
   "messages": [

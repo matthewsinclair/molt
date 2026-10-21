@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 04:09Z
+heartbeat_at: 2026-10-21 05:10Z
 status: active
-focus: "21 Oct: E5 fixed (93999c8, CI green); ST0005 open for gyges only (WP03); gyges and Pi resyncs wait on reachability"
+focus: "21 Oct: ST0006 sleeve agents specified (c215907); cc builds WP01 then WP02, dc WP05, kovacs-sysadm holds WP04 plan; vc reviews and merges; ST0005 open for gyges only"
 claims: [ST0005, ST0006]
 ---
 
@@ -56,6 +56,7 @@ _(none)_
 - (2026-09-15) **iTerm2 does not write into terminal config without hv knowing.** hv's ruling. No dynamic profile in Molt-matts carries `"Rewritable": true`; profile changes are made in git.
 - (2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after "179 passing", and a stale AC001 question written into wip.
 - **AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: "STRICTLY FORBIDDEN. Purge that from the git record immediately"). Molt-matts `e3af373`'s trailers had been carried for days as "rewriting pushed history is hv's call". The purge recipe is in done 023 and vc's memory. Every sleeve whose Claude Code commits needs the attribution keys in `~/.claude/settings.json` and the Git Commits rule in `~/.claude/CLAUDE.md`. rhadamanth and kovacs have both; gyges is unchecked.
+- (2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).
 - (2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).
 
 ---
