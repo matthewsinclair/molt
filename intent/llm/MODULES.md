@@ -31,6 +31,7 @@
 | keys           | `liberators/keys.sh`           | keyd build from source, config from instance (Linux)    |
 | desktop        | `liberators/desktop.sh`        | GNOME settings, GTK config (Linux)                      |
 | dev-tools      | `liberators/dev-tools.sh`      | CLI tools (bat, rg, fd, etc.) + mise                    |
+| npm            | `liberators/npm.sh`            | ~/.npmrc, npm's cache under XDG (issue 0031)            |
 | ssh            | `liberators/ssh.sh`            | SSH key generation, config linking                      |
 | local-bin      | `liberators/local-bin.sh`      | ~/bin directory, molt CLI symlink                       |
 | intent         | `liberators/intent.sh`         | Intent project management framework, ~/bin symlinks     |
