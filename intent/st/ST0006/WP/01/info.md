@@ -2,14 +2,14 @@
 wp_id: WP-01
 title: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
 scope: S
-status: WIP
+status: Done
 ---
 
 # WP-01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
 
 ## Objective
 
-_(not yet written)_
+Claude Code's state leaves $HOME on a sleeve that declares MOLT_CLAUDE_CONFIG_DIR: the claude liberator honours CLAUDE_CONFIG_DIR, renders env.sh, the GUI file and the home-launch guard, moves ~/.claude and ~/.claude.json once with a clone backup, publishes the variable only once the state is in place, links the user-scope CLAUDE.md and AGENTS.md, and reports through doctor; merged to main at 695e961 on 21 Oct.
 
 
 Owner: molt-cc. Branch `st0006-wp01` in a git worktree; molt-vc reviews and merges.
