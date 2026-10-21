@@ -39,25 +39,15 @@ _claude_links() {
 _CLAUDE_STATUSLINE_GET='.statusLine'
 # shellcheck disable=SC2016 # $want is jq's, not the shell's
 _CLAUDE_STATUSLINE_SET='.statusLine = $want'
-# The hook is the one UserPromptSubmit entry that runs the guard's command. Any
-# other entry is somebody else's, and is kept.
-# shellcheck disable=SC2016
-_CLAUDE_HOOK_GET='first(.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command))) // null'
-# shellcheck disable=SC2016
-_CLAUDE_HOOK_SET='.hooks.UserPromptSubmit = ([.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command) | not)] + [$want])'
+# The hook's entry and filters are molt_claude_hook_entry, MOLT_CLAUDE_HOOK_GET
+# and MOLT_CLAUDE_HOOK_SET in lib/molt.sh: the agents liberator writes the same
+# entry into each home's settings (issue 0030).
 
 # The statusLine the user repo $1 declares, as a file, when it declares one.
 _claude_statusline() {
   if [[ -f "$1/config/claude/statusline.json" ]]; then
     echo "$1/config/claude/statusline.json"
   fi
-}
-
-# The settings entry that runs the home guard. One of Molt's own files, the same
-# on every sleeve: it names the guard as ~/.config/molt/claude-home-guard.sh, the
-# file _claude_published renders, so it holds no machine's path.
-_claude_hook_entry() {
-  echo "${MOLT_ROOT}/templates/claude/home-guard-hook.json"
 }
 
 # Names why the user settings.json does not carry the value that $1 labels, $2
@@ -450,26 +440,38 @@ _claude_published() {
   printf '%s\t%s\t%s\n' "$t/claude-home-guard.sh.tmpl" "$HOME/.config/molt/claude-home-guard.sh" 755
 }
 
-# The agents root the home guard at $1 was rendered with: the line after the
-# here-document opener templates/claude/claude-home-guard.sh.tmpl writes, found
-# only in that form. Nothing when there is no such line.
-_claude_guard_agt_dir() {
+# A value the home guard at $1 was rendered with: the line after the
+# here-document opener, ending in <<'$2', that
+# templates/claude/claude-home-guard.sh.tmpl writes, found only in that form.
+# MOLT_AGENTS_ROOT names the agents root, and MOLT_CLAUDE_CONFIG_DIR the config
+# dir. Nothing when there is no such line.
+_claude_guard_line() {
   [[ -f "$1" ]] || return 0
-  awk -v opener="IFS= read -r agt <<'MOLT_AGENTS_ROOT'" 'found { print; exit } $0 == opener { found = 1 }' "$1"
+  awk -v end="<<'$2'" '
+    found { print; exit }
+    $0 ~ /^IFS= read -r [a-z_]+ <</ && substr($0, length($0) - length(end) + 1) == end { found = 1 }
+  ' "$1"
 }
 
-# The state of the published file $2, rendered from the template $1: missing;
-# stale, when its template or this sleeve's vars.sh changed after it was
-# rendered; drifted, when it is the home guard and the agents root it was
-# rendered with is no longer MOLT_AGT_DIR, which no digest covers; or current.
+# The state of the published file $2, rendered from the template $1, on a
+# sleeve whose config dir is $3: missing; stale, when its template or this
+# sleeve's vars.sh changed after it was rendered; current; or, for the home
+# guard, drifted, when the agents root it was rendered with is no longer
+# MOLT_AGT_DIR, and misdirected, when the config dir it was rendered with is
+# no longer $3. No digest covers either: MOLT_AGT_DIR can come from where molt
+# runs, and vars.sh can build the config dir from XDG_CONFIG_HOME.
 _claude_published_state() {
-  local template="$1" target="$2"
+  local template="$1" target="$2" dir="$3"
   if [[ ! -e "$target" ]]; then
     echo missing
   elif molt_render_stale "$template" "$target"; then
     echo stale
-  elif [[ "$template" == */claude-home-guard.sh.tmpl && "$(_claude_guard_agt_dir "$target")" != "${MOLT_AGT_DIR:-}" ]]; then
+  elif [[ "$template" != */claude-home-guard.sh.tmpl ]]; then
+    echo current
+  elif [[ "$(_claude_guard_line "$target" MOLT_AGENTS_ROOT)" != "${MOLT_AGT_DIR:-}" ]]; then
     echo drifted
+  elif [[ "$(_claude_guard_line "$target" MOLT_CLAUDE_CONFIG_DIR)" != "$dir" ]]; then
+    echo misdirected
   else
     echo current
   fi
@@ -484,7 +486,7 @@ _claude_publish() {
   local dir="$1" template target mode
   while IFS=$'\t' read -r template target mode; do
     [[ -n "$template" ]] || continue
-    if [[ "$(_claude_published_state "$template" "$target")" != current ]]; then
+    if [[ "$(_claude_published_state "$template" "$target" "$dir")" != current ]]; then
       molt_render "$template" "$target" || return 1
     fi
     if ! chmod "$mode" "$target"; then
@@ -560,18 +562,26 @@ _claude_unpublished() {
 }
 
 # Reports, through $1 after the prefix $2, each published file that is not
-# current, or not the mode it was given. Returns non-zero when it reported one.
+# current for the config dir $3, or not the mode it was given. Returns non-zero
+# when it reported one.
 _claude_report_published_faults() {
-  local log="$1" prefix="$2" template target mode faulted=0
+  local log="$1" prefix="$2" dir="$3" template target mode had faulted=0
   while IFS=$'\t' read -r template target mode; do
     [[ -n "$template" ]] || continue
-    case "$(_claude_published_state "$template" "$target")" in
+    case "$(_claude_published_state "$template" "$target" "$dir")" in
       missing)
         "$log" "${prefix}$(molt_tilde "$target") is missing" ;;
       stale)
         "$log" "${prefix}$(molt_tilde "$target") differs from its template or this sleeve's vars.sh" ;;
       drifted)
-        "$log" "${prefix}$(molt_tilde "$target") refuses launches under $(molt_tilde "$(_claude_guard_agt_dir "$target")"), but MOLT_AGT_DIR is $(molt_tilde "${MOLT_AGT_DIR:-}"): re-run molt upgrade" ;;
+        "$log" "${prefix}$(molt_tilde "$target") refuses launches under $(molt_tilde "$(_claude_guard_line "$target" MOLT_AGENTS_ROOT)"), but MOLT_AGT_DIR is $(molt_tilde "${MOLT_AGT_DIR:-}"): re-run molt upgrade" ;;
+      misdirected)
+        had="$(_claude_guard_line "$target" MOLT_CLAUDE_CONFIG_DIR)"
+        case "$had" in
+          /*) had="config dir $(molt_tilde "$had")" ;;
+          *) had="no config dir" ;;
+        esac
+        "$log" "${prefix}$(molt_tilde "$target") checks sessions for $had, but this sleeve's is $(molt_tilde "$dir"): re-run molt upgrade" ;;
       *)
         if [[ "$mode" == 755 && ! -x "$target" ]]; then
           "$log" "${prefix}$(molt_tilde "$target") is not executable"
@@ -595,7 +605,7 @@ _claude_report_config_faults() {
     _claude_report_settings_fault "$log" "$prefix" statusLine "$statusline" "$_CLAUDE_STATUSLINE_GET" || ok=1
   fi
   if [[ "$guarded" == "yes" ]]; then
-    _claude_report_settings_fault "$log" "$prefix" "home-launch hook" "$(_claude_hook_entry)" "$_CLAUDE_HOOK_GET" || ok=1
+    _claude_report_settings_fault "$log" "$prefix" "home-launch hook" "$(molt_claude_hook_entry)" "$MOLT_CLAUDE_HOOK_GET" || ok=1
   fi
   return $ok
 }
@@ -646,7 +656,7 @@ _claude_report_faults() {
     "$log" "${prefix}CLAUDE_CONFIG_DIR is $(molt_tilde "$CLAUDE_CONFIG_DIR"), not this sleeve's config dir $(molt_tilde "$dir")"
     ok=1
   fi
-  _claude_report_published_faults "$log" "$prefix" || ok=1
+  _claude_report_published_faults "$log" "$prefix" "$dir" || ok=1
   # Read where Claude Code reads once the variable is set, not where an
   # environment that missed it would look.
   CLAUDE_CONFIG_DIR="$dir" _claude_report_config_faults "$log" "$prefix" "$user_repo" yes || ok=1
@@ -692,7 +702,7 @@ claude_install() {
     _claude_settings_merge statusLine "$statusline" "$_CLAUDE_STATUSLINE_GET" "$_CLAUDE_STATUSLINE_SET" || return 1
   fi
   if [[ -n "$dir" ]]; then
-    _claude_settings_merge "home-launch hook" "$(_claude_hook_entry)" "$_CLAUDE_HOOK_GET" "$_CLAUDE_HOOK_SET" || return 1
+    _claude_settings_merge "home-launch hook" "$(molt_claude_hook_entry)" "$MOLT_CLAUDE_HOOK_GET" "$MOLT_CLAUDE_HOOK_SET" || return 1
   fi
 
   molt_info "Liberator complete: claude"

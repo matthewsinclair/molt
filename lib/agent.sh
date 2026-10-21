@@ -256,6 +256,63 @@ molt_agent_files() {
   printf '%s\t%s\t%s\t%s\n' .claude/settings.json "$role_dir/settings.json.tmpl" "" ""
 }
 
+# The home guard's hook entry (molt_claude_hook_entry) when the home's file $1
+# carries it, and nothing when it does not: settings.json carries it on a
+# sleeve that declares its config dir, where the claude liberator publishes the
+# guard. A session started without that config dir never reads the user
+# settings that also run it, so only the home's copy refuses it (issue 0030).
+# Fails, printing why instead, when vars.sh cannot be read.
+molt_agent_guard_hook() {
+  local declared
+  [[ "$1" == .claude/settings.json ]] || return 0
+  if ! declared="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
+    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: $declared"
+    return 1
+  fi
+  [[ -z "$declared" ]] || molt_claude_hook_entry
+}
+
+# Whether the home's settings.json $1 carries the hook entry in the file $2 as
+# it stands, compared as the claude liberator compares the user settings', with
+# jq -S, so key order and layout are not differences.
+molt_agent_runs_hook() {
+  local want have
+  want="$(jq -eS 'select(type == "object")' "$2" 2>/dev/null)" || return 1
+  have="$(jq -S --argjson want "$want" "$MOLT_CLAUDE_HOOK_GET" "$1" 2>/dev/null)" || return 1
+  [[ "$have" == "$want" ]]
+}
+
+# Whether the file $2 of the home $1 must be rendered again from the template
+# $3, with the template $4 put ahead of it and the file $5 after it: it is
+# missing, or its digest, which covers the guard's hook entry where the file
+# carries it, does not match, or it does not run that hook.
+molt_agent_file_stale() {
+  local home="$1" file="$2" template="$3" before="$4" after="$5" hook
+  hook="$(molt_agent_guard_hook "$file")" || return 0
+  molt_render_stale "$template" "$home/$file" ${before:+"$before"} ${after:+"$after"} ${hook:+"$hook"} && return 0
+  [[ -n "$hook" ]] && ! molt_agent_runs_hook "$home/$file" "$hook"
+}
+
+# Whether the home $1's settings.json runs the home guard, for molt agent
+# config: the guard's command when it does, a fault when it should and does
+# not, and why it need not on a sleeve that declares no config dir.
+molt_agent_guard_state() {
+  local home="$1" hook command
+  if ! hook="$(molt_agent_guard_hook .claude/settings.json)"; then
+    echo "not checked: $hook"
+  elif [[ -z "$hook" ]]; then
+    echo "none: this sleeve declares no config dir for Claude Code"
+  elif ! molt_agent_runs_hook "$home/.claude/settings.json" "$hook"; then
+    echo "missing from .claude/settings.json: re-run molt upgrade"
+  elif ! command="$(jq -er '.hooks[0].command' "$hook")"; then
+    echo "not checked: $(molt_tilde "$hook") names no command"
+  elif [[ ! -x "${command/#\~/$HOME}" ]]; then
+    echo "$command, which is missing or not executable: the claude liberator publishes it once the move is done"
+  else
+    echo "$command"
+  fi
+}
+
 # Each file in the home of the agent named $1, with the role $2, one
 # "file<TAB>state<TAB>template" line each, where the state is current, stale,
 # missing, or untemplated when the role has no template for it. Fails when the
@@ -270,7 +327,7 @@ molt_agent_file_states() {
       state=untemplated
     elif [[ ! -e "$home/$file" ]]; then
       state=missing
-    elif molt_render_stale "$template" "$home/$file" ${before:+"$before"} ${after:+"$after"}; then
+    elif molt_agent_file_stale "$home" "$file" "$template" "$before" "$after"; then
       state=stale
     else
       state=current
@@ -429,6 +486,7 @@ _agent_config() {
     [[ "$state" != untemplated ]] || state="role $role has no $(basename "$template")"
     printf '    %-24s %s\n' "$file" "$state"
   done <<< "$states"
+  printf '  %-9s %s\n' guard "$(molt_agent_guard_state "$home")"
 
   echo "  settings, highest first"
   while IFS=$'\t' read -r layer path; do
