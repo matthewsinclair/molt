@@ -52,7 +52,7 @@ A role is a directory under your config repo's `config/agents/roles/`, so the se
 | `ops`    | operations and monitoring    | on, escape hatches closed   |
 | `docs`   | documentation of the machine | on, escape hatches closed   |
 
-`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, which the agent reaches by path from its home rather than by starting a session there. What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it.
+`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, while its session starts in the home itself (see [Starting an agent](#starting-an-agent)). What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it.
 
 ## Three layers
 
@@ -183,7 +183,7 @@ There is no launch command. To start an agent, start Claude in its home:
 cd "$MOLT_AGT_DIR/kovacs-sysadm" && claude
 ```
 
-Start it in the home itself, never in a directory below it. Claude Code reads project settings only from `.claude/` in the directory a session starts in, with no fallback to a parent, while it reads `CLAUDE.md` from that directory and every one above it. An agent started in its `work/` therefore keeps its contract and loses its fence, its sandbox and its memory setting. On a sleeve whose state has moved, the home-launch guard blocks the prompts of a session started below a home (see [A Claude started in $HOME, or below a home, is refused](#a-claude-started-in-home-or-below-a-home-is-refused)).
+Start it in the home itself, never in a directory below it. Claude Code reads project settings only from `.claude/` in the directory a session starts in, with no fallback to a parent, while it reads `CLAUDE.md` from that directory and every one above it. An agent started in its `work/` therefore keeps its contract and loses its fence, its sandbox and its memory setting. Once it is started in its home, working under `work/` by path, or with a `cd` inside a command, is fine. On a sleeve whose state has moved, the home-launch guard blocks the prompts of a session started below a home (see [A Claude started in $HOME, or below a home, is refused](#a-claude-started-in-home-or-below-a-home-is-refused)).
 
 Accept the trust prompt at the first launch in each home. The home's `permissions.allow` rules, hooks in settings files and the home's `autoMemoryDirectory` wait for that prompt, which an interactive session shows once per directory. A `claude -p` run never shows it: it uses the hooks and the memory setting but not the home's allow rules, and warns on stderr.
 
@@ -260,19 +260,19 @@ Start each agent from its home, as [Starting an agent](#starting-an-agent) says.
 
 ### A Claude started in $HOME, or below a home, is refused
 
-Once the variable is published, Molt also merges a `UserPromptSubmit` hook into the user settings, changing that key and no other, as it does for the statusLine. The hook runs `~/.config/molt/claude-home-guard.sh`, a POSIX `sh` script that needs `jq` but not `molt`, so it does not depend on `molt` being on `PATH` when a prompt is sent. When the session's working directory is `$HOME`, it prints this on stderr and exits 2, which blocks the prompt:
+Once the variable is published, Molt also merges a `UserPromptSubmit` hook into the user settings, changing that key and no other, as it does for the statusLine. The hook runs `~/.config/molt/claude-home-guard.sh`, a POSIX `sh` script that does not need `molt`, so it does not depend on `molt` being on `PATH` when a prompt is sent. It checks the directory the session was started in, `CLAUDE_PROJECT_DIR` in the hook's environment, never the directory a command has since moved to, so a `cd` inside a command, or a worktree Claude enters, never trips it. When the session was started in `$HOME`, the script prints this on stderr and exits 2, which blocks the prompt:
 
 ```
 launch from an agent home: molt agent list
 ```
 
-It blocks, the same way, a working directory in `MOLT_AGT_DIR` that is not an agent home itself: the agents root, or a directory below a home, such as its `work/`. Below a home it names the home to launch from:
+It blocks, the same way, a session started in `MOLT_AGT_DIR` but not in an agent home itself: at the agents root, or in a directory below a home, such as its `work/`. Below a home it names the home to launch from:
 
 ```
 launch from the agent home itself: cd <home>
 ```
 
-An agent home itself passes, as does any other working directory, so project agents are unaffected. If `jq` is missing, or the hook's input is not JSON or names no working directory, the script exits 1, which shows its message and blocks nothing.
+A session started in an agent home itself passes, as does one started anywhere else, so project agents are unaffected. If `CLAUDE_PROJECT_DIR` is not set, the script says the launch directory was not checked, and blocks nothing.
 
 ## What molt doctor reports
 
