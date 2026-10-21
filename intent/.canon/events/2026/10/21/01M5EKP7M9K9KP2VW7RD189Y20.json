@@ -1,0 +1,14 @@
+{
+  "id": "01M5EKP7M9K9KP2VW7RD189Y20",
+  "ts": "2026-10-21T06:51:57.961Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC013"
+  },
+  "payload": {
+    "evidence": "docs/blog/bl0001-so-you-want-to-run-a-local-agent.md at 159d205: precis, audience, nine sections on hv's arc, three to nine tagged bullets each, Molt: marking where the example begins; reviewed by vc 21 Oct"
+  }
+}
