@@ -1,0 +1,15 @@
+{
+  "id": "01M5EGB0TFYNDYN7ST66DFPS7M",
+  "ts": "2026-10-21T05:53:24.815Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ST0006 WP02: [[agent]] table, MOLT_AGT_DIR, agents liberator, molt agent list|config; branch st0006-wp02 on WP01"
+  }
+}

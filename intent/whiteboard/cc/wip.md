@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 05:03Z
+heartbeat_at: 2026-10-21 05:53Z
 status: active
-focus: "ST0006 WP01 (then WP02) for vc: worktree ~/Devel/prj/Molt-wt/st0006-wp01, branch st0006-wp01"
+focus: "ST0006: WP01 handed to vc at st0006-wp01 820827c; WP02 in build on ~/Devel/prj/Molt-wt/st0006-wp02"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -14,6 +14,7 @@ claims: [ST0006/01, ST0006/02]
 ## DOING
 
 - ST0006 WP01: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches; branch st0006-wp01
+- ST0006 WP02: [[agent]] table, MOLT_AGT_DIR, agents liberator, molt agent list|config; branch st0006-wp02 on WP01
 
 ## TODO
 
