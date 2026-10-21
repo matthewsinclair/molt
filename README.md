@@ -338,6 +338,7 @@ Liberators verify their own prerequisites and fail with install hints if anythin
 - [Creating a New User Config Repo](docs/guides/new-user.md) — scaffold a `molt-{user}` repo with `molt new-user`
 - [Writing a Liberator](docs/guides/writing-a-liberator.md) — how to create your own config modules
 - [Template System](docs/guides/templates.md) — per-instance config rendering with `envsubst`
+- [Sleeve Agents](docs/guides/sleeve-agents.md) — a home for each machine's local agent, and Claude Code's state moved out of `$HOME`
 - [Bootstrap Runbook](docs/guides/bootstrap-runbook.md) — detailed manual setup reference
 
 ## Status
