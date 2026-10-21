@@ -55,7 +55,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC011
 
-- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: yes (computed)
+- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: no (computed)
 
 ### Group AC012
 
@@ -238,6 +238,14 @@ _(no criteria in this group)_
 _(no criteria in this group)_
 
 ### Group AT044
+
+_(no criteria in this group)_
+
+### Group AT045
+
+_(no criteria in this group)_
+
+### Group AT046
 
 _(no criteria in this group)_
 
@@ -470,6 +478,14 @@ _(no tests in this group)_
 ### Group AT044
 
 - AT044 `test/molt.bats` -- covers AC005 -- status: green -- @test "molt_config_digest counts an absent extra input as none, and its arrival as a change". Red on WP01's head (st0006-wp01 820827c): an absent extra input failed the digest under pipefail (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT045
+
+- AT045 `test/liberators/claude.bats` -- covers AC011 -- status: red -- vc's WP01 review C1: a vars.sh that does not parse or cannot be read is refused; red on 41ef6b1
+
+### Group AT046
+
+- AT046 `test/templates.bats` -- covers AC011 -- status: red -- vc's WP01 review C1: molt_render refuses a vars.sh that does not parse or cannot be read; red on 41ef6b1
 
 ---
 

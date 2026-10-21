@@ -1,0 +1,16 @@
+{
+  "id": "01M5EJKVYQKVTR1ERPD1RAK3BX",
+  "ts": "2026-10-21T06:33:11.896Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 1,
+    "text": "ST0006 WP01 review fixes on st0006-wp01, uncommitted on 41ef6b1: C1 one vars.sh reader (molt_source_instance_vars; status 2 refused by _claude_declared_dir and molt_render), C2 non-canonical path and trailing whitespace refused, molt_hostname moved in, recs done (% is no specifier in environment.d). AT045 and AT046 red on main, red on 41ef6b1 and green on the fix. Next: critic-shell's delta review and the suite under both bashes, then one commit and the head to vc."
+  }
+}

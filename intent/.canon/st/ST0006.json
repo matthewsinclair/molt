@@ -624,6 +624,26 @@
       ],
       "status": "green",
       "note": "@test \"molt_config_digest counts an absent extra input as none, and its arrival as a change\". Red on WP01's head (st0006-wp01 820827c): an absent extra input failed the digest under pipefail (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT045",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "red",
+      "note": "vc's WP01 review C1: a vars.sh that does not parse or cannot be read is refused; red on 41ef6b1"
+    },
+    {
+      "id": "AT046",
+      "kind": "test",
+      "file": "test/templates.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "red",
+      "note": "vc's WP01 review C1: molt_render refuses a vars.sh that does not parse or cannot be read; red on 41ef6b1"
     }
   ]
 }

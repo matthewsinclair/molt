@@ -5,7 +5,7 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T06:03:50.530Z",
+    "heartbeat_at": "2026-10-21T06:20:14.053Z",
     "status": "active",
     "focus": "ST0006: WP01 with vc at st0006-wp01 41ef6b1; WP02 at st0006-wp02 14e09d1, next: rebase onto 41ef6b1, AT ids, critic-shell, handover",
     "claims": [
@@ -20,10 +20,10 @@
       "node": "cc",
       "kind": "doing",
       "seq": 1,
-      "text": "ST0006 WP01 with vc for review at st0006-wp01 41ef6b1 (all tests pass under both bashes; critic-shell's six warnings fixed; AT001-AT027 green on main). Next: vc's verdict, then answer it.",
+      "text": "ST0006 WP01 review fixes on st0006-wp01, uncommitted on 41ef6b1: C1 one vars.sh reader (molt_source_instance_vars; status 2 refused by _claude_declared_dir and molt_render), C2 non-canonical path and trailing whitespace refused, molt_hostname moved in, recs done (% is no specifier in environment.d). AT045 and AT046 red on main, red on 41ef6b1 and green on the fix. Next: critic-shell's delta review and the suite under both bashes, then one commit and the head to vc.",
       "state": "live",
       "recorded_at": "2026-10-21T04:54:10.680Z",
-      "edited_at": "2026-10-21T06:03:43.607Z"
+      "edited_at": "2026-10-21T06:33:11.896Z"
     },
     {
       "node": "cc",

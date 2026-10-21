@@ -3,7 +3,7 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 06:03Z
+heartbeat_at: 2026-10-21 06:20Z
 status: active
 focus: "ST0006: WP01 with vc at st0006-wp01 41ef6b1; WP02 at st0006-wp02 14e09d1, next: rebase onto 41ef6b1, AT ids, critic-shell, handover"
 claims: [ST0006/01, ST0006/02]
@@ -13,7 +13,7 @@ claims: [ST0006/01, ST0006/02]
 
 ## DOING
 
-- ST0006 WP01 with vc for review at st0006-wp01 41ef6b1 (all tests pass under both bashes; critic-shell's six warnings fixed; AT001-AT027 green on main). Next: vc's verdict, then answer it. (edited)
+- ST0006 WP01 review fixes on st0006-wp01, uncommitted on 41ef6b1: C1 one vars.sh reader (molt_source_instance_vars; status 2 refused by _claude_declared_dir and molt_render), C2 non-canonical path and trailing whitespace refused, molt_hostname moved in, recs done (% is no specifier in environment.d). AT045 and AT046 red on main, red on 41ef6b1 and green on the fix. Next: critic-shell's delta review and the suite under both bashes, then one commit and the head to vc. (edited)
 - ST0006 WP02 at st0006-wp02 14e09d1, on 820827c, all tests pass under both bashes. Next: rebase onto 41ef6b1; put AT028-AT044 ids in agents.bats, manifest.bats and molt.bats; verify and fix the critic-shell findings (review launched 21 Oct before the compact; rerun it if its report is lost); then hand over to vc. AT028-AT040 stay to-write until the merge brings agents.bats. (edited)
 
 ## TODO
