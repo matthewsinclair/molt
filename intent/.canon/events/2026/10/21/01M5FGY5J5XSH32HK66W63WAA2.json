@@ -1,0 +1,15 @@
+{
+  "id": "01M5FGY5J5XSH32HK66W63WAA2",
+  "ts": "2026-10-21T15:23:06.693Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Nothing more on issue-0027 until vc's verdict (21 Oct); released by that verdict, or by hv. After the merge: remove its worktree and branch; then WP06 (no ACs yet; ask vc)."
+  }
+}
