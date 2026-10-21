@@ -336,10 +336,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 9,
-      "text": "WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 on Molt-matts main 9f1fa46, in 45e344c on upstream. kovacs-sysadm's c1 after hv's relaunch (10 FAIL, 21 Oct evening): B9 ran without B2-B8, so $HOME is untouched, CLAUDE_CONFIG_DIR unset, kovacs' Molt-matts still d48886f. Phase B2-B9 is hv's, on kovacs, from a plain terminal, kovacs-sysadm quit at B4 and relaunched at B9. Then c1 again, hv's C3 go, C3, c4, AC008 evidence. Runbook final at 5a21904 + 1f931a8.",
+      "text": "WP04 on kovacs: phase A done (kovacs-sysadm). Phase B done by hv 21 Oct evening: move at 22:29 (molt resleeve, backup ~/.config/claude.molt-backup.20261021222904), GNOME re-login, stray state from a stale-shell B9 reconciled by hand at 22:55 (cfb46953 transcript kept, stray ~/.claude removed), relaunch 22:56 read the moved token with no login. c1 PASS from the third session (claude process env checked). hv: C3 go. Next: kovacs-sysadm's c4 + doctor, then AC008 evidence, WP04 objective check, intent wp done ST0006/04. Runbook final at 5a21904 + 1f931a8 + 5cefa98 (B9 shell rule). Then rhadamanth's turn, when hv says.",
       "state": "live",
       "recorded_at": "2026-10-21T09:34:08.997Z",
-      "edited_at": "2026-10-21T18:25:59.023Z"
+      "edited_at": "2026-10-21T19:01:27.793Z"
     },
     {
       "node": "vc",
