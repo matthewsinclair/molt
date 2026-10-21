@@ -1,0 +1,15 @@
+{
+  "id": "01M5EWZ6G85JX0ERNTN7DB30Z6",
+  "ts": "2026-10-21T09:34:08.904Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0023"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "molt upgrade runs the library it started with against the liberators it has just pulled"
+  }
+}

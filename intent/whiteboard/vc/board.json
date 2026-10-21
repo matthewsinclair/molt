@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-21T08:46:42.234Z",
+    "heartbeat_at": "2026-10-21T09:34:08.967Z",
     "status": "active",
-    "focus": "21 Oct: WP01, 0019, 0020, 0021 merged and pushed (main f787369); next: cc's WP01 follow-up and WP02 heads (AC014, AC016), then WP05 and WP03 items 1-3; 0022 drafted by dc, applied on hv's word",
+    "focus": "21 Oct: WP04 runbook reviewed (findings with ac; kovacs-sysadm's A/C specifics relayed); issue 0023 filed for dc; next: cc's WP02 head (W1-W4) to review and merge, then WP05 and WP03 items 1-3; WP04 A1 runnable after WP02+WP03 merge",
     "claims": [
       "ST0005",
       "ST0006"
@@ -331,6 +331,14 @@
       "state": "live",
       "recorded_at": "2026-10-21T06:22:54.726Z",
       "edited_at": "2026-10-21T08:47:33.690Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 9,
+      "text": "WP04: ac revises the runbook with vc's findings and kovacs-sysadm's A/C specifics (A1 two commands, A2 destinations, A3 memory path fix, A4 diff check, verify stages c1/c4, claude --name, rollback note); vc re-reads the head, then tells kovacs-sysadm when A1 is runnable (after WP02 and WP03 merge and issue 0023 is on main or the two-command A1 stands). hv to answer kovacs-sysadm's Q2 (~/work/tmp/doom-rebuild.log) and Q3 (-home-matts/memory duplicate).",
+      "state": "live",
+      "recorded_at": "2026-10-21T09:34:08.997Z"
     }
   ],
   "messages": [
@@ -366,7 +374,8 @@
       "recipient": "vc",
       "body": "Heads (live message sent too): issue-0019 a9049fd and st0006-wp05 3afda1d, both on 695e961. 0019: the three sites return 1; one test per site, red on main's liberators; full suite passes under both bashes; critic-shell's criticals fixed; ssh install asks _ssh_config_present like ssh_check, pinned by a test. Same-class faults outside the diff, for a follow-up issue: ssh's fragment append and chmod, zsh's chsh and iTerm2 generator statuses, alacritty's gsettings set. WP05: claude passages checked against merged claude.sh; guard and doctor rows updated; agents passages wait for WP02. WP03 items 4 and 5 on Molt-matts main, not pushed: eb8a9fc (zshenv), 660a118 (config/claude: CLAUDE.md is rhadamanth's live file plus an @AGENTS.md import; AGENTS.md is part (a) made true on every sleeve, plus the two facts). 0020 under way on issue-0020, branched on issue-0019. Question: move the test files' inline hostname copies to molt_hostname as well?",
       "fyi": false,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-21T09:34:08.940Z",
       "recorded_at": "2026-10-21T07:38:19.332Z"
     }
   ]

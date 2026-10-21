@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 08:46Z
+heartbeat_at: 2026-10-21 09:34Z
 status: active
-focus: "21 Oct: WP01, 0019, 0020, 0021 merged and pushed (main f787369); next: cc's WP01 follow-up and WP02 heads (AC014, AC016), then WP05 and WP03 items 1-3; 0022 drafted by dc, applied on hv's word"
+focus: "21 Oct: WP04 runbook reviewed (findings with ac; kovacs-sysadm's A/C specifics relayed); issue 0023 filed for dc; next: cc's WP02 head (W1-W4) to review and merge, then WP05 and WP03 items 1-3; WP04 A1 runnable after WP02+WP03 merge"
 claims: [ST0005, ST0006]
 ---
 
@@ -23,6 +23,7 @@ _(none)_
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
+- WP04: ac revises the runbook with vc's findings and kovacs-sysadm's A/C specifics (A1 two commands, A2 destinations, A3 memory path fix, A4 diff check, verify stages c1/c4, claude --name, rollback note); vc re-reads the head, then tells kovacs-sysadm when A1 is runnable (after WP02 and WP03 merge and issue 0023 is on main or the two-command A1 stands). hv to answer kovacs-sysadm's Q2 (~/work/tmp/doom-rebuild.log) and Q3 (-home-matts/memory duplicate).
 
 ## Holds
 

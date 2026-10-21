@@ -1,0 +1,15 @@
+{
+  "id": "01M5EWZ6K5YWT49BV768JR726E",
+  "ts": "2026-10-21T09:34:08.997Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "WP04: ac revises the runbook with vc's findings and kovacs-sysadm's A/C specifics (A1 two commands, A2 destinations, A3 memory path fix, A4 diff check, verify stages c1/c4, claude --name, rollback note); vc re-reads the head, then tells kovacs-sysadm when A1 is runnable (after WP02 and WP03 merge and issue 0023 is on main or the two-command A1 stands). hv to answer kovacs-sysadm's Q2 (~/work/tmp/doom-rebuild.log) and Q3 (-home-matts/memory duplicate)."
+  }
+}
