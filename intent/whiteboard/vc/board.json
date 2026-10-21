@@ -382,7 +382,8 @@
       "kind": "todo",
       "seq": 14,
       "text": "Molt-matts: remove the dead static config/ssh/config after 0027 merges (hv: yes, 21 Oct): diff it against config/ssh/config.tmpl first and report anything the template lacks, then one deletion commit by vc to Molt-matts main, pushed upstream.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:29:15.489Z",
       "recorded_at": "2026-10-21T15:04:05.986Z",
       "edited_at": "2026-10-21T15:22:26.579Z"
     },
