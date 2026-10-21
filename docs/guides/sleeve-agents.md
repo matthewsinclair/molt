@@ -52,29 +52,30 @@ A role is a directory under your config repo's `config/agents/roles/`, so the se
 | `ops`    | operations and monitoring    | on, escape hatches closed   |
 | `docs`   | documentation of the machine | on, escape hatches closed   |
 
-`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, while its session starts in the home itself (see [Starting an agent](#starting-an-agent)). What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it.
+`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, while its session starts in the home itself (see [Starting an agent](#starting-an-agent)). What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it. What every sleeve agent shares, such as its home and how to start in it, is in one preamble, `config/agents/AGENTS.md.tmpl`.
 
 ## Three layers
 
-| Layer         | Where                                             | Owned by       | Holds                                                                                         |
-| ------------- | ------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------- |
-| Role source   | your config repo's `config/agents/roles/<role>/`  | you, in git    | the role contract `AGENTS.md.tmpl` and the permission profile `settings.json.tmpl`            |
-| Agent home    | `$MOLT_AGT_DIR/<hostname>-<role>/`                | Molt, rendered | `AGENTS.md`, `CLAUDE.md`, `.claude/settings.json`, `memory/`, `work/`                         |
-| Harness state | `$XDG_CONFIG_HOME/claude`, as `CLAUDE_CONFIG_DIR` | Claude Code    | credentials, transcripts, plugins and user settings: one per machine, shared by every session |
+| Layer         | Where                                             | Owned by       | Holds                                                                                                                                                           |
+| ------------- | ------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Role source   | your config repo's `config/agents/`               | you, in git    | the shared preamble `AGENTS.md.tmpl`, and for each role the contract `roles/<role>/AGENTS.md.tmpl` and the permission profile `roles/<role>/settings.json.tmpl` |
+| Agent home    | `$MOLT_AGT_DIR/<hostname>-<role>/`                | Molt, rendered | `AGENTS.md`, `CLAUDE.md`, `.claude/settings.json`, `memory/`, `work/`                                                                                           |
+| Harness state | `$XDG_CONFIG_HOME/claude`, as `CLAUDE_CONFIG_DIR` | Claude Code    | credentials, transcripts, plugins and user settings: one per machine, shared by every session                                                                   |
 
 The agent home is both the agent's config and the directory it runs in. Claude Code reads project-level settings from `.claude/` in the directory a session starts in, and from no directory above it, so starting the agent in its home is what applies the home's settings: the two coincide by construction (see [Starting an agent](#starting-an-agent)). The home's settings set `autoMemoryDirectory` to `<home>/memory`, so the agent's memory lives in its home rather than in the harness state, where Claude Code keys auto memory by git repository, or by the project root outside one.
 
 ### What a session in the home reads
 
-A session started in a home reads three layers of instructions, widest first:
+A session started in a home reads four layers of instructions, widest first:
 
-| Layer      | File                                                                        | Carries                                                                                             |
-| ---------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| User scope | `CLAUDE.md` and `AGENTS.md` in the config dir, linked from `config/claude/` | the rules every session on every sleeve follows                                                     |
-| Role       | the home's `AGENTS.md`, from `config/agents/roles/<role>/AGENTS.md.tmpl`    | the role's own text: who the agent is, what the role is for, what it may touch, where its work goes |
-| Host       | `instances/<hostname>/agents/<role>.md`, appended to the home's `AGENTS.md` | facts true on this machine only: its stack layout, what is installed, its known issues              |
+| Layer      | File                                                                          | Carries                                                                                            |
+| ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| User scope | `CLAUDE.md` and `AGENTS.md` in the config dir, linked from `config/claude/`   | the rules every session on every sleeve follows                                                    |
+| Agent      | the home's `AGENTS.md`, first from `config/agents/AGENTS.md.tmpl`             | what every sleeve agent shares: who it is, its home and how to start in it, the files Molt renders |
+| Role       | the home's `AGENTS.md`, next from `config/agents/roles/<role>/AGENTS.md.tmpl` | the role's own text: what the role is for, what it may touch, what it must not                     |
+| Host       | `instances/<hostname>/agents/<role>.md`, appended to the home's `AGENTS.md`   | facts true on this machine only: its stack layout, what is installed, its known issues             |
 
-The home's `CLAUDE.md` is a one-line `@AGENTS.md` stub. Put each instruction in exactly one layer: a rule that holds everywhere belongs in user scope, and the role contract does not repeat it.
+The home's `CLAUDE.md` is a one-line `@AGENTS.md` stub. Put each instruction in exactly one layer: a rule that holds everywhere belongs in user scope, one that holds for every sleeve agent in the preamble, and the role contract repeats neither. The preamble is optional; without one, the role's template opens the file.
 
 When your config repo has `config/claude/CLAUDE.md` and `AGENTS.md`, Molt links them into the config dir on every sleeve, moved or not (on a sleeve that has not moved, the config dir is still `~/.claude`), so the cross-session rules are the same everywhere; a regular file already at either path is backed up before the link replaces it. Project agents read these files too.
 
@@ -112,12 +113,12 @@ Homes live under `MOLT_AGT_DIR`. It defaults to the `agt/` sibling of `MOLT_PRJ_
 
 On `molt resleeve` and `molt upgrade`, the `agents` liberator renders each enabled agent's home:
 
-| In the home             | Rendered from                                                                                               |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `AGENTS.md`             | `config/agents/roles/<role>/AGENTS.md.tmpl`, followed by `instances/<hostname>/agents/<role>.md` if present |
-| `CLAUDE.md`             | a one-line `@AGENTS.md` stub                                                                                |
-| `.claude/settings.json` | `config/agents/roles/<role>/settings.json.tmpl`, with `autoMemoryDirectory` set to `<home>/memory`          |
-| `memory/`, `work/`      | created empty, and the agent's from then on: Molt never writes to them again                                |
+| In the home             | Rendered from                                                                                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`             | `config/agents/AGENTS.md.tmpl` if present, then `config/agents/roles/<role>/AGENTS.md.tmpl`, then `instances/<hostname>/agents/<role>.md` if present |
+| `CLAUDE.md`             | a one-line `@AGENTS.md` stub                                                                                                                         |
+| `.claude/settings.json` | `config/agents/roles/<role>/settings.json.tmpl`, with `autoMemoryDirectory` set to `<home>/memory`                                                   |
+| `memory/`, `work/`      | created empty, and the agent's from then on: Molt never writes to them again                                                                         |
 
 Templates go through Molt's usual renderer (see [Template System](templates.md)), so only `MOLT_*` variables are substituted and any other `$VAR` is left as written. Besides the sleeve's own instance variables, an agent's templates can use:
 
@@ -324,6 +325,8 @@ Claude Code merges settings from several levels. From the highest precedence dow
 The home's `.claude/settings.json` is a fence: it carries the role's permission profile, but it sits in a directory the agent works in, and the agent could edit it. The managed-settings file is the wall: root owns it, so the agent cannot change it, and since a deny wins at every level, a deny there holds whatever the levels below allow. It lives at `/Library/Application Support/ClaudeCode/managed-settings.json` on macOS and `/etc/claude-code/managed-settings.json` on Linux, with drop-in files in `managed-settings.d/` beside it.
 
 `ops` and `docs` get the fence and the sandbox. With `sandbox.enabled`, sandboxed Bash cannot write any `.claude` settings, hooks, shell rc files, `.git` config or the config dir, with no exemption. The sandbox binds sandboxed commands only, and it has two escape hatches, which the `ops` and `docs` profiles both close. A command matching `sandbox.excludedCommands` runs with no filesystem restrictions and no network proxy, so the profiles list no excluded commands. A command that fails in the sandbox can be retried outside it on approval unless `sandbox.allowUnsandboxedCommands` is `false`, so the profiles set it to `false`. Hooks, Edit and Write run outside the sandbox, and Edit and Write only prompt.
+
+The profiles' credential denies bind Claude Code's Read tool only, so Bash can still read those files: in `sysadm` because it has no sandbox, and in `ops` and `docs` because project settings cannot set the sandbox's `sandbox.credentials` entries. Until the managed floor below, the contract alone keeps them unread.
 
 `sysadm` cannot be sandboxed, because changing the machine is its job, so for now its permissions live only in the fence. A managed deny floor for `sysadm` is planned (ST0006 WP06): Molt will render the role's `permissions.deny` into a root-owned drop-in, `managed-settings.d/molt-sysadm.json`, through the `sudo` path the `system` liberator already uses, and `molt agent config` will show those rules as managed. What the floor denies is the user's decision; WP06 supplies the mechanism.
 
