@@ -336,10 +336,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 9,
-      "text": "WP04 on kovacs: phase A done (kovacs-sysadm). Phase B done by hv 21 Oct evening: move at 22:29 (molt resleeve, backup ~/.config/claude.molt-backup.20261021222904), GNOME re-login, stray state from a stale-shell B9 reconciled by hand at 22:55 (cfb46953 transcript kept, stray ~/.claude removed), relaunch 22:56 read the moved token with no login. c1 PASS from the third session (claude process env checked). hv: C3 go. Next: kovacs-sysadm's c4 + doctor, then AC008 evidence, WP04 objective check, intent wp done ST0006/04. Runbook final at 5a21904 + 1f931a8 + 5cefa98 (B9 shell rule). Then rhadamanth's turn, when hv says.",
+      "text": "WP04 kovacs DONE 21 Oct ~23:50: phases A-C, c4 PASS, AC008 satisfied by evidence, kovacs-sysadm folded (session 1c7fdc09); ~/.npm gone, cache in ~/.cache/npm (issue 0031). WP04 started (WIP): rhadamanth's move is next when hv schedules it (runbook section 'rhadamanth', same three phases; B9 from a post-move shell; hv removes ~/.npm done already); gyges later (hv). hv to rule whether WP04 closes after rhadamanth with gyges carried as a todo.",
       "state": "live",
       "recorded_at": "2026-10-21T09:34:08.997Z",
-      "edited_at": "2026-10-21T19:01:27.793Z"
+      "edited_at": "2026-10-21T19:51:33.843Z"
     },
     {
       "node": "vc",

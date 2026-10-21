@@ -43,7 +43,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC008
 
-- AC008 (non-test) kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home; ~/.claude and ~/.claude.json are gone from $HOME and the verify script says so -- satisfied: no
+- AC008 (non-test) kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home; ~/.claude and ~/.claude.json are gone from $HOME and the verify script says so -- evidence: kovacs, 21 Oct 2026: kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home (autoMemoryDirectory, role memory stated unread); CLAUDE_CONFIG_DIR=/home/matts/.config/claude in the claude process's own environment; ~/.claude and ~/.claude.json absent; work/verify-wp04.sh c4 PASS on every line after C3; molt doctor all checks passed; FOLD note in the home updated (session 1c7fdc09, ~23:50 local). Runbook phases A-C per intent/st/ST0006/WP/04/info.md at 2915240; Molt 2b330c0, Molt-matts 423b800 on kovacs. -- satisfied: yes
 
 ### Group AC009
 

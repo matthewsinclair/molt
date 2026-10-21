@@ -1,0 +1,16 @@
+{
+  "id": "01M5G09Q6KEGGT88NSN2WV0EZG",
+  "ts": "2026-10-21T19:51:33.843Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04 kovacs DONE 21 Oct ~23:50: phases A-C, c4 PASS, AC008 satisfied by evidence, kovacs-sysadm folded (session 1c7fdc09); ~/.npm gone, cache in ~/.cache/npm (issue 0031). WP04 started (WIP): rhadamanth's move is next when hv schedules it (runbook section 'rhadamanth', same three phases; B9 from a post-move shell; hv removes ~/.npm done already); gyges later (hv). hv to rule whether WP04 closes after rhadamanth with gyges carried as a todo."
+  }
+}

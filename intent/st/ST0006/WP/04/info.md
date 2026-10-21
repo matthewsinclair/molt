@@ -2,7 +2,7 @@
 wp_id: WP-04
 title: Move kovacs-sysadm into its home; then rhadamanth, then gyges
 scope: S
-status: Not Started
+status: WIP
 ---
 
 # WP-04: Move kovacs-sysadm into its home; then rhadamanth, then gyges
