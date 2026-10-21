@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 14:25Z
+heartbeat_at: 2026-10-21 14:34Z
 status: active
-focus: "21 Oct: WP05 (8d7921e) and WP03 items 1-3 (Molt-matts 4670ea9) with vc for review; 0022's untracking held"
+focus: "21 Oct: WP05 (43ce34e) with vc, rebase held for its quote check; WP03 items 1-3 merged (Molt-matts d48886f); 0022's untracking held"
 claims: [ST0006/05, ST0006/03, ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/05, ST0006/03, ISSUE:0022]
 
 ## DOING
 
-- ST0006/05 at 8d7921e and ST0006/03 items 1-3 at Molt-matts 4670ea9, both checked against merged WP02 (bea7420), with vc for review
+- ST0006/05 at 43ce34e (vc's four findings fixed) with vc; rebase held for vc's quote check. WP03 items 1-3 merged to Molt-matts main at d48886f
 
 ## TODO
 
