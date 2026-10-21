@@ -435,7 +435,7 @@ _vars_read_whole() {
     [ "$(cat "$BATS_TEST_TMPDIR/out")" = "value = bar" ]
 }
 
-@test "a vars.sh whose EXIT trap prints, on stdout or stderr, is read to its end by every reader" {
+@test "a vars.sh whose EXIT, RETURN or DEBUG trap prints, on stdout or stderr, is read to its end by every reader" {
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
     create_test_vars "$repo"
@@ -449,6 +449,13 @@ _vars_read_whole() {
     _vars_with_trap 'trap "echo bye >&2" EXIT'
     _vars_read_whole
     _vars_with_trap 'trap ":" EXIT'
+    _vars_read_whole
+    # A RETURN trap runs as the . returns, after the probe's answer, and a
+    # DEBUG trap before each command after the file, the one that clears it
+    # included (critic-shell, 21 Oct).
+    _vars_with_trap 'trap "echo bye >&2" RETURN'
+    _vars_read_whole
+    _vars_with_trap 'trap "echo bye" DEBUG'
     _vars_read_whole
 }
 
