@@ -1,0 +1,15 @@
+{
+  "id": "01M5EX4703X2DZT7HW3C97VTH5",
+  "ts": "2026-10-21T09:36:53.251Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0006 WP02 design for todos 3 and 4, worked out on 21 Oct before the hold. No code is changed yet: st0006-wp02 is still at b897a23. (1) W3 is wider than AGENTS.md. A probe showed .claude/settings.json backed up on every re-render, because _agents_memory_dir_set rewrites it after molt_render's compare; the critic missed this. Split molt_render into molt_render_text and a new molt_render_place, which keeps the region above @@MOLT:BEGIN@@, compares, backs up, moves, writes the sidecar with the digest of the template, vars.sh and any extras, sets perms and logs. _agents_render_file builds the whole file in .molt-tmp first (preamble, role and overlay; the jq memory dir for settings.json) and hands it to molt_render_place, so a failed layer leaves the file as it was; AT035 then reads missing on a first install and stale after. (2) Composing alone still duplicates the preamble when a role template carries @@MOLT:BEGIN@@: keep the region only when the new render opens with the marker, as both ssh templates do, and rename molt_render's local preamble to kept. (3) W2: molt_instance_var takes an optional starting value, exported before vars.sh is sourced, as molt_render_text's subshell has it; molt_agt_dir_fault asks with $MOLT_AGT_DIR and refuses any difference, unset included. (4) W1: molt_disk_path in lib/molt.sh resolves the nearest existing ancestor with (cd && { /bin/pwd -P || pwd -P; }), the guard's real_dir method, and appends the rest; containment compares those. (5) Recs: a molt_path_fault shared by _claude_path_fault and _molt_agt_root_fault; molt_instance_vars_file prints the 'cannot be found' reason once; refuse a root at or under ~/.claude, molt_claude_config_dir or the declared MOLT_CLAUDE_CONFIG_DIR; handle / before the canonical test; name a derived root through a molt_agt_dir_derived in constants.sh; move the envsubst check to the start of molt_render_text; a per-test MOLT_AGT_DIR in test_helper's setup(), keeping the file-level line for the four files with setups of their own. (6) Tests: extend AT059 and AT057; new AT062 (entries or a role's files unreadable), AT063 (a layer that cannot render leaves AGENTS.md as it was, a vars.sh EXIT trap kept out of the reason), AT064 (AT055's letter case as its own skipping test), AT065 (the marker with a preamble), AT066 (no backup on a re-render without a hand edit); W4 at constants.bats lines 115 and 124. ssh's config.d append probably has the same render-then-append shape: unverified, and not WP02."
+  }
+}
