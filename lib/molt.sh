@@ -176,10 +176,21 @@ molt_report_link_faults() {
     else
       fault="$(molt_link_fault "$target")"
     fi
-    "$log" "${prefix}"'~'"${target#"$HOME"} $fault"
+    "$log" "${prefix}$(molt_tilde "$target") $fault"
     faulted=1
   done <<< "$links"
   return $faulted
+}
+
+# $1 for a message: a path under $HOME is written from ~, any other as it is.
+# Writing '~' before whatever follows $HOME named a target outside $HOME as if
+# it were inside it, and Claude Code's config dir may be anywhere (ST0006).
+molt_tilde() {
+  case "$1" in
+    "$HOME") echo '~' ;;
+    "$HOME"/*) echo '~'"${1#"$HOME"}" ;;
+    *) echo "$1" ;;
+  esac
 }
 
 # Links every line of the list $1, stopping at the first link that fails.
@@ -228,6 +239,30 @@ molt_link() {
   molt_info "Linked: $target -> $source"
 }
 
+# --- Instance Vars ---
+
+# The path of this sleeve's instances/<host>/vars.sh in the user repo, whether
+# or not it exists. Fails, as molt_find_user_repo does, when there is no repo.
+molt_instance_vars_file() {
+  local user_repo hostname
+  user_repo="$(molt_find_user_repo)" || return 1
+  hostname="$(hostname -s 2>/dev/null || hostname)"
+  echo "${user_repo}/instances/${hostname}/vars.sh"
+}
+
+# Prints the variable $1 as this sleeve's vars.sh exports it; nothing when the
+# file does not export it, or there is no file. Only exported variables count,
+# because molt_render substitutes only those: a value it could not render is
+# not declared. Sourced in a subshell, as molt_render does, so nothing leaks.
+# Fails when there is no user repo, or the file cannot be sourced.
+molt_instance_var() {
+  local name="$1" vars_file
+  vars_file="$(molt_instance_vars_file)" || return 1
+  [[ -f "$vars_file" ]] || return 0
+  # shellcheck disable=SC1090
+  ( . "$vars_file" >/dev/null 2>&1 && { printenv "$name" || true; } )
+}
+
 # --- Template Rendering ---
 
 molt_render() {
@@ -249,11 +284,9 @@ molt_render() {
   fi
 
   # Load instance vars
-  local user_repo
-  user_repo="$(molt_find_user_repo)" || return 1
-  local hostname
+  local vars_file hostname
+  vars_file="$(molt_instance_vars_file)" || return 1
   hostname="$(hostname -s 2>/dev/null || hostname)"
-  local vars_file="$user_repo/instances/$hostname/vars.sh"
 
   # Create parent directory if needed
   mkdir -p "$(dirname "$target")"
@@ -370,10 +403,8 @@ molt_config_digest() {
   shift
   [[ -f "$template" ]] || return 1
 
-  local user_repo hostname vars_file
-  user_repo="$(molt_find_user_repo)" || return 1
-  hostname="$(hostname -s 2>/dev/null || hostname)"
-  vars_file="${user_repo}/instances/${hostname}/vars.sh"
+  local vars_file
+  vars_file="$(molt_instance_vars_file)" || return 1
 
   # Any remaining arguments are extra inputs that also determine the rendered
   # result -- ssh's instance config.d fragments, for one. A fragment ADDED or
@@ -481,6 +512,18 @@ molt_config_stale() {
   template="${user_repo}/${source}.tmpl"
 
   [[ -f "$template" ]] || return 1      # static/linked config: nothing to render
+  molt_render_stale "$template" "$target" ${1+"$@"}
+}
+
+# molt_config_stale for a template named by its path, as Molt's own templates
+# under templates/ are (the claude liberator's, ST0006): true when the file $2
+# rendered from the template $1 is missing, or no longer matches the template,
+# this sleeve's vars.sh or the extra inputs after them. Fails closed, a missing
+# template included: a template that is not there cannot be called rendered.
+molt_render_stale() {
+  local template="$1" target="$2"
+  shift 2
+  [[ -f "$template" ]] || return 0
   [[ -e "$target" ]]   || return 0      # never rendered: trivially stale
 
   local want have
@@ -488,7 +531,7 @@ molt_config_stale() {
   [[ -n "$want" ]] || return 0
   have="$(sed -n 's/^digest //p' "${target}.molt-rendered" 2>/dev/null)"
 
-  [[ "$want" == "$have" ]] && return 1 || return 0
+  [[ "$want" != "$have" ]]
 }
 
 # --- Fonts ---
@@ -801,6 +844,18 @@ molt_report_faults() {
     "$log" "${lead}${label}: $fault"
   done <<< "$faults"
   return 1
+}
+
+# --- Claude Code ---
+
+# Where Claude Code keeps its state on this machine: CLAUDE_CONFIG_DIR when it
+# is set, which moves every ~/.claude path and ~/.claude.json too, and
+# ~/.claude when it is not. Every liberator that reads or writes Claude Code's
+# files asks this, so none of them recreates ~/.claude once the state has moved
+# (ST0006). Asked at each call, never captured, because the claude liberator
+# exports CLAUDE_CONFIG_DIR partway through a run.
+molt_claude_config_dir() {
+  echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 }
 
 # --- CLI Commands ---

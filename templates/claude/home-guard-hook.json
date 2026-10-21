@@ -1,0 +1,8 @@
+{
+  "hooks": [
+    {
+      "type": "command",
+      "command": "~/.config/molt/claude-home-guard.sh"
+    }
+  ]
+}
