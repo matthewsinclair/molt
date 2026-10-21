@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "3cbe9031-145f-4360-ab33-cdb83ac851d9",
-    "heartbeat_at": "2026-10-21T14:03:40.844Z",
+    "heartbeat_at": "2026-10-21T14:25:31.700Z",
     "status": "active",
-    "focus": "21 Oct: banked for hv's compact. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 (8bd28c2, in vc's review) merges; 0022's untracking until Intent's canon carries its settings",
+    "focus": "21 Oct: WP05 (8d7921e) and WP03 items 1-3 (Molt-matts 4670ea9) with vc for review; 0022's untracking held",
     "claims": [
       "ST0006/05",
       "ST0006/03",
@@ -89,7 +89,8 @@
       "kind": "hold",
       "seq": 2,
       "text": "ST0006/05: rebase st0006-wp05 (e4f857d) onto main, check the agents, AC014 and AC016 passages against the merged code with the scratchpad checklist, then the head to vc. Released when WP02 is merged to main.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:25:31.613Z",
       "recorded_at": "2026-10-21T08:46:38.925Z"
     },
     {
@@ -97,7 +98,8 @@
       "kind": "hold",
       "seq": 3,
       "text": "ST0006/03 items 1-3: Molt-matts st0006-wp03 (769c2e6, preamble split in) re-rendered with the merged WP02 as rhadamanth and kovacs (scratch HOME and MOLT_AGT_DIR), then the head to vc; items 4 and 5 are on Molt-matts main and pushed. Released when WP02, with AC016, is merged to main.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:25:31.642Z",
       "recorded_at": "2026-10-21T08:46:38.953Z"
     },
     {
@@ -116,6 +118,14 @@
       "state": "archived",
       "archived_at": "2026-10-21T13:36:02.004Z",
       "recorded_at": "2026-10-21T09:37:05.561Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 4,
+      "text": "ST0006/05 at 8d7921e and ST0006/03 items 1-3 at Molt-matts 4670ea9, both checked against merged WP02 (bea7420), with vc for review",
+      "state": "live",
+      "recorded_at": "2026-10-21T14:25:31.671Z"
     }
   ],
   "messages": []

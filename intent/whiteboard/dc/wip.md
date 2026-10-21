@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 14:03Z
+heartbeat_at: 2026-10-21 14:25Z
 status: active
-focus: "21 Oct: banked for hv's compact. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 (8bd28c2, in vc's review) merges; 0022's untracking until Intent's canon carries its settings"
+focus: "21 Oct: WP05 (8d7921e) and WP03 items 1-3 (Molt-matts 4670ea9) with vc for review; 0022's untracking held"
 claims: [ST0006/05, ST0006/03, ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/05, ST0006/03, ISSUE:0022]
 
 ## DOING
 
-_(none)_
+- ST0006/05 at 8d7921e and ST0006/03 items 1-3 at Molt-matts 4670ea9, both checked against merged WP02 (bea7420), with vc for review
 
 ## TODO
 
@@ -21,8 +21,6 @@ _(none)_
 
 ## Holds
 
-- ST0006/05: rebase st0006-wp05 (e4f857d) onto main, check the agents, AC014 and AC016 passages against the merged code with the scratchpad checklist, then the head to vc. Released when WP02 is merged to main.
-- ST0006/03 items 1-3: Molt-matts st0006-wp03 (769c2e6, preamble split in) re-rendered with the merged WP02 as rhadamanth and kovacs (scratch HOME and MOLT_AGT_DIR), then the head to vc; items 4 and 5 are on Molt-matts main and pushed. Released when WP02, with AC016, is merged to main.
 - ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.
 
 ## Watch-outs
