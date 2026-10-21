@@ -372,10 +372,18 @@
       "node": "vc",
       "kind": "todo",
       "seq": 13,
-      "text": "Issue reviews: 0024 and 0025 merged (da8da33: 0024 at d62a6d7, 0025 at da8da33) and closed. dc's 0028 (0d552df) merging onto the combined tree in the scratch worktree; then main, push, CI, close 0028. cc next: 0027 (static ssh config). cc also fixes the templates.md word (molt_render_text where ssh calls molt_render_tmp) on main by pathspec.",
+      "text": "Issue reviews: 0024, 0025 (da8da33) and 0028 (f4a1156) merged and closed; 0026 earlier (c295b94). Open: cc's 0027 (static ssh config refused up front; route approved), head to come. 0022 waits on Intent canon.",
       "state": "live",
       "recorded_at": "2026-10-21T14:39:54.958Z",
-      "edited_at": "2026-10-21T15:03:47.641Z"
+      "edited_at": "2026-10-21T15:09:00.965Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 14,
+      "text": "For hv, with the next batch: Molt-matts has both config/ssh/config (static) and config/ssh/config.tmpl; molt_install_config picks the template, so the static file is dead weight (cc, issue 0027). Propose removing it from Molt-matts once 0027 settles the static path.",
+      "state": "live",
+      "recorded_at": "2026-10-21T15:04:05.986Z"
     }
   ],
   "messages": [
