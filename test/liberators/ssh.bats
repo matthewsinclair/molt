@@ -32,7 +32,7 @@ _ssh_env() {
     printf 'rendered earlier\ndigest stale\n' > "$HOME/.ssh/config.molt-rendered"
     cp "$HOME/.ssh/config" "$SSH_ROOT/config.before"
     cp "$HOME/.ssh/config.molt-rendered" "$SSH_ROOT/sidecar.before"
-    molt_render() { molt_error "render refused: $1"; return 1; }
+    molt_render_text() { echo "render refused: $1"; return 1; }
 
     run ssh_install
     assert_failure
@@ -63,19 +63,20 @@ _ssh_env() {
 
 # A fragment that could not be read was appended as its sentinel alone, so every
 # later run took it as present (issue 0021).
-@test "ssh_install fails on a config.d fragment it cannot read, and appends nothing" {
+@test "ssh_install fails on a config.d fragment it cannot read, and leaves ~/.ssh/config as it was" {
     [[ "$(id -u)" -ne 0 ]] || skip "root reads any file"
     _ssh_env
     printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
-    molt_render() { printf 'Host *\n' > "$2"; }
+    printf 'Host *\n' > "$HOME/.ssh/config"
+    cp "$HOME/.ssh/config" "$SSH_ROOT/config.before"
     chmod 000 "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
 
     run ssh_install
     assert_failure
     assert_output_contains "gyges.conf cannot be read"
     refute_output_contains "Liberator complete"
-    run grep -cF 'molt config.d: gyges.conf' "$HOME/.ssh/config"
-    [ "$output" = 0 ]
+    cmp "$SSH_ROOT/config.before" "$HOME/.ssh/config"
+    [ -z "$(find "$HOME/.ssh" -name 'config.molt-*')" ]
 }
 
 # The chmod 600's status was dropped, so a config ssh refuses still ended on
@@ -83,7 +84,6 @@ _ssh_env() {
 @test "ssh_install fails when ~/.ssh/config cannot be made mode 600" {
     _ssh_env
     printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
-    molt_render() { printf 'Host *\n' > "$2"; }
     mkdir -p "$SSH_ROOT/bin"
     # A chmod that refuses this one call and passes every other through.
     printf '#!/bin/sh\n[ "$1" = 600 ] && [ "$2" = "%s/.ssh/config" ] && exit 1\nexec /bin/chmod "$@"\n' "$HOME" > "$SSH_ROOT/bin/chmod"
@@ -94,4 +94,104 @@ _ssh_env() {
     assert_failure
     assert_output_contains "could not be made mode 600"
     refute_output_contains "Liberator complete"
+}
+
+# Issue 0024: ssh_install rendered ~/.ssh/config and appended its config.d
+# fragments after molt_render had compared the render with the file on disk,
+# which held them, so every install backed the file up and warned it had been
+# changed, and a hand edit read the same as molt's own fragments. The whole
+# file is built before the compare now.
+_ssh_backups() {
+    find "$HOME/.ssh" -name 'config.molt-backup.*' | wc -l | tr -d ' '
+}
+
+@test "a second ssh_install with nothing changed writes nothing and backs nothing up" {
+    require_command ssh "ssh_check needs ssh"
+    _ssh_env
+    printf 'Host *\n  ServerAliveInterval 60\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    printf 'Host kovacs\n  HostName kovacs.local\n' > "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/kovacs.conf"
+    ssh_install >/dev/null
+    printf 'Host *\n  ServerAliveInterval 60\n\n# --- molt config.d: gyges.conf ---\nHost gyges\n  HostName gyges.local\n\n# --- molt config.d: kovacs.conf ---\nHost kovacs\n  HostName kovacs.local\n' > "$SSH_ROOT/expected"
+    cmp "$SSH_ROOT/expected" "$HOME/.ssh/config"
+    cp "$HOME/.ssh/config.molt-rendered" "$SSH_ROOT/sidecar.before"
+
+    run ssh_install
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(_ssh_backups)" = 0 ]
+    cmp "$SSH_ROOT/expected" "$HOME/.ssh/config"
+    [ "$(stat -f '%Lp' "$HOME/.ssh/config" 2>/dev/null || stat -c '%a' "$HOME/.ssh/config")" = 600 ]
+    run ssh_check
+    assert_success
+}
+
+# molt_render_place backs a file up whenever it differs from what molt would
+# write, so a changed input takes one backup, of the render before it; the
+# install after that, with nothing changed, takes none.
+@test "a changed template or fragment re-renders ~/.ssh/config once, with each fragment once" {
+    require_command ssh "ssh_check needs ssh"
+    _ssh_env
+    local frag="$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+    printf 'Host *\n  ServerAliveInterval 60\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    ssh_install >/dev/null
+
+    printf 'Host *\n  ServerAliveInterval 30\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    run ssh_check
+    assert_failure
+    ssh_install >/dev/null
+    [ "$(_ssh_backups)" = 1 ]
+    grep -qx '  ServerAliveInterval 30' "$HOME/.ssh/config"
+
+    printf 'Host gyges\n  HostName gyges.lan\n' > "$frag"
+    run ssh_check
+    assert_failure
+    ssh_install >/dev/null
+    [ "$(_ssh_backups)" = 2 ]
+    grep -qx '  HostName gyges.lan' "$HOME/.ssh/config"
+    [ "$(grep -c 'molt config.d: gyges.conf' "$HOME/.ssh/config")" = 1 ]
+    ! grep -q 'gyges.local' "$HOME/.ssh/config"
+
+    run ssh_install
+    assert_success
+    [ "$(_ssh_backups)" = 2 ]
+    run ssh_check
+    assert_success
+}
+
+@test "a hand edit below the config.d fragments is backed up once, with the warning" {
+    _ssh_env
+    printf 'Host *\n  ServerAliveInterval 60\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    ssh_install >/dev/null
+    echo "Host by-hand" >> "$HOME/.ssh/config"
+
+    run ssh_install
+    assert_success
+    assert_output_contains "Rendered file changed since last render, backing up: $HOME/.ssh/config -> $HOME/.ssh/config.molt-backup."
+    [ "$(_ssh_backups)" = 1 ]
+    grep -qx "Host by-hand" "$HOME"/.ssh/config.molt-backup.*
+    ! grep -q "Host by-hand" "$HOME/.ssh/config"
+
+    run ssh_install
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(_ssh_backups)" = 1 ]
+}
+
+# A static config/ssh/config is linked, so the fragments went through the link
+# into the user repo. With fragments declared, the install refuses instead.
+@test "ssh_install refuses a static config/ssh/config when config.d declares fragments, and writes nothing" {
+    _ssh_env
+    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config"
+    cp "$SSH_ROOT/repo/config/ssh/config" "$SSH_ROOT/static.before"
+    printf 'Host mine\n' > "$HOME/.ssh/config"
+    cp "$HOME/.ssh/config" "$SSH_ROOT/config.before"
+
+    run ssh_install
+    assert_failure
+    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so 1 fragment(s) were not applied"
+    refute_output_contains "Liberator complete"
+    cmp "$SSH_ROOT/static.before" "$SSH_ROOT/repo/config/ssh/config"
+    [ ! -L "$HOME/.ssh/config" ]
+    cmp "$SSH_ROOT/config.before" "$HOME/.ssh/config"
+    [ -z "$(find "$HOME/.ssh" -name 'config.molt-*')" ]
 }

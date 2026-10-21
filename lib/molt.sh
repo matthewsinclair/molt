@@ -706,32 +706,6 @@ molt_config_digest() {
 # re-rendering costs a moment and skipping it is the failure mode above.
 #
 # Liberators that render configs should fold this into their check.
-# Re-stamp a rendered file's digest to include extra inputs.
-#
-# molt_render records molt_config_digest(template) only. When a liberator also
-# post-processes the rendered file from other inputs -- ssh appending its
-# config.d fragments -- the check computes a digest WITH those inputs and the
-# sidecar holds one WITHOUT, so they can never match and the liberator
-# reinstalls on every single run. Call this after the post-processing, with the
-# same extra inputs the _check passes to molt_config_stale.
-molt_config_record_digest() {
-  local target="$1" template="$2"
-  shift 2
-  local sidecar="${target}.molt-rendered"
-  [[ -f "$sidecar" ]] || return 0
-
-  local digest
-  digest="$(molt_config_digest "$template" ${1+"$@"})" || return 0
-  [[ -n "$digest" ]] || return 0
-
-  local tmp="${sidecar}.tmp.$$"
-  { grep -v '^digest ' "$sidecar" 2>/dev/null; echo "digest ${digest}"; } > "$tmp" \
-    && mv "$tmp" "$sidecar"
-  # Match the sidecar's permissions to the rendered file (eg 600 under ~/.ssh).
-  chmod --reference="$target" "$sidecar" 2>/dev/null \
-    || chmod "$(stat -f '%Lp' "$target" 2>/dev/null || echo 644)" "$sidecar" 2>/dev/null || true
-}
-
 molt_config_stale() {
   local source="$1"    # relative path, no .tmpl: "config/backup/backup-mount.sh"
   local target="$2"    # absolute path of the rendered file

@@ -48,6 +48,43 @@ _ssh_config_present() {
   [[ -f "$user_repo/config/ssh/config.tmpl" ]] || [[ -f "$user_repo/config/ssh/config" ]]
 }
 
+# Renders the template $1 to $2 with the config.d fragments after it ($3...,
+# in the sorted order _ssh_fragments gives), each under its sentinel line.
+#
+# THE WHOLE FILE IS BUILT BEFORE molt_render_place COMPARES IT. molt_render
+# keeps only the region ABOVE @@MOLT:BEGIN@@, and a fragment appended to the
+# placed file after the compare made every install differ from what was there:
+# each one backed ~/.ssh/config up and warned it had been changed, and a hand
+# edit read the same as molt's own fragments (issue 0024). The fragments are
+# extra inputs, so the sidecar's digest covers them and ssh_check, which asks
+# with the same list, reads the file current. The file is rebuilt whole each
+# time, so a fragment lands once because the compare finds nothing to change,
+# not because its sentinel is already there.
+_ssh_render() {
+  local template="$1" target="$2" tmp="${2}.molt-tmp" why
+  shift 2
+  if ! why="$(molt_render_text "$template" "$tmp")"; then
+    molt_error "Could not render $template -> $target${why:+: $why}"
+    return 1
+  fi
+  local fragment content
+  for fragment in "$@"; do
+    # Read before the sentinel is written: a fragment that cannot be read
+    # would leave its sentinel with nothing under it.
+    if ! content="$(cat "$fragment")"; then
+      rm -f "$tmp"
+      molt_error "ssh: config.d fragment $(basename "$fragment") cannot be read, so ~/.ssh/config was not rendered"
+      return 1
+    fi
+    if ! printf '\n%s\n%s\n' "# --- molt config.d: $(basename "$fragment") ---" "$content" >> "$tmp"; then
+      rm -f "$tmp"
+      molt_error "ssh: config.d fragment $(basename "$fragment") could not be added to ~/.ssh/config, so it was not rendered"
+      return 1
+    fi
+  done
+  molt_render_place "$template" "$target" ${1+"$@"}
+}
+
 ssh_check() {
   local ok=0
 
@@ -116,51 +153,28 @@ ssh_install() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
   if _ssh_config_present; then
-    # A refused render stops the install here. The append and the re-stamp
-    # below would otherwise record the inputs that failed as installed, and
-    # ssh_check would pass on every later run.
-    molt_install_config "config/ssh/config" "$HOME/.ssh/config" || return 1
-  fi
-
-  # THE RENDER AND THE APPEND MUST STAY IN THIS FUNCTION, IN THIS ORDER.
-  # molt_render preserves only the region ABOVE @@MOLT:BEGIN@@; fragments are
-  # appended BELOW @@MOLT:END@@, so every render wipes every fragment. That is
-  # safe only because the re-append happens here, immediately after. Separating
-  # them -- or rendering from anywhere else -- silently drops every fragment on
-  # the next template change. Flagged by gyges.
-  #
-  # Append instance-specific config.d fragments (idempotent via sentinels)
-  local hostname
-  if ! hostname="$(molt_hostname)"; then
-    molt_error "ssh: this host gives no hostname, so its config.d fragments cannot be found"
-    return 1
-  fi
-  local config_d="$user_repo/instances/$hostname/ssh/config.d"
-  if [[ -d "$config_d" ]]; then
-    for fragment in "$config_d"/*.conf; do
-      [[ -f "$fragment" ]] || continue
-      local fragment_name
-      fragment_name="$(basename "$fragment")"
-      local sentinel="# --- molt config.d: ${fragment_name} ---"
-      # Only append if sentinel not already present
-      if ! grep -qF "$sentinel" "$HOME/.ssh/config" 2>/dev/null; then
-        # Read before the sentinel is written: a fragment that cannot be read
-        # would leave its sentinel with nothing under it, and every later run
-        # would take the fragment as appended.
-        local content
-        if ! content="$(cat "$fragment")"; then
-          molt_error "ssh: config.d fragment $fragment_name cannot be read, so it was not appended"
-          return 1
-        fi
-        molt_info "Appending SSH config fragment: $fragment_name"
-        if ! printf '\n%s\n%s\n' "$sentinel" "$content" >> "$HOME/.ssh/config"; then
-          molt_error "ssh: config.d fragment $fragment_name could not be appended to ~/.ssh/config"
-          return 1
-        fi
-      else
-        molt_debug "SSH config fragment already present: $fragment_name"
-      fi
-    done
+    local hostname
+    if ! hostname="$(molt_hostname)"; then
+      molt_error "ssh: this host gives no hostname, so its config.d fragments cannot be found"
+      return 1
+    fi
+    local frags=() f
+    while IFS= read -r f; do [[ -n "$f" ]] && frags+=("$f"); done < <(_ssh_fragments)
+    local template="$user_repo/config/ssh/config.tmpl"
+    local target="$HOME/.ssh/config"
+    if [[ -f "$template" ]]; then
+      # A refused render stops the install here, with the config and its
+      # sidecar as they were, so ssh_check goes on calling it stale.
+      _ssh_render "$template" "$target" ${frags+"${frags[@]}"} || return 1
+    elif [[ ${#frags[@]} -gt 0 ]]; then
+      # A static config is linked, not rendered, so there is no file of molt's
+      # own to put the fragments in; a fragment declared but not applied is a
+      # sleeve that is not as declared.
+      molt_error "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so ${#frags[@]} fragment(s) were not applied"
+      return 1
+    else
+      molt_install_config "config/ssh/config" "$target" || return 1
+    fi
   fi
 
   # ssh refuses a config that others can write, so a chmod that fails is an
@@ -168,16 +182,6 @@ ssh_install() {
   if [[ -f "$HOME/.ssh/config" ]] && ! chmod 600 "$HOME/.ssh/config"; then
     molt_error "ssh: ~/.ssh/config could not be made mode 600, which ssh requires"
     return 1
-  fi
-
-  # Re-stamp the sidecar so its digest covers the fragments too. Without this
-  # the check (which digests fragments) and the sidecar (which did not) never
-  # agree, and ssh reinstalls on every run.
-  local _frags=() _f
-  while IFS= read -r _f; do [[ -n "$_f" ]] && _frags+=("$_f"); done < <(_ssh_fragments)
-  if [[ -f "$user_repo/config/ssh/config.tmpl" ]]; then
-    molt_config_record_digest "$HOME/.ssh/config" \
-      "$user_repo/config/ssh/config.tmpl" ${_frags+"${_frags[@]}"}
   fi
 
   molt_info "Liberator complete: ssh"
