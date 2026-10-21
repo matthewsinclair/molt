@@ -62,7 +62,10 @@ keys_install() {
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
   local hostname
-  hostname="$(hostname -s 2>/dev/null || hostname)"
+  if ! hostname="$(molt_hostname)"; then
+    molt_error "keys: this host gives no hostname, so its instances/ directory cannot be found"
+    return 1
+  fi
   local instance_keyd="$user_repo/instances/$hostname/keyd/default.conf"
 
   if [[ -f "$instance_keyd" ]]; then

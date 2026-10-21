@@ -10,7 +10,9 @@ load "../test_helper.bash"
 _ssh_env() {
     load_liberator ssh
     local root="$BATS_TEST_TMPDIR"
-    local host; host="$(hostname -s 2>/dev/null || hostname)"
+    # The instance directory as ssh.sh finds it, so the fixture and the code
+    # cannot name different hosts.
+    local host; host="$(molt_hostname)"
     export HOME="$root/home"
     mkdir -p "$HOME/.ssh" "$root/repo/config/ssh" "$root/repo/instances/$host/ssh/config.d"
     # A key already exists, so ssh-keygen never runs.

@@ -39,7 +39,7 @@ _zsh_generate_iterm2_ssh_colors() {
   [[ -z "$entries" ]] && return 0
 
   local this_host reset
-  this_host="$(hostname -s 2>/dev/null || hostname)"
+  this_host="$(molt_hostname)" || this_host=""
   reset="$(molt_instances_field "bg_color" "terminal" 2>/dev/null | awk -F: -v h="$this_host" '$1 == h { print $2 }')"
   [[ -n "$reset" ]] || reset=000000
 

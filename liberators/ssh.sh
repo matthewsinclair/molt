@@ -29,7 +29,7 @@ _ssh_fragments() {
   local user_repo hostname config_d
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   [[ -n "$user_repo" ]] || return 0
-  hostname="$(hostname -s 2>/dev/null || hostname)"
+  hostname="$(molt_hostname)" || return 1
   config_d="$user_repo/instances/$hostname/ssh/config.d"
   [[ -d "$config_d" ]] || return 0
   local f
@@ -102,7 +102,7 @@ ssh_install() {
   if ! _ssh_find_key &>/dev/null; then
     molt_info "Generating SSH key..."
     local email
-    email="$(git config --global user.email 2>/dev/null || echo "$(whoami)@$(hostname -s 2>/dev/null || hostname)")"
+    email="$(git config --global user.email 2>/dev/null || echo "$(whoami)@$(molt_hostname)")"
     ssh-keygen -t ed25519 -C "$email" -f "$HOME/.ssh/id_ed25519" -N ""
     molt_warn "New SSH key generated. Add public key to GitHub/remotes:"
     molt_warn "  cat ~/.ssh/id_ed25519.pub"
@@ -131,7 +131,10 @@ ssh_install() {
   #
   # Append instance-specific config.d fragments (idempotent via sentinels)
   local hostname
-  hostname="$(hostname -s 2>/dev/null || hostname)"
+  if ! hostname="$(molt_hostname)"; then
+    molt_error "ssh: this host gives no hostname, so its config.d fragments cannot be found"
+    return 1
+  fi
   local config_d="$user_repo/instances/$hostname/ssh/config.d"
   if [[ -d "$config_d" ]]; then
     for fragment in "$config_d"/*.conf; do
