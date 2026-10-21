@@ -1,0 +1,16 @@
+{
+  "id": "01M5EGXX3QBRMN892E6WKGR00K",
+  "ts": "2026-10-21T06:03:43.607Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 1,
+    "text": "ST0006 WP01 with vc for review at st0006-wp01 41ef6b1 (all tests pass under both bashes; critic-shell's six warnings fixed; AT001-AT027 green on main). Next: vc's verdict, then answer it."
+  }
+}

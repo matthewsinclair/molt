@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T05:53:24.791Z",
+    "heartbeat_at": "2026-10-21T06:03:50.530Z",
     "status": "active",
-    "focus": "ST0006: WP01 handed to vc at st0006-wp01 820827c; WP02 in build on ~/Devel/prj/Molt-wt/st0006-wp02",
+    "focus": "ST0006: WP01 with vc at st0006-wp01 41ef6b1; WP02 at st0006-wp02 14e09d1, next: rebase onto 41ef6b1, AT ids, critic-shell, handover",
     "claims": [
       "ST0006/01",
       "ST0006/02"
@@ -20,17 +20,35 @@
       "node": "cc",
       "kind": "doing",
       "seq": 1,
-      "text": "ST0006 WP01: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches; branch st0006-wp01",
+      "text": "ST0006 WP01 with vc for review at st0006-wp01 41ef6b1 (all tests pass under both bashes; critic-shell's six warnings fixed; AT001-AT027 green on main). Next: vc's verdict, then answer it.",
       "state": "live",
-      "recorded_at": "2026-10-21T04:54:10.680Z"
+      "recorded_at": "2026-10-21T04:54:10.680Z",
+      "edited_at": "2026-10-21T06:03:43.607Z"
     },
     {
       "node": "cc",
       "kind": "doing",
       "seq": 2,
-      "text": "ST0006 WP02: [[agent]] table, MOLT_AGT_DIR, agents liberator, molt agent list|config; branch st0006-wp02 on WP01",
+      "text": "ST0006 WP02 at st0006-wp02 14e09d1, on 820827c, all tests pass under both bashes. Next: rebase onto 41ef6b1; put AT028-AT044 ids in agents.bats, manifest.bats and molt.bats; verify and fix the critic-shell findings (review launched 21 Oct before the compact; rerun it if its report is lost); then hand over to vc. AT028-AT040 stay to-write until the merge brings agents.bats.",
       "state": "live",
-      "recorded_at": "2026-10-21T05:53:24.815Z"
+      "recorded_at": "2026-10-21T05:53:24.815Z",
+      "edited_at": "2026-10-21T06:03:43.754Z"
+    },
+    {
+      "node": "cc",
+      "kind": "watchout",
+      "seq": 1,
+      "text": "macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=.",
+      "state": "live",
+      "recorded_at": "2026-10-21T06:03:43.826Z"
+    },
+    {
+      "node": "cc",
+      "kind": "watchout",
+      "seq": 2,
+      "text": "In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree.",
+      "state": "live",
+      "recorded_at": "2026-10-21T06:03:43.850Z"
     }
   ],
   "messages": []

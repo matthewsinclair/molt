@@ -1,0 +1,15 @@
+{
+  "id": "01M5EGXXAJCB7GAVFKE9PKR1KH",
+  "ts": "2026-10-21T06:03:43.826Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=."
+  }
+}

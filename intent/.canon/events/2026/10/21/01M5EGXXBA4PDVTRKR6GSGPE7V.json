@@ -1,0 +1,15 @@
+{
+  "id": "01M5EGXXBA4PDVTRKR6GSGPE7V",
+  "ts": "2026-10-21T06:03:43.850Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree."
+  }
+}

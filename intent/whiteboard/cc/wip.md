@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 05:53Z
+heartbeat_at: 2026-10-21 06:03Z
 status: active
-focus: "ST0006: WP01 handed to vc at st0006-wp01 820827c; WP02 in build on ~/Devel/prj/Molt-wt/st0006-wp02"
+focus: "ST0006: WP01 with vc at st0006-wp01 41ef6b1; WP02 at st0006-wp02 14e09d1, next: rebase onto 41ef6b1, AT ids, critic-shell, handover"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -13,8 +13,8 @@ claims: [ST0006/01, ST0006/02]
 
 ## DOING
 
-- ST0006 WP01: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches; branch st0006-wp01
-- ST0006 WP02: [[agent]] table, MOLT_AGT_DIR, agents liberator, molt agent list|config; branch st0006-wp02 on WP01
+- ST0006 WP01 with vc for review at st0006-wp01 41ef6b1 (all tests pass under both bashes; critic-shell's six warnings fixed; AT001-AT027 green on main). Next: vc's verdict, then answer it. (edited)
+- ST0006 WP02 at st0006-wp02 14e09d1, on 820827c, all tests pass under both bashes. Next: rebase onto 41ef6b1; put AT028-AT044 ids in agents.bats, manifest.bats and molt.bats; verify and fix the critic-shell findings (review launched 21 Oct before the compact; rerun it if its report is lost); then hand over to vc. AT028-AT040 stay to-write until the merge brings agents.bats. (edited)
 
 ## TODO
 
@@ -26,7 +26,8 @@ _(none)_
 
 ## Watch-outs
 
-_(none)_
+- macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=.
+- In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree.
 
 ## Decisions
 

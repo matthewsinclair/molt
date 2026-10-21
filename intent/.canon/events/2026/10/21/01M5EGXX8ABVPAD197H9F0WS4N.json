@@ -1,0 +1,16 @@
+{
+  "id": "01M5EGXX8ABVPAD197H9F0WS4N",
+  "ts": "2026-10-21T06:03:43.754Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP02 at st0006-wp02 14e09d1, on 820827c, all tests pass under both bashes. Next: rebase onto 41ef6b1; put AT028-AT044 ids in agents.bats, manifest.bats and molt.bats; verify and fix the critic-shell findings (review launched 21 Oct before the compact; rerun it if its report is lost); then hand over to vc. AT028-AT040 stay to-write until the merge brings agents.bats."
+  }
+}
