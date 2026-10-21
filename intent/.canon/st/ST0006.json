@@ -691,6 +691,36 @@
       ],
       "status": "green",
       "note": "@test \"molt_render refuses a vars.sh that cannot be read, and leaves the target as it was\" (split from AT046). Red on 41ef6b1. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT050",
+      "kind": "test",
+      "file": "test/templates.bats",
+      "covers": [
+        "AC015"
+      ],
+      "status": "green",
+      "note": "@test \"molt_render leaves the target as it was, and no temporary file, when envsubst fails\". Red on 41ef6b1, which moved the failed render into place. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT051",
+      "kind": "test",
+      "file": "test/templates.bats",
+      "covers": [
+        "AC015"
+      ],
+      "status": "green",
+      "note": "@test \"molt_render renders past an unset variable in vars.sh, and leaves out what vars.sh prints\". Red on 41ef6b1, where nounset stopped the render and the file's output was moved in as the rendered file. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT052",
+      "kind": "test",
+      "file": "test/liberators/backup.bats",
+      "covers": [
+        "AC015"
+      ],
+      "status": "green",
+      "note": "@test \"the backup values are read from a vars.sh with an unset name in it, rather than ending molt\". Red on 41ef6b1, which sourced vars.sh into molt's own shell. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2."
     }
   ]
 }

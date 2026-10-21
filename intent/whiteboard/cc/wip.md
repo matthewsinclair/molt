@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 06:20Z
+heartbeat_at: 2026-10-21 07:12Z
 status: active
-focus: "ST0006: WP01 with vc at st0006-wp01 41ef6b1; WP02 at st0006-wp02 14e09d1, next: rebase onto 41ef6b1, AT ids, critic-shell, handover"
+focus: "ST0006: WP01 with vc at st0006-wp01 28062ea; WP02 rebasing onto it, with AC014 (guard under MOLT_AGT_DIR) on top"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -13,12 +13,12 @@ claims: [ST0006/01, ST0006/02]
 
 ## DOING
 
-- ST0006 WP01 review fixes on st0006-wp01, uncommitted on 41ef6b1: C1 one vars.sh reader (molt_source_instance_vars; status 2 refused by _claude_declared_dir and molt_render), C2 non-canonical path and trailing whitespace refused, molt_hostname moved in, recs done (% is no specifier in environment.d). AT045 and AT046 red on main, red on 41ef6b1 and green on the fix. Next: critic-shell's delta review and the suite under both bashes, then one commit and the head to vc. (edited)
+- ST0006 WP01 with vc for re-read at st0006-wp01 28062ea (one fix commit on 41ef6b1; all tests pass under both bashes): one vars.sh reader, exit-0 data loss fixed, line break and non-canonical dir refused, tiling/backup/doctor on the reader, guard reads CLAUDE_PROJECT_DIR (no jq). AT045/AT046/AT048/AT049 green on main (aba2bd5); issue 0019 filed. critic-shell's second pass on the delta running. (edited)
 - ST0006 WP02 at st0006-wp02 483e343, still on 820827c: critic-shell's findings verified and fixed (C1 empty or null settings render, C2 a test that could not fail, W sidecar kept on failure, Highlander x2, lookup by name, jq, test gaps); AT028-AT044 and AT047 ids in the tests; AT047 to-write on main. Next: rebase onto WP01's final head (WP01's molt_hostname kept, WP02's dropped), suite under both bashes, critic-shell on the delta, then the head to vc with the deviations: the 4th settings layer, MOLT_AGT_DIR from MOLT_PRJ_DIR, the eight liberator hostname copies left (desktop.sh:23 drifted), molt_render backing up post-processed files on each re-render. (edited)
 
 ## TODO
 
-- ST0006 WP01 review fixes (vc, at 41ef6b1), one commit on st0006-wp01, then the suite under both bashes and tell vc the head. C1: molt_instance_var swallows every failure of '.': a syntax error or unreadable vars.sh reads as undeclared, and on a moved sleeve mkdir -p would recreate ~/.claude. Fix: check [[ -r ]] and bash -n before sourcing, return a distinct status (2) that _claude_declared_dir refuses on, make it the one reader of vars.sh that molt_render uses too, and test each shape. C2: refuse a trailing slash in the declared dir; the templates render the raw value, so normalising in one reader gives a permanent mismatch; add it to the refusal test. W: molt_render's own hostname copy; move molt_hostname into WP01 and drop it from WP02 at the rebase. Recs: check whether % is a systemd specifier in environment.d and refuse it if so; cross-reference _claude_env_dir's sed and env.sh.tmpl in comments.
+_(none)_
 
 ## Holds
 

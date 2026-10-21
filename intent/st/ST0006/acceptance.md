@@ -71,7 +71,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC015
 
-- AC015 molt_render fails loud and leaves the target as it was: a vars.sh the one reader refuses, or an envsubst that fails, writes nothing, backs nothing up and leaves no temp file; an unset name in a template renders rather than aborting the render; what vars.sh prints never reaches the rendered file; and a liberator reading vars.sh through the reader (backup) survives an unset name under nounset. -- satisfied: no (computed)
+- AC015 molt_render fails loud and leaves the target as it was: a vars.sh the one reader refuses, or an envsubst that fails, writes nothing, backs nothing up and leaves no temp file; an unset name in a template renders rather than aborting the render; what vars.sh prints never reaches the rendered file; and a liberator reading vars.sh through the reader (backup) survives an unset name under nounset. -- satisfied: yes (computed)
 
 ### Group AT001
 
@@ -266,6 +266,18 @@ _(no criteria in this group)_
 _(no criteria in this group)_
 
 ### Group AT049
+
+_(no criteria in this group)_
+
+### Group AT050
+
+_(no criteria in this group)_
+
+### Group AT051
+
+_(no criteria in this group)_
+
+### Group AT052
 
 _(no criteria in this group)_
 
@@ -526,6 +538,18 @@ _(no tests in this group)_
 ### Group AT049
 
 - AT049 `test/templates.bats` -- covers AC011 -- status: green -- @test "molt_render refuses a vars.sh that cannot be read, and leaves the target as it was" (split from AT046). Red on 41ef6b1. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
+
+### Group AT050
+
+- AT050 `test/templates.bats` -- covers AC015 -- status: green -- @test "molt_render leaves the target as it was, and no temporary file, when envsubst fails". Red on 41ef6b1, which moved the failed render into place. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2.
+
+### Group AT051
+
+- AT051 `test/templates.bats` -- covers AC015 -- status: green -- @test "molt_render renders past an unset variable in vars.sh, and leaves out what vars.sh prints". Red on 41ef6b1, where nounset stopped the render and the file's output was moved in as the rendered file. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2.
+
+### Group AT052
+
+- AT052 `test/liberators/backup.bats` -- covers AC015 -- status: green -- @test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt". Red on 41ef6b1, which sourced vars.sh into molt's own shell. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2.
 
 ---
 
