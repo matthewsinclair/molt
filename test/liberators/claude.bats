@@ -30,7 +30,9 @@ setup_claude() {
     mkdir -p "$BATS_TEST_TMPDIR/stub"
     cat > "$BATS_TEST_TMPDIR/stub/pgrep" <<'EOF'
 #!/bin/bash
-# pgrep -u <uid> -f <pattern>: the pids in $FAKE_PROCS whose command line matches.
+# pgrep [-a] -u <uid> -f <pattern>: the pids in $FAKE_PROCS whose command line
+# matches. Its arguments are logged, for the test of -a.
+echo "$*" >> "$FAKE_PROCS.args"
 for pattern; do :; done
 awk -v pat="$pattern" '{ args = $0; sub(/^[0-9]+ /, "", args) } args ~ pat { print $1; n++ } END { exit n ? 0 : 1 }' "$FAKE_PROCS"
 EOF
@@ -286,26 +288,62 @@ JSON
 
 # AC002. kovacs-sysadm's review: a command that merely names the package is not
 # Claude Code, and procps prints only a name for pgrep -l.
-@test "a native or node-run Claude Code counts as running; a grep, npm ls or molt run naming it does not" {
+@test "a native or node-run Claude Code counts as running; a grep, npm ls, ls or molt run naming it does not" {
     setup_claude
     fake_processes "9 grep -r @anthropic-ai/claude-code ." \
         "10 node /usr/lib/node_modules/npm/bin/npm-cli.js ls @anthropic-ai/claude-code" \
         "11 /Applications/ClaudeUsage.app/Contents/MacOS/ClaudeUsage" \
         "12 bash /Users/x/Devel/prj/Molt/bin/molt upgrade claude" \
-        "13 vim /tmp/claude.md"
+        "13 vim /tmp/claude.md" \
+        "17 vim /Users/x/.config/claude" \
+        "18 ls -la /Users/x/.config/claude" \
+        "19 ssh host /usr/local/bin/claude"
     run _claude_processes
     assert_success
     [ -z "$output" ]
     fake_processes "12 bash /Users/x/Devel/prj/Molt/bin/molt upgrade claude" \
         "14 node /usr/local/lib/node_modules/@anthropic-ai/claude-code/cli.js --resume" \
         "15 /Users/x/Library/Application Support/Claude/claude-code/2.1.0/claude --print" \
-        "16 claude"
+        "16 claude" \
+        "20 node /usr/local/bin/claude --continue"
     run _claude_processes
     assert_success
     [ "$output" = "$(printf '%s\n' \
         "14 node /usr/local/lib/node_modules/@anthropic-ai/claude-code/cli.js --resume" \
         "15 /Users/x/Library/Application Support/Claude/claude-code/2.1.0/claude --print" \
-        "16 claude")" ]
+        "16 claude" \
+        "20 node /usr/local/bin/claude --continue")" ]
+}
+
+# AC002. Found live on rhadamanth, 21 Oct: run without -a, macOS's pgrep did not
+# list the Claude Code session it was run from.
+@test "on macOS the process check counts molt's own ancestors, which pgrep leaves out unless asked; procps is not asked" {
+    setup_claude
+    eval 'molt_platform() { echo macos; }'
+    run _claude_processes
+    assert_success
+    grep -q -- '^-a -u ' "$FAKE_PROCS.args"
+    rm "$FAKE_PROCS.args"
+    eval 'molt_platform() { echo linux; }'
+    run _claude_processes
+    assert_success
+    grep -q -- '^-u ' "$FAKE_PROCS.args"
+}
+
+# critic-shell, 21 Oct: a failure after the copies were taken must not also say
+# that nothing was changed.
+@test "a move that fails after its copies are taken names them, and does not say nothing was changed" {
+    setup_declared
+    printf '#!/bin/bash\nexit 1\n' > "$BATS_TEST_TMPDIR/stub/cp"
+    chmod +x "$BATS_TEST_TMPDIR/stub/cp"
+    run claude_install
+    assert_failure
+    assert_output_contains "could not copy ~/.claude into ~/.config/claude.molt-backup."
+    assert_output_contains "so nothing was moved; the copies are in"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written"
+    refute_output_contains "nothing else was changed"
+    [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
+    [ ! -e "$CONFIG" ]
 }
 
 # AC011
@@ -347,6 +385,56 @@ JSON
     assert_output_contains "CLAUDE_CONFIG_DIR was not published"
     [ -L "$HOME/.claude" ]
     [ ! -e "$HOME/.config" ]
+    [ ! -e "$(gui_file)" ]
+}
+
+# AC011. A Claude Code once run with CLAUDE_CONFIG_DIR=~/.claude keeps its own
+# .claude.json inside it, which the move would overwrite with ~/.claude.json.
+@test "a ~/.claude holding its own .claude.json beside ~/.claude.json is not moved, and nothing is published" {
+    setup_declared
+    echo '{"userID": "inner"}' > "$HOME/.claude/.claude.json"
+    run claude_install
+    assert_failure
+    assert_output_contains "~/.claude/.claude.json and ~/.claude.json both exist, and molt will not choose between them"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    [ "$(jq -r .userID "$HOME/.claude/.claude.json")" = "inner" ]
+    [ "$(jq -r .userID "$HOME/.claude.json")" = "u" ]
+    [ ! -e "$HOME/.config" ]
+}
+
+# AC011, critic-shell, 21 Oct: after a move, declaring a new dir leaves the state
+# in the old one, and publishing the new, empty one would start Claude afresh.
+@test "a newly declared, empty config dir is not published while the variable names another dir that exists" {
+    setup_moved
+    run claude_install
+    assert_success
+    local old="$CONFIG"
+    declare_config_dir "$HOME/.local/claude"
+    run claude_install
+    assert_failure
+    assert_output_contains "~/.local/claude holds nothing, and CLAUDE_CONFIG_DIR named ~/.config/claude, which exists"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    grep -qxF "export CLAUDE_CONFIG_DIR=\"$old\"" "$HOME/.config/molt/env.sh"
+    [ ! -e "$HOME/.local/claude" ]
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.local/claude holds nothing, and CLAUDE_CONFIG_DIR named ~/.config/claude"
+}
+
+# critic-shell, 21 Oct: vars.sh is read as leniently as molt_render reads it,
+# and only what it declares counts, not what molt's own shell inherited.
+@test "a vars.sh ending in a false test, or a MOLT_CLAUDE_CONFIG_DIR only inherited, leaves a sleeve undeclared" {
+    setup_claude
+    local vars="$TEST_USER_REPO/instances/$(hostname -s 2>/dev/null || hostname)"
+    mkdir -p "$vars"
+    printf 'export MOLT_FONT_SIZE=12\n[[ -d /nonexistent ]] && export MOLT_EXTRA=1\n' > "$vars/vars.sh"
+    export MOLT_CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+    run claude_install
+    assert_success
+    run claude_check
+    assert_success
+    [ ! -e "$HOME/.config/claude" ]
+    [ ! -e "$HOME/.config/molt" ]
 }
 
 # AC011. Each value is written into env.sh, a plist and an environment.d file.
@@ -366,6 +454,7 @@ JSON
     assert_output_contains "MOLT_CLAUDE_CONFIG_DIR must be a directory of its own, not ~/.claude"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
     [ ! -e "$HOME/.config" ]
+    [ ! -e "$(gui_file)" ]
 }
 
 # AC011. No state anywhere, so nothing to split.
@@ -397,7 +486,12 @@ JSON
     run claude_install
     assert_success
     grep -qxF "CLAUDE_CONFIG_DIR=$CONFIG" "$HOME/.config/environment.d/claude.conf"
-    run grep -lF "$MOLT_ROOT" "$HOME/.config/molt/env.sh" "$HOME/.config/molt/claude-home-guard.sh" \
+    # The templates take one value from the sleeve and nothing else of molt's,
+    # so no install of Molt can put its own path, or any other, into them.
+    run grep -ohE '\$\{?MOLT_[A-Z_]*' "$MOLT_ROOT"/templates/claude/*
+    assert_success
+    [ "$(printf '%s\n' "$output" | sort -u)" = '${MOLT_CLAUDE_CONFIG_DIR' ]
+    run grep -lE '\$\{?MOLT_|/Molt' "$HOME/.config/molt/env.sh" "$HOME/.config/molt/claude-home-guard.sh" \
         "$plist" "$HOME/.config/environment.d/claude.conf"
     assert_failure
     [ -z "$output" ]
@@ -427,7 +521,7 @@ JSON
 }
 
 # AC003. Exit 1 blocks nothing, and Claude Code shows what it printed.
-@test "the home guard exits 1, saying so, when jq is missing or the input names no cwd" {
+@test "the home guard exits 1, saying so, when jq is missing, or the input is not JSON or names no cwd" {
     setup_moved
     run claude_install
     assert_success
@@ -435,6 +529,9 @@ JSON
     run "$guard" <<< '{"prompt": "no cwd"}'
     [ "$status" -eq 1 ]
     assert_output_contains "the hook input names no cwd"
+    run "$guard" <<< '{"cwd": '
+    [ "$status" -eq 1 ]
+    assert_output_contains "the hook input is not JSON"
     run env PATH=/nonexistent "$guard" <<< "{\"cwd\": \"$HOME\"}"
     [ "$status" -eq 1 ]
     assert_output_contains "jq is not on PATH"

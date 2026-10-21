@@ -175,7 +175,7 @@ _claude_settings_merge() {
 _claude_declared_dir() {
   local dir
   if ! dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
-    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: this sleeve's vars.sh does not source cleanly"
+    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: the user config repo cannot be found"
     return 1
   fi
   [[ -n "$dir" ]] || return 0
@@ -185,7 +185,7 @@ _claude_declared_dir() {
     *) echo "MOLT_CLAUDE_CONFIG_DIR is not an absolute path: $dir"; return 1 ;;
   esac
   case "$dir" in
-    *[\"\$\`\\\<\>\&]* | *$'\n'*)
+    *[\"\'\$\`\\\<\>\&]* | *$'\n'*)
       echo "MOLT_CLAUDE_CONFIG_DIR holds a character env.sh, a plist or environment.d would read as syntax: $dir"
       return 1 ;;
   esac
@@ -245,6 +245,14 @@ _claude_state() {
     printf 'blocked\t%s is not a file\n' "$(molt_tilde "$HOME/.claude.json")"
     return
   fi
+  # A Claude Code once run with CLAUDE_CONFIG_DIR=~/.claude keeps a
+  # .claude.json inside it, and moving ~/.claude.json in after it would
+  # overwrite it.
+  if [[ -e "$HOME/.claude/.claude.json" && -e "$HOME/.claude.json" ]]; then
+    printf 'blocked\t%s and %s both exist, and molt will not choose between them\n' \
+      "$(molt_tilde "$HOME/.claude/.claude.json")" "$(molt_tilde "$HOME/.claude.json")"
+    return
+  fi
   if [[ -L "$dir" ]] || { [[ -e "$dir" ]] && [[ ! -d "$dir" ]]; }; then
     printf 'blocked\t%s is not a directory molt can move into\n' "$(molt_tilde "$dir")"
     return
@@ -262,20 +270,31 @@ _claude_state() {
   fi
 }
 
-# A Claude Code process: the native binary, which runs with argv0 claude from
-# any directory, or an npm install, which node runs. Matched against the whole
-# command line with pgrep -f; pgrep -x matches a process name, which misses
-# running processes on macOS (board watchout 6). The node arm is anchored on
-# argv0, so a grep or npm ls that names the package is not Claude Code.
-_CLAUDE_PROCESS_PATTERN='^(.*/)?claude( |$)|^([^ ]*/)?node .*@anthropic-ai/claude-code/cli'
+# A Claude Code process: the native binary, which runs with argv0 claude, by
+# name or by an absolute path (the desktop app's has a space in it), or an npm
+# install, which node runs by its bin link or its cli.js. Matched against the
+# whole command line with pgrep -f; pgrep -x matches a process name, which
+# misses running processes on macOS (board watchout 6). Every arm is anchored
+# on argv0, so `ls ~/.config/claude`, a grep or an npm ls naming the package is
+# not Claude Code. The path arm allows a space only where the next character
+# starts no other argument, ie is not / or -. A relative ./claude is not
+# matched.
+_CLAUDE_PROCESS_PATTERN='^(/[^ ]*( [^/ -][^ ]*)*/)?claude( |$)|^([^ ]*/)?node ([^ ]*/)?claude( |$)|^([^ ]*/)?node .*@anthropic-ai/claude-code/cli'
 
 # The Claude Code processes this user is running, "pid command" a line, cut to
 # 100 characters; nothing when there are none. ps names them, because procps'
 # pgrep -l prints a process's name and macOS's its arguments; a process that
 # has gone by then is named by its pid alone. Fails when pgrep cannot answer.
 _claude_processes() {
-  local pids named rc=0
-  pids="$(pgrep -u "$(id -u)" -f "$_CLAUDE_PROCESS_PATTERN")" || rc=$?
+  local pids named rc=0 ancestors=()
+  # macOS's pgrep leaves out its own ancestors unless given -a, so molt run from
+  # inside a Claude Code session would not see that session, the very one whose
+  # state it is about to move. procps' pgrep leaves out only itself, and its -a
+  # means something else.
+  if [[ "$(molt_platform)" == "macos" ]]; then
+    ancestors=(-a)
+  fi
+  pids="$(pgrep ${ancestors+"${ancestors[@]}"} -u "$(id -u)" -f "$_CLAUDE_PROCESS_PATTERN")" || rc=$?
   case "$rc" in
     0) ;;
     1) return 0 ;;
@@ -304,11 +323,13 @@ _claude_clone() {
 
 # Moves ~/.claude and ~/.claude.json into the config dir $1, which is absent or
 # empty, having first copied both beside it. Refuses, naming them, while any
-# Claude Code runs: a live session cannot survive its own state moving.
+# Claude Code runs: a live session cannot survive its own state moving. Returns
+# 1 when it wrote nothing, and 2 when it failed having written something, the
+# copies or half of the move, which its message names.
 _claude_move() {
-  local dir="$1" running backup item
+  local dir="$1" running backup kept item
   if ! running="$(_claude_processes)"; then
-    molt_error "claude: pgrep could not list processes, so whether Claude Code is running is unknown and nothing was moved"
+    molt_error "claude: pgrep could not list processes, so whether Claude Code is running is unknown"
     return 1
   fi
   if [[ -n "$running" ]]; then
@@ -320,42 +341,71 @@ _claude_move() {
     return 1
   fi
 
-  backup="${dir}.molt-backup.$(date -u +%Y%m%dT%H%M%SZ)"
+  backup="${dir}.molt-backup.$(date +%Y%m%d%H%M%S)"
   if ! mkdir -p "$backup"; then
-    molt_error "claude: could not create $(molt_tilde "$backup") for the copies, so nothing was moved"
+    molt_error "claude: could not create $(molt_tilde "$backup") for the copies"
     return 1
   fi
+  kept="nothing was moved; the copies are in $(molt_tilde "$backup")"
   for item in "$HOME/.claude" "$HOME/.claude.json"; do
     [[ -e "$item" ]] || continue
     if ! _claude_clone "$item" "$backup/"; then
-      molt_error "claude: could not copy $(molt_tilde "$item") into $(molt_tilde "$backup"), so nothing was moved"
-      return 1
+      molt_error "claude: could not copy $(molt_tilde "$item") into $(molt_tilde "$backup"), so $kept, as far as they got"
+      return 2
     fi
   done
 
   # An empty config dir counts as absent, and rmdir refuses anything else.
   if [[ -d "$dir" ]] && ! rmdir "$dir"; then
-    molt_error "claude: could not remove the empty $(molt_tilde "$dir"), so nothing was moved"
-    return 1
+    molt_error "claude: could not remove the empty $(molt_tilde "$dir"), so $kept"
+    return 2
   fi
   if ! mkdir -p "$(dirname "$dir")"; then
-    molt_error "claude: could not create $(molt_tilde "$(dirname "$dir")"), so nothing was moved"
-    return 1
+    molt_error "claude: could not create $(molt_tilde "$(dirname "$dir")"), so $kept"
+    return 2
   fi
   if [[ -d "$HOME/.claude" ]]; then
     if ! mv "$HOME/.claude" "$dir"; then
-      molt_error "claude: could not move ~/.claude to $(molt_tilde "$dir"), so nothing was moved"
-      return 1
+      molt_error "claude: could not move ~/.claude to $(molt_tilde "$dir"), so $kept"
+      return 2
     fi
   elif ! mkdir "$dir"; then
-    molt_error "claude: could not create $(molt_tilde "$dir"), so nothing was moved"
-    return 1
+    molt_error "claude: could not create $(molt_tilde "$dir"), so $kept"
+    return 2
   fi
   if [[ -f "$HOME/.claude.json" ]] && ! mv "$HOME/.claude.json" "$dir/.claude.json"; then
-    molt_error "claude: ~/.claude.json did not move, so Claude Code's state is split between it and $(molt_tilde "$dir"); move it by hand to $(molt_tilde "$dir")/.claude.json"
-    return 1
+    molt_error "claude: ~/.claude.json did not move, so Claude Code's state is split between it and $(molt_tilde "$dir"); move it by hand to $(molt_tilde "$dir")/.claude.json (the copies are in $(molt_tilde "$backup"))"
+    return 2
   fi
   molt_info "claude: moved Claude Code's state into $(molt_tilde "$dir"); the copies taken first are in $(molt_tilde "$backup")"
+}
+
+# The env file ~/.zshenv sources to set CLAUDE_CONFIG_DIR.
+_claude_env_file() {
+  echo "$HOME/.config/molt/env.sh"
+}
+
+# The config dir the env file last published, when there is one.
+_claude_env_dir() {
+  local env_file
+  env_file="$(_claude_env_file)"
+  [[ -f "$env_file" ]] || return 0
+  sed -n 's/^export CLAUDE_CONFIG_DIR="\(.*\)"$/\1/p' "$env_file"
+}
+
+# A directory other than the config dir $1 that Claude Code's state may be in:
+# one CLAUDE_CONFIG_DIR names, in this shell or as the env file last published
+# it, that exists. Nothing when there is none, as on a sleeve Claude Code has
+# not run on. A sleeve that declares a new dir after its move has its state in
+# the old one, and publishing the new, empty one would start Claude afresh.
+_claude_other_dir() {
+  local dir="$1" named
+  for named in "${CLAUDE_CONFIG_DIR:-}" "$(_claude_env_dir)"; do
+    if [[ -n "$named" && "$named" != "$dir" && -d "$named" ]]; then
+      echo "$named"
+      return
+    fi
+  done
 }
 
 # The files that publish the config dir, one "template<TAB>target<TAB>mode"
@@ -364,7 +414,7 @@ _claude_move() {
 # Molt, so a Molt installed any other way renders the same bytes.
 _claude_published() {
   local t="${MOLT_ROOT}/templates/claude"
-  printf '%s\t%s\t%s\n' "$t/env.sh.tmpl" "$HOME/.config/molt/env.sh" 644
+  printf '%s\t%s\t%s\n' "$t/env.sh.tmpl" "$(_claude_env_file)" 644
   case "$(molt_platform)" in
     macos)
       printf '%s\t%s\t%s\n' "$t/com.molt.claude-config-dir.plist.tmpl" \
@@ -398,22 +448,42 @@ _claude_publish() {
   export CLAUDE_CONFIG_DIR="$dir"
 }
 
+# Names, when the config dir $1 holds nothing and nothing of Claude Code's is
+# in $HOME, the other dir its state may be in; prints nothing otherwise.
+_claude_other_dir_fault() {
+  local dir="$1" other
+  [[ -z "$(_claude_contents "$dir")" ]] || return 0
+  other="$(_claude_other_dir "$dir")"
+  [[ -n "$other" ]] || return 0
+  echo "$(molt_tilde "$dir") holds nothing, and CLAUDE_CONFIG_DIR named $(molt_tilde "$other"), which exists: Claude Code's state may be there. Move it into $(molt_tilde "$dir") by hand, or declare $(molt_tilde "$other") again"
+}
+
 # Puts Claude Code's state in the declared config dir $1, moving it out of $HOME
-# once, then publishes it. Refuses, having written nothing, when it cannot, and
-# says that the variable was not published.
+# once, then publishes it. Refuses when it cannot, and says that the variable
+# was not published.
 _claude_relocate() {
-  local dir="$1" state why
+  local dir="$1" state why fault rc=0
   IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
   case "$state" in
-    moved) ;;
-    none)
-      # Claude Code has not run here, so there is no state to split.
-      if ! mkdir -p "$dir"; then
+    moved | none)
+      fault="$(_claude_other_dir_fault "$dir")"
+      if [[ -n "$fault" ]]; then
+        molt_error "claude: $fault"
+        _claude_unpublished
+        return 1
+      fi
+      # Neither $HOME nor any dir the variable named holds Claude Code's
+      # state: it has not run here, so there is nothing to split.
+      if [[ "$state" == none ]] && ! mkdir -p "$dir"; then
         molt_error "claude: could not create $(molt_tilde "$dir")"
         return 1
       fi ;;
     home)
-      if ! _claude_move "$dir"; then
+      _claude_move "$dir" || rc=$?
+      if [[ $rc -eq 2 ]]; then
+        _claude_unpublished changed
+        return 1
+      elif [[ $rc -ne 0 ]]; then
         _claude_unpublished
         return 1
       fi ;;
@@ -429,8 +499,14 @@ _claude_relocate() {
   _claude_publish "$dir"
 }
 
+# Says that CLAUDE_CONFIG_DIR was not published and, unless $1 is "changed",
+# that nothing else was changed either: a refusal before anything was written.
 _claude_unpublished() {
-  molt_error "claude: CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written, and nothing else was changed"
+  if [[ "${1:-}" == "changed" ]]; then
+    molt_error "claude: CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written"
+  else
+    molt_error "claude: CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written, and nothing else was changed"
+  fi
 }
 
 # Reports, through $1 after the prefix $2, each published file that is missing,
@@ -473,7 +549,7 @@ _claude_report_config_faults() {
 # standing between this sleeve and the Claude Code config the user repo $3
 # declares. Returns non-zero when it reported anything.
 _claude_report_faults() {
-  local log="$1" prefix="$2" user_repo="$3" dir state why items verb=is ok=0
+  local log="$1" prefix="$2" user_repo="$3" dir state why fault items verb=is ok=0
   if ! dir="$(_claude_declared_dir)"; then
     "$log" "${prefix}$dir"
     return 1
@@ -485,10 +561,16 @@ _claude_report_faults() {
 
   IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
   case "$state" in
-    moved) ;;
-    none)
-      "$log" "${prefix}$(molt_tilde "$dir"), this sleeve's config dir, does not exist yet"
-      ok=1 ;;
+    moved | none)
+      fault="$(_claude_other_dir_fault "$dir")"
+      if [[ -n "$fault" ]]; then
+        "$log" "${prefix}$fault"
+        return 1
+      fi
+      if [[ "$state" == none ]]; then
+        "$log" "${prefix}$(molt_tilde "$dir"), this sleeve's config dir, does not exist yet"
+        ok=1
+      fi ;;
     home)
       "$log" "${prefix}Claude Code's state is still in $(_claude_home_items), and this sleeve's config dir is $(molt_tilde "$dir"): quit every Claude Code, then run molt resleeve to move it"
       return 1 ;;

@@ -253,14 +253,17 @@ molt_instance_vars_file() {
 # Prints the variable $1 as this sleeve's vars.sh exports it; nothing when the
 # file does not export it, or there is no file. Only exported variables count,
 # because molt_render substitutes only those: a value it could not render is
-# not declared. Sourced in a subshell, as molt_render does, so nothing leaks.
-# Fails when there is no user repo, or the file cannot be sourced.
+# not declared. Nor does a value this process inherited: the file declares, not
+# the environment molt runs in. Sourced in a subshell, so nothing leaks, and as
+# leniently as molt_render sources it: a file whose last line is a false test
+# renders, so it must read too. What the file says on stderr reaches the
+# operator. Fails when there is no user repo.
 molt_instance_var() {
   local name="$1" vars_file
   vars_file="$(molt_instance_vars_file)" || return 1
   [[ -f "$vars_file" ]] || return 0
   # shellcheck disable=SC1090
-  ( . "$vars_file" >/dev/null 2>&1 && { printenv "$name" || true; } )
+  ( unset "$name"; set +eu; . "$vars_file" >/dev/null; printenv "$name" || true )
 }
 
 # --- Template Rendering ---

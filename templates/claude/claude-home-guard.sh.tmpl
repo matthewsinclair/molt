@@ -10,13 +10,21 @@
 # Claude Code sends the hook's input as JSON on stdin. Exit 2 blocks the prompt
 # and shows stderr; any other non-zero exit shows stderr and blocks nothing. It
 # needs jq and nothing of molt's: molt need not be on PATH when a prompt is sent.
+#
+# Strict mode is off on purpose, and every step is checked by hand. The exit
+# status is the verdict, and a strict-mode exit could land on 2: dash exits 2
+# for an unset variable under set -u, which would block every prompt. Exit 2
+# comes only from the $HOME test below.
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "claude-home-guard: jq is not on PATH, so the launch directory was not checked" >&2
   exit 1
 fi
 
-cwd="$(jq -r '.cwd // empty' 2>/dev/null)"
+if ! cwd="$(jq -r '.cwd // empty' 2>/dev/null)"; then
+  echo "claude-home-guard: the hook input is not JSON, so the launch directory was not checked" >&2
+  exit 1
+fi
 if [ -z "$cwd" ]; then
   echo "claude-home-guard: the hook input names no cwd, so the launch directory was not checked" >&2
   exit 1
