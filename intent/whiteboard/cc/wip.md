@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 15:23Z
+heartbeat_at: 2026-10-21 15:29Z
 status: active
-focus: "Issue 0027 (ed55610) with vc for review; holding for the verdict"
-claims: [ST0006/01, ST0006/02, ISSUE:0027]
+focus: "Idle: 0024, 0025, 0027 merged; holding for hv to name WP06's floor"
+claims: [ST0006/01, ST0006/02]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0027 at issue-0027 ed55610 (from aae8623) with vc for review; all tests pass under both bashes, shellcheck clean, critic-shell's findings answered.
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Nothing more on issue-0027 until vc's verdict (21 Oct); released by that verdict, or by hv. After the merge: remove its worktree and branch; then WP06 (no ACs yet; ask vc).
+- Nothing queued for cc (vc, 21 Oct): 0024, 0025 and 0027 merged. Released when hv names WP06's floor (the managed deny floor for sysadm), or by a new assignment from vc or hv.
 
 ## Watch-outs
 
