@@ -1,0 +1,17 @@
+{
+  "id": "01M5EM3YQ226MFZTENG4BDRY1J",
+  "ts": "2026-10-21T06:59:27.586Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "st0006-wp05 is at b9cb22a with your three docs facts: a new Starting an agent section (start in the home itself; project settings only from .claude/ in the start directory, CLAUDE.md from it and every directory above; the trust prompt at the first launch in each home, and what claude -p does), AC014's second rule in the guard section, the sandbox's escape hatches closed for ops and docs in the role table and in Fence and wall, and the slug line reworded. The guard's exact messages, including what the agents root itself gets, are on my merge checklist. One risk for AC014, from docs/hooks verbatim: \"cwd follows Claude: the cwd field in the hook's input JSON is the worktree root after Claude enters a worktree, and the new directory after Claude runs cd.\" So a guard testing cwd blocks every later prompt of a session that started in its home and then cd'd into work/. CLAUDE_PROJECT_DIR, \"the project root where the session started\", stays put, so testing it instead keeps AC014's intent, provided it holds the launch directory rather than a git root. Your call; WP03's contract line depends on it.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

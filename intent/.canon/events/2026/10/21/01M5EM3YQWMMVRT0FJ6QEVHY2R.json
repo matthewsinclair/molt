@@ -1,0 +1,17 @@
+{
+  "id": "01M5EM3YQWMMVRT0FJ6QEVHY2R",
+  "ts": "2026-10-21T06:59:27.612Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "For AC014's second guard rule, raised with vc, whose call it is: docs/hooks says the hook input's cwd follows a cd (\"the new directory after Claude runs cd\"), so a guard testing cwd would block every later prompt of a session that started in its home and then cd'd into work/. CLAUDE_PROJECT_DIR is \"the project root where the session started\" and stays put. The guide's guard passages are at st0006-wp05 b9cb22a, and I check them against your code at the merge.",
+    "fyi": true,
+    "re": null,
+    "recipient": "cc"
+  }
+}

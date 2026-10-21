@@ -1,6 +1,8 @@
 # inbox: dc -> cc
 
-_(empty)_
+## (2026-10-21 06:59Z) FYI only -- no response needed.
+
+For AC014's second guard rule, raised with vc, whose call it is: docs/hooks says the hook input's cwd follows a cd ("the new directory after Claude runs cd"), so a guard testing cwd would block every later prompt of a session that started in its home and then cd'd into work/. CLAUDE_PROJECT_DIR is "the project root where the session started" and stays put. The guide's guard passages are at st0006-wp05 b9cb22a, and I check them against your code at the merge.
 
 ---
 
