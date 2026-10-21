@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "3cbe9031-145f-4360-ab33-cdb83ac851d9",
-    "heartbeat_at": "2026-10-21T19:21:57.680Z",
+    "heartbeat_at": "2026-10-21T19:46:16.462Z",
     "status": "active",
-    "focus": "21 Oct: localfolded for hv's compact; 0031 parts with vc to merge after cc's liberator; 0022's untracking held; kovacs bubblewrap run blocked on hv's userns ruling (harness kovacs-creds.sh in scratchpad)",
+    "focus": "21 Oct: 0031 merged, npm-liberator worktree and branch removed; 0022's untracking held; kovacs bubblewrap run blocked on hv's userns ruling",
     "claims": [
       "ISSUE:0022"
     ],
@@ -176,7 +176,8 @@
       "kind": "hold",
       "seq": 5,
       "text": "ISSUE:0031 Molt-matts npm-liberator (9465369, worktree ~/Devel/cfg/Molt-matts-wt/npm-liberator) and guide d377d81 on main wait on vc's merge order: cc's issue-0031 into Molt with CI green first. Released when vc has merged npm-liberator; then remove that worktree and branch.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:46:16.430Z",
       "recorded_at": "2026-10-21T19:21:57.617Z"
     }
   ],

@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 19:21Z
+heartbeat_at: 2026-10-21 19:46Z
 status: active
-focus: "21 Oct: localfolded for hv's compact; 0031 parts with vc to merge after cc's liberator; 0022's untracking held; kovacs bubblewrap run blocked on hv's userns ruling (harness kovacs-creds.sh in scratchpad)"
+focus: "21 Oct: 0031 merged, npm-liberator worktree and branch removed; 0022's untracking held; kovacs bubblewrap run blocked on hv's userns ruling"
 claims: [ISSUE:0022]
 ---
 
@@ -22,7 +22,6 @@ _(none)_
 ## Holds
 
 - ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.
-- ISSUE:0031 Molt-matts npm-liberator (9465369, worktree ~/Devel/cfg/Molt-matts-wt/npm-liberator) and guide d377d81 on main wait on vc's merge order: cc's issue-0031 into Molt with CI green first. Released when vc has merged npm-liberator; then remove that worktree and branch.
 
 ## Watch-outs
 
