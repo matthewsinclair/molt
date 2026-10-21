@@ -5,9 +5,9 @@
     "name": "Authoring Claude",
     "role": "authoring",
     "session_id": "d1da0c2b-7939-45d0-b367-098542eec60e",
-    "heartbeat_at": "2026-10-21T13:20:41.797Z",
+    "heartbeat_at": "2026-10-21T14:03:34.068Z",
     "status": "active",
-    "focus": "21 Oct: ST0006 WP04 revision at a943773, with vc for review",
+    "focus": "21 Oct: WP04 runbook final at 5a21904; claim held until hv executes the move; localfolded, holding for hv's compact",
     "claims": [
       "ST0006/04"
     ],
@@ -30,7 +30,8 @@
       "kind": "doing",
       "seq": 2,
       "text": "ST0006 WP04: runbook revised per vc's review at a943773 (on a1fe844, 41a096e), with vc for review; hv's two C3 questions open",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:03:34.008Z",
       "recorded_at": "2026-10-21T08:49:27.253Z",
       "edited_at": "2026-10-21T13:20:41.706Z"
     },

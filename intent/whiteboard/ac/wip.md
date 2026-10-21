@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-21 13:20Z
+heartbeat_at: 2026-10-21 14:03Z
 status: active
-focus: "21 Oct: ST0006 WP04 revision at a943773, with vc for review"
+focus: "21 Oct: WP04 runbook final at 5a21904; claim held until hv executes the move; localfolded, holding for hv's compact"
 claims: [ST0006/04]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/04]
 
 ## DOING
 
-- ST0006 WP04: runbook revised per vc's review at a943773 (on a1fe844, 41a096e), with vc for review; hv's two C3 questions open (edited)
+_(none)_
 
 ## TODO
 
