@@ -17,11 +17,11 @@ _(none)_
 
 ## TODO
 
-_(none)_
+- WP06 managed deny floor: hv named it 21 Oct (credentials only; sysadm sleeves only). vc settled: contents in Molt-matts config/agents/roles/sysadm/floor.json; Molt renders it to managed-settings.d/molt-sysadm.json with a sidecar, removes one it rendered where no sysadm, agent config shows the managed layer, doctor reports. Read-ahead done. (edited)
 
 ## Holds
 
-- Nothing queued for cc (vc, 21 Oct): 0024, 0025 and 0027 merged. Released when hv names WP06's floor (the managed deny floor for sysadm), or by a new assignment from vc or hv.
+- No WP06 branch until vc's ACs and ATs for ST0006/06 are on the thread (tonight after the kovacs tail, or tomorrow if hv calls it).
 
 ## Watch-outs
 

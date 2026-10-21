@@ -180,8 +180,35 @@
       "kind": "hold",
       "seq": 6,
       "text": "Nothing queued for cc (vc, 21 Oct): 0024, 0025 and 0027 merged. Released when hv names WP06's floor (the managed deny floor for sysadm), or by a new assignment from vc or hv.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:40:48.370Z",
       "recorded_at": "2026-10-21T15:29:33.266Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 6,
+      "text": "WP06 managed deny floor: hv named it 21 Oct (credentials only; sysadm sleeves only). vc settled: contents in Molt-matts config/agents/roles/sysadm/floor.json; Molt renders it to managed-settings.d/molt-sysadm.json with a sidecar, removes one it rendered where no sysadm, agent config shows the managed layer, doctor reports. Read-ahead done.",
+      "state": "live",
+      "recorded_at": "2026-10-21T19:40:48.406Z",
+      "edited_at": "2026-10-21T19:44:15.939Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 7,
+      "text": "Not building WP06 until vc's ACs for ST0006/06 exist (asked vc 21 Oct).",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:44:15.844Z",
+      "recorded_at": "2026-10-21T19:40:48.437Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 8,
+      "text": "No WP06 branch until vc's ACs and ATs for ST0006/06 are on the thread (tonight after the kovacs tail, or tomorrow if hv calls it).",
+      "state": "live",
+      "recorded_at": "2026-10-21T19:44:16.023Z"
     }
   ],
   "messages": [
