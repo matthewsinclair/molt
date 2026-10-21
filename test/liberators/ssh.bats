@@ -180,40 +180,137 @@ _ssh_backups() {
     [ "$(_ssh_backups)" = 1 ]
 }
 
-# A static config/ssh/config is linked, so the fragments went through the link
-# into the user repo. With fragments declared, the install refuses instead.
-@test "ssh_install refuses a static config/ssh/config when config.d declares fragments, and writes nothing" {
+# Issue 0027: a static config/ssh/config was linked, and check and verify
+# refuse a linked ~/.ssh/config, which sshd will not read, so the sleeve never
+# settled; fragments went through the link into the user repo. A static config
+# is refused instead: as config.tmpl it renders as it stands. Check, install
+# and verify agree on every shape of repo; check needs ssh, so it has a test of
+# its own.
+STATIC_REFUSAL="ssh: config/ssh/config is static, and ssh refuses ~/.ssh/config as the link molt would make of it: rename it config/ssh/config.tmpl, which renders it as it stands"
+NO_CONFIG_REFUSAL="ssh: config.d fragments need config/ssh/config.tmpl; the user repo has no ssh config, so 1 fragment(s) were not applied"
+
+_ssh_no_fragments() {
+    rm "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+}
+
+_ssh_static_env() {
     _ssh_env
-    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config"
+    printf 'Host *\n  ServerAliveInterval 60\n' > "$SSH_ROOT/repo/config/ssh/config"
     cp "$SSH_ROOT/repo/config/ssh/config" "$SSH_ROOT/static.before"
     printf 'Host mine\n' > "$HOME/.ssh/config"
     cp "$HOME/.ssh/config" "$SSH_ROOT/config.before"
+}
 
-    run ssh_install
-    assert_failure
-    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so 1 fragment(s) were not applied"
-    refute_output_contains "Liberator complete"
+_ssh_nothing_written() {
     cmp "$SSH_ROOT/static.before" "$SSH_ROOT/repo/config/ssh/config"
     [ ! -L "$HOME/.ssh/config" ]
     cmp "$SSH_ROOT/config.before" "$HOME/.ssh/config"
     [ -z "$(find "$HOME/.ssh" -name 'config.molt-*')" ]
 }
 
-# Fragments had been appended to a ~/.ssh/config of fragments alone when the
-# repo had no ssh config; building the file from its template, they would be
-# dropped without a word. Check and install both say so instead.
-@test "ssh_check and ssh_install refuse config.d fragments when the user repo has no ssh config" {
-    require_command ssh "ssh_check needs ssh"
-    _ssh_env
-
-    run ssh_check
-    assert_failure
-    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; the user repo has no ssh config, so 1 fragment(s) were not applied"
+# Install and verify refuse with $1, and install writes nothing.
+_ssh_install_and_verify_refuse() {
     run ssh_install
     assert_failure
-    assert_output_contains "ssh: config.d fragments need config/ssh/config.tmpl; the user repo has no ssh config, so 1 fragment(s) were not applied"
+    assert_output_contains "$1"
     refute_output_contains "Liberator complete"
+    run ssh_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: $1"
+}
+
+@test "install and verify refuse a static config/ssh/config, and install writes nothing" {
+    _ssh_static_env
+    _ssh_no_fragments
+    _ssh_install_and_verify_refuse "$STATIC_REFUSAL"
+    refute_output_contains "fragment(s)"
+    _ssh_nothing_written
+}
+
+@test "install and verify refuse a static config/ssh/config with config.d fragments, naming them, and install writes nothing" {
+    _ssh_static_env
+    _ssh_install_and_verify_refuse "$STATIC_REFUSAL; 1 config.d fragment(s) were not applied"
+    _ssh_nothing_written
+}
+
+# Fragments had been appended to a ~/.ssh/config of fragments alone when the
+# repo had no ssh config; building the file from its template, they would be
+# dropped without a word.
+@test "install and verify refuse config.d fragments when the user repo has no ssh config" {
+    _ssh_env
+    _ssh_install_and_verify_refuse "$NO_CONFIG_REFUSAL"
     [ ! -e "$HOME/.ssh/config" ]
+}
+
+@test "on a host with no name, install and verify say its config.d fragments cannot be found" {
+    _ssh_env
+    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    molt_hostname() { return 1; }
+    _ssh_install_and_verify_refuse "ssh: this host gives no hostname, so its config.d fragments cannot be found"
+}
+
+@test "with no ssh config and no config.d fragments, install and verify pass and leave ~/.ssh/config alone" {
+    _ssh_env
+    _ssh_no_fragments
+    run ssh_install
+    assert_success
+    run ssh_verify
+    assert_success
+    [ ! -e "$HOME/.ssh/config" ]
+}
+
+# Both files, as Molt-matts has: the template is the config, as before.
+@test "with config/ssh/config.tmpl beside a static config/ssh/config, install renders the template and verify passes" {
+    _ssh_static_env
+    printf 'Host *\n  ServerAliveInterval 30\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    run ssh_install
+    assert_success
+    refute_output_contains "is static"
+    grep -qx '  ServerAliveInterval 30' "$HOME/.ssh/config"
+    run ssh_verify
+    assert_success
+}
+
+# A sleeve the old code linked: renamed to config.tmpl, the link is replaced
+# by a regular file, and the repo's file is left as it was.
+@test "a static config/ssh/config renamed config.tmpl replaces the link molt made with a render of it, as it stands" {
+    _ssh_static_env
+    _ssh_no_fragments
+    rm "$HOME/.ssh/config"
+    ln -s "$SSH_ROOT/repo/config/ssh/config" "$HOME/.ssh/config"
+    mv "$SSH_ROOT/repo/config/ssh/config" "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    run ssh_install
+    assert_success
+    [ ! -L "$HOME/.ssh/config" ]
+    cmp "$SSH_ROOT/static.before" "$HOME/.ssh/config"
+    cmp "$SSH_ROOT/static.before" "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    [ ! -e "$SSH_ROOT/repo/config/ssh/config" ]
+    run ssh_verify
+    assert_success
+}
+
+@test "ssh_check agrees with install and verify on every shape of user repo" {
+    require_command ssh "ssh_check needs ssh"
+    _ssh_static_env
+    run ssh_check
+    assert_failure
+    assert_output_contains "$STATIC_REFUSAL; 1 config.d fragment(s) were not applied"
+    _ssh_no_fragments
+    run ssh_check
+    assert_failure
+    assert_output_contains "$STATIC_REFUSAL"
+    refute_output_contains "fragment(s)"
+    printf 'Host *\n' > "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    ssh_install >/dev/null
+    run ssh_check
+    assert_success
+    rm "$SSH_ROOT/repo/config/ssh/config" "$SSH_ROOT/repo/config/ssh/config.tmpl"
+    run ssh_check
+    assert_success
+    printf 'Host gyges\n' > "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+    run ssh_check
+    assert_failure
+    assert_output_contains "$NO_CONFIG_REFUSAL"
 }
 
 @test "with no vars.sh, ssh_install warns as every render does" {

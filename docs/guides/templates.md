@@ -46,11 +46,13 @@ Variables are sourced in a subshell during rendering — they don't leak into th
 The simplest approach is `molt_install_config`, which auto-picks between rendering and symlinking:
 
 ```bash
-# If config/ssh/config.tmpl exists → render with instance vars
-# If config/ssh/config exists → symlink
+# If config/tmux/tmux.conf.tmpl exists → render with instance vars
+# If config/tmux/tmux.conf exists → symlink
 # If neither exists → warn and return 1
-molt_install_config "config/ssh/config" "$HOME/.ssh/config"
+molt_install_config "config/tmux/tmux.conf" "$HOME/.tmux.conf"
 ```
+
+A liberator whose target must be a regular file renders it and never links it. `ssh` is one: ssh refuses a linked `~/.ssh/config`, so the `ssh` liberator renders `config/ssh/config.tmpl` and refuses a static `config/ssh/config`, which as `config.tmpl` renders as it stands.
 
 For direct control, use `molt_render`:
 
