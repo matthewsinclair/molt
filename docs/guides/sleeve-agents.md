@@ -107,18 +107,20 @@ enabled = false
 
 The `[[agent]]` entries render nothing without the `[[liberator]]` entry for `agents`, though `molt agent list` reads them either way.
 
-Homes live under `MOLT_AGT_DIR`. It defaults to the `agt/` sibling of `MOLT_PRJ_DIR`, the way `MOLT_CFG_DIR` defaults to `cfg/`, so `~/Devel/prj` gives `~/Devel/agt`; with `MOLT_PRJ_DIR` unset it is `$HOME/Devel/agt`. Export it from your `zshenv` beside `MOLT_PRJ_DIR`, so your shells and your agents see the same value. An agent runs as you, and Unix has no convention for an interactive agent that runs as its user: `/opt`, `/var/lib` and `/srv` are for software and for services under their own accounts.
+Homes live under `MOLT_AGT_DIR`. It defaults to the `agt/` sibling of `MOLT_PRJ_DIR`, the way `MOLT_CFG_DIR` defaults to `cfg/`, so `~/Devel/prj` gives `~/Devel/agt`. With neither set, Molt does not guess: `MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset`, and no home is made. Export it from your `zshenv` beside `MOLT_PRJ_DIR`, so your shells and your agents see the same value. An agent runs as you, and Unix has no convention for an interactive agent that runs as its user: `/opt`, `/var/lib` and `/srv` are for software and for services under their own accounts.
+
+Molt refuses an agents root it cannot hold homes in, and then makes none, renders no home-launch guard and moves no state. The root must be absolute and canonical, with no trailing slash, no `//` and no `.` or `..` component, and hold no line break. It must not be at or above `$HOME`, `MOLT_PRJ_DIR` or `MOLT_CFG_DIR`, compared by where the paths lead, because the guard would then refuse launches in your projects. It must not be at or under `~/.claude`, Claude Code's config dir, or the config dir the sleeve declares, because a home there would move with Claude Code's state. And the sleeve's `vars.sh` must not set, empty or unset `MOLT_AGT_DIR`, since the guard and the homes must agree on one root: set it where molt runs, beside `MOLT_PRJ_DIR`. Each refusal is one line naming the root and the fault, eg `MOLT_AGT_DIR, ~/Devel/agt, is at or under ~/.config/claude, the config dir this sleeve declares for Claude Code: ...`.
 
 ## What Molt renders
 
 On `molt resleeve` and `molt upgrade`, the `agents` liberator renders each enabled agent's home:
 
-| In the home             | Rendered from                                                                                                                                        |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AGENTS.md`             | `config/agents/AGENTS.md.tmpl` if present, then `config/agents/roles/<role>/AGENTS.md.tmpl`, then `instances/<hostname>/agents/<role>.md` if present |
-| `CLAUDE.md`             | a one-line `@AGENTS.md` stub                                                                                                                         |
-| `.claude/settings.json` | `config/agents/roles/<role>/settings.json.tmpl`, with `autoMemoryDirectory` set to `<home>/memory`                                                   |
-| `memory/`, `work/`      | created empty, and the agent's from then on: Molt never writes to them again                                                                         |
+| In the home             | Rendered from                                                                                                                                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`             | `config/agents/AGENTS.md.tmpl` if present, then `config/agents/roles/<role>/AGENTS.md.tmpl`, then `instances/<hostname>/agents/<role>.md` if present, with a blank line before each part after the first |
+| `CLAUDE.md`             | a one-line `@AGENTS.md` stub                                                                                                                                                                             |
+| `.claude/settings.json` | `config/agents/roles/<role>/settings.json.tmpl`, with `autoMemoryDirectory` set to `<home>/memory`                                                                                                       |
+| `memory/`, `work/`      | created empty, and the agent's from then on: Molt never writes to them again                                                                                                                             |
 
 Templates go through Molt's usual renderer (see [Template System](templates.md)), so only `MOLT_*` variables are substituted and any other `$VAR` is left as written. Besides the sleeve's own instance variables, an agent's templates can use:
 
@@ -131,7 +133,9 @@ Templates go through Molt's usual renderer (see [Template System](templates.md))
 
 A contract that names a `MOLT_*` variable for its reader, rather than wanting its value, should write the name without the `$`.
 
-Each rendered file has a `.molt-rendered` sidecar recording a digest of its sources (see [Detecting stale renders](templates.md#detecting-stale-renders)). Re-rendering is a no-op while the digests match. A change to the role's templates or to the host's overlay makes the home stale, and the next `molt upgrade` re-renders it. A role your config repo does not define is a fault that names the role and the path Molt looked in.
+Each rendered file has a `.molt-rendered` sidecar recording a digest of its sources (see [Detecting stale renders](templates.md#detecting-stale-renders)). Re-rendering is a no-op while the digests match. A change to the role's templates or to the host's overlay makes the home stale, and the next `molt upgrade` re-renders it. A role your config repo does not define is a fault that names the role and the path Molt looked in. A role's `settings.json.tmpl` must render to one JSON object, or the home's settings are not written: `agents: <name>'s settings.json, from role <role>'s settings.json.tmpl, is not usable: the template does not render to one JSON object`.
+
+Each file is built whole, preamble and overlay included, before Molt compares it with what is in the home, so an unchanged home is left alone and a changed one is backed up once. Lines a home's `AGENTS.md` carries above `@@MOLT:BEGIN@@` are kept only when the new render opens with the marker (see [Preserving hand-written entries](templates.md#preserving-hand-written-entries)); with a preamble ahead of a role contract that carries it, the render no longer opens with the marker, so put the marker at the top of the preamble, or keep such text in the overlay.
 
 A home renders whether or not the sleeve's Claude Code state has moved (see below). That is deliberate: on a sleeve whose agent still runs from `$HOME`, the home can be rendered first, so the agent can copy its own files in before its state moves.
 
@@ -150,7 +154,7 @@ kovacs-sysadm                sysadm   true     current        ~/Devel/agt/kovacs
 kovacs-ops                   ops      false    role undefined ~/Devel/agt/kovacs-ops
 ```
 
-`STATE` is one of `current`, `stale`, `not rendered` and `role undefined`. Faults in the `[[agent]]` entries follow the table as warnings, and the command then exits 1.
+`STATE` is one of `current`, `stale`, `not rendered` and `role undefined`; `stale` covers any rendered file missing or out of date, and a missing `memory/` or `work/`. Faults in the `[[agent]]` entries follow the table as warnings, each as `molt agent: molt.toml: <fault>` with the faults [molt doctor](#what-molt-doctor-reports) lists, and the command then exits 1. A sleeve whose `molt.toml` has no `[[agent]]` entries prints `No agents: this sleeve's molt.toml has no [[agent]] entries.`, and one with no `molt.toml` fails.
 
 `molt agent config <name>` prints one agent: its role, harness and home, and the currency of each rendered file; then the settings files Claude Code merges for a session in the home, highest precedence first; then the effective permissions, each rule tagged with the layer it came from:
 
@@ -174,7 +178,7 @@ kovacs-sysadm
     allow  Bash(uptime)                                 home
 ```
 
-The managed layer also lists any drop-ins in `managed-settings.d/`. An undeclared name fails with `molt agent: <name> is not declared on this sleeve; declared: <the declared names>`.
+The managed layer also lists any drop-ins in `managed-settings.d/`. A file the role has no template for shows `role <role> has no <template>`, and a session with no rules at any layer shows `none` under permissions. Reading the rules needs `jq`, and a layer that is not JSON with permission lists fails the command, naming the file. An undeclared name fails with `molt agent: <name> is not declared on this sleeve; declared: <the declared names>`.
 
 ## Starting an agent
 
@@ -202,7 +206,7 @@ export MOLT_CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/claude"
 
 Until it does, the sleeve keeps today's behaviour: no move, no env or GUI file, no `$HOME` hook. Only the user-scope links described above are made either way. Once it does, the next `molt upgrade` or `molt resleeve` runs the move, so declare it when the sleeve is ready to move, and run that upgrade as the next section says.
 
-The value must be a path Molt can write unchanged into each file that publishes it. It must be absolute and canonical, with no trailing slash, no `//` and no `.` or `..` component. It must hold no character those files read as syntax: either quote, `$`, a backquote, a backslash, `<`, `>`, `&` or a line break. It must not end in whitespace, which environment.d strips. It must be a directory of its own, not `$HOME`, `~/.claude` or anything under it. `MOLT_AGT_DIR` must pass the same path test, because the home-launch guard is rendered with it. A `vars.sh` that cannot be read, does not parse, or stops before its end when sourced is refused as well. In each case the claude liberator fails before it moves or writes anything, with a line that names the fault, eg `MOLT_CLAUDE_CONFIG_DIR is not a canonical path, with no trailing slash, // or . or .. component: <path>`, and `molt doctor` reports the same line.
+The value must be a path Molt can write unchanged into each file that publishes it. It must be absolute and canonical, with no trailing slash, no `//` and no `.` or `..` component. It must hold no character those files read as syntax: either quote, `$`, a backquote, a backslash, `<`, `>`, `&` or a line break. It must not end in whitespace, which environment.d strips. It must be a directory of its own, not `$HOME`, `~/.claude` or anything under it. `MOLT_AGT_DIR` must be an agents root Molt accepts, as [Declaring an agent](#declaring-an-agent) sets out, because the home-launch guard is rendered with it. A `vars.sh` that cannot be read, does not parse, or stops before its end when sourced is refused as well. In each case the claude liberator fails before it moves or writes anything, with a line that names the fault, eg `MOLT_CLAUDE_CONFIG_DIR is not a canonical path, with no trailing slash, // or . or .. component: <path>`, and `molt doctor` reports the same line.
 
 ### Quit every Claude first, and use a plain terminal
 
@@ -275,7 +279,7 @@ It blocks a session started in `MOLT_AGT_DIR` but not in an agent home itself th
 launch from the agent home itself: cd <home>
 ```
 
-A session started in an agent home itself passes, as does one started anywhere else, so project agents are unaffected. If the hook has no `CLAUDE_PROJECT_DIR`, or no `HOME`, the script exits 1 with a line that says so, eg `claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked`, which shows the line and blocks nothing.
+A session started in an agent home itself passes, as does one started anywhere else, so project agents are unaffected. A directory directly in `MOLT_AGT_DIR` is taken for a home, whether or not an agent is declared there. If the hook has no `CLAUDE_PROJECT_DIR` or no `HOME`, or either is not an absolute path, the script exits 1 with a line that says so, eg `claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked`, which shows the line and blocks nothing.
 
 ## What molt doctor reports
 
@@ -303,18 +307,20 @@ A fault in `vars.sh` or in a declared path is reported alone, because nothing pa
 
 On every sleeve, whether or not it has declared the variable:
 
-| Report                                                                                           | Means                                                                                      | What to do                                    |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| `~/.config/claude/CLAUDE.md is missing`, `is a broken symlink`, or `points at <X>, not <Y>`      | the user-scope link is not made yet, or is wrong; the same lines cover `AGENTS.md`         | `molt upgrade`                                |
-| `~/.config/claude/CLAUDE.md is not a symlink`                                                    | a regular file is where the link goes                                                      | `molt upgrade`, which backs the file up first |
-| `agents: <name>: <home>/<file> is missing`, or `is stale`, for any rendered file                 | the home has not been rendered, or its role templates or host overlay changed since it was | `molt upgrade`                                |
-| `agents: <name>: <home>/memory is missing`, or `<home>/work is missing`                          | one of the agent's own directories is gone                                                 | `molt upgrade` creates it again, empty        |
-| `agents: <name>: role <role> is not defined: there is no <user repo>/config/agents/roles/<role>` | the entry names a role your config repo does not define                                    | add the role, or fix the entry                |
-| `agents: <name>: role <role> has no <user repo>/config/agents/roles/<role>/<template>`           | the role's directory lacks one of its templates                                            | add the template                              |
-| `agents: molt.toml: an [[agent]] entry has no role`                                              | an entry without its one required key                                                      | add the role                                  |
-| `agents: molt.toml: role <role> is declared by more than one [[agent]] entry`                    | two entries for one role                                                                   | keep one                                      |
-| `agents: molt.toml: the <role> entry writes a name; an agent is named <hostname>-<role>`         | an entry sets the name Molt derives                                                        | remove the name                               |
-| `agents: molt.toml: the <role> entry names harness codex; claude is the only one`                | a harness Molt does not render for                                                         | remove `harness`, or set it to `"claude"`     |
+| Report                                                                                           | Means                                                                                                                                | What to do                                                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `~/.config/claude/CLAUDE.md is missing`, `is a broken symlink`, or `points at <X>, not <Y>`      | the user-scope link is not made yet, or is wrong; the same lines cover `AGENTS.md`                                                   | `molt upgrade`                                                           |
+| `~/.config/claude/CLAUDE.md is not a symlink`                                                    | a regular file is where the link goes                                                                                                | `molt upgrade`, which backs the file up first                            |
+| `agents: <name>: <home>/<file> is missing`, or `is stale`, for any rendered file                 | the home has not been rendered, or its role templates or host overlay changed since it was                                           | `molt upgrade`                                                           |
+| `agents: <name>: <home>/memory is missing`, or `<home>/work is missing`                          | one of the agent's own directories is gone                                                                                           | `molt upgrade` creates it again, empty                                   |
+| `agents: <name>: role <role> is not defined: there is no <user repo>/config/agents/roles/<role>` | the entry names a role your config repo does not define                                                                              | add the role, or fix the entry                                           |
+| `agents: <name>: role <role> has no <user repo>/config/agents/roles/<role>/<template>`           | the role's directory lacks one of its templates                                                                                      | add the template                                                         |
+| `agents: molt.toml: an [[agent]] entry has no role`                                              | an entry without its one required key                                                                                                | add the role                                                             |
+| `agents: molt.toml: role <role> is declared by more than one [[agent]] entry`                    | two entries for one role                                                                                                             | keep one                                                                 |
+| `agents: molt.toml: the <role> entry writes a name; an agent is named <hostname>-<role>`         | an entry sets the name Molt derives                                                                                                  | remove the name                                                          |
+| `agents: molt.toml: the <role> entry names harness codex; claude is the only one`                | a harness Molt does not render for                                                                                                   | remove `harness`, or set it to `"claude"`                                |
+| `agents: molt.toml: the <role> entry has enabled = <value>, not true or false`                   | `enabled` is not a boolean                                                                                                           | set it to `true` or `false`                                              |
+| `agents: MOLT_AGT_DIR, <root>, ...`, or another line naming what is wrong with the agents root   | the root is one Molt refuses, as [Declaring an agent](#declaring-an-agent) sets out; reported alone, on a sleeve with agents to home | fix `MOLT_AGT_DIR` or `MOLT_PRJ_DIR` where you export them, or `vars.sh` |
 
 The native installer's paths listed above are not faults.
 
