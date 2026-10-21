@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 14:24Z
+heartbeat_at: 2026-10-21 14:54Z
 status: active
-focus: "Issues 0024 then 0025 for vc, each on its own branch"
+focus: "Issues 0024 (d11841a) and 0025 (a770a0b) with vc for review; holding for the verdict"
 claims: [ST0006/01, ST0006/02, ISSUE:0024, ISSUE:0025]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/01, ST0006/02, ISSUE:0024, ISSUE:0025]
 
 ## DOING
 
-- Issue 0024 (ssh config.d: build the whole file before the compare) on issue-0024 from 35b3670, then 0025 (vars.sh EXIT trap) on issue-0025, per vc's contract (21 Oct); each head to vc when green.
+- Issues 0024 (issue-0024 d11841a) and 0025 (issue-0025 a770a0b), both from 35b3670, with vc for review; all tests pass under both bashes, shellcheck clean, critic-shell's two passes answered. 0027 filed (ssh static path).
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- Nothing more on issue-0024 or issue-0025 until vc's verdict (21 Oct); released by that verdict, or by hv. After the merges: remove both worktrees and branches; then WP06 (no ACs yet; ask vc).
 
 ## Watch-outs
 
