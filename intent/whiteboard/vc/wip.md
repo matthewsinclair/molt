@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 18:18Z
-status: active
-focus: "21 Oct (banked before hv's compact): ST0006 WP01/02/05/07 done, WP03 and credential denies on Molt-matts main (45e344c); issues 0023-0028 closed; WP04 phase A done on kovacs, phase B with hv. Next: kovacs-sysadm's c4 after B9, phase C, AC008; hv's bubblewrap run; WP06 floor"
+heartbeat_at: 2026-10-21 20:04Z
+status: paused
+focus: "22 Oct globalfold: ST0006 WP01/02/03/05/07 done, WP04 kovacs done (rhadamanth next on hv's date), WP06 in build (cc st0006-wp06; dc wp06-guide 1efde2c; Molt-matts 1421034 ready); issues 0023-0031 closed, 0032 (kovacs sandbox) for hv. Next: merge WP06 in order (todo), hv's 0032 ruling, rhadamanth's move."
 claims: [ST0005, ST0006]
 ---
 
@@ -24,7 +24,8 @@ _(none)_
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
 - WP04 kovacs DONE 21 Oct ~23:50: phases A-C, c4 PASS, AC008 satisfied by evidence, kovacs-sysadm folded (session 1c7fdc09); ~/.npm gone, cache in ~/.cache/npm (issue 0031). WP04 started (WIP): rhadamanth's move is next when hv schedules it (runbook section 'rhadamanth', same three phases; B9 from a post-move shell; hv removes ~/.npm done already); gyges later (hv). hv to rule whether WP04 closes after rhadamanth with gyges carried as a todo. (edited)
-- ops/docs sandbox.credentials.files denies: on Molt-matts main 45e344c; rhadamanth and kovacs homes rendered against it (kovacs at hv's 22:26 upgrade; five backup diffs exactly 45e344c). The guide's Fence and wall paragraph as tested on rhadamanth (f57ee55). kovacs bubblewrap run A (21 Oct 22:xx, dc's kovacs-creds.sh): the sandbox cannot start on kovacs, every sandboxed Bash fails with 'apply-seccomp: write /proc/self/setgroups (nested userns is capability-restricted; caller must provide CAP_SYS_ADMIN)', so kovacs-ops and kovacs-docs fail closed and can run no command; Read() denies and the Read tool behave as on rhadamanth. Likely Ubuntu 24.04's apparmor_restrict_unprivileged_userns; hv's host decision (AppArmor profile for bwrap, or sysctl); the guide's 'still owed' sentence stays and needs a Linux line once hv decides. (edited)
+- Credentials fence: ops/docs sandbox.credentials denies live on Molt-matts 45e344c, tested on rhadamanth (Seatbelt). The Linux (bubblewrap) table is blocked by issue 0032: Claude Code's sandbox cannot start on kovacs (bwrap-userns-restrict denies capabilities to bwrap's children; kovacs-sysadm's read-only diagnosis in the issue). hv rules on the option; build on WP06's sudo helpers; then dc's kovacs-creds.sh A and B, then the guide's 'still owed' sentence goes. (edited)
+- WP06 merge order (vc): cc's st0006-wp06 head -> scratch merge, both bashes, shellcheck, mutation, replay, CI -> dc finishes wp06-guide (1efde2c; sidecar name, doctor 14 lines) and it lands on main -> Molt-matts st0006-wp06 (1421034: roles/sysadm/floor.json, role text) merges -> kovacs molt upgrade with hv at the sudo prompt -> kovacs-sysadm's molt agent config and doctor for AC020 (AT074) -> AT068-AT075 red/green, wp done ST0006/06.
 
 ## Holds
 

@@ -1,0 +1,16 @@
+{
+  "id": "01M5G1137M2W710V1SBY7589FZ",
+  "ts": "2026-10-21T20:04:19.828Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "Credentials fence: ops/docs sandbox.credentials denies live on Molt-matts 45e344c, tested on rhadamanth (Seatbelt). The Linux (bubblewrap) table is blocked by issue 0032: Claude Code's sandbox cannot start on kovacs (bwrap-userns-restrict denies capabilities to bwrap's children; kovacs-sysadm's read-only diagnosis in the issue). hv rules on the option; build on WP06's sudo helpers; then dc's kovacs-creds.sh A and B, then the guide's 'still owed' sentence goes."
+  }
+}
