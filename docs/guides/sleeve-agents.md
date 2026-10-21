@@ -284,7 +284,7 @@ A session started in an agent home itself passes, as does one started anywhere e
 
 ## What molt doctor reports
 
-`molt doctor`'s check of the enabled liberators shows `not installed: claude`, followed by the first three lines the claude liberator's check printed, as it printed them, under the `not installed:` line; the agents liberator's the same. Until issue 0026 is fixed, doctor also puts the liberator's name ahead of each, so a line reads `claude: Zen: claude: <report>`. The tables below give the report alone. Below, `~/.config/claude` stands for the sleeve's config dir, which is still `~/.claude` on a sleeve that has not moved.
+`molt doctor`'s check of the enabled liberators shows `not installed: claude`, followed by the first three lines the claude liberator's check printed, as it printed them, under the `not installed:` line; the agents liberator's the same. The tables below leave off the `Zen:` prefix, and the claude liberator's own `claude:`. Below, `~/.config/claude` stands for the sleeve's config dir, which is still `~/.claude` on a sleeve that has not moved.
 
 On a sleeve that has declared `MOLT_CLAUDE_CONFIG_DIR`, the claude liberator reports:
 
