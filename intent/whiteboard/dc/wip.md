@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 09:37Z
+heartbeat_at: 2026-10-21 13:27Z
 status: active
-focus: "21 Oct: quiesced for hv's move and travel; nothing starts until hv resumes, even if WP02 merges. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 merges; 0022's untracking until Intent's canon carries its settings. Queued, not started: issue 0023"
+focus: "21 Oct: issue 0023 at issue-0023 48d1284, with vc for review. Holds: WP05 (e4f857d) and WP03 items 1-3 (Molt-matts 769c2e6) until WP02 merges; 0022's untracking until Intent's canon carries its settings"
 claims: [ST0006/05, ST0006/03, ISSUE:0022, ISSUE:0023]
 ---
 
