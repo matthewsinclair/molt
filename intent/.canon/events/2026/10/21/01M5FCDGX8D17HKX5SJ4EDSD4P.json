@@ -1,0 +1,15 @@
+{
+  "id": "01M5FCDGX8D17HKX5SJ4EDSD4P",
+  "ts": "2026-10-21T14:04:06.952Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "WP02 review in progress (cc's head st0006-wp02 8bd28c2): code read clean; suite and mutation running; merge has one CHANGELOG.md conflict (keep both); run the suite on the MERGED tree (lib/molt.sh merges with 0023); then at green AT035-040, AT047, AT059-067 per the id map, lint, satisfy AC005 AC006 AC014 AC016, wp done ST0006/02, release dc's WP05/WP03 holds, tell kovacs-sysadm. Notes: scratchpad wp02-review-notes.md."
+  }
+}
