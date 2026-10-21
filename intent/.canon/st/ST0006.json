@@ -187,6 +187,14 @@
       "state": {
         "is": "computed"
       }
+    },
+    {
+      "id": "AC015",
+      "text": "molt_render fails loud and leaves the target as it was: a vars.sh the one reader refuses, or an envsubst that fails, writes nothing, backs nothing up and leaves no temp file; an unset name in a template renders rather than aborting the render; what vars.sh prints never reaches the rendered file; and a liberator reading vars.sh through the reader (backup) survives an unset name under nounset.",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
     }
   ],
   "tests": [

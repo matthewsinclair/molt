@@ -69,6 +69,10 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 - AC014 The home-launch guard refuses a prompt whose session started under MOLT_AGT_DIR without starting in an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a session started exactly in an agent home passes, as does one started anywhere else but $HOME. The guard tests CLAUDE_PROJECT_DIR, the directory the session started in, never the hook input's cwd, which follows Claude's cd. Project settings load from the start directory's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence. -- satisfied: no (computed)
 
+### Group AC015
+
+- AC015 molt_render fails loud and leaves the target as it was: a vars.sh the one reader refuses, or an envsubst that fails, writes nothing, backs nothing up and leaves no temp file; an unset name in a template renders rather than aborting the render; what vars.sh prints never reaches the rendered file; and a liberator reading vars.sh through the reader (backup) survives an unset name under nounset. -- satisfied: no (computed)
+
 ### Group AT001
 
 _(no criteria in this group)_
@@ -320,6 +324,10 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC014
+
+_(no tests in this group)_
+
+### Group AC015
 
 _(no tests in this group)_
 
