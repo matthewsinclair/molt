@@ -17,6 +17,7 @@ Owners: molt-dc for the role contracts (prose), molt-cc for the permission profi
 2. `config/agents/roles/<role>/settings.json.tmpl`: `permissions.allow/deny/ask`; `sandbox.enabled = true` for `ops` and `docs`, absent for `sysadm`; `autoMemoryDirectory` is written by the liberator, not the template. Rules that name the agent's work paths (kovacs' user settings allow-list `Bash(bash /home/matts/work/{intent-vc,devbin-vc}/*)` today, hand-edited) belong to the role profile, pointing at `${MOLT_AGENT_HOME}/work`, and leave the user settings (H4).
 3. `instances/{rhadamanth,gyges,kovacs}/molt.toml`: `[[agent]]` entries for the three roles, and the `agents` liberator enabled. `instances/<host>/vars.sh`: `MOLT_CLAUDE_CONFIG_DIR`.
 4. `config/zsh/zshenv`: export `MOLT_AGT_DIR` beside `MOLT_PRJ_DIR`, and source Molt's rendered env file when present.
+5. `config/claude/CLAUDE.md` and `config/claude/AGENTS.md`: the user-scope rules every sleeve's sessions load, linked into the config dir by WP01 4a. Seed `CLAUDE.md` from rhadamanth's current `~/.claude/CLAUDE.md` (hv's richest copy: Global Rules, Elixir, Tone and Style; the Git Commits rule is identical on kovacs) and `AGENTS.md` from part (a) of the kovacs split plus the two carried facts (test counts, host naming). Before the link lands on a sleeve, diff that sleeve's live file against the repo copy so nothing hv wrote locally is lost; a difference is folded into the repo first.
 
 Done when `molt doctor` is green on rhadamanth with the three homes rendered, and the Molt-matts commits are pushed.
 

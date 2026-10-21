@@ -57,6 +57,10 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 - AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: no (computed)
 
+### Group AC012
+
+- AC012 When the user repo has config/claude/CLAUDE.md and AGENTS.md, the claude liberator links them into the config dir, backing up a regular file found there; check reports the link pending and doctor reports it broken or missing -- satisfied: no (computed)
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -100,6 +104,10 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC011
+
+_(no tests in this group)_
+
+### Group AC012
 
 _(no tests in this group)_
 

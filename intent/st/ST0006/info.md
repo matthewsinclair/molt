@@ -55,7 +55,9 @@ The agent home is both the agent's config and its runtime directory: Claude Code
 
 ## Constraints
 
-- kovacs is brew-only (ST0005): nothing installed there may need a dev checkout of Molt or Utilz.
+- kovacs will be brew-only, and Molt itself will gain a brew install mode (hv, 21 Oct; not ready yet, and Molt on kovacs is a dev checkout for now). So: nothing in this thread may be anti-brew. Rendered files (the hook script, env files, GUI files, agent homes) reference no checkout path; what a sleeve agent needs at prompt time lives under `~/.config/molt/` or the agent home, where a brew-installed Molt will put it just the same.
+- gyges is fixed later, not today (hv): its sleeve agent becomes `gyges-sysadm` when WP04 reaches it.
+- Molt manages the user-scope `CLAUDE.md` and `AGENTS.md` under the config dir as links from the user repo's `config/claude/` (hv, 21 Oct), so the cross-session rules are the same on every sleeve; kovacs lacked the Git Commits rule until 20 Oct while rhadamanth had it.
 - Intent on rhadamanth is off limits (board watchout 16).
 - Molt's CI runner is bash 3.2; run bats under `/bin/bash` too.
 - No AI attribution in any commit; messages end `(C) hello@matthewsinclair.com`.
