@@ -29,10 +29,10 @@
       "node": "cc",
       "kind": "doing",
       "seq": 2,
-      "text": "ST0006 WP02 at st0006-wp02 14e09d1, on 820827c, all tests pass under both bashes. Next: rebase onto 41ef6b1; put AT028-AT044 ids in agents.bats, manifest.bats and molt.bats; verify and fix the critic-shell findings (review launched 21 Oct before the compact; rerun it if its report is lost); then hand over to vc. AT028-AT040 stay to-write until the merge brings agents.bats.",
+      "text": "ST0006 WP02 at st0006-wp02 483e343, still on 820827c: critic-shell's findings verified and fixed (C1 empty or null settings render, C2 a test that could not fail, W sidecar kept on failure, Highlander x2, lookup by name, jq, test gaps); AT028-AT044 and AT047 ids in the tests; AT047 to-write on main. Next: rebase onto WP01's final head (WP01's molt_hostname kept, WP02's dropped), suite under both bashes, critic-shell on the delta, then the head to vc with the deviations: the 4th settings layer, MOLT_AGT_DIR from MOLT_PRJ_DIR, the eight liberator hostname copies left (desktop.sh:23 drifted), molt_render backing up post-processed files on each re-render.",
       "state": "live",
       "recorded_at": "2026-10-21T05:53:24.815Z",
-      "edited_at": "2026-10-21T06:03:43.754Z"
+      "edited_at": "2026-10-21T06:41:15.502Z"
     },
     {
       "node": "cc",
@@ -63,7 +63,8 @@
       "kind": "todo",
       "seq": 2,
       "text": "ST0006 WP02 critic-shell findings (at 14e09d1), to verify, then fix, after the compact and the rebase onto WP01's fixes. C1: agents.sh:38's jq passes an empty, whitespace-only or null settings render, leaving a settings.json with no autoMemoryDirectory that reads current; use jq -e with select(type == \"object\"), consider -s for a single document, and test an empty template. C2: manifest.bats:185 can never fail, because $output loses its trailing empty line; count empty lines from the function's own output, or put the nameless block before a named one, and watch it go red with the guard removed. W: the mktemp and mv failure paths in agents.sh:37-45 keep molt_render's sidecar; remove it on every failure path through one shared cleanup. Recs: check for jq before reading settings (agent.sh:197, agents.sh:38); 'is the role defined' is decided in three places and 'which agents get a home' in two (Highlander); the lookup by name inside _agent_config; test gaps (the MOLT_HOSTNAME export, CLAUDE_CONFIG_DIR set in the pre-move test, molt agent never run through bin/molt, no positive 'Rendered' check); record the deferral of the eight hostname copies in liberators/ (desktop.sh:23 has drifted).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T06:41:15.575Z",
       "recorded_at": "2026-10-21T06:12:26.909Z"
     }
   ],

@@ -257,6 +257,14 @@ _(no criteria in this group)_
 
 _(no criteria in this group)_
 
+### Group AT048
+
+_(no criteria in this group)_
+
+### Group AT049
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -353,7 +361,7 @@ _(no tests in this group)_
 
 ### Group AT010
 
-- AT010 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a declared config dir that is relative, holds a quote, or is ~/.claude itself is refused before anything moves". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+- AT010 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a declared config dir that is relative, not canonical, holds a quote or a line break, ends in a space, or is ~/.claude itself is refused before anything moves". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct); its non-canonical, line-break and trailing-space cases fail on 41ef6b1 too (vc C2). Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT011
 
@@ -365,11 +373,11 @@ _(no tests in this group)_
 
 ### Group AT013
 
-- AT013 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 2 with the agent-home message when cwd is $HOME, and 0 anywhere else". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+- AT013 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 2 with the agent-home message for a session launched in $HOME, wherever it has cd'd since, and 0 for one launched anywhere else". Red on main and on 41ef6b1, whose guard read the input's cwd. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2; the guard reads CLAUDE_PROJECT_DIR by vc's ruling, 21 Oct.
 
 ### Group AT014
 
-- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when jq is missing, or the input is not JSON or names no cwd". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2; renamed after critic-shell's review.
+- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when the hook has no CLAUDE_PROJECT_DIR, and needs nothing on PATH". Red on main and on 41ef6b1. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2.
 
 ### Group AT015
 
@@ -493,15 +501,23 @@ _(no tests in this group)_
 
 ### Group AT045
 
-- AT045 `test/liberators/claude.bats` -- covers AC011 -- status: red -- vc's WP01 review C1: a vars.sh that does not parse or cannot be read is refused; red on 41ef6b1
+- AT045 `test/liberators/claude.bats` -- covers AC011 -- status: red -- @test "a vars.sh that does not parse, or stops before its end when sourced, is refused, and a moved sleeve gets no ~/.claude back" (vc's WP01 review C1). Red on 41ef6b1, which read each as undeclared and recreated ~/.claude.
 
 ### Group AT046
 
-- AT046 `test/templates.bats` -- covers AC011 -- status: red -- vc's WP01 review C1: molt_render refuses a vars.sh that does not parse or cannot be read; red on 41ef6b1
+- AT046 `test/templates.bats` -- covers AC011 -- status: red -- @test "molt_render refuses a vars.sh that does not parse or stops before its end, and leaves the target as it was" (vc's WP01 review C1). Red on 41ef6b1, which rendered past the syntax error and, for a vars.sh that exits, backed the target up with nothing in its place.
 
 ### Group AT047
 
 - AT047 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats
+
+### Group AT048
+
+- AT048 `test/liberators/claude.bats` -- covers AC011 -- status: red -- @test "a vars.sh that cannot be read is refused, and a moved sleeve gets no ~/.claude back" (vc's WP01 review C1; split from AT045 so a run as root skips only this half). Red on 41ef6b1.
+
+### Group AT049
+
+- AT049 `test/templates.bats` -- covers AC011 -- status: red -- @test "molt_render refuses a vars.sh that cannot be read, and leaves the target as it was" (split from AT046). Red on 41ef6b1.
 
 ---
 

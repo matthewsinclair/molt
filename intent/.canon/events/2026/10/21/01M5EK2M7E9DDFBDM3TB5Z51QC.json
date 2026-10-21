@@ -1,0 +1,16 @@
+{
+  "id": "01M5EK2M7E9DDFBDM3TB5Z51QC",
+  "ts": "2026-10-21T06:41:15.502Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP02 at st0006-wp02 483e343, still on 820827c: critic-shell's findings verified and fixed (C1 empty or null settings render, C2 a test that could not fail, W sidecar kept on failure, Highlander x2, lookup by name, jq, test gaps); AT028-AT044 and AT047 ids in the tests; AT047 to-write on main. Next: rebase onto WP01's final head (WP01's molt_hostname kept, WP02's dropped), suite under both bashes, critic-shell on the delta, then the head to vc with the deviations: the 4th settings layer, MOLT_AGT_DIR from MOLT_PRJ_DIR, the eight liberator hostname copies left (desktop.sh:23 drifted), molt_render backing up post-processed files on each re-render."
+  }
+}
