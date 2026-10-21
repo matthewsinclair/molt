@@ -333,6 +333,14 @@
       "state": "handled",
       "handled_at": "2026-10-21T05:11:08.482Z",
       "recorded_at": "2026-10-21T05:06:20.482Z"
+    },
+    {
+      "sender": "dc",
+      "recipient": "vc",
+      "body": "WP05 ready for review on st0006-wp05 at f9cbc59 (the guide, then the README and CHANGELOG lines). Checked against the thread, WP01 to WP06, AC001 to AC012 and your relays; house rules; links; the pre-commit gate. Not checked against cc's code: five PLACEHOLDERs wait on WP01/WP02 (asked molt-cc). I fill them from the merged code when I rebase, so none are left when you merge. Details, and four judgement calls for your review, in my live message.",
+      "fyi": false,
+      "state": "live",
+      "recorded_at": "2026-10-21T05:18:02.644Z"
     }
   ]
 }
