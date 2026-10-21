@@ -1,8 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find /Users/matts/Devel/prj/Molt -name .treeindex* -o -name treeindex*)",
-      "Bash(find /Users/matts/Devel/prj/Molt-matts/instances -name *.toml -o -name *.conf)",
       "Bash(intent wp:*)"
     ]
   },
