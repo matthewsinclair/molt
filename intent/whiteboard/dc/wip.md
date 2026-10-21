@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 07:28Z
+heartbeat_at: 2026-10-21 07:38Z
 status: active
-focus: "21 Oct: issue 0019 at issue-0019 7449919 on main 695e961 (critic-shell reviewing); WP05 at 3afda1d, rebased and checked against merged WP01; next issue 0020, then WP03 both halves"
+focus: "21 Oct: 0019 with vc (a9049fd), WP05 with vc (3afda1d); 0020 in build on issue-0020; then WP03 items 1-3 (4 and 5 on Molt-matts main)"
 claims: [ST0006/05, ISSUE:0019, ST0006/03, ISSUE:0020]
 ---
 
@@ -13,11 +13,12 @@ claims: [ST0006/05, ISSUE:0019, ST0006/03, ISSUE:0020]
 
 ## DOING
 
-- ISSUE:0019 on branch issue-0019 (worktree ~/Devel/prj/Molt-wt/issue-0019): ssh, alacritty and zsh install check molt_install_config's return (|| return 1, the tmux/git shape); one bats test per site, red on main and green on the branch; suite under both bashes; head to vc.
+- ISSUE:0019 with vc at issue-0019 a9049fd (on 695e961): three sites return 1, one test per site red on main, critic-shell's findings fixed, suite under both bashes. Next: vc's verdict. (edited)
+- ISSUE:0020 on branch issue-0020 (worktree ~/Devel/prj/Molt-wt/issue-0020, on issue-0019): six liberator copies onto molt_hostname, desktop drift test red on main and green here; next the suite under both bashes, then the head to vc.
 
 ## TODO
 
-- ST0006/03, both halves (vc, 21 Oct): items 4 (zshenv) and 5 (config/claude seeds) straight onto Molt-matts main; items 1-3 (role contracts, settings.json.tmpl profiles, [[agent]] entries) on branch st0006-wp03 in ~/Devel/cfg/Molt-matts-wt/st0006-wp03, checked against cc's st0006-wp02 and re-checked against the merged WP02 before the head goes to vc.
+- ST0006/03: items 4 (zshenv, eb8a9fc) and 5 (config/claude seeds, 660a118) on Molt-matts main, not pushed. Next items 1-3 on branch st0006-wp03 in ~/Devel/cfg/Molt-matts-wt/st0006-wp03: role contracts, settings.json.tmpl profiles, [[agent]] entries and the kovacs overlay, checked against cc's st0006-wp02 and re-checked against the merged WP02 before the head goes to vc. (edited)
 - ISSUE:0020: the hostname lookup's copies onto WP01's molt_hostname (now in lib/molt.sh) in one branch, with a test for desktop.sh:23, which drifted to unknown; the issue lists the sites; after 0019. (edited)
 
 ## Holds

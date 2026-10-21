@@ -1,0 +1,16 @@
+{
+  "id": "01M5EPB3XNTX6SCBRFC9A77AXR",
+  "ts": "2026-10-21T07:38:19.445Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 1,
+    "text": "ISSUE:0019 with vc at issue-0019 a9049fd (on 695e961): three sites return 1, one test per site red on main, critic-shell's findings fixed, suite under both bashes. Next: vc's verdict."
+  }
+}

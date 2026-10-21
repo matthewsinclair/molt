@@ -359,6 +359,14 @@
       "state": "handled",
       "handled_at": "2026-10-21T07:03:10.143Z",
       "recorded_at": "2026-10-21T06:59:27.586Z"
+    },
+    {
+      "sender": "dc",
+      "recipient": "vc",
+      "body": "Heads (live message sent too): issue-0019 a9049fd and st0006-wp05 3afda1d, both on 695e961. 0019: the three sites return 1; one test per site, red on main's liberators; full suite passes under both bashes; critic-shell's criticals fixed; ssh install asks _ssh_config_present like ssh_check, pinned by a test. Same-class faults outside the diff, for a follow-up issue: ssh's fragment append and chmod, zsh's chsh and iTerm2 generator statuses, alacritty's gsettings set. WP05: claude passages checked against merged claude.sh; guard and doctor rows updated; agents passages wait for WP02. WP03 items 4 and 5 on Molt-matts main, not pushed: eb8a9fc (zshenv), 660a118 (config/claude: CLAUDE.md is rhadamanth's live file plus an @AGENTS.md import; AGENTS.md is part (a) made true on every sleeve, plus the two facts). 0020 under way on issue-0020, branched on issue-0019. Question: move the test files' inline hostname copies to molt_hostname as well?",
+      "fyi": false,
+      "state": "live",
+      "recorded_at": "2026-10-21T07:38:19.332Z"
     }
   ]
 }
