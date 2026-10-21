@@ -1,0 +1,15 @@
+{
+  "id": "01M5ECM8TV73F91Z5ZC54TJGDF",
+  "ts": "2026-10-21T04:48:33.627Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0006/06"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "Managed deny floor for sysadm"
+  }
+}

@@ -3,10 +3,10 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 04:04Z
+heartbeat_at: 2026-10-21 04:09Z
 status: active
 focus: "21 Oct: E5 fixed (93999c8, CI green); ST0005 open for gyges only (WP03); gyges and Pi resyncs wait on reachability"
-claims: [ST0005]
+claims: [ST0005, ST0006]
 ---
 
 # Validation Claude (vc)

@@ -1,0 +1,15 @@
+{
+  "id": "01M5ECM8RE74MQWCHN5DN01J46",
+  "ts": "2026-10-21T04:48:33.551Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0006/03"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs"
+  }
+}

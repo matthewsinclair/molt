@@ -1,0 +1,17 @@
+{
+  "schema": "intent/board@3.0",
+  "node": {
+    "moniker": "dc",
+    "name": "molt-dc",
+    "role": "dc",
+    "session_id": "3cbe9031-145f-4360-ab33-cdb83ac851d9",
+    "heartbeat_at": "2026-10-21T04:45:18.205Z",
+    "status": "active",
+    "focus": "",
+    "claims": [],
+    "recorded_at": "2026-10-21T04:44:48.144Z",
+    "migrated_at": "2026-10-21T04:44:48.144Z"
+  },
+  "items": [],
+  "messages": []
+}

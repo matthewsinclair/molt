@@ -1,0 +1,150 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0006",
+  "title": "Sleeve agents: a named, role-bound home for a machine's local agent",
+  "slug": "sleeve-agents-a-named-role-bound-home-for-a-mach",
+  "status": "wip",
+  "created": "2026-10-21",
+  "objective": "A sleeve agent is a local agent (Claude Code, for now) that does machine-oriented work on one host, as the user: system administration, operations, documentation of the machine. Today it runs from `$HOME`, where it has no instruction file, no project-layer permissions, a memory slot shared with every other home-launched session, and leaves the harness's files loose in the home directory.\n\nThis thread gives a sleeve agent a home: `$MOLT_AGT_DIR/<host>-<role>/`, declared in the sleeve's manifest as an `[[agent]]` entry, rendered by Molt from a role profile kept in the user config repo, holding its role contract, its permissions and its memory. The harness's own state leaves `$HOME` for `$XDG_CONFIG_HOME/claude`, nothing recreates `~/.claude`, and a Claude launched with its cwd in `$HOME` is refused at its first prompt. Project agents (sessions run inside an Intent project, such as molt-vc) are out of scope: the project and Intent already bound them.",
+  "context": "## Where this came from\n\nhv, 21 Oct 2026, to kovacs-sysadm and molt-vc: a local agent on kovacs runs out of `$HOME`, leaves LLM files there, and is \"a bit too risky for my liking\". The ask: a way, in Molt, to install, name, configure and manage a local agent safely. kovacs-sysadm surveyed kovacs; molt-vc verified the Claude Code facts the design turns on (docs, plus one live test on rhadamanth). hv's rulings are below; the thread is specified by molt-vc, built by molt-cc and molt-dc, and the kovacs move is planned by kovacs-sysadm and executed by hv.\n\n## Three layers\n\n| Layer         | Where                                        | Owned by       | Holds                                                                                        |\n| ------------- | -------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------- |\n| Role source   | Molt-matts `config/agents/roles/<role>/`     | hv, in git     | the role contract (`AGENTS.md`) and permission profile (`settings.json`) templates            |\n| Agent home    | `$MOLT_AGT_DIR/<host>-<role>/`               | Molt, rendered | `AGENTS.md`, `CLAUDE.md`, `.claude/settings.json`, `memory/`, `work/`; the agent's cwd        |\n| Harness state | `$XDG_CONFIG_HOME/claude` (`CLAUDE_CONFIG_DIR`) | Claude Code    | credentials, transcripts, plugins, user settings; one per machine, shared by every session   |\n\nThe agent home is both the agent's config and its runtime directory: Claude Code's project-layer config is whatever sits in the cwd's `.claude/`, so cwd and config home coincide by construction. `autoMemoryDirectory` pins memory to `<home>/memory/`, so an agent's memory travels with its home rather than hiding under a cwd slug in the harness state.\n\n## Naming and roles (hv, 21 Oct)\n\n- Sleeve agents are always `<hostname>-<role>`: `rhadamanth-sysadm`, `kovacs-ops`.\n- Roles, normalised across rhadamanth, gyges and kovacs: `sysadm` (system administration; may change the machine; cannot be sandboxed), `ops` (operations and monitoring; observe and diagnose, writes only inside its home; sandbox on), `docs` (documentation; sandbox on).\n- `MOLT_AGT_DIR` follows `MOLT_PRJ_DIR` and `MOLT_CFG_DIR`; default `$HOME/Devel/agt`, a peer of `prj/` and `cfg/`. Unix has no convention for an interactive agent that runs as the user; `/opt`, `/var/lib` and `/srv` are for software and services under a service account. A dedicated Unix account per agent is the stronger boundary and stays in view for later.\n\n## hv's calls\n\n1. Harness state goes to `$XDG_CONFIG_HOME/claude`. No `~/.claude` at all, no compat symlink: `CLAUDE_CONFIG_DIR` is rendered from one value (`MOLT_CLAUDE_CONFIG_DIR` in the instance vars) into `zshenv` and the GUI environment path (a LaunchAgent `setenv` on macOS, `environment.d` on Linux), and `molt doctor` treats a reappeared `~/.claude` or `~/.claude.json` as the signal that a launch path missed the variable.\n2. Config and runtime home are the same directory.\n3. Roles `sysadm`, `ops`, `docs`; declared on rhadamanth, gyges and kovacs.\n4. Enforcement: the home's `.claude/settings.json` is a fence the agent could edit; the root-owned managed-settings file is the wall. `ops` and `docs` get fence plus sandbox; `sysadm` gets a managed deny floor as its own work package (WP06).\n5. No launch verb. `molt agent list` and `molt agent config <name>`. Claude only; Codex later, if ever.\n\n## Facts verified (21 Oct)\n\n- `CLAUDE_CONFIG_DIR` relocates every `~/.claude` path, and also `~/.claude.json`: with the variable set to an empty directory, `claude config list` created `<dir>/.claude.json` (mode 600) and left `~/.claude.json` untouched. The docs do not say so; the test does.\n- Settings precedence: managed, `--settings`, `.claude/settings.local.json`, `.claude/settings.json`, user. `permissions.allow/deny/ask` merge across levels and deny wins at every level. Managed file: `/Library/Application Support/ClaudeCode/managed-settings.json` (macOS), `/etc/claude-code/managed-settings.json` (Linux), plus `managed-settings.d/`.\n- `sandbox.enabled` stops sandboxed Bash from writing any `.claude` settings, hooks, shell rc files, `.git` config and the config dir, with no exemption; Edit and Write are outside the sandbox and only prompt.\n- A `UserPromptSubmit` hook returning exit 2 blocks the prompt; Intent's in-session gate already uses it.\n- A live session cannot move its own state: `mv ~/.claude` under a running Claude moves its transcript, credentials and state out from under it. The move is run from a plain terminal with every Claude session on the host quit.\n- `liberators/claude.sh` hardcodes `$HOME/.claude` in five places; the variable must be honoured before it is set anywhere.\n\n## Constraints\n\n- kovacs is brew-only (ST0005): nothing installed there may need a dev checkout of Molt or Utilz.\n- Intent on rhadamanth is off limits (board watchout 16).\n- Molt's CI runner is bash 3.2; run bats under `/bin/bash` too.\n- No AI attribution in any commit; messages end `(C) hello@matthewsinclair.com`.\n- Three Molt sessions share one checkout on rhadamanth: cc and dc work in git worktrees on `st0006-wp<NN>` branches; vc reviews and merges to main.\n- `[[agent]]` entries land in the Molt-matts manifests only after WP02's parser is on every sleeve that reads them.",
+  "body": "",
+  "preamble": "",
+  "wps": [
+    {
+      "seq": 1,
+      "title": "Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Owner: molt-cc. Branch `st0006-wp01` in a git worktree; molt-vc reviews and merges.\n\n## Contract\n\n1. **One accessor for the config dir.** `molt_claude_config_dir` in `lib/molt.sh` answers `${CLAUDE_CONFIG_DIR:-$HOME/.claude}`; every `$HOME/.claude` in `liberators/claude.sh` (five today) goes through it. WP02's agents liberator uses the same accessor.\n2. **One value, rendered twice.** The sleeve's `instances/<host>/vars.sh` carries `MOLT_CLAUDE_CONFIG_DIR` (default `${XDG_CONFIG_HOME:-$HOME/.config}/claude`). Molt renders it into an env file the shell sources (the `~/.config/molt/` pattern the iTerm2 ssh wrapper already uses) and into the GUI environment path: a LaunchAgent plist running `launchctl setenv CLAUDE_CONFIG_DIR` on macOS, `~/.config/environment.d/claude.conf` on Linux. Both carry `.molt-rendered` digest sidecars. The zshenv change that sources the env file is Molt-matts work (WP03).\n3. **The move, once.** When `$HOME/.claude` is a real directory and the config dir does not exist, `claude_install` backs up and moves `~/.claude` and `~/.claude.json` into place. It refuses, naming the processes, when any Claude Code is running (`pgrep -f`, never `pgrep -x`: board watchout 6), because a live session cannot survive its own state moving. It refuses when both exist, and says what it found.\n4. **Refuse `$HOME` launches.** A `UserPromptSubmit` hook, merged into the user `settings.json` the way the statusLine already is (generalise `_claude_statusline_install` into one merge-a-key function; Highlander), runs a script Molt renders into `~/.config/molt/`. The script reads the hook's JSON on stdin, and when `cwd` is `$HOME` exits 2 with \"launch from an agent home: molt agent list\". Any other cwd passes. The hook must not depend on `molt` being on PATH at prompt time.\n5. **Doctor.** `claude_check` reports: `CLAUDE_CONFIG_DIR` unset in the environment molt runs in; `~/.claude` or `~/.claude.json` present (file, dir or link) while the config dir is elsewhere, as the sign a launch path missed the variable; the env file, GUI file or hook missing or stale.\n\n## Tests (bats, both bash 5 and `/bin/bash` 3.2)\n\nFake `$HOME` and fake config dir; a `pgrep` stub for the running-Claude refusal; the hook script fed JSON with cwd = `$HOME` (exit 2, message) and cwd elsewhere (exit 0); the merge function leaving every other settings key byte-identical (`jq -S` compare). No test may touch the real `~/.claude`.\n\n## Out of scope\n\nCodex. The compat symlink (hv: none). Moving any real sleeve (WP04).\n",
+      "preamble": ""
+    },
+    {
+      "seq": 2,
+      "title": "[[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Owner: molt-cc. Branch `st0006-wp02` in a git worktree, on top of WP01; molt-vc reviews and merges.\n\n## Contract\n\n1. **Manifest.** `instances/<host>/molt.toml` gains `[[agent]]` tables: `role = \"sysadm\"` (required; one of the roles the user repo defines), `enabled = true` (default), `harness = \"claude\"` (default, the only value this thread accepts). The name is derived, never written: `<hostname>-<role>`, so the convention cannot be mistyped. The parser is the existing `[[liberator]]` one, generalised to take the table name (`_molt_liberator_entries` becomes one table parser; Highlander), and `test/manifest.bats` covers `[[agent]]` as it covers `[[liberator]]`.\n2. **`MOLT_AGT_DIR`.** Default `$HOME/Devel/agt`, defined where `MOLT_PRJ_DIR` and `MOLT_CFG_DIR` are, exported from zshenv by Molt-matts (WP03). An agent's home is `$MOLT_AGT_DIR/<name>`.\n3. **The `agents` liberator.** For each enabled agent, `agents_install` renders the home from the user repo's `config/agents/roles/<role>/`: `AGENTS.md` from `AGENTS.md.tmpl`, `CLAUDE.md` as the `@AGENTS.md` stub, `.claude/settings.json` from `settings.json.tmpl` with `autoMemoryDirectory` set to `<home>/memory`; creates `memory/` and `work/`. Rendering is Molt's `envsubst` with `MOLT_HOSTNAME`, `MOLT_AGENT_NAME`, `MOLT_AGENT_ROLE`, `MOLT_AGENT_HOME` available; `.molt-rendered` digest sidecars decide re-rendering, as for ssh. `memory/` and `work/` are the agent's and are never written by Molt after creation. A role the user repo does not define is a fault naming the role and the path looked in. `agents_check` and `agents_verify` report missing or stale homes; `agents_upgrade` re-renders stale ones.\n4. **`molt agent list`** prints each declared agent: name, role, home, enabled, and whether its rendered files are current. **`molt agent config <name>`** prints the home, the role, each rendered file's currency, and the effective permissions: `permissions.allow/deny/ask` merged from the managed file, the user settings and the home's `.claude/settings.json`, each rule tagged with the layer it came from. An undeclared name fails and lists the declared ones.\n\n## Tests\n\nFake user repo with a role dir; fake `$MOLT_AGT_DIR`; render, re-render no-op, stale after the template changes; undefined role fault; derived name; `agent config` merging three fake settings layers and tagging each rule's source; the `[[agent]]` parser cases in `manifest.bats`.\n\n## Out of scope\n\nCodex renderer. Launch verb. The role contents themselves (WP03).\n",
+      "preamble": ""
+    },
+    {
+      "seq": 3,
+      "title": "Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Owners: molt-dc for the role contracts (prose), molt-cc for the permission profiles; in Molt-matts (`~/Devel/cfg/Molt-matts`), on main, after WP02 is merged. molt-vc reviews.\n\n1. `config/agents/roles/{sysadm,ops,docs}/AGENTS.md.tmpl`: the role contract. Who the agent is (`${MOLT_AGENT_NAME}` on `${MOLT_HOSTNAME}`), what the role is for, what it may touch and what it may not, where its work goes (`${MOLT_AGENT_HOME}/work`), the standing rules every session on this machine carries (no AI attribution in commits, the commit trailer, `eg` not `e.g.`, no \"absolutely\"). The kovacs `~/.claude/AGENTS.md` that kovacs-sysadm found holds hv's existing standing rules; fold them in rather than rewrite them.\n2. `config/agents/roles/<role>/settings.json.tmpl`: `permissions.allow/deny/ask`; `sandbox.enabled = true` for `ops` and `docs`, absent for `sysadm`; `autoMemoryDirectory` is written by the liberator, not the template.\n3. `instances/{rhadamanth,gyges,kovacs}/molt.toml`: `[[agent]]` entries for the three roles, and the `agents` liberator enabled. `instances/<host>/vars.sh`: `MOLT_CLAUDE_CONFIG_DIR`.\n4. `config/zsh/zshenv`: export `MOLT_AGT_DIR` beside `MOLT_PRJ_DIR`, and source Molt's rendered env file when present.\n\nDone when `molt doctor` is green on rhadamanth with the three homes rendered, and the Molt-matts commits are pushed.\n",
+      "preamble": ""
+    },
+    {
+      "seq": 4,
+      "title": "Move kovacs-sysadm into its home; then rhadamanth, then gyges",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Owner: kovacs-sysadm plans and verifies; hv executes the move at the keyboard. molt-vc reviews the plan.\n\nkovacs-sysadm cannot move itself: `mv ~/.claude` under a running session moves its transcript, credentials and state out from under it.\n\n1. kovacs-sysadm, in place and copy-only: create `~/Devel/agt/kovacs-sysadm/` (once WP02 and WP03 have rendered it, through `molt upgrade`); copy `~/work`, `~/prov` and `~/.claude/projects/-home-matts/memory/` into the home; archive `projects/-home-matts-work-o7h-proj` (3 transcripts, memory) into the home; inspect `-home-matts-setup` (memory only) before anything is removed. Write the move plan and a verify script in the home.\n2. hv, from a plain terminal with every Claude session on kovacs quit: `molt upgrade` (WP01's move runs: `~/.claude` and `~/.claude.json` to the config dir, with backups), then start Claude from `~/Devel/agt/kovacs-sysadm`.\n3. kovacs-sysadm, new session: run the verify script; nothing of Claude's left in `$HOME`; memory present in the home; `molt doctor` green.\n4. `~/tmp` (root-owned, hv's handover note) is hv's and is not touched.\n5. Then rhadamanth, then gyges when reachable (gyges-infra).\n",
+      "preamble": ""
+    },
+    {
+      "seq": 5,
+      "title": "docs/guides/sleeve-agents.md: naming, roles, layers, the move",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Owner: molt-dc. Branch `st0006-wp05` in a git worktree; molt-vc reviews and merges.\n\n`docs/guides/sleeve-agents.md`: what a sleeve agent is and how it differs from a project agent; the naming rule `<hostname>-<role>`; the three roles and what each may do; the three layers (role source, agent home, harness state) and why cwd and config home coincide; declaring an agent in the manifest; `molt agent list|config`; the one-time harness move and why it is run with every session quit; what `molt doctor` reports and what each report means; the fence/wall distinction and where WP06 fits. Also the first written record of the project-agent suffixes as used (vc, cc, dc, ic, ac, sc), in one short section, since nothing else records them. `README.md` and `CHANGELOG.md` entries. No manual line wrapping.\n",
+      "preamble": ""
+    },
+    {
+      "seq": 6,
+      "title": "Managed deny floor for sysadm",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Owner: molt-cc, after WP01 to WP05. molt-vc reviews.\n\nThe `sysadm` role cannot be sandboxed, so its home's deny list is a fence the agent could edit. This package renders the role's `permissions.deny` into the root-owned managed-settings file (`/Library/Application Support/ClaudeCode/managed-settings.d/molt-sysadm.json` on macOS, `/etc/claude-code/managed-settings.d/molt-sysadm.json` on Linux), through the sudo path the `system` liberator already uses, with a digest sidecar beside it. `molt agent config <name>` already tags each rule's layer, so a managed rule shows as managed. `molt doctor` reports the floor missing or stale. hv decides the floor's contents; the mechanism is this package.\n",
+      "preamble": ""
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC001",
+      "text": "With CLAUDE_CONFIG_DIR set, the claude liberator reads and writes only under it, and no path under $HOME/.claude is touched",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC002",
+      "text": "The one-time move refuses while any Claude Code process runs, naming it, and otherwise moves ~/.claude and ~/.claude.json into the config dir with backups",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC003",
+      "text": "The UserPromptSubmit hook exits 2 with the launch-from-an-agent-home message when cwd is $HOME and exits 0 for any other cwd; merging it leaves every other user settings key byte-identical",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC004",
+      "text": "molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere, and the env file, GUI file or hook missing or stale",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC005",
+      "text": "An enabled [[agent]] entry renders its home (AGENTS.md, CLAUDE.md, .claude/settings.json with autoMemoryDirectory=<home>/memory, memory/, work/) with a name derived as <hostname>-<role>; re-render is a no-op while digests match and happens when the role source changes; an undefined role is a fault naming it",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC006",
+      "text": "molt agent list names every declared agent with role, home and currency; molt agent config <name> prints the effective permissions with each rule tagged by its layer, and fails on an undeclared name listing the declared ones",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC007",
+      "text": "sysadm, ops and docs contracts and profiles exist in Molt-matts and are declared on rhadamanth, gyges and kovacs; molt doctor is green on each reachable host with its homes rendered",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    },
+    {
+      "id": "AC008",
+      "text": "kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home and nothing of Claude's left in $HOME; the verify script says so",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    },
+    {
+      "id": "AC009",
+      "text": "docs/guides/sleeve-agents.md records the naming, roles, layers, move and doctor reports; README and CHANGELOG updated",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    },
+    {
+      "id": "AC010",
+      "text": "sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    }
+  ]
+}

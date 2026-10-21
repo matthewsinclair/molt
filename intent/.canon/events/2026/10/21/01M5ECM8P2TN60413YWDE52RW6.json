@@ -1,0 +1,15 @@
+{
+  "id": "01M5ECM8P2TN60413YWDE52RW6",
+  "ts": "2026-10-21T04:48:33.474Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "thread.set",
+  "subject": {
+    "type": "thread",
+    "id": "ST0006"
+  },
+  "payload": {
+    "field": "context",
+    "via": "address"
+  }
+}
