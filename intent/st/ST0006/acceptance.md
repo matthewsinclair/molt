@@ -149,6 +149,26 @@ _(no criteria in this group)_
 
 _(no criteria in this group)_
 
+### Group AT023
+
+_(no criteria in this group)_
+
+### Group AT024
+
+_(no criteria in this group)_
+
+### Group AT025
+
+_(no criteria in this group)_
+
+### Group AT026
+
+_(no criteria in this group)_
+
+### Group AT027
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -221,7 +241,7 @@ _(no tests in this group)_
 
 ### Group AT006
 
-- AT006 `test/liberators/claude.bats` -- covers AC002 -- status: green -- @test "a native or node-run Claude Code counts as running; a grep, npm ls or molt run naming it does not". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+- AT006 `test/liberators/claude.bats` -- covers AC002 -- status: green -- @test "a native or node-run Claude Code counts as running; a grep, npm ls, ls or molt run naming it does not". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2; renamed after critic-shell's review.
 
 ### Group AT007
 
@@ -253,7 +273,7 @@ _(no tests in this group)_
 
 ### Group AT014
 
-- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when jq is missing or the input names no cwd". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when jq is missing, or the input is not JSON or names no cwd". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2; renamed after critic-shell's review.
 
 ### Group AT015
 
@@ -286,6 +306,26 @@ _(no tests in this group)_
 ### Group AT022
 
 - AT022 `test/liberators/claude.bats` -- covers AC012 -- status: green -- @test "check and verify report a CLAUDE.md link that is broken". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT023
+
+- AT023 `test/liberators/claude.bats` -- covers AC002 -- status: green -- @test "on macOS the process check counts molt's own ancestors, which pgrep leaves out unless asked; procps is not asked". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT024
+
+- AT024 `test/liberators/claude.bats` -- covers AC002, AC011 -- status: green -- @test "a move that fails after its copies are taken names them, and does not say nothing was changed". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT025
+
+- AT025 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a ~/.claude holding its own .claude.json beside ~/.claude.json is not moved, and nothing is published". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT026
+
+- AT026 `test/liberators/claude.bats` -- covers AC011, AC004 -- status: green -- @test "a newly declared, empty config dir is not published while the variable names another dir that exists". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT027
+
+- AT027 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a vars.sh ending in a false test, or a MOLT_CLAUDE_CONFIG_DIR only inherited, leaves a sleeve undeclared". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
 
 ---
 
