@@ -162,5 +162,229 @@
         "is": "computed"
       }
     }
+  ],
+  "tests": [
+    {
+      "id": "AT001",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC001"
+      ],
+      "status": "green",
+      "note": "@test \"with CLAUDE_CONFIG_DIR set, claude_install, check and verify use only it, and write nothing into ~/.claude\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT002",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC001"
+      ],
+      "status": "green",
+      "note": "@test \"with CLAUDE_CONFIG_DIR set and no ~/.claude, claude_install creates none\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT003",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC001"
+      ],
+      "status": "green",
+      "note": "@test \"on a sleeve whose state has moved, claude_install writes only the config dir though this shell lacks CLAUDE_CONFIG_DIR\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT004",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC002",
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"the move refuses while Claude Code runs, names each process, and moves and publishes nothing\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT005",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC002",
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"the move takes ~/.claude and ~/.claude.json into the config dir, copies both beside it first, then publishes it\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT006",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "green",
+      "note": "@test \"a native or node-run Claude Code counts as running; a grep, npm ls or molt run naming it does not\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT007",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"a config dir that already holds anything is refused, named with its contents, and nothing is merged or published\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT008",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"an empty config dir counts as absent, and the move goes ahead\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT009",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"a ~/.claude that is a symlink is not moved, and nothing is published\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT010",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"a declared config dir that is relative, holds a quote, or is ~/.claude itself is refused before anything moves\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT011",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"on a sleeve Claude Code has not run on, install creates the config dir and publishes it\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT012",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC011"
+      ],
+      "status": "green",
+      "note": "@test \"the GUI file is a LaunchAgent on macOS and an environment.d file on Linux, and nothing published names Molt's checkout\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT013",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "green",
+      "note": "@test \"the home guard exits 2 with the agent-home message when cwd is $HOME, and 0 anywhere else\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT014",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "green",
+      "note": "@test \"the home guard exits 1, saying so, when jq is missing or the input names no cwd\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT015",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "green",
+      "note": "@test \"the hook merge adds the guard once, keeps every other key and hook as it was, and a second install writes nothing\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT016",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "green",
+      "note": "@test \"check reports CLAUDE_CONFIG_DIR unset where molt runs, or naming another dir, and passes once it names the config dir\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT017",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "green",
+      "note": "@test \"check reports ~/.claude or ~/.claude.json present while the config dir is elsewhere, whether a directory, a file or a link\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT018",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "green",
+      "note": "@test \"the native installer's own paths under ~/.local and ~/.cache are not faults\". Passes on main as well: it pins that no check reaches these paths, and before WP01 none looked (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT019",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "green",
+      "note": "@test \"check and verify report env.sh, the GUI file or the guard missing or stale, and the hook missing from settings.json\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT020",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "green",
+      "note": "@test \"check and verify report a move still pending, naming what is in $HOME\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT021",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC012"
+      ],
+      "status": "green",
+      "note": "@test \"CLAUDE.md and AGENTS.md are linked into the config dir, and a regular file there is backed up first\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    },
+    {
+      "id": "AT022",
+      "kind": "test",
+      "file": "test/liberators/claude.bats",
+      "covers": [
+        "AC012"
+      ],
+      "status": "green",
+      "note": "@test \"check and verify report a CLAUDE.md link that is broken\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+    }
   ]
 }

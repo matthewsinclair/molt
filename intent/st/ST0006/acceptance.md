@@ -15,19 +15,19 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC001
 
-- AC001 With CLAUDE_CONFIG_DIR set, the claude liberator reads and writes only under it, and no path under $HOME/.claude is touched -- satisfied: no (computed)
+- AC001 With CLAUDE_CONFIG_DIR set, the claude liberator reads and writes only under it, and no path under $HOME/.claude is touched -- satisfied: yes (computed)
 
 ### Group AC002
 
-- AC002 The one-time move refuses while any Claude Code process runs, naming it, and otherwise moves ~/.claude and ~/.claude.json into the config dir with backups -- satisfied: no (computed)
+- AC002 The one-time move refuses while any Claude Code process runs, naming it, and otherwise moves ~/.claude and ~/.claude.json into the config dir with backups -- satisfied: yes (computed)
 
 ### Group AC003
 
-- AC003 The UserPromptSubmit hook exits 2 with the launch-from-an-agent-home message when cwd is $HOME and exits 0 for any other cwd; merging it leaves every other user settings key byte-identical -- satisfied: no (computed)
+- AC003 The UserPromptSubmit hook exits 2 with the launch-from-an-agent-home message when cwd is $HOME and exits 0 for any other cwd; merging it leaves every other user settings key byte-identical -- satisfied: yes (computed)
 
 ### Group AC004
 
-- AC004 molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere (the XDG paths the native installer owns are not faults), and the env file, GUI file or hook missing or stale -- satisfied: no (computed)
+- AC004 molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere (the XDG paths the native installer owns are not faults), and the env file, GUI file or hook missing or stale -- satisfied: yes (computed)
 
 ### Group AC005
 
@@ -55,11 +55,99 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC011
 
-- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: no (computed)
+- AC011 The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are -- satisfied: yes (computed)
 
 ### Group AC012
 
-- AC012 When the user repo has config/claude/CLAUDE.md and AGENTS.md, the claude liberator links them into the config dir, backing up a regular file found there; check reports the link pending and doctor reports it broken or missing -- satisfied: no (computed)
+- AC012 When the user repo has config/claude/CLAUDE.md and AGENTS.md, the claude liberator links them into the config dir, backing up a regular file found there; check reports the link pending and doctor reports it broken or missing -- satisfied: yes (computed)
+
+### Group AT001
+
+_(no criteria in this group)_
+
+### Group AT002
+
+_(no criteria in this group)_
+
+### Group AT003
+
+_(no criteria in this group)_
+
+### Group AT004
+
+_(no criteria in this group)_
+
+### Group AT005
+
+_(no criteria in this group)_
+
+### Group AT006
+
+_(no criteria in this group)_
+
+### Group AT007
+
+_(no criteria in this group)_
+
+### Group AT008
+
+_(no criteria in this group)_
+
+### Group AT009
+
+_(no criteria in this group)_
+
+### Group AT010
+
+_(no criteria in this group)_
+
+### Group AT011
+
+_(no criteria in this group)_
+
+### Group AT012
+
+_(no criteria in this group)_
+
+### Group AT013
+
+_(no criteria in this group)_
+
+### Group AT014
+
+_(no criteria in this group)_
+
+### Group AT015
+
+_(no criteria in this group)_
+
+### Group AT016
+
+_(no criteria in this group)_
+
+### Group AT017
+
+_(no criteria in this group)_
+
+### Group AT018
+
+_(no criteria in this group)_
+
+### Group AT019
+
+_(no criteria in this group)_
+
+### Group AT020
+
+_(no criteria in this group)_
+
+### Group AT021
+
+_(no criteria in this group)_
+
+### Group AT022
+
+_(no criteria in this group)_
 
 ## Acceptance Tests
 
@@ -110,6 +198,94 @@ _(no tests in this group)_
 ### Group AC012
 
 _(no tests in this group)_
+
+### Group AT001
+
+- AT001 `test/liberators/claude.bats` -- covers AC001 -- status: green -- @test "with CLAUDE_CONFIG_DIR set, claude_install, check and verify use only it, and write nothing into ~/.claude". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT002
+
+- AT002 `test/liberators/claude.bats` -- covers AC001 -- status: green -- @test "with CLAUDE_CONFIG_DIR set and no ~/.claude, claude_install creates none". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT003
+
+- AT003 `test/liberators/claude.bats` -- covers AC001 -- status: green -- @test "on a sleeve whose state has moved, claude_install writes only the config dir though this shell lacks CLAUDE_CONFIG_DIR". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT004
+
+- AT004 `test/liberators/claude.bats` -- covers AC002, AC011 -- status: green -- @test "the move refuses while Claude Code runs, names each process, and moves and publishes nothing". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT005
+
+- AT005 `test/liberators/claude.bats` -- covers AC002, AC011 -- status: green -- @test "the move takes ~/.claude and ~/.claude.json into the config dir, copies both beside it first, then publishes it". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT006
+
+- AT006 `test/liberators/claude.bats` -- covers AC002 -- status: green -- @test "a native or node-run Claude Code counts as running; a grep, npm ls or molt run naming it does not". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT007
+
+- AT007 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a config dir that already holds anything is refused, named with its contents, and nothing is merged or published". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT008
+
+- AT008 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "an empty config dir counts as absent, and the move goes ahead". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT009
+
+- AT009 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a ~/.claude that is a symlink is not moved, and nothing is published". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT010
+
+- AT010 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "a declared config dir that is relative, holds a quote, or is ~/.claude itself is refused before anything moves". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT011
+
+- AT011 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "on a sleeve Claude Code has not run on, install creates the config dir and publishes it". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT012
+
+- AT012 `test/liberators/claude.bats` -- covers AC011 -- status: green -- @test "the GUI file is a LaunchAgent on macOS and an environment.d file on Linux, and nothing published names Molt's checkout". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT013
+
+- AT013 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 2 with the agent-home message when cwd is $HOME, and 0 anywhere else". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT014
+
+- AT014 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the home guard exits 1, saying so, when jq is missing or the input names no cwd". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT015
+
+- AT015 `test/liberators/claude.bats` -- covers AC003 -- status: green -- @test "the hook merge adds the guard once, keeps every other key and hook as it was, and a second install writes nothing". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT016
+
+- AT016 `test/liberators/claude.bats` -- covers AC004 -- status: green -- @test "check reports CLAUDE_CONFIG_DIR unset where molt runs, or naming another dir, and passes once it names the config dir". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT017
+
+- AT017 `test/liberators/claude.bats` -- covers AC004 -- status: green -- @test "check reports ~/.claude or ~/.claude.json present while the config dir is elsewhere, whether a directory, a file or a link". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT018
+
+- AT018 `test/liberators/claude.bats` -- covers AC004 -- status: green -- @test "the native installer's own paths under ~/.local and ~/.cache are not faults". Passes on main as well: it pins that no check reaches these paths, and before WP01 none looked (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT019
+
+- AT019 `test/liberators/claude.bats` -- covers AC004 -- status: green -- @test "check and verify report env.sh, the GUI file or the guard missing or stale, and the hook missing from settings.json". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT020
+
+- AT020 `test/liberators/claude.bats` -- covers AC004 -- status: green -- @test "check and verify report a move still pending, naming what is in $HOME". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT021
+
+- AT021 `test/liberators/claude.bats` -- covers AC012 -- status: green -- @test "CLAUDE.md and AGENTS.md are linked into the config dir, and a regular file there is backed up first". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
+
+### Group AT022
+
+- AT022 `test/liberators/claude.bats` -- covers AC012 -- status: green -- @test "check and verify report a CLAUDE.md link that is broken". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2.
 
 ---
 
