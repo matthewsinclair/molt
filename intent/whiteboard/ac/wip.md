@@ -3,17 +3,17 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-21 07:15Z
+heartbeat_at: 2026-10-21 09:08Z
 status: active
-focus: "21 Oct: WP07 closed (brief at 159d205, hv writes the piece); localfolded, holding for hv's next instruction"
-claims: []
+focus: "21 Oct: ST0006 WP04 runbook at a1fe844, with vc for review"
+claims: [ST0006/04]
 ---
 
 # Authoring Claude (ac)
 
 ## DOING
 
-_(none)_
+- ST0006 WP04: runbook written into WP04's body at a1fe844, with vc for review (edited)
 
 ## TODO
 

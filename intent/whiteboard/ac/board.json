@@ -5,10 +5,12 @@
     "name": "Authoring Claude",
     "role": "authoring",
     "session_id": "d1da0c2b-7939-45d0-b367-098542eec60e",
-    "heartbeat_at": "2026-10-21T07:15:51.832Z",
+    "heartbeat_at": "2026-10-21T09:08:26.260Z",
     "status": "active",
-    "focus": "21 Oct: WP07 closed (brief at 159d205, hv writes the piece); localfolded, holding for hv's next instruction",
-    "claims": [],
+    "focus": "21 Oct: ST0006 WP04 runbook at a1fe844, with vc for review",
+    "claims": [
+      "ST0006/04"
+    ],
     "recorded_at": "2026-10-21T05:20:09.410Z",
     "migrated_at": "2026-10-21T05:20:09.410Z"
   },
@@ -22,6 +24,15 @@
       "archived_at": "2026-10-21T07:15:51.780Z",
       "recorded_at": "2026-10-21T06:07:10.263Z",
       "edited_at": "2026-10-21T06:47:28.976Z"
+    },
+    {
+      "node": "ac",
+      "kind": "doing",
+      "seq": 2,
+      "text": "ST0006 WP04: runbook written into WP04's body at a1fe844, with vc for review",
+      "state": "live",
+      "recorded_at": "2026-10-21T08:49:27.253Z",
+      "edited_at": "2026-10-21T09:08:26.188Z"
     }
   ],
   "messages": []
