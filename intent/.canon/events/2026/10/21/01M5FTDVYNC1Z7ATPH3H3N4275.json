@@ -1,0 +1,16 @@
+{
+  "id": "01M5FTDVYNC1Z7ATPH3H3N4275",
+  "ts": "2026-10-21T18:08:58.325Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "ops/docs sandbox.credentials.files denies: on Molt-matts main 45e344c; rhadamanth homes re-rendered and current; the guide's Fence and wall paragraph corrected as tested (f57ee55). Owed by hv: dc's harness on kovacs under bubblewrap after B9 (then the guide's 'still owed' sentence goes). kovacs homes re-render at B5."
+  }
+}
