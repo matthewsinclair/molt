@@ -18,7 +18,7 @@ claims: [ST0006/01, ST0006/02]
 
 ## TODO
 
-_(none)_
+- ST0006 WP01 review fixes (vc, at 41ef6b1), one commit on st0006-wp01, then the suite under both bashes and tell vc the head. C1: molt_instance_var swallows every failure of '.': a syntax error or unreadable vars.sh reads as undeclared, and on a moved sleeve mkdir -p would recreate ~/.claude. Fix: check [[ -r ]] and bash -n before sourcing, return a distinct status (2) that _claude_declared_dir refuses on, make it the one reader of vars.sh that molt_render uses too, and test each shape. C2: refuse a trailing slash in the declared dir; the templates render the raw value, so normalising in one reader gives a permanent mismatch; add it to the refusal test. W: molt_render's own hostname copy; move molt_hostname into WP01 and drop it from WP02 at the rebase. Recs: check whether % is a systemd specifier in environment.d and refuse it if so; cross-reference _claude_env_dir's sed and env.sh.tmpl in comments.
 
 ## Holds
 
