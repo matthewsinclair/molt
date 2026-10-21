@@ -1,0 +1,16 @@
+{
+  "id": "01M5FF54P01GVAD84KG9NN59ME",
+  "ts": "2026-10-21T14:51:58.016Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 13,
+    "text": "Issue reviews pending: cc's issue-0024 head (ssh whole-file build, option b with the loud static refusal), then 0025, then 0027; dc's issue-0028 head (doctor manifest step without user_repo) after 0026, which merged at c295b94. dc deletes the 'Until issue 0026' sentence in docs/guides/sleeve-agents.md on main."
+  }
+}
