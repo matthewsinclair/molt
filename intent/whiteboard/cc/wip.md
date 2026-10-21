@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 14:54Z
+heartbeat_at: 2026-10-21 15:14Z
 status: active
-focus: "Issues 0024 (d11841a) and 0025 (a770a0b) with vc for review; holding for the verdict"
-claims: [ST0006/01, ST0006/02, ISSUE:0024, ISSUE:0025]
+focus: "Issue 0027 on issue-0027 (bf5be02); critic, then to vc"
+claims: [ST0006/01, ST0006/02, ISSUE:0027]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issues 0024 (issue-0024 d11841a) and 0025 (issue-0025 a770a0b), both from 35b3670, with vc for review; all tests pass under both bashes, shellcheck clean, critic-shell's two passes answered. 0027 filed (ssh static path).
+- Issue 0027 (ssh refuses a static config/ssh/config, one render path) on issue-0027 bf5be02 from aae8623, per vc's approved route (21 Oct); critic-shell reviewing, then the head to vc.
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Nothing more on issue-0024 or issue-0025 until vc's verdict (21 Oct); released by that verdict, or by hv. After the merges: remove both worktrees and branches; then WP06 (no ACs yet; ask vc).
+_(none)_
 
 ## Watch-outs
 
