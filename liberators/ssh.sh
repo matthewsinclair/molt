@@ -84,14 +84,13 @@ _ssh_render() {
   molt_render_place "$template" "$target" ${1+"$@"}
 }
 
-# Why the config.d fragments, $1 of them, cannot be applied, or nothing when
-# they can: only a rendered config has a file of molt's own to put them in. A
-# fragment declared but not applied is a sleeve that is not as declared, so
-# check and install both ask here.
+# Why the config.d fragments, $2 of them, cannot be applied from the user repo
+# $1, or nothing when they can: only a rendered config has a file of molt's own
+# to put them in. A fragment declared but not applied is a sleeve that is not
+# as declared, so check and install both ask here.
 _ssh_fragments_fault() {
-  local n="$1" user_repo
+  local user_repo="$1" n="$2"
   [[ "$n" -gt 0 ]] || return 0
-  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   [[ -n "$user_repo" && ! -f "$user_repo/config/ssh/config.tmpl" ]] || return 0
   if [[ -f "$user_repo/config/ssh/config" ]]; then
     echo "ssh: config.d fragments need config/ssh/config.tmpl; config/ssh/config is static, so $n fragment(s) were not applied"
@@ -126,7 +125,7 @@ ssh_check() {
     return 1
   fi
   while IFS= read -r _f; do [[ -n "$_f" ]] && _ssh_frags+=("$_f"); done <<< "$_list"
-  _fault="$(_ssh_fragments_fault "${#_ssh_frags[@]}")"
+  _fault="$(_ssh_fragments_fault "$user_repo" "${#_ssh_frags[@]}")"
   if [[ -n "$_fault" ]]; then
     molt_info "$_fault"
     ok=1
@@ -181,7 +180,7 @@ ssh_install() {
     return 1
   fi
   while IFS= read -r f; do [[ -n "$f" ]] && frags+=("$f"); done <<< "$list"
-  fault="$(_ssh_fragments_fault "${#frags[@]}")"
+  fault="$(_ssh_fragments_fault "$user_repo" "${#frags[@]}")"
   if [[ -n "$fault" ]]; then
     molt_error "$fault"
     return 1

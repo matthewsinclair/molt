@@ -619,13 +619,19 @@ molt_render_place() {
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
   local parent_perms
-  parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null \
-    || stat -f '%Lp' "$(dirname "$target")" 2>/dev/null || echo "755")"
+  parent_perms="$(molt_file_mode "$(dirname "$target")" || echo "755")"
   if [[ "$parent_perms" == "700" ]]; then
     chmod 600 "$target" "${target}.molt-rendered"
   fi
 
   molt_info "Rendered: $template -> $target"
+}
+
+# The permission bits of $1 in octal, eg 700, on Linux and macOS. GNU stat is
+# asked first, and BSD's only when it fails: GNU's -f means --file-system, and
+# takes BSD's format for a file to report on.
+molt_file_mode() {
+  stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1" 2>/dev/null
 }
 
 # SHA-256 of a string on stdin, portable across macOS and Linux.

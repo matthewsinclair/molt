@@ -120,6 +120,13 @@ test_hostname() {
     echo "${name%%.*}"
 }
 
+# The permission bits of $1 in octal, eg 600, for a test to compare with the
+# mode it expects. GNU stat first: its -f means --file-system, so BSD's form
+# would print a block of filesystem facts on Linux.
+test_file_mode() {
+    stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1"
+}
+
 # Create a mock molt-{user} repo with config/ directory
 # Usage: create_test_repo "$BATS_TEST_TMPDIR/molt-testuser"
 create_test_repo() {

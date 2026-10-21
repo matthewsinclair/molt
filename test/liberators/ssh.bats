@@ -120,8 +120,8 @@ _ssh_backups() {
     refute_output_contains "backing up"
     [ "$(_ssh_backups)" = 0 ]
     cmp "$SSH_ROOT/expected" "$HOME/.ssh/config"
-    [ "$(stat -f '%Lp' "$HOME/.ssh/config" 2>/dev/null || stat -c '%a' "$HOME/.ssh/config")" = 600 ]
-    [ "$(stat -f '%Lp' "$HOME/.ssh/config.molt-rendered" 2>/dev/null || stat -c '%a' "$HOME/.ssh/config.molt-rendered")" = 600 ]
+    [ "$(test_file_mode "$HOME/.ssh/config")" = 600 ]
+    [ "$(test_file_mode "$HOME/.ssh/config.molt-rendered")" = 600 ]
     run ssh_check
     assert_success
 }
