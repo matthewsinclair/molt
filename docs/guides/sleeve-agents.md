@@ -29,7 +29,7 @@ Physical machines take their names from the Hyperion Cantos: rhadamanth, gyges, 
 
 ### Project agents
 
-A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. Every Intent project uses the same six suffixes, named on 21 Oct 2026. Molt's whiteboard roster, [`intent/whiteboard/README.md`](../../intent/whiteboard/README.md), is the record, and this table repeats it:
+A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. The six suffixes below are the convention for Intent projects, named on 21 Oct 2026. Molt's whiteboard roster, [`intent/whiteboard/README.md`](../../intent/whiteboard/README.md), is the record, and this table repeats it:
 
 | Suffix | Name              |
 | ------ | ----------------- |
@@ -40,7 +40,7 @@ A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. Ever
 | `ac`   | Authoring Claude  |
 | `dc`   | DevX Claude       |
 
-Molt itself runs `vc`, `cc` and `dc`. A suffix names a project session's job and a role names a sleeve agent's, so `dc`, DevX Claude, is a project agent, while `docs` is a sleeve role.
+Molt itself runs `vc`, `cc`, `dc` and `ac`. A suffix names a project session's job and a role names a sleeve agent's, so `dc`, DevX Claude, is a project agent, while `docs` is a sleeve role.
 
 ## Roles
 
@@ -190,7 +190,7 @@ cd "$MOLT_AGT_DIR/kovacs-sysadm" && claude
 
 Start it in the home itself, never in a directory below it. Claude Code reads project settings only from `.claude/` in the directory a session starts in, with no fallback to a parent, while it reads `CLAUDE.md` from that directory and every one above it. An agent started in its `work/` therefore keeps its contract and loses its fence, its sandbox and its memory setting. Once it is started in its home, working under `work/` by path, or with a `cd` inside a command, is fine. On a sleeve whose state has moved, the home-launch guard blocks the prompts of a session started at the agents root or below a home (see [A Claude started in $HOME, or below a home, is refused](#a-claude-started-in-home-or-below-a-home-is-refused)).
 
-Accept the trust prompt at the first launch in each home. The home's `permissions.allow` rules, hooks in settings files and the home's `autoMemoryDirectory` wait for that prompt, which an interactive session shows once per directory. A `claude -p` run never shows it: it uses the hooks and the memory setting but not the home's allow rules, and warns on stderr.
+Accept the trust prompt at the first launch in each home. The home's `permissions.allow` rules, hooks in settings files and the home's `autoMemoryDirectory` wait for that prompt, which an interactive session shows once per directory. Claude Code's documentation says a `claude -p` run never shows it, uses the hooks in the home's settings but not its allow rules, and warns `this workspace has not been trusted` on stderr; it gives `autoMemoryDirectory` the same trust rule as hooks. Molt has not tested this.
 
 ## Moving Claude Code's state out of $HOME
 
@@ -332,7 +332,7 @@ The home's `.claude/settings.json` is a fence: it carries the role's permission 
 
 `ops` and `docs` get the fence and the sandbox. With `sandbox.enabled`, sandboxed Bash cannot write any `.claude` settings, hooks, shell rc files, `.git` config or the config dir, with no exemption. The sandbox binds sandboxed commands only, and it has two escape hatches, which the `ops` and `docs` profiles both close. A command matching `sandbox.excludedCommands` runs with no filesystem restrictions and no network proxy, so the profiles list no excluded commands. A command that fails in the sandbox can be retried outside it on approval unless `sandbox.allowUnsandboxedCommands` is `false`, so the profiles set it to `false`. Hooks, Edit and Write run outside the sandbox, and Edit and Write only prompt.
 
-The profiles' credential denies bind Claude Code's Read tool only, so Bash can still read those files: in `sysadm` because it has no sandbox, and in `ops` and `docs` because project settings cannot set the sandbox's `sandbox.credentials` entries. Until the managed floor below, the contract alone keeps them unread.
+The profiles' credential denies bind Claude Code's Read tool only, so Bash can still read those files: in `sysadm` because it has no sandbox, and in `ops` and `docs` because the profiles carry only `Read()` denies. Claude Code's documentation says a `deny` entry in `sandbox.credentials.files` would also keep sandboxed Bash from reading a file, and that such entries merge from every settings scope, the project's included, while `mask` entries in project settings are dropped; Molt has not tested this, and the profiles do not carry such entries yet. Until they do, or until the managed floor below, the contract alone keeps those files unread.
 
 `sysadm` cannot be sandboxed, because changing the machine is its job, so for now its permissions live only in the fence. A managed deny floor for `sysadm` is planned (ST0006 WP06): Molt will render the role's `permissions.deny` into a root-owned drop-in, `managed-settings.d/molt-sysadm.json`, through the `sudo` path the `system` liberator already uses, and `molt agent config` will show those rules as managed. What the floor denies is the user's decision; WP06 supplies the mechanism.
 
