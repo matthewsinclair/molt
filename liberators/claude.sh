@@ -200,13 +200,11 @@ _claude_path_fault() {
 # Fails, printing why instead, when the value cannot be read or used: a path
 # _claude_path_fault refuses, or $HOME, ~/.claude or anything under it.
 _claude_declared_dir() {
-  local dir status=0 fault
-  dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)" || status=$?
-  case "$status" in
-    0) ;;
-    3) echo "MOLT_CLAUDE_CONFIG_DIR could not be read: the user config repo cannot be found"; return 1 ;;
-    *) echo "MOLT_CLAUDE_CONFIG_DIR could not be read: ${dir:-reading vars.sh failed with status $status}"; return 1 ;;
-  esac
+  local dir fault
+  if ! dir="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
+    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: $dir"
+    return 1
+  fi
   [[ -n "$dir" ]] || return 0
   fault="$(_claude_path_fault MOLT_CLAUDE_CONFIG_DIR "$dir")"
   if [[ -n "$fault" ]]; then

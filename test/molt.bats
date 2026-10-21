@@ -87,6 +87,22 @@ load "test_helper.bash"
     assert_output_contains "version"
 }
 
+# A sleeve's name is its short hostname, whichever form hostname gives, and a
+# host that gives none is a failure, not an empty name (critic-shell, 21 Oct).
+@test "molt_hostname cuts the name at its first dot, and fails when the host gives no name" {
+    load_molt_libs
+    mkdir -p "$BATS_TEST_TMPDIR/stub"
+    printf '#!/bin/sh\necho kovacs.example.net\n' > "$BATS_TEST_TMPDIR/stub/hostname"
+    chmod +x "$BATS_TEST_TMPDIR/stub/hostname"
+    PATH="$BATS_TEST_TMPDIR/stub:$PATH" run molt_hostname
+    assert_success
+    [ "$output" = "kovacs" ]
+    printf '#!/bin/sh\nexit 1\n' > "$BATS_TEST_TMPDIR/stub/hostname"
+    HOSTNAME="" PATH="$BATS_TEST_TMPDIR/stub:$PATH" run molt_hostname
+    assert_failure
+    [ -z "$output" ]
+}
+
 # --- Foreign home-path detection (doctor check 10) ---
 
 @test "molt_foreign_home_paths flags another user's home path (incl JSON-escaped)" {

@@ -149,3 +149,13 @@ TOML
     assert_success
     assert_output_contains "instances/$hostname/molt.toml"
 }
+
+# critic-shell, 21 Oct: a host with no name has no instance, but the repo-level
+# manifest still names its liberators; without it resleeve would run them all.
+@test "a host with no name takes the repo-level manifest" {
+    _use_test_repo
+    molt_hostname() { return 1; }
+    run molt_find_manifest
+    assert_success
+    [ "$output" = "$BATS_TEST_TMPDIR/molt-testuser/molt.toml" ]
+}

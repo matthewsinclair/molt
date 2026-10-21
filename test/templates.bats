@@ -145,6 +145,25 @@ create_test_template() {
     assert_failure
     assert_output_contains "Could not render $repo/config/test/app.conf.tmpl -> $target: $vars stops before its end when sourced"
     [ "$(cat "$target")" = "as it was" ]
+    # critic-shell, 21 Oct: a top-level return, as an include guard has, and
+    # a set -e of the file's own, stop it too, under bash 3.2 and 5 alike.
+    printf '[ -n "${MOLT_GUARDED:-}" ] || return 0\nexport MOLT_TEST_VAR=x\n' > "$vars"
+    run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "$vars stops before its end when sourced"
+    printf 'set -e\nfalse\nexport MOLT_TEST_VAR=x\n' > "$vars"
+    run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "$vars stops before its end when sourced"
+    # A file that stops only the second time it is sourced, with a tmp a
+    # crashed render left behind.
+    printf '[ -e %q ] && exit 0\n: > %q\nexport MOLT_TEST_VAR=x\n' "$BATS_TEST_TMPDIR/sourced-once" "$BATS_TEST_TMPDIR/sourced-once" > "$vars"
+    echo "a crashed render" > "$target.molt-tmp"
+    run molt_render "$repo/config/test/app.conf.tmpl" "$target"
+    assert_failure
+    assert_output_contains "Could not render $repo/config/test/app.conf.tmpl -> $target"
+    [ "$(cat "$target")" = "as it was" ]
+    [ ! -e "$target.molt-tmp" ]
     [ -z "$(find "$(dirname "$target")" -name '*.molt-backup.*')" ]
 }
 
@@ -188,19 +207,40 @@ create_test_template() {
 }
 
 # vars.sh is sourced as a profile is. Under molt's nounset an unset variable in
-# it stopped the render, and what it had printed was moved in as the file.
-@test "molt_render renders past an unset variable in vars.sh, and leaves out what vars.sh prints" {
+# it stopped the render, and what it had printed was moved in as the file. A
+# declare -x in it makes a local of the function that sources it, so it is
+# sourced where it is read (critic-shell, 21 Oct).
+@test "molt_render renders past an unset variable in vars.sh, reads what it declare -x's, and leaves out what it prints" {
     # AT051 (ST0006 AC015).
     _use_test_repo
     local repo="$BATS_TEST_TMPDIR/molt-testuser"
     local vars_dir="$repo/instances/$(hostname -s 2>/dev/null || hostname)"
     mkdir -p "$vars_dir"
-    printf 'echo chatter\nexport MOLT_A=one\nexport MOLT_B="$MOLT_TEST_UNSET"\nexport MOLT_C=three\n' > "$vars_dir/vars.sh"
+    printf 'echo chatter\nexport MOLT_A=one\nexport MOLT_B="$MOLT_TEST_UNSET"\ndeclare -x MOLT_C=three\n' > "$vars_dir/vars.sh"
     create_test_template "$repo" "config/test/lenient.conf" 'a = ${MOLT_A} c = ${MOLT_C}'
     local target="$HOME/.config/test/lenient.conf"
     run molt_render "$repo/config/test/lenient.conf.tmpl" "$target"
     assert_success
     [ "$(cat "$target")" = "a = one c = three" ]
+    run molt_instance_var MOLT_C
+    assert_success
+    [ "$output" = "three" ]
+}
+
+# BASH_ENV is read first by every bash molt starts, and its errors would be
+# blamed on vars.sh (critic-shell, 21 Oct).
+@test "a BASH_ENV that does not parse, or that exits, is not blamed on vars.sh" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    create_test_vars "$repo"
+    echo 'fi' > "$BATS_TEST_TMPDIR/bash-env"
+    BASH_ENV="$BATS_TEST_TMPDIR/bash-env" run molt_instance_var MOLT_TEST_VAR
+    assert_success
+    [ "$output" = "hello-world" ]
+    echo 'exit 3' > "$BATS_TEST_TMPDIR/bash-env"
+    BASH_ENV="$BATS_TEST_TMPDIR/bash-env" run molt_instance_var MOLT_TEST_VAR
+    assert_success
+    [ "$output" = "hello-world" ]
 }
 
 @test "molt_render idempotent re-render produces same output without duplicate backups" {

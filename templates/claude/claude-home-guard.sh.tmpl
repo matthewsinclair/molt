@@ -23,17 +23,32 @@
 # for an unset variable under set -u, which would block every prompt. Exit 2
 # comes only from the $HOME test below.
 
-# Drained unread, so Claude Code's write of the input always lands.
-[ -t 0 ] || cat >/dev/null 2>&1
+# Drained unread, by the shell's own read, so Claude Code's write of the input
+# always lands, with or without a cat on PATH.
+if [ ! -t 0 ]; then
+  while IFS= read -r _; do :; done
+fi
 
-if [ -z "${CLAUDE_PROJECT_DIR:-}" ]; then
-  echo "claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked" >&2
-  exit 1
-fi
-if [ -z "${HOME:-}" ]; then
-  echo "claude-home-guard: the hook has no HOME, so the launch directory was not checked" >&2
-  exit 1
-fi
+# Each must be absolute: cd resolves a relative one against wherever the hook
+# runs, which can make an agent home read as $HOME.
+case "${CLAUDE_PROJECT_DIR:-}" in
+  /*) ;;
+  "")
+    echo "claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked" >&2
+    exit 1 ;;
+  *)
+    echo "claude-home-guard: CLAUDE_PROJECT_DIR is not an absolute path, so the launch directory was not checked" >&2
+    exit 1 ;;
+esac
+case "${HOME:-}" in
+  /*) ;;
+  "")
+    echo "claude-home-guard: the hook has no HOME, so the launch directory was not checked" >&2
+    exit 1 ;;
+  *)
+    echo "claude-home-guard: HOME is not an absolute path, so the launch directory was not checked" >&2
+    exit 1 ;;
+esac
 
 # Compare where the two lead, so a symlinked spelling of $HOME, or one with a
 # trailing slash, is still $HOME.

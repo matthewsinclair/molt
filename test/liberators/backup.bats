@@ -97,17 +97,23 @@ _strict() {
 
 # critic-shell, 21 Oct: vars.sh was sourced into molt's own shell, so an unset
 # name in it ended molt under its nounset, and backup_check, whose stderr molt
-# discards, died without a word.
-@test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt" {
+# discards, died without a word. A file the reader refuses must stop backup,
+# not hand it the reason as a host to probe.
+@test "the backup values are read from a vars.sh with an unset name in it, rather than ending molt, and one molt cannot read stops backup, saying why" {
     # AT052 (ST0006 AC015).
     _backup_env
     local host; host="$(hostname -s 2>/dev/null || hostname)"
-    echo 'export MOLT_BACKUP_NOTE="$MOLT_NOT_DECLARED"' >> "$BATS_TEST_TMPDIR/repo/instances/$host/vars.sh"
+    local vars="$BATS_TEST_TMPDIR/repo/instances/$host/vars.sh"
+    echo 'export MOLT_BACKUP_NOTE="$MOLT_NOT_DECLARED"' >> "$vars"
     run _backup_vars
     assert_success
     _backup_vars
     [ "$MOLT_BACKUP_HOST" = "nas.test" ]
     [ "$MOLT_BACKUP_WINDOW" = "03:00-05:00" ]
+    echo 'fi' >> "$vars"
+    run _backup_vars
+    assert_failure
+    assert_output_contains "backup: MOLT_BACKUP_HOST could not be read: $vars does not parse"
 }
 
 # ---------------------------------------------------------------------------
