@@ -1,0 +1,14 @@
+{
+  "id": "01M5ED5Z3KRGXHJ397962NEFWV",
+  "ts": "2026-10-21T04:58:13.492Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.edit",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC005"
+  },
+  "payload": {
+    "text": "An enabled [[agent]] entry renders its home (AGENTS.md from the role template plus the instance overlay when the sleeve has one, CLAUDE.md, .claude/settings.json with autoMemoryDirectory=<home>/memory, memory/, work/) with a name derived as <hostname>-<role>; re-render is a no-op while digests match and happens when the template or overlay changes; an undefined role is a fault naming it"
+  }
+}
