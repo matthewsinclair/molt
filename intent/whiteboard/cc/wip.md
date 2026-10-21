@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 08:19Z
+heartbeat_at: 2026-10-21 08:46Z
 status: active
-focus: "ST0006: WP01 merged (c815d23); WP02 at b897a23 with AC014 and AC016, suite and critic-shell running, then the head to vc; WP06 after"
+focus: "ST0006: WP01 merged (c815d23); WP02 at b897a23 complete bar critic-shell's last pass, then the head to vc; WP06 after"
 claims: [ST0006/01, ST0006/02]
 ---
 
@@ -13,8 +13,7 @@ claims: [ST0006/01, ST0006/02]
 
 ## DOING
 
-- ST0006 WP01 merged into main: 28062ea and fb5bf7d at 695e961, the second follow-up 4cfe31a at c815d23 (critic-shell's second pass answered). Done on my side. (edited)
-- ST0006 WP02 at st0006-wp02 b897a23 on main c815d23: build, review fixes, AC014 (guard under MOLT_AGT_DIR), one root validator (molt_agt_dir_fault, no $HOME/Devel/agt guess), AC016 preamble layer (molt_render_text), guard compares the disk's spelling. AT053-AT058 red on main, AT059-AT061 to-write (897b46f). Suite under both bashes and critic-shell on 6caffe8+b897a23 running; then the head to vc. (edited)
+- ST0006 WP02 at st0006-wp02 b897a23, rebased onto main c815d23, committed and clean; all tests pass under both bashes. Holds: the build, critic-shell's first review answered, AC014 (guard refuses a launch in the agents root or below a home, root baked from a quoted here-document, drift row), one root validator molt_agt_dir_fault (no $HOME/Devel/agt guess), AC016 preamble layer (molt_render_text), the guard compares the disk's spelling (/bin/pwd -P). On main: AT053-AT058 green (1f390c4), AT059-AT061 to-write until the merge. Remaining: critic-shell's pass on 6caffe8+b897a23 (launched before the compact; rerun it if its report is lost), answer it, then the head to vc. (edited)
 
 ## TODO
 
