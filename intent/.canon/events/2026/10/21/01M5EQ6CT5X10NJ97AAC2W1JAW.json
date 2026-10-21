@@ -1,0 +1,15 @@
+{
+  "id": "01M5EQ6CT5X10NJ97AAC2W1JAW",
+  "ts": "2026-10-21T07:53:13.285Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ISSUE:0021 with vc at issue-0021 6de6663 (on 0020 f73670e, merged at 2675064): five statuses checked, one test per site red on main, suite under both bashes. Next: vc's verdict."
+  }
+}

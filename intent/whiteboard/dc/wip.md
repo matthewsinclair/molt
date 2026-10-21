@@ -3,23 +3,22 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 07:38Z
+heartbeat_at: 2026-10-21 07:53Z
 status: active
-focus: "21 Oct: 0019 with vc (a9049fd), WP05 with vc (3afda1d); 0020 in build on issue-0020; then WP03 items 1-3 (4 and 5 on Molt-matts main)"
-claims: [ST0006/05, ISSUE:0019, ST0006/03, ISSUE:0020, ISSUE:0021]
+focus: "21 Oct: 0021 with vc (6de6663); WP05 (3afda1d) and WP03 items 1-3 (Molt-matts 2525c0e) wait for WP02; next issue 0022, drafted and held for hv"
+claims: [ST0006/05, ST0006/03, ISSUE:0021]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ISSUE:0019 with vc at issue-0019 a9049fd (on 695e961): three sites return 1, one test per site red on main, critic-shell's findings fixed, suite under both bashes. Next: vc's verdict. (edited)
-- ISSUE:0020 on branch issue-0020 (worktree ~/Devel/prj/Molt-wt/issue-0020, on issue-0019): six liberator copies onto molt_hostname, desktop drift test red on main and green here; next the suite under both bashes, then the head to vc.
+- ISSUE:0021 with vc at issue-0021 6de6663 (on 0020 f73670e, merged at 2675064): five statuses checked, one test per site red on main, suite under both bashes. Next: vc's verdict.
 
 ## TODO
 
-- ST0006/03: items 4 (zshenv, eb8a9fc) and 5 (config/claude seeds, 660a118) on Molt-matts main, not pushed. Next items 1-3 on branch st0006-wp03 in ~/Devel/cfg/Molt-matts-wt/st0006-wp03: role contracts, settings.json.tmpl profiles, [[agent]] entries and the kovacs overlay, checked against cc's st0006-wp02 and re-checked against the merged WP02 before the head goes to vc. (edited)
-- ISSUE:0020: the hostname lookup's copies onto WP01's molt_hostname (now in lib/molt.sh) in one branch, with a test for desktop.sh:23, which drifted to unknown; the issue lists the sites; after 0019. (edited)
+- ST0006/03 with vc: items 4 and 5 on Molt-matts main (eb8a9fc, 660a118); items 1-3 on Molt-matts st0006-wp03 at 2525c0e, checked against st0006-wp02 86cb827. They merge after WP02 lands, re-checked against the merged renderer then. vc pushes Molt-matts. (edited)
+- ISSUE:0022 (Molt's tracked .claude/settings.local.json), after 0021: draft from its body. It changes this project's Claude Code permission settings, so apply nothing until hv says so in this session, not relayed.
 
 ## Holds
 
