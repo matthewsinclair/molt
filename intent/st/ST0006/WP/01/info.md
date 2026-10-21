@@ -11,6 +11,7 @@ status: WIP
 
 _(not yet written)_
 
+
 Owner: molt-cc. Branch `st0006-wp01` in a git worktree; molt-vc reviews and merges.
 
 ## Contract
@@ -26,7 +27,7 @@ Owner: molt-cc. Branch `st0006-wp01` in a git worktree; molt-vc reviews and merg
 
 ## Tests (bats, both bash 5 and `/bin/bash` 3.2)
 
-Fake `$HOME` and fake config dir; a `pgrep` stub for the running-Claude refusal; a non-empty target refused and nothing merged; env and GUI files absent after any refusal and present after a successful move; the hook script fed JSON with cwd = `$HOME` (exit 2, message) and cwd elsewhere (exit 0); the merge function leaving every other settings key byte-identical (`jq -S` compare). No test may touch the real `~/.claude`.
+Fake `$HOME` and fake config dir; a `pgrep` stub for the running-Claude refusal; a non-empty target refused and nothing merged; env and GUI files absent after any refusal and present after a successful move; the hook script run with CLAUDE_PROJECT_DIR at `$HOME` (exit 2, message), elsewhere (exit 0), and unset (exit 1, blocks nothing); it reads no JSON and needs only sh; the merge function leaving every other settings key byte-identical (`jq -S` compare). No test may touch the real `~/.claude`.
 
 ## Out of scope
 
