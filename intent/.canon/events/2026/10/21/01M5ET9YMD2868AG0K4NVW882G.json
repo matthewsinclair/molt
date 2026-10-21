@@ -1,0 +1,15 @@
+{
+  "id": "01M5ET9YMD2868AG0K4NVW882G",
+  "ts": "2026-10-21T08:47:35.565Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0006 WP02 critic-shell findings on 6caffe8+b897a23 (0 critical, 4 W, 8 R, 1 S), to fix on st0006-wp02 after the compact, then the head to vc. W1: molt_agt_dir_fault compares spellings while the guard compares directories on disk (real_dir), so a root reaching HOME or a parent of MOLT_PRJ_DIR/MOLT_CFG_DIR by a symlink or another letter case passes and the guard then refuses every project: test containment with (cd && /bin/pwd -P) in one helper shared with the guard's logic, or refuse an existing root whose disk spelling differs. W2: the vars.sh check misses MOLT_AGT_DIR=x (plain), +=, and unset, because MOLT_AGT_DIR is already exported in molt's shell and molt_instance_var unsets then counts exports only; compare in a subshell with MOLT_AGT_DIR exported as resolved (unset reads as a difference), or restore it after sourcing in molt_render_text; add the cases to AT059 and AT057. W3: AGENTS.md is built in two places, so molt_render compares the bare role layer with the full file and backs it up on every re-render once a preamble or overlay exists; compose the layers before molt_render's compare/backup/move (also fixes the @@MOLT:BEGIN@@ duplicate-preamble rec and the half-written AGENTS.md on a failed prepend). W4: constants.bats:124 [[ -z ]] is inert under bash 3.2 errexit (not last); use [ ]. Recs: red controls for hostname-first, molt_agent_named status 2, the listing statuses, the line-break refusal, MOLT_CFG_DIR in the loop, the vars.sh-unreadable branch, the >/dev/null, and above all || exit after molt_render (unreadable role template plus a preamble installs PRE|PRE|contract|OVL|OVL); one shared absolute/canonical check with claude.sh's _claude_path_fault, and the repeated 'vars.sh cannot be found' message; refuse a root at or under ~/.claude or the declared config dir; rename one of the two 'preamble's; claude asks the validator even with no agents (blocks the move on a sleeve without MOLT_PRJ_DIR): ask vc whether intended; AT055's letter-case block into its own skipping test; per-test scratch MOLT_AGT_DIR. Style: say when the root came from MOLT_PRJ_DIR; test / before the canonical patterns."
+  }
+}
