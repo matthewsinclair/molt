@@ -123,6 +123,23 @@ FAKE
     refute_output_contains "Liberator complete"
 }
 
+# critic-shell, 21 Oct: a vars.sh molt cannot read is not a sleeve that wants
+# the default binding.
+@test "tiling install fails, saying why, and writes no setting, when vars.sh cannot be read" {
+    _tactile_sleeve
+    cp "$TACTILE_EXT_DIR/schemas/$TACTILE_SCHEMA_XML" "$MOLT_SYSTEM_SCHEMA_DIR/"
+    local repo="$BATS_TEST_TMPDIR/repo" host
+    host="$(hostname -s 2>/dev/null || hostname)"
+    mkdir -p "$repo/config" "$repo/instances/$host"
+    printf 'fi\nexport MOLT_TACTILE_ACTIVATE="<Super>t"\n' > "$repo/instances/$host/vars.sh"
+    MOLT_USER_REPO_SEARCH_PATHS=("$repo")
+    run tiling_install
+    assert_failure
+    assert_output_contains "tiling: the activation binding could not be read: $repo/instances/$host/vars.sh does not parse"
+    refute_output_contains "Liberator complete"
+    [ -z "$(grep 'gsettings set' "$FAKE_LOG" 2>/dev/null)" ]
+}
+
 # gsettings reads the compiled database. A copy left behind after a failed
 # compile would match the extension's XML, and the next check would pass over
 # the old database.

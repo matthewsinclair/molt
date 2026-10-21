@@ -29,7 +29,8 @@ _tiling_activate() {
   local activate status=0
   activate="$(molt_instance_var MOLT_TACTILE_ACTIVATE)" || status=$?
   case "$status" in
-    0 | 3) echo "${activate:-$TACTILE_ACTIVATE_DEFAULT}" ;;
+    0) echo "${activate:-$TACTILE_ACTIVATE_DEFAULT}" ;;
+    3) echo "$TACTILE_ACTIVATE_DEFAULT" ;;
     *) echo "$activate"; return 1 ;;
   esac
 }

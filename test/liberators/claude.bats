@@ -445,9 +445,9 @@ JSON
     [ ! -e "$HOME/.config/molt" ]
 }
 
-# vc, 21 Oct: sourcing stops at a syntax error, at an exit, and at an error
-# under the file's own set -u, so each read as undeclared after that point, and
-# install then recreated ~/.claude on a sleeve whose state had moved.
+# vc, 21 Oct: sourcing stops at a syntax error, at an exit or a return, and at
+# an error under the file's own set -u, so each read as undeclared after that
+# point, and install then recreated ~/.claude on a sleeve whose state had moved.
 @test "a vars.sh that does not parse, or stops before its end when sourced, is refused, and a moved sleeve gets no ~/.claude back" {
     # AT045 (ST0006 AC011).
     setup_moved
@@ -468,6 +468,12 @@ JSON
     assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars stops before its end when sourced (line 2: MOLT_NOT_DECLARED: unbound variable)"
     [ ! -e "$HOME/.claude" ]
     printf '[ -n "$MOLT_ANYTHING" ] || exit 0\nexport MOLT_CLAUDE_CONFIG_DIR=%q\n' "$CONFIG" > "$vars"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars stops before its end when sourced"
+    [ ! -e "$HOME/.claude" ]
+    # An include guard's return ends only the file, and is caught all the same.
+    printf '[ -n "${MOLT_VARS_LOADED:-}" ] || return 0\nexport MOLT_CLAUDE_CONFIG_DIR=%q\n' "$CONFIG" > "$vars"
     run claude_install
     assert_failure
     assert_output_contains "claude: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars stops before its end when sourced"
@@ -600,7 +606,7 @@ JSON
 
 # Exit 1 blocks nothing, and Claude Code shows what it printed. The guard needs
 # nothing on PATH: with none it still refuses $HOME.
-@test "the home guard exits 1, saying so, when the hook has no CLAUDE_PROJECT_DIR, and needs nothing on PATH" {
+@test "the home guard exits 1, saying so, when the hook has no CLAUDE_PROJECT_DIR or HOME, or a relative one, and needs nothing on PATH" {
     # AT014 (ST0006 AC003).
     setup_moved
     run claude_install
@@ -614,6 +620,22 @@ JSON
     assert_output_contains "the hook has no CLAUDE_PROJECT_DIR"
     run env PATH=/nonexistent CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME\"}"
     [ "$status" -eq 2 ]
+    # Run from the launch directory, where cd "" or cd . stays put: an agent
+    # home would read as $HOME, and $HOME as anywhere (critic-shell, 21 Oct).
+    local agent_home="$BATS_TEST_TMPDIR/agt/kovacs-sysadm"
+    mkdir -p "$agent_home"
+    run bash -c 'cd "$1" && env -u HOME CLAUDE_PROJECT_DIR="$1" "$2" < /dev/null' _ "$agent_home" "$guard"
+    [ "$status" -eq 1 ]
+    [ "$output" = "claude-home-guard: the hook has no HOME, so the launch directory was not checked" ]
+    run bash -c 'cd "$1" && env HOME= CLAUDE_PROJECT_DIR="$1" "$2" < /dev/null' _ "$agent_home" "$guard"
+    [ "$status" -eq 1 ]
+    assert_output_contains "the hook has no HOME"
+    run bash -c 'cd "$1" && env HOME=. CLAUDE_PROJECT_DIR="$1" "$2" < /dev/null' _ "$agent_home" "$guard"
+    [ "$status" -eq 1 ]
+    assert_output_contains "claude-home-guard: HOME is not an absolute path"
+    run bash -c 'cd "$1" && env CLAUDE_PROJECT_DIR=. "$2" < /dev/null' _ "$HOME" "$guard"
+    [ "$status" -eq 1 ]
+    assert_output_contains "claude-home-guard: CLAUDE_PROJECT_DIR is not an absolute path"
 }
 
 @test "the hook merge adds the guard once, keeps every other key and hook as it was, and a second install writes nothing" {

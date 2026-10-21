@@ -253,7 +253,8 @@ molt_link() {
 # --- Instance Vars ---
 
 # The path of this sleeve's instances/<host>/vars.sh in the user repo, whether
-# or not it exists. Fails, as molt_find_user_repo does, when there is no repo.
+# or not it exists. Fails, as molt_find_user_repo does, when there is no repo,
+# and when this host has no name.
 molt_instance_vars_file() {
   local user_repo host
   user_repo="$(molt_find_user_repo)" || return 1
@@ -261,75 +262,102 @@ molt_instance_vars_file() {
   echo "${user_repo}/instances/${host}/vars.sh"
 }
 
-# Sources the vars.sh at $1 into the calling shell, which must be a subshell so
-# that nothing it exports leaks into the framework; with no file there, it
-# sources nothing. This is the one reader of vars.sh: molt_render and
-# molt_instance_var source it through here, and everything else reads it
-# through molt_instance_var. It sources as leniently as a shell sources a
-# profile: errexit and nounset off, so a file whose last line is a false test
-# still counts, with the file's stdout discarded and its stderr left to reach
-# the operator. Fails with status 2, printing why instead, when the file is
-# there but cannot be read, does not parse, or stops before its end when
-# sourced: an exit, or an error under a set -u or set -e of its own. Each of
-# those would read as though the file declared nothing after the point it
-# stopped at, and on a sleeve whose Claude Code state has moved that recreates
-# ~/.claude (ST0006).
-molt_source_instance_vars() {
-  local vars_file="$1" err _molt_sourced_mark="molt: vars.sh sourced to its end"
-  if (( BASH_SUBSHELL == 0 )); then
-    echo "molt_source_instance_vars sources only into a subshell"
-    return 2
-  fi
+# Why the vars.sh at $1 cannot be sourced, or nothing when it can be, or is not
+# there. Two places source vars.sh, molt_render and molt_instance_var, each in
+# its own subshell so that a declare -x in the file is still in scope where it
+# is read; both ask here first, and everything else reads it through
+# molt_instance_var. Refused: a file that cannot be read, does not parse, or
+# stops before its end when sourced (a return or an exit, or an error under a
+# set -u or set -e of its own). Each of those reads as though the file declared
+# nothing after the point it stopped at, and on a sleeve whose Claude Code
+# state has moved that recreates ~/.claude (ST0006). The file is sourced here
+# once first, in a fresh bash, from a copy whose last line answers on fd 3:
+# anything that ends the sourcing early misses the answer, and a set -e of the
+# file's own stops it under bash 3.2 and 5 alike, which a subshell of a caller
+# that ignores errexit would not. BASH_ENV would be read first, by bash -n too,
+# and its errors blamed on vars.sh.
+molt_instance_vars_fault() {
+  local vars_file="$1" err probe
   [[ -e "$vars_file" || -L "$vars_file" ]] || return 0
   if [[ ! -f "$vars_file" || ! -r "$vars_file" ]]; then
     echo "$(molt_tilde "$vars_file") cannot be read"
-    return 2
+    return 0
   fi
-  # BASH_ENV would be read first, and its errors blamed on vars.sh.
   if ! err="$(BASH_ENV='' "$BASH" -n "$vars_file" 2>&1)"; then
     err="${err%%$'\n'*}"
     echo "$(molt_tilde "$vars_file") does not parse (${err#"$vars_file": })"
-    return 2
+    return 0
   fi
-  # Sourced first in a throwaway subshell, keeping what it says on stderr: what
-  # stops it there stops it in this shell too, and says why.
-  # shellcheck disable=SC1090
-  err="$(set +eu; . "$vars_file" 2>&1 >/dev/null; echo "$_molt_sourced_mark")" || true
-  if [[ "$err" != *"$_molt_sourced_mark" ]]; then
-    err="${err##*$'\n'}"
-    echo "$(molt_tilde "$vars_file") stops before its end when sourced${err:+ (${err#"$vars_file": })}"
-    return 2
+  if ! probe="$(mktemp "${TMPDIR:-/tmp}/molt-vars.XXXXXX")"; then
+    echo "$(molt_tilde "$vars_file") could not be checked: no temporary file could be made"
+    return 0
   fi
-  set +eu
-  # shellcheck disable=SC1090
-  . "$vars_file" >/dev/null
-  return 0
+  { cat "$vars_file"; printf '\n\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
+  # The answer decides, not the status, which is the file's own. The $1 is the
+  # fresh bash's own, so it stays in single quotes.
+  # shellcheck disable=SC2016
+  err="$(BASH_ENV='' "$BASH" -c 'set +eu; . "$1"' molt-vars "$probe" 3>&1 2>&1 >/dev/null)" || true
+  rm -f "$probe"
+  case "$err" in
+    *"molt: sourced to its end") return 0 ;;
+  esac
+  # The last thing it said, when that is an error of the file's own.
+  err="${err##*$'\n'}"
+  case "$err" in
+    "$probe: "*) err=" (${err#"$probe: "})" ;;
+    *) err="" ;;
+  esac
+  echo "$(molt_tilde "$vars_file") stops before its end when sourced$err"
 }
 
 # Prints the variable $1 as this sleeve's vars.sh exports it; nothing when the
 # file does not export it, or there is no file. Only exported variables count,
 # because molt_render substitutes only those: a value it could not render is
 # not declared. Nor does a value this process inherited: the file declares, not
-# the environment molt runs in. Fails with status 2, printing why instead, when
-# molt_source_instance_vars refuses the file, or when the value holds a line
-# break, which the caller's $() would cut from its end; and with status 3 when
-# this sleeve's vars.sh cannot be located, as when there is no user repo.
+# the environment molt runs in. Fails, printing why instead: with status 2 when
+# molt_instance_vars_fault refuses the file, when the sourcing here stops
+# before its end, or when the value holds a line break or a carriage return,
+# which the caller's $() would cut or keep unseen; and with status 3 when this
+# sleeve's vars.sh cannot be found, as when there is no user repo.
 molt_instance_var() {
-  local vars_file
-  vars_file="$(molt_instance_vars_file)" || return 3
+  local vars_file fault out
+  if ! vars_file="$(molt_instance_vars_file)"; then
+    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    return 3
+  fi
+  fault="$(molt_instance_vars_fault "$vars_file")"
+  if [[ -n "$fault" ]]; then
+    echo "$fault"
+    return 2
+  fi
   # The name is $1 throughout: vars.sh can assign any variable, this function's
-  # locals among them, but not its arguments.
-  (
+  # locals among them, but not its arguments. The value goes out ahead of a
+  # closing line, so a sourcing that ends early, or a value that ends in a line
+  # break, shows here.
+  out="$(
     unset "$1"
-    molt_source_instance_vars "$vars_file" || exit
-    printenv "$1" >/dev/null || exit 0
-    case "${!1}" in
-      *$'\n'*)
-        echo "$(molt_tilde "$vars_file") exports $1 with a line break in it"
-        exit 2 ;;
-    esac
-    printf '%s\n' "${!1}"
-  )
+    if [[ -e "$vars_file" ]]; then
+      set +eu
+      # shellcheck disable=SC1090
+      . "$vars_file" >/dev/null
+    fi
+    if printenv "$1" >/dev/null; then
+      printf '%s' "${!1}"
+    fi
+    printf '\nmolt: read to its end'
+  )" || true
+  case "$out" in
+    *$'\n'"molt: read to its end") out="${out%$'\n'molt: read to its end}" ;;
+    *)
+      echo "$(molt_tilde "$vars_file") stops before its end when sourced"
+      return 2 ;;
+  esac
+  case "$out" in
+    *[$'\n\r']*)
+      echo "$(molt_tilde "$vars_file") exports $1 with a line break in it"
+      return 2 ;;
+  esac
+  printf '%s\n' "$out"
 }
 
 # --- Template Rendering ---
@@ -354,27 +382,36 @@ molt_render() {
 
   local vars_file why
   vars_file="$(molt_instance_vars_file)" || return 1
-  # Only for the warning; molt_source_instance_vars decides what is read.
-  if [[ ! -e "$vars_file" && ! -L "$vars_file" ]]; then
+  why="$(molt_instance_vars_fault "$vars_file")"
+  if [[ -n "$why" ]]; then
+    molt_error "Could not render $template -> $target: $why"
+    return 1
+  fi
+  if [[ ! -e "$vars_file" ]]; then
     molt_warn "No vars.sh for instance $(molt_hostname) — rendering template with env only"
   fi
 
-  # Render in a subshell that has sourced vars.sh, so its exports don't leak
-  # into the framework, and nothing is written when vars.sh cannot be read.
-  # Only substitute MOLT_* variables — leave other $VAR references (like
-  # starship's $username, $path, etc.) untouched. Everything below handles the
-  # render it finds, so no render, whatever the subshell's status, is a failure:
-  # the target would be backed up with nothing to take its place.
+  # Render in a subshell that sources vars.sh, so its exports don't leak into
+  # the framework, and a declare -x in it is still in scope for envsubst. Only
+  # substitute MOLT_* variables — leave other $VAR references (like starship's
+  # $username, $path, etc.) untouched. Everything below handles the render it
+  # finds, so no render, whatever the subshell's status, is a failure: the
+  # target would be backed up with nothing to take its place. A tmp a crashed
+  # render left goes first, or it would pass for this one.
   rm -f "${target}.molt-tmp"
-  if ! why="$(
-    molt_source_instance_vars "$vars_file" || exit
+  if ! (
+    if [[ -e "$vars_file" ]]; then
+      set +eu
+      # shellcheck disable=SC1090
+      . "$vars_file" >/dev/null
+    fi
     mkdir -p "$(dirname "$target")" || exit
     local molt_vars
     molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
     envsubst "$molt_vars" < "$template" > "${target}.molt-tmp"
-  )" || [[ ! -f "${target}.molt-tmp" ]]; then
+  ) || [[ ! -f "${target}.molt-tmp" ]]; then
     rm -f "${target}.molt-tmp"
-    molt_error "Could not render $template -> $target${why:+: $why}"
+    molt_error "Could not render $template -> $target"
     return 1
   fi
 
@@ -700,13 +737,16 @@ molt_find_manifest() {
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   [[ -z "$user_repo" ]] && return 1
 
-  # Instance-specific overrides repo-level
+  # Instance-specific overrides repo-level. A host with no name has no
+  # instance, and takes the repo-level manifest, as it did before
+  # molt_hostname could say so.
   local host instance_manifest
-  host="$(molt_hostname)" || return 1
-  instance_manifest="$user_repo/instances/$host/molt.toml"
-  if [[ -f "$instance_manifest" ]]; then
-    echo "$instance_manifest"
-    return 0
+  if host="$(molt_hostname)"; then
+    instance_manifest="$user_repo/instances/$host/molt.toml"
+    if [[ -f "$instance_manifest" ]]; then
+      echo "$instance_manifest"
+      return 0
+    fi
   fi
 
   # Repo-level default
@@ -1354,6 +1394,10 @@ cmd_doctor() {
   step=$((step + 1))
   local font_family="" font_status=0
   font_family="$(molt_instance_var MOLT_FONT_FAMILY)" || font_status=$?
+  # With no user repo, or no host name, nothing declares a font.
+  if [[ $font_status -eq 3 ]]; then
+    font_family=""
+  fi
   if [[ $font_status -eq 2 ]]; then
     echo "[$step/$total] Checking declared font... ⚠ $font_family"
     warnings=$((warnings + 1))
