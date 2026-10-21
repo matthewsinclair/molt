@@ -16,9 +16,10 @@
 # role an earlier entry declared, is left out: molt_agent_manifest_faults names
 # it. Prints nothing when the sleeve has no manifest.
 molt_agents() {
-  local manifest
+  local manifest host
   manifest="$(molt_find_manifest 2>/dev/null)" || return 0
-  _molt_table_entries agent role "$manifest" | awk -F'\t' -v host="$(molt_hostname)" '
+  host="$(molt_hostname)" || return 1
+  _molt_table_entries agent role "$manifest" | awk -F'\t' -v host="$host" '
     $2 == "role" {
       skip = ($1 == "" || ($1 in seen))
       if (!skip) { seen[$1] = 1; order[++n] = $1; enabled[$1] = "true"; harness[$1] = "claude" }
@@ -106,9 +107,10 @@ molt_agent_role_fault() {
 # on this machine only, which the role's template, one file for every host,
 # cannot hold. Fails when there is no user repo.
 molt_agent_overlay() {
-  local user_repo
+  local user_repo host
   user_repo="$(molt_find_user_repo)" || return 1
-  echo "${user_repo}/instances/$(molt_hostname)/agents/$1.md"
+  host="$(molt_hostname)" || return 1
+  echo "${user_repo}/instances/${host}/agents/$1.md"
 }
 
 # The files rendered into a home for the role $1, one

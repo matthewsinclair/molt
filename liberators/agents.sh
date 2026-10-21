@@ -40,7 +40,10 @@ _agents_memory_dir_set() {
 _agents_render_file() {
   local name="$1" role="$2" file="$3" template="$4" extra="$5" home host target why
   home="$(molt_agent_home "$name")"
-  host="$(molt_hostname)"
+  if ! host="$(molt_hostname)"; then
+    molt_error "agents: this host gives no name, so $name's $file was not rendered"
+    return 1
+  fi
   target="$home/$file"
   # In a subshell, so the agent's variables reach molt_render's envsubst and go
   # no further.

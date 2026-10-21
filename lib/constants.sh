@@ -28,6 +28,9 @@ MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
 # agent's home must never land at /<name>.
 MOLT_AGT_DIR="${MOLT_AGT_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/agt}}"
 MOLT_AGT_DIR="${MOLT_AGT_DIR:-$HOME/Devel/agt}"
+# Exported, so molt_render substitutes it into the claude liberator's home
+# guard, which refuses a launch under it that is not in an agent home (AC014).
+export MOLT_AGT_DIR
 
 # --- User config repo ---
 # The Molt-{user} repo location. Searched in order.
