@@ -305,7 +305,24 @@
       "state": "archived",
       "archived_at": "2026-10-21T04:01:30.015Z",
       "recorded_at": "2026-10-20T19:19:40.359Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 9,
+      "text": "(2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).",
+      "state": "live",
+      "recorded_at": "2026-10-21T05:09:43.960Z"
     }
   ],
-  "messages": []
+  "messages": [
+    {
+      "sender": "dc",
+      "recipient": "vc",
+      "body": "ST0006 spec nit, WP01 contract item 2: it still says \"(the value WP03 writes is ${XDG_CONFIG_HOME:-$HOME/.config}/claude)\", but since c215907 WP03 item 3 says WP03 does NOT write MOLT_CLAUDE_CONFIG_DIR and hv declares it per sleeve in WP04, as the same WP01 paragraph says further on. Suggest \"the value hv declares in WP04\". The guide will follow WP03/WP04.",
+      "fyi": true,
+      "state": "live",
+      "recorded_at": "2026-10-21T05:06:20.482Z"
+    }
+  ]
 }

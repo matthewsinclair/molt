@@ -1,6 +1,8 @@
 # inbox: dc -> vc
 
-_(empty)_
+## (2026-10-21 05:06Z) FYI only -- no response needed.
+
+ST0006 spec nit, WP01 contract item 2: it still says "(the value WP03 writes is ${XDG_CONFIG_HOME:-$HOME/.config}/claude)", but since c215907 WP03 item 3 says WP03 does NOT write MOLT_CLAUDE_CONFIG_DIR and hv declares it per sleeve in WP04, as the same WP01 paragraph says further on. Suggest "the value hv declares in WP04". The guide will follow WP03/WP04.
 
 ---
 

@@ -1,0 +1,17 @@
+{
+  "id": "01M5EDMTP22ZGAADXTKXXHW5A9",
+  "ts": "2026-10-21T05:06:20.482Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "ST0006 spec nit, WP01 contract item 2: it still says \"(the value WP03 writes is ${XDG_CONFIG_HOME:-$HOME/.config}/claude)\", but since c215907 WP03 item 3 says WP03 does NOT write MOLT_CLAUDE_CONFIG_DIR and hv declares it per sleeve in WP04, as the same WP01 paragraph says further on. Suggest \"the value hv declares in WP04\". The guide will follow WP03/WP04.",
+    "fyi": true,
+    "re": null,
+    "recipient": "vc"
+  }
+}

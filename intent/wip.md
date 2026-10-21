@@ -1,12 +1,14 @@
 ---
-verblock: "20 Oct 2026:v0.31: Matthew Sinclair - EOD fold for 20 Oct; done 023"
+verblock: "21 Oct 2026:v0.32: Matthew Sinclair - localfold; ST0006 sleeve agents in build"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**ST0005 is open for gyges alone.** It covers the utilz liberator, which takes Utilz from a checkout or from Homebrew as each sleeve declares. WP01 and WP02 are done and all five criteria are met. kovacs and rhadamanth run utilz from Homebrew; gyges waits until hv can reach it (WP03, vc board todo 5).
+**ST0006, sleeve agents, is in build.** A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops`, `docs`. It gets a home at `$MOLT_AGT_DIR/<name>/` (default `~/Devel/agt`), declared as an `[[agent]]` entry and rendered from a role profile in Molt-matts; the harness state leaves `$HOME` for `$XDG_CONFIG_HOME/claude`; a Claude launched in `$HOME` is refused. The thread's context carries hv's rulings and the verified Claude Code facts; read it before touching any of this. Three sessions share this checkout: vc specifies, validates, reviews and merges; molt-cc builds code on `~/Devel/prj/Molt-wt/<branch>`; molt-dc builds the guide; kovacs-sysadm plans its own move. Everyone commits only their own paths from main.
+
+**ST0005 stays open for gyges alone** (utilz from Homebrew there; WP03), until hv can reach it.
 
 TODO:
 
@@ -21,10 +23,13 @@ How a sleeve moves its config repos, for any later one:
 
 ## Active Steel Threads
 
+- **ST0006, sleeve agents.** Order of landing: WP01 (molt-cc, in build on `st0006-wp01`: the claude liberator honours `CLAUDE_CONFIG_DIR`, renders env.sh, the GUI file and the `$HOME` hook, moves the state once, links the user-scope `CLAUDE.md`/`AGENTS.md`; everything gated on the sleeve declaring `MOLT_CLAUDE_CONFIG_DIR`), then WP02 (molt-cc: `[[agent]]`, `MOLT_AGT_DIR`, the agents liberator with the per-instance overlay, `molt agent list|config`), then WP05 (molt-dc, the guide; plan shown to hv first), then WP03 (Molt-matts: roles, `[[agent]]` entries, zshenv line, `config/claude/CLAUDE.md` and `AGENTS.md` seeds; the variable is NOT declared there), then WP04 (kovacs first: phase A copy-only by kovacs-sysadm once its home renders, phase B by hv declaring the variable and running the move with every Claude quit, phase C verify; then rhadamanth with Chrome quit; gyges later), then WP06 (managed deny floor for sysadm; hv names the floor's contents). vc reviews each WP against its ACs before merging; cc records ATs on main.
 - **ST0005, WP03 (WIP): roll the per-sleeve `source` out to gyges.** hv agreed brew for gyges. Set `source = "brew"` on its utilz entry, run `molt doctor` there through gyges-infra, then close WP03 and the thread. The WP body records where each sleeve stands.
 
 ## Waiting on hv
 
+- **ST0006 WP06: the contents of the sysadm deny floor**, when WP01 to WP05 have landed. The mechanism is specified; what sysadm may never do is hv's.
+- **Molt from brew is coming (hv, 21 Oct), not today, and no thread carries it yet.** ST0006 renders nothing that names a checkout path so as not to make it harder.
 - **Issue 0015: what an offline `molt upgrade` should do.** A failed git pull (framework, user config, Doom config) is reported as "skipped", with a cause that cannot be true: an up-to-date pull exits 0. git's own reason goes to /dev/null. Making it fail needs a ruling: either stop the upgrade, or run the hooks on the trees it has and fail at the end. utilz's checkout-mode pull has the same shape.
 - **Issue 0016, a separate pass if wanted:** `molt_error` writes to stdout, so a captured call's diagnostics never reach the user, eg the search-path help when no config repo is found. Sending error lines to stderr changes what every captured call collects.
 - **Issue 0018: the manifest's `depends` key is documented as ordering liberators, and nothing reads it.** Make molt honour it, assert it in doctor as check 4 does `user_repo`, or drop it from the manifests and the docs.
@@ -39,6 +44,7 @@ How a sleeve moves its config repos, for any later one:
 gyges is at home in the UK, and changes on it go through gyges-infra (board watchout 16).
 
 - **ST0005 WP03:** `source = "brew"` on gyges' utilz entry, then `molt doctor`.
+- **ST0006 WP04 on gyges:** declare `MOLT_CLAUDE_CONFIG_DIR`, run the move with every Claude quit, and its sleeve agent becomes `gyges-sysadm` (hv: later, not today).
 - **Resync its Molt and Molt-matts clones onto the purged histories:** nothing local, fetch, `reset --hard`, reflog expire, gc. These are the steps kovacs ran on 20 Oct (board todo 5).
 - **Check gyges' Claude Code attribution config**, the `~/.claude/settings.json` attribution keys and the "## Git Commits" rule in `~/.claude/CLAUDE.md`, as kovacs now has them.
 - **Deploy the Gtools Sinclair estate on gyges, visible inside the house to anyone at home.** A recreational hack-around; part of the point is to see whether a deploy like that can be done from here. Gtools is gtools-vc's pen, so bring it in.
