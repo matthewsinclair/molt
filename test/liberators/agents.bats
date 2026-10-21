@@ -21,6 +21,18 @@ setup_agents() {
     # root-owned managed file nor any real config dir is read.
     eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/claude-config"
+    # sudo runs the command it is given, logging it, unless FAKE_SUDO_STATUS
+    # says otherwise (as tiling.bats fakes it).
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
+#!/usr/bin/env bash
+echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
+[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
+exec "$@"
+FAKE
+    chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+    export FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
 
     cat > "$ROLE/AGENTS.md.tmpl" <<'EOF'
 # ${MOLT_AGENT_NAME}
@@ -35,6 +47,7 @@ EOF
     # No MOLT_HOSTNAME here: the liberator exports it, so a sleeve whose vars.sh
     # does not declare it renders its name all the same.
     echo 'export MOLT_FONT_SIZE=12' > "$INSTANCE/vars.sh"
+    printf '%s\n' '{' '  "permissions": { "deny": ["Read(~/.ssh/id_*)", "Read(~/.aws/credentials)"] }' '}' > "$ROLE/floor.json"
     write_manifest '[[agent]]' 'role = "sysadm"'
 
     export NAME="$SLEEVE-sysadm"
@@ -613,6 +626,8 @@ with_role_files_unlisted() {
     [ "$output" = "$(printf '%s\t%s\t%s\n' \
         deny "Bash(sudo rm:*)" managed \
         deny "Edit(/etc/**)" managed \
+        deny "Read(~/.ssh/id_*)" managed \
+        deny "Read(~/.aws/credentials)" managed \
         deny "Bash(rm -rf:*)" home \
         ask "Bash(git push:*)" user \
         allow "Bash(systemctl status:*)" local \
@@ -678,4 +693,132 @@ with_role_files_unlisted() {
     run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent config kovacs-docs
     assert_failure
     assert_output_contains "kovacs-docs is not declared on this sleeve; declared: $NAME"
+}
+
+# --- The managed floor (WP06) ---
+
+# An ops role, the sysadm role's files under another name, so a sleeve can have
+# an agent and no sysadm.
+_ops_role() {
+    mkdir -p "$TEST_USER_REPO/config/agents/roles/ops"
+    cp "$ROLE/AGENTS.md.tmpl" "$ROLE/settings.json.tmpl" "$TEST_USER_REPO/config/agents/roles/ops/"
+}
+
+@test "agents install renders floor.json's bytes as the managed drop-in through sudo, mode 644, with molt's sidecar, and a second run writes nothing" {
+    # AT068 (ST0006 AC010).
+    setup_agents
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: $FLOOR is missing"
+    run agents_install
+    assert_success
+    assert_output_contains "Rendered: $ROLE/floor.json -> $FLOOR"
+    cmp "$ROLE/floor.json" "$FLOOR"
+    [ "$(test_file_mode "$FLOOR")" = 644 ]
+    [ "$(test_file_mode "$FLOOR.molt-rendered")" = 644 ]
+    grep -q "^digest " "$FLOOR.molt-rendered"
+    grep -q "^sudo install -m 644 .* $FLOOR\$" "$BATS_TEST_TMPDIR/sudo.log"
+    run agents_check
+    assert_success
+    rm -f "$BATS_TEST_TMPDIR/sudo.log"
+    run agents_install
+    assert_success
+    refute_output_contains "molt-sysadm.json"
+    [ ! -e "$BATS_TEST_TMPDIR/sudo.log" ]
+
+    printf '{"permissions": {"deny": ["Read(~/.ssh/id_*)"]}}\n' > "$ROLE/floor.json"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: $FLOOR is not $ROLE/floor.json"
+    run agents_install
+    assert_success
+    cmp "$ROLE/floor.json" "$FLOOR"
+}
+
+@test "molt agent config shows the floor's rules tagged managed above the user layer where it is, and no managed rule where it is not" {
+    # AT069 (ST0006 AC010).
+    setup_agents
+    agents_install >/dev/null
+    mkdir -p "$CLAUDE_CONFIG_DIR"
+    echo '{"permissions": {"deny": ["Bash(curl:*)"]}}' > "$CLAUDE_CONFIG_DIR/settings.json"
+    run cmd_agent config "$NAME"
+    assert_success
+    assert_output_contains "$(printf '    %-8s %s' managed "$FLOOR")"
+    assert_output_contains "$(permission_line deny "Read(~/.ssh/id_*)" managed)"
+    assert_output_contains "$(permission_line deny "Read(~/.aws/credentials)" managed)"
+    [ "$(printf '%s\n' "$output" | grep -n 'Read(~/.aws/credentials)' | cut -d: -f1)" -lt \
+      "$(printf '%s\n' "$output" | grep -n 'Bash(curl:\*)' | cut -d: -f1)" ]
+
+    _ops_role
+    write_manifest '[[agent]]' 'role = "ops"'
+    agents_install >/dev/null
+    run cmd_agent config "$SLEEVE-ops"
+    assert_success
+    run grep -c managed <<< "$(printf '%s\n' "$output" | grep -E '^    (deny|ask|allow) ')"
+    [ "$output" = 0 ]
+}
+
+@test "with no enabled sysadm agent, install renders no floor and removes molt's, and leaves, naming it, one molt did not write" {
+    # AT070 (ST0006 AC017).
+    setup_agents
+    _ops_role
+    write_manifest '[[agent]]' 'role = "ops"'
+    run agents_install
+    assert_success
+    [ ! -e "$FLOOR" ]
+
+    write_manifest '[[agent]]' 'role = "sysadm"'
+    agents_install >/dev/null
+    write_manifest '[[agent]]' 'role = "sysadm"' 'enabled = false' '' '[[agent]]' 'role = "ops"'
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: $FLOOR is molt's, and no sysadm agent here needs it"
+    run agents_install
+    assert_success
+    assert_output_contains "Removed the managed floor: $FLOOR"
+    [ ! -e "$FLOOR" ]
+    [ ! -e "$FLOOR.molt-rendered" ]
+
+    echo '{"permissions": {"deny": ["Bash(theirs)"]}}' > "$FLOOR"
+    run agents_check
+    assert_success
+    run agents_install
+    assert_success
+    assert_output_contains "agents: managed floor: $FLOOR was not written by molt, which leaves it"
+    [ "$(cat "$FLOOR")" = '{"permissions": {"deny": ["Bash(theirs)"]}}' ]
+
+    # Nor is one molt did not write replaced where the floor is wanted.
+    write_manifest '[[agent]]' 'role = "sysadm"'
+    run agents_install
+    assert_failure
+    assert_output_contains "$FLOOR was not written by molt, which leaves it, so the floor is not in place"
+    [ "$(cat "$FLOOR")" = '{"permissions": {"deny": ["Bash(theirs)"]}}' ]
+}
+
+@test "a sysadm sleeve with no floor.json, or one that is not one object holding only permissions.deny, fails check and install naming it, and nothing is written" {
+    # AT071 (ST0006 AC018).
+    setup_agents
+    local bad
+    rm "$ROLE/floor.json"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: a sysadm agent needs its managed floor, and there is no $ROLE/floor.json"
+    run agents_install
+    assert_failure
+    assert_output_contains "there is no $ROLE/floor.json, so nothing was written"
+    [ ! -e "$AGENT_HOME" ]
+    [ ! -e "$BATS_TEST_TMPDIR/managed" ]
+    for bad in '' '[]' '"deny"' '{"permissions": {"deny": ["Read(x)"]}} {}' \
+        '{"permissions": {"deny": ["Read(x)"], "allow": ["Bash(y)"]}}' \
+        '{"permissions": {"deny": [1]}}' '{"permissions": {"deny": "Read(x)"}}' \
+        '{"permissions": {"deny": []}, "model": "opus"}'; do
+        printf '%s\n' "$bad" > "$ROLE/floor.json"
+        run agents_check
+        assert_failure
+        assert_output_contains "agents: managed floor: $ROLE/floor.json is not one object holding only permissions.deny, a list of strings"
+        run agents_install
+        assert_failure
+        [ ! -e "$AGENT_HOME" ]
+        [ ! -e "$BATS_TEST_TMPDIR/managed" ]
+    done
 }

@@ -76,7 +76,7 @@ TOML
     printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
     MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
     assert_output_contains "Checking manifest... ✓ $repo/molt.toml"
-    assert_output_contains "[13/13]"
+    assert_output_contains "[14/14]"
 }
 
 @test "molt doctor reports a manifest it cannot read, and carries on (issue 0028)" {
@@ -89,7 +89,7 @@ TOML
     chmod 600 "$repo/molt.toml"
     assert_output_contains "Checking manifest... ⚠ $repo/molt.toml"
     assert_output_contains "could not be read"
-    assert_output_contains "[13/13]"
+    assert_output_contains "[14/14]"
 }
 
 # --- Unknown command ---
@@ -591,4 +591,94 @@ _use_digest_test_repo() {
     mkdir -p "$empty"
     PATH="$empty" run molt_font_available "Hack Nerd Font Mono"
     [ "$status" -eq 2 ]
+}
+
+# --- The managed floor (ST0006 WP06) ---
+
+# A sleeve in the test directory, in this shell: a user repo with a sysadm
+# role and its floor, a managed dir of the test's own, and a fake sudo that
+# runs what it is given unless FAKE_SUDO_STATUS says otherwise.
+_floor_sleeve() {
+    load_molt_libs
+    source "$MOLT_ROOT/liberators/agents.sh"
+    export HOME="$BATS_TEST_TMPDIR/home" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
+    REPO="$BATS_TEST_TMPDIR/repo"
+    INSTANCE="$REPO/instances/$(test_hostname)"
+    mkdir -p "$HOME" "$REPO/config/agents/roles/sysadm" "$INSTANCE" "$BATS_TEST_TMPDIR/bin"
+    eval "molt_find_user_repo() { echo \"$REPO\"; }"
+    eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
+    FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
+    printf '{"permissions": {"deny": ["Read(~/.ssh/id_*)", "Read(~/.aws/credentials)"]}}\n' \
+        > "$REPO/config/agents/roles/sysadm/floor.json"
+    printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "sysadm"\n' > "$INSTANCE/molt.toml"
+    cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
+#!/usr/bin/env bash
+echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
+[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
+exec "$@"
+FAKE
+    chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+}
+
+@test "doctor check 14 warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent carrying molt's, and passes otherwise" {
+    # AT072 (ST0006 AC019).
+    _floor_sleeve
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ⚠"
+    assert_output_contains "         $FLOOR is missing"
+    _agents_floor >/dev/null
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ✓ in place: $FLOOR"
+    echo '{"permissions": {"deny": []}}' > "$FLOOR"
+    run cmd_doctor
+    assert_output_contains "         $FLOOR is not $REPO/config/agents/roles/sysadm/floor.json"
+
+    printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ⚠"
+    assert_output_contains "         $FLOOR is molt's, and no sysadm agent here needs it"
+    rm -f "$FLOOR.molt-rendered"
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ✓ none needed; $FLOOR is not molt's, and is left"
+    rm -f "$FLOOR"
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ✓ none needed, and none of molt's here"
+}
+
+@test "the sudo helpers install a user copy, not the file named, refuse with sudo absent or refusing, and write nothing unprivileged" {
+    # AT073 (ST0006 AC019).
+    _floor_sleeve
+    local src="$REPO/config/agents/roles/sysadm/floor.json"
+    mkdir -p "$(dirname "$FLOOR")"
+
+    FAKE_SUDO_STATUS=1 run molt_sudo_install "$src" "$FLOOR"
+    assert_failure
+    assert_output_contains "sudo could not install $FLOOR"
+    [ ! -e "$FLOOR" ]
+
+    PATH="$BATS_TEST_TMPDIR/nosudo" run molt_sudo_install "$src" "$FLOOR"
+    assert_failure
+    assert_output_contains "sudo is not installed, so $FLOOR was not written"
+    [ ! -e "$FLOOR" ]
+
+    rm -f "$BATS_TEST_TMPDIR/sudo.log"
+    run molt_sudo_install "$src" "$FLOOR"
+    assert_success
+    cmp "$src" "$FLOOR"
+    [ "$(test_file_mode "$FLOOR")" = 644 ]
+    grep -q "^sudo install -m 644 " "$BATS_TEST_TMPDIR/sudo.log"
+    run grep -qF "install -m 644 $src " "$BATS_TEST_TMPDIR/sudo.log"
+    assert_failure
+
+    FAKE_SUDO_STATUS=1 run molt_sudo_remove "$FLOOR"
+    assert_failure
+    [ -e "$FLOOR" ]
+    PATH="$BATS_TEST_TMPDIR/nosudo" run molt_sudo_remove "$FLOOR"
+    assert_failure
+    assert_output_contains "sudo is not installed"
+    [ -e "$FLOOR" ]
+    run molt_sudo_remove "$FLOOR"
+    assert_success
+    [ ! -e "$FLOOR" ]
 }

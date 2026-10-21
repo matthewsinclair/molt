@@ -1150,12 +1150,50 @@ MOLT_CLAUDE_HOOK_SET='.hooks.UserPromptSubmit = ([.hooks.UserPromptSubmit[]? | s
 
 # Where Claude Code reads its managed settings, which nothing a user or an agent
 # writes can override: managed-settings.json, and the drop-ins beside it in
-# managed-settings.d/. Root-owned; nothing in molt writes it.
+# managed-settings.d/. Root-owned; molt writes molt-sysadm.json there through
+# sudo, and its sidecar, and nothing else (ST0006 WP06).
 molt_claude_managed_dir() {
   case "$(molt_platform)" in
     macos) echo "/Library/Application Support/ClaudeCode" ;;
     *)     echo "/etc/claude-code" ;;
   esac
+}
+
+# Puts the bytes of $1 at $2, a root-owned path, mode 644, through sudo: copied
+# first to a temporary file of the user's, so what sudo installs is what was
+# read, then installed with the directory made as needed. Never written any
+# other way: without sudo, or with sudo refusing, nothing is. Fails, printing
+# why.
+molt_sudo_install() {
+  local src="$1" dest="$2" tmp
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $dest was not written"
+    return 1
+  fi
+  if ! tmp="$(mktemp "${TMPDIR:-/tmp}/molt-sudo.XXXXXX")" || ! cp "$src" "$tmp"; then
+    rm -f "${tmp:-}"
+    echo "$src could not be copied to a temporary file, so $dest was not written"
+    return 1
+  fi
+  if ! sudo install -d -m 755 "$(dirname "$dest")" || ! sudo install -m 644 "$tmp" "$dest"; then
+    rm -f "$tmp"
+    echo "sudo could not install $dest"
+    return 1
+  fi
+  rm -f "$tmp"
+}
+
+# Removes the root-owned files $@ through sudo. Fails, printing why, with sudo
+# absent or refusing.
+molt_sudo_remove() {
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $* was not removed"
+    return 1
+  fi
+  if ! sudo rm -f "$@"; then
+    echo "sudo could not remove $*"
+    return 1
+  fi
 }
 
 # --- CLI Commands ---
@@ -1286,7 +1324,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=13
+  local total=14
   local step=0
   local warnings=0
 
@@ -1634,6 +1672,27 @@ cmd_doctor() {
         echo "         unknown. Not reporting ok: that would assert something unmeasured."
         echo "         Install fontconfig if you want this checked." ;;
     esac
+  fi
+
+  # 14. The managed floor (ST0006 WP06): on a sleeve with a sysadm agent, its
+  # denies are in Claude Code's managed drop-in, where the agent cannot edit
+  # them; on one without, no floor molt wrote is left behind.
+  step=$((step + 1))
+  local floor_faults floor_fault
+  floor_faults="$(molt_agent_floor_faults)"
+  if [[ -z "$floor_faults" ]]; then
+    case "$(molt_agent_floor_state)" in
+      current) floor_fault="in place: $(molt_tilde "$(molt_agent_floor_target)")" ;;
+      unowned) floor_fault="none needed; $(molt_tilde "$(molt_agent_floor_target)") is not molt's, and is left" ;;
+      *)       floor_fault="none needed, and none of molt's here" ;;
+    esac
+    echo "[$step/$total] Checking managed floor... ✓ $floor_fault"
+  else
+    echo "[$step/$total] Checking managed floor... ⚠"
+    while IFS= read -r floor_fault; do
+      echo "         $floor_fault"
+    done <<< "$floor_faults"
+    warnings=$((warnings + 1))
   fi
 
   echo ""

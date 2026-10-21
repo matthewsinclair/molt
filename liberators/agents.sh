@@ -169,7 +169,53 @@ _agents_report_faults() {
     [[ -n "$name" ]] || continue
     molt_report_faults "$log" "$prefix" "$name" "$(molt_agent_faults "$name" "$role")" || ok=1
   done <<< "$agents"
+  molt_report_faults "$log" "$prefix" "managed floor" "$(molt_agent_floor_faults)" || ok=1
   return $ok
+}
+
+# Puts this sleeve's managed floor right: installs floor.json's bytes as the
+# drop-in, its sidecar first, so a drop-in beside molt's sidecar is always one
+# molt wrote, where a sysadm agent has a home and the floor is missing or
+# stale; removes molt's drop-in, then its sidecar, where none has; and leaves,
+# naming it, a drop-in molt did not write.
+_agents_floor() {
+  local state target src sidecar why
+  target="$(molt_agent_floor_target)"
+  if ! state="$(molt_agent_floor_state)"; then
+    why="$(molt_agent_floor_fault)"
+    molt_error "agents: managed floor: ${why:-the [[agent]] entries in molt.toml could not be read}, so nothing was written"
+    return 1
+  fi
+  case "$state" in
+    current | absent) return 0 ;;
+    foreign)
+      molt_error "agents: managed floor: $(molt_tilde "$target") was not written by molt, which leaves it, so the floor is not in place"
+      return 1 ;;
+    unowned)
+      molt_warn "agents: managed floor: $(molt_tilde "$target") was not written by molt, which leaves it"
+      return 0 ;;
+    leftover)
+      if ! why="$(molt_sudo_remove "$target" "${target}.molt-rendered")"; then
+        molt_error "agents: managed floor: $why"
+        return 1
+      fi
+      molt_info "Removed the managed floor: $(molt_tilde "$target")"
+      return 0 ;;
+  esac
+  src="$(molt_agent_floor_source)" || return 1
+  if ! sidecar="$(mktemp "${TMPDIR:-/tmp}/molt-floor.XXXXXX")"; then
+    molt_error "agents: managed floor: no temporary file could be made for its sidecar, so nothing was written"
+    return 1
+  fi
+  if ! { echo "rendered $(date -Iseconds) from $src" && echo "digest $(molt_hash < "$src")"; } > "$sidecar" \
+      || ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
+      || ! why="$(molt_sudo_install "$src" "$target")"; then
+    rm -f "$sidecar"
+    molt_error "agents: managed floor: ${why:-its sidecar could not be written}"
+    return 1
+  fi
+  rm -f "$sidecar"
+  molt_info "Rendered: $src -> $target"
 }
 
 agents_check() {
@@ -189,10 +235,16 @@ agents_install() {
     molt_error "agents: $fault"
     return 1
   fi
+  # Nor any home a sysadm agent's floor cannot follow.
+  if molt_agent_floor_wanted && fault="$(molt_agent_floor_fault)" && [[ -n "$fault" ]]; then
+    molt_error "agents: managed floor: $fault, so nothing was written"
+    return 1
+  fi
   while IFS=$'\t' read -r name role; do
     [[ -n "$name" ]] || continue
     _agents_render "$name" "$role" || failed=1
   done <<< "$agents"
+  _agents_floor || failed=1
   if [[ $failed -ne 0 ]]; then
     return 1
   fi
