@@ -1,15 +1,15 @@
 ---
 node: cc
-name: molt-cc
-role: cc
+name: Control Claude
+role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 04:54Z
+heartbeat_at: 2026-10-21 05:03Z
 status: active
-focus: "ST0006 WP01 (then WP02) for vc: worktree ~/Devel/scratch/molt-cc/st0006-wp01, branch st0006-wp01"
+focus: "ST0006 WP01 (then WP02) for vc: worktree ~/Devel/prj/Molt-wt/st0006-wp01, branch st0006-wp01"
 claims: [ST0006/01, ST0006/02]
 ---
 
-# molt-cc (cc)
+# Control Claude (cc)
 
 ## DOING
 
