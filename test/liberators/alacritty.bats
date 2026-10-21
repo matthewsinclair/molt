@@ -92,6 +92,19 @@ _alac_template() {
     assert_failure
 }
 
+# The install ignored molt_install_config's return, so a render that failed
+# still ended on "Liberator complete" and resleeve showed alacritty installed
+# (issue 0019).
+@test "alacritty_install fails when its config render fails" {
+    _alac_env
+    _alac_template
+    molt_render() { molt_error "render refused: $1"; return 1; }
+
+    run alacritty_install
+    assert_failure
+    refute_output_contains "Liberator complete"
+}
+
 # --- Linked form ---
 
 @test "alacritty_check passes a healthy link and flags a dangling one" {

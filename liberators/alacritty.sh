@@ -90,7 +90,7 @@ alacritty_install() {
     # filename: renaming the config to .tmpl made it vanish rather than render.
     # That is why MOLT_FONT_FAMILY and MOLT_FONT_SIZE are declared in every
     # instance's vars.sh and read by nothing.
-    molt_install_config "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+    molt_install_config "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml" || return 1
   fi
 
   # On Linux/GNOME, add Alacritty to dock favorites if not already there

@@ -105,7 +105,10 @@ ssh_install() {
   # Install config from user repo (template or static)
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
-  molt_install_config "config/ssh/config" "$HOME/.ssh/config"
+  # A refused render stops the install here. The append and the re-stamp below
+  # would otherwise record the inputs that failed as installed, and ssh_check
+  # would pass on every later run.
+  molt_install_config "config/ssh/config" "$HOME/.ssh/config" || return 1
 
   # THE RENDER AND THE APPEND MUST STAY IN THIS FUNCTION, IN THIS ORDER.
   # molt_render preserves only the region ABOVE @@MOLT:BEGIN@@; fragments are

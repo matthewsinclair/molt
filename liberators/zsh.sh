@@ -168,7 +168,7 @@ zsh_install() {
   molt_link "$user_repo/config/zsh/zshenv" "$HOME/.zshenv" || return 1
   molt_link "$user_repo/config/zsh/zprofile" "$HOME/.zprofile" || return 1
 
-  molt_install_config "config/starship/starship.toml" "$HOME/.config/starship.toml"
+  molt_install_config "config/starship/starship.toml" "$HOME/.config/starship.toml" || return 1
 
   # Generate iTerm2 SSH colors from instance config (cross-instance aggregation)
   _zsh_generate_iterm2_ssh_colors "$HOME/.config/molt/iterm2-ssh-colors.sh"
