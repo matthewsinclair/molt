@@ -1,0 +1,15 @@
+{
+  "id": "01M5H5BYS10PAR1CJTNY2K8RZT",
+  "ts": "2026-10-22T06:39:24.449Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Issue 0033 commit (staged in ~/Devel/prj/Molt-wt/issue-0033, accepted by vc): released by vc's 'pushed' notice for the dc inbox view and vc's clear; then stash, merge main, stash pop, git checkout main -- intent if the hook rewrote it, commit with the gate on. Then 0034 (keys.sh sudo make install, systemctl, keyd reload unchecked), same shape."
+  }
+}

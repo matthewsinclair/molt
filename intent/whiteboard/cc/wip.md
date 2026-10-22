@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 06:16Z
+heartbeat_at: 2026-10-22 06:27Z
 status: active
-focus: "WP06 handed to vc at 1720f99; waiting on merge"
-claims: [ST0006/06]
+focus: "Issue 0033 (sudo helpers in keys.sh, tiling.sh) on issue-0033"
+claims: [ISSUE:0033]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- WP06 handed to vc at st0006-wp06 1720f99 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): both-bash suite passing, critic-shell fixed, mutation pass all killed; AT068-AT073. dc has the guide facts. Waiting on vc's merge; then remove the worktree and branch, record ATs from main when vc says. Rollout kovacs only (hv, 22 Oct). (edited)
+- Issue 0033 on branch issue-0033 (worktree ~/Devel/prj/Molt-wt/issue-0033, off main 02f51a2): keys.sh and tiling.sh to molt_sudo_install/molt_sudo_remove
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Issue 0033 (low, vc 22 Oct): keys.sh:73 and tiling.sh:80/85 use raw sudo cp/rm where molt_sudo_install/molt_sudo_remove exist; keyd make install, systemctl and keyd reload stay. Released when vc says the WP06 merge is pushed to main; then branch issue-0033 at ~/Devel/prj/Molt-wt/issue-0033 off main.
+- Issue 0033 commit (staged in ~/Devel/prj/Molt-wt/issue-0033, accepted by vc): released by vc's 'pushed' notice for the dc inbox view and vc's clear; then stash, merge main, stash pop, git checkout main -- intent if the hook rewrote it, commit with the gate on. Then 0034 (keys.sh sudo make install, systemctl, keyd reload unchecked), same shape.
 
 ## Watch-outs
 

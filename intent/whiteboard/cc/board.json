@@ -5,11 +5,11 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-22T06:16:54.324Z",
+    "heartbeat_at": "2026-10-22T06:27:44.444Z",
     "status": "active",
-    "focus": "WP06 handed to vc at 1720f99; waiting on merge",
+    "focus": "Issue 0033 (sudo helpers in keys.sh, tiling.sh) on issue-0033",
     "claims": [
-      "ST0006/06"
+      "ISSUE:0033"
     ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -219,7 +219,8 @@
       "kind": "doing",
       "seq": 7,
       "text": "WP06 handed to vc at st0006-wp06 1720f99 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): both-bash suite passing, critic-shell fixed, mutation pass all killed; AT068-AT073. dc has the guide facts. Waiting on vc's merge; then remove the worktree and branch, record ATs from main when vc says. Rollout kovacs only (hv, 22 Oct).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T06:27:44.316Z",
       "recorded_at": "2026-10-21T20:08:46.607Z",
       "edited_at": "2026-10-22T06:16:54.237Z"
     },
@@ -228,8 +229,25 @@
       "kind": "hold",
       "seq": 9,
       "text": "Issue 0033 (low, vc 22 Oct): keys.sh:73 and tiling.sh:80/85 use raw sudo cp/rm where molt_sudo_install/molt_sudo_remove exist; keyd make install, systemctl and keyd reload stay. Released when vc says the WP06 merge is pushed to main; then branch issue-0033 at ~/Devel/prj/Molt-wt/issue-0033 off main.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T06:27:44.283Z",
       "recorded_at": "2026-10-22T06:20:05.082Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 8,
+      "text": "Issue 0033 on branch issue-0033 (worktree ~/Devel/prj/Molt-wt/issue-0033, off main 02f51a2): keys.sh and tiling.sh to molt_sudo_install/molt_sudo_remove",
+      "state": "live",
+      "recorded_at": "2026-10-22T06:27:44.412Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 10,
+      "text": "Issue 0033 commit (staged in ~/Devel/prj/Molt-wt/issue-0033, accepted by vc): released by vc's 'pushed' notice for the dc inbox view and vc's clear; then stash, merge main, stash pop, git checkout main -- intent if the hook rewrote it, commit with the gate on. Then 0034 (keys.sh sudo make install, systemctl, keyd reload unchecked), same shape.",
+      "state": "live",
+      "recorded_at": "2026-10-22T06:39:24.449Z"
     }
   ],
   "messages": [
