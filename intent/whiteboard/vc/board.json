@@ -432,25 +432,27 @@
       "node": "vc",
       "kind": "watchout",
       "seq": 18,
-      "text": "**An inbound ask is stored in the RECIPIENT's board.json, which is canon, and only the recipient commits it.** The sender's wb ask re-renders the recipient's inbox view and the sender commits that view with its event, but the message itself lands in <recipient>/board.json, which stays uncommitted on main until the recipient commits its own paths. Until then every fresh worktree (every builder's gate) fails doctor with view skew on that inbox: the committed view shows a message the committed canon cannot render. Found 22 Oct 18:00Z local when cc's 0015 gate refused on vc/inbox.cc.md (12018 on disk, 7254 rendered). Rule: whenever you commit anything, include your own board.json; and after a peer's ask or your own clear, commit board.json at once. A fresh detached worktree and a read-only intent doctor reproduce the gate's view.",
+      "text": "**A whiteboard message lives in its SENDER's board.json (board@4.0, Intent 0612, live 22 Oct 19:08Z, Molt 2805f6a); the recipient's board.json carries only handled marks; inbox views render from the sender's canon and show no (handled).** Commit exactly what your verb prints on its `wrote:` lines, at once; a `re-rendered:` line names another node's file, leave it. The lesson that outlives the old shape: a view committed without the canon that renders it fails every peer's fresh-worktree gate with view skew (seen 22 Oct 18:00Z local on vc/inbox.cc.md under board@3.0, where the message landed in the RECIPIENT's board.json). A fresh detached worktree and a read-only intent doctor reproduce the gate's view.",
       "state": "live",
-      "recorded_at": "2026-10-22T13:57:39.412Z"
+      "recorded_at": "2026-10-22T13:57:39.412Z",
+      "edited_at": "2026-10-22T19:11:49.720Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 18,
-      "text": "Intent 0612 (high, ruled 22 Oct at e248aafd9 on vc's no-objection under hv's pen) landed on Intent main at 521f81ca2 (intent-vc via dc, 22 Oct 18:36Z) but is NOT live in Molt yet: it arrives with Intent's next `bin/devbin build all`, after 0610 and 0609 land, and intent-vc messages every estate's vc just before that build. Shape: an inbound message moves to the SENDER's board.json, the recipient keeps only handled marks, the inbox view renders from the sender's canon, no (handled) in inbox views (board@4.0). After the build, Molt's next board write (any wb verb, pickup included) re-renders every board.json and inbox view; vc makes that ONE mechanical commit as coordinating node, outside the one-writer rule, and from then on each node commits what its verbs print on their `wrote:` lines. Watch-out 18's rule stands until the build. Also filed from Molt's reports: Intent 0613 (broken-pipe panic, low), 0614 (worktree hooks sync an older store, medium, unreproduced), 0615 (stale doc comment on the settings merge, low); no lane yet.",
+      "text": "Intent 0612 SHIPPED 22 Oct 19:08Z (intent 3.2.4 dcd9057d4); Molt re-rendered to board@4.0 in 2805f6a, checked field for field against the old boards. The commit rule is now: each node commits exactly what its verbs print on `wrote:` lines (own board.json and wip.md, the inbox views its asks render, its events); a `re-rendered:` line is another node's, leave it. Still open: hv to confirm or overrule 0612's ruling, which intent-vc recorded on vc's no-objection under hv's pen; and Intent 0613 (broken-pipe panic, low), 0614 (worktree hooks sync an older store, medium, unreproduced), 0615 (stale doc comment on the settings merge, low), no lane yet.",
       "state": "live",
       "recorded_at": "2026-10-22T17:06:29.056Z",
-      "edited_at": "2026-10-22T18:35:33.135Z"
+      "edited_at": "2026-10-22T19:11:49.458Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 19,
       "text": "**On intent-vc's END (Intent rebuild carrying 0612, announced 18:53Z for about 19:13Z):** run `intent wb pickup --node vc` from the CLI, not the session's intent mcp (the running server keeps the old code and refuses the migrated store; reconnect with /mcp after); that first verb re-renders every board.json and inbox view into board@4.0 and migrates the store to schema 32. Commit the whole re-render as ONE mechanical commit (every board, every inbox view, the events it writes), push, then tell cc, dc and ac they may run wb verbs again. From then on each node commits exactly what its verbs print on `wrote:` lines; a `re-rendered:` line is another node's. Peers were told at 18:53Z to run no wb verb from START until that commit. If hv's quit lands first, this runs on vc's bounce, before any peer's pickup: ask hv to launch vc first.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T19:11:49.841Z",
       "recorded_at": "2026-10-22T18:53:01.323Z"
     }
   ],

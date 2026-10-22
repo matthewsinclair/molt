@@ -1,0 +1,16 @@
+{
+  "id": "01M5JGDNYR9VX9KG96DV0Q3XBS",
+  "ts": "2026-10-22T19:11:49.720Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 18,
+    "text": "**A whiteboard message lives in its SENDER's board.json (board@4.0, Intent 0612, live 22 Oct 19:08Z, Molt 2805f6a); the recipient's board.json carries only handled marks; inbox views render from the sender's canon and show no (handled).** Commit exactly what your verb prints on its `wrote:` lines, at once; a `re-rendered:` line names another node's file, leave it. The lesson that outlives the old shape: a view committed without the canon that renders it fails every peer's fresh-worktree gate with view skew (seen 22 Oct 18:00Z local on vc/inbox.cc.md under board@3.0, where the message landed in the RECIPIENT's board.json). A fresh detached worktree and a read-only intent doctor reproduce the gate's view."
+  }
+}
