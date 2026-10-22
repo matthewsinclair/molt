@@ -1,0 +1,16 @@
+{
+  "id": "01M5H0D78P5SQARC7Q64QT8DYE",
+  "ts": "2026-10-22T05:12:43.030Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 11,
+    "text": "ST0006/06 AC021: guide draft on Molt branch wp06-guide at 0be162b (worktree Molt-wt/wp06-guide; hv's scope, sysadm plus MOLT_CLAUDE_CONFIG_DIR, applied), waiting on cc's st0006-wp06 head for the sidecar name, agent config output and doctor check 14 lines; Molt-matts st0006-wp06 at 1421034 ready for vc"
+  }
+}
