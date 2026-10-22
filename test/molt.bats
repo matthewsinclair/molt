@@ -407,6 +407,96 @@ TOML
     refute_output_contains "restarting on the new code"
 }
 
+# --- A pull that fails (issue 0015) ---
+
+# A framework clone and a user config clone in the test directory, each
+# pulling from an origin beside it, and one liberator whose upgrade hook says
+# it ran. A pull is made to fail by removing its origin: git's own failure,
+# with no network involved.
+_pull_sleeve() {
+    ORIGIN="$BATS_TEST_TMPDIR/origin" FW="$BATS_TEST_TMPDIR/fw" CFG="$BATS_TEST_TMPDIR/cfg"
+    CFG_ORIGIN="$BATS_TEST_TMPDIR/cfg-origin"
+    USER_REPO="$CFG/Molt-$(whoami)"
+    G=(git -c user.name=test -c user.email=test@example.com)
+    mkdir -p "$ORIGIN/liberators" "$CFG_ORIGIN/config" "$CFG"
+    cp -R "$MOLT_ROOT/bin" "$MOLT_ROOT/lib" "$MOLT_ROOT/VERSION" "$ORIGIN/"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { echo "zzz upgraded"; }\n' > "$ORIGIN/liberators/zzz.sh"
+    : > "$CFG_ORIGIN/config/.keep"
+    local r
+    for r in "$ORIGIN" "$CFG_ORIGIN"; do
+        "${G[@]}" -C "$r" init -q
+        "${G[@]}" -C "$r" add -A
+        "${G[@]}" -C "$r" commit -qm init
+    done
+    git clone -q "$ORIGIN" "$FW"
+    git clone -q "$CFG_ORIGIN" "$USER_REPO"
+}
+
+# molt upgrade, run from the framework clone, with $@.
+_pull_upgrade() {
+    run env -u MOLT_PRJ_DIR -u MOLT_LIBERATORS_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$CFG" \
+        "$FW/bin/molt" upgrade "$@"
+}
+
+@test "a repo with no upstream is the one pull molt upgrade skips: it warns, and the run goes on to Sleeve ready" {
+    _pull_sleeve
+    git -C "$USER_REPO" branch -q --unset-upstream
+    _pull_upgrade
+    assert_success
+    assert_output_contains "User config pull skipped: $USER_REPO has no upstream branch"
+    assert_output_contains "zzz upgraded"
+    assert_output_contains "Sleeve ready"
+}
+
+@test "a pull that fails is an error naming the repo and git's reason; the liberators still run, and the upgrade ends non-zero without Sleeve ready" {
+    _pull_sleeve
+    rm -rf "$ORIGIN"
+    _pull_upgrade
+    assert_failure
+    assert_output_contains "Framework pull failed in $FW:"
+    assert_output_contains "$ORIGIN"
+    refute_output_contains "pull skipped"
+    assert_output_contains "Pulling user config repo"
+    assert_output_contains "zzz upgraded"
+    assert_output_contains "Running resleeve"
+    assert_output_contains "Upgrade incomplete: the pull failed for the framework repo ($FW)"
+    refute_output_contains "Sleeve ready"
+
+    _pull_upgrade --self
+    [ "$status" -eq 1 ]
+    assert_output_contains "Framework pull failed in $FW:"
+}
+
+# git rev-parse @{upstream} fails for an upstream that is configured and gone,
+# as for none, but only none is a skip.
+@test "a pull from a configured upstream that is gone fails the upgrade; it is not a repo with no upstream" {
+    _pull_sleeve
+    git -C "$USER_REPO" config "branch.$(git -C "$USER_REPO" branch --show-current).merge" refs/heads/gone
+    _pull_upgrade
+    assert_failure
+    assert_output_contains "User config pull failed in $USER_REPO:"
+    assert_output_contains "gone"
+    refute_output_contains "User config pull skipped"
+    refute_output_contains "Sleeve ready"
+}
+
+# A pull that moved the framework restarts the upgrade in a new process
+# (issue 0023); a pull that failed before it must still fail the run.
+@test "a failed pull is carried through the restart a framework pull makes" {
+    _pull_sleeve
+    echo "# pulled" >> "$ORIGIN/VERSION.note"
+    "${G[@]}" -C "$ORIGIN" add -A
+    "${G[@]}" -C "$ORIGIN" commit -qm new
+    rm -rf "$CFG_ORIGIN"
+    _pull_upgrade
+    assert_failure
+    assert_output_contains "restarting on the new code"
+    assert_output_contains "User config pull failed in $USER_REPO:"
+    assert_output_contains "zzz upgraded"
+    assert_output_contains "Upgrade incomplete: the pull failed for the user config repo ($USER_REPO)"
+    refute_output_contains "Sleeve ready"
+}
+
 @test "molt upgrade refuses --self with --no-pull" {
     run_molt upgrade --self --no-pull
     assert_failure
@@ -452,6 +542,13 @@ _no_user_repo() {
     assert_output_contains "Searched:"
     assert_output_contains "  $BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
     assert_output_contains "Cannot resleeve without a user config repo."
+}
+
+@test "molt_find_user_repo leaves a caller's path as it was" {
+    _no_user_repo
+    local path=keep
+    molt_find_user_repo >/dev/null 2>&1 || true
+    [ "$path" = keep ]
 }
 
 @test "a caller that discards the lookup's stderr reads no repo, not the error's text" {
