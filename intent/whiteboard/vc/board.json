@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T07:41:06.566Z",
-    "status": "paused",
-    "focus": "22 Oct: ST0006 WP06 DONE (floor on kovacs, AC020 evidence); ST0006 open on WP04 (rhadamanth on hv's date, gyges later); 0032 (kovacs sandbox) for hv; 0033/0034 closed; estate renames done, Gtools side with the estate Claudes.",
+    "heartbeat_at": "2026-10-22T10:53:49.497Z",
+    "status": "active",
+    "focus": "22 Oct pm: ST0006 WP06 done; WP04 rhadamanth on hv's date (runbook carries the floor at B5); issue 0032 ruled (Molt-managed AppArmor profile), cc building on issue-0032, dc docs after; estate renames done; 0022/0015/0016/0018 as before.",
     "claims": [
       "ST0005",
       "ST0006"
@@ -393,10 +393,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 15,
-      "text": "Credentials fence: ops/docs sandbox.credentials denies live on Molt-matts 45e344c, tested on rhadamanth (Seatbelt). The Linux (bubblewrap) table is blocked by issue 0032: Claude Code's sandbox cannot start on kovacs (bwrap-userns-restrict denies capabilities to bwrap's children; kovacs-sysadm's read-only diagnosis in the issue). hv rules on the option; build on WP06's sudo helpers; then dc's kovacs-creds.sh A and B, then the guide's 'still owed' sentence goes.",
+      "text": "Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; spec in the issue; cc builds on issue-0032 (two open points: the AppArmor grammar for all-but-one capability, and which tool confirms a loaded profile; kovacs-sysadm asked for the distro file and tool versions). Then vc's scratch merge, dc's guide section and the owed sentence, hv's molt upgrade on kovacs at the sudo prompt, dc's kovacs-creds.sh A and B for the bubblewrap table, close on that evidence.",
       "state": "live",
       "recorded_at": "2026-10-21T15:22:26.678Z",
-      "edited_at": "2026-10-21T20:04:19.828Z"
+      "edited_at": "2026-10-22T10:53:49.396Z"
     },
     {
       "node": "vc",

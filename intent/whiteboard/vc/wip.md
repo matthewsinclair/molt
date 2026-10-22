@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-22 07:41Z
-status: paused
-focus: "22 Oct: ST0006 WP06 DONE (floor on kovacs, AC020 evidence); ST0006 open on WP04 (rhadamanth on hv's date, gyges later); 0032 (kovacs sandbox) for hv; 0033/0034 closed; estate renames done, Gtools side with the estate Claudes."
+heartbeat_at: 2026-10-22 10:53Z
+status: active
+focus: "22 Oct pm: ST0006 WP06 done; WP04 rhadamanth on hv's date (runbook carries the floor at B5); issue 0032 ruled (Molt-managed AppArmor profile), cc building on issue-0032, dc docs after; estate renames done; 0022/0015/0016/0018 as before."
 claims: [ST0005, ST0006]
 ---
 
@@ -24,7 +24,7 @@ _(none)_
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
 - WP04 kovacs DONE 21 Oct ~23:50: phases A-C, c4 PASS, AC008 satisfied by evidence, kovacs-sysadm folded (session 1c7fdc09); ~/.npm gone, cache in ~/.cache/npm (issue 0031). WP04 started (WIP): rhadamanth's move is next when hv schedules it (runbook section 'rhadamanth', same three phases; B9 from a post-move shell; hv removes ~/.npm done already); gyges later (hv). hv to rule whether WP04 closes after rhadamanth with gyges carried as a todo. (edited)
-- Credentials fence: ops/docs sandbox.credentials denies live on Molt-matts 45e344c, tested on rhadamanth (Seatbelt). The Linux (bubblewrap) table is blocked by issue 0032: Claude Code's sandbox cannot start on kovacs (bwrap-userns-restrict denies capabilities to bwrap's children; kovacs-sysadm's read-only diagnosis in the issue). hv rules on the option; build on WP06's sudo helpers; then dc's kovacs-creds.sh A and B, then the guide's 'still owed' sentence goes. (edited)
+- Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; spec in the issue; cc builds on issue-0032 (two open points: the AppArmor grammar for all-but-one capability, and which tool confirms a loaded profile; kovacs-sysadm asked for the distro file and tool versions). Then vc's scratch merge, dc's guide section and the owed sentence, hv's molt upgrade on kovacs at the sudo prompt, dc's kovacs-creds.sh A and B for the bubblewrap table, close on that evidence. (edited)
 
 ## Holds
 

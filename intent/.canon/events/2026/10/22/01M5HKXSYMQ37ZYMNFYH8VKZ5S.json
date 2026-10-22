@@ -1,0 +1,16 @@
+{
+  "id": "01M5HKXSYMQ37ZYMNFYH8VKZ5S",
+  "ts": "2026-10-22T10:53:49.396Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; spec in the issue; cc builds on issue-0032 (two open points: the AppArmor grammar for all-but-one capability, and which tool confirms a loaded profile; kovacs-sysadm asked for the distro file and tool versions). Then vc's scratch merge, dc's guide section and the owed sentence, hv's molt upgrade on kovacs at the sudo prompt, dc's kovacs-creds.sh A and B for the bubblewrap table, close on that evidence."
+  }
+}
