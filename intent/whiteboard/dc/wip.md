@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 12:18Z
+heartbeat_at: 2026-10-22 12:35Z
 status: active
-focus: "22 Oct: 0032 guide at cf0d453, vc-read; only BWRAP-RESULT, waits on hv's kovacs run; 0022 held"
+focus: "22 Oct: 0032 guide complete at 8877401, with vc to land; 0022 held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ISSUE:0032 guide on Molt branch issue-0032-guide at cf0d453 (worktree Molt-wt/issue-0032-guide): vc read it against the code, his two changes applied (no-orig fix via the package's copy then molt upgrade; kept orig predates a later package update). Only <BWRAP-RESULT> left: waits on hv's molt upgrade on kovacs, then hv runs ~/kovacs-creds.sh A, B, clean (edited)
+- ISSUE:0032 guide complete on Molt branch issue-0032-guide at 8877401 (worktree Molt-wt/issue-0032-guide): BWRAP-RESULT filled from hv's kovacs runs A/B (22 Oct). Open: sandbox handling of ~/.ssh/id_* and ~/.aws/credentials under bwrap untested, the floor refuses them first; a rerun with paths outside the floor's patterns is vc/hv's call. Waits on vc to land (edited)
 
 ## TODO
 
