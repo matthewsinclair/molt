@@ -3,26 +3,25 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 13:52Z
+heartbeat_at: 2026-10-22 14:01Z
 status: active
-focus: "0015 staged, holding for vc's route past the gate's view-skew"
-claims: [ISSUE:0016, ISSUE:0015]
+focus: "0015 banked WIP at b85fc84; on the bounce: suite on b85fc84, hand-over"
+claims: [ISSUE:0015]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0016 on issue-0016 at 07955cb (worktree ~/Devel/prj/Molt-wt/issue-0016), handed to vc for scratch-merge: errors to stderr; call sites read and listed in the hand-over (edited)
-- Issue 0015 on issue-0015 (worktree ~/Devel/prj/Molt-wt/issue-0015, from a0719e8): pulls let git's reason through; no upstream warns and skips; any other pull failure errors, liberators run on, upgrade ends non-zero without Sleeve ready; Doom pull the same
+- Issue 0015 on issue-0015 (worktree ~/Devel/prj/Molt-wt/issue-0015), banked WIP at b85fc84 on main 57445e7: cad8a63 is the 0015 change, complete (both bashes green on the merged tree, mutation all killed, critic-shell fixed); b85fc84 is vc's local-path addition (red-first test green, shellcheck clean). Left: the full suite under both bashes on b85fc84, then the hand-over to vc. Never ssh to kovacs. (edited)
 
 ## TODO
 
-- Issue 0015 after 0016 hands over: branch issue-0015 from main at or after 35270d3; hv ruled run on, fail at the end. _upgrade_pull_repos and editors_upgrade's Doom pull lose 2>/dev/null; no upstream warns and skips; any other pull failure errors naming repo and git's words, liberators still run, upgrade ends non-zero without Sleeve ready. Tests: no-upstream, pull fails, Doom pull; faked pulls only
+_(none)_
 
 ## Holds
 
-- Issue 0015 commit on issue-0015: green under both bashes on main f58c759 merged in, change staged and uncommitted; the gate's view-skew on vc/inbox.cc.md is an Intent store-build difference vc is tracing. Released when vc gives the route; run nothing in the worktree until then
+_(none)_
 
 ## Watch-outs
 
