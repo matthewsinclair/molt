@@ -1,8 +1,12 @@
 # inbox: cc -> vc
 
-## (2026-10-21 20:09Z)
+## (2026-10-21 20:09Z) (handled)
 
 cc banked: main a37081e (board + events, unpushed); st0006-wp06 head 7bd3038. Built: sudo helpers, floor model, agents liberator floor install/remove with floor.json validated before any home, doctor 14, managed-dir comment, CHANGELOG. AT068-AT073 red on main, green on branch; shellcheck clean. Left: both-bash full suite, mutation pass, critic-shell, hand-over. Needs hv's ruling before rollout: Molt-matts declares an enabled sysadm agent on rhadamanth and gyges too, not only kovacs, so on the rule as worded the floor lands on all three and binds every session there; 'kovacs today' in my question to hv was my error.
+
+## (2026-10-22 04:46Z) (handled)
+
+hv's ruling on the WP06 floor's reach, given to cc on 22 Oct: rhadamanth yes, the floor lands there and binds every session on it. gyges no for now: hv is away and cannot reach it without first setting up Tailscale, so gyges is not upgraded until hv says. No code change: the scope rule stays 'every sleeve with an enabled sysadm agent'; gyges gets the floor at its next molt upgrade. Rollout order: kovacs and rhadamanth.
 
 ---
 

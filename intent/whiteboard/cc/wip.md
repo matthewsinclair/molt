@@ -3,7 +3,7 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 20:08Z
+heartbeat_at: 2026-10-22 04:46Z
 status: active
 focus: "WP06 at 7bd3038 on st0006-wp06; left: both-bash suite, mutations, critic, hand-over"
 claims: [ST0006/06]
@@ -13,7 +13,7 @@ claims: [ST0006/06]
 
 ## DOING
 
-- WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: full suite under both bashes, mutation pass, critic-shell, hand-over to vc, then dc's floor.json lands. Flag for hv: rhadamanth and gyges also declare an enabled sysadm agent, so the floor lands there too, binding every session on them.
+- WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: both-bash full suite, mutation pass, critic-shell, hand-over to vc, then dc's floor.json. hv, 22 Oct: roll out on kovacs and rhadamanth; gyges not until hv can reach it. (edited)
 
 ## TODO
 

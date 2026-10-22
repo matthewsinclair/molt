@@ -5,7 +5,7 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T20:08:46.668Z",
+    "heartbeat_at": "2026-10-22T04:46:19.291Z",
     "status": "active",
     "focus": "WP06 at 7bd3038 on st0006-wp06; left: both-bash suite, mutations, critic, hand-over",
     "claims": [
@@ -23,7 +23,7 @@
       "state": "archived",
       "archived_at": "2026-10-21T08:46:24.059Z",
       "recorded_at": "2026-10-21T04:54:10.680Z",
-      "edited_at": "2026-10-21T08:19:22.814Z"
+      "edited_at": "2026-10-22T04:46:37.152Z"
     },
     {
       "node": "cc",
@@ -218,9 +218,10 @@
       "node": "cc",
       "kind": "doing",
       "seq": 7,
-      "text": "WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: full suite under both bashes, mutation pass, critic-shell, hand-over to vc, then dc's floor.json lands. Flag for hv: rhadamanth and gyges also declare an enabled sysadm agent, so the floor lands there too, binding every session on them.",
+      "text": "WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: both-bash full suite, mutation pass, critic-shell, hand-over to vc, then dc's floor.json. hv, 22 Oct: roll out on kovacs and rhadamanth; gyges not until hv can reach it.",
       "state": "live",
-      "recorded_at": "2026-10-21T20:08:46.607Z"
+      "recorded_at": "2026-10-21T20:08:46.607Z",
+      "edited_at": "2026-10-22T04:46:37.339Z"
     }
   ],
   "messages": [
