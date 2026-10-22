@@ -179,6 +179,23 @@ TOML
 # FAKE HOMEBREW
 # ============================================================================
 
+# Puts a fake sudo first on PATH: it logs each call to $BATS_TEST_TMPDIR/sudo.log
+# and runs the command it is given, unless FAKE_SUDO_STATUS says otherwise.
+install_fake_sudo() {
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
+#!/usr/bin/env bash
+echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
+[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
+exec "$@"
+FAKE
+    chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+    case ":$PATH:" in
+        *":$BATS_TEST_TMPDIR/bin:"*) ;;
+        *) export PATH="$BATS_TEST_TMPDIR/bin:$PATH" ;;
+    esac
+}
+
 # A Homebrew prefix in the test directory holding one installed formula, and a
 # brew stub first on PATH that answers from it. Nothing reaches the real brew.
 # Usage: fake_brew_formula <name> <version> <command> [<utility>...]

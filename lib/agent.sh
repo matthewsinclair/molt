@@ -378,6 +378,133 @@ molt_agent_currency() {
   fi
 }
 
+# --- The managed floor (WP06) ---
+
+# A sysadm agent cannot be sandboxed, so its home's deny list is a fence it
+# could edit. The floor is the same denies where it cannot reach them: the
+# user repo's config/agents/roles/sysadm/floor.json, its bytes as they are,
+# in Claude Code's managed drop-in, root-owned, beside a sidecar molt writes
+# first. Only a drop-in beside molt's sidecar is ever replaced or removed.
+
+# The floor's source in the user repo. Fails when there is no user repo.
+molt_agent_floor_source() {
+  local role_dir
+  role_dir="$(molt_agent_role_dir sysadm)" || return 1
+  echo "$role_dir/floor.json"
+}
+
+# The floor's drop-in; its sidecar is ${this}.molt-rendered.
+molt_agent_floor_target() {
+  echo "$(molt_claude_managed_dir)/managed-settings.d/molt-sysadm.json"
+}
+
+# True when this sleeve gives a sysadm agent a home and declares
+# MOLT_CLAUDE_CONFIG_DIR, the gate the home guard's hook keeps
+# (molt_agent_guard_hook), so it carries the floor. Fails, with status 2 and
+# printing why, when the [[agent]] entries or vars.sh cannot be read.
+molt_agent_floor_wanted() {
+  local agents declared
+  if ! agents="$(molt_homed_agents)"; then
+    echo "the [[agent]] entries in molt.toml could not be read"
+    return 2
+  fi
+  printf '%s\n' "$agents" | awk -F'\t' '$2 == "sysadm" { found = 1 } END { exit !found }' || return 1
+  if ! declared="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
+    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: $declared"
+    return 2
+  fi
+  [[ -n "$declared" ]]
+}
+
+# Why the floor's source cannot be installed, or nothing when it can: no user
+# repo, no floor.json, or one that is not a single object holding only
+# permissions, holding only deny, a list of strings.
+molt_agent_floor_fault() {
+  local src
+  if ! src="$(molt_agent_floor_source)"; then
+    echo "the user repo cannot be found, so the floor cannot be read"
+  elif [[ ! -f "$src" ]]; then
+    echo "a sysadm agent needs its managed floor, and there is no $(molt_tilde "$src")"
+  elif ! command -v jq &>/dev/null; then
+    echo "jq is not installed, so $(molt_tilde "$src") cannot be read"
+  elif ! jq -se 'length == 1 and (.[0] | type == "object" and keys == ["permissions"]
+      and (.permissions | type == "object" and keys == ["deny"])
+      and (.permissions.deny | type == "array" and all(type == "string")))' "$src" >/dev/null 2>&1; then
+    echo "$(molt_tilde "$src") is not one object holding only permissions.deny, a list of strings"
+  fi
+}
+
+# The state of this sleeve's floor, one word: on a sleeve that carries it,
+# current, missing, stale, or foreign (a drop-in molt did not write, which it
+# leaves, so the floor is not in place); on one that does not, absent, leftover
+# (molt's, to remove), or unowned (somebody else's, left alone). Fails,
+# printing why instead, when the [[agent]] entries or vars.sh cannot be read,
+# or, on a sleeve that carries the floor, its source cannot be installed.
+molt_agent_floor_state() {
+  local target src why wanted=0
+  target="$(molt_agent_floor_target)"
+  why="$(molt_agent_floor_wanted)" || wanted=$?
+  if [[ $wanted -eq 2 ]]; then
+    echo "$why"
+    return 1
+  fi
+  if [[ $wanted -ne 0 ]]; then
+    if [[ -f "${target}.molt-rendered" ]]; then
+      echo leftover
+    elif [[ -e "$target" ]]; then
+      echo unowned
+    else
+      echo absent
+    fi
+    return 0
+  fi
+  why="$(molt_agent_floor_fault)"
+  if [[ -n "$why" ]]; then
+    echo "$why"
+    return 1
+  fi
+  # The fault above names a source that cannot be found.
+  src="$(molt_agent_floor_source)" || return 1
+  if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
+    echo foreign
+    return 0
+  elif [[ ! -e "$target" ]]; then
+    echo missing
+    return 0
+  fi
+  local differ=0
+  cmp -s "$src" "$target" || differ=$?
+  case $differ in
+    0) echo current ;;
+    1) echo stale ;;
+    *)
+      echo "$(molt_tilde "$target") could not be compared with $(molt_tilde "$src")"
+      return 1 ;;
+  esac
+}
+
+# Names, a line each, what stands between this sleeve and the floor it should
+# carry: the source's fault, a floor missing or stale, one molt did not write,
+# or molt's left on a sleeve that no longer carries it. Takes the state
+# molt_agent_floor_state gave as $1 where the caller has it.
+molt_agent_floor_faults() {
+  local state target
+  target="$(molt_tilde "$(molt_agent_floor_target)")"
+  if [[ $# -gt 0 ]]; then
+    state="$1"
+  elif ! state="$(molt_agent_floor_state)"; then
+    echo "$state"
+    return 0
+  fi
+  case "$state" in
+    current | absent | unowned) ;;
+    missing) echo "$target is missing" ;;
+    stale) echo "$target is not $(molt_tilde "$(molt_agent_floor_source)")" ;;
+    foreign) echo "$target was not written by molt, which leaves it" ;;
+    leftover) echo "$target is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR" ;;
+  esac
+}
+
 # --- Permissions ---
 
 # The settings files Claude Code reads permission rules from, for a session in
