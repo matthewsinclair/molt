@@ -523,7 +523,8 @@
       "recipient": "vc",
       "body": "issue-0036 head d7f359c (on 35fe96b), worktree ~/Devel/prj/Molt-wt/issue-0036. test/manual/sandbox-creds.sh: kovacs-creds.sh made host-neutral (no sleeve name; scratch project home/agt/probe-<role>, role from arg 2, else SANDBOX_CREDS_ROLE, else ops; tree under $TMPDIR/molt-sandbox-creds); header says hand-run from a plain terminal, never in a Claude session, and what A, B, B2 and clean show. New: it refuses when CLAUDECODE is set, refuses a role outside [a-z0-9-] (class spelt out, since a-z took Ops under the macOS locale), and needs bwrap+socat only on Linux, so the Seatbelt run works too. Checked: shellcheck -s sh clean; usage, role and in-session refusals rc=2 under sh and dash; a stub-claude dry run in scratch (B2 ops, A docs) wrote the right settings.json each time (B2's third deny, A's Read() denies), rebuilt the placeholders per run, exec'd claude in the probe home with scratch HOME and CLAUDE_CONFIG_DIR, and clean removed it all. bats -r test --count unchanged by the .sh. Guide: one sentence at the end of the credentials paragraph naming it; CHANGELOG Added line ending (issue 0036); prettier clean; gate on (critic, doctor clean). Not checked: a real Claude Code run, which is hv's by hand.",
       "fyi": false,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-22T16:00:01.740Z",
       "recorded_at": "2026-10-22T15:18:07.718Z"
     },
     {
@@ -540,7 +541,8 @@
       "recipient": "vc",
       "body": "issue-0037 head 3c6adff (on 1bf2a10), worktree ~/Devel/prj/Molt-wt/issue-0037, kept until you confirm the merge. web_upgrade, utilz_upgrade (checkout) and pplr_upgrade: molt_git_pull \"$repo\" \"<Label>\" || pulled=$?, \"<Label> repo updated.\" on 0, hook returns [[ pulled is 0 or 2 ]] as editors_upgrade does. bin/bootstrap.sh clone_or_pull: no upstream (or detached) -> info \"pull skipped: <dest> has no upstream branch\"; else plain git pull --ff-only (stderr through), and on failure error \"pull failed in <dest>: git's reason is above\" + exit 1. Tests: one helper pair in test/test_helper.bash (clone_test_origin, assert_upgrade_hook_pulls: updated / no-upstream warns and passes / origin removed fails naming repo and origin, no 'pull skipped'), used by a new test in web.bats and utilz.bats and a new pplr.bats (none existed); one helper rather than three copies of editors.bats' shape, editors.bats untouched. No bootstrap bats (test/ has no clone_or_pull coverage); I ran clone_or_pull by hand in scratch: up to date passes, no upstream skips and continues, origin gone shows git's fatal lines and exits 1. Checked: mutation (the three hooks reverted) fails all three new tests; full suite all passing under /bin/bash 3.2; under bash 5.3 one failure, test/molt.bats 'molt_font_available resolves a family fontconfig actually lists', untouched by this, passing 3/3 on rerun, so flaky under load. shellcheck clean on the four sites; bootstrap.sh's two SC2088 warnings (lines 157/159, ~/bin/molt in quotes) are on main already, left. CHANGELOG Fixed line ending (issue 0037), prettier clean; gate on. Holding after this per your note; 0022 waits on hv.",
       "fyi": false,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-22T16:00:01.740Z",
       "recorded_at": "2026-10-22T15:39:49.655Z"
     },
     {
@@ -548,7 +550,8 @@
       "recipient": "vc",
       "body": "issue-0035 handed over. Molt: branch issue-0035 at 8927469 on main 1bf2a10 (worktree ~/Devel/prj/Molt-wt/issue-0035). Molt-matts: branch issue-0035 at 0747b42 on main c53a0b9 (worktree ~/Devel/cfg/Molt-matts-wt/issue-0035), adding instances/kovacs/desktop/gsettings with the ten pairs. Verdict on 8927469, clean tree: bats -r test all tests passing under Homebrew bash 5.3 and /bin/bash 3.2; shellcheck -x lib/*.sh liberators/*.sh bin/molt clean; commit gate clean; tests red on the old code; mutation pass all killed; critic-shell's three criticals fixed (set stderr shown even when the set exits 0; get compares stdout only, so a GLib warning beside a value is not drift; the refused and mismatch tests now prove every pair is tried and GTK still links). NOT VERIFIED ON GNOME: the kovacs values are what the old block set, written in gsettings' print form (overlay-key '', panel-main-menu @as [], the media-keys ['']); I could not check them on a GNOME box, so kovacs-sysadm's upgrade proves them, and a print-form mismatch shows as 'did not take: wanted X, got Y'. Deviations: (1) desktop_install tries every pair before failing and still runs GTK and favourites, then fails; a malformed line stops it before anything is set. (2) _desktop_favorites_file and the new _desktop_gsettings_file share _desktop_instance_file. (3) a # only starts a comment at the start of a line; later in a line it is part of the value. (4) a key that cannot be read back is its own error ('could not be read back' with gsettings' words). Left, critic recommendations below the gate: check/verify pass silently when a file is declared but gsettings is absent; a molt_hostname failure reads as 'no gsettings file'; the instance-path build is still repeated across lib/molt.sh, lib/agent.sh, ssh.sh and keys.sh (a molt_instance_file helper is a later thread). Holding; worktrees stay until you confirm both merges.",
       "fyi": false,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-22T16:00:01.771Z",
       "recorded_at": "2026-10-22T15:40:55.074Z"
     }
   ]
