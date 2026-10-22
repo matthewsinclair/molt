@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-21 20:01Z
-status: paused
-focus: "21 Oct, day called: WP06 guide draft on wp06-guide (1efde2c) waits on cc's head; Molt-matts st0006-wp06 1421034 ready; 0022 held; kovacs bubblewrap run waits on hv's userns ruling"
+heartbeat_at: 2026-10-22 04:46Z
+status: active
+focus: "22 Oct: WP06 guide on wp06-guide 1efde2c waiting on cc's head 7bd3038 or later; Molt-matts st0006-wp06 1421034 ready; 0022 held"
 claims: [ISSUE:0022]
 ---
 
