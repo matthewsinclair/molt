@@ -1,0 +1,16 @@
+{
+  "id": "01M5HW59VR07J7CEXH3JX2KXGC",
+  "ts": "2026-10-22T13:17:43.672Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 14,
+    "text": "ISSUE:0032 guide B2 paragraph on Molt issue-0032-guide-b2 8e2aff3 (Molt-wt/issue-0032-guide-b2), complete; with vc to land"
+  }
+}

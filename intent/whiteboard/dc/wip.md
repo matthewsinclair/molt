@@ -14,7 +14,7 @@ claims: [ISSUE:0022, ISSUE:0018]
 ## DOING
 
 - ISSUE:0018 drop depends (hv ruled): Molt issue-0018 c030930 (Molt-wt/issue-0018), Molt-matts issue-0018 7d4374b (Molt-matts-wt/issue-0018); grep clean bar unrelated words; with vc to merge (Molt-matts first)
-- ISSUE:0032 guide B2 paragraph on Molt issue-0032-guide-b2 cdb537e (Molt-wt/issue-0032-guide-b2); <B2-VERSION> waits on kovacs-sysadm's Claude Code version for B2; then head to vc
+- ISSUE:0032 guide B2 paragraph on Molt issue-0032-guide-b2 8e2aff3 (Molt-wt/issue-0032-guide-b2), complete; with vc to land (edited)
 
 ## TODO
 
