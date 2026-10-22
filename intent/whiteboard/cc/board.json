@@ -5,10 +5,12 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-22T12:38:44.753Z",
+    "heartbeat_at": "2026-10-22T12:50:18.403Z",
     "status": "active",
-    "focus": "Idle: 0032 closed (kovacs took the profile, sandboxed Bash runs); nothing queued",
-    "claims": [],
+    "focus": "Issue 0016: molt_error to stderr, call-site sweep",
+    "claims": [
+      "ISSUE:0016"
+    ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
@@ -277,6 +279,14 @@
       "state": "archived",
       "archived_at": "2026-10-22T12:16:48.238Z",
       "recorded_at": "2026-10-22T12:14:19.125Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 11,
+      "text": "Issue 0016 on issue-0016 (worktree ~/Devel/prj/Molt-wt/issue-0016, from 35270d3): molt_error to stderr; read every captured caller of a molt_error path; tests red first, both bashes, mutation, critic-shell; hand over with the head and the call sites read",
+      "state": "live",
+      "recorded_at": "2026-10-22T12:50:18.371Z"
     }
   ],
   "messages": [

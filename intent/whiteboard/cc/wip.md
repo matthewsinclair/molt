@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 12:38Z
+heartbeat_at: 2026-10-22 12:50Z
 status: active
-focus: "Idle: 0032 closed (kovacs took the profile, sandboxed Bash runs); nothing queued"
-claims: []
+focus: "Issue 0016: molt_error to stderr, call-site sweep"
+claims: [ISSUE:0016]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-_(none)_
+- Issue 0016 on issue-0016 (worktree ~/Devel/prj/Molt-wt/issue-0016, from 35270d3): molt_error to stderr; read every captured caller of a molt_error path; tests red first, both bashes, mutation, critic-shell; hand over with the head and the call sites read
 
 ## TODO
 
