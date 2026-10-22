@@ -159,10 +159,9 @@ After creating your liberator script, add it to your `molt.toml`:
 name = "myapp"
 enabled = true
 os = ["linux", "macos"]
-depends = ["zsh"]           # optional: run after these liberators
 ```
 
-A liberator can take settings of its own from its entry with `molt_liberator_field`. `utilz` reads `source`, which is `"checkout"` (the default) or `"brew"`.
+Liberators run in the order the manifest lists them, so put an entry after any whose work it needs. A liberator can take settings of its own from its entry with `molt_liberator_field`. `utilz` reads `source`, which is `"checkout"` (the default) or `"brew"`.
 
 ## Platform-specific behavior
 
