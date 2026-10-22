@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 06:19Z
+heartbeat_at: 2026-10-22 06:27Z
 status: active
-focus: "22 Oct: WP06 guide done, wp06-guide 9a325d8, with Molt-matts st0006-wp06 1421034, both with vc to merge; 0022 held"
+focus: "22 Oct: WP06 guide and Molt-matts merged; waiting on kovacs-sysadm's AC020 evidence for AT075's joint text check with vc; 0022 held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ST0006/06 AC021: guide on wp06-guide 9a325d8 accepted by vc, merging on main after cc's 1720f99; Molt-matts st0006-wp06 at 9b36722 (sysadm floor sentence true with or without the floor) with vc. Nothing further until kovacs-sysadm's run gives AC020's evidence (edited)
+- ST0006/06: AC021 guide merged (main 02f51a2), Molt-matts st0006-wp06 9b36722 merged, both worktrees removed. Next: AT075's joint text check with vc once kovacs-sysadm's run gives AC020's evidence (edited)
 
 ## TODO
 
