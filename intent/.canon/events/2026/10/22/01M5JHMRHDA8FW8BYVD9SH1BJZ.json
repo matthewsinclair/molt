@@ -1,0 +1,14 @@
+{
+  "id": "01M5JHMRHDA8FW8BYVD9SH1BJZ",
+  "ts": "2026-10-22T19:33:10.317Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "attachment.put",
+  "subject": {
+    "type": "attachment",
+    "id": "ST0006/rhadamanth-move.md"
+  },
+  "payload": {
+    "via": "address"
+  }
+}
