@@ -5,7 +5,7 @@ role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
 heartbeat_at: 2026-10-22 04:46Z
 status: active
-focus: "WP06 at 7bd3038 on st0006-wp06; left: both-bash suite, mutations, critic, hand-over"
+focus: "WP06 at 7bd3038 on st0006-wp06; left: both-bash suite, mutation pass, critic-shell, hand-over; rollout kovacs + rhadamanth (hv), gyges later"
 claims: [ST0006/06]
 ---
 
