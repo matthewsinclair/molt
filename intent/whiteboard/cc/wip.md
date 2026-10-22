@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 12:14Z
+heartbeat_at: 2026-10-22 12:16Z
 status: active
-focus: "Holding: 0032 merged at 3919fcd; worktree removal on vc's CI green, then kovacs results via vc"
+focus: "Idle: 0032 merged at 3919fcd, CI green, worktree removed; kovacs results via vc"
 claims: [ISSUE:0032]
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Remove the issue-0032 worktree (not the branch) once vc confirms CI green on 3919fcd; 0032 itself waits on hv's molt upgrade on kovacs, results relayed by vc
+_(none)_
 
 ## Watch-outs
 

@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-22T12:14:19.161Z",
+    "heartbeat_at": "2026-10-22T12:16:48.270Z",
     "status": "active",
-    "focus": "Holding: 0032 merged at 3919fcd; worktree removal on vc's CI green, then kovacs results via vc",
+    "focus": "Idle: 0032 merged at 3919fcd, CI green, worktree removed; kovacs results via vc",
     "claims": [
       "ISSUE:0032"
     ],
@@ -275,7 +275,8 @@
       "kind": "hold",
       "seq": 11,
       "text": "Remove the issue-0032 worktree (not the branch) once vc confirms CI green on 3919fcd; 0032 itself waits on hv's molt upgrade on kovacs, results relayed by vc",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T12:16:48.238Z",
       "recorded_at": "2026-10-22T12:14:19.125Z"
     }
   ],
