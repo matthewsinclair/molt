@@ -2044,6 +2044,29 @@ molt_resleeve() {
 
 # --- Upgrade ---
 
+# Pulls the repo $1, fast-forward only, $2 naming it for the user (eg
+# Framework). A repo with no upstream branch is the one pull not tried: it
+# warns that the pull was skipped and fails with status 2. Any other failure
+# is an error naming the repo, with git's own words under it, and status 1
+# (issue 0015). No upstream is read from the branch's config, or a HEAD on no
+# branch, not from git rev-parse @{upstream}, which fails as well for an
+# upstream configured and gone: that pull is tried, and fails with git's
+# reason.
+molt_git_pull() {
+  local repo="$1" label="$2" out branch
+  if ! branch="$(git -C "$repo" symbolic-ref -q --short HEAD 2>/dev/null)" \
+      || ! git -C "$repo" config "branch.${branch}.merge" >/dev/null 2>&1; then
+    molt_warn "$label pull skipped: $repo has no upstream branch"
+    return 2
+  fi
+  if ! out="$(git -C "$repo" pull --ff-only 2>&1)"; then
+    molt_error "$label pull failed in $repo:"
+    printf '%s\n' "$out" | sed 's/^/    /' >&2
+    return 1
+  fi
+  [[ -z "$out" ]] || printf '%s\n' "$out"
+}
+
 _upgrade_check_clean() {
   local repo_path="$1"
   local label="$2"
@@ -2076,11 +2099,10 @@ _upgrade_warn_untracked() {
   return 0
 }
 
-# The one that actually bites. Commits sitting unpushed mean `git pull --ff-only`
-# below cannot fast-forward, so it is skipped with a soft warning, and every other
-# sleeve upgrades to a version that does not contain your fixes -- while reporting
-# success. That is how gyges spent a morning running a backup agent pointing at a
-# path rhadamanth had already moved.
+# The one that actually bites. Commits sitting unpushed mean every other sleeve
+# upgrades to a version that does not contain your fixes, and reports success.
+# That is how gyges spent a morning running a backup agent pointing at a path
+# rhadamanth had already moved.
 _upgrade_warn_unpushed() {
   local repo_path="$1" label="$2" upstream ahead
   upstream="$(git -C "$repo_path" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)" || {
@@ -2096,9 +2118,16 @@ _upgrade_warn_unpushed() {
   return 0
 }
 
+# Checks, then pulls, the framework and the user config repo. Fails with
+# status 1, pulling nothing, when either cannot be upgraded from as it stands;
+# and with status 2 when a pull failed, after trying both, naming each in
+# _UPGRADE_FAILED_PULLS for the verdict, since the run goes on against the
+# trees on disk and fails at the end.
 _upgrade_pull_repos() {
   local dry_run="${1:-false}"
   local old_version="$MOLT_VERSION"
+  local pulled
+  _UPGRADE_FAILED_PULLS=""
 
   # 1. Check framework repo
   molt_info "Checking framework repo: $MOLT_ROOT"
@@ -2122,20 +2151,28 @@ _upgrade_pull_repos() {
   molt_info "Pulling framework repo..."
   if $dry_run; then
     echo "  molt: WOULD PULL"
-  elif git -C "$MOLT_ROOT" pull --ff-only 2>/dev/null; then
-    molt_info "Framework repo updated."
   else
-    molt_warn "Framework pull skipped (not on tracking branch or already up-to-date)."
+    pulled=0
+    molt_git_pull "$MOLT_ROOT" "Framework" || pulled=$?
+    case $pulled in
+      0) molt_info "Framework repo updated." ;;
+      2) ;;
+      *) _UPGRADE_FAILED_PULLS="the framework repo ($MOLT_ROOT)" ;;
+    esac
   fi
 
   # 4. Pull user config repo
   molt_info "Pulling user config repo..."
   if $dry_run; then
     echo "  config: WOULD PULL"
-  elif git -C "$user_repo" pull --ff-only 2>/dev/null; then
-    molt_info "User config repo updated."
   else
-    molt_warn "User config pull skipped (not on tracking branch or already up-to-date)."
+    pulled=0
+    molt_git_pull "$user_repo" "User config" || pulled=$?
+    case $pulled in
+      0) molt_info "User config repo updated." ;;
+      2) ;;
+      *) _UPGRADE_FAILED_PULLS="${_UPGRADE_FAILED_PULLS:+$_UPGRADE_FAILED_PULLS, }the user config repo ($user_repo)" ;;
+    esac
   fi
 
   # 5. Re-source constants to pick up any version change
@@ -2145,15 +2182,16 @@ _upgrade_pull_repos() {
     echo ""
     molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
   fi
+  [[ -z "$_UPGRADE_FAILED_PULLS" ]] || return 2
 }
 
 # Ends an upgrade: resleeves when asked, then gives the verdict. $3 lists the
-# upgrade hooks that failed. A sleeve whose upgrade hooks failed is not ready,
-# whatever resleeve then finds, so resleeve is told not to say it is: on kovacs
-# doom sync failed inside the editors hook, and molt upgrade still said "Sleeve
-# ready" (issue 0013).
+# upgrade hooks that failed, and $4 the repos whose pull failed. A sleeve with
+# either is not ready, whatever resleeve then finds, so resleeve is told not to
+# say it is: on kovacs doom sync failed inside the editors hook, and molt
+# upgrade still said "Sleeve ready" (issue 0013).
 _upgrade_finish() {
-  local dry_run="$1" do_resleeve="$2" failed_hooks="$3" status=0 claim_ready=true
+  local dry_run="$1" do_resleeve="$2" failed_hooks="$3" failed_pulls="${4:-}" status=0 claim_ready=true
   if [[ "$do_resleeve" == "yes" ]]; then
     echo ""
     if $dry_run; then
@@ -2163,9 +2201,14 @@ _upgrade_finish() {
     else
       molt_info "Running resleeve..."
       echo ""
-      [[ -z "$failed_hooks" ]] || claim_ready=false
+      [[ -z "$failed_hooks$failed_pulls" ]] || claim_ready=false
       molt_resleeve false "$claim_ready" || status=1
     fi
+  fi
+  if [[ -n "$failed_pulls" ]]; then
+    echo ""
+    molt_error "Upgrade incomplete: the pull failed for $failed_pulls. The liberators ran against the trees on disk; the sleeve is not ready."
+    status=1
   fi
   if [[ -n "$failed_hooks" ]]; then
     echo ""
@@ -2187,9 +2230,10 @@ _upgrade_framework_head() {
 # the old library against the new liberators: with ST0006 WP02, the first
 # upgrade on every sleeve failed in claude and agents (issue 0023). Only a new
 # process knows which library files the pulled bin/molt sources, so the rest
-# of the upgrade runs in one, without pulling again.
+# of the upgrade runs in one, without pulling again, told which pulls failed
+# ($3) so that its verdict still counts them.
 _upgrade_restart_if_pulled() {
-  local head_before="$1" do_resleeve="$2" head_after
+  local head_before="$1" do_resleeve="$2" failed_pulls="${3:-}" head_after
   [[ -n "$head_before" ]] || return 0
   head_after="$(_upgrade_framework_head)" || {
     molt_warn "Cannot read the framework commit in $MOLT_ROOT after the pull; if it changed lib/, run molt upgrade again."
@@ -2199,9 +2243,9 @@ _upgrade_restart_if_pulled() {
   echo ""
   molt_info "Framework updated (${head_before:0:7} -> ${head_after:0:7}); restarting on the new code."
   if [[ "$do_resleeve" == "yes" ]]; then
-    exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --resleeve
+    MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --resleeve
   fi
-  exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --no-resleeve
+  MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --no-resleeve
 }
 
 cmd_upgrade() {
@@ -2247,8 +2291,8 @@ cmd_upgrade() {
 
   if $self_only; then
     # Self-update only: pull repos, report, exit
-    _upgrade_pull_repos "$dry_run"
-    return $?
+    _upgrade_pull_repos "$dry_run" || return 1
+    return 0
   fi
 
   if [[ -n "$target_liberators" ]]; then
@@ -2288,15 +2332,25 @@ cmd_upgrade() {
 
   # --- Full upgrade: pull repos, run all _upgrade() hooks, then resleeve ---
 
+  # A pull that failed does not stop the run: the hooks and resleeve settle
+  # what they can on the trees on disk, and the verdict counts it (issue
+  # 0015). An upgrade restarted after a pull is told by the one that pulled.
+  local failed_pulls=""
   if $pull; then
-    local head_before
+    local head_before pulled=0
     head_before="$(_upgrade_framework_head)" || {
       head_before=""
       molt_warn "Cannot read the framework commit in $MOLT_ROOT; a pull that changes lib/ needs a second molt upgrade."
     }
-    _upgrade_pull_repos "$dry_run" || return 1
-    $dry_run || _upgrade_restart_if_pulled "$head_before" "$do_resleeve"
+    _upgrade_pull_repos "$dry_run" || pulled=$?
+    [[ $pulled -ne 1 ]] || return 1
+    failed_pulls="${_UPGRADE_FAILED_PULLS:-}"
+    $dry_run || _upgrade_restart_if_pulled "$head_before" "$do_resleeve" "$failed_pulls"
+  else
+    failed_pulls="${MOLT_UPGRADE_FAILED_PULLS:-}"
   fi
+  # Read once: it is the restart's, not anything this run starts.
+  unset MOLT_UPGRADE_FAILED_PULLS
 
   # Run _upgrade() hooks on all enabled liberators that define one
   echo ""
@@ -2330,7 +2384,7 @@ cmd_upgrade() {
   fi
 
   # 7. Resleeve (unless suppressed), then the verdict
-  _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks"
+  _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks" "$failed_pulls"
 }
 
 # --- Maintain ---
