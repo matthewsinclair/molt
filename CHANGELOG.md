@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The Markdown formatter check runs from `"formatters": ["markdown"]` in `intent/.config/config.json`, which Intent's shipped staged-format guard reads in the pre-commit gate, so a fresh clone runs the same check as this one. It replaces a hand-wired copy of that guard in this clone's untracked `.git/hooks/pre-commit`, which no clone received and `intent doctor` reported; the copy is removed from the clone
+
 ### Removed
 
 - The three Intent v2 hook scripts under `.claude/scripts/` (`session-context.sh`, `require-in-session.sh`, `post-tool-advisory.sh`): v3 serves its hooks from the installed Intent, no hook command in `.claude/settings.json` ran them, and `intent doctor` reported each as orphaned

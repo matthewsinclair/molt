@@ -10,5 +10,8 @@
   ],
   "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
   "project_name": "Molt",
-  "st_prefix": "ST"
+  "st_prefix": "ST",
+  "formatters": [
+    "markdown"
+  ]
 }
