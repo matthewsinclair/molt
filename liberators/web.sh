@@ -101,16 +101,15 @@ web_verify() {
 }
 
 web_upgrade() {
-  local repo
+  local repo pulled=0
   if ! repo="$(_web_find_repo)"; then
     molt_error "web repo not found — cannot upgrade"
     return 1
   fi
 
   molt_info "Pulling web repo..."
-  if git -C "$repo" pull --ff-only 2>/dev/null; then
-    molt_info "web repo updated."
-  else
-    molt_warn "web pull skipped (not on tracking branch or already up-to-date)."
-  fi
+  molt_git_pull "$repo" "web" || pulled=$?
+  [[ $pulled -ne 0 ]] || molt_info "web repo updated."
+  # Updated, or skipped for want of an upstream; anything else failed (issue 0037).
+  [[ $pulled -eq 0 || $pulled -eq 2 ]]
 }
