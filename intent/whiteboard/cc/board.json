@@ -5,12 +5,10 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-22T06:58:07.600Z",
+    "heartbeat_at": "2026-10-22T07:06:13.870Z",
     "status": "active",
-    "focus": "Issue 0034 handed to vc at 9eae8ff; waiting on merge",
-    "claims": [
-      "ISSUE:0034"
-    ],
+    "focus": "Idle: WP06, 0033, 0034 merged; queue empty (vc, 22 Oct)",
+    "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
@@ -256,7 +254,8 @@
       "kind": "doing",
       "seq": 9,
       "text": "Issue 0034 handed to vc at issue-0034 9eae8ff (worktree ~/Devel/prj/Molt-wt/issue-0034): clone, build, systemctl enable/start, keyd reload each named and stopping; waiting on vc's merge, then remove the worktree and branch.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T07:06:13.804Z",
       "recorded_at": "2026-10-22T06:48:30.183Z",
       "edited_at": "2026-10-22T06:58:07.496Z"
     }

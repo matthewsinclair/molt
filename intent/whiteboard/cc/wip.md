@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 06:58Z
+heartbeat_at: 2026-10-22 07:06Z
 status: active
-focus: "Issue 0034 handed to vc at 9eae8ff; waiting on merge"
-claims: [ISSUE:0034]
+focus: "Idle: WP06, 0033, 0034 merged; queue empty (vc, 22 Oct)"
+claims: []
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0034 handed to vc at issue-0034 9eae8ff (worktree ~/Devel/prj/Molt-wt/issue-0034): clone, build, systemctl enable/start, keyd reload each named and stopping; waiting on vc's merge, then remove the worktree and branch. (edited)
+_(none)_
 
 ## TODO
 
