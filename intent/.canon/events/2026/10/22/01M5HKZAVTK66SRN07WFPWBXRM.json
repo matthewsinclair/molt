@@ -1,0 +1,15 @@
+{
+  "id": "01M5HKZAVTK66SRN07WFPWBXRM",
+  "ts": "2026-10-22T10:54:39.482Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ISSUE:0032 guide: draft at scratchpad bwrap-profile-draft.md (still-owed sentence, '### The sandbox on Ubuntu' under Fence and wall, dpkg conffile note, check 15 and agent config placeholders). Waits on cc's issue-0032 head for the exact lines; then, after hv's molt upgrade on kovacs, hv runs kovacs-creds.sh A and B under an ops home and the bubblewrap table lands"
+  }
+}
