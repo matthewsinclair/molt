@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 12:16Z
+heartbeat_at: 2026-10-22 12:18Z
 status: active
-focus: "22 Oct: 0032 guide complete but BWRAP-RESULT on issue-0032-guide 3e5ded0; waits on hv's kovacs run; 0022 held"
+focus: "22 Oct: 0032 guide at cf0d453, vc-read; only BWRAP-RESULT, waits on hv's kovacs run; 0022 held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ISSUE:0032 guide on Molt branch issue-0032-guide at 3e5ded0 (worktree Molt-wt/issue-0032-guide, main 3919fcd merged in): '### The sandbox on Ubuntu' filled from the as-built (copy route; parse before write, sidecar, load and probe, upgrade errors, check 15, sandbox row, doctor rows). Only <BWRAP-RESULT> left: waits on hv's molt upgrade on kovacs, then hv runs ~/kovacs-creds.sh A, B, clean (edited)
+- ISSUE:0032 guide on Molt branch issue-0032-guide at cf0d453 (worktree Molt-wt/issue-0032-guide): vc read it against the code, his two changes applied (no-orig fix via the package's copy then molt upgrade; kept orig predates a later package update). Only <BWRAP-RESULT> left: waits on hv's molt upgrade on kovacs, then hv runs ~/kovacs-creds.sh A, B, clean (edited)
 
 ## TODO
 
