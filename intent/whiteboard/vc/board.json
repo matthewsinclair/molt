@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T10:53:49.497Z",
+    "heartbeat_at": "2026-10-22T11:00:37.849Z",
     "status": "active",
     "focus": "22 Oct pm: ST0006 WP06 done; WP04 rhadamanth on hv's date (runbook carries the floor at B5); issue 0032 ruled (Molt-managed AppArmor profile), cc building on issue-0032, dc docs after; estate renames done; 0022/0015/0016/0018 as before.",
     "claims": [
@@ -393,10 +393,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 15,
-      "text": "Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; spec in the issue; cc builds on issue-0032 (two open points: the AppArmor grammar for all-but-one capability, and which tool confirms a loaded profile; kovacs-sysadm asked for the distro file and tool versions). Then vc's scratch merge, dc's guide section and the owed sentence, hv's molt upgrade on kovacs at the sudo prompt, dc's kovacs-creds.sh A and B for the bubblewrap table, close on that evidence.",
+      "text": "Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; spec in the issue. Route settled 22 Oct 11:13Z: the conffile copy (hv's priority=1 local-include experiment on kovacs failed; recorded in the issue). cc builds on issue-0032 (03bee17 WIP: shared molt_root_file_* helpers landed; left: predicate, state, faults, _agents_sandbox with the bwrap probe, doctor 15, config line, tests, CHANGELOG). Then vc's scratch merge, dc's guide section (route text on issue-0032-guide 0071324), hv's molt upgrade on kovacs at the sudo prompt, hv runs dc's kovacs-creds.sh A and B from a plain terminal, close on that evidence.",
       "state": "live",
       "recorded_at": "2026-10-21T15:22:26.678Z",
-      "edited_at": "2026-10-22T10:53:49.396Z"
+      "edited_at": "2026-10-22T11:14:32.000Z"
     },
     {
       "node": "vc",
