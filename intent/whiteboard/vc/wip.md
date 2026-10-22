@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-22 05:24Z
-status: active
+heartbeat_at: 2026-10-22 05:49Z
+status: paused
 focus: "22 Oct globalfold: ST0006 WP01/02/03/05/07 done, WP04 kovacs done (rhadamanth next on hv's date), WP06 in build (cc st0006-wp06; dc wp06-guide 1efde2c; Molt-matts 1421034 ready); issues 0023-0031 closed, 0032 (kovacs sandbox) for hv. Next: merge WP06 in order (todo), hv's 0032 ruling, rhadamanth's move."
 claims: [ST0005, ST0006]
 ---
