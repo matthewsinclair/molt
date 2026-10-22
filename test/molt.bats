@@ -544,6 +544,13 @@ _no_user_repo() {
     assert_output_contains "Cannot resleeve without a user config repo."
 }
 
+@test "molt_find_user_repo leaves a caller's path as it was" {
+    _no_user_repo
+    local path=keep
+    molt_find_user_repo >/dev/null 2>&1 || true
+    [ "$path" = keep ]
+}
+
 @test "a caller that discards the lookup's stderr reads no repo, not the error's text" {
     _no_user_repo
     load_liberator git

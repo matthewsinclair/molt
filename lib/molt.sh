@@ -2612,6 +2612,7 @@ cmd_git() {
 # --- Stack Discovery ---
 
 molt_find_user_repo() {
+  local path
   for path in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
     if [[ -d "$path/config" ]]; then
       echo "$path"
