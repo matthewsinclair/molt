@@ -1,0 +1,16 @@
+{
+  "id": "01M5JEB8CFAASPJTB179EY0WEZ",
+  "ts": "2026-10-22T18:35:33.135Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 18,
+    "text": "Intent 0612 (high, ruled 22 Oct at e248aafd9 on vc's no-objection under hv's pen) landed on Intent main at 521f81ca2 (intent-vc via dc, 22 Oct 18:36Z) but is NOT live in Molt yet: it arrives with Intent's next `bin/devbin build all`, after 0610 and 0609 land, and intent-vc messages every estate's vc just before that build. Shape: an inbound message moves to the SENDER's board.json, the recipient keeps only handled marks, the inbox view renders from the sender's canon, no (handled) in inbox views (board@4.0). After the build, Molt's next board write (any wb verb, pickup included) re-renders every board.json and inbox view; vc makes that ONE mechanical commit as coordinating node, outside the one-writer rule, and from then on each node commits what its verbs print on their `wrote:` lines. Watch-out 18's rule stands until the build. Also filed from Molt's reports: Intent 0613 (broken-pipe panic, low), 0614 (worktree hooks sync an older store, medium, unreproduced), 0615 (stale doc comment on the settings merge, low); no lane yet."
+  }
+}
