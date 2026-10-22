@@ -2,7 +2,7 @@
 #
 # Consumers:
 #   - intent critic <lang>             (headless runner, pre-commit gate)
-#   - .claude/scripts/post-tool-advisory.sh (opt-in PostToolUse advisory)
+#   - the post-tool-advisory hook Intent's install serves (opt-in PostToolUse advisory)
 #   - critic-<lang> subagents          (LLM review via Task(...))
 #
 # Full schema and behaviour notes: intent/docs/critics.md at the Intent
@@ -20,8 +20,8 @@ severity_min: warning
 disabled: []
 
 # Opt-in PostToolUse critic advisory. When set to `true`, the
-# `post-tool-advisory.sh` hook (installed by `.claude/settings.local.json`
-# opt-in) runs `intent critic <lang> --files <edited-file>` after every
+# `post-tool-advisory.sh` hook, served from the Intent install and wired by an
+# opt-in `.claude/settings.local.json` entry, runs `intent critic <lang> --files <edited-file>` after every
 # Write|Edit|MultiEdit tool use and surfaces findings as a system-reminder.
 #
 # Off by default: too noisy for interactive work; the pre-commit gate

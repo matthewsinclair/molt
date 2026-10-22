@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- The three Intent v2 hook scripts under `.claude/scripts/` (`session-context.sh`, `require-in-session.sh`, `post-tool-advisory.sh`): v3 serves its hooks from the installed Intent, no hook command in `.claude/settings.json` ran them, and `intent doctor` reported each as orphaned
+
 ## [0.2.0] - 2026-10-22
 
 ### Added
