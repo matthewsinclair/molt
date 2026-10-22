@@ -355,11 +355,43 @@ The home's `.claude/settings.json` is a fence: it carries the role's permission 
 
 `ops` and `docs` get the fence and the sandbox. With `sandbox.enabled`, sandboxed Bash cannot write any `.claude` settings, hooks, shell rc files, `.git` config or the config dir, with no exemption. The sandbox binds sandboxed commands only, and it has two escape hatches, which the `ops` and `docs` profiles both close. A command matching `sandbox.excludedCommands` runs with no filesystem restrictions and no network proxy, so the profiles list no excluded commands. A command that fails in the sandbox can be retried outside it on approval unless `sandbox.allowUnsandboxedCommands` is `false`, so the profiles set it to `false`. Hooks, Edit and Write run outside the sandbox, and Edit and Write only prompt.
 
-Every profile denies `Read()` of `~/.ssh/id_*` and `~/.aws/credentials`. A `Read()` deny refuses the Read tool, and also a Bash command whose text names the path, before it runs, but not a command that reaches the file another way. `ops` and `docs` also carry `sandbox.credentials.files` deny entries for `~/.ssh` and `~/.aws/credentials`, which bind what the sandbox runs, not the command's text. Tested on 21 Oct 2026 with Claude Code 2.1.306 under macOS Seatbelt, in a scratch home: with those entries alone, sandboxed Bash got `Operation not permitted` reading both files, `~/.ssh/config`, and the listing of `~/.ssh`, so an `ssh` from `ops` or `docs` runs with no keys and no config. The same run on Linux, under bubblewrap, is still owed. `sysadm` has no sandbox, so its `Read()` denies, its contract and the [managed floor](#managed-floor) stand between it and those files.
+Every profile denies `Read()` of `~/.ssh/id_*` and `~/.aws/credentials`. A `Read()` deny refuses the Read tool, and also a Bash command whose text names the path, before it runs, but not a command that reaches the file another way. `ops` and `docs` also carry `sandbox.credentials.files` deny entries for `~/.ssh` and `~/.aws/credentials`, which bind what the sandbox runs, not the command's text. Tested on 21 Oct 2026 with Claude Code 2.1.306 under macOS Seatbelt, in a scratch home: with those entries alone, sandboxed Bash got `Operation not permitted` reading both files, `~/.ssh/config`, and the listing of `~/.ssh`, so an `ssh` from `ops` or `docs` runs with no keys and no config. <BWRAP-RESULT: the same run on kovacs under bubblewrap, with the [sandbox profile](#the-sandbox-on-ubuntu) in place, filled from kovacs-creds.sh runs A and B after molt upgrade there> `sysadm` has no sandbox, so its `Read()` denies, its contract and the [managed floor](#managed-floor) stand between it and those files.
 
 `sysadm` cannot be sandboxed, because changing the machine is its job, so its permissions live in the fence, and the [managed floor](#managed-floor) holds its two credential denies where it cannot edit them.
 
 Claude Code is the only harness Molt renders homes for. A dedicated Unix account per agent would be a stronger boundary than any of this, and stays an option for later.
+
+### The sandbox on Ubuntu
+
+<!-- DRAFT (issue 0032). Placeholders: <ROUTE ...> paragraphs flip on kovacs-sysadm's test of a priority=1 allow in local/unpriv_bwrap (vc sends the result); <SIDECAR-NOTE>, <CHECK15>, <CONFIG-LINE>, <FAULTS>, <UBUNTU-VERSION> from cc's issue-0032 head. -->
+
+On Linux, Claude Code's sandbox runs each command under bubblewrap, and inside it creates a second user namespace, which needs `CAP_SYS_ADMIN` there. Ubuntu's own AppArmor profile, `/etc/apparmor.d/bwrap-userns-restrict`, denies every capability to whatever `bwrap` starts, so every sandboxed command fails before it runs:
+
+```
+apply-seccomp: write /proc/self/setgroups (nested userns is capability-restricted; caller must provide CAP_SYS_ADMIN): Permission denied
+```
+
+`ops` and `docs` then fail closed: nothing escapes the sandbox, and no shell command runs at all.
+
+<ROUTE copy, if a local allow cannot outrank the deny: "The profile's `local/` include cannot fix this, because an AppArmor deny takes precedence over any allow. So on a Linux sleeve whose `molt.toml` enables an `ops` or `docs` agent, Molt replaces that file with its own copy, `templates/apparmor/bwrap-userns-restrict.tmpl`: Ubuntu <UBUNTU-VERSION>'s file with one change, bwrap's children still denied every capability except `sys_admin`." / ROUTE local, if a priority=1 allow does outrank it: "So on a Linux sleeve whose `molt.toml` enables an `ops` or `docs` agent, Molt writes the one file Ubuntu's profile includes for local changes, `/etc/apparmor.d/local/unpriv_bwrap`, holding a single rule that allows `capability sys_admin` at a priority above the profile's deny. Ubuntu's own file is not changed.">
+
+Only processes bwrap starts gain anything, and only that one capability. The `bwrap` profile's own rules and the `kernel.apparmor_restrict_unprivileged_userns` sysctl stay as Ubuntu set them, and `sysadm`, which has no sandbox, is unaffected. Every other sleeve, macOS included, gets nothing.
+
+The agents liberator writes the file the way it writes the [managed floor](#managed-floor): through `sudo`, root-owned and mode 644, <SIDECAR-NOTE: its sidecar first>. It then reloads the profile with `sudo apparmor_parser -r`. So `molt upgrade` on such a sleeve may stop at a `sudo` prompt, as it does for the floor.
+
+<ROUTE copy: "Before its first write it keeps Ubuntu's file as `bwrap-userns-restrict.molt-orig`, and never overwrites that copy while it exists. The file is a dpkg conffile. When a package update ships a new version of it, the update asks whether to keep the local change. Keeping it leaves Molt's copy in place. Taking the package's version brings back the blanket deny, so `ops` and `docs` fail closed again until the next `molt upgrade`, which compares the file byte for byte with its own render and puts Molt's copy back. A new Ubuntu release that changes the profile needs the template refreshed from it; the template names the Ubuntu version it was copied from." / ROUTE local: "A package update never touches the local file, so it asks nothing; Molt compares the file byte for byte with its own render, and puts it back if it differs.">
+
+`molt doctor` check 15 shows whether the profile is in place, by running bubblewrap the way the sandbox does, as you, and checking that the nested namespace starts:
+
+<CHECK15: the pass lines (in place; none needed) and the warning faults, from cc's code>
+
+`molt agent config <hostname>-ops` (or `-docs`) says so in one line:
+
+<CONFIG-LINE>
+
+<ROUTE copy: "When a sleeve no longer enables an `ops` or `docs` agent, the next `molt upgrade` puts `.molt-orig` back as the file, removes it and the sidecar, and reloads the profile, all through `sudo`. With no `.molt-orig` to restore, it fails, naming the file, and changes nothing. Molt replaces or restores only a `bwrap-userns-restrict` beside its own sidecar; a file without one is left alone and reported." / ROUTE local: "When a sleeve no longer enables an `ops` or `docs` agent, the next `molt upgrade` removes the local file and its sidecar and reloads the profile, through `sudo`. Molt removes only a local file beside its own sidecar; one without it is left alone and reported.">
+
+<FAULTS: rows for the doctor table from cc's code: sudo absent or refused, apparmor_parser absent or failing, an unreadable target, a foreign file, a molt-written leftover; copy route also: no .molt-orig>
 
 ## Managed floor
 
