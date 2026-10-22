@@ -1204,6 +1204,71 @@ molt_sudo_remove() {
   fi
 }
 
+# The state of the root-owned file $2 that molt installs from $1, byte for
+# byte, one word: on a sleeve that wants it ($3 is 0), current, missing, stale,
+# or foreign (a file molt did not write, which it leaves); on one that does not
+# ($3 is anything else), absent, leftover (molt's, to remove), or unowned
+# (somebody else's, left alone). Molt's is the one beside molt's sidecar,
+# ${2}.molt-rendered. Fails, printing why, when the two cannot be compared.
+molt_root_file_state() {
+  local src="$1" target="$2" wanted="$3" differ=0
+  if [[ "$wanted" -ne 0 ]]; then
+    if [[ -f "${target}.molt-rendered" ]]; then
+      echo leftover
+    elif [[ -e "$target" ]]; then
+      echo unowned
+    else
+      echo absent
+    fi
+    return 0
+  fi
+  if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
+    echo foreign
+    return 0
+  elif [[ ! -e "$target" ]]; then
+    echo missing
+    return 0
+  fi
+  cmp -s "$src" "$target" || differ=$?
+  case $differ in
+    0) echo current ;;
+    1) echo stale ;;
+    *)
+      echo "$(molt_tilde "$target") could not be compared with $(molt_tilde "$src")"
+      return 1 ;;
+  esac
+}
+
+# Installs the bytes of $1 as the root-owned file $2, through sudo, its sidecar
+# first, so a file beside molt's sidecar is always one molt wrote. Fails,
+# printing why.
+molt_root_file_install() {
+  local src="$1" target="$2" sidecar digest why
+  if ! sidecar="$(mktemp "${TMPDIR:-/tmp}/molt-sidecar.XXXXXX")"; then
+    echo "no temporary file could be made for the sidecar of $target, so nothing was written"
+    return 1
+  fi
+  digest="$(molt_hash < "$src")" || digest=""
+  if ! molt_render_sidecar "$src" "$digest" "$src" > "$sidecar"; then
+    rm -f "$sidecar"
+    echo "the sidecar of $target could not be written, so nothing was"
+    return 1
+  fi
+  if ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
+      || ! why="$(molt_sudo_install "$src" "$target")"; then
+    rm -f "$sidecar"
+    echo "$why"
+    return 1
+  fi
+  rm -f "$sidecar"
+}
+
+# Removes the root-owned file $1 that molt installed, and its sidecar, through
+# sudo. Fails, printing why.
+molt_root_file_remove() {
+  molt_sudo_remove "$1" "${1}.molt-rendered"
+}
+
 # --- CLI Commands ---
 
 cmd_version() {

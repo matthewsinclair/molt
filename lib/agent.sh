@@ -448,39 +448,16 @@ molt_agent_floor_state() {
     echo "$why"
     return 1
   fi
-  if [[ $wanted -ne 0 ]]; then
-    if [[ -f "${target}.molt-rendered" ]]; then
-      echo leftover
-    elif [[ -e "$target" ]]; then
-      echo unowned
-    else
-      echo absent
+  if [[ $wanted -eq 0 ]]; then
+    why="$(molt_agent_floor_fault)"
+    if [[ -n "$why" ]]; then
+      echo "$why"
+      return 1
     fi
-    return 0
+    # The fault above names a source that cannot be found.
+    src="$(molt_agent_floor_source)" || return 1
   fi
-  why="$(molt_agent_floor_fault)"
-  if [[ -n "$why" ]]; then
-    echo "$why"
-    return 1
-  fi
-  # The fault above names a source that cannot be found.
-  src="$(molt_agent_floor_source)" || return 1
-  if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
-    echo foreign
-    return 0
-  elif [[ ! -e "$target" ]]; then
-    echo missing
-    return 0
-  fi
-  local differ=0
-  cmp -s "$src" "$target" || differ=$?
-  case $differ in
-    0) echo current ;;
-    1) echo stale ;;
-    *)
-      echo "$(molt_tilde "$target") could not be compared with $(molt_tilde "$src")"
-      return 1 ;;
-  esac
+  molt_root_file_state "${src:-}" "$target" "$wanted"
 }
 
 # Names, a line each, what stands between this sleeve and the floor it should

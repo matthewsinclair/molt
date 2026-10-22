@@ -179,7 +179,7 @@ _agents_report_faults() {
 # stale; removes molt's drop-in, then its sidecar, where none has; and leaves,
 # naming it, a drop-in molt did not write.
 _agents_floor() {
-  local state target src sidecar digest why
+  local state target src why
   target="$(molt_agent_floor_target)"
   if ! state="$(molt_agent_floor_state)"; then
     molt_error "agents: managed floor: $state, so nothing was written"
@@ -194,7 +194,7 @@ _agents_floor() {
       molt_warn "agents: managed floor: $(molt_tilde "$target") was not written by molt, which leaves it"
       return 0 ;;
     leftover)
-      if ! why="$(molt_sudo_remove "$target" "${target}.molt-rendered")"; then
+      if ! why="$(molt_root_file_remove "$target")"; then
         molt_error "agents: managed floor: $why"
         return 1
       fi
@@ -205,19 +205,10 @@ _agents_floor() {
     molt_error "agents: managed floor: the user repo cannot be found, so nothing was written"
     return 1
   fi
-  if ! sidecar="$(mktemp "${TMPDIR:-/tmp}/molt-floor.XXXXXX")"; then
-    molt_error "agents: managed floor: no temporary file could be made for its sidecar, so nothing was written"
+  if ! why="$(molt_root_file_install "$src" "$target")"; then
+    molt_error "agents: managed floor: $why"
     return 1
   fi
-  digest="$(molt_hash < "$src")" || digest=""
-  if ! molt_render_sidecar "$src" "$digest" "$src" > "$sidecar" \
-      || ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
-      || ! why="$(molt_sudo_install "$src" "$target")"; then
-    rm -f "$sidecar"
-    molt_error "agents: managed floor: ${why:-its sidecar could not be written}"
-    return 1
-  fi
-  rm -f "$sidecar"
   molt_info "Rendered: $src -> $target"
 }
 
