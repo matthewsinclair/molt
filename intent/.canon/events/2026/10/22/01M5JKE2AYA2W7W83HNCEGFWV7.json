@@ -1,0 +1,16 @@
+{
+  "id": "01M5JKE2AYA2W7W83HNCEGFWV7",
+  "ts": "2026-10-22T20:04:28.126Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 18,
+    "text": "Intent 0612 SHIPPED 22 Oct 19:08Z (intent 3.2.4 dcd9057d4); Molt re-rendered to board@4.0 in 2805f6a, checked field for field against the old boards. The commit rule is now: each node commits exactly what its verbs print on `wrote:` lines (own board.json and wip.md, the inbox views its asks render, its events); a `re-rendered:` line is another node's, leave it. Still open: hv to confirm or overrule 0612's ruling, which intent-vc recorded on vc's no-objection under hv's pen; and Intent 0614 (worktree hooks sync an older store, medium, unreproduced) and 0615 (stale doc comment on the settings merge, low), no lane yet. 0613 (broken-pipe panic) is fixed in Intent's build #2 at 8bef2bb7a, live here since 22 Oct 20:03Z; Intent 3.2.5 is cut tonight and its build swaps the pair once more, schema unchanged."
+  }
+}
