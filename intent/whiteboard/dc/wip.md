@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ST0006/06 AC021: guide draft on Molt branch wp06-guide at 0be162b (worktree Molt-wt/wp06-guide; hv's scope, sysadm plus MOLT_CLAUDE_CONFIG_DIR, applied), waiting on cc's st0006-wp06 head for the sidecar name, agent config output and doctor check 14 lines; Molt-matts st0006-wp06 at 1421034 ready for vc (edited)
+- ST0006/06 AC021: guide draft on Molt branch wp06-guide at ec1acf2, rebased onto main c2e167b (estate agents) (worktree Molt-wt/wp06-guide; hv's scope, sysadm plus MOLT_CLAUDE_CONFIG_DIR, applied), waiting on cc's st0006-wp06 head for the sidecar name, agent config output and doctor check 14 lines; Molt-matts st0006-wp06 at 1421034 ready for vc (edited)
 
 ## TODO
 
