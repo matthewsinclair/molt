@@ -224,7 +224,6 @@ projects_dir = "~/Projects"
 name = "zsh"
 enabled = true
 os = ["linux", "macos"]
-depends = ["system"]
 
 [[liberator]]
 name = "keys"

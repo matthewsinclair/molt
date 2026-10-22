@@ -26,13 +26,11 @@ os = ["linux"]
 name = "local-bin"
 enabled = true
 os = ["linux", "macos"]
-depends = ["system"]
 
 [[liberator]]
 name = "zsh"
 enabled = true
 os = ["linux", "macos"]
-depends = ["system"]
 
 [[liberator]]
 name = "git"
@@ -48,7 +46,6 @@ os = ["linux", "macos"]
 name = "editors"
 enabled = true
 os = ["linux", "macos"]
-depends = ["zsh", "git"]
 
 [[liberator]]
 name = "terminal"
@@ -69,7 +66,6 @@ os = ["linux"]
 name = "dev-tools"
 enabled = true
 os = ["linux", "macos"]
-depends = ["zsh"]
 
 [[liberator]]
 name = "npm"
@@ -88,4 +84,3 @@ os = ["linux", "macos"]
 name = "utilz"
 enabled = true
 os = ["linux", "macos"]
-depends = ["local-bin"]
