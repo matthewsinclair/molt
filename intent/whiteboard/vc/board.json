@@ -277,17 +277,19 @@
       "node": "vc",
       "kind": "todo",
       "seq": 5,
-      "text": "**gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = \"brew\"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.",
+      "text": "**gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = \"brew\"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has; (4) if its Molt clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: since 22 Oct Molt's config.json declares `formatters: [markdown]` and the shipped guard runs the check, so the stanza is a duplicate doctor reports (same for kovacs, through kovacs-sysadm).",
       "state": "live",
-      "recorded_at": "2026-10-20T18:54:19.126Z"
+      "recorded_at": "2026-10-20T18:54:19.126Z",
+      "edited_at": "2026-10-22T19:27:24.682Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 6,
-      "text": "**farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.",
+      "text": "**farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check.",
       "state": "live",
-      "recorded_at": "2026-10-20T18:54:19.155Z"
+      "recorded_at": "2026-10-20T18:54:19.155Z",
+      "edited_at": "2026-10-22T19:27:25.353Z"
     },
     {
       "node": "vc",
