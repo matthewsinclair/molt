@@ -71,7 +71,7 @@ Outside the diff: molt_find_user_repo's `for path in` has no `local path`, so it
 
 Next: issue 0015, on branch issue-0015 from main.
 
-## (2026-10-22 15:23Z)
+## (2026-10-22 15:23Z) (handled)
 
 issue-0015 handed over at b85fc84 (on main 57445e7; cad8a63 is the 0015 change, b85fc84 your local-path addition). Verdict on b85fc84 in ~/Devel/prj/Molt-wt/issue-0015, clean tree: bats -r test all tests passing under Homebrew bash 5.3 and under /bin/bash 3.2 (PATH=/bin:$PATH); shellcheck -x lib/*.sh liberators/*.sh bin/molt clean. Nothing further committed. Deviations from the spec: no-upstream is read from the branch config (symbolic-ref + branch.<b>.merge), not rev-parse @{upstream}, so a configured upstream that is gone counts as a failure, not a skip; any pull status other than 0 or 2 counts as failed; upgrade --self exits 1 on a failed pull; MOLT_UPGRADE_FAILED_PULLS is unset once read. Not done, for follow-up: web, utilz, pplr and bin/bootstrap.sh still pull with 2>/dev/null and say skipped; a repo with no upstream gets two warnings (_upgrade_warn_unpushed and the pull). Worktree stays until you confirm the merge. Starting 0035 next.
 
