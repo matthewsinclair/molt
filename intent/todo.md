@@ -18,7 +18,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
   - [x] 03: Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs
   - [-] 04: Move kovacs-sysadm into its home; then rhadamanth, then gyges
   - [x] 05: docs/guides/sleeve-agents.md: naming, roles, layers, the move
-  - [-] 06: Managed deny floor for sysadm
+  - [x] 06: Managed deny floor for sysadm
   - [x] 07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
 
 ## TODO
