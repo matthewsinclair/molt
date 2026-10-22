@@ -287,6 +287,14 @@
       "text": "Issue 0016 on issue-0016 (worktree ~/Devel/prj/Molt-wt/issue-0016, from 35270d3): molt_error to stderr; read every captured caller of a molt_error path; tests red first, both bashes, mutation, critic-shell; hand over with the head and the call sites read",
       "state": "live",
       "recorded_at": "2026-10-22T12:50:18.371Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 7,
+      "text": "Issue 0015 after 0016 hands over: branch issue-0015 from main at or after 35270d3; hv ruled run on, fail at the end. _upgrade_pull_repos and editors_upgrade's Doom pull lose 2>/dev/null; no upstream warns and skips; any other pull failure errors naming repo and git's words, liberators still run, upgrade ends non-zero without Sleeve ready. Tests: no-upstream, pull fails, Doom pull; faked pulls only",
+      "state": "live",
+      "recorded_at": "2026-10-22T13:03:21.051Z"
     }
   ],
   "messages": [

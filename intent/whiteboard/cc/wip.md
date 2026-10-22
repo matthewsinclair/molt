@@ -17,7 +17,7 @@ claims: [ISSUE:0016]
 
 ## TODO
 
-_(none)_
+- Issue 0015 after 0016 hands over: branch issue-0015 from main at or after 35270d3; hv ruled run on, fail at the end. _upgrade_pull_repos and editors_upgrade's Doom pull lose 2>/dev/null; no upstream warns and skips; any other pull failure errors naming repo and git's words, liberators still run, upgrade ends non-zero without Sleeve ready. Tests: no-upstream, pull fails, Doom pull; faked pulls only
 
 ## Holds
 
