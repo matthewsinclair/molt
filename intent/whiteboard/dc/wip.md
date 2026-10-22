@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 12:35Z
+heartbeat_at: 2026-10-22 12:36Z
 status: active
-focus: "22 Oct: 0032 guide complete at 8877401, with vc to land; 0022 held"
+focus: "22 Oct: 0032 guide at 8d45c1a, with vc to land; harness question to vc; 0022 held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ISSUE:0032 guide complete on Molt branch issue-0032-guide at 8877401 (worktree Molt-wt/issue-0032-guide): BWRAP-RESULT filled from hv's kovacs runs A/B (22 Oct). Open: sandbox handling of ~/.ssh/id_* and ~/.aws/credentials under bwrap untested, the floor refuses them first; a rerun with paths outside the floor's patterns is vc/hv's call. Waits on vc to land (edited)
+- ISSUE:0032 guide complete on Molt branch issue-0032-guide at 8d45c1a (worktree Molt-wt/issue-0032-guide): kovacs result as shown (sandbox started; id_* and credentials refused by the floor first; ~/.ssh/config the sandbox's own row). Harness: kovacs-creds.sh already probes ~/.ssh/config (prompt 3), asked vc whether a rerun or a Molt-matts copy is still wanted. Waits on vc to land (edited)
 
 ## TODO
 
