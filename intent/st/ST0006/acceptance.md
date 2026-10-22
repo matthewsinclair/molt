@@ -79,7 +79,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC017
 
-- AC017 On a sleeve whose manifest declares no enabled sysadm agent, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not -- satisfied: no (computed)
+- AC017 On a sleeve whose manifest declares no enabled sysadm agent, or whose vars.sh declares no MOLT_CLAUDE_CONFIG_DIR, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not -- satisfied: no (computed)
 
 ### Group AC018
 
@@ -761,7 +761,7 @@ _(no tests in this group)_
 
 ### Group AT070
 
-- AT070 `test/liberators/agents.bats` -- covers AC017 -- status: to-write -- to-write: with no enabled sysadm agent, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported
+- AT070 `test/liberators/agents.bats` -- covers AC017 -- status: to-write -- to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported
 
 ### Group AT071
 

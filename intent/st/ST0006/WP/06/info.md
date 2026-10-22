@@ -13,7 +13,7 @@ A sysadm sleeve agent's credential denies hold at a layer the agent cannot edit:
 
 ## Ruling
 
-hv, 21 Oct 2026, via cc: the floor's contents are credentials only, the two rules the role fence carries today, `Read(~/.ssh/id_*)` and `Read(~/.aws/credentials)`; nothing else (not a fence lock, not destructive-Bash denies, not "whatever the role's deny is"). Its scope is every sleeve whose `molt.toml` declares an enabled `[[agent]]` with `role = "sysadm"` (kovacs today); elsewhere Molt removes a floor file it rendered earlier. A managed file binds every Claude Code session on the sleeve, and deny always wins, so the floor also binds hv's own sessions there: that is the point, and the guide says so.
+hv, 21 Oct 2026, via cc: the floor's contents are credentials only, the two rules the role fence carries today, `Read(~/.ssh/id_*)` and `Read(~/.aws/credentials)`; nothing else (not a fence lock, not destructive-Bash denies, not "whatever the role's deny is"). Its scope (hv, 22 Oct, after seeing two answers side by side): every sleeve whose `molt.toml` declares an enabled `[[agent]]` with `role = "sysadm"` AND whose `vars.sh` declares `MOLT_CLAUDE_CONFIG_DIR`, the switch that arms the move and the home's guard hook; so kovacs now, rhadamanth at its WP04 move, gyges at its move. Elsewhere Molt renders none and removes a floor file it rendered earlier. A managed file binds every Claude Code session on the sleeve, and deny always wins, so the floor also binds hv's own sessions there: that is the point, and the guide says so.
 
 ## Where things live
 
@@ -26,7 +26,7 @@ hv, 21 Oct 2026, via cc: the floor's contents are credentials only, the two rule
 
 ## Rollout
 
-Molt first (cc, worktree `issue`-style branch `st0006-wp06`), CI green, vc merges; then Molt-matts (`floor.json` and the role text); then `molt upgrade` on kovacs, where hv answers the sudo prompt, and `molt agent config kovacs-sysadm` and doctor give AC020's evidence. rhadamanth and gyges declare no sysadm agent today and get nothing.
+Molt first (cc, worktree `issue`-style branch `st0006-wp06`), CI green, vc merges; then Molt-matts (`floor.json` and the role text); then `molt upgrade` on kovacs, where hv answers the sudo prompt, and `molt agent config kovacs-sysadm` and doctor give AC020's evidence. rhadamanth and gyges declare no config dir today and get nothing until their moves.
 
 ## Out of scope
 

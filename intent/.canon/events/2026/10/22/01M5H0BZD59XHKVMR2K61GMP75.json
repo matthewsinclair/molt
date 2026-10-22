@@ -1,0 +1,14 @@
+{
+  "id": "01M5H0BZD59XHKVMR2K61GMP75",
+  "ts": "2026-10-22T05:12:02.214Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.edit",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC017"
+  },
+  "payload": {
+    "text": "On a sleeve whose manifest declares no enabled sysadm agent, or whose vars.sh declares no MOLT_CLAUDE_CONFIG_DIR, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not"
+  }
+}
