@@ -6,7 +6,7 @@ session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
 heartbeat_at: 2026-10-22 12:39Z
 status: active
 focus: "22 Oct pm: ST0006 WP06 done, issue 0032 closed (2026-10-22 12:39Z: profile on kovacs, sandbox runs, guide landed 9b4fbe0); WP04 rhadamanth on hv's date (runbook b3a39fb, floor at B5), gyges later; estate renames done; 0022/0015/0016/0018 as before."
-claims: [ST0005, ST0006]
+claims: [ST0006]
 ---
 
 # Validation Claude (vc)

@@ -5,7 +5,7 @@ An index of every steel thread in the project. A steel thread is a self-containe
 | ID     | Title                                                               | Status    | Created    | Completed  |
 | ------ | ------------------------------------------------------------------- | --------- | ---------- | ---------- |
 | ST0006 | Sleeve agents: a named, role-bound home for a machine's local agent | WIP       | 2026-10-21 |            |
-| ST0005 | Utilz liberator: a checkout or Homebrew, per sleeve                 | WIP       | 2026-10-20 |            |
+| ST0005 | Utilz liberator: a checkout or Homebrew, per sleeve                 | Completed | 2026-10-20 | 2026-10-22 |
 | ST0004 | Intent liberator: install from Homebrew, hands off rhadamanth       | Completed | 2026-09-23 | 2026-09-23 |
 | ST0003 | Reproducible VM build and release artifact                          | Completed | 2026-09-08 | 2026-09-08 |
 | ST0002 | Proper per-instance config of per-instance variables                | Completed | 2026-03-23 | 2026-03-23 |

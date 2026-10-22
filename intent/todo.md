@@ -8,10 +8,6 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 
 ## DOING
 
-- [-] ST0005: Utilz liberator: a checkout or Homebrew, per sleeve
-  - [x] 01: Shared Homebrew check, trust gate included
-  - [x] 02: utilz: a checkout or Homebrew, per sleeve
-  - [-] 03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
 - [-] ST0006: Sleeve agents: a named, role-bound home for a machine's local agent
   - [x] 01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
   - [x] 02: [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config
@@ -57,6 +53,10 @@ _(none)_
   - [x] 02: Brew-only intent liberator
   - [x] 03: Roll out on gyges
   - [x] 04: Retire gyges's Intent v2 links and checkout (hv's action)
+- [x] ST0005: Utilz liberator: a checkout or Homebrew, per sleeve
+  - [x] 01: Shared Homebrew check, trust gate included
+  - [x] 02: utilz: a checkout or Homebrew, per sleeve
+  - [x] 03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
 
 ---
 
