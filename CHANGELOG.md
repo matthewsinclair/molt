@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-22
+
 ### Added
 
 - `test/manual/sandbox-creds.sh`, a manual probe of whether Claude Code's sandbox keeps a sandboxed sleeve agent's shell commands away from credential files: in a scratch HOME and config dir, with placeholder files, it starts the real Claude Code with `Read()` denies plus `sandbox.credentials.files` (A), the sandbox entries alone (B), or those plus paths no permission rule names (B2), and `clean` removes it all, login token included. The role the scratch home stands for is its second argument or `SANDBOX_CREDS_ROLE`, `ops` by default. It runs by hand from a plain terminal and refuses inside a Claude session; `bats -r test` never runs it (issue 0036)
