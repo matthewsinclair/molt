@@ -170,6 +170,7 @@ _agents_report_faults() {
     molt_report_faults "$log" "$prefix" "$name" "$(molt_agent_faults "$name" "$role")" || ok=1
   done <<< "$agents"
   molt_report_faults "$log" "$prefix" "managed floor" "$(molt_agent_floor_faults)" || ok=1
+  molt_report_faults "$log" "$prefix" "sandbox profile" "$(molt_agent_sandbox_faults)" || ok=1
   return $ok
 }
 
@@ -179,7 +180,7 @@ _agents_report_faults() {
 # stale; removes molt's drop-in, then its sidecar, where none has; and leaves,
 # naming it, a drop-in molt did not write.
 _agents_floor() {
-  local state target src sidecar digest why
+  local state target src why
   target="$(molt_agent_floor_target)"
   if ! state="$(molt_agent_floor_state)"; then
     molt_error "agents: managed floor: $state, so nothing was written"
@@ -194,7 +195,7 @@ _agents_floor() {
       molt_warn "agents: managed floor: $(molt_tilde "$target") was not written by molt, which leaves it"
       return 0 ;;
     leftover)
-      if ! why="$(molt_sudo_remove "$target" "${target}.molt-rendered")"; then
+      if ! why="$(molt_root_file_remove "$target")"; then
         molt_error "agents: managed floor: $why"
         return 1
       fi
@@ -205,20 +206,106 @@ _agents_floor() {
     molt_error "agents: managed floor: the user repo cannot be found, so nothing was written"
     return 1
   fi
-  if ! sidecar="$(mktemp "${TMPDIR:-/tmp}/molt-floor.XXXXXX")"; then
-    molt_error "agents: managed floor: no temporary file could be made for its sidecar, so nothing was written"
+  if ! why="$(molt_root_file_install "$src" "$target")"; then
+    molt_error "agents: managed floor: $why"
     return 1
   fi
-  digest="$(molt_hash < "$src")" || digest=""
-  if ! molt_render_sidecar "$src" "$digest" "$src" > "$sidecar" \
-      || ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
-      || ! why="$(molt_sudo_install "$src" "$target")"; then
-    rm -f "$sidecar"
-    molt_error "agents: managed floor: ${why:-its sidecar could not be written}"
-    return 1
-  fi
-  rm -f "$sidecar"
   molt_info "Rendered: $src -> $target"
+}
+
+# Loads molt's sandbox profile at $1 and tries bwrap under it. A bwrap that is
+# not installed is a warning, since the profile is in place and nothing could
+# be tried; bwrap's children still refused is a failure.
+_agents_sandbox_take() {
+  local why status=0
+  if ! why="$(molt_apparmor_load "$1")"; then
+    molt_error "agents: sandbox profile: $why"
+    return 1
+  fi
+  molt_info "Loaded: $(molt_tilde "$1")"
+  why="$(molt_agent_sandbox_probe)" || status=$?
+  case $status in
+    0) ;;
+    2) molt_warn "agents: sandbox profile: $why" ;;
+    *)
+      molt_error "agents: sandbox profile: $why"
+      return 1 ;;
+  esac
+}
+
+# Puts this sleeve's sandbox profile right. Where a Linux sleeve gives an ops or
+# docs agent a home: checks this sleeve's AppArmor parses molt's, keeps the
+# distro's profile once as .molt-orig, installs molt's, its sidecar first, then
+# loads it and tries bwrap; loads molt's again where it is in place but bwrap's
+# children are still refused. Where none is wanted and molt's is in place: puts
+# the distro's back and loads it, then removes the sidecar and the orig. Any
+# other profile is left.
+_agents_sandbox() {
+  local state target orig src why status=0
+  target="$(molt_agent_sandbox_target)"
+  orig="$(molt_agent_sandbox_orig)"
+  src="$(molt_agent_sandbox_source)"
+  if ! state="$(molt_agent_sandbox_state)"; then
+    molt_error "agents: sandbox profile: $state, so nothing was written"
+    return 1
+  fi
+  # Nothing is written that this sleeve's AppArmor cannot load.
+  case "$state" in
+    missing | stale | foreign)
+      if ! why="$(molt_apparmor_parses "$src")"; then
+        molt_error "agents: sandbox profile: $why, so nothing was written"
+        return 1
+      fi ;;
+  esac
+  case "$state" in
+    absent | unowned) return 0 ;;
+    current)
+      why="$(molt_agent_sandbox_probe)" || status=$?
+      case $status in
+        0) return 0 ;;
+        2)
+          molt_warn "agents: sandbox profile: $why"
+          return 0 ;;
+      esac
+      _agents_sandbox_take "$target"
+      return ;;
+    leftover)
+      if [[ ! -e "$orig" ]]; then
+        molt_error "agents: sandbox profile: there is no $(molt_tilde "$orig") to put back, so $(molt_tilde "$target") is left"
+        return 1
+      fi
+      # The sidecar and the orig go only once the distro's is back and loaded,
+      # so a run cut short, or a load refused, leaves a profile molt still
+      # answers for.
+      if ! why="$(molt_sudo_install "$orig" "$target")" \
+          || ! why="$(molt_apparmor_load "$target")" \
+          || ! why="$(molt_sudo_remove "${target}.molt-rendered" "$orig")"; then
+        molt_error "agents: sandbox profile: $why"
+        return 1
+      fi
+      molt_info "Restored the distro's $(molt_tilde "$target") from $(molt_tilde "$orig")"
+      return 0 ;;
+    foreign)
+      # Only the distro's is replaced: kept first, or kept already by a run cut
+      # short, which left it in place again.
+      if [[ -e "$orig" ]] && ! cmp -s "$target" "$orig"; then
+        molt_report_faults molt_error "agents: " "sandbox profile" "$(molt_agent_sandbox_faults foreign)"
+        return 1
+      fi
+      if [[ ! -e "$orig" ]]; then
+        if ! why="$(molt_sudo_install "$target" "$orig")"; then
+          molt_error "agents: sandbox profile: $why"
+          return 1
+        fi
+        molt_info "Kept the distro's $(molt_tilde "$target") as $(molt_tilde "$orig")"
+      fi ;;
+  esac
+  if ! why="$(molt_root_file_install "$src" "$target")"; then
+    molt_error "agents: sandbox profile: $why"
+    return 1
+  fi
+  molt_info "Rendered: $src -> $target"
+  _agents_sandbox_take "$target"
 }
 
 agents_check() {
@@ -248,6 +335,7 @@ agents_install() {
     _agents_render "$name" "$role" || failed=1
   done <<< "$agents"
   _agents_floor || failed=1
+  _agents_sandbox || failed=1
   if [[ $failed -ne 0 ]]; then
     return 1
   fi

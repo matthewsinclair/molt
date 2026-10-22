@@ -1,0 +1,108 @@
+# Molt's copy of /etc/apparmor.d/bwrap-userns-restrict (issue 0032).
+#
+# Copied from Ubuntu 26.04's apparmor 5.0.2-0ubuntu1~26.04.1, abi 5.0. Molt
+# installs it on a Linux sleeve that enables an ops or docs agent, keeping the
+# distro's file beside it as bwrap-userns-restrict.molt-orig, and puts that back
+# when the sleeve no longer needs this one. It is a dpkg conffile: when the
+# apparmor package next changes it, dpkg asks; keep this copy, and molt upgrade
+# compares it byte for byte. A new Ubuntu release is a refresh of this file.
+#
+# One change from the distro's: unpriv_bwrap, the profile bwrap's children run
+# under, lets them have sys_admin, which Claude Code's sandbox needs to make its
+# nested user namespace and write its uid_map. Every other capability stays
+# denied. The denies are written out by name because AppArmor has no "all but
+# one": a deny outranks any allow, so the distro's blanket
+# `audit deny capability,` cannot be kept beside an allow of sys_admin, and on
+# this release a priority=1 allow in local/unpriv_bwrap does not outrank it
+# either (hv ran it on kovacs, 22 Oct 2026). The list is every capability the
+# kernel knows (0 to 40, cap_last_cap) but sys_admin (21).
+#
+# The distro's file follows, as it was.
+
+# This profile allows almost everything and only exists to allow bwrap
+# to work on a system with user namespace restrictions being enforced.
+# bwrap is allowed access to user namespaces and capabilities within
+# the user namespace, but its children do not have capabilities,
+# blocking bwrap from being able to be used to arbitrarily by-pass the
+# user namespace restrictions.
+
+# Note: the bwrap child is stacked against the bwrap profile due to
+# bwraps use of no-new-privs.
+
+abi <abi/5.0>,
+
+include <tunables/global>
+
+profile bwrap /usr/bin/bwrap flags=(attach_disconnected,mediate_deleted) {
+  allow capability,
+  # not allow all, to allow for pix stack on systems that don't support
+  # rule priority.
+  #
+  # sadly we have to allow 'm' every where to allow children to work under
+  # profile stacking atm.
+  allow file rwlkm /{**,},
+  allow network,
+  allow unix,
+  allow ptrace,
+  allow signal,
+  allow mqueue,
+  allow io_uring,
+  allow userns,
+  allow mount,
+  allow umount,
+  allow pivot_root,
+  allow dbus,
+
+  # stacked like this due to no-new-privs restriction
+  # this will stack a target profile against bwrap and unpriv_bwrap
+  # Ideally
+  # - there would be a transition at userns creation first. This would allow
+  #   for the bwrap profile to be tighter, and looser within the user
+  #   ns. bwrap will still have to fairly loose until a transition at
+  #   namespacing in general (not just user ns) is available.
+  # - there would be an independent second target as fallback
+  #   This would allow for select target profiles to be used, and not
+  #   necessarily stack the unpriv_bwrap in cases where this is desired
+  #
+  # the ix works here because stack will apply to ix fallback
+  # Ideally we would sanitize the environment across a privilege boundry
+  # (leaving bwarp into application) but flatpak etc use environment glibc
+  # sanitized environment variables as part of the sandbox setup.
+  allow pix /** -> &bwrap//&unpriv_bwrap,
+
+  # the local include should not be used without understanding the userns
+  # restriction.
+  # Site-specific additions and overrides. See local/README for details.
+  include if exists <local/bwrap-userns-restrict>
+}
+
+# The unpriv_bwrap profile is used to strip capabilities within the userns
+profile unpriv_bwrap flags=(attach_disconnected,mediate_deleted) {
+  # not allow all, to allow for pix stack
+  allow file rwlkm /{**,},
+  allow network,
+  allow unix,
+  allow ptrace,
+  allow signal,
+  allow mqueue,
+  allow io_uring,
+  allow userns,
+  allow mount,
+  allow umount,
+  allow pivot_root,
+  allow dbus,
+
+  # bwrap profile does stacking against itself this will keep the target
+  # profile from having elevated privileges in the container.
+  # If done recursively the stack will remove any duplicate
+  allow pix /** -> &unpriv_bwrap,
+
+  # Molt: the distro's `audit deny capability,`, less sys_admin.
+  allow capability sys_admin,
+  audit deny capability chown dac_override dac_read_search fowner fsetid kill setgid setuid setpcap linux_immutable net_bind_service net_broadcast net_admin net_raw ipc_lock ipc_owner sys_module sys_rawio sys_chroot sys_ptrace sys_pacct sys_boot sys_nice sys_resource sys_time sys_tty_config mknod lease audit_write audit_control setfcap mac_override mac_admin syslog wake_alarm block_suspend audit_read perfmon bpf checkpoint_restore,
+
+  # the local include should not be used without understanding the userns
+  # restriction.
+  # Site-specific additions and overrides. See local/README for details.
+  include if exists <local/unpriv_bwrap>
+}

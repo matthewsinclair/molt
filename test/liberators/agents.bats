@@ -23,6 +23,9 @@ setup_agents() {
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/claude-config"
     install_fake_sudo
     export FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
+    # macOS, which takes no sandbox profile, on every runner, so an ops or docs
+    # agent here asks nothing of AppArmor; the sandbox's tests say linux.
+    eval 'molt_platform() { echo macos; }'
 
     cat > "$ROLE/AGENTS.md.tmpl" <<'EOF'
 # ${MOLT_AGENT_NAME}
@@ -855,4 +858,295 @@ _ops_role() {
         [ ! -e "$AGENT_HOME" ]
         [ ! -e "$BATS_TEST_TMPDIR/managed" ]
     done
+}
+
+# --- The sandbox profile (issue 0032) ---
+
+# A Linux sleeve with an ops agent, AppArmor in the test directory, and the
+# distro's profile there as Ubuntu ships it, standing in as a line of text.
+_sandbox_sleeve() {
+    setup_agents
+    _ops_role
+    write_manifest '[[agent]]' 'role = "ops"'
+    eval 'molt_platform() { echo linux; }'
+    install_fake_apparmor
+    export PROFILE="$BATS_TEST_TMPDIR/apparmor.d/bwrap-userns-restrict"
+    export PROFILE_SRC="$MOLT_ROOT/templates/apparmor/bwrap-userns-restrict.tmpl"
+    echo "the distro's profile" > "$PROFILE"
+}
+
+@test "the sandbox profile's template is the distro's unpriv_bwrap less sys_admin: every other capability denied by name" {
+    local src="$MOLT_ROOT/templates/apparmor/bwrap-userns-restrict.tmpl" denied
+    grep -q '^  allow capability sys_admin,$' "$src"
+    run grep -q '^  audit deny capability,$' "$src"
+    assert_failure
+    denied="$(sed -n 's/^  audit deny capability \(.*\),$/\1/p' "$src")"
+    [ "$(wc -w <<< "$denied")" -eq 40 ]
+    run grep -qw sys_admin <<< "$denied"
+    assert_failure
+    grep -q '^  include if exists <local/unpriv_bwrap>$' "$src"
+    grep -q 'apparmor 5.0.2-0ubuntu1~26.04.1' "$src"
+}
+
+@test "agents install puts molt's sandbox profile in place through sudo, keeping the distro's once as .molt-orig, loads it, tries bwrap, and a second run writes nothing" {
+    _sandbox_sleeve
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is not molt's, so bwrap's children are denied the sys_admin Claude Code's sandbox needs"
+    run agents_install
+    assert_success
+    assert_output_contains "Kept the distro's $PROFILE as $PROFILE.molt-orig"
+    assert_output_contains "Rendered: $PROFILE_SRC -> $PROFILE"
+    assert_output_contains "Loaded: $PROFILE"
+    cmp "$PROFILE_SRC" "$PROFILE"
+    [ "$(cat "$PROFILE.molt-orig")" = "the distro's profile" ]
+    [ "$(test_file_mode "$PROFILE")" = 644 ]
+    [ "$(test_file_mode "$PROFILE.molt-rendered")" = 644 ]
+    [ "$(test_file_mode "$PROFILE.molt-orig")" = 644 ]
+    grep -q "^sudo apparmor_parser -r $PROFILE\$" "$BATS_TEST_TMPDIR/sudo.log"
+    [ "$(cat "$BATS_TEST_TMPDIR/apparmor.log")" = "$(printf 'apparmor_parser -Q -K -I %s %s\napparmor_parser -r %s' "$BATS_TEST_TMPDIR/apparmor.d" "$PROFILE_SRC" "$PROFILE")" ]
+    [ ! -e "$FLOOR" ]
+    run agents_check
+    assert_success
+    rm -f "$BATS_TEST_TMPDIR/sudo.log" "$BATS_TEST_TMPDIR/apparmor.log"
+    run agents_install
+    assert_success
+    refute_output_contains "$PROFILE"
+    [ ! -e "$BATS_TEST_TMPDIR/sudo.log" ]
+
+    # A distro update that rewrote the file reads as stale, and molt's goes
+    # back; the distro's first copy is never overwritten.
+    echo "the distro's next profile" > "$PROFILE"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is not $PROFILE_SRC"
+    run agents_install
+    assert_success
+    cmp "$PROFILE_SRC" "$PROFILE"
+    [ "$(cat "$PROFILE.molt-orig")" = "the distro's profile" ]
+
+    # A run cut short after the distro's was put back, before the sidecar
+    # went, is picked up where it stopped.
+    cp "$PROFILE.molt-orig" "$PROFILE"
+    rm -f "$PROFILE.molt-rendered"
+    run agents_install
+    assert_success
+    refute_output_contains "Kept the distro's"
+    cmp "$PROFILE_SRC" "$PROFILE"
+    [ "$(cat "$PROFILE.molt-orig")" = "the distro's profile" ]
+
+    # Somebody else's in molt's place is neither replaced nor kept over the
+    # distro's.
+    rm -f "$PROFILE.molt-rendered"
+    echo "somebody's profile" > "$PROFILE"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is neither molt's nor the distro's kept in $PROFILE.molt-orig, so molt leaves it"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is neither molt's nor the distro's kept in $PROFILE.molt-orig, so molt leaves it"
+    [ "$(cat "$PROFILE")" = "somebody's profile" ]
+    [ "$(cat "$PROFILE.molt-orig")" = "the distro's profile" ]
+    cp "$PROFILE.molt-orig" "$PROFILE"
+    agents_install >/dev/null
+
+    # A docs agent takes it too.
+    write_manifest '[[agent]]' 'role = "docs"'
+    mkdir -p "$TEST_USER_REPO/config/agents/roles/docs"
+    cp "$ROLE/AGENTS.md.tmpl" "$ROLE/settings.json.tmpl" "$TEST_USER_REPO/config/agents/roles/docs/"
+    run molt_agent_sandbox_state
+    assert_success
+    [ "$output" = current ]
+}
+
+@test "the sandbox profile fails by name: sudo refusing, a profile that does not parse, apparmor_parser failing or absent, bwrap's children still refused, bwrap or unshare absent, a target that cannot be read; a Linux sleeve with no distro profile takes none" {
+    _sandbox_sleeve
+    FAKE_SUDO_STATUS=1 run agents_install
+    assert_failure
+    assert_output_contains "agents: sandbox profile: sudo could not install $PROFILE.molt-orig"
+    [ "$(cat "$PROFILE")" = "the distro's profile" ]
+    [ ! -e "$PROFILE.molt-orig" ]
+    [ ! -e "$PROFILE.molt-rendered" ]
+
+    # A profile this sleeve's AppArmor cannot parse is never written.
+    FAKE_PARSER_CHECK_STATUS=1 run agents_install
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE_SRC does not parse under this sleeve's AppArmor, so nothing was written"
+    [ "$(cat "$PROFILE")" = "the distro's profile" ]
+    [ ! -e "$PROFILE.molt-orig" ]
+
+    FAKE_PARSER_STATUS=1 run agents_install
+    assert_failure
+    assert_output_contains "agents: sandbox profile: apparmor_parser could not load $PROFILE"
+    cmp "$PROFILE_SRC" "$PROFILE"
+
+    # In place but not taking: the probe says so, and install loads it again.
+    export FAKE_BWRAP_STATUS=1
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is molt's, but bwrap's children still cannot make the sandbox's user namespace: unshare: write failed /proc/self/uid_map: Operation not permitted"
+    rm -f "$BATS_TEST_TMPDIR/apparmor.log"
+    run agents_install
+    assert_failure
+    assert_output_contains "bwrap's children still cannot make the sandbox's user namespace"
+    [ "$(cat "$BATS_TEST_TMPDIR/apparmor.log")" = "apparmor_parser -r $PROFILE" ]
+    unset FAKE_BWRAP_STATUS
+    run agents_check
+    assert_success
+
+    # unshare absent is named, a warning in install, and no reload is tried
+    # for it. Runs where the system has no unshare in /usr/bin or /bin.
+    local saved="$PATH" bare="$BATS_TEST_TMPDIR/bin:/usr/bin:/bin"
+    rm -f "$BATS_TEST_TMPDIR/bin/unshare"
+    if ! PATH="/usr/bin:/bin" command -v unshare >/dev/null; then
+        PATH="$bare"
+        run molt_agent_sandbox_faults
+        rm -f "$BATS_TEST_TMPDIR/apparmor.log"
+        local installed
+        installed="$(agents_install 2>&1)"
+        PATH="$saved"
+        assert_output_contains "unshare is not installed, so whether Claude Code's sandbox can start cannot be tried"
+        [[ "$installed" == *"agents: sandbox profile: unshare is not installed"* ]]
+        [ ! -e "$BATS_TEST_TMPDIR/apparmor.log" ]
+    fi
+    install_fake_apparmor
+
+    # bwrap or apparmor_parser absent is named. Each arm runs where the system's
+    # own is not in /usr/bin or /bin, as on macOS; the fakes go first.
+    rm -f "$BATS_TEST_TMPDIR/bin/bwrap"
+    if ! PATH="/usr/bin:/bin" command -v bwrap >/dev/null; then
+        PATH="$bare"
+        run molt_agent_sandbox_faults
+        PATH="$saved"
+        assert_output_contains "bwrap is not installed, so whether Claude Code's sandbox can start cannot be tried"
+    fi
+    rm -f "$BATS_TEST_TMPDIR/bin/apparmor_parser"
+    if ! PATH="/usr/bin:/bin" command -v apparmor_parser >/dev/null; then
+        PATH="$bare"
+        run molt_agent_sandbox_faults
+        PATH="$saved"
+        assert_output_contains "apparmor_parser is not installed, so the sandbox profile cannot be loaded"
+    fi
+    install_fake_apparmor
+
+    chmod 000 "$PROFILE"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE could not be compared with $PROFILE_SRC"
+    run agents_install
+    assert_failure
+    assert_output_contains "$PROFILE could not be compared with $PROFILE_SRC, so nothing was written"
+    chmod 644 "$PROFILE"
+
+    # A Linux sleeve whose distro ships no bwrap-userns-restrict restricts no
+    # bwrap, so it takes none, and nothing is written.
+    rm -f "$PROFILE" "$PROFILE.molt-rendered" "$PROFILE.molt-orig" "$BATS_TEST_TMPDIR/sudo.log"
+    run molt_agent_sandbox_wanted
+    assert_failure
+    run agents_check
+    assert_success
+    run agents_install
+    assert_success
+    [ ! -e "$PROFILE" ]
+    [ ! -e "$BATS_TEST_TMPDIR/sudo.log" ]
+    # Nor is the distro's kept copy without its profile a sleeve that takes none.
+    echo "the distro's profile" > "$PROFILE.molt-orig"
+    run molt_agent_sandbox_state
+    [ "$output" = missing ]
+    run agents_install
+    assert_success
+    cmp "$PROFILE_SRC" "$PROFILE"
+}
+
+@test "a sleeve that no longer takes the sandbox profile gets the distro's back and the profile reloaded; one molt did not write is left, silently; no .molt-orig fails by name and leaves everything" {
+    _sandbox_sleeve
+    agents_install >/dev/null
+    write_manifest '[[agent]]' 'role = "ops"' 'enabled = false'
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is molt's, and this sleeve takes no sandbox profile: it enables no ops or docs agent, or is not Linux"
+    rm -f "$BATS_TEST_TMPDIR/apparmor.log"
+    run agents_install
+    assert_success
+    assert_output_contains "Restored the distro's $PROFILE from $PROFILE.molt-orig"
+    [ "$(cat "$PROFILE")" = "the distro's profile" ]
+    [ ! -e "$PROFILE.molt-rendered" ]
+    [ ! -e "$PROFILE.molt-orig" ]
+    [ "$(cat "$BATS_TEST_TMPDIR/apparmor.log")" = "apparmor_parser -r $PROFILE" ]
+
+    # A restore the kernel did not take is still molt's to finish: the sidecar
+    # and the orig stay until the distro's is loaded.
+    write_manifest '[[agent]]' 'role = "ops"'
+    agents_install >/dev/null
+    write_manifest '[[agent]]' 'role = "ops"' 'enabled = false'
+    FAKE_PARSER_STATUS=1 run agents_install
+    assert_failure
+    assert_output_contains "agents: sandbox profile: apparmor_parser could not load $PROFILE"
+    [ "$(cat "$PROFILE")" = "the distro's profile" ]
+    [ -f "$PROFILE.molt-rendered" ]
+    [ -f "$PROFILE.molt-orig" ]
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: $PROFILE is molt's, and this sleeve takes no sandbox profile"
+    run agents_install
+    assert_success
+    assert_output_contains "Restored the distro's $PROFILE from $PROFILE.molt-orig"
+    [ ! -e "$PROFILE.molt-rendered" ]
+
+    # The distro's own, on a sleeve that takes none, is left, and said nothing of.
+    run agents_check
+    assert_success
+    run agents_install
+    assert_success
+    refute_output_contains "$PROFILE"
+    [ "$(cat "$PROFILE")" = "the distro's profile" ]
+
+    # macOS takes none, whatever its agents.
+    write_manifest '[[agent]]' 'role = "ops"'
+    eval 'molt_platform() { echo macos; }'
+    run molt_agent_sandbox_wanted
+    assert_failure
+    eval 'molt_platform() { echo linux; }'
+
+    agents_install >/dev/null
+    rm -f "$PROFILE.molt-orig"
+    write_manifest '[[agent]]' 'role = "ops"' 'enabled = false'
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: sandbox profile: there is no $PROFILE.molt-orig to put back"
+    run agents_install
+    assert_failure
+    assert_output_contains "agents: sandbox profile: there is no $PROFILE.molt-orig to put back, so $PROFILE is left"
+    cmp "$PROFILE_SRC" "$PROFILE"
+    [ -f "$PROFILE.molt-rendered" ]
+
+    # [[agent]] entries that cannot be read are a failure, not a sleeve that
+    # takes none: molt's profile stays.
+    eval 'molt_agents() { return 1; }'
+    run molt_agent_sandbox_state
+    assert_failure
+    assert_output_contains "the [[agent]] entries in molt.toml could not be read"
+    run agents_install
+    assert_failure
+    cmp "$PROFILE_SRC" "$PROFILE"
+}
+
+@test "molt agent config says whether an ops or docs agent's sandbox profile is in place, and a sysadm agent's says nothing of it" {
+    _sandbox_sleeve
+    run cmd_agent config "$SLEEVE-ops"
+    assert_success
+    assert_output_contains "$(printf '  %-9s %s' sandbox "$PROFILE is not molt's, so bwrap's children are denied the sys_admin Claude Code's sandbox needs")"
+    agents_install >/dev/null
+    run cmd_agent config "$SLEEVE-ops"
+    assert_success
+    assert_output_contains "$(printf '  %-9s %s' sandbox "in place: $PROFILE")"
+    eval 'molt_platform() { echo macos; }'
+    rm -f "$PROFILE" "$PROFILE.molt-rendered"
+    run cmd_agent config "$SLEEVE-ops"
+    assert_success
+    assert_output_contains "$(printf '  %-9s %s' sandbox "none needed on this sleeve")"
+    write_manifest '[[agent]]' 'role = "sysadm"'
+    run cmd_agent config "$NAME"
+    assert_success
+    refute_output_contains "sandbox"
 }

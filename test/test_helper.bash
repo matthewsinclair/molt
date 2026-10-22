@@ -196,6 +196,33 @@ FAKE
     esac
 }
 
+# AppArmor in the test directory: molt_apparmor_dir answers
+# $BATS_TEST_TMPDIR/apparmor.d, and a fake apparmor_parser, bwrap and unshare go
+# first on PATH, with the fake sudo. The parser logs each call to
+# $BATS_TEST_TMPDIR/apparmor.log and exits FAKE_PARSER_STATUS, or
+# FAKE_PARSER_CHECK_STATUS for a -Q parse that loads nothing; bwrap exits
+# FAKE_BWRAP_STATUS, saying why on stderr as unshare does. Neither the real
+# /etc/apparmor.d nor the kernel's policy is reached.
+install_fake_apparmor() {
+    install_fake_sudo
+    mkdir -p "$BATS_TEST_TMPDIR/apparmor.d"
+    eval "molt_apparmor_dir() { echo \"$BATS_TEST_TMPDIR/apparmor.d\"; }"
+    cat > "$BATS_TEST_TMPDIR/bin/apparmor_parser" <<'FAKE'
+#!/usr/bin/env bash
+echo "apparmor_parser $*" >> "$BATS_TEST_TMPDIR/apparmor.log"
+[ "$1" = -Q ] && exit "${FAKE_PARSER_CHECK_STATUS:-0}"
+exit "${FAKE_PARSER_STATUS:-0}"
+FAKE
+    cat > "$BATS_TEST_TMPDIR/bin/bwrap" <<'FAKE'
+#!/usr/bin/env bash
+[ "${FAKE_BWRAP_STATUS:-0}" -eq 0 ] && exit 0
+echo "unshare: write failed /proc/self/uid_map: Operation not permitted" >&2
+exit "$FAKE_BWRAP_STATUS"
+FAKE
+    printf '#!/bin/sh\nexit 0\n' > "$BATS_TEST_TMPDIR/bin/unshare"
+    chmod +x "$BATS_TEST_TMPDIR/bin/apparmor_parser" "$BATS_TEST_TMPDIR/bin/bwrap" "$BATS_TEST_TMPDIR/bin/unshare"
+}
+
 # A Homebrew prefix in the test directory holding one installed formula, and a
 # brew stub first on PATH that answers from it. Nothing reaches the real brew.
 # Usage: fake_brew_formula <name> <version> <command> [<utility>...]
