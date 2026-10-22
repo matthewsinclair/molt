@@ -2,7 +2,7 @@
 wp_id: WP-06
 title: Managed deny floor for sysadm
 scope: S
-status: WIP
+status: Done
 ---
 
 # WP-06: Managed deny floor for sysadm

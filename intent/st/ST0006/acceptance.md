@@ -91,7 +91,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC020
 
-- AC020 (non-test) kovacs carries the floor: after molt upgrade, molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the user layer, the drop-in and its sidecar are root-owned 644, and doctor check 14 passes -- satisfied: no
+- AC020 (non-test) kovacs carries the floor: after molt upgrade, molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the user layer, the drop-in and its sidecar are root-owned 644, and doctor check 14 passes -- evidence: kovacs, 22 Oct 2026, after hv's molt upgrade from a plain terminal (Molt 842a080, Molt-matts 5220ca8): kovacs-sysadm ran, read-only, molt agent config kovacs-sysadm, which lists /etc/claude-code/managed-settings.d/molt-sysadm.json in the managed layer with Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the same two from the home's fence; and molt doctor, 14/14 passing with check 14 'Checking managed floor... in place: /etc/claude-code/managed-settings.d/molt-sysadm.json'; ls shows molt-sysadm.json and its .molt-rendered sidecar root:root 644. Output relayed verbatim to vc's session -- satisfied: yes
 
 ### Group AC021
 
@@ -777,7 +777,7 @@ _(no tests in this group)_
 
 ### Group AT074
 
-- AT074 (non-test) kovacs after the WP06 upgrade: molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed; ls -l of molt-sysadm.json and its sidecar root-owned 644; doctor check 14 passes -- covers AC020 -- status: n/a -- to-write: evidence from kovacs-sysadm after the upgrade
+- AT074 (non-test) kovacs after the WP06 upgrade: molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed; ls -l of molt-sysadm.json and its sidecar root-owned 644; doctor check 14 passes -- covers AC020 -- status: n/a -- to-write: evidence from kovacs-sysadm after the upgrade. Done 22 Oct 2026 on kovacs by kovacs-sysadm after hv's upgrade; the two commands' output is AC020's evidence
 
 ### Group AT075
 

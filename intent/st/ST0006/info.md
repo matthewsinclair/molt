@@ -77,7 +77,7 @@ The agent home is both the agent's config and its runtime directory: Claude Code
 | WP-03 | Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs         | S    | Done   |
 | WP-04 | Move kovacs-sysadm into its home; then rhadamanth, then gyges                                                          | S    | WIP    |
 | WP-05 | docs/guides/sleeve-agents.md: naming, roles, layers, the move                                                          | S    | Done   |
-| WP-06 | Managed deny floor for sysadm                                                                                          | S    | WIP    |
+| WP-06 | Managed deny floor for sysadm                                                                                          | S    | Done   |
 | WP-07 | Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)                         | S    | Done   |
 
 ## Acceptance

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T06:28:36.300Z",
+    "heartbeat_at": "2026-10-22T07:21:23.052Z",
     "status": "active",
-    "focus": "22 Oct: ST0006 WP06 merged (Molt 02f51a2, Molt-matts 5220ca8); AC020 waits on kovacs (hv's sudo at molt upgrade, kovacs-sysadm's config+doctor); WP04 rhadamanth on hv's date; 0032 (kovacs sandbox) for hv; 0033 with cc; estate renames with the estate Claudes.",
+    "focus": "22 Oct: ST0006 WP06 DONE (floor on kovacs, AC020 evidence); ST0006 open on WP04 (rhadamanth on hv's date, gyges later); 0032 (kovacs sandbox) for hv; 0033/0034 closed; estate renames done, Gtools side with the estate Claudes.",
     "claims": [
       "ST0005",
       "ST0006"
@@ -403,7 +403,8 @@
       "kind": "todo",
       "seq": 16,
       "text": "WP06 landed 22 Oct: Molt merge 8656983 + guide, CI green at 3ae65ce; Molt-matts 5220ca8 (floor.json, role sentence); AT068-AT073 green, AC010/017/018/019/021 satisfied. Left: kovacs molt upgrade with hv at the sudo prompt, then kovacs-sysadm's molt agent config kovacs-sysadm and molt doctor (check 14 in place) as AC020/AT074 evidence, then wp done ST0006/06. Follow-ups 0033 and 0034 merged and closed (37ef7e0, 938e2d6); cc's queue is empty.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T07:21:23.019Z",
       "recorded_at": "2026-10-21T20:04:19.921Z",
       "edited_at": "2026-10-22T07:05:44.613Z"
     },
