@@ -127,6 +127,53 @@ test_file_mode() {
     stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1"
 }
 
+# Clone an origin made in the test directory, holding the executable files
+# named relative to it, into dest, and set TEST_ORIGIN to the origin, so a test
+# can unset the clone's upstream or remove the origin to make a pull fail.
+# Usage: clone_test_origin "$UTILZ_HOME" bin/utilz
+clone_test_origin() {
+    local dest="$1" f
+    shift
+    TEST_ORIGIN="$BATS_TEST_TMPDIR/$(basename "$dest")-origin"
+    mkdir -p "$TEST_ORIGIN"
+    for f in "$@"; do
+        mkdir -p "$TEST_ORIGIN/$(dirname "$f")"
+        printf '#!/bin/bash\n' > "$TEST_ORIGIN/$f"
+        chmod +x "$TEST_ORIGIN/$f"
+    done
+    : > "$TEST_ORIGIN/README"
+    git -C "$TEST_ORIGIN" init -q
+    git -C "$TEST_ORIGIN" add -A
+    git -c user.name=test -c user.email=test@example.com -C "$TEST_ORIGIN" commit -qm init
+    git clone -q "$TEST_ORIGIN" "$dest"
+}
+
+# An upgrade hook pulling the clone_test_origin repo at $repo reports it
+# updated; with no upstream it warns and passes; with its origin gone it fails,
+# naming the repo and git's reason (issue 0037).
+# Usage: assert_upgrade_hook_pulls web_upgrade web "$repo"
+assert_upgrade_hook_pulls() {
+    local hook="$1" label="$2" repo="$3"
+    run "$hook"
+    assert_success
+    assert_output_contains "$label repo updated."
+
+    git -C "$repo" branch -q --unset-upstream
+    run "$hook"
+    assert_success
+    assert_output_contains "$label pull skipped: $repo has no upstream branch"
+    refute_output_contains "$label repo updated."
+
+    git -C "$repo" branch -q --set-upstream-to="origin/$(git -C "$repo" branch --show-current)"
+    rm -rf "$TEST_ORIGIN"
+    run "$hook"
+    assert_failure
+    assert_output_contains "$label pull failed in $repo:"
+    assert_output_contains "$TEST_ORIGIN"
+    refute_output_contains "pull skipped"
+    refute_output_contains "$label repo updated."
+}
+
 # Create a mock molt-{user} repo with config/ directory
 # Usage: create_test_repo "$BATS_TEST_TMPDIR/molt-testuser"
 create_test_repo() {
