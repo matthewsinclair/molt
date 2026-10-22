@@ -199,10 +199,11 @@ molt_agent_home() {
   echo "${MOLT_AGT_DIR}/$1"
 }
 
-# Where the user repo defines the role $1. Fails when there is no user repo.
+# Where the user repo defines the role $1. Fails, printing nothing, when there
+# is no user repo: its callers say so in their own words.
 molt_agent_role_dir() {
   local user_repo
-  user_repo="$(molt_find_user_repo)" || return 1
+  user_repo="$(molt_find_user_repo 2>/dev/null)" || return 1
   echo "${user_repo}/config/agents/roles/$1"
 }
 

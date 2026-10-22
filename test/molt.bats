@@ -427,6 +427,69 @@ TOML
     refute_output_contains "Sleeve ready"
 }
 
+# --- Where errors go (issue 0016) ---
+
+@test "molt_error writes to stderr, and warnings and the rest to stdout, so a captured call never takes an error for its value" {
+    load_molt_libs
+    [ "$(molt_error boom 2>/dev/null)" = "" ]
+    [ "$(molt_error boom 2>&1 >/dev/null)" = "Zen [error]: boom" ]
+    [ "$(molt_warn careful 2>/dev/null)" = "Zen [warning]: careful" ]
+    [ "$(molt_info hello 2>/dev/null)" = "Zen: hello" ]
+}
+
+# A sleeve with no user config repo, in this shell.
+_no_user_repo() {
+    unset MOLT_PRJ_DIR
+    export HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+    load_molt_libs
+}
+
+@test "a caller that captures molt_find_user_repo and fails on it no longer swallows what it searched" {
+    _no_user_repo
+    run molt_resleeve false true
+    assert_failure
+    assert_output_contains "Could not find user config repo (Molt-$(whoami))."
+    assert_output_contains "Searched:"
+    assert_output_contains "  $BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    assert_output_contains "Cannot resleeve without a user config repo."
+}
+
+@test "a caller that discards the lookup's stderr reads no repo, not the error's text" {
+    _no_user_repo
+    load_liberator git
+    run git_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: user config repo not found, so no git config link was checked"
+}
+
+@test "a lookup whose caller gives its own reason, where no repo can be a sleeve's normal state, says only that reason" {
+    _no_user_repo
+    run molt_instance_vars_file
+    assert_failure
+    [ "$output" = "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name" ]
+    run molt_agent_role_dir sysadm
+    assert_failure
+    [ "$output" = "" ]
+    run molt_config_stale config/zsh/zshrc "$HOME/.zshrc"
+    assert_success
+    [ "$output" = "Zen [warning]: molt_config_stale: no user repo — cannot tell whether $HOME/.zshrc is stale" ]
+}
+
+@test "molt upgrade and molt maintain name a liberator the manifest enables and the framework does not have" {
+    local libs="$BATS_TEST_TMPDIR/liberators" repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    mkdir -p "$libs" "$repo/config"
+    printf 'bbb_maintain() { echo "bbb maintained"; }\nbbb_upgrade() { echo "bbb upgraded"; }\n' > "$libs/bbb.sh"
+    printf '[[liberator]]\nname = "ghost"\nenabled = true\n\n[[liberator]]\nname = "bbb"\nenabled = true\n' > "$repo/molt.toml"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt maintain
+    assert_output_contains "Liberator not found: ghost"
+    assert_output_contains "bbb maintained"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt upgrade --no-pull
+    assert_output_contains "Liberator not found: ghost"
+    assert_output_contains "bbb upgraded"
+}
+
 @test "molt maintain names a failed maintain hook, runs the rest and exits non-zero" {
     local libs="$BATS_TEST_TMPDIR/liberators"
     mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"

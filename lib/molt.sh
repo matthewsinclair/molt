@@ -11,6 +11,9 @@ source "${MOLT_LIB_DIR}/constants.sh"
 
 # --- Logging ---
 
+# Prints a line at the level $1. Errors go to stderr, so a caller that captures
+# a function's output, as x="$(fn)", never takes an error for its value and the
+# user still sees it; every other level goes to stdout (issue 0016).
 molt_log() {
   local level="$1"; shift
   local prefix
@@ -21,7 +24,11 @@ molt_log() {
     debug) [[ "${MOLT_DEBUG:-0}" == "1" ]] || return 0; prefix="Zen [debug]:" ;;
     *)     prefix="Zen:" ;;
   esac
-  echo "$prefix $*"
+  if [[ "$level" == error ]]; then
+    echo "$prefix $*" >&2
+  else
+    echo "$prefix $*"
+  fi
 }
 
 molt_info()  { molt_log info "$@"; }
@@ -303,7 +310,9 @@ molt_link() {
 # when this host has no name.
 molt_instance_vars_file() {
   local user_repo host
-  if ! user_repo="$(molt_find_user_repo)" || ! host="$(molt_hostname)"; then
+  # The reason below is the whole answer: a sleeve with no repo reads its
+  # variables as undeclared, so the lookup's own error is not the user's.
+  if ! user_repo="$(molt_find_user_repo 2>/dev/null)" || ! host="$(molt_hostname)"; then
     echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
     return 1
   fi
@@ -775,7 +784,7 @@ molt_config_stale() {
   fi
 
   local user_repo template
-  if ! user_repo="$(molt_find_user_repo)"; then
+  if ! user_repo="$(molt_find_user_repo 2>/dev/null)"; then
     molt_warn "molt_config_stale: no user repo — cannot tell whether ${target} is stale"
     return 0
   fi
@@ -1982,9 +1991,7 @@ molt_resleeve() {
     fi
     molt_info "Manifest: $manifest"
   else
-    # liberator_list reports on stdout, so its error is in what was captured.
     if ! liberators="$(liberator_list)"; then
-      echo "$liberators"
       molt_error "Cannot resleeve: there are no liberators to run."
       return 1
     fi
@@ -2304,7 +2311,7 @@ cmd_upgrade() {
   local upgrade_count=0 failed_hooks=""
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
-    if ! liberator_load "$lib" 2>/dev/null; then
+    if ! liberator_load "$lib"; then
       continue
     fi
     if liberator_has_upgrade "$lib"; then
@@ -2394,7 +2401,7 @@ cmd_maintain() {
   local maintain_count=0 failed_hooks=""
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
-    if ! liberator_load "$lib" 2>/dev/null; then
+    if ! liberator_load "$lib"; then
       continue
     fi
     if liberator_has_maintain "$lib"; then
