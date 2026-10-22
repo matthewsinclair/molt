@@ -1,0 +1,17 @@
+{
+  "id": "01M5J916HQ0BDSYM4HHGZEQCR6",
+  "ts": "2026-10-22T17:02:40.695Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "issue-0022 new head b3b51f6 (on 608a177), hv's two fixes as relayed. The hook, still inline in settings.json: path from stdin via jq -r '.tool_input.file_path // empty' when command -v jq, else $CLAUDE_FILE_PATH; then strips \"${CLAUDE_PROJECT_DIR:-$PWD}/\", because Claude Code passes absolute paths and MODULES.md lists relative ones, so without it every edit would warn; does nothing on an empty path; exit 0 always. Timeout 5. Checked by piping JSON into the command string: lib/nowhere.sh, relative and absolute, gives the advisory; lib/molt.sh (absolute) and liberators/web.sh (relative) give none; empty stdin gives none, and with CLAUDE_FILE_PATH=lib/nowhere.sh the advisory; no file_path key gives none; no jq on PATH gives none; rc 0 every time under bash, /bin/sh and dash. jq and prettier clean, gate on.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
