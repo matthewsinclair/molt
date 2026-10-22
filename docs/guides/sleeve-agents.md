@@ -363,7 +363,7 @@ Claude Code is the only harness Molt renders homes for. A dedicated Unix account
 
 ### The sandbox on Ubuntu
 
-<!-- DRAFT (issue 0032). Placeholders: <ROUTE ...> paragraphs flip on kovacs-sysadm's test of a priority=1 allow in local/unpriv_bwrap (vc sends the result); <SIDECAR-NOTE>, <CHECK15>, <CONFIG-LINE>, <FAULTS>, <UBUNTU-VERSION> from cc's issue-0032 head. -->
+<!-- DRAFT (issue 0032). Route: the conffile copy (issue 0032, 22 Oct). Placeholders: <SIDECAR-NOTE>, <CHECK15>, <CONFIG-LINE>, <FAULTS>, <UBUNTU-VERSION> from cc's issue-0032 head. -->
 
 On Linux, Claude Code's sandbox runs each command under bubblewrap, and inside it creates a second user namespace, which needs `CAP_SYS_ADMIN` there. Ubuntu's own AppArmor profile, `/etc/apparmor.d/bwrap-userns-restrict`, denies every capability to whatever `bwrap` starts, so every sandboxed command fails before it runs:
 
@@ -373,13 +373,21 @@ apply-seccomp: write /proc/self/setgroups (nested userns is capability-restricte
 
 `ops` and `docs` then fail closed: nothing escapes the sandbox, and no shell command runs at all.
 
-<ROUTE copy, if a local allow cannot outrank the deny: "The profile's `local/` include cannot fix this, because an AppArmor deny takes precedence over any allow. So on a Linux sleeve whose `molt.toml` enables an `ops` or `docs` agent, Molt replaces that file with its own copy, `templates/apparmor/bwrap-userns-restrict.tmpl`: Ubuntu <UBUNTU-VERSION>'s file with one change, bwrap's children still denied every capability except `sys_admin`." / ROUTE local, if a priority=1 allow does outrank it: "So on a Linux sleeve whose `molt.toml` enables an `ops` or `docs` agent, Molt writes the one file Ubuntu's profile includes for local changes, `/etc/apparmor.d/local/unpriv_bwrap`, holding a single rule that allows `capability sys_admin` at a priority above the profile's deny. Ubuntu's own file is not changed.">
+The profile's `local/` include cannot fix this. On 22 Oct 2026 on kovacs (AppArmor 5.0.2, kernel 7.0.0-38), a `priority=1 allow capability sys_admin,` in `/etc/apparmor.d/local/unpriv_bwrap` parsed and loaded, and the kernel denied the capability all the same:
+
+```
+apparmor="DENIED" operation="capable" class="cap" profile="unpriv_bwrap" comm="unshare" capability=21 capname="sys_admin"
+```
+
+So on a Linux sleeve whose `molt.toml` enables an `ops` or `docs` agent, Molt replaces that file with its own copy, `templates/apparmor/bwrap-userns-restrict.tmpl`: Ubuntu <UBUNTU-VERSION>'s file with one change. Its `unpriv_bwrap` allows `capability sys_admin` and denies every other capability by name, in place of Ubuntu's one deny of them all; the template's head says why.
 
 Only processes bwrap starts gain anything, and only that one capability. The `bwrap` profile's own rules and the `kernel.apparmor_restrict_unprivileged_userns` sysctl stay as Ubuntu set them, and `sysadm`, which has no sandbox, is unaffected. Every other sleeve, macOS included, gets nothing.
 
 The agents liberator writes the file the way it writes the [managed floor](#managed-floor): through `sudo`, root-owned and mode 644, <SIDECAR-NOTE: its sidecar first>. It then reloads the profile with `sudo apparmor_parser -r`. So `molt upgrade` on such a sleeve may stop at a `sudo` prompt, as it does for the floor.
 
-<ROUTE copy: "Before its first write it keeps Ubuntu's file as `bwrap-userns-restrict.molt-orig`, and never overwrites that copy while it exists. The file is a dpkg conffile. When a package update ships a new version of it, the update asks whether to keep the local change. Keeping it leaves Molt's copy in place. Taking the package's version brings back the blanket deny, so `ops` and `docs` fail closed again until the next `molt upgrade`, which compares the file byte for byte with its own render and puts Molt's copy back. A new Ubuntu release that changes the profile needs the template refreshed from it; the template names the Ubuntu version it was copied from." / ROUTE local: "A package update never touches the local file, so it asks nothing; Molt compares the file byte for byte with its own render, and puts it back if it differs.">
+Before its first write it keeps Ubuntu's file as `bwrap-userns-restrict.molt-orig`, and never overwrites that copy while it exists.
+
+The file is a dpkg conffile, and that is this route's cost. When the `apparmor` package next ships a changed `bwrap-userns-restrict`, dpkg finds the file modified and prompts. Keep Molt's copy (`N`, dpkg's default). If the package's version wins instead, the blanket deny is back, and `ops` and `docs` fail closed again until the next `molt upgrade`, which compares the file byte for byte with its own render and puts Molt's copy back. Either way, a package that changes the profile means the template wants refreshing from the new file; the template names the Ubuntu version it was copied from.
 
 `molt doctor` check 15 shows whether the profile is in place, by running bubblewrap the way the sandbox does, as you, and checking that the nested namespace starts:
 
@@ -389,9 +397,9 @@ The agents liberator writes the file the way it writes the [managed floor](#mana
 
 <CONFIG-LINE>
 
-<ROUTE copy: "When a sleeve no longer enables an `ops` or `docs` agent, the next `molt upgrade` puts `.molt-orig` back as the file, removes it and the sidecar, and reloads the profile, all through `sudo`. With no `.molt-orig` to restore, it fails, naming the file, and changes nothing. Molt replaces or restores only a `bwrap-userns-restrict` beside its own sidecar; a file without one is left alone and reported." / ROUTE local: "When a sleeve no longer enables an `ops` or `docs` agent, the next `molt upgrade` removes the local file and its sidecar and reloads the profile, through `sudo`. Molt removes only a local file beside its own sidecar; one without it is left alone and reported.">
+When a sleeve no longer enables an `ops` or `docs` agent, the next `molt upgrade` puts `.molt-orig` back as the file, removes it and the sidecar, and reloads the profile, all through `sudo`. With no `.molt-orig` to restore, it fails, naming the file, and changes nothing. Molt replaces or restores only a `bwrap-userns-restrict` beside its own sidecar; a file without one is left alone and reported.
 
-<FAULTS: rows for the doctor table from cc's code: sudo absent or refused, apparmor_parser absent or failing, an unreadable target, a foreign file, a molt-written leftover; copy route also: no .molt-orig>
+<FAULTS: rows for the doctor table from cc's code: sudo absent or refused, apparmor_parser absent or failing, an unreadable target, a foreign file, a molt-written leftover, no .molt-orig>
 
 ## Managed floor
 
