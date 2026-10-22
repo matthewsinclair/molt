@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-22T13:21:16.307Z",
+    "heartbeat_at": "2026-10-22T13:52:58.543Z",
     "status": "active",
-    "focus": "Issue 0015: run on, fail at the end",
+    "focus": "0015 staged, holding for vc's route past the gate's view-skew",
     "claims": [
       "ISSUE:0016",
       "ISSUE:0015"
@@ -305,6 +305,14 @@
       "text": "Issue 0015 on issue-0015 (worktree ~/Devel/prj/Molt-wt/issue-0015, from a0719e8): pulls let git's reason through; no upstream warns and skips; any other pull failure errors, liberators run on, upgrade ends non-zero without Sleeve ready; Doom pull the same",
       "state": "live",
       "recorded_at": "2026-10-22T13:21:16.274Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 12,
+      "text": "Issue 0015 commit on issue-0015: green under both bashes on main f58c759 merged in, change staged and uncommitted; the gate's view-skew on vc/inbox.cc.md is an Intent store-build difference vc is tracing. Released when vc gives the route; run nothing in the worktree until then",
+      "state": "live",
+      "recorded_at": "2026-10-22T13:52:58.509Z"
     }
   ],
   "messages": [

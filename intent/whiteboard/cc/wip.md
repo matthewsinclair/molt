@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 13:21Z
+heartbeat_at: 2026-10-22 13:52Z
 status: active
-focus: "Issue 0015: run on, fail at the end"
+focus: "0015 staged, holding for vc's route past the gate's view-skew"
 claims: [ISSUE:0016, ISSUE:0015]
 ---
 
@@ -22,7 +22,7 @@ claims: [ISSUE:0016, ISSUE:0015]
 
 ## Holds
 
-_(none)_
+- Issue 0015 commit on issue-0015: green under both bashes on main f58c759 merged in, change staged and uncommitted; the gate's view-skew on vc/inbox.cc.md is an Intent store-build difference vc is tracing. Released when vc gives the route; run nothing in the worktree until then
 
 ## Watch-outs
 
