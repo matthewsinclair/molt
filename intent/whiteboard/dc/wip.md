@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 06:03Z
+heartbeat_at: 2026-10-22 06:19Z
 status: active
-focus: "22 Oct: WP06 guide on wp06-guide 0be162b (hv's floor scope in) waiting on cc's finished head (ffa25c7 WIP); Molt-matts st0006-wp06 1421034 ready; 0022 held"
+focus: "22 Oct: WP06 guide done, wp06-guide 9a325d8, with Molt-matts st0006-wp06 1421034, both with vc to merge; 0022 held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ST0006/06 AC021: guide draft on Molt branch wp06-guide at ec1acf2, rebased onto main c2e167b (estate agents) (worktree Molt-wt/wp06-guide; hv's scope, sysadm plus MOLT_CLAUDE_CONFIG_DIR, applied), waiting on cc's st0006-wp06 head for the sidecar name, agent config output and doctor check 14 lines; Molt-matts st0006-wp06 at 1421034 ready for vc (edited)
+- ST0006/06 AC021: guide done on Molt branch wp06-guide at 9a325d8 (on main c2e167b; from cc's 1720f99), handed to vc to merge after cc's code; Molt-matts st0006-wp06 at 1421034 ready for vc (edited)
 
 ## TODO
 

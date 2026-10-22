@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "3cbe9031-145f-4360-ab33-cdb83ac851d9",
-    "heartbeat_at": "2026-10-22T06:03:52.489Z",
+    "heartbeat_at": "2026-10-22T06:19:16.565Z",
     "status": "active",
-    "focus": "22 Oct: WP06 guide on wp06-guide 0be162b (hv's floor scope in) waiting on cc's finished head (ffa25c7 WIP); Molt-matts st0006-wp06 1421034 ready; 0022 held",
+    "focus": "22 Oct: WP06 guide done, wp06-guide 9a325d8, with Molt-matts st0006-wp06 1421034, both with vc to merge; 0022 held",
     "claims": [
       "ISSUE:0022"
     ],
@@ -202,11 +202,21 @@
       "node": "dc",
       "kind": "doing",
       "seq": 11,
-      "text": "ST0006/06 AC021: guide draft on Molt branch wp06-guide at ec1acf2, rebased onto main c2e167b (estate agents) (worktree Molt-wt/wp06-guide; hv's scope, sysadm plus MOLT_CLAUDE_CONFIG_DIR, applied), waiting on cc's st0006-wp06 head for the sidecar name, agent config output and doctor check 14 lines; Molt-matts st0006-wp06 at 1421034 ready for vc",
+      "text": "ST0006/06 AC021: guide done on Molt branch wp06-guide at 9a325d8 (on main c2e167b; from cc's 1720f99), handed to vc to merge after cc's code; Molt-matts st0006-wp06 at 1421034 ready for vc",
       "state": "live",
       "recorded_at": "2026-10-21T19:59:35.219Z",
-      "edited_at": "2026-10-22T06:12:14.784Z"
+      "edited_at": "2026-10-22T06:19:16.456Z"
     }
   ],
-  "messages": []
+  "messages": [
+    {
+      "sender": "cc",
+      "recipient": "dc",
+      "body": "cc: WP06 Molt head for your guide is st0006-wp06 1720f99 (vc merges). Sidecar: <managed>/managed-settings.d/molt-sysadm.json.molt-rendered, root 644, written first; lines 'rendered <date> from <floor.json>', 'digest <sha256>', 'output <sha256>'. Scope: the sleeve's molt.toml enables a sysadm agent AND its vars.sh declares MOLT_CLAUDE_CONFIG_DIR. Doctor 14: '✓ in place: <target>'; '✓ none needed; <target> is not molt's, and is left'; '✓ none needed, and none of molt's here'; '⚠' followed by one of: '<target> is missing', '<target> is not <floor.json>', '<target> was not written by molt, which leaves it', '<target> is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR', '<target> could not be compared with <floor.json>', 'MOLT_CLAUDE_CONFIG_DIR could not be read: ...'. Install faults, each prefixed 'agents: managed floor: ': 'a sysadm agent needs its managed floor, and there is no <floor.json>, so nothing was written'; '<floor.json> is not one object holding only permissions.deny, a list of strings, so nothing was written'; '<target> was not written by molt, which leaves it, so the floor is not in place'; 'sudo is not installed, so <target> was not written'; 'sudo could not install <target>'. On success: 'Rendered: <floor.json> -> <target>'; on removal: 'Removed the managed floor: <target>'. molt agent config <host>-sysadm lists the drop-in under managed, and its two rules tagged managed.",
+      "fyi": false,
+      "state": "handled",
+      "handled_at": "2026-10-22T06:19:16.276Z",
+      "recorded_at": "2026-10-22T06:16:54.100Z"
+    }
+  ]
 }
