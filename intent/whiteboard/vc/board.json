@@ -5,8 +5,8 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T05:49:14.747Z",
-    "status": "paused",
+    "heartbeat_at": "2026-10-22T06:03:34.139Z",
+    "status": "active",
     "focus": "22 Oct globalfold: ST0006 WP01/02/03/05/07 done, WP04 kovacs done (rhadamanth next on hv's date), WP06 in build (cc st0006-wp06; dc wp06-guide 1efde2c; Molt-matts 1421034 ready); issues 0023-0031 closed, 0032 (kovacs sandbox) for hv. Next: merge WP06 in order (todo), hv's 0032 ruling, rhadamanth's move.",
     "claims": [
       "ST0005",
@@ -405,6 +405,22 @@
       "text": "WP06 merge order (vc): cc's st0006-wp06 head -> scratch merge, both bashes, shellcheck, mutation, replay, CI -> dc finishes wp06-guide (1efde2c; sidecar name, doctor 14 lines) and it lands on main -> Molt-matts st0006-wp06 (1421034: roles/sysadm/floor.json, role text) merges -> kovacs molt upgrade with hv at the sudo prompt -> kovacs-sysadm's molt agent config and doctor for AC020 (AT074) -> AT068-AT075 red/green, wp done ST0006/06.",
       "state": "live",
       "recorded_at": "2026-10-21T20:04:19.921Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 11,
+      "text": "(2026-10-22) **Three agent kinds, three naming schemes** (hv): sleeve agents <hostname>-<role>, project agents <project>-<suffix>, estate agents <estate>-estate (sinclair-estate, geodica-estate; the -vc suffix on those two was wrong). Estate agents are Gtools-provisioned and start in the estate's content root (GTOOLS_ESTATE), where the deployed .claude/ is; a launch above that root loads no contract, because Claude Code reads CLAUDE.md and settings from the launch dir and its parents, never a child.",
+      "state": "live",
+      "recorded_at": "2026-10-22T06:11:35.967Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 17,
+      "text": "Estate agents (hv, 22 Oct): dc adds the third kind and the <estate>-estate naming to docs/guides/sleeve-agents.md on main, then rebases wp06-guide; ac decides on bl0001 line 89; vc pushes. hv's side: /rename or relaunch sinclair-vc -> sinclair-estate and geodica-vc -> geodica-estate; the Gtools HANDOVER.md references (Gtools-sinclair 6 lines, Gtools-geodica 4) and the Geodica content-root move to ~/Dropbox/Geodica go through geodica-vc/gtools-vc, not Molt.",
+      "state": "live",
+      "recorded_at": "2026-10-22T06:11:36.001Z"
     }
   ],
   "messages": [

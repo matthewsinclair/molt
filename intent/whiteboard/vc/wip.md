@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-22 05:49Z
-status: paused
+heartbeat_at: 2026-10-22 06:03Z
+status: active
 focus: "22 Oct globalfold: ST0006 WP01/02/03/05/07 done, WP04 kovacs done (rhadamanth next on hv's date), WP06 in build (cc st0006-wp06; dc wp06-guide 1efde2c; Molt-matts 1421034 ready); issues 0023-0031 closed, 0032 (kovacs sandbox) for hv. Next: merge WP06 in order (todo), hv's 0032 ruling, rhadamanth's move."
 claims: [ST0005, ST0006]
 ---
@@ -26,6 +26,7 @@ _(none)_
 - WP04 kovacs DONE 21 Oct ~23:50: phases A-C, c4 PASS, AC008 satisfied by evidence, kovacs-sysadm folded (session 1c7fdc09); ~/.npm gone, cache in ~/.cache/npm (issue 0031). WP04 started (WIP): rhadamanth's move is next when hv schedules it (runbook section 'rhadamanth', same three phases; B9 from a post-move shell; hv removes ~/.npm done already); gyges later (hv). hv to rule whether WP04 closes after rhadamanth with gyges carried as a todo. (edited)
 - Credentials fence: ops/docs sandbox.credentials denies live on Molt-matts 45e344c, tested on rhadamanth (Seatbelt). The Linux (bubblewrap) table is blocked by issue 0032: Claude Code's sandbox cannot start on kovacs (bwrap-userns-restrict denies capabilities to bwrap's children; kovacs-sysadm's read-only diagnosis in the issue). hv rules on the option; build on WP06's sudo helpers; then dc's kovacs-creds.sh A and B, then the guide's 'still owed' sentence goes. (edited)
 - WP06 merge order (vc): cc's st0006-wp06 head -> scratch merge, both bashes, shellcheck, mutation, replay, CI -> dc finishes wp06-guide (1efde2c; sidecar name, doctor 14 lines) and it lands on main -> Molt-matts st0006-wp06 (1421034: roles/sysadm/floor.json, role text) merges -> kovacs molt upgrade with hv at the sudo prompt -> kovacs-sysadm's molt agent config and doctor for AC020 (AT074) -> AT068-AT075 red/green, wp done ST0006/06.
+- Estate agents (hv, 22 Oct): dc adds the third kind and the <estate>-estate naming to docs/guides/sleeve-agents.md on main, then rebases wp06-guide; ac decides on bl0001 line 89; vc pushes. hv's side: /rename or relaunch sinclair-vc -> sinclair-estate and geodica-vc -> geodica-estate; the Gtools HANDOVER.md references (Gtools-sinclair 6 lines, Gtools-geodica 4) and the Geodica content-root move to ~/Dropbox/Geodica go through geodica-vc/gtools-vc, not Molt.
 
 ## Holds
 
@@ -61,6 +62,7 @@ _(none)_
 - (2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after "179 passing", and a stale AC001 question written into wip.
 - **AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: "STRICTLY FORBIDDEN. Purge that from the git record immediately"). Molt-matts `e3af373`'s trailers had been carried for days as "rewriting pushed history is hv's call". The purge recipe is in done 023 and vc's memory. Every sleeve whose Claude Code commits needs the attribution keys in `~/.claude/settings.json` and the Git Commits rule in `~/.claude/CLAUDE.md`. rhadamanth and kovacs have both; gyges is unchecked.
 - (2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).
+- (2026-10-22) **Three agent kinds, three naming schemes** (hv): sleeve agents <hostname>-<role>, project agents <project>-<suffix>, estate agents <estate>-estate (sinclair-estate, geodica-estate; the -vc suffix on those two was wrong). Estate agents are Gtools-provisioned and start in the estate's content root (GTOOLS_ESTATE), where the deployed .claude/ is; a launch above that root loads no contract, because Claude Code reads CLAUDE.md and settings from the launch dir and its parents, never a child.
 
 ---
 

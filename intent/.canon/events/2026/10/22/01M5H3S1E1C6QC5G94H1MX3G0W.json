@@ -1,0 +1,15 @@
+{
+  "id": "01M5H3S1E1C6QC5G94H1MX3G0W",
+  "ts": "2026-10-22T06:11:36.001Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Estate agents (hv, 22 Oct): dc adds the third kind and the <estate>-estate naming to docs/guides/sleeve-agents.md on main, then rebases wp06-guide; ac decides on bl0001 line 89; vc pushes. hv's side: /rename or relaunch sinclair-vc -> sinclair-estate and geodica-vc -> geodica-estate; the Gtools HANDOVER.md references (Gtools-sinclair 6 lines, Gtools-geodica 4) and the Geodica content-root move to ~/Dropbox/Geodica go through geodica-vc/gtools-vc, not Molt."
+  }
+}
