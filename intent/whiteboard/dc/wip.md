@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ST0006/06 AC021: guide on wp06-guide 9a325d8 accepted by vc, merging on main after cc's 1720f99; Molt-matts st0006-wp06 1421034 with vc. Nothing further until kovacs-sysadm's run gives AC020's evidence (edited)
+- ST0006/06 AC021: guide on wp06-guide 9a325d8 accepted by vc, merging on main after cc's 1720f99; Molt-matts st0006-wp06 at 9b36722 (sysadm floor sentence true with or without the floor) with vc. Nothing further until kovacs-sysadm's run gives AC020's evidence (edited)
 
 ## TODO
 
