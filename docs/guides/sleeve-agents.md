@@ -4,16 +4,16 @@ A sleeve agent is a local agent, Claude Code for now, that does machine work on 
 
 Without a home, an agent like this runs from `$HOME`. There it has no instruction file of its own and no project-level permissions, it shares a memory slot with every other session started in `$HOME`, and Claude Code's own files sit loose in the home directory. So Molt also moves Claude Code's state out of `$HOME`, once per sleeve, and refuses a Claude started there.
 
-## Sleeve agents and project agents
+## Sleeve, project and estate agents
 
-|            | Sleeve agent                                               | Project agent                      |
-| ---------- | ---------------------------------------------------------- | ---------------------------------- |
-| Works on   | one machine                                                | one project                        |
-| Runs in    | its home, `$MOLT_AGT_DIR/<hostname>-<role>/`               | the project's working tree         |
-| Named      | `<hostname>-<role>`, eg `kovacs-sysadm`                    | `<project>-<suffix>`, eg `molt-vc` |
-| Bounded by | its role contract and permission profile, rendered by Molt | the project and Intent             |
+|            | Sleeve agent                                               | Project agent                      | Estate agent                                                                                                                                          |
+| ---------- | ---------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Works on   | one machine                                                | one project                        | one Gtools estate                                                                                                                                     |
+| Runs in    | its home, `$MOLT_AGT_DIR/<hostname>-<role>/`               | the project's working tree         | the estate's content root, the directory Gtools registers as `GTOOLS_ESTATE` and deploys the estate's `.claude/` into, eg `~/Dropbox/Sinclair-Shared` |
+| Named      | `<hostname>-<role>`, eg `kovacs-sysadm`                    | `<project>-<suffix>`, eg `molt-vc` | `<estate>-estate`, eg `sinclair-estate`                                                                                                               |
+| Bounded by | its role contract and permission profile, rendered by Molt | the project and Intent             | the Gtools consulting contract and the estate's pinned `settings.json`, deployed by Gtools                                                            |
 
-This guide is about sleeve agents. A project agent is a session run inside an Intent project, which already gives it instructions, permissions and memory, so Molt does not manage it.
+This guide is about sleeve agents. A project agent is a session run inside an Intent project, which already gives it instructions, permissions and memory, and an estate agent is a session run in a Gtools estate, which Gtools provisions, so Molt manages neither.
 
 ## Naming
 
@@ -41,6 +41,12 @@ A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. The 
 | `dc`   | DevX Claude       |
 
 Molt itself runs `vc`, `cc`, `dc` and `ac`. A suffix names a project session's job and a role names a sleeve agent's, so `dc`, DevX Claude, is a project agent, while `docs` is a sleeve role.
+
+### Estate agents
+
+An estate agent is named `<estate>-estate`: `sinclair-estate`, `geodica-estate`. An estate has one agent, so the suffix never varies. Gtools provisions it, with `gtools doctor` and the contract it deploys, and Molt does not manage it.
+
+Its content root is the directory Gtools registers as `GTOOLS_ESTATE` and deploys the estate's `.claude/` into: `~/Dropbox/Sinclair-Shared` for sinclair, and `~/Dropbox/Geodica/Consulting` for geodica today. Start the session in that directory or below it. Claude Code loads `CLAUDE.md` and settings from the launch directory and its parents, never from a child, so a geodica session started in `~/Dropbox/Geodica` loads none of them.
 
 ## Roles
 
