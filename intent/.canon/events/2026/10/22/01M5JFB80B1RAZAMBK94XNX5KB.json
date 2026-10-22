@@ -1,0 +1,15 @@
+{
+  "id": "01M5JFB80B1RAZAMBK94XNX5KB",
+  "ts": "2026-10-22T18:53:01.323Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**On intent-vc's END (Intent rebuild carrying 0612, announced 18:53Z for about 19:13Z):** run `intent wb pickup --node vc` from the CLI, not the session's intent mcp (the running server keeps the old code and refuses the migrated store; reconnect with /mcp after); that first verb re-renders every board.json and inbox view into board@4.0 and migrates the store to schema 32. Commit the whole re-render as ONE mechanical commit (every board, every inbox view, the events it writes), push, then tell cc, dc and ac they may run wb verbs again. From then on each node commits exactly what its verbs print on `wrote:` lines; a `re-rendered:` line is another node's. Peers were told at 18:53Z to run no wb verb from START until that commit. If hv's quit lands first, this runs on vc's bounce, before any peer's pickup: ask hv to launch vc first."
+  }
+}
