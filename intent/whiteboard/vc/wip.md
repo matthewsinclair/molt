@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-22 15:43Z
+heartbeat_at: 2026-10-22 16:06Z
 status: active
-focus: "22 Oct, hv moving (2026-10-22 14:00Z): fold and hold on the bounce, likely from home. Closed today: 0032, 0018, 0016, ST0005; 0035 filed. Open: 0015 (cc's head banked on issue-0015, vc scratch-merge on the bounce), 0022 (dc, hv's word), ST0006 WP04 (rhadamanth's move when hv is home, then close with gyges carried). Rule: commit your board.json with every commit (watch-out 18)."
+focus: "22 Oct evening, hv AFK with vc holding the pen: v0.2.0 cut (f1f27bb) and pushed; every issue but 0022 closed (hv's word in dc's session). kovacs onto v0.2.0 through kovacs-sysadm, proving 0035's gsettings print forms. Then: rhadamanth's move with hv at the keyboard, WP04 and ST0006 close with gyges carried. Peers localfolded (ac c272b9a, cc 7287c89, dc 17b89de), holding, not released."
 claims: [ST0006]
 ---
 
