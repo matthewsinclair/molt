@@ -139,11 +139,12 @@ For sensitive directories like `~/.ssh` (which has `700` permissions), `molt_ren
 
 Some liberators read per-machine files from `instances/<hostname>/` rather than from `config/`, because the value is genuinely machine-specific rather than shared:
 
-| Liberator | File                                     | Shape                                                                                      |
-| --------- | ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `keys`    | `instances/<host>/keyd/default.conf`     | keyd config, copied to `/etc/keyd/`                                                        |
-| `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                         |
-| `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored |
+| Liberator | File                                     | Shape                                                                                                                                                                                           |
+| --------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `keys`    | `instances/<host>/keyd/default.conf`     | keyd config, copied to `/etc/keyd/`                                                                                                                                                             |
+| `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                                                                                                                              |
+| `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored                                                                                                      |
+| `desktop` | `instances/<host>/desktop/gsettings`     | one `<schema> <key> <value>` per line, the value to the end of the line as `gsettings get` prints it; blank lines and `#` comments ignored; applied on install, read back and compared by check |
 
 A liberator that builds a rendered file from one of these as well (as `ssh` does, putting its fragments after the template's render) builds the whole file before it is placed: `molt_render_tmp` into `<target>.molt-tmp` (which renders with `molt_render_text`), its own additions there, then `molt_render_place` with those files as extra inputs, so the sidecar's digest covers them. It passes the same files to `molt_config_stale` in `_check`; pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run. A file added to after it is placed differs from every new render, so each install backs it up.
 
