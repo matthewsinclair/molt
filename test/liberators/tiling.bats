@@ -109,6 +109,21 @@ FAKE
     refute_output_contains "Liberator complete"
 }
 
+# Issue 0033: the schema goes in, and comes back out, through molt's sudo
+# helpers, which name sudo's absence.
+@test "tiling install writes the schema through molt_sudo_install, mode 644, and passes on why sudo did not" {
+    _tactile_sleeve
+    run tiling_install
+    assert_success
+    grep -q "^sudo install -m 644 .* $MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML\$" "$BATS_TEST_TMPDIR/sudo.log"
+    [ "$(test_file_mode "$MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML")" = 644 ]
+
+    rm -f "$MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML"
+    FAKE_SUDO_STATUS=1 run tiling_install
+    assert_failure
+    assert_output_contains "tiling: could not install Tactile's gsettings schema into $MOLT_SYSTEM_SCHEMA_DIR: sudo could not install $MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML"
+}
+
 @test "tiling install fails, and does not say complete, when a setting cannot be written" {
     _tactile_sleeve
     cp "$TACTILE_EXT_DIR/schemas/$TACTILE_SCHEMA_XML" "$MOLT_SYSTEM_SCHEMA_DIR/"
@@ -145,6 +160,7 @@ FAKE
     run tiling_install
     assert_failure
     assert_output_contains "so Tactile's copy was taken back out"
+    grep -q "^sudo rm -f $MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML\$" "$BATS_TEST_TMPDIR/sudo.log"
     refute_output_contains "Liberator complete"
     run _tiling_schema_fault
     assert_output_contains "is not installed"
