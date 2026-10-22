@@ -3,8 +3,8 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-22 04:46Z
-status: active
+heartbeat_at: 2026-10-22 05:48Z
+status: paused
 focus: "22 Oct: idle, nothing queued; WP04 rhadamanth section may take a date line once hv names one"
 claims: []
 ---
