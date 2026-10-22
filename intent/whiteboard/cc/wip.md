@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 05:50Z
+heartbeat_at: 2026-10-22 06:16Z
 status: active
-focus: "WP06 at ffa25c7 on st0006-wp06 (WIP); left: critic warnings, both-bash suite, mutation pass, hand-over"
+focus: "WP06 handed to vc at 1720f99; waiting on merge"
 claims: [ST0006/06]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/06]
 
 ## DOING
 
-- WP06 on st0006-wp06 at ffa25c7 (WIP commit; worktree ~/Devel/prj/Molt-wt/st0006-wp06): hv 22 Oct scope built (sysadm agent AND declared MOLT_CLAUDE_CONFIG_DIR); floor state prints its own failure reason; new AT070/AT072 arms red-first then green. agents.bats and molt.bats green; shellcheck clean. Left: critic-shell's 2 warnings (bare digest line if molt_hash fails; stale comment fixed) and its recommendations (cmp exit 2 read as stale; doctor reads state twice); both-bash full suite; mutation pass; hand-over to vc. (edited)
+- WP06 handed to vc at st0006-wp06 1720f99 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): both-bash suite passing, critic-shell fixed, mutation pass all killed; AT068-AT073. dc has the guide facts. Waiting on vc's merge; then remove the worktree and branch, record ATs from main when vc says. Rollout kovacs only (hv, 22 Oct). (edited)
 
 ## TODO
 
