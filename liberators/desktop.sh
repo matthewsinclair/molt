@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # desktop.sh — Liberator: desktop environment settings
-# Frees you from GNOME defaults that steal your keys.
+# Frees you from GNOME defaults that steal your keys: applies the GNOME keys the
+# user stack declares for this sleeve, links the GTK stylesheet and sets the dock
+# favourites. The keys, values included, are the user's, read from
+# instances/<host>/desktop/gsettings; none is written into the liberator, and
+# each set is read back, so a key that did not take is an error, not silence
+# (issue 0035).
 
 # GTK3 and GTK4 read different paths and do not share a stylesheet. Linking
 # gtk-3.0 only left GTK4 apps -- now the common case -- unstyled, and molt could
@@ -17,6 +22,21 @@
 # pinned and the user clicked the icon. A fresh sleeve gets whatever GNOME
 # ships, which is how that happened.
 _desktop_favorites_file() {
+  _desktop_instance_file favorite-apps
+}
+
+# GNOME keys, read from instances/<host>/desktop/gsettings, instance-scoped for
+# the favourites' reason. One "<schema> <key> <value>" per line, the value
+# running to the end of the line and written as `gsettings get` prints it, so
+# what install sets is what check compares. Blank lines and lines starting
+# with # are ignored; a # later in a line is part of the value.
+_desktop_gsettings_file() {
+  _desktop_instance_file gsettings
+}
+
+# The path of instances/<host>/desktop/$1 in the user repo, failing when it has
+# none.
+_desktop_instance_file() {
   local user_repo hostname
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")" || return 1
   [[ -n "$user_repo" ]] || return 1
@@ -24,9 +44,94 @@ _desktop_favorites_file() {
   # "unknown" where the others fall back to the long hostname, so a host whose
   # hostname -s failed looked in instances/unknown/ (issue 0020).
   hostname="$(molt_hostname)" || return 1
-  local f="$user_repo/instances/$hostname/desktop/favorite-apps"
+  local f="$user_repo/instances/$hostname/desktop/$1"
   [[ -f "$f" ]] || return 1
   echo "$f"
+}
+
+# The pairs gsettings file $1 declares, one "<schema>\t<key>\t<value>" per
+# line. A line with fewer than three fields is a fault naming the file and the
+# line, and nothing is printed.
+_desktop_gsettings_pairs() {
+  local f="$1" line n=0 schema key value out=""
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    n=$((n + 1))
+    [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+    read -r schema key value <<<"$line"
+    if [[ -z "$value" ]]; then
+      molt_error "desktop: $f line $n: expected <schema> <key> <value>, got: $line"
+      return 1
+    fi
+    out+="${schema}"$'\t'"${key}"$'\t'"${value}"$'\n'
+  done <"$f"
+  printf '%s' "$out"
+}
+
+# What gsettings holds for schema $1, key $2: what `gsettings get` prints on
+# stdout, so that a warning GLib prints beside a value does not read as drift.
+# A key gsettings cannot read answers with gsettings' words, and fails.
+_desktop_gsettings_get() {
+  local got
+  if got="$(gsettings get "$1" "$2" 2>/dev/null)"; then
+    printf '%s\n' "$got"
+    return 0
+  fi
+  # Asked again for its reason; a get changes nothing.
+  { gsettings get "$1" "$2" >/dev/null; } 2>&1
+  return 1
+}
+
+# gsettings' words $1, indented on stderr under the molt_error they explain.
+_desktop_gsettings_words() {
+  [[ -z "$1" ]] || printf '%s\n' "$1" | sed 's/^/    /' >&2
+}
+
+# Each declared pair gsettings does not hold, one "<schema> <key> is <got>,
+# wanted <value>" per line, for check and verify to report as each reports. A
+# key gsettings cannot read is reported with gsettings' words as what it got.
+_desktop_gsettings_drift() {
+  local pairs schema key value got
+  pairs="$(_desktop_gsettings_pairs "$1")" || return 1
+  [[ -n "$pairs" ]] || return 0
+  while IFS=$'\t' read -r schema key value; do
+    # A key that cannot be read is drift too, its reason standing as what it got.
+    got="$(_desktop_gsettings_get "$schema" "$key")" || true
+    [[ "$got" == "$value" ]] || echo "$schema $key is $got, wanted $value"
+  done <<<"$pairs"
+}
+
+# Sets each pair gsettings file $1 declares and reads it back. A set gsettings
+# refuses, or a key that reads back other than declared, is an error naming the
+# key; every pair is tried, and any such error fails the whole with 1. A
+# malformed file sets nothing and fails with 2.
+_desktop_gsettings_apply() {
+  local f="$1" pairs schema key value out got failed=0
+  pairs="$(_desktop_gsettings_pairs "$f")" || return 2
+  if [[ -z "$pairs" ]]; then
+    molt_debug "desktop: ${f#"$HOME/"} declares no keys"
+    return 0
+  fi
+  molt_info "Setting GNOME keys from ${f#"$HOME/"}..."
+  while IFS=$'\t' read -r schema key value; do
+    if ! out="$(gsettings set "$schema" "$key" "$value" 2>&1)"; then
+      molt_error "desktop: gsettings refused $schema $key:"
+      _desktop_gsettings_words "$out"
+      failed=1
+      continue
+    fi
+    # A set that exits 0 can still have warned, eg dconf failing to commit,
+    # and the read-back below is then explained by what it said.
+    [[ -z "$out" ]] || printf '%s\n' "$out" >&2
+    if ! got="$(_desktop_gsettings_get "$schema" "$key")"; then
+      molt_error "desktop: $schema $key could not be read back:"
+      _desktop_gsettings_words "$got"
+      failed=1
+    elif [[ "$got" != "$value" ]]; then
+      molt_error "desktop: $schema $key did not take: wanted $value, got $got"
+      failed=1
+    fi
+  done <<<"$pairs"
+  return $failed
 }
 
 # True when the favourites file yields no entries.
@@ -78,12 +183,19 @@ desktop_check() {
     return 0
   fi
 
-  # Check if GNOME Super/overlay key is disabled
-  local overlay_key
-  overlay_key="$(gsettings get org.gnome.mutter overlay-key 2>/dev/null || echo "unavailable")"
-  if [[ "$overlay_key" != "''" ]] && [[ "$overlay_key" != "unavailable" ]]; then
-    molt_info "desktop: GNOME overlay-key still bound ($overlay_key)"
-    ok=1
+  # Declared GNOME keys drift
+  local gs_file drift line
+  if gs_file="$(_desktop_gsettings_file)"; then
+    if drift="$(_desktop_gsettings_drift "$gs_file")"; then
+      if [[ -n "$drift" ]]; then
+        while IFS= read -r line; do
+          molt_info "desktop: $line"
+        done <<<"$drift"
+        ok=1
+      fi
+    else
+      ok=1
+    fi
   fi
 
   # Check GTK config
@@ -134,20 +246,20 @@ desktop_install() {
     return 0
   fi
 
-  # Strip GNOME Super bindings
-  molt_info "Stripping GNOME Super key bindings..."
-  gsettings set org.gnome.mutter overlay-key '' 2>/dev/null || true
-  gsettings set org.gnome.desktop.wm.keybindings panel-main-menu "[]" 2>/dev/null || true
-  gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']" 2>/dev/null || true
-  gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Shift><Alt>Tab']" 2>/dev/null || true
-  gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']" 2>/dev/null || true
-  gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward "['<Shift><Alt>Tab']" 2>/dev/null || true
-
-  # Strip GNOME accessibility bindings that conflict with Super combos
-  gsettings set org.gnome.settings-daemon.plugins.media-keys screenreader "['']" 2>/dev/null || true
-  gsettings set org.gnome.settings-daemon.plugins.media-keys magnifier "['']" 2>/dev/null || true
-  gsettings set org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-in "['']" 2>/dev/null || true
-  gsettings set org.gnome.settings-daemon.plugins.media-keys magnifier-zoom-out "['']" 2>/dev/null || true
+  # GNOME keys the user stack declares. A malformed file stops install here; a
+  # key that did not take fails it once the rest is done.
+  local gs_file failed=0
+  if gs_file="$(_desktop_gsettings_file)"; then
+    local gs_status=0
+    _desktop_gsettings_apply "$gs_file" || gs_status=$?
+    case $gs_status in
+      0) ;;
+      1) failed=1 ;;
+      *) return 1 ;;
+    esac
+  else
+    molt_debug "desktop: no instances/<host>/desktop/gsettings, so no GNOME keys to set"
+  fi
 
   # Install GTK config
   local user_repo
@@ -180,6 +292,7 @@ desktop_install() {
     fi
   fi
 
+  [[ $failed -eq 0 ]] || return 1
   molt_info "Liberator complete: desktop"
 }
 
@@ -193,11 +306,16 @@ desktop_verify() {
     return 0
   fi
 
-  if command -v gsettings &>/dev/null; then
-    local overlay_key
-    overlay_key="$(gsettings get org.gnome.mutter overlay-key 2>/dev/null || echo "")"
-    if [[ -n "$overlay_key" ]] && [[ "$overlay_key" != "''" ]]; then
-      molt_error "VERIFY FAIL: GNOME overlay-key still bound"
+  local gs_file drift line
+  if command -v gsettings &>/dev/null && gs_file="$(_desktop_gsettings_file)"; then
+    if drift="$(_desktop_gsettings_drift "$gs_file")"; then
+      if [[ -n "$drift" ]]; then
+        while IFS= read -r line; do
+          molt_error "VERIFY FAIL: desktop: $line"
+        done <<<"$drift"
+        errors=1
+      fi
+    else
       errors=1
     fi
   fi

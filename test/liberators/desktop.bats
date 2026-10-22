@@ -75,3 +75,144 @@ load "../test_helper.bash"
     # sleeve rather than assumed.
     [ "$output" = "@as []" ]
 }
+
+# --- Declared gsettings (issue 0035) ---
+#
+# The liberator set ten GNOME keys written into it, each ending
+# "2>/dev/null || true", so a key that did not take was silent and check read
+# back only overlay-key. The pairs now come from instances/<host>/desktop/gsettings.
+
+# A sleeve on GNOME with a user repo holding $1 as its gsettings file (no file
+# when $1 is empty). The fake gsettings keeps each key in GS_STORE/<schema>/<key>,
+# logs each set to GS_LOG, refuses a set when GS_STORE/<schema>/<key>.refuse
+# exists, and stores the contents of GS_STORE/<schema>/<key>.mangle in place of
+# the value it was given when that exists, as GNOME does with a value it rewrites.
+_gs_env() {
+    load_liberator desktop
+    local root="$BATS_TEST_TMPDIR"
+    export HOME="$root/home"
+    export GS_STORE="$root/gs" GS_LOG="$root/gs.log"
+    mkdir -p "$HOME" "$GS_STORE" "$root/bin" "$root/repo/config" "$root/repo/instances/$(test_hostname)/desktop"
+    GS_FILE="$root/repo/instances/$(test_hostname)/desktop/gsettings"
+    [ -z "${1:-}" ] || printf '%s\n' "$1" > "$GS_FILE"
+    # A stylesheet to link, so whether install went on past the keys shows.
+    mkdir -p "$root/repo/config/gtk"
+    : > "$root/repo/config/gtk/gtk.css"
+    cat > "$root/bin/gsettings" <<'FAKE'
+#!/bin/sh
+d="$GS_STORE/$2"
+case "$1" in
+  set)
+    echo "set $2 $3 $4" >> "$GS_LOG"
+    if [ -e "$d/$3.refuse" ]; then echo "No such key “$3”" >&2; exit 1; fi
+    mkdir -p "$d"
+    if [ -e "$d/$3.mangle" ]; then cp "$d/$3.mangle" "$d/$3"; else printf '%s\n' "$4" > "$d/$3"; fi ;;
+  get)
+    if [ -e "$d/$3" ]; then cat "$d/$3"; else echo "No such key “$3”" >&2; exit 1; fi ;;
+esac
+FAKE
+    chmod +x "$root/bin/gsettings"
+    export PATH="$root/bin:$PATH"
+    MOLT_USER_REPO_SEARCH_PATHS=("$root/repo")
+    molt_platform() { echo linux; }
+}
+
+# What the fake holds for schema $1, key $2.
+_gs_held() {
+    cat "$GS_STORE/$1/$2"
+}
+
+_GS_PAIRS="# GNOME keys for this sleeve
+org.gnome.mutter overlay-key ''
+
+org.gnome.desktop.wm.keybindings switch-windows ['<Alt>Tab', '<Super>Tab']"
+
+@test "desktop_install sets each declared key and reads it back" {
+    _gs_env "$_GS_PAIRS"
+    run desktop_install
+    assert_success
+    [ "$(_gs_held org.gnome.mutter overlay-key)" = "''" ]
+    [ "$(_gs_held org.gnome.desktop.wm.keybindings switch-windows)" = "['<Alt>Tab', '<Super>Tab']" ]
+    [ "$(grep -c '^set ' "$GS_LOG")" -eq 2 ]
+}
+
+@test "desktop_install fails naming the key gsettings refused, with gsettings' words" {
+    _gs_env "$_GS_PAIRS"
+    mkdir -p "$GS_STORE/org.gnome.mutter"
+    touch "$GS_STORE/org.gnome.mutter/overlay-key.refuse"
+    run desktop_install
+    assert_failure
+    assert_output_contains "gsettings refused org.gnome.mutter overlay-key"
+    assert_output_contains "    No such key “overlay-key”"
+    refute_output_contains "Liberator complete: desktop"
+    # Every pair is tried, and the rest of install still runs.
+    [ "$(_gs_held org.gnome.desktop.wm.keybindings switch-windows)" = "['<Alt>Tab', '<Super>Tab']" ]
+    [ -L "$HOME/.config/gtk-3.0/gtk.css" ]
+}
+
+@test "desktop_install fails when a key reads back other than the file declares" {
+    _gs_env "$_GS_PAIRS"
+    mkdir -p "$GS_STORE/org.gnome.mutter"
+    echo "'Super_L'" > "$GS_STORE/org.gnome.mutter/overlay-key.mangle"
+    run desktop_install
+    assert_failure
+    assert_output_contains "org.gnome.mutter overlay-key did not take: wanted '', got 'Super_L'"
+    refute_output_contains "Liberator complete: desktop"
+    [ "$(_gs_held org.gnome.desktop.wm.keybindings switch-windows)" = "['<Alt>Tab', '<Super>Tab']" ]
+    [ -L "$HOME/.config/gtk-3.0/gtk.css" ]
+}
+
+@test "a gsettings line with fewer than three fields is a fault naming the file and line" {
+    _gs_env "$(printf '# keys\norg.gnome.mutter overlay-key\n')"
+    run desktop_install
+    assert_failure
+    assert_output_contains "$GS_FILE line 2: expected <schema> <key> <value>"
+    [ ! -e "$GS_LOG" ]
+    [ ! -e "$HOME/.config/gtk-3.0/gtk.css" ]
+}
+
+@test "desktop_install applies nothing when the instance has no gsettings file" {
+    _gs_env ""
+    run desktop_install
+    assert_success
+    [ ! -e "$GS_LOG" ]
+}
+
+@test "desktop_check and desktop_verify name each declared key that differs" {
+    _gs_env "$_GS_PAIRS"
+    # Installed, then the keys moved under it, so drift is the only fault.
+    desktop_install >/dev/null
+    echo "'Super_L'" > "$GS_STORE/org.gnome.mutter/overlay-key"
+    echo "['<Super>Tab']" > "$GS_STORE/org.gnome.desktop.wm.keybindings/switch-windows"
+    run desktop_check
+    assert_failure
+    assert_output_contains "desktop: org.gnome.mutter overlay-key is 'Super_L', wanted ''"
+    assert_output_contains "desktop: org.gnome.desktop.wm.keybindings switch-windows is ['<Super>Tab'], wanted ['<Alt>Tab', '<Super>Tab']"
+    run desktop_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: desktop: org.gnome.mutter overlay-key is 'Super_L', wanted ''"
+    assert_output_contains "VERIFY FAIL: desktop: org.gnome.desktop.wm.keybindings switch-windows is ['<Super>Tab'], wanted ['<Alt>Tab', '<Super>Tab']"
+}
+
+# GLib can warn on stderr beside a value it read; the value is what counts.
+@test "a key gsettings reads with a warning beside it is not drift" {
+    _gs_env "$_GS_PAIRS"
+    desktop_install >/dev/null
+    mv "$BATS_TEST_TMPDIR/bin/gsettings" "$BATS_TEST_TMPDIR/bin/gsettings.real"
+    printf '#!/bin/sh\necho "GLib-WARNING: a warning" >&2\nexec "%s" "$@"\n' "$BATS_TEST_TMPDIR/bin/gsettings.real" > "$BATS_TEST_TMPDIR/bin/gsettings"
+    chmod +x "$BATS_TEST_TMPDIR/bin/gsettings"
+    run desktop_check
+    assert_success
+    run desktop_install
+    assert_success
+    assert_output_contains "GLib-WARNING: a warning"
+}
+
+@test "desktop_check passes once every declared key holds its value" {
+    _gs_env "$_GS_PAIRS"
+    desktop_install >/dev/null
+    run desktop_check
+    assert_success
+    run desktop_verify
+    assert_success
+}
