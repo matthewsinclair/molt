@@ -1,0 +1,16 @@
+{
+  "id": "01M5HRGZK3XS91BC2HZ83GNES8",
+  "ts": "2026-10-22T12:14:12.067Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; route settled 22 Oct 11:13Z as the conffile copy after hv's priority=1 experiment failed on kovacs. MERGED to main at 3919fcd (vc scratch merge: both bashes green, shellcheck clean, mutation red on main's code); CI watching. Next: dc fills the guide placeholders on issue-0032-guide from the as-built and reports its head; hv pulls kovacs' Molt checkout to 3919fcd and runs molt upgrade there (writes /etc/apparmor.d/bwrap-userns-restrict through sudo, keeps the distro's as .molt-orig, reloads; kovacs-sysadm's classifier may refuse, then hv at its ! prompt), then sh ~/kovacs-creds.sh A, B, clean from a plain terminal and pastes; dc puts the table in the guide; vc lands the guide and closes 0032 on that evidence."
+  }
+}

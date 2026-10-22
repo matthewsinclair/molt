@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 10:54Z
+heartbeat_at: 2026-10-22 11:16Z
 status: active
-focus: "22 Oct: 0032 guide drafted, waiting on cc's issue-0032 head; then kovacs creds A/B under ops; 0022 held"
+focus: "22 Oct: 0032 guide on issue-0032-guide ad94722, route settled (copy); waiting on cc's head and hv's kovacs run; 0022 held"
 claims: [ISSUE:0022]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0022]
 
 ## DOING
 
-- ISSUE:0032 guide: draft at scratchpad bwrap-profile-draft.md (still-owed sentence, '### The sandbox on Ubuntu' under Fence and wall, dpkg conffile note, check 15 and agent config placeholders). Waits on cc's issue-0032 head for the exact lines; then, after hv's molt upgrade on kovacs, hv runs kovacs-creds.sh A and B under an ops home and the bubblewrap table lands
+- ISSUE:0032 guide: DRAFT on Molt branch issue-0032-guide at ad94722 (worktree Molt-wt/issue-0032-guide), '### The sandbox on Ubuntu' under Fence and wall. Route settled: the conffile copy (vc, 22 Oct; local include failed on kovacs). Placeholders: check 15, config line, fault rows, sidecar, Ubuntu version wait on cc's issue-0032 head; <BWRAP-RESULT> waits on hv's molt upgrade on kovacs, then hv runs ~/kovacs-creds.sh A and B (edited)
 
 ## TODO
 

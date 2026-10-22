@@ -1,0 +1,16 @@
+{
+  "id": "01M5HN3QE04JDFYY77HF794832",
+  "ts": "2026-10-22T11:14:32.000Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "Issue 0032 (kovacs sandbox): hv ruled 22 Oct, option 1, a Molt-managed bwrap-userns-restrict profile with sys_admin kept for bwrap's children, on Linux sleeves with an ops or docs agent; spec in the issue. Route settled 22 Oct 11:13Z: the conffile copy (hv's priority=1 local-include experiment on kovacs failed; recorded in the issue). cc builds on issue-0032 (03bee17 WIP: shared molt_root_file_* helpers landed; left: predicate, state, faults, _agents_sandbox with the bwrap probe, doctor 15, config line, tests, CHANGELOG). Then vc's scratch merge, dc's guide section (route text on issue-0032-guide 0071324), hv's molt upgrade on kovacs at the sudo prompt, hv runs dc's kovacs-creds.sh A and B from a plain terminal, close on that evidence."
+  }
+}

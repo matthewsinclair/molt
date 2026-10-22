@@ -1165,6 +1165,50 @@ molt_claude_managed_dir() {
   esac
 }
 
+# Where AppArmor reads its profiles on a Linux sleeve. Root-owned; molt writes
+# bwrap-userns-restrict there through sudo, with its sidecar and the distro's
+# copy beside it, and nothing else (issue 0032).
+molt_apparmor_dir() {
+  echo "/etc/apparmor.d"
+}
+
+# True when this sleeve's AppArmor parses the profile file $1, read with the
+# includes in molt_apparmor_dir, unprivileged and loading nothing. Fails,
+# printing why, with apparmor_parser absent or the parse refused; the parser's
+# own words go to stderr.
+molt_apparmor_parses() {
+  local profile
+  profile="$(molt_tilde "$1")"
+  if ! command -v apparmor_parser &>/dev/null; then
+    echo "apparmor_parser is not installed, so $profile cannot be parsed"
+    return 1
+  fi
+  if ! apparmor_parser -Q -K -I "$(molt_apparmor_dir)" "$1" >&2; then
+    echo "$profile does not parse under this sleeve's AppArmor"
+    return 1
+  fi
+}
+
+# Loads the AppArmor profile file $1 into the kernel, replacing what it holds of
+# it, through sudo. Fails, printing why, with apparmor_parser or sudo absent or
+# the load refused.
+molt_apparmor_load() {
+  local profile
+  profile="$(molt_tilde "$1")"
+  if ! command -v apparmor_parser &>/dev/null; then
+    echo "apparmor_parser is not installed, so $profile was not loaded"
+    return 1
+  fi
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $profile was not loaded"
+    return 1
+  fi
+  if ! sudo apparmor_parser -r "$1" >&2; then
+    echo "apparmor_parser could not load $profile"
+    return 1
+  fi
+}
+
 # Puts the bytes of $1 at $2, a root-owned path, mode 644, through sudo: copied
 # first to a temporary file of the user's, so what sudo installs is what was
 # read, then installed with the directory made as needed. Never written any
@@ -1202,6 +1246,71 @@ molt_sudo_remove() {
     echo "sudo could not remove $*"
     return 1
   fi
+}
+
+# The state of the root-owned file $2 that molt installs from $1, byte for
+# byte, one word: on a sleeve that wants it ($3 is 0), current, missing, stale,
+# or foreign (a file molt did not write, which it leaves); on one that does not
+# ($3 is anything else), absent, leftover (molt's, to remove), or unowned
+# (somebody else's, left alone). Molt's is the one beside molt's sidecar,
+# ${2}.molt-rendered. Fails, printing why, when the two cannot be compared.
+molt_root_file_state() {
+  local src="$1" target="$2" wanted="$3" differ=0
+  if [[ "$wanted" -ne 0 ]]; then
+    if [[ -f "${target}.molt-rendered" ]]; then
+      echo leftover
+    elif [[ -e "$target" ]]; then
+      echo unowned
+    else
+      echo absent
+    fi
+    return 0
+  fi
+  if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
+    echo foreign
+    return 0
+  elif [[ ! -e "$target" ]]; then
+    echo missing
+    return 0
+  fi
+  cmp -s "$src" "$target" || differ=$?
+  case $differ in
+    0) echo current ;;
+    1) echo stale ;;
+    *)
+      echo "$(molt_tilde "$target") could not be compared with $(molt_tilde "$src")"
+      return 1 ;;
+  esac
+}
+
+# Installs the bytes of $1 as the root-owned file $2, through sudo, its sidecar
+# first, so a file beside molt's sidecar is always one molt wrote. Fails,
+# printing why.
+molt_root_file_install() {
+  local src="$1" target="$2" sidecar digest why
+  if ! sidecar="$(mktemp "${TMPDIR:-/tmp}/molt-sidecar.XXXXXX")"; then
+    echo "no temporary file could be made for the sidecar of $target, so nothing was written"
+    return 1
+  fi
+  digest="$(molt_hash < "$src")" || digest=""
+  if ! molt_render_sidecar "$src" "$digest" "$src" > "$sidecar"; then
+    rm -f "$sidecar"
+    echo "the sidecar of $target could not be written, so nothing was"
+    return 1
+  fi
+  if ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
+      || ! why="$(molt_sudo_install "$src" "$target")"; then
+    rm -f "$sidecar"
+    echo "$why"
+    return 1
+  fi
+  rm -f "$sidecar"
+}
+
+# Removes the root-owned file $1 that molt installed, and its sidecar, through
+# sudo. Fails, printing why.
+molt_root_file_remove() {
+  molt_sudo_remove "$1" "${1}.molt-rendered"
 }
 
 # --- CLI Commands ---
@@ -1332,7 +1441,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=14
+  local total=15
   local step=0
   local warnings=0
 
@@ -1704,6 +1813,31 @@ cmd_doctor() {
     while IFS= read -r floor_fault; do
       echo "         $floor_fault"
     done <<< "$floor_faults"
+    warnings=$((warnings + 1))
+  fi
+
+  # 15. The sandbox profile (issue 0032): on a Linux sleeve with an ops or docs
+  # agent, molt's bwrap-userns-restrict is in place and bwrap's children can
+  # make the sandbox's user namespace; on any other, none of molt's is left.
+  step=$((step + 1))
+  local sandbox_state sandbox_faults sandbox_fault
+  if sandbox_state="$(molt_agent_sandbox_state)"; then
+    sandbox_faults="$(molt_agent_sandbox_faults "$sandbox_state")"
+  else
+    sandbox_faults="$sandbox_state"
+  fi
+  if [[ -z "$sandbox_faults" ]]; then
+    case "$sandbox_state" in
+      current) sandbox_fault="in place: $(molt_tilde "$(molt_agent_sandbox_target)")" ;;
+      unowned) sandbox_fault="none needed; $(molt_tilde "$(molt_agent_sandbox_target)") is not molt's, and is left" ;;
+      *)       sandbox_fault="none needed, and none of molt's here" ;;
+    esac
+    echo "[$step/$total] Checking sandbox profile... ✓ $sandbox_fault"
+  else
+    echo "[$step/$total] Checking sandbox profile... ⚠"
+    while IFS= read -r sandbox_fault; do
+      echo "         $sandbox_fault"
+    done <<< "$sandbox_faults"
     warnings=$((warnings + 1))
   fi
 
