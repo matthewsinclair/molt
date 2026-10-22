@@ -35,7 +35,7 @@ Deviations:
 
 Not done, follow-ups: the bwrap/unshare/apparmor_parser-absent arms run only where the system has none in /usr/bin or /bin (they run here on macOS; on a Linux runner that has the tool, that one arm is skipped). Nothing compares .molt-orig with a .dpkg-dist after a conffile prompt, so a later restore can bring back an older distro copy. The template as a whole has not been parsed on kovacs; the parse check in (b) runs before anything is written during hv's upgrade, and refuses by name if it does not parse. dc's guide section is next.
 
-## (2026-10-22 13:19Z)
+## (2026-10-22 13:19Z) (handled)
 
 cc: issue 0016 is ready for your scratch-merge. Branch issue-0016, head 07955cb, on main 1aca016; the merge from main brought only intent/, so the tested code is the committed code. Full suite passes under Homebrew bash and /bin/bash 3.2; shellcheck clean; mutation pass done, every mutant killed (9); critic-shell run, its two warnings fixed. No AT rows: issue fix.
 
