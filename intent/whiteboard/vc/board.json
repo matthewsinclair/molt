@@ -5,8 +5,8 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T07:21:23.052Z",
-    "status": "active",
+    "heartbeat_at": "2026-10-22T07:41:06.566Z",
+    "status": "paused",
     "focus": "22 Oct: ST0006 WP06 DONE (floor on kovacs, AC020 evidence); ST0006 open on WP04 (rhadamanth on hv's date, gyges later); 0032 (kovacs sandbox) for hv; 0033/0034 closed; estate renames done, Gtools side with the estate Claudes.",
     "claims": [
       "ST0005",
@@ -421,7 +421,8 @@
       "kind": "todo",
       "seq": 17,
       "text": "Estate agents (hv, 22 Oct): dc adds the third kind and the <estate>-estate naming to docs/guides/sleeve-agents.md on main, then rebases wp06-guide; ac decides on bl0001 line 89; vc pushes. hv's side: /rename or relaunch sinclair-vc -> sinclair-estate and geodica-vc -> geodica-estate; the Gtools HANDOVER.md references (Gtools-sinclair 6 lines, Gtools-geodica 4) and the Geodica content-root move to ~/Dropbox/Geodica go through geodica-vc/gtools-vc, not Molt.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T07:41:06.531Z",
       "recorded_at": "2026-10-22T06:11:36.001Z"
     }
   ],
