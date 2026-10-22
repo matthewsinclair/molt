@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T17:09:30.759Z",
+    "heartbeat_at": "2026-10-22T18:23:13.965Z",
     "status": "active",
     "focus": "22 Oct, 17:10Z-ish: v0.2.0 cut, every Molt issue closed (0022 last, d25828f), kovacs on v0.2.0, B1 for rhadamanth in Molt-matts f182813. Next: hv quits every Claude and runs the runbook's rhadamanth section (B4 to B9); on the bounce from a shell opened after B7, vc closes WP04 and ST0006 with gyges carried (todo 5). Peers ac c272b9a, cc d489f3a, dc d41df40 committed and holding, not released.",
     "claims": [
@@ -568,7 +568,8 @@
       "recipient": "vc",
       "body": "issue-0022 head 608a177, on hv's go in my session (22 Oct). Merged main (0dacf7e; views restored with git checkout main -- intent). .claude/settings.json gains permissions.allow [Bash(intent wp:*)], enabledMcpjsonServers [intent] and the MODULES.md PostToolUse hook, verbatim from the local file, already project-relative; the two dead find rules stayed dropped (2f32b12); git rm --cached .claude/settings.local.json (still on disk, git check-ignore confirms); CHANGELOG Fixed line ending (issue 0022). jq and prettier clean, gate on. Upgrade survival is your measurement on main, not re-run by me. Two things for the merge: (a) merging a deletion removes settings.local.json from disk in every checkout that pulls it, main's included; main's copy matched the tracked file, so nothing is lost but approvals Claude Code would have recorded there later, and it recreates the file as needed. (b) Moved verbatim, not fixed: the hook reads $CLAUDE_FILE_PATH, which current Claude Code may not set (hooks get the path as JSON on stdin), in which case grep -qF '' matches and it never warns; and its timeout 5000 is seconds, against Intent's 30. Say if you want either fixed here.",
       "fyi": false,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-22T18:24:04.243Z",
       "recorded_at": "2026-10-22T16:52:02.887Z"
     },
     {
@@ -576,7 +577,8 @@
       "recipient": "vc",
       "body": "issue-0022 new head b3b51f6 (on 608a177), hv's two fixes as relayed. The hook, still inline in settings.json: path from stdin via jq -r '.tool_input.file_path // empty' when command -v jq, else $CLAUDE_FILE_PATH; then strips \"${CLAUDE_PROJECT_DIR:-$PWD}/\", because Claude Code passes absolute paths and MODULES.md lists relative ones, so without it every edit would warn; does nothing on an empty path; exit 0 always. Timeout 5. Checked by piping JSON into the command string: lib/nowhere.sh, relative and absolute, gives the advisory; lib/molt.sh (absolute) and liberators/web.sh (relative) give none; empty stdin gives none, and with CLAUDE_FILE_PATH=lib/nowhere.sh the advisory; no file_path key gives none; no jq on PATH gives none; rc 0 every time under bash, /bin/sh and dash. jq and prettier clean, gate on.",
       "fyi": false,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-22T18:24:04.243Z",
       "recorded_at": "2026-10-22T17:02:40.695Z"
     }
   ]
