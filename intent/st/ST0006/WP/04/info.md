@@ -259,6 +259,8 @@ On a Mac the copy is `cp -cRp "$b/.claude" "$b/.claude.json" ~/`, an APFS clone.
 
 ## rhadamanth
 
+hv set the date on 22 Oct 2026: rhadamanth moves that day, after the globalfold, with every Claude quit first (B4).
+
 After kovacs has passed C4, the same three phases, with these differences:
 
 - A: the first upgrade after WP02 and WP03 is two commands, as in A1 (P5), and renders `~/Devel/agt/rhadamanth-sysadm`, `rhadamanth-ops` and `rhadamanth-docs`. Then hv copies the memory of the sessions launched in `$HOME`, which are sysadm memories, into rhadamanth-sysadm's home, and confirms the destination: `cp -Rp ~/.claude/projects/-Users-matts/memory/. ~/Devel/agt/rhadamanth-sysadm/memory/`. vc's inventory on 21 Oct found `MEMORY.md` and four notes there (doom-emacs-version-profile-miss, emacs-plus31-dylib-crash, launchd-agents-tcc-network-volumes, nas-smb-share-wedges-emfile), so `ls ~/Devel/agt/rhadamanth-sysadm/memory/` should list those. The slug's one session transcript stays where it is, and moves with the state.
