@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 37,
+  "slug": "web-utilz-pplr-and-bootstrap-still-pull-with-git",
+  "title": "web, utilz, pplr and bootstrap still pull with git's reason dropped and every failure called skipped",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-22",
+  "reporter": "Matthew Sinclair",
+  "body": "Issue 0015 fixed the framework, user config and Doom pulls: a failed `git pull` is no longer reported as skipped with a cause that cannot be true, git's reason is shown, and the upgrade fails at the end. Four pulls of the same shape were outside that issue and still drop git's stderr and call every failure a skip: `liberators/web.sh:111`, `liberators/utilz.sh:202` (checkout mode), `liberators/pplr.sh:77`, each `git pull --ff-only 2>/dev/null` with \"pull skipped (not on tracking branch or already up-to-date)\" on failure and the hook returning 0; and `bin/bootstrap.sh:94`, `clone_or_pull`, which pulls the same way and says \"pull skipped (not on tracking branch)\". An offline or diverged sleeve upgrades those repos to nothing and the run says so to nobody. Listed by cc at the 0015 hand-over, 22 Oct 2026.\n\n## Spec (vc, 22 Oct 2026): the 0015 shape at the four sites\n\nThe three liberators pull through `molt_git_pull \"$repo\" \"<Label>\"`: updated on 0, a warning on 2 (no upstream configured), and the hook returns non-zero on any other status, so `molt upgrade` counts it in the failed hooks and ends without `Sleeve ready`, as `editors_upgrade` does. `bin/bootstrap.sh` is standalone and cannot source `lib/`: it lets git's stderr through, keeps \"pull skipped\" only when the branch has no upstream configured, and fails the bootstrap on any other pull failure with git's words shown, through its own helpers. Tests fake the failing pull as `test/liberators/editors.bats` does. Accepted as it is: a repo with no upstream gets two warnings on `molt upgrade`, one from `_upgrade_warn_unpushed` and one from the pull. Branch `issue-0037`, dc.\n"
+}
