@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T17:03:29.399Z",
+    "heartbeat_at": "2026-10-22T17:09:30.759Z",
     "status": "active",
-    "focus": "22 Oct evening, hv AFK with vc holding the pen: v0.2.0 cut (f1f27bb) and pushed; every issue but 0022 closed (hv's word in dc's session). kovacs onto v0.2.0 through kovacs-sysadm, proving 0035's gsettings print forms. Then: rhadamanth's move with hv at the keyboard, WP04 and ST0006 close with gyges carried. Peers localfolded (ac c272b9a, cc 7287c89, dc 17b89de), holding, not released.",
+    "focus": "22 Oct, 17:10Z-ish: v0.2.0 cut, every Molt issue closed (0022 last, d25828f), kovacs on v0.2.0, B1 for rhadamanth in Molt-matts f182813. Next: hv quits every Claude and runs the runbook's rhadamanth section (B4 to B9); on the bounce from a shell opened after B7, vc closes WP04 and ST0006 with gyges carried (todo 5). Peers ac c272b9a, cc d489f3a, dc d41df40 committed and holding, not released.",
     "claims": [
       "ST0006"
     ],
