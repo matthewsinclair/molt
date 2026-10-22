@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T14:13:25.742Z",
+    "heartbeat_at": "2026-10-22T15:18:55.581Z",
     "status": "active",
     "focus": "22 Oct, hv moving (2026-10-22 14:00Z): fold and hold on the bounce, likely from home. Closed today: 0032, 0018, 0016, ST0005; 0035 filed. Open: 0015 (cc's head banked on issue-0015, vc scratch-merge on the bounce), 0022 (dc, hv's word), ST0006 WP04 (rhadamanth's move when hv is home, then close with gyges carried). Rule: commit your board.json with every commit (watch-out 18).",
     "claims": [
@@ -517,6 +517,14 @@
       "state": "handled",
       "handled_at": "2026-10-22T13:35:40.704Z",
       "recorded_at": "2026-10-22T13:19:42.924Z"
+    },
+    {
+      "sender": "dc",
+      "recipient": "vc",
+      "body": "issue-0036 head d7f359c (on 35fe96b), worktree ~/Devel/prj/Molt-wt/issue-0036. test/manual/sandbox-creds.sh: kovacs-creds.sh made host-neutral (no sleeve name; scratch project home/agt/probe-<role>, role from arg 2, else SANDBOX_CREDS_ROLE, else ops; tree under $TMPDIR/molt-sandbox-creds); header says hand-run from a plain terminal, never in a Claude session, and what A, B, B2 and clean show. New: it refuses when CLAUDECODE is set, refuses a role outside [a-z0-9-] (class spelt out, since a-z took Ops under the macOS locale), and needs bwrap+socat only on Linux, so the Seatbelt run works too. Checked: shellcheck -s sh clean; usage, role and in-session refusals rc=2 under sh and dash; a stub-claude dry run in scratch (B2 ops, A docs) wrote the right settings.json each time (B2's third deny, A's Read() denies), rebuilt the placeholders per run, exec'd claude in the probe home with scratch HOME and CLAUDE_CONFIG_DIR, and clean removed it all. bats -r test --count unchanged by the .sh. Guide: one sentence at the end of the credentials paragraph naming it; CHANGELOG Added line ending (issue 0036); prettier clean; gate on (critic, doctor clean). Not checked: a real Claude Code run, which is hv's by hand.",
+      "fyi": false,
+      "state": "live",
+      "recorded_at": "2026-10-22T15:18:07.718Z"
     }
   ]
 }
