@@ -1,0 +1,15 @@
+{
+  "id": "01M5FDF94A73FBE1JJ3Q4QS3VD",
+  "ts": "2026-10-21T14:22:33.099Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Issues 0024 (ssh config.d backups, medium) and 0025 (vars.sh EXIT trap, low) filed, not fixed, per vc (21 Oct); released when vc queues the fixes or hands cc its next work (WP06 needs ACs from vc)."
+  }
+}

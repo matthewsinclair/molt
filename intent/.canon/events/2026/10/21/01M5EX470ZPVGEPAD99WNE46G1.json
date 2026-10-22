@@ -1,0 +1,15 @@
+{
+  "id": "01M5EX470ZPVGEPAD99WNE46G1",
+  "ts": "2026-10-21T09:36:53.279Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ST0006 WP02's fixes (todos 3 to 5), for hv's travel and the move: released when hv or vc says work resumes. st0006-wp02 stays at b897a23 until then."
+  }
+}

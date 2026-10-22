@@ -1,0 +1,16 @@
+{
+  "id": "01M5FDC1F9E8MKE7W7SSMPFYJM",
+  "ts": "2026-10-21T14:20:46.953Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04: runbook final at 5a21904 (ac). WP02 is on main (bea7420); WP03 (dc, Molt-matts st0006-wp03 re-rendered against merged WP02) is the last gate before A1. vc tells kovacs-sysadm when A1 is runnable. hv's date for the move."
+  }
+}

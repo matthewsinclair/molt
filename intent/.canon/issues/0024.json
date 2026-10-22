@@ -1,0 +1,12 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 24,
+  "slug": "ssh-install-backs-ssh-config-up-on-every-install",
+  "title": "ssh_install backs ~/.ssh/config up on every install when there is a config.d fragment, warning it was changed",
+  "status": "closed",
+  "severity": "medium",
+  "created": "2026-10-21",
+  "closed": "2026-10-21",
+  "reporter": "Matthew Sinclair",
+  "body": "## What happens\n\n`ssh_install` renders `~/.ssh/config` with `molt_install_config`, then appends each instance `config.d/*.conf` fragment below it. `molt_render_place` compares the new render (with no fragments) against the file on disk (with them), so on a sleeve with any config.d fragment the two always differ. Every install therefore takes the \"Rendered file changed since last render\" branch: it warns that the file was changed, and moves `~/.ssh/config` to a new `config.molt-backup.<timestamp>` file, though nobody edited it. This happens whether or not the template, vars.sh or a fragment changed.\n\nThe backups pile up in `~/.ssh`, and the warning stops meaning anything: a real hand edit looks the same as molt's own appended fragments.\n\n## Repro (main at bea7420, both bashes)\n\nUse the fixture from `_ssh_env` in `test/liberators/ssh.bats`: one fragment, `gyges.conf`, and a template `Host *\\n  ServerAliveInterval 60\\n`.\n\n1. Run `ssh_install`. The config is rendered, the fragment is appended, and there is no backup.\n2. Run `ssh_install` again with nothing changed. It warns \"Rendered file changed since last render, backing up\", and `config.molt-backup.<ts>` holds the earlier render plus the fragment.\n3. Change the template and run it again. It takes another backup, `.1`, with the same warning.\n\n## Cause\n\nThis is the shape WP02 fixed for an agent's AGENTS.md and settings.json, where the file was finished after the compare. The `molt_render_place` contract says a caller builds the whole file in `${target}.molt-tmp` first. The ssh liberator calls `molt_render` (render plus place) and appends afterwards. The fix is to render into `.molt-tmp`, append the fragments there, then call `molt_render_place` with the fragments as its extra inputs. That would also replace the sidecar re-stamp that follows. The fix is not made yet; vc is queueing it.\n"
+}

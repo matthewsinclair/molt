@@ -1,0 +1,16 @@
+{
+  "id": "01M5J7Y4XJYBBSARAQH0M0C1NQ",
+  "ts": "2026-10-22T16:43:32.146Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 8,
+    "text": "Sent to intent-vc on 22 Oct 2026 evening: the three Intent defects (worktree hooks syncing an old store; 'intent at list | grep -q' panicking on the broken pipe; 'intent claude upgrade --apply' rewriting a .claude/settings.json that names 'intent claude hook' whole, Molt issue 0022's blocker, asking canon to carry enabledMcpjsonServers [\"intent\"], the MODULES.md PostToolUse advisory and Bash(intent wp:*), or to keep keys it does not own) by dc, replies relayed by dc; and the fourth, an inbound wb ask stored in the recipient's board.json while the sender commits the view, so a fresh worktree's gate skews until the recipient commits (watch-out 18), by vc. Open until intent-vc answers; 0022 moves on the settings.json answer."
+  }
+}

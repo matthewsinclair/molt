@@ -1,0 +1,15 @@
+{
+  "id": "01M5ETBDWD8H1P0J13W9XVRDKB",
+  "ts": "2026-10-21T08:48:23.949Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "vc's rulings on cc todo 3 (WP02 critic findings), 21 Oct: (a) claude keeps asking molt_agt_dir_fault unconditionally (a Molt sleeve always has MOLT_PRJ_DIR); the empty-root refusal reads exactly 'MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset'. (b) W1: the validator resolves real paths the same way the guard does (/bin/pwd -P, builtin fallback) so the two never disagree. (c) W3: assemble the three AGENTS.md layers first and give molt_render the whole, so its compare is against what is on disk. W2 and W4 as described in todo 3. All on st0006-wp02 after the compact; b897a23 stays the head until then."
+  }
+}

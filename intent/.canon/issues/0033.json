@@ -1,0 +1,12 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 33,
+  "slug": "keys-sh-and-tiling-sh-write-root-owned-files-wit",
+  "title": "keys.sh and tiling.sh write root-owned files with raw sudo cp/rm where molt_sudo_install/remove now exist (Highlander)",
+  "status": "closed",
+  "severity": "low",
+  "created": "2026-10-22",
+  "closed": "2026-10-22",
+  "reporter": "Matthew Sinclair",
+  "body": "ST0006 WP06 added `molt_sudo_install` and `molt_sudo_remove` to `lib/molt.sh`: the one way molt writes or removes a root-owned file, through sudo, from a user copy, failing with a reason when sudo is absent or refuses. Two liberators still do the same thing their own way, from before the helpers existed:\n\n- `liberators/keys.sh:73` copies the instance's keyd config to `/etc/keyd/default.conf` with a raw `sudo cp`.\n- `liberators/tiling.sh:80` copies the Tactile schema into the system schema dir with `sudo cp`, and `tiling.sh:85` removes it with `sudo rm -f` when compiling fails.\n\nThree copies of one concern (Highlander): the two raw forms neither name sudo's absence nor copy to a user tmp first, and a change to how molt writes through sudo (eg the mode, the directory creation) reaches only the helper. Replace the three calls with the helpers; tiling.bats already fakes sudo through `install_fake_sudo`, so its arms stay. The keyd build (`make && sudo make install`), the `systemctl` calls and `keyd reload` are commands, not file writes, and stay as they are.\n\nNamed by cc at the WP06 hand-over (22 Oct 2026) as not done. No behaviour changes on any sleeve.\n"
+}

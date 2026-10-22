@@ -31,27 +31,27 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC005
 
-- AC005 An enabled [[agent]] entry renders its home (AGENTS.md from the role template plus the instance overlay when the sleeve has one, CLAUDE.md, .claude/settings.json with autoMemoryDirectory=<home>/memory, memory/, work/) with a name derived as <hostname>-<role>; re-render is a no-op while digests match and happens when the template or overlay changes; an undefined role is a fault naming it -- satisfied: no (computed)
+- AC005 An enabled [[agent]] entry renders its home (AGENTS.md from the role template plus the instance overlay when the sleeve has one, CLAUDE.md, .claude/settings.json with autoMemoryDirectory=<home>/memory, memory/, work/) with a name derived as <hostname>-<role>; re-render is a no-op while digests match and happens when the template or overlay changes; an undefined role is a fault naming it -- satisfied: yes (computed)
 
 ### Group AC006
 
-- AC006 molt agent list names every declared agent with role, home and currency; molt agent config <name> prints the effective permissions with each rule tagged by its layer, and fails on an undeclared name listing the declared ones -- satisfied: no (computed)
+- AC006 molt agent list names every declared agent with role, home and currency; molt agent config <name> prints the effective permissions with each rule tagged by its layer, and fails on an undeclared name listing the declared ones -- satisfied: yes (computed)
 
 ### Group AC007
 
-- AC007 (non-test) sysadm, ops and docs contracts and profiles exist in Molt-matts and are declared on rhadamanth, gyges and kovacs; molt doctor is green on each reachable host with its homes rendered -- satisfied: no
+- AC007 (non-test) sysadm, ops and docs contracts and profiles exist in Molt-matts and are declared on rhadamanth, gyges and kovacs; molt doctor is green on each reachable host with its homes rendered -- evidence: Molt-matts d48886f (roles sysadm/ops/docs, preamble, kovacs overlay, [[agent]] entries on rhadamanth, gyges, kovacs). kovacs: A1 by kovacs-sysadm, 21 Oct: molt upgrade rendered kovacs-{sysadm,ops,docs}, agent list all current, doctor 13/13 all passed. rhadamanth: molt resleeve by molt-vc, 21 Oct 19:21: rhadamanth-{sysadm,ops,docs} rendered, agent list all current, doctor exit 0 with two standing warnings unrelated to agents (backup copy age and schedule; core.ignorecase). gyges unreachable until hv is home (hv: later). -- satisfied: yes
 
 ### Group AC008
 
-- AC008 (non-test) kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home; ~/.claude and ~/.claude.json are gone from $HOME and the verify script says so -- satisfied: no
+- AC008 (non-test) kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home; ~/.claude and ~/.claude.json are gone from $HOME and the verify script says so -- evidence: kovacs, 21 Oct 2026: kovacs-sysadm runs from ~/Devel/agt/kovacs-sysadm with its memory in the home (autoMemoryDirectory, role memory stated unread); CLAUDE_CONFIG_DIR=/home/matts/.config/claude in the claude process's own environment; ~/.claude and ~/.claude.json absent; work/verify-wp04.sh c4 PASS on every line after C3; molt doctor all checks passed; FOLD note in the home updated (session 1c7fdc09, ~23:50 local). Runbook phases A-C per intent/st/ST0006/WP/04/info.md at 2915240; Molt 2b330c0, Molt-matts 423b800 on kovacs. -- satisfied: yes
 
 ### Group AC009
 
-- AC009 (non-test) docs/guides/sleeve-agents.md records the naming, roles, layers, move and doctor reports; README and CHANGELOG updated -- satisfied: no
+- AC009 (non-test) docs/guides/sleeve-agents.md records the naming, roles, layers, move and doctor reports; README and CHANGELOG updated -- evidence: docs/guides/sleeve-agents.md at 4968355 (WP05 merge): naming, roles, three layers, declaring and rendering, molt agent list|config, the move and its refusals, where the variable is published, the guard, doctor reports, fence and wall; README and CHANGELOG entries; 101 quoted items checked against the code by molt-vc -- satisfied: yes
 
 ### Group AC010
 
-- AC010 sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed -- satisfied: no (computed)
+- AC010 sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed -- satisfied: yes (computed)
 
 ### Group AC011
 
@@ -67,7 +67,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC014
 
-- AC014 The home-launch guard refuses a prompt whose session started under MOLT_AGT_DIR without starting in an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a session started exactly in an agent home passes, as does one started anywhere else but $HOME. The guard tests CLAUDE_PROJECT_DIR, the directory the session started in, never the hook input's cwd, which follows Claude's cd. Project settings load from the start directory's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence. -- satisfied: no (computed)
+- AC014 The home-launch guard refuses a prompt whose session started under MOLT_AGT_DIR without starting in an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a session started exactly in an agent home passes, as does one started anywhere else but $HOME. The guard tests CLAUDE_PROJECT_DIR, the directory the session started in, never the hook input's cwd, which follows Claude's cd. Project settings load from the start directory's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence. -- satisfied: yes (computed)
 
 ### Group AC015
 
@@ -75,7 +75,27 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC016
 
-- AC016 A sleeve agent's AGENTS.md renders from three layers in order: the config repo's role-independent preamble config/agents/AGENTS.md.tmpl when it has one, the role's roles/<role>/AGENTS.md.tmpl, and the host overlay instances/<host>/agents/<role>.md when it has one; no paragraph common to every sleeve agent is written in a role template (Highlander). -- satisfied: no (computed)
+- AC016 A sleeve agent's AGENTS.md renders from three layers in order: the config repo's role-independent preamble config/agents/AGENTS.md.tmpl when it has one, the role's roles/<role>/AGENTS.md.tmpl, and the host overlay instances/<host>/agents/<role>.md when it has one; no paragraph common to every sleeve agent is written in a role template (Highlander). -- satisfied: yes (computed)
+
+### Group AC017
+
+- AC017 On a sleeve whose manifest declares no enabled sysadm agent, or whose vars.sh declares no MOLT_CLAUDE_CONFIG_DIR, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not -- satisfied: yes (computed)
+
+### Group AC018
+
+- AC018 The floor's contents come verbatim from Molt-matts config/agents/roles/sysadm/floor.json; a sysadm sleeve with no floor.json, or one that is not a single object with permissions.deny, fails check and install naming the file, and nothing is written -- satisfied: yes (computed)
+
+### Group AC019
+
+- AC019 molt doctor check 14 warns on a sleeve that takes the floor (an enabled sysadm agent and a declared MOLT_CLAUDE_CONFIG_DIR) whose floor is missing or stale, and on a sleeve that does not take it carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses -- satisfied: yes (computed)
+
+### Group AC020
+
+- AC020 (non-test) kovacs carries the floor: after molt upgrade, molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the user layer, the drop-in and its sidecar are root-owned 644, and doctor check 14 passes -- evidence: kovacs, 22 Oct 2026, after hv's molt upgrade from a plain terminal (Molt 842a080, Molt-matts 5220ca8): kovacs-sysadm ran, read-only, molt agent config kovacs-sysadm, which lists /etc/claude-code/managed-settings.d/molt-sysadm.json in the managed layer with Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the same two from the home's fence; and molt doctor, 14/14 passing with check 14 'Checking managed floor... in place: /etc/claude-code/managed-settings.d/molt-sysadm.json'; ls shows molt-sysadm.json and its .molt-rendered sidecar root:root 644. Output relayed verbatim to vc's session -- satisfied: yes
+
+### Group AC021
+
+- AC021 (non-test) The guide has a Managed floor section (what, where, the sudo prompt mid-upgrade, how to see it, the removal rule, that it binds every session on the sleeve), and Molt-matts' sysadm AGENTS.md.tmpl no longer says the floor is still to come -- evidence: docs/guides/sleeve-agents.md's Managed floor section (dc, 9a325d8, merged 02f51a2) covers what the floor is, where it lives per platform, the sudo prompt mid molt upgrade, how to see it (molt agent config example and doctor check 14), the removal rule and that it binds every session on the sleeve; Molt-matts config/agents/roles/sysadm/AGENTS.md.tmpl (dc, 9b36722, merged 5220ca8) no longer says the floor is still to come: where Molt has installed one the two denies hold, where not only the fence does. Text checked by dc and vc, 22 Oct 2026 -- satisfied: yes
 
 ### Group AT001
 
@@ -321,6 +341,62 @@ _(no criteria in this group)_
 
 _(no criteria in this group)_
 
+### Group AT062
+
+_(no criteria in this group)_
+
+### Group AT063
+
+_(no criteria in this group)_
+
+### Group AT064
+
+_(no criteria in this group)_
+
+### Group AT065
+
+_(no criteria in this group)_
+
+### Group AT066
+
+_(no criteria in this group)_
+
+### Group AT067
+
+_(no criteria in this group)_
+
+### Group AT068
+
+_(no criteria in this group)_
+
+### Group AT069
+
+_(no criteria in this group)_
+
+### Group AT070
+
+_(no criteria in this group)_
+
+### Group AT071
+
+_(no criteria in this group)_
+
+### Group AT072
+
+_(no criteria in this group)_
+
+### Group AT073
+
+_(no criteria in this group)_
+
+### Group AT074
+
+_(no criteria in this group)_
+
+### Group AT075
+
+_(no criteria in this group)_
+
 ## Acceptance Tests
 
 ### Group AC001
@@ -384,6 +460,26 @@ _(no tests in this group)_
 _(no tests in this group)_
 
 ### Group AC016
+
+_(no tests in this group)_
+
+### Group AC017
+
+_(no tests in this group)_
+
+### Group AC018
+
+_(no tests in this group)_
+
+### Group AC019
+
+_(no tests in this group)_
+
+### Group AC020
+
+_(no tests in this group)_
+
+### Group AC021
 
 _(no tests in this group)_
 
@@ -497,55 +593,55 @@ _(no tests in this group)_
 
 ### Group AT028
 
-- AT028 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT028 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "an enabled [[agent]] gets its home: AGENTS.md from the role, CLAUDE.md importing it, settings.json with its memory in the home, memory/ and work/". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT029
 
-- AT029 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT029 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT030
 
-- AT030 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a changed role template makes the home stale, and install renders it again". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT030 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "a changed role template makes the home stale, and install renders it again". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT031
 
-- AT031 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT031 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "the sleeve's overlay follows the role's contract in AGENTS.md, and adding or changing it makes the home stale". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT032
 
-- AT032 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a role the user repo does not define is a fault naming the role and where it was looked for". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT032 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "a role the user repo does not define is a fault naming the role and where it was looked for". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT033
 
-- AT033 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "an agent that is not enabled is not rendered". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT033 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "an agent that is not enabled is not rendered". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT034
 
-- AT034 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a home renders while Claude Code's state is still in $HOME, waiting on nothing the claude liberator does". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT034 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "a home renders while Claude Code's state is still in $HOME, waiting on nothing the claude liberator does". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT035
 
-- AT035 `test/liberators/agents.bats` -- covers AC005 -- status: to-write -- @test "a settings template that does not render to JSON fails the install and leaves the file reading stale". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT035 `test/liberators/agents.bats` -- covers AC005 -- status: green -- @test "a settings template that does not render to JSON fails the install and leaves the file reading stale". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). The test is now @test "a settings template that does not render to one JSON object, being broken, empty, null or two objects, fails the install and leaves the file as it was: missing on a first install, as last rendered after". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT036
 
-- AT036 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT036 `test/liberators/agents.bats` -- covers AC006 -- status: green -- @test "molt agent list names every declared agent with its role, whether enabled, the state of its home, and the home". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT037
 
-- AT037 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "the permissions in effect are every rule from every layer, deny first, each tagged with its layer". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT037 `test/liberators/agents.bats` -- covers AC006 -- status: green -- @test "the permissions in effect are every rule from every layer, deny first, each tagged with its layer". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT038
 
-- AT038 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT038 `test/liberators/agents.bats` -- covers AC006 -- status: green -- @test "molt agent config prints the role, the home, each file's state, the settings it read, and the tagged rules". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT039
 
-- AT039 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent config fails on an undeclared name, listing the declared ones". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT039 `test/liberators/agents.bats` -- covers AC006 -- status: green -- @test "molt agent config fails on an undeclared name, listing the declared ones". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT040
 
-- AT040 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- @test "molt agent config fails, naming the file, when a settings layer is not JSON". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct).
+- AT040 `test/liberators/agents.bats` -- covers AC006 -- status: green -- @test "molt agent config fails, naming the file, when a settings layer is not JSON". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT041
 
@@ -573,7 +669,7 @@ _(no tests in this group)_
 
 ### Group AT047
 
-- AT047 `test/liberators/agents.bats` -- covers AC006 -- status: to-write -- critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats
+- AT047 `test/liberators/agents.bats` -- covers AC006 -- status: green -- critic-shell's WP02 review: molt agent through bin/molt; to-write until the WP02 merge brings agents.bats. @test "molt agent list and molt agent config run through bin/molt". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT048
 
@@ -621,15 +717,71 @@ _(no tests in this group)_
 
 ### Group AT059
 
-- AT059 `test/liberators/agents.bats` -- covers AC005, AC014 -- status: to-write -- @test "agents check and install refuse an agents root that is unset, relative, untidy, at or above HOME or a project root, or set apart in vars.sh, and make no home". To-write until the WP02 merge brings agents.bats.
+- AT059 `test/liberators/agents.bats` -- covers AC005, AC014 -- status: green -- @test "agents check and install refuse an agents root that is unset, relative, untidy, at or above HOME or a project root, or set apart in vars.sh, and make no home". To-write until the WP02 merge brings agents.bats. The test is now @test "agents check and install refuse an agents root that is unset, relative, untidy or holds a line break, that reaches HOME or a parent of a project or config root by any spelling, or that is in Claude Code's config dir, and make no home". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT060
 
-- AT060 `test/liberators/agents.bats` -- covers AC016 -- status: to-write -- @test "an agent's AGENTS.md is the preamble, rendered, then the role's contract, then the sleeve's overlay, and a changed preamble makes it stale". To-write until the WP02 merge brings agents.bats; red on 6caffe8, which had no preamble layer.
+- AT060 `test/liberators/agents.bats` -- covers AC016 -- status: green -- @test "an agent's AGENTS.md is the preamble, rendered, then the role's contract, then the sleeve's overlay, and a changed preamble makes it stale". To-write until the WP02 merge brings agents.bats; red on 6caffe8, which had no preamble layer. Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
 
 ### Group AT061
 
-- AT061 `test/liberators/agents.bats` -- covers AC016 -- status: to-write -- @test "with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last". To-write until the WP02 merge brings agents.bats; red on 6caffe8.
+- AT061 `test/liberators/agents.bats` -- covers AC016 -- status: green -- @test "with no preamble the role's contract opens AGENTS.md, and a preamble added later goes first with the overlay still last". To-write until the WP02 merge brings agents.bats; red on 6caffe8. Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT062
+
+- AT062 `test/liberators/agents.bats` -- covers AC014 -- status: green -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test "agents install refuses a vars.sh that sets, appends to or unsets MOLT_AGT_DIR, or cannot be read, and a declared config dir holding the root, and makes no home". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT063
+
+- AT063 `test/liberators/agents.bats` -- covers AC005, AC006 -- status: green -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test "on a host with no name, or with a role's files unlisted, check, install and molt agent config fail and say which, rather than reading as no agents or no files". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT064
+
+- AT064 `test/liberators/agents.bats` -- covers AC016 -- status: green -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test "a layer of AGENTS.md that cannot be rendered fails the install, names it, and leaves AGENTS.md as it was". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT065
+
+- AT065 `test/liberators/claude.bats` -- covers AC014 -- status: green -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test "on a disk that ignores letter case, the home guard and molt_agt_dir_fault take a root spelt in another case for the directory the disk names". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT066
+
+- AT066 `test/liberators/agents.bats` -- covers AC016 -- status: green -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test "a role whose contract carries @@MOLT:BEGIN@@ keeps one copy of the preamble however often its home renders". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT067
+
+- AT067 `test/liberators/agents.bats` -- covers AC005, AC016 -- status: green -- written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test "a re-render that would write a home's files as they are backs nothing up, with a preamble, an overlay and settings.json's memory dir in place, and one over a hand edit backs the edit up". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct).
+
+### Group AT068
+
+- AT068 `test/liberators/agents.bats` -- covers AC010 -- status: green -- to-write: WP06 spec 21 Oct; agents install on a sleeve with an enabled sysadm agent renders managed-settings.d/molt-sysadm.json through faked sudo with exactly floor.json's deny list, mode 644, with a sidecar; a second run writes nothing. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
+
+### Group AT069
+
+- AT069 `test/liberators/agents.bats` -- covers AC010 -- status: green -- to-write: molt agent config <host>-sysadm shows the floor's two rules tagged managed above the user layer on a sleeve carrying the floor, and no managed rule on one that does not. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
+
+### Group AT070
+
+- AT070 `test/liberators/agents.bats` -- covers AC017 -- status: green -- to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
+
+### Group AT071
+
+- AT071 `test/liberators/agents.bats` -- covers AC018 -- status: green -- to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
+
+### Group AT072
+
+- AT072 `test/molt.bats` -- covers AC019 -- status: green -- doctor check 14 warns on a sleeve that takes the floor with a missing or stale floor, and on a sleeve that does not take it (no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR) carrying a molt-written floor; passes otherwise. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
+
+### Group AT073
+
+- AT073 `test/molt.bats` -- covers AC019 -- status: green -- to-write: the sudo helpers render to a user tmp first, refuse when sudo is absent or FAKE_SUDO_STATUS fails, and never write the managed dir unprivileged. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
+
+### Group AT074
+
+- AT074 (non-test) kovacs after the WP06 upgrade: molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed; ls -l of molt-sysadm.json and its sidecar root-owned 644; doctor check 14 passes -- covers AC020 -- status: n/a -- to-write: evidence from kovacs-sysadm after the upgrade. Done 22 Oct 2026 on kovacs by kovacs-sysadm after hv's upgrade; the two commands' output is AC020's evidence
+
+### Group AT075
+
+- AT075 (non-test) docs/guides/sleeve-agents.md has a Managed floor section covering what, where, the sudo prompt, how to see it, the removal rule and that it binds every session; Molt-matts roles/sysadm/AGENTS.md.tmpl's credential sentence says the floor is in place -- covers AC021 -- status: n/a -- dc and vc check the text. Checked 22 Oct 2026: guide section at 9a325d8 (merged 02f51a2) and the sysadm role sentence at Molt-matts 9b36722 (merged 5220ca8); AC021 satisfied by evidence
 
 ---
 

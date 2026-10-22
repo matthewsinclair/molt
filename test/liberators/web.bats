@@ -70,3 +70,10 @@ _expected_web_bin() {
     assert_failure
     assert_output_contains "no usable binary"
 }
+
+@test "web_upgrade reports the repo updated, warns when it has no upstream, and fails, naming the repo and git's reason, when its pull fails" {
+    setup_web
+    rm -rf "$MOLT_OPT_DIR/web"
+    clone_test_origin "$MOLT_OPT_DIR/web" go.mod
+    assert_upgrade_hook_pulls web_upgrade web "$MOLT_OPT_DIR/web"
+}

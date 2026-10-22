@@ -1,0 +1,16 @@
+{
+  "id": "01M5H47338Z6DH5A5GQGNF95VB",
+  "ts": "2026-10-22T06:19:16.456Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 11,
+    "text": "ST0006/06 AC021: guide done on Molt branch wp06-guide at 9a325d8 (on main c2e167b; from cc's 1720f99), handed to vc to merge after cc's code; Molt-matts st0006-wp06 at 1421034 ready for vc"
+  }
+}

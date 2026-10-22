@@ -305,6 +305,51 @@ create_test_template() {
     [[ "$content" == *"new content"* ]]
 }
 
+# The sidecar carries the digest of what molt wrote, so a template change over
+# molt's own untouched render replaces it with no backup, and a hand edit is
+# still backed up with the warning (issue 0029).
+@test "a template change replaces molt's own untouched render with no backup, and a hand edit is still backed up" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser" target="$HOME/.config/test/moved.conf"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/moved.conf" 'v = ${MOLT_TEST_VAR}'
+    molt_render "$repo/config/test/moved.conf.tmpl" "$target" >/dev/null
+    create_test_template "$repo" "config/test/moved.conf" 'v = ${MOLT_TEST_VAR} changed'
+    run molt_render "$repo/config/test/moved.conf.tmpl" "$target"
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(cat "$target")" = "v = hello-world changed" ]
+    [ -z "$(find "$HOME/.config/test" -name 'moved.conf.molt-backup.*')" ]
+
+    echo "by hand" >> "$target"
+    create_test_template "$repo" "config/test/moved.conf" 'v = ${MOLT_TEST_VAR} again'
+    run molt_render "$repo/config/test/moved.conf.tmpl" "$target"
+    assert_success
+    assert_output_contains "Rendered file changed since last render, backing up: $target -> $target.molt-backup."
+    [ "$(cat "$target")" = "v = hello-world again" ]
+    grep -qx "by hand" "$target".molt-backup.*
+}
+
+# A sidecar written before it carried the output digest cannot vouch for the
+# file, so the first render after the change backs it up once, as before.
+@test "a render over a sidecar with no output digest backs the file up once" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser" target="$HOME/.config/test/old.conf"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/old.conf" 'v = ${MOLT_TEST_VAR}'
+    molt_render "$repo/config/test/old.conf.tmpl" "$target" >/dev/null
+    sed -i.bak '/^output /d' "$target.molt-rendered"
+    create_test_template "$repo" "config/test/old.conf" 'v = ${MOLT_TEST_VAR} changed'
+    run molt_render "$repo/config/test/old.conf.tmpl" "$target"
+    assert_success
+    assert_output_contains "Rendered file changed since last render, backing up"
+    create_test_template "$repo" "config/test/old.conf" 'v = ${MOLT_TEST_VAR} again'
+    run molt_render "$repo/config/test/old.conf.tmpl" "$target"
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(find "$HOME/.config/test" -name 'old.conf.molt-backup.*' | wc -l | tr -d ' ')" = 1 ]
+}
+
 # --- molt_install_config tests ---
 
 @test "molt_install_config picks render for .tmpl file" {
@@ -342,4 +387,139 @@ create_test_template() {
     run molt_install_config "config/nonexistent/file.conf" "$target"
     assert_failure
     assert_output_contains "Config not found"
+}
+
+# The @@MOLT:BEGIN@@ contract: what a user writes above the marker survives a
+# render. It had no test, and a render whose own text came above the marker
+# had that text kept and written again under it at every render
+# (critic-shell, 21 Oct), so the region is kept only for a render that opens
+# with the marker, as the ssh templates do.
+@test "molt_render keeps the lines above @@MOLT:BEGIN@@ for a render that opens with it, and copies nothing for one with text of its own above it" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser" target="$HOME/.config/test/kept.conf"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/kept.conf" '# @@MOLT:BEGIN@@ managed by molt
+size ${MOLT_FONT_SIZE}'
+    molt_render "$repo/config/test/kept.conf.tmpl" "$target" >/dev/null
+    { echo "Host mine"; cat "$target"; } > "$target.new" && mv "$target.new" "$target"
+    sed -i.bak 's/MOLT_FONT_SIZE=14/MOLT_FONT_SIZE=15/' "$repo/instances/$(test_hostname)/vars.sh"
+    run molt_render "$repo/config/test/kept.conf.tmpl" "$target"
+    assert_success
+    assert_output_contains "Preserved 1 line(s) above @@MOLT:BEGIN@@"
+    [ "$(cat "$target")" = "$(printf 'Host mine\n# @@MOLT:BEGIN@@ managed by molt\nsize 15')" ]
+    # The kept lines go in before the compare: a render that writes the same
+    # file again backs nothing up (critic-shell, 21 Oct).
+    local backups
+    backups="$(find "$HOME/.config/test" -name 'kept.conf.molt-backup.*' | wc -l | tr -d ' ')"
+    echo 'export MOLT_UNUSED=1' >> "$repo/instances/$(test_hostname)/vars.sh"
+    run molt_render "$repo/config/test/kept.conf.tmpl" "$target"
+    assert_success
+    refute_output_contains "backing up"
+    [ "$(find "$HOME/.config/test" -name 'kept.conf.molt-backup.*' | wc -l | tr -d ' ')" = "$backups" ]
+    # A render that no longer opens with the marker keeps nothing, and says so.
+    create_test_template "$repo" "config/test/kept.conf" '# a header now
+# @@MOLT:BEGIN@@ managed by molt
+size ${MOLT_FONT_SIZE}'
+    run molt_render "$repo/config/test/kept.conf.tmpl" "$target"
+    assert_success
+    assert_output_contains "1 line(s) above @@MOLT:BEGIN@@ in $target are not kept: the new render does not open with the marker, so they are in $target.molt-backup."
+    grep -qx "Host mine" "$target".molt-backup.*
+
+    create_test_template "$repo" "config/test/header.conf" '# a header of its own
+# @@MOLT:BEGIN@@ managed by molt
+size ${MOLT_FONT_SIZE}'
+    target="$HOME/.config/test/header.conf"
+    molt_render "$repo/config/test/header.conf.tmpl" "$target" >/dev/null
+    sed -i.bak 's/MOLT_FONT_SIZE=15/MOLT_FONT_SIZE=16/' "$repo/instances/$(test_hostname)/vars.sh"
+    run molt_render "$repo/config/test/header.conf.tmpl" "$target"
+    assert_success
+    refute_output_contains "Preserved"
+    # Its own lines above the marker are in the new render: nothing is lost,
+    # and nothing is said to be (critic-shell, 21 Oct).
+    refute_output_contains "are not kept"
+    [ "$(grep -c '^# a header of its own$' "$target")" -eq 1 ]
+}
+
+# The render's subshell writes nothing to its caller, whose capture is the
+# reason a failure is given: an EXIT trap set in vars.sh would speak in it
+# (critic-shell, 21 Oct).
+@test "a failed render's reason holds nothing an EXIT trap in vars.sh prints" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    create_test_vars "$repo"
+    echo "trap 'echo vars-trap-said' EXIT" >> "$repo/instances/$(test_hostname)/vars.sh"
+    create_test_template "$repo" "config/test/unreadable.conf" 'v = ${MOLT_TEST_VAR}'
+    [ "$(id -u)" -ne 0 ] || skip "root reads a file whatever its mode"
+    chmod 000 "$repo/config/test/unreadable.conf.tmpl"
+    run molt_render "$repo/config/test/unreadable.conf.tmpl" "$HOME/.config/test/unreadable.conf"
+    chmod 644 "$repo/config/test/unreadable.conf.tmpl"
+    assert_failure
+    assert_output_contains "Could not render $repo/config/test/unreadable.conf.tmpl"
+    refute_output_contains "vars-trap-said"
+}
+
+# Issue 0025: an EXIT trap in vars.sh runs as the sourcing shell exits, after
+# the line each reader takes as the file's end, so a trap that printed made a
+# file sourced to its end read as one that stopped before it: on stdout to
+# molt_instance_var, on stderr to molt_instance_vars_fault's probe too, which
+# refused the render as well. Each reader clears the trap before its end line.
+_vars_with_trap() {
+    printf 'export MOLT_TEST_VAR=bar\n%s\n' "$1" > "$VARS"
+}
+
+_vars_read_whole() {
+    run molt_instance_vars_fault "$VARS"
+    assert_success
+    [ -z "$output" ]
+    run molt_instance_var MOLT_TEST_VAR
+    assert_success
+    [ "$output" = bar ]
+    run molt_render_text "$TMPL" "$BATS_TEST_TMPDIR/out"
+    assert_success
+    [ -z "$output" ]
+    [ "$(cat "$BATS_TEST_TMPDIR/out")" = "value = bar" ]
+}
+
+@test "a vars.sh whose EXIT, RETURN or DEBUG trap prints, on stdout or stderr, is read to its end by every reader" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/trap.conf" 'value = ${MOLT_TEST_VAR}'
+    VARS="$repo/instances/$(test_hostname)/vars.sh"
+    TMPL="$repo/config/test/trap.conf.tmpl"
+    _vars_with_trap ''
+    _vars_read_whole
+    _vars_with_trap 'trap "echo bye" EXIT'
+    _vars_read_whole
+    _vars_with_trap 'trap "echo bye >&2" EXIT'
+    _vars_read_whole
+    _vars_with_trap 'trap ":" EXIT'
+    _vars_read_whole
+    # A RETURN trap runs as the . returns, after the probe's answer, and a
+    # DEBUG trap before each command after the file, the one that clears it
+    # included (critic-shell, 21 Oct).
+    _vars_with_trap 'trap "echo bye >&2" RETURN'
+    _vars_read_whole
+    _vars_with_trap 'trap "echo bye" DEBUG'
+    _vars_read_whole
+}
+
+# A backup is named for its second, and a second render in the same second took
+# the first one's name, and mv put the newer backup over the older with no word
+# (critic-shell, 21 Oct).
+@test "two backups made in the same second are both kept" {
+    _use_test_repo
+    local repo="$BATS_TEST_TMPDIR/molt-testuser" target="$HOME/.config/test/twice.conf"
+    mkdir -p "$BATS_TEST_TMPDIR/stub"
+    printf '#!/bin/sh\necho 20261021000000\n' > "$BATS_TEST_TMPDIR/stub/date"
+    chmod +x "$BATS_TEST_TMPDIR/stub/date"
+    create_test_vars "$repo"
+    create_test_template "$repo" "config/test/twice.conf" 'v = ${MOLT_TEST_VAR}'
+    molt_render "$repo/config/test/twice.conf.tmpl" "$target" >/dev/null
+    echo "first edit" >> "$target"
+    PATH="$BATS_TEST_TMPDIR/stub:$PATH" molt_render "$repo/config/test/twice.conf.tmpl" "$target" >/dev/null
+    echo "second edit" >> "$target"
+    PATH="$BATS_TEST_TMPDIR/stub:$PATH" molt_render "$repo/config/test/twice.conf.tmpl" "$target" >/dev/null
+    grep -qx "first edit" "$target.molt-backup.20261021000000"
+    grep -qx "second edit" "$target.molt-backup.20261021000000.1"
 }

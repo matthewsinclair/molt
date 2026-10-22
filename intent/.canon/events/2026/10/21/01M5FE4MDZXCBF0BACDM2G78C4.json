@@ -1,0 +1,16 @@
+{
+  "id": "01M5FE4MDZXCBF0BACDM2G78C4",
+  "ts": "2026-10-21T14:34:12.799Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04: runbook final at 5a21904 (ac); ac adding the three ~/.claude .molt-backup files to its removal list. A1 ran clean on kovacs (21 Oct): Molt 5c41557, Molt-matts d48886f pulled; kovacs-{sysadm,ops,docs} rendered and current; doctor 13/13. kovacs-sysadm on phase A (A2-A4); phase B is hv's, on hv's date. AC007 evidence: kovacs done; rhadamanth needs a molt upgrade here (hv's machine: ask hv); gyges later."
+  }
+}

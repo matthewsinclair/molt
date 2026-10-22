@@ -1,0 +1,17 @@
+{
+  "id": "01M5J31RK6YNXW7S99B61YZVHA",
+  "ts": "2026-10-22T15:18:07.718Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "issue-0036 head d7f359c (on 35fe96b), worktree ~/Devel/prj/Molt-wt/issue-0036. test/manual/sandbox-creds.sh: kovacs-creds.sh made host-neutral (no sleeve name; scratch project home/agt/probe-<role>, role from arg 2, else SANDBOX_CREDS_ROLE, else ops; tree under $TMPDIR/molt-sandbox-creds); header says hand-run from a plain terminal, never in a Claude session, and what A, B, B2 and clean show. New: it refuses when CLAUDECODE is set, refuses a role outside [a-z0-9-] (class spelt out, since a-z took Ops under the macOS locale), and needs bwrap+socat only on Linux, so the Seatbelt run works too. Checked: shellcheck -s sh clean; usage, role and in-session refusals rc=2 under sh and dash; a stub-claude dry run in scratch (B2 ops, A docs) wrote the right settings.json each time (B2's third deny, A's Read() denies), rebuilt the placeholders per run, exec'd claude in the probe home with scratch HOME and CLAUDE_CONFIG_DIR, and clean removed it all. bats -r test --count unchanged by the .sh. Guide: one sentence at the end of the credentials paragraph naming it; CHANGELOG Added line ending (issue 0036); prettier clean; gate on (critic, doctor clean). Not checked: a real Claude Code run, which is hv's by hand.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

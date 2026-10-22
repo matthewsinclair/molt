@@ -105,6 +105,28 @@ load "test_helper.bash"
     [[ "$MOLT_CFG_DIR" == "/custom/cfg" ]]
 }
 
+# ST0006: the user repo's zshenv gives shells ${MOLT_PRJ_DIR:h}/agt, and molt
+# must agree; exported, so molt_render substitutes it into the home guard
+# (critic-shell, 21 Oct: no test caught the export going).
+@test "MOLT_AGT_DIR derives from MOLT_PRJ_DIR's parent, and is exported" {
+    unset MOLT_AGT_DIR
+    export MOLT_PRJ_DIR="/tmp/test-projects"
+    load_molt_libs
+    [ "$MOLT_AGT_DIR" = "/tmp/agt" ]
+    [ "$(printenv MOLT_AGT_DIR)" = "/tmp/agt" ]
+}
+
+# vc, 21 Oct: no guess at $HOME/Devel/agt, which would disagree with a sleeve
+# whose projects live elsewhere; molt_agt_dir_fault refuses the empty root.
+@test "MOLT_AGT_DIR is empty when MOLT_PRJ_DIR unset, and respects an override" {
+    unset MOLT_AGT_DIR MOLT_PRJ_DIR
+    load_molt_libs
+    [ -z "$MOLT_AGT_DIR" ]
+    export MOLT_AGT_DIR="/custom/agt" MOLT_PRJ_DIR="/tmp/test-projects"
+    source "$MOLT_LIB_DIR/constants.sh"
+    [[ "$MOLT_AGT_DIR" == "/custom/agt" ]]
+}
+
 # The move to cfg/ is per sleeve, so a sleeve that has not moved its repo must
 # still find it in MOLT_PRJ_DIR -- but only after cfg/ has been tried.
 @test "MOLT_USER_REPO_SEARCH_PATHS searches MOLT_CFG_DIR before MOLT_PRJ_DIR" {

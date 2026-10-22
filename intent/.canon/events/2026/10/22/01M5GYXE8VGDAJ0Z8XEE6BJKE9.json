@@ -1,0 +1,16 @@
+{
+  "id": "01M5GYXE8VGDAJ0Z8XEE6BJKE9",
+  "ts": "2026-10-22T04:46:37.339Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: both-bash full suite, mutation pass, critic-shell, hand-over to vc, then dc's floor.json. hv, 22 Oct: roll out on kovacs and rhadamanth; gyges not until hv can reach it."
+  }
+}

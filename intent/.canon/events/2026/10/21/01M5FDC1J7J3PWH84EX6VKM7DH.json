@@ -1,0 +1,15 @@
+{
+  "id": "01M5FDC1J7J3PWH84EX6VKM7DH",
+  "ts": "2026-10-21T14:20:47.047Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Follow-up issues from cc's WP02 review (hv, 21 Oct: sort issues out as we go): cc checks and files (a) ssh config.d render-then-append backs up every render? (b) a vars.sh EXIT trap that echoes makes molt_instance_var say 'stops before its end'. Then vc queues the fixes (dc if cc is busy)."
+  }
+}

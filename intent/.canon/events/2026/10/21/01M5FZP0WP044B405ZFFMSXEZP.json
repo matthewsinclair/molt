@@ -1,0 +1,15 @@
+{
+  "id": "01M5FZP0WP044B405ZFFMSXEZP",
+  "ts": "2026-10-21T19:40:48.406Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "WP06 managed deny floor (hv 21 Oct: credentials only, sysadm sleeves only). vc's design: contents in Molt-matts config/agents/roles/sysadm/floor.json; a put/remove helper pair in lib/molt.sh (user tmp, then sudo install -m 644; tiling.sh shape, FAKE_SUDO_STATUS in tests); the agents liberator owns it, renders molt-sysadm.json to managed-settings.d with a root-owned 644 sidecar beside it, removes only a drop-in whose sidecar molt wrote; molt_claude_managed_dir comment changes; AT: the two rules tagged managed in molt agent config, absent without the floor; doctor check 14 both ways; guide notes the sudo prompt."
+  }
+}

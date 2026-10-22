@@ -1,0 +1,15 @@
+{
+  "id": "01M5FE0YSPE3W6EWH3HPQKEGW1",
+  "ts": "2026-10-21T14:32:12.343Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "WP05 review (dc, st0006-wp05 8d7921e on bea7420, no conflicts): guide read in full; four findings sent to dc (ac in the roster, 'every Intent project' softened, sources for the claude -p and sandbox.credentials claims); subagent quote check against code pending. Then dc fixes, vc merges, satisfies AC009 (non-test) with the merge sha, wp done ST0006/05."
+  }
+}

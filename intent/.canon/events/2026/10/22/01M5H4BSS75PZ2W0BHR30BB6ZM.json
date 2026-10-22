@@ -1,0 +1,16 @@
+{
+  "id": "01M5H4BSS75PZ2W0BHR30BB6ZM",
+  "ts": "2026-10-22T06:21:50.759Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 11,
+    "text": "ST0006/06 AC021: guide on wp06-guide 9a325d8 accepted by vc, merging on main after cc's 1720f99; Molt-matts st0006-wp06 at 9b36722 (sysadm floor sentence true with or without the floor) with vc. Nothing further until kovacs-sysadm's run gives AC020's evidence"
+  }
+}

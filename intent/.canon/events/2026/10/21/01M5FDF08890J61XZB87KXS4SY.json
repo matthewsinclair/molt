@@ -1,0 +1,15 @@
+{
+  "id": "01M5FDF08890J61XZB87KXS4SY",
+  "ts": "2026-10-21T14:22:24.008Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0024"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "ssh_install backs ~/.ssh/config up on every install when there is a config.d fragment, warning it was changed"
+  }
+}

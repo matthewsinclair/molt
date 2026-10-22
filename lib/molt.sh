@@ -11,6 +11,9 @@ source "${MOLT_LIB_DIR}/constants.sh"
 
 # --- Logging ---
 
+# Prints a line at the level $1. Errors go to stderr, so a caller that captures
+# a function's output, as x="$(fn)", never takes an error for its value and the
+# user still sees it; every other level goes to stdout (issue 0016).
 molt_log() {
   local level="$1"; shift
   local prefix
@@ -21,7 +24,11 @@ molt_log() {
     debug) [[ "${MOLT_DEBUG:-0}" == "1" ]] || return 0; prefix="Zen [debug]:" ;;
     *)     prefix="Zen:" ;;
   esac
-  echo "$prefix $*"
+  if [[ "$level" == error ]]; then
+    echo "$prefix $*" >&2
+  else
+    echo "$prefix $*"
+  fi
 }
 
 molt_info()  { molt_log info "$@"; }
@@ -204,6 +211,52 @@ molt_tilde() {
   esac
 }
 
+# The absolute path $1 as the disk spells it: the directory it leads to, as
+# /bin/pwd -P names it, or, where it does not exist yet, its nearest ancestor
+# that does, so named, with the rest of $1 after it, as mkdir -p would make
+# it. A symlinked spelling, or one in another letter case on a disk that
+# ignores case, is the same directory. bash's builtin pwd -P keeps the letter
+# case it was given, so /bin/pwd answers, and the builtin only on a system
+# without one. The claude liberator's home guard resolves a directory the same
+# way (real_dir), so molt_agt_dir_fault and the guard never disagree about
+# which directories are one (ST0006 AC014). Fails for a relative path, and
+# when not even / can be entered.
+molt_disk_path() {
+  local path="$1" rest="" real
+  # ${path%/*} of a relative path is itself, and the loop below would not end.
+  [[ "$path" == /* ]] || return 1
+  until real="$(cd "${path:-/}" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })"; do
+    [[ -n "$path" ]] || return 1
+    rest="/${path##*/}$rest"
+    path="${path%/*}"
+  done
+  real="${real%/}$rest"
+  echo "${real:-/}"
+}
+
+# Why the path $2, named $1, is not an absolute, canonical path, or nothing
+# when it is. A relative one would land wherever molt runs, and a ~ quoted in a
+# shell or in vars.sh is not expanded. A trailing slash, //, or a . or ..
+# component is a second spelling of a directory, which a comparison of
+# spellings takes for another, and after a symlink a .. that cd and mkdir
+# resolve to different places. Its callers add what their own use refuses.
+molt_path_fault() {
+  local name="$1" path="$2"
+  case "$path" in
+    /*) ;;
+    "~"*)
+      echo "$name is not an absolute path (a quoted ~ is not expanded): $path"
+      return ;;
+    *)
+      echo "$name is not an absolute path: $path"
+      return ;;
+  esac
+  case "$path/" in
+    *//* | */./* | */../*)
+      echo "$name is not a canonical path, with no trailing slash, // or . or .. component: $path" ;;
+  esac
+}
+
 # Links every line of the list $1, stopping at the first link that fails.
 molt_link_all() {
   local source target
@@ -253,12 +306,16 @@ molt_link() {
 # --- Instance Vars ---
 
 # The path of this sleeve's instances/<host>/vars.sh in the user repo, whether
-# or not it exists. Fails, as molt_find_user_repo does, when there is no repo,
-# and when this host has no name.
+# or not it exists. Fails, printing why instead, when there is no repo, and
+# when this host has no name.
 molt_instance_vars_file() {
   local user_repo host
-  user_repo="$(molt_find_user_repo)" || return 1
-  host="$(molt_hostname)" || return 1
+  # The reason below is the whole answer: a sleeve with no repo reads its
+  # variables as undeclared, so the lookup's own error is not the user's.
+  if ! user_repo="$(molt_find_user_repo 2>/dev/null)" || ! host="$(molt_hostname)"; then
+    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    return 1
+  fi
   echo "${user_repo}/instances/${host}/vars.sh"
 }
 
@@ -292,7 +349,9 @@ molt_instance_vars_fault() {
     echo "$(molt_tilde "$vars_file") could not be checked: no temporary file could be made"
     return 0
   fi
-  { cat "$vars_file"; printf '\n\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
+  # An EXIT or RETURN trap the file set would speak after the answer, and a
+  # DEBUG trap before it, so the answer clears them first (issue 0025).
+  { cat "$vars_file"; printf '\n\nbuiltin trap - EXIT RETURN DEBUG\nbuiltin echo "molt: sourced to its end" >&3\n'; } > "$probe"
   # The answer decides, not the status, which is the file's own. The $1 is the
   # fresh bash's own, so it stays in single quotes.
   # shellcheck disable=SC2016
@@ -314,15 +373,19 @@ molt_instance_vars_fault() {
 # file does not export it, or there is no file. Only exported variables count,
 # because molt_render substitutes only those: a value it could not render is
 # not declared. Nor does a value this process inherited: the file declares, not
-# the environment molt runs in. Fails, printing why instead: with status 2 when
-# molt_instance_vars_fault refuses the file, when the sourcing here stops
-# before its end, or when the value holds a line break or a carriage return,
-# which the caller's $() would cut or keep unseen; and with status 3 when this
-# sleeve's vars.sh cannot be found, as when there is no user repo.
+# the environment molt runs in, so $1 starts unset. Given $2, it starts
+# exported with that value instead, as a variable molt's own shell exports
+# reaches molt_render_text's subshell: there an assignment, a += or an unset in
+# the file changes what envsubst sees, and so it does here. Fails, printing why
+# instead: with status 2 when molt_instance_vars_fault refuses the file, when
+# the sourcing here stops before its end, or when the value holds a line break
+# or a carriage return, which the caller's $() would cut or keep unseen; and
+# with status 3 when this sleeve's vars.sh cannot be found, as when there is no
+# user repo.
 molt_instance_var() {
   local vars_file fault out
   if ! vars_file="$(molt_instance_vars_file)"; then
-    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    echo "$vars_file"
     return 3
   fi
   fault="$(molt_instance_vars_fault "$vars_file")"
@@ -335,11 +398,23 @@ molt_instance_var() {
   # closing line, so a sourcing that ends early, or a value that ends in a line
   # break, shows here.
   out="$(
-    unset "$1"
+    if [[ $# -gt 1 ]]; then
+      export "$1=$2"
+    else
+      unset "$1"
+    fi
     if [[ -e "$vars_file" ]]; then
       set +eu
-      # shellcheck disable=SC1090
-      . "$vars_file" >/dev/null
+      # An EXIT trap the file set would print after the closing line, a
+      # RETURN trap as the . returns, and a DEBUG trap before each command
+      # after the file, the one that clears it included, so the file is
+      # quiet here, its stderr too: molt_instance_vars_fault has already
+      # said what was wrong with it (issue 0025).
+      {
+        # shellcheck disable=SC1090
+        . "$vars_file"
+        builtin trap - EXIT RETURN DEBUG
+      } >/dev/null 2>&1
     fi
     if printenv "$1" >/dev/null; then
       printf '%s' "${!1}"
@@ -362,7 +437,59 @@ molt_instance_var() {
 
 # --- Template Rendering ---
 
-molt_render() {
+# Renders the template $1 into the file $2 and nothing more: molt_render_place
+# adds the region kept above @@MOLT:BEGIN@@, the backup and the sidecar. Only
+# MOLT_* variables are substituted, as this sleeve's vars.sh and the
+# environment export them; other $VAR references (like starship's $username,
+# $path, etc.) are left untouched. vars.sh is sourced in a subshell, so its
+# exports don't leak into the framework, and a declare -x in it is still in
+# scope for envsubst. Fails, printing why when envsubst or vars.sh is the
+# reason, with $2 not written: no render, whatever the subshell's status, is a
+# failure, and a file a crashed render left goes first, or it would pass for
+# this one.
+molt_render_text() {
+  local template="$1" out="$2" vars_file why
+  # Asked first, before anything else here runs a command: without envsubst a
+  # render would leave the ${VARS} as they are, and the caller report success.
+  if ! command -v envsubst &>/dev/null; then
+    echo "envsubst not found; install gettext (macOS: brew install gettext && brew link --force gettext; linux: apt install gettext), then re-run"
+    return 1
+  fi
+  if ! vars_file="$(molt_instance_vars_file)"; then
+    echo "$vars_file"
+    return 1
+  fi
+  why="$(molt_instance_vars_fault "$vars_file")"
+  if [[ -n "$why" ]]; then
+    echo "$why"
+    return 1
+  fi
+  rm -f "$out"
+  if ! (
+    if [[ -e "$vars_file" ]]; then
+      set +eu
+      # The traps molt_instance_var clears, cleared alike, so the two read
+      # the file the same way (issue 0025).
+      {
+        # shellcheck disable=SC1090
+        . "$vars_file"
+        builtin trap - EXIT RETURN DEBUG
+      } >/dev/null 2>&1
+    fi
+    mkdir -p "$(dirname "$out")" || exit
+    local molt_vars
+    molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
+    envsubst "$molt_vars" < "$template" > "$out"
+  ) >/dev/null || [[ ! -f "$out" ]]; then
+    rm -f "$out"
+    return 1
+  fi
+}
+
+# Renders the template $1 into ${2}.molt-tmp, for molt_render_place to put in
+# place at $2: what molt_render does before placing, for a caller that adds to
+# the file between the two, as the ssh liberator does its config.d fragments.
+molt_render_tmp() {
   local template="$1"
   local target="$2"
 
@@ -371,49 +498,50 @@ molt_render() {
     return 1
   fi
 
-  # envsubst (from gettext) is required to render templates. Without this guard
-  # a missing envsubst leaves the target with un-substituted ${VARS} while the
-  # liberator still reports success — a silent failure.
-  if ! command -v envsubst &>/dev/null; then
-    molt_error "envsubst not found — cannot render $template"
-    molt_error "Install gettext (macOS: brew install gettext && brew link --force gettext; linux: apt install gettext) then re-run."
-    return 1
-  fi
-
   local vars_file why
-  vars_file="$(molt_instance_vars_file)" || return 1
-  why="$(molt_instance_vars_fault "$vars_file")"
-  if [[ -n "$why" ]]; then
-    molt_error "Could not render $template -> $target: $why"
-    return 1
-  fi
-  if [[ ! -e "$vars_file" ]]; then
+  if vars_file="$(molt_instance_vars_file)" && [[ ! -e "$vars_file" ]]; then
     molt_warn "No vars.sh for instance $(molt_hostname) — rendering template with env only"
   fi
 
-  # Render in a subshell that sources vars.sh, so its exports don't leak into
-  # the framework, and a declare -x in it is still in scope for envsubst. Only
-  # substitute MOLT_* variables — leave other $VAR references (like starship's
-  # $username, $path, etc.) untouched. Everything below handles the render it
-  # finds, so no render, whatever the subshell's status, is a failure: the
-  # target would be backed up with nothing to take its place. A tmp a crashed
-  # render left goes first, or it would pass for this one.
-  rm -f "${target}.molt-tmp"
-  if ! (
-    if [[ -e "$vars_file" ]]; then
-      set +eu
-      # shellcheck disable=SC1090
-      . "$vars_file" >/dev/null
-    fi
-    mkdir -p "$(dirname "$target")" || exit
-    local molt_vars
-    molt_vars="$(env | grep '^MOLT_' | sed 's/=.*//' | sed 's/^/\$/' | tr '\n' ' ')"
-    envsubst "$molt_vars" < "$template" > "${target}.molt-tmp"
-  ) || [[ ! -f "${target}.molt-tmp" ]]; then
-    rm -f "${target}.molt-tmp"
-    molt_error "Could not render $template -> $target"
+  # Everything below handles the render it finds, so no render is a failure:
+  # the target would be backed up with nothing to take its place.
+  if ! why="$(molt_render_text "$template" "${target}.molt-tmp")"; then
+    molt_error "Could not render $template -> $target${why:+: $why}"
     return 1
   fi
+}
+
+molt_render() {
+  molt_render_tmp "$1" "$2" && molt_render_place "$1" "$2"
+}
+
+# A path to move $1 aside to, named for this second, that nothing holds yet: a
+# second render in the same second took the first one's name, and mv put the
+# newer backup over the older without a word (critic-shell, 21 Oct).
+_molt_backup_path() {
+  local backup n=1
+  backup="${1}.molt-backup.$(date +%Y%m%d%H%M%S)"
+  while [[ -e "$backup" || -L "$backup" ]]; do
+    backup="${1}.molt-backup.$(date +%Y%m%d%H%M%S).$n"
+    n=$((n + 1))
+  done
+  echo "$backup"
+}
+
+# Puts ${2}.molt-tmp in place as $2: the file rendered from the template $1,
+# with whatever its caller built into it from the extra inputs after $1. A
+# caller builds the whole file there first, and changes nothing in $2 after,
+# and the region kept above @@MOLT:BEGIN@@ goes in before the compare: $2 is
+# backed up whenever what molt would write differs from what is there, so a
+# file finished after the compare would be compared as part of a file and
+# backed up at every render (ST0006: an agent's AGENTS.md and settings.json,
+# and any file with lines above the marker). The sidecar records the digest of
+# $1, this sleeve's vars.sh and the extra inputs, so molt_render_stale, asked
+# with the same inputs, reads $2 current.
+molt_render_place() {
+  local template="$1"
+  local target="$2"
+  shift 2
 
   # Honour the @@MOLT:BEGIN@@ contract. Templates carrying the marker tell the
   # user "add your own entries ABOVE this line" -- but rendering replaced the
@@ -422,15 +550,41 @@ molt_render() {
   # templates rarely changed; molt_config_stale makes renders routine, which
   # turns a latent bug into a frequent one.
   #
-  # Capture the region above the marker from the CURRENT file BEFORE the backup
-  # logic below moves it aside. Only applies when both the existing file and the
-  # new render carry the marker, so rendered scripts and plists are untouched.
+  # Take the region above the marker from the CURRENT file BEFORE the backup
+  # logic below moves it aside. Only applies when the new render opens with the
+  # marker, as the templates that carry it do, and the existing file carries it
+  # too, so rendered scripts and plists are untouched. A render with lines of
+  # its own above the marker would have them kept here and written again under
+  # them, one more copy each time, as a preamble put ahead of a role's contract
+  # that carried the marker was (critic-shell, 21 Oct); and a marker that is
+  # only mentioned, below the first line, is only text. Lines above a marker
+  # the new render no longer opens with are not kept, and those it does not
+  # carry itself are named when the file they were in is backed up.
   local marker='@@MOLT:BEGIN@@'
-  local preamble=""
-  if [[ -f "$target" ]] \
-     && grep -qF "$marker" "$target" 2>/dev/null \
-     && grep -qF "$marker" "${target}.molt-tmp" 2>/dev/null; then
-    preamble="$(awk -v m="$marker" 'index($0, m) { exit } { print }' "$target")"
+  local kept="" dropped=""
+  if [[ -f "$target" ]] && grep -qF "$marker" "$target" 2>/dev/null; then
+    kept="$(awk -v m="$marker" 'index($0, m) { exit } { print }' "$target")"
+    if [[ -n "$kept" ]] \
+       && ! awk -v m="$marker" 'NR == 1 { found = index($0, m) } END { exit !found }' "${target}.molt-tmp" 2>/dev/null; then
+      # Only lines the new render does not carry above its own marker: a
+      # template's own text there is in it already (critic-shell, 21 Oct).
+      dropped="$(awk -v m="$marker" '
+        FNR == 1 { file++ }
+        file == 1 { if (index($0, m)) done = 1; if (!done) have[$0] = 1; next }
+        index($0, m) { exit }
+        /./ && !($0 in have) { n++ }
+        END { if (n) print n }
+      ' "${target}.molt-tmp" "$target")"
+      kept=""
+    fi
+  fi
+  if [[ -n "$kept" ]]; then
+    if ! { printf '%s\n' "$kept" && cat "${target}.molt-tmp"; } > "${target}.molt-tmp2" \
+        || ! mv -f "${target}.molt-tmp2" "${target}.molt-tmp"; then
+      rm -f "${target}.molt-tmp" "${target}.molt-tmp2"
+      molt_error "Could not keep the lines above ${marker} in $target, so it was not rendered"
+      return 1
+    fi
   fi
 
   # Handle existing file before replacing
@@ -441,48 +595,89 @@ molt_render() {
       molt_info "Removing existing symlink: $target"
       rm "$target"
     elif [[ -f "${target}.molt-rendered" ]]; then
-      # Previously rendered by molt — check if content actually changed
-      if ! diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
+      # Previously rendered by molt. A file that is still what molt wrote, by
+      # the sidecar's output digest, is replaced with no backup: only a hand
+      # edit is backed up, and lines above the marker the new render drops are
+      # kept in a backup either way (issue 0029).
+      local wrote now
+      wrote="$(sed -n 's/^output //p' "${target}.molt-rendered" 2>/dev/null)"
+      now="$(molt_hash < "$target" 2>/dev/null)" || now=""
+      if diff -q "$target" "${target}.molt-tmp" &>/dev/null; then
+        :   # the same file again: nothing to keep
+      elif [[ -n "$wrote" && "$now" == "$wrote" && -z "$dropped" ]]; then
+        molt_info "Replacing molt's own render, unchanged since it was written: $target"
+      else
         local backup
-        backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+        backup="$(_molt_backup_path "$target")"
         molt_warn "Rendered file changed since last render, backing up: $target -> $backup"
-        mv "$target" "$backup"
+        if [[ -n "$dropped" ]]; then
+          molt_warn "$dropped line(s) above ${marker} in $target are not kept: the new render does not open with the marker, so they are in $backup"
+        fi
+        if ! mv "$target" "$backup"; then
+          rm -f "${target}.molt-tmp"
+          molt_error "Could not back up $target, so it was not rendered"
+          return 1
+        fi
       fi
     else
       # Regular file that wasn't rendered by molt — back up
       local backup
-      backup="${target}.molt-backup.$(date +%Y%m%d%H%M%S)"
+      backup="$(_molt_backup_path "$target")"
       molt_warn "Backing up existing file: $target -> $backup"
-      mv "$target" "$backup"
+      if ! mv "$target" "$backup"; then
+        rm -f "${target}.molt-tmp"
+        molt_error "Could not back up $target, so it was not rendered"
+        return 1
+      fi
     fi
   fi
 
-  if [[ -n "$preamble" ]]; then
-    printf '%s\n' "$preamble" > "${target}.molt-tmp2"
-    cat "${target}.molt-tmp" >> "${target}.molt-tmp2"
-    mv "${target}.molt-tmp2" "${target}.molt-tmp"
-    molt_info "Preserved $(printf '%s\n' "$preamble" | grep -c .) line(s) above ${marker}"
+  if [[ -n "$kept" ]]; then
+    molt_info "Preserved $(printf '%s\n' "$kept" | grep -c .) line(s) above ${marker}"
   fi
 
-  mv "${target}.molt-tmp" "$target"
+  if ! mv "${target}.molt-tmp" "$target"; then
+    rm -f "${target}.molt-tmp"
+    molt_error "Could not move the render of $template into place at $target"
+    return 1
+  fi
 
   # Leave a marker so we know this file was rendered (not symlinked), carrying
-  # the digest of the inputs so molt_config_stale can tell whether they moved.
-  {
-    echo "rendered $(date -Iseconds) from $template"
-    local d
-    d="$(molt_config_digest "$template")" && [[ -n "$d" ]] && echo "digest $d"
-  } > "${target}.molt-rendered"
+  # the digest of the inputs so molt_config_stale can tell whether they moved,
+  # and of the file written, so the next render can tell a hand edit from it.
+  local d
+  d="$(molt_config_digest "$template" ${1+"$@"})" || d=""
+  molt_render_sidecar "$template" "$d" "$target" > "${target}.molt-rendered"
 
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
   local parent_perms
-  parent_perms="$(stat -c '%a' "$(dirname "$target")" 2>/dev/null || echo "755")"
+  parent_perms="$(molt_file_mode "$(dirname "$target")" || echo "755")"
   if [[ "$parent_perms" == "700" ]]; then
     chmod 600 "$target" "${target}.molt-rendered"
   fi
 
   molt_info "Rendered: $template -> $target"
+}
+
+# The text of a .molt-rendered sidecar: when the file $3 was rendered and from
+# what, $1, the digest $2 of its inputs, and the hash of $3 as written. A digest
+# or hash that could not be taken leaves its line out, so the file reads as
+# stale, or as not molt's own render, rather than as one that matches.
+molt_render_sidecar() {
+  local from="$1" digest="$2" written="$3" d
+  echo "rendered $(date -Iseconds) from $from"
+  [[ -z "$digest" ]] || echo "digest $digest"
+  if d="$(molt_hash < "$written")" && [[ -n "$d" ]]; then
+    echo "output $d"
+  fi
+}
+
+# The permission bits of $1 in octal, eg 700, on Linux and macOS. GNU stat is
+# asked first, and BSD's only when it fails: GNU's -f means --file-system, and
+# takes BSD's format for a file to report on.
+molt_file_mode() {
+  stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1" 2>/dev/null
 }
 
 # SHA-256 of a string on stdin, portable across macOS and Linux.
@@ -529,13 +724,17 @@ molt_config_digest() {
       < <(printf '%s\n' "$@" | sort)
   fi
 
+  # An absent input contributes nothing, so adding it later changes the digest.
+  # Each test is an `if`: a bare `[[ -f ]] && ...` as the group's last command
+  # fails it for an absent last extra, pipefail carries that out of the
+  # pipeline, and the file then reads stale however often it is rendered.
   {
     cat "$template"
-    [[ -f "$vars_file" ]] && cat "$vars_file"
+    if [[ -f "$vars_file" ]]; then cat "$vars_file"; fi
     local x
     for x in ${extras+"${extras[@]}"}; do
       # Name as well as content: renaming a fragment changes the sentinel.
-      [[ -f "$x" ]] && { basename "$x"; cat "$x"; }
+      if [[ -f "$x" ]]; then basename "$x"; cat "$x"; fi
     done
   } 2>/dev/null | molt_hash
 }
@@ -566,32 +765,6 @@ molt_config_digest() {
 # re-rendering costs a moment and skipping it is the failure mode above.
 #
 # Liberators that render configs should fold this into their check.
-# Re-stamp a rendered file's digest to include extra inputs.
-#
-# molt_render records molt_config_digest(template) only. When a liberator also
-# post-processes the rendered file from other inputs -- ssh appending its
-# config.d fragments -- the check computes a digest WITH those inputs and the
-# sidecar holds one WITHOUT, so they can never match and the liberator
-# reinstalls on every single run. Call this after the post-processing, with the
-# same extra inputs the _check passes to molt_config_stale.
-molt_config_record_digest() {
-  local target="$1" template="$2"
-  shift 2
-  local sidecar="${target}.molt-rendered"
-  [[ -f "$sidecar" ]] || return 0
-
-  local digest
-  digest="$(molt_config_digest "$template" ${1+"$@"})" || return 0
-  [[ -n "$digest" ]] || return 0
-
-  local tmp="${sidecar}.tmp.$$"
-  { grep -v '^digest ' "$sidecar" 2>/dev/null; echo "digest ${digest}"; } > "$tmp" \
-    && mv "$tmp" "$sidecar"
-  # Match the sidecar's permissions to the rendered file (eg 600 under ~/.ssh).
-  chmod --reference="$target" "$sidecar" 2>/dev/null \
-    || chmod "$(stat -f '%Lp' "$target" 2>/dev/null || echo 644)" "$sidecar" 2>/dev/null || true
-}
-
 molt_config_stale() {
   local source="$1"    # relative path, no .tmpl: "config/backup/backup-mount.sh"
   local target="$2"    # absolute path of the rendered file
@@ -611,7 +784,7 @@ molt_config_stale() {
   fi
 
   local user_repo template
-  if ! user_repo="$(molt_find_user_repo)"; then
+  if ! user_repo="$(molt_find_user_repo 2>/dev/null)"; then
     molt_warn "molt_config_stale: no user repo — cannot tell whether ${target} is stale"
     return 0
   fi
@@ -673,8 +846,8 @@ molt_font_available() {
 }
 
 molt_install_config() {
-  local source="$1"    # relative path: "config/ssh/config"
-  local target="$2"    # absolute path: "$HOME/.ssh/config"
+  local source="$1"    # relative path: "config/starship/starship.toml"
+  local target="$2"    # absolute path: "$HOME/.config/starship.toml"
 
   local user_repo
   user_repo="$(molt_find_user_repo)" || return 1
@@ -759,24 +932,27 @@ molt_find_manifest() {
   return 1
 }
 
-# The one reader of molt.toml's [[liberator]] blocks. Prints a line per key of
-# every block, "name<TAB>key<TAB>value", the block's name line first whatever
-# order its keys are written in. A block ends at the next table header of any
-# kind, so a key below [stack] or [sleeve] belongs to no liberator. A quoted
-# value loses its quotes; a bare one loses a trailing comment and is otherwise
-# kept as written, so a caller can refuse a value by name rather than mistake
-# it for none. Keys are read from the start of a line, as molt.toml writes them.
-_molt_liberator_entries() {
-  awk '
+# The one reader of molt.toml's array tables, [[liberator]] and [[agent]]: the
+# blocks headed [[$1]] in the manifest $3. Prints a line per key of every block,
+# "id<TAB>key<TAB>value", where the id is the value of the block's $2 key and
+# its own line comes first whatever order the keys are written in. A block with
+# no $2 key is printed with an empty id, so a caller can refuse it rather than
+# never see it. A block ends at the next table header of any kind, so a key
+# below [stack] or [sleeve] belongs to no block. A quoted value loses its
+# quotes; a bare one loses a trailing comment and is otherwise kept as written,
+# so a caller can refuse a value by name rather than mistake it for none. Keys
+# are read from the start of a line, as molt.toml writes them.
+_molt_table_entries() {
+  awk -v header="[[$1]]" -v idkey="$2" '
     function flush(   k) {
-      if (inblock && name != "") {
-        print name "\tname\t" name
-        for (k in val) print name "\t" k "\t" val[k]
+      if (inblock) {
+        print id "\t" idkey "\t" id
+        for (k in val) print id "\t" k "\t" val[k]
       }
       for (k in val) delete val[k]
-      name = ""
+      id = ""
     }
-    /^\[\[liberator\]\]/ { flush(); inblock = 1; next }
+    index($0, header) == 1 { flush(); inblock = 1; next }
     /^\[/ { flush(); inblock = 0; next }
     inblock && /^[A-Za-z0-9_-]+[[:space:]]*=/ {
       key = $0
@@ -789,11 +965,11 @@ _molt_liberator_entries() {
       } else {
         sub(/[[:space:]]*(#.*)?$/, "", v)
       }
-      if (key == "name") name = v
+      if (key == idkey) id = v
       else val[key] = v
     }
     END { flush() }
-  ' "$1"
+  ' "$3"
 }
 
 # Parse enabled liberators from molt.toml.
@@ -807,8 +983,10 @@ molt_enabled_liberators() {
   local platform
   platform="$(molt_platform)"
 
-  # In manifest order. enabled defaults to true, os to every platform.
-  _molt_liberator_entries "$manifest" | awk -F'\t' -v platform="$platform" '
+  # In manifest order. enabled defaults to true, os to every platform. An entry
+  # with no name names no liberator.
+  _molt_table_entries liberator name "$manifest" | awk -F'\t' -v platform="$platform" '
+    $1 == "" { next }
     $2 == "name" { order[++n] = $1; enabled[$1] = "true"; os[$1] = "" }
     $2 == "enabled" { enabled[$1] = ($3 == "false") ? "false" : "true" }
     $2 == "os" { os[$1] = $3 }
@@ -822,14 +1000,14 @@ molt_enabled_liberators() {
 }
 
 # Prints the value of key $2 on the [[liberator]] entry named $1 in this
-# sleeve's molt.toml, read by _molt_liberator_entries like every other key.
+# sleeve's molt.toml, read by _molt_table_entries like every other key.
 # Fails when there is no manifest, no such entry or no such key.
 molt_liberator_field() {
   local manifest value
   manifest="$(molt_find_manifest 2>/dev/null)" || return 1
   # Reads every line rather than exiting at the first match, so the writer
   # upstream never meets a closed pipe (issue 0008).
-  value="$(_molt_liberator_entries "$manifest" | awk -F'\t' -v want="$1" -v key="$2" '
+  value="$(_molt_table_entries liberator name "$manifest" | awk -F'\t' -v want="$1" -v key="$2" '
     $1 == want && $2 == key && !found { print $3; found = 1 }
   ')" || return 1
   [[ -n "$value" ]] || return 1
@@ -966,6 +1144,184 @@ molt_claude_config_dir() {
   echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 }
 
+# The settings entry that runs the home guard, as a file holding the JSON object
+# molt writes. One of Molt's own files, the same on every sleeve: it names the
+# guard as ~/.config/molt/claude-home-guard.sh, outside any Claude config dir,
+# so it holds no machine's path and runs whichever config dir a session read.
+# The claude liberator writes it into the user settings, and the agents
+# liberator into each home's (issue 0030).
+molt_claude_hook_entry() {
+  echo "${MOLT_ROOT}/templates/claude/home-guard-hook.json"
+}
+
+# The jq filters that read and write that entry, with it bound to $want. It is
+# the one UserPromptSubmit entry that runs the guard's command; any other entry
+# is somebody else's, and is kept. GET gives null when there is none. Read by
+# liberators/claude.sh and lib/agent.sh, and so unused here.
+# shellcheck disable=SC2016,SC2034 # $want is jq's, not the shell's
+MOLT_CLAUDE_HOOK_GET='first(.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command))) // null'
+# shellcheck disable=SC2016,SC2034
+MOLT_CLAUDE_HOOK_SET='.hooks.UserPromptSubmit = ([.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command) | not)] + [$want])'
+
+# Where Claude Code reads its managed settings, which nothing a user or an agent
+# writes can override: managed-settings.json, and the drop-ins beside it in
+# managed-settings.d/. Root-owned; molt writes molt-sysadm.json there through
+# sudo, and its sidecar, and nothing else (ST0006 WP06).
+molt_claude_managed_dir() {
+  case "$(molt_platform)" in
+    macos) echo "/Library/Application Support/ClaudeCode" ;;
+    *)     echo "/etc/claude-code" ;;
+  esac
+}
+
+# Where AppArmor reads its profiles on a Linux sleeve. Root-owned; molt writes
+# bwrap-userns-restrict there through sudo, with its sidecar and the distro's
+# copy beside it, and nothing else (issue 0032).
+molt_apparmor_dir() {
+  echo "/etc/apparmor.d"
+}
+
+# True when this sleeve's AppArmor parses the profile file $1, read with the
+# includes in molt_apparmor_dir, unprivileged and loading nothing. Fails,
+# printing why, with apparmor_parser absent or the parse refused; the parser's
+# own words go to stderr.
+molt_apparmor_parses() {
+  local profile
+  profile="$(molt_tilde "$1")"
+  if ! command -v apparmor_parser &>/dev/null; then
+    echo "apparmor_parser is not installed, so $profile cannot be parsed"
+    return 1
+  fi
+  if ! apparmor_parser -Q -K -I "$(molt_apparmor_dir)" "$1" >&2; then
+    echo "$profile does not parse under this sleeve's AppArmor"
+    return 1
+  fi
+}
+
+# Loads the AppArmor profile file $1 into the kernel, replacing what it holds of
+# it, through sudo. Fails, printing why, with apparmor_parser or sudo absent or
+# the load refused.
+molt_apparmor_load() {
+  local profile
+  profile="$(molt_tilde "$1")"
+  if ! command -v apparmor_parser &>/dev/null; then
+    echo "apparmor_parser is not installed, so $profile was not loaded"
+    return 1
+  fi
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $profile was not loaded"
+    return 1
+  fi
+  if ! sudo apparmor_parser -r "$1" >&2; then
+    echo "apparmor_parser could not load $profile"
+    return 1
+  fi
+}
+
+# Puts the bytes of $1 at $2, a root-owned path, mode 644, through sudo: copied
+# first to a temporary file of the user's, so what sudo installs is what was
+# read, then installed with the directory made as needed. Never written any
+# other way: without sudo, or with sudo refusing, nothing is. Fails, printing
+# why.
+molt_sudo_install() {
+  local src="$1" dest="$2" tmp
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $dest was not written"
+    return 1
+  fi
+  if ! tmp="$(mktemp "${TMPDIR:-/tmp}/molt-sudo.XXXXXX")" || ! cp "$src" "$tmp"; then
+    rm -f "${tmp:-}"
+    echo "$src could not be copied to a temporary file, so $dest was not written"
+    return 1
+  fi
+  # An existing directory keeps the mode it has.
+  if ! { [[ -d "$(dirname "$dest")" ]] || sudo install -d -m 755 "$(dirname "$dest")"; } \
+      || ! sudo install -m 644 "$tmp" "$dest"; then
+    rm -f "$tmp"
+    echo "sudo could not install $dest"
+    return 1
+  fi
+  rm -f "$tmp"
+}
+
+# Removes the root-owned files $@ through sudo. Fails, printing why, with sudo
+# absent or refusing.
+molt_sudo_remove() {
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $* was not removed"
+    return 1
+  fi
+  if ! sudo rm -f "$@"; then
+    echo "sudo could not remove $*"
+    return 1
+  fi
+}
+
+# The state of the root-owned file $2 that molt installs from $1, byte for
+# byte, one word: on a sleeve that wants it ($3 is 0), current, missing, stale,
+# or foreign (a file molt did not write, which it leaves); on one that does not
+# ($3 is anything else), absent, leftover (molt's, to remove), or unowned
+# (somebody else's, left alone). Molt's is the one beside molt's sidecar,
+# ${2}.molt-rendered. Fails, printing why, when the two cannot be compared.
+molt_root_file_state() {
+  local src="$1" target="$2" wanted="$3" differ=0
+  if [[ "$wanted" -ne 0 ]]; then
+    if [[ -f "${target}.molt-rendered" ]]; then
+      echo leftover
+    elif [[ -e "$target" ]]; then
+      echo unowned
+    else
+      echo absent
+    fi
+    return 0
+  fi
+  if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
+    echo foreign
+    return 0
+  elif [[ ! -e "$target" ]]; then
+    echo missing
+    return 0
+  fi
+  cmp -s "$src" "$target" || differ=$?
+  case $differ in
+    0) echo current ;;
+    1) echo stale ;;
+    *)
+      echo "$(molt_tilde "$target") could not be compared with $(molt_tilde "$src")"
+      return 1 ;;
+  esac
+}
+
+# Installs the bytes of $1 as the root-owned file $2, through sudo, its sidecar
+# first, so a file beside molt's sidecar is always one molt wrote. Fails,
+# printing why.
+molt_root_file_install() {
+  local src="$1" target="$2" sidecar digest why
+  if ! sidecar="$(mktemp "${TMPDIR:-/tmp}/molt-sidecar.XXXXXX")"; then
+    echo "no temporary file could be made for the sidecar of $target, so nothing was written"
+    return 1
+  fi
+  digest="$(molt_hash < "$src")" || digest=""
+  if ! molt_render_sidecar "$src" "$digest" "$src" > "$sidecar"; then
+    rm -f "$sidecar"
+    echo "the sidecar of $target could not be written, so nothing was"
+    return 1
+  fi
+  if ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
+      || ! why="$(molt_sudo_install "$src" "$target")"; then
+    rm -f "$sidecar"
+    echo "$why"
+    return 1
+  fi
+  rm -f "$sidecar"
+}
+
+# Removes the root-owned file $1 that molt installed, and its sidecar, through
+# sudo. Fails, printing why.
+molt_root_file_remove() {
+  molt_sudo_remove "$1" "${1}.molt-rendered"
+}
+
 # --- CLI Commands ---
 
 cmd_version() {
@@ -994,7 +1350,7 @@ cmd_list() {
     manifest="$(molt_find_manifest 2>/dev/null || echo "")"
     if [[ -n "$manifest" ]]; then
       local all_names
-      all_names="$(_molt_liberator_entries "$manifest" | awk -F'\t' '$2 == "name" { print $1 }')"
+      all_names="$(_molt_table_entries liberator name "$manifest" | awk -F'\t' '$1 != "" && $2 == "name" { print $1 }')"
       while IFS= read -r lib; do
         [[ -z "$lib" ]] && continue
         if [[ "$enabled_list" != *" ${lib} "* ]]; then
@@ -1094,7 +1450,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=13
+  local total=15
   local step=0
   local warnings=0
 
@@ -1174,10 +1530,21 @@ cmd_doctor() {
     # the repo to find the manifest inside it. Left as prose it silently drifts
     # out of date, which is how a lowercase declaration survived the rename. So
     # assert it instead: dead documentation becomes a live check.
-    local declared_repo
-    declared_repo="$(grep -E '^[[:space:]]*user_repo[[:space:]]*=' "$manifest" 2>/dev/null \
-                     | head -n 1 | sed -E 's/.*=[[:space:]]*"?([^"]*)"?.*/\1/')"
-    if [[ -n "$declared_repo" && -n "${real_repo:-}" && "$declared_repo" != "$real_repo" ]]; then
+    #
+    # grep is asked on its own, for its status: 1 is a manifest that declares
+    # no user_repo, which passes, and anything above is a manifest grep could
+    # not read. In the pipeline it was, either ended doctor here, without a
+    # word, under bin/molt's pipefail (issue 0028).
+    local declared_repo="" declared_lines grep_status=0
+    declared_lines="$(grep -E '^[[:space:]]*user_repo[[:space:]]*=' "$manifest" 2>&1)" || grep_status=$?
+    if [[ $grep_status -eq 0 ]]; then
+      declared_repo="$(printf '%s\n' "$declared_lines" | head -n 1 | sed -E 's/.*=[[:space:]]*"?([^"]*)"?.*/\1/')"
+    fi
+    if [[ $grep_status -gt 1 ]]; then
+      echo "[$step/$total] Checking manifest... ⚠ $manifest"
+      echo "         It could not be read for its user_repo declaration: ${declared_lines:-grep exited $grep_status}"
+      warnings=$((warnings + 1))
+    elif [[ -n "$declared_repo" && -n "${real_repo:-}" && "$declared_repo" != "$real_repo" ]]; then
       echo "[$step/$total] Checking manifest... ⚠ $manifest"
       echo "         Declares user_repo = '${declared_repo}' but the directory is '${real_repo}'."
       echo "         Nothing reads this key, so the mismatch is silent -- fix it before"
@@ -1235,9 +1602,12 @@ cmd_doctor() {
         installed_count=$((installed_count + 1))
       else
         not_installed="${not_installed:+$not_installed }$lib"
+        # As the check printed them: molt's prefix already names the
+        # liberator, and the not installed: line names it for a line without
+        # one (issue 0026).
         while IFS= read -r line; do
           [[ -z "$line" ]] && continue
-          not_installed_why="${not_installed_why}         ${lib}: ${line}"$'\n'
+          not_installed_why="${not_installed_why}         ${line}"$'\n'
         done <<< "$(echo "$why" | head -3)"
       fi
     done <<< "$enabled"
@@ -1430,6 +1800,56 @@ cmd_doctor() {
     esac
   fi
 
+  # 14. The managed floor (ST0006 WP06): on a sleeve with a sysadm agent, its
+  # denies are in Claude Code's managed drop-in, where the agent cannot edit
+  # them; on one without, no floor molt wrote is left behind.
+  step=$((step + 1))
+  local floor_state floor_faults floor_fault
+  if floor_state="$(molt_agent_floor_state)"; then
+    floor_faults="$(molt_agent_floor_faults "$floor_state")"
+  else
+    floor_faults="$floor_state"
+  fi
+  if [[ -z "$floor_faults" ]]; then
+    case "$floor_state" in
+      current) floor_fault="in place: $(molt_tilde "$(molt_agent_floor_target)")" ;;
+      unowned) floor_fault="none needed; $(molt_tilde "$(molt_agent_floor_target)") is not molt's, and is left" ;;
+      *)       floor_fault="none needed, and none of molt's here" ;;
+    esac
+    echo "[$step/$total] Checking managed floor... ✓ $floor_fault"
+  else
+    echo "[$step/$total] Checking managed floor... ⚠"
+    while IFS= read -r floor_fault; do
+      echo "         $floor_fault"
+    done <<< "$floor_faults"
+    warnings=$((warnings + 1))
+  fi
+
+  # 15. The sandbox profile (issue 0032): on a Linux sleeve with an ops or docs
+  # agent, molt's bwrap-userns-restrict is in place and bwrap's children can
+  # make the sandbox's user namespace; on any other, none of molt's is left.
+  step=$((step + 1))
+  local sandbox_state sandbox_faults sandbox_fault
+  if sandbox_state="$(molt_agent_sandbox_state)"; then
+    sandbox_faults="$(molt_agent_sandbox_faults "$sandbox_state")"
+  else
+    sandbox_faults="$sandbox_state"
+  fi
+  if [[ -z "$sandbox_faults" ]]; then
+    case "$sandbox_state" in
+      current) sandbox_fault="in place: $(molt_tilde "$(molt_agent_sandbox_target)")" ;;
+      unowned) sandbox_fault="none needed; $(molt_tilde "$(molt_agent_sandbox_target)") is not molt's, and is left" ;;
+      *)       sandbox_fault="none needed, and none of molt's here" ;;
+    esac
+    echo "[$step/$total] Checking sandbox profile... ✓ $sandbox_fault"
+  else
+    echo "[$step/$total] Checking sandbox profile... ⚠"
+    while IFS= read -r sandbox_fault; do
+      echo "         $sandbox_fault"
+    done <<< "$sandbox_faults"
+    warnings=$((warnings + 1))
+  fi
+
   echo ""
   if [[ "$warnings" -eq 0 ]]; then
     echo "All checks passed."
@@ -1571,9 +1991,7 @@ molt_resleeve() {
     fi
     molt_info "Manifest: $manifest"
   else
-    # liberator_list reports on stdout, so its error is in what was captured.
     if ! liberators="$(liberator_list)"; then
-      echo "$liberators"
       molt_error "Cannot resleeve: there are no liberators to run."
       return 1
     fi
@@ -1626,6 +2044,29 @@ molt_resleeve() {
 
 # --- Upgrade ---
 
+# Pulls the repo $1, fast-forward only, $2 naming it for the user (eg
+# Framework). A repo with no upstream branch is the one pull not tried: it
+# warns that the pull was skipped and fails with status 2. Any other failure
+# is an error naming the repo, with git's own words under it, and status 1
+# (issue 0015). No upstream is read from the branch's config, or a HEAD on no
+# branch, not from git rev-parse @{upstream}, which fails as well for an
+# upstream configured and gone: that pull is tried, and fails with git's
+# reason.
+molt_git_pull() {
+  local repo="$1" label="$2" out branch
+  if ! branch="$(git -C "$repo" symbolic-ref -q --short HEAD 2>/dev/null)" \
+      || ! git -C "$repo" config "branch.${branch}.merge" >/dev/null 2>&1; then
+    molt_warn "$label pull skipped: $repo has no upstream branch"
+    return 2
+  fi
+  if ! out="$(git -C "$repo" pull --ff-only 2>&1)"; then
+    molt_error "$label pull failed in $repo:"
+    printf '%s\n' "$out" | sed 's/^/    /' >&2
+    return 1
+  fi
+  [[ -z "$out" ]] || printf '%s\n' "$out"
+}
+
 _upgrade_check_clean() {
   local repo_path="$1"
   local label="$2"
@@ -1658,11 +2099,10 @@ _upgrade_warn_untracked() {
   return 0
 }
 
-# The one that actually bites. Commits sitting unpushed mean `git pull --ff-only`
-# below cannot fast-forward, so it is skipped with a soft warning, and every other
-# sleeve upgrades to a version that does not contain your fixes -- while reporting
-# success. That is how gyges spent a morning running a backup agent pointing at a
-# path rhadamanth had already moved.
+# The one that actually bites. Commits sitting unpushed mean every other sleeve
+# upgrades to a version that does not contain your fixes, and reports success.
+# That is how gyges spent a morning running a backup agent pointing at a path
+# rhadamanth had already moved.
 _upgrade_warn_unpushed() {
   local repo_path="$1" label="$2" upstream ahead
   upstream="$(git -C "$repo_path" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)" || {
@@ -1678,9 +2118,16 @@ _upgrade_warn_unpushed() {
   return 0
 }
 
+# Checks, then pulls, the framework and the user config repo. Fails with
+# status 1, pulling nothing, when either cannot be upgraded from as it stands;
+# and with status 2 when a pull failed, after trying both, naming each in
+# _UPGRADE_FAILED_PULLS for the verdict, since the run goes on against the
+# trees on disk and fails at the end.
 _upgrade_pull_repos() {
   local dry_run="${1:-false}"
   local old_version="$MOLT_VERSION"
+  local pulled
+  _UPGRADE_FAILED_PULLS=""
 
   # 1. Check framework repo
   molt_info "Checking framework repo: $MOLT_ROOT"
@@ -1704,20 +2151,28 @@ _upgrade_pull_repos() {
   molt_info "Pulling framework repo..."
   if $dry_run; then
     echo "  molt: WOULD PULL"
-  elif git -C "$MOLT_ROOT" pull --ff-only 2>/dev/null; then
-    molt_info "Framework repo updated."
   else
-    molt_warn "Framework pull skipped (not on tracking branch or already up-to-date)."
+    pulled=0
+    molt_git_pull "$MOLT_ROOT" "Framework" || pulled=$?
+    case $pulled in
+      0) molt_info "Framework repo updated." ;;
+      2) ;;
+      *) _UPGRADE_FAILED_PULLS="the framework repo ($MOLT_ROOT)" ;;
+    esac
   fi
 
   # 4. Pull user config repo
   molt_info "Pulling user config repo..."
   if $dry_run; then
     echo "  config: WOULD PULL"
-  elif git -C "$user_repo" pull --ff-only 2>/dev/null; then
-    molt_info "User config repo updated."
   else
-    molt_warn "User config pull skipped (not on tracking branch or already up-to-date)."
+    pulled=0
+    molt_git_pull "$user_repo" "User config" || pulled=$?
+    case $pulled in
+      0) molt_info "User config repo updated." ;;
+      2) ;;
+      *) _UPGRADE_FAILED_PULLS="${_UPGRADE_FAILED_PULLS:+$_UPGRADE_FAILED_PULLS, }the user config repo ($user_repo)" ;;
+    esac
   fi
 
   # 5. Re-source constants to pick up any version change
@@ -1727,15 +2182,16 @@ _upgrade_pull_repos() {
     echo ""
     molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
   fi
+  [[ -z "$_UPGRADE_FAILED_PULLS" ]] || return 2
 }
 
 # Ends an upgrade: resleeves when asked, then gives the verdict. $3 lists the
-# upgrade hooks that failed. A sleeve whose upgrade hooks failed is not ready,
-# whatever resleeve then finds, so resleeve is told not to say it is: on kovacs
-# doom sync failed inside the editors hook, and molt upgrade still said "Sleeve
-# ready" (issue 0013).
+# upgrade hooks that failed, and $4 the repos whose pull failed. A sleeve with
+# either is not ready, whatever resleeve then finds, so resleeve is told not to
+# say it is: on kovacs doom sync failed inside the editors hook, and molt
+# upgrade still said "Sleeve ready" (issue 0013).
 _upgrade_finish() {
-  local dry_run="$1" do_resleeve="$2" failed_hooks="$3" status=0 claim_ready=true
+  local dry_run="$1" do_resleeve="$2" failed_hooks="$3" failed_pulls="${4:-}" status=0 claim_ready=true
   if [[ "$do_resleeve" == "yes" ]]; then
     echo ""
     if $dry_run; then
@@ -1745,9 +2201,14 @@ _upgrade_finish() {
     else
       molt_info "Running resleeve..."
       echo ""
-      [[ -z "$failed_hooks" ]] || claim_ready=false
+      [[ -z "$failed_hooks$failed_pulls" ]] || claim_ready=false
       molt_resleeve false "$claim_ready" || status=1
     fi
+  fi
+  if [[ -n "$failed_pulls" ]]; then
+    echo ""
+    molt_error "Upgrade incomplete: the pull failed for $failed_pulls. The liberators ran against the trees on disk; the sleeve is not ready."
+    status=1
   fi
   if [[ -n "$failed_hooks" ]]; then
     echo ""
@@ -1757,16 +2218,48 @@ _upgrade_finish() {
   return $status
 }
 
+# The framework commit, or nothing and a failure when git cannot read it. It
+# prints only the commit, since its callers capture it; they say what an
+# unread commit means.
+_upgrade_framework_head() {
+  git -C "$MOLT_ROOT" rev-parse HEAD 2>/dev/null
+}
+
+# This process sourced lib/ before the pull, but liberator_load reads each
+# liberator from disk after it, so a pull that moved the framework would run
+# the old library against the new liberators: with ST0006 WP02, the first
+# upgrade on every sleeve failed in claude and agents (issue 0023). Only a new
+# process knows which library files the pulled bin/molt sources, so the rest
+# of the upgrade runs in one, without pulling again, told which pulls failed
+# ($3) so that its verdict still counts them.
+_upgrade_restart_if_pulled() {
+  local head_before="$1" do_resleeve="$2" failed_pulls="${3:-}" head_after
+  [[ -n "$head_before" ]] || return 0
+  head_after="$(_upgrade_framework_head)" || {
+    molt_warn "Cannot read the framework commit in $MOLT_ROOT after the pull; if it changed lib/, run molt upgrade again."
+    return 0
+  }
+  [[ "$head_after" != "$head_before" ]] || return 0
+  echo ""
+  molt_info "Framework updated (${head_before:0:7} -> ${head_after:0:7}); restarting on the new code."
+  if [[ "$do_resleeve" == "yes" ]]; then
+    MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --resleeve
+  fi
+  MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --no-resleeve
+}
+
 cmd_upgrade() {
   local dry_run=false
   local do_resleeve=""  # "" = use default, "yes" = forced, "no" = suppressed
   local target_liberators=""
   local self_only=false
+  local pull=true
 
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --self)        self_only=true; shift ;;
+      --no-pull)     pull=false; shift ;;
       --dry-run)     dry_run=true; shift ;;
       --resleeve)    do_resleeve="yes"; shift ;;
       --no-resleeve) do_resleeve="no"; shift ;;
@@ -1788,13 +2281,18 @@ cmd_upgrade() {
     fi
   fi
 
+  if $self_only && ! $pull; then
+    molt_error "--self pulls and does nothing else, so it cannot take --no-pull."
+    return 1
+  fi
+
   echo "${MOLT_NAME} v${MOLT_VERSION} — Upgrade"
   echo ""
 
   if $self_only; then
     # Self-update only: pull repos, report, exit
-    _upgrade_pull_repos "$dry_run"
-    return $?
+    _upgrade_pull_repos "$dry_run" || return 1
+    return 0
   fi
 
   if [[ -n "$target_liberators" ]]; then
@@ -1834,7 +2332,25 @@ cmd_upgrade() {
 
   # --- Full upgrade: pull repos, run all _upgrade() hooks, then resleeve ---
 
-  _upgrade_pull_repos "$dry_run" || return 1
+  # A pull that failed does not stop the run: the hooks and resleeve settle
+  # what they can on the trees on disk, and the verdict counts it (issue
+  # 0015). An upgrade restarted after a pull is told by the one that pulled.
+  local failed_pulls=""
+  if $pull; then
+    local head_before pulled=0
+    head_before="$(_upgrade_framework_head)" || {
+      head_before=""
+      molt_warn "Cannot read the framework commit in $MOLT_ROOT; a pull that changes lib/ needs a second molt upgrade."
+    }
+    _upgrade_pull_repos "$dry_run" || pulled=$?
+    [[ $pulled -ne 1 ]] || return 1
+    failed_pulls="${_UPGRADE_FAILED_PULLS:-}"
+    $dry_run || _upgrade_restart_if_pulled "$head_before" "$do_resleeve" "$failed_pulls"
+  else
+    failed_pulls="${MOLT_UPGRADE_FAILED_PULLS:-}"
+  fi
+  # Read once: it is the restart's, not anything this run starts.
+  unset MOLT_UPGRADE_FAILED_PULLS
 
   # Run _upgrade() hooks on all enabled liberators that define one
   echo ""
@@ -1849,7 +2365,7 @@ cmd_upgrade() {
   local upgrade_count=0 failed_hooks=""
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
-    if ! liberator_load "$lib" 2>/dev/null; then
+    if ! liberator_load "$lib"; then
       continue
     fi
     if liberator_has_upgrade "$lib"; then
@@ -1868,7 +2384,7 @@ cmd_upgrade() {
   fi
 
   # 7. Resleeve (unless suppressed), then the verdict
-  _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks"
+  _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks" "$failed_pulls"
 }
 
 # --- Maintain ---
@@ -1939,7 +2455,7 @@ cmd_maintain() {
   local maintain_count=0 failed_hooks=""
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
-    if ! liberator_load "$lib" 2>/dev/null; then
+    if ! liberator_load "$lib"; then
       continue
     fi
     if liberator_has_maintain "$lib"; then
@@ -2096,6 +2612,7 @@ cmd_git() {
 # --- Stack Discovery ---
 
 molt_find_user_repo() {
+  local path
   for path in "${MOLT_USER_REPO_SEARCH_PATHS[@]}"; do
     if [[ -d "$path/config" ]]; then
       echo "$path"

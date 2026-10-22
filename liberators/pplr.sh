@@ -67,16 +67,15 @@ pplr_verify() {
 }
 
 pplr_upgrade() {
-  local repo
+  local repo pulled=0
   if ! repo="$(_pplr_find_repo)"; then
     molt_error "Pplr repo not found — cannot upgrade"
     return 1
   fi
 
   molt_info "Pulling Pplr repo..."
-  if git -C "$repo" pull --ff-only 2>/dev/null; then
-    molt_info "Pplr repo updated."
-  else
-    molt_warn "Pplr pull skipped (not on tracking branch or already up-to-date)."
-  fi
+  molt_git_pull "$repo" "Pplr" || pulled=$?
+  [[ $pulled -ne 0 ]] || molt_info "Pplr repo updated."
+  # Updated, or skipped for want of an upstream; anything else failed (issue 0037).
+  [[ $pulled -eq 0 || $pulled -eq 2 ]]
 }

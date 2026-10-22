@@ -296,8 +296,8 @@ ssh-keygen -t ed25519 -C "you@example.com"
 
 ### 10.2 Write SSH config [agnostic]
 
-- Config: `molt-{user}/config/ssh/config`
-- Symlink: `~/.ssh/config`
+- Config: `molt-{user}/config/ssh/config.tmpl`, with each `instances/{hostname}/ssh/config.d/*.conf` fragment after it
+- Rendered, not linked: `~/.ssh/config`, a regular file, as ssh requires. A static `config/ssh/config` is refused; rename it `config.tmpl`, which renders it as it stands
 - Defines host aliases (eg `github.com-{github}`) with identity file references.
 - **Manual step**: Public key must be added to GitHub account.
 
@@ -352,7 +352,7 @@ Claude Code configuration.
 | doom/                        | ~/.config/doom                       |
 | alacritty/alacritty.toml     | ~/.config/alacritty/alacritty.toml   |
 | starship/starship.toml       | ~/.config/starship.toml              |
-| ssh/config                   | ~/.ssh/config                        |
+| ssh/config.tmpl (rendered)   | ~/.ssh/config                        |
 | claude/keybindings.json      | ~/.claude/keybindings.json           |
 | ccstatusline/settings.json   | ~/.config/ccstatusline/settings.json |
 

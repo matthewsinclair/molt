@@ -149,3 +149,35 @@ _doom_synced_under() {
     assert_output_contains "doom: sync failed"
     assert_output_contains "editors: doom sync -u failed"
 }
+
+# A Doom config cloned from an origin in the test directory (issue 0015).
+_doom_config_repo() {
+    local origin="$BATS_TEST_TMPDIR/doom-origin"
+    mkdir -p "$origin"
+    : > "$origin/init.el"
+    git -C "$origin" init -q
+    git -C "$origin" add -A
+    git -c user.name=test -c user.email=test@example.com -C "$origin" commit -qm init
+    git clone -q "$origin" "$HOME/.config/doom"
+    DOOM_ORIGIN="$origin"
+}
+
+@test "the editors upgrade hook warns when the Doom config has no upstream, and fails, naming the repo and git's reason, when its pull fails, syncing either way" {
+    _fake_doom
+    _doom_synced_under "30.2"
+    _doom_config_repo
+    load_liberator editors
+    git -C "$HOME/.config/doom" branch -q --unset-upstream
+    MOLT_EMACS_VERSION="30.2" run editors_upgrade
+    assert_success
+    assert_output_contains "Doom config pull skipped: $HOME/.config/doom has no upstream branch"
+
+    git -C "$HOME/.config/doom" branch -q --set-upstream-to="origin/$(git -C "$HOME/.config/doom" branch --show-current)"
+    rm -rf "$DOOM_ORIGIN" "$HOME/doom.calls"
+    MOLT_EMACS_VERSION="30.2" run editors_upgrade
+    assert_failure
+    assert_output_contains "Doom config pull failed in $HOME/.config/doom:"
+    assert_output_contains "$DOOM_ORIGIN"
+    refute_output_contains "pull skipped"
+    [ "$(cat "$HOME/doom.calls")" = "doom sync" ]
+}

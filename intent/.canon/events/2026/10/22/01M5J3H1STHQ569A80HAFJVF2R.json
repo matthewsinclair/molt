@@ -1,0 +1,15 @@
+{
+  "id": "01M5J3H1STHQ569A80HAFJVF2R",
+  "ts": "2026-10-22T15:26:28.666Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0037"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "web, utilz, pplr and bootstrap still pull with git's reason dropped and every failure called skipped"
+  }
+}

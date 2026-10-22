@@ -1,0 +1,15 @@
+{
+  "id": "01M5ETDBPNV0SAYN9W3EGFFCQS",
+  "ts": "2026-10-21T08:49:27.253Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ST0006 WP04: runbook written into WP04's body at a1fe844, with vc for review"
+  }
+}

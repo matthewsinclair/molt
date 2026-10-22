@@ -46,11 +46,13 @@ Variables are sourced in a subshell during rendering — they don't leak into th
 The simplest approach is `molt_install_config`, which auto-picks between rendering and symlinking:
 
 ```bash
-# If config/ssh/config.tmpl exists → render with instance vars
-# If config/ssh/config exists → symlink
+# If config/tmux/tmux.conf.tmpl exists → render with instance vars
+# If config/tmux/tmux.conf exists → symlink
 # If neither exists → warn and return 1
-molt_install_config "config/ssh/config" "$HOME/.ssh/config"
+molt_install_config "config/tmux/tmux.conf" "$HOME/.tmux.conf"
 ```
+
+A liberator whose target must be a regular file renders it and never links it. `ssh` is one: ssh refuses a linked `~/.ssh/config`, so the `ssh` liberator renders `config/ssh/config.tmpl` and refuses a static `config/ssh/config`, which as `config.tmpl` renders as it stands.
 
 For direct control, use `molt_render`:
 
@@ -118,7 +120,7 @@ A template may open with a marker:
 # Add your own entries ABOVE this line.
 ```
 
-When both the existing file and the new render carry `@@MOLT:BEGIN@@`, `molt_render` preserves everything above the marker from the current file and prepends it to the new render. Files without the marker — rendered scripts, plists — are replaced wholesale as before.
+When the existing file carries `@@MOLT:BEGIN@@` and the new render opens with it, on its first line, `molt_render` preserves everything above the marker from the current file and prepends it to the new render. A render with lines of its own above the marker keeps nothing, since those lines would be written again under the kept copy at every render; nor does a marker that is only mentioned further down. When lines above the marker are not kept and the file is backed up, molt warns how many of them the new render does not carry, and names the backup that holds them. Files without the marker — rendered scripts, plists — are replaced wholesale as before.
 
 Anything _below_ the marker is molt's to own and will be replaced. Content that must survive belongs either above the marker or in the template itself.
 
@@ -137,14 +139,13 @@ For sensitive directories like `~/.ssh` (which has `700` permissions), `molt_ren
 
 Some liberators read per-machine files from `instances/<hostname>/` rather than from `config/`, because the value is genuinely machine-specific rather than shared:
 
-| Liberator | File                                     | Shape                                                                                      |
-| --------- | ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `keys`    | `instances/<host>/keyd/default.conf`     | keyd config, copied to `/etc/keyd/`                                                        |
-| `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                         |
-| `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored |
+| Liberator | File                                     | Shape                                                                                                                                                                                           |
+| --------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `keys`    | `instances/<host>/keyd/default.conf`     | keyd config, copied to `/etc/keyd/`                                                                                                                                                             |
+| `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                                                                                                                              |
+| `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored                                                                                                      |
+| `desktop` | `instances/<host>/desktop/gsettings`     | one `<schema> <key> <value>` per line, the value to the end of the line as `gsettings get` prints it; blank lines and `#` comments ignored; applied on install, read back and compared by check |
 
-If a liberator post-processes the rendered file from one of these (as `ssh` does, appending its fragments), those files are inputs to the result and **must** be passed to `molt_config_stale` in `_check` and to `molt_config_record_digest` after the post-processing. Pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run.
-
-Note also that `molt_render` preserves only the region _above_ `@@MOLT:BEGIN@@`. Anything appended below `@@MOLT:END@@` is wiped by the next render, so the render and the re-append must stay in the same function, in that order.
+A liberator that builds a rendered file from one of these as well (as `ssh` does, putting its fragments after the template's render) builds the whole file before it is placed: `molt_render_tmp` into `<target>.molt-tmp` (which renders with `molt_render_text`), its own additions there, then `molt_render_place` with those files as extra inputs, so the sidecar's digest covers them. It passes the same files to `molt_config_stale` in `_check`; pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run. A file added to after it is placed differs from every new render, so each install backs it up.
 
 Prefer this over a `vars.sh` variable when the value is a list, when ordering matters, or when it is really a config file in its own format. Prefer `vars.sh` for scalars that a template needs to interpolate.

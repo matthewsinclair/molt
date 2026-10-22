@@ -3,10 +3,10 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-21 07:56Z
+heartbeat_at: 2026-10-22 16:06Z
 status: active
-focus: "21 Oct: WP01, 0019, 0020, 0021 merged and pushed (main f787369); next: cc's WP01 follow-up and WP02 heads (AC014, AC016), then WP05 and WP03 items 1-3; 0022 drafted by dc, applied on hv's word"
-claims: [ST0005, ST0006]
+focus: "22 Oct evening, hv AFK with vc holding the pen: v0.2.0 cut (f1f27bb) and pushed; every issue but 0022 closed (hv's word in dc's session). kovacs onto v0.2.0 through kovacs-sysadm, proving 0035's gsettings print forms. Then: rhadamanth's move with hv at the keyboard, WP04 and ST0006 close with gyges carried. Peers localfolded (ac c272b9a, cc 7287c89, dc 17b89de), holding, not released."
+claims: [ST0006]
 ---
 
 # Validation Claude (vc)
@@ -19,10 +19,9 @@ _(none)_
 
 - When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)
 - **Weekend, when hv starts it (gyges):** deploy the Gtools Sinclair estate on gyges, visible inside the house; declare gyges' [terminal] bg_color from its live iTerm2 profile and regenerate its ssh wrapper (nothing checks the rendered wrapper, so molt upgrade will not). Start Tailscale first: gyges.lan did not resolve on 15 Oct. Changes on gyges go through gyges-infra; Gtools is gtools-vc's pen. See wip.md. (edited)
-- **Confirm the Tactile install hint's URL live** (issue 0014). Plain DNS for extensions.gnome.org fails from here: on 16 Oct it resolved on neither rhadamanth nor kovacs, and timed out when rhadamanth asked 1.1.1.1 and 8.8.8.8 directly, though both answer github.com; Cloudflare's DNS over HTTPS answers it (54.221.220.94, TTL 60). From another network, `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' 'https://extensions.gnome.org/download-extension/tactile@lundal.io.shell-extension.zip?shell_version=50.1'` should give a 302 to a versioned zip. Here it needs `--resolve extensions.gnome.org:443:<address>`, which Claude Code's auto-mode classifier refused to vc, so it is hv's to run. (edited)
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
-- Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly.
+- Sent to intent-vc on 22 Oct 2026 evening: the three Intent defects (worktree hooks syncing an old store; 'intent at list | grep -q' panicking on the broken pipe; 'intent claude upgrade --apply' rewriting a .claude/settings.json that names 'intent claude hook' whole, Molt issue 0022's blocker, asking canon to carry enabledMcpjsonServers ["intent"], the MODULES.md PostToolUse advisory and Bash(intent wp:*), or to keep keys it does not own) by dc, replies relayed by dc; and the fourth, an inbound wb ask stored in the recipient's board.json while the sender commits the view, so a fresh worktree's gate skews until the recipient commits (watch-out 18), by vc. Open until intent-vc answers; 0022 moves on the settings.json answer. (edited)
 
 ## Holds
 
@@ -46,6 +45,7 @@ _(none)_
 - **`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.
 - **Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-sysadm (not kovacs-infra, hv 15 Oct). gyges is at home in the UK: while hv travels, ssh gyges cannot resolve gyges.lan, which is distance, not a fault. (edited)
 - **Doom's `-!`/`--force` suppresses the rebuild along with the prompt** (`bin/doom-sync`, Doom 59cdaa32): after an Emacs version change it neither asks nor rebuilds, and leaves `$DOOMLOCALDIR/etc/sync` naming the old Emacs. Never answer a doom prompt with --force. Molt compares Doom's recorded version with the running Emacs and passes `--rebuild` itself (`_editors_doom_sync`, issue 0013).
+- **An inbound ask is stored in the RECIPIENT's board.json, which is canon, and only the recipient commits it.** The sender's wb ask re-renders the recipient's inbox view and the sender commits that view with its event, but the message itself lands in <recipient>/board.json, which stays uncommitted on main until the recipient commits its own paths. Until then every fresh worktree (every builder's gate) fails doctor with view skew on that inbox: the committed view shows a message the committed canon cannot render. Found 22 Oct 18:00Z local when cc's 0015 gate refused on vc/inbox.cc.md (12018 on disk, 7254 rendered). Rule: whenever you commit anything, include your own board.json; and after a peer's ask or your own clear, commit board.json at once. A fresh detached worktree and a read-only intent doctor reproduce the gate's view.
 
 ## Decisions
 
@@ -58,6 +58,7 @@ _(none)_
 - (2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after "179 passing", and a stale AC001 question written into wip.
 - **AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: "STRICTLY FORBIDDEN. Purge that from the git record immediately"). Molt-matts `e3af373`'s trailers had been carried for days as "rewriting pushed history is hv's call". The purge recipe is in done 023 and vc's memory. Every sleeve whose Claude Code commits needs the attribution keys in `~/.claude/settings.json` and the Git Commits rule in `~/.claude/CLAUDE.md`. rhadamanth and kovacs have both; gyges is unchecked.
 - (2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).
+- (2026-10-22) **Three agent kinds, three naming schemes** (hv): sleeve agents <hostname>-<role>, project agents <project>-<suffix>, estate agents <estate>-estate (sinclair-estate, geodica-estate; the -vc suffix on those two was wrong). Estate agents are Gtools-provisioned and start in the estate's content root (GTOOLS_ESTATE), where the deployed .claude/ is; a launch above that root loads no contract, because Claude Code reads CLAUDE.md and settings from the launch dir and its parents, never a child.
 
 ---
 

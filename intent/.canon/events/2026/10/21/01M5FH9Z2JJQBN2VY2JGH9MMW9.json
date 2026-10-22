@@ -1,0 +1,15 @@
+{
+  "id": "01M5FH9Z2JJQBN2VY2JGH9MMW9",
+  "ts": "2026-10-21T15:29:33.266Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Nothing queued for cc (vc, 21 Oct): 0024, 0025 and 0027 merged. Released when hv names WP06's floor (the managed deny floor for sysadm), or by a new assignment from vc or hv."
+  }
+}

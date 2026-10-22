@@ -1,0 +1,16 @@
+{
+  "id": "01M5HSRV94QP42PG255WFCYBK7",
+  "ts": "2026-10-22T12:35:58.372Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 12,
+    "text": "ISSUE:0032 guide complete on Molt branch issue-0032-guide at 8877401 (worktree Molt-wt/issue-0032-guide): BWRAP-RESULT filled from hv's kovacs runs A/B (22 Oct). Open: sandbox handling of ~/.ssh/id_* and ~/.aws/credentials under bwrap untested, the floor refuses them first; a rerun with paths outside the floor's patterns is vc/hv's call. Waits on vc to land"
+  }
+}

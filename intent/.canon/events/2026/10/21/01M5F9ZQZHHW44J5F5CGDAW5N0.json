@@ -1,0 +1,16 @@
+{
+  "id": "01M5F9ZQZHHW44J5F5CGDAW5N0",
+  "ts": "2026-10-21T13:21:38.289Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04: runbook revised by ac at a943773 (vc's R1-R11, M1-M5, kovacs-sysadm's A2 commands); vc tells kovacs-sysadm A1 is runnable once WP02 and WP03 are on main. hv to answer kovacs-sysadm's Q2 (~/work/tmp/doom-rebuild.log) and Q3 (-home-matts/memory duplicate); both open in the runbook's C3 and Not decided."
+  }
+}

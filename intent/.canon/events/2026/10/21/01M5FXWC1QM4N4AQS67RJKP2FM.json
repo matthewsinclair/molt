@@ -1,0 +1,15 @@
+{
+  "id": "01M5FXWC1QM4N4AQS67RJKP2FM",
+  "ts": "2026-10-21T19:09:19.287Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0031"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "The status line runs ccstatusline through npx, which fills ~/.npm on every sleeve; Molt publishes NPM_CONFIG_CACHE under XDG beside CLAUDE_CONFIG_DIR"
+  }
+}

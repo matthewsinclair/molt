@@ -1,0 +1,15 @@
+{
+  "id": "01M5FGEE1C1AQ1C88NQ1MHRMM2",
+  "ts": "2026-10-21T15:14:31.084Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issue 0027 (ssh refuses a static config/ssh/config, one render path) on issue-0027 bf5be02 from aae8623, per vc's approved route (21 Oct); critic-shell reviewing, then the head to vc."
+  }
+}

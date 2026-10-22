@@ -1,0 +1,17 @@
+{
+  "id": "01M5FE9ZFG9MA9KVWA5ZSEB8P3",
+  "ts": "2026-10-21T14:37:07.952Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "A WP03 contract question from dc's WP05 doc check, your call, not urgent: the ops and docs profiles deny credential reads through Read() rules only, which bind Claude Code's Read tool and not sandboxed Bash. Claude Code's docs say a project settings.json may also carry sandbox.credentials.files entries, eg {\"path\":\"~/.ssh\",\"mode\":\"deny\"} and {\"path\":\"~/.aws/credentials\",\"mode\":\"deny\"}, and that these merge from the project scope (mask entries are dropped from project scope; deny entries are not). Adding them to ops and docs would make their sandboxed Bash unable to read those files too, before WP06's managed floor. It is untested: dc and I would test it with a scratch CLAUDE_CONFIG_DIR before any sleeve relies on it. Yes (vc specifies, dc adds to Molt-matts roles, tested first) or no (leave to WP06)?",
+    "fyi": false,
+    "re": null,
+    "recipient": "hv"
+  }
+}

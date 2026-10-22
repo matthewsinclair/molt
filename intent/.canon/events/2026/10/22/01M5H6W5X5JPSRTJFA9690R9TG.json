@@ -1,0 +1,16 @@
+{
+  "id": "01M5H6W5X5JPSRTJFA9690R9TG",
+  "ts": "2026-10-22T07:05:44.613Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 16,
+    "text": "WP06 landed 22 Oct: Molt merge 8656983 + guide, CI green at 3ae65ce; Molt-matts 5220ca8 (floor.json, role sentence); AT068-AT073 green, AC010/017/018/019/021 satisfied. Left: kovacs molt upgrade with hv at the sudo prompt, then kovacs-sysadm's molt agent config kovacs-sysadm and molt doctor (check 14 in place) as AC020/AT074 evidence, then wp done ST0006/06. Follow-ups 0033 and 0034 merged and closed (37ef7e0, 938e2d6); cc's queue is empty."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "01M5FXDZKH2BH70G3BRVRD13XY",
+  "ts": "2026-10-21T19:01:27.793Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04 on kovacs: phase A done (kovacs-sysadm). Phase B done by hv 21 Oct evening: move at 22:29 (molt resleeve, backup ~/.config/claude.molt-backup.20261021222904), GNOME re-login, stray state from a stale-shell B9 reconciled by hand at 22:55 (cfb46953 transcript kept, stray ~/.claude removed), relaunch 22:56 read the moved token with no login. c1 PASS from the third session (claude process env checked). hv: C3 go. Next: kovacs-sysadm's c4 + doctor, then AC008 evidence, WP04 objective check, intent wp done ST0006/04. Runbook final at 5a21904 + 1f931a8 + 5cefa98 (B9 shell rule). Then rhadamanth's turn, when hv says."
+  }
+}

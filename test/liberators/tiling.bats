@@ -10,8 +10,8 @@ _fake() {
 }
 
 # A Linux sleeve with Tactile installed, in a HOME of the test's own, with
-# fakes for the GNOME tools on PATH. Each fake logs what it was asked to do;
-# sudo runs the command it is given unless FAKE_SUDO_STATUS says otherwise.
+# fakes for the GNOME tools and sudo (install_fake_sudo) on PATH. Each fake
+# logs what it was asked to do.
 _tactile_sleeve() {
     export HOME="$BATS_TEST_TMPDIR/home"
     export MOLT_SYSTEM_SCHEMA_DIR="$BATS_TEST_TMPDIR/system-schemas"
@@ -20,11 +20,7 @@ _tactile_sleeve() {
     mkdir -p "$ext/schemas" "$MOLT_SYSTEM_SCHEMA_DIR" "$BATS_TEST_TMPDIR/bin"
     printf '<schemalist>v38</schemalist>\n' > "$ext/schemas/org.gnome.shell.extensions.tactile.gschema.xml"
 
-    _fake sudo <<'FAKE'
-#!/usr/bin/env bash
-[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
-exec "$@"
-FAKE
+    install_fake_sudo
     _fake glib-compile-schemas <<'FAKE'
 #!/usr/bin/env bash
 echo "glib-compile-schemas $*" >> "$FAKE_LOG"
@@ -113,6 +109,21 @@ FAKE
     refute_output_contains "Liberator complete"
 }
 
+# Issue 0033: the schema goes in, and comes back out, through molt's sudo
+# helpers, which name sudo's absence.
+@test "tiling install writes the schema through molt_sudo_install, mode 644, and passes on why sudo did not" {
+    _tactile_sleeve
+    run tiling_install
+    assert_success
+    grep -q "^sudo install -m 644 .* $MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML\$" "$BATS_TEST_TMPDIR/sudo.log"
+    [ "$(test_file_mode "$MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML")" = 644 ]
+
+    rm -f "$MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML"
+    FAKE_SUDO_STATUS=1 run tiling_install
+    assert_failure
+    assert_output_contains "tiling: could not install Tactile's gsettings schema into $MOLT_SYSTEM_SCHEMA_DIR: sudo could not install $MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML"
+}
+
 @test "tiling install fails, and does not say complete, when a setting cannot be written" {
     _tactile_sleeve
     cp "$TACTILE_EXT_DIR/schemas/$TACTILE_SCHEMA_XML" "$MOLT_SYSTEM_SCHEMA_DIR/"
@@ -129,7 +140,7 @@ FAKE
     _tactile_sleeve
     cp "$TACTILE_EXT_DIR/schemas/$TACTILE_SCHEMA_XML" "$MOLT_SYSTEM_SCHEMA_DIR/"
     local repo="$BATS_TEST_TMPDIR/repo" host
-    host="$(hostname -s 2>/dev/null || hostname)"
+    host="$(test_hostname)"
     mkdir -p "$repo/config" "$repo/instances/$host"
     printf 'fi\nexport MOLT_TACTILE_ACTIVATE="<Super>t"\n' > "$repo/instances/$host/vars.sh"
     MOLT_USER_REPO_SEARCH_PATHS=("$repo")
@@ -149,6 +160,7 @@ FAKE
     run tiling_install
     assert_failure
     assert_output_contains "so Tactile's copy was taken back out"
+    grep -q "^sudo rm -f $MOLT_SYSTEM_SCHEMA_DIR/$TACTILE_SCHEMA_XML\$" "$BATS_TEST_TMPDIR/sudo.log"
     refute_output_contains "Liberator complete"
     run _tiling_schema_fault
     assert_output_contains "is not installed"

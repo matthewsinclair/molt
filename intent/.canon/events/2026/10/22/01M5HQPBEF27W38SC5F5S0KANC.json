@@ -1,0 +1,16 @@
+{
+  "id": "01M5HQPBEF27W38SC5F5S0KANC",
+  "ts": "2026-10-22T11:59:39.471Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 10,
+    "text": "Issue 0032 on issue-0032 at fca6848 (worktree ~/Devel/prj/Molt-wt/issue-0032), handed to vc for scratch-merge: conffile route built (template, .molt-orig, sidecar first, parse check, reload, bwrap probe, restore), doctor 15, agent config line, CHANGELOG; both bashes green, mutation all killed, critic-shell fixed. Waiting on vc's merge, then hv's molt upgrade on kovacs. Never ssh to kovacs (vc)."
+  }
+}

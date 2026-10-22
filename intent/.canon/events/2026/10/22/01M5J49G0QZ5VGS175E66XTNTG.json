@@ -1,0 +1,17 @@
+{
+  "id": "01M5J49G0QZ5VGS175E66XTNTG",
+  "ts": "2026-10-22T15:39:49.655Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "issue-0037 head 3c6adff (on 1bf2a10), worktree ~/Devel/prj/Molt-wt/issue-0037, kept until you confirm the merge. web_upgrade, utilz_upgrade (checkout) and pplr_upgrade: molt_git_pull \"$repo\" \"<Label>\" || pulled=$?, \"<Label> repo updated.\" on 0, hook returns [[ pulled is 0 or 2 ]] as editors_upgrade does. bin/bootstrap.sh clone_or_pull: no upstream (or detached) -> info \"pull skipped: <dest> has no upstream branch\"; else plain git pull --ff-only (stderr through), and on failure error \"pull failed in <dest>: git's reason is above\" + exit 1. Tests: one helper pair in test/test_helper.bash (clone_test_origin, assert_upgrade_hook_pulls: updated / no-upstream warns and passes / origin removed fails naming repo and origin, no 'pull skipped'), used by a new test in web.bats and utilz.bats and a new pplr.bats (none existed); one helper rather than three copies of editors.bats' shape, editors.bats untouched. No bootstrap bats (test/ has no clone_or_pull coverage); I ran clone_or_pull by hand in scratch: up to date passes, no upstream skips and continues, origin gone shows git's fatal lines and exits 1. Checked: mutation (the three hooks reverted) fails all three new tests; full suite all passing under /bin/bash 3.2; under bash 5.3 one failure, test/molt.bats 'molt_font_available resolves a family fontconfig actually lists', untouched by this, passing 3/3 on rerun, so flaky under load. shellcheck clean on the four sites; bootstrap.sh's two SC2088 warnings (lines 157/159, ~/bin/molt in quotes) are on main already, left. CHANGELOG Fixed line ending (issue 0037), prettier clean; gate on. Holding after this per your note; 0022 waits on hv.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

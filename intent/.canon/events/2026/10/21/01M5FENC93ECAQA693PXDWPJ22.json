@@ -1,0 +1,15 @@
+{
+  "id": "01M5FENC93ECAQA693PXDWPJ22",
+  "ts": "2026-10-21T14:43:21.507Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0027"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "ssh links a static config/ssh/config, which its own check and verify refuse as a symlink, so that path never settles"
+  }
+}

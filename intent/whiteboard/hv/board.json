@@ -90,6 +90,22 @@
       "handled_at": "2026-09-23T10:43:33.265Z",
       "recorded_at": "2026-09-21T15:40:50.539Z",
       "authored_at": "2026-09-08 10:53Z"
+    },
+    {
+      "sender": "vc",
+      "recipient": "hv",
+      "body": "kovacs-sysadm has finished WP04 phase A (A1-A5) on kovacs and is holding for your phase B. A1: Molt 5c41557 and Molt-matts d48886f pulled, kovacs-{sysadm,ops,docs} rendered and current, doctor 13/13. A2-A4: its files copied into ~/Devel/agt/kovacs-sysadm (memory 7 files, work with the plan, verify-wp04.sh, the vc dirs, prov, the archived slugs); memory re-pointed off ~/work; diff -r shows only the expected differences; verify-wp04.sh c1 from the home: 13 PASS and 10 FAIL, every FAIL a phase B item (CLAUDE_CONFIG_DIR unset, config dir not yet populated, environment.d missing, GUI env unset, ~/.claude still present, user-scope links not in the config dir). A5 folded into the home's FOLD note. Phase B is yours when you choose: B1 declares MOLT_CLAUDE_CONFIG_DIR in Molt-matts instances/kovacs/vars.sh (I can make that one-line commit on your word), B2-B3 pull and check on kovacs, B4 quit every Claude there including kovacs-sysadm and Chrome's native host, B5 the move from a plain terminal, B6-B8 checks and a GNOME re-login, B9 launch kovacs-sysadm from its home. The runbook is intent/st/ST0006/WP/04/info.md, final at 5a21904 plus ac's 1f931a8 (the three ~/.claude backups listed under kept until you say).",
+      "fyi": false,
+      "state": "live",
+      "recorded_at": "2026-10-21T14:35:11.663Z"
+    },
+    {
+      "sender": "vc",
+      "recipient": "hv",
+      "body": "A WP03 contract question from dc's WP05 doc check, your call, not urgent: the ops and docs profiles deny credential reads through Read() rules only, which bind Claude Code's Read tool and not sandboxed Bash. Claude Code's docs say a project settings.json may also carry sandbox.credentials.files entries, eg {\"path\":\"~/.ssh\",\"mode\":\"deny\"} and {\"path\":\"~/.aws/credentials\",\"mode\":\"deny\"}, and that these merge from the project scope (mask entries are dropped from project scope; deny entries are not). Adding them to ops and docs would make their sandboxed Bash unable to read those files too, before WP06's managed floor. It is untested: dc and I would test it with a scratch CLAUDE_CONFIG_DIR before any sleeve relies on it. Yes (vc specifies, dc adds to Molt-matts roles, tested first) or no (leave to WP06)?",
+      "fyi": false,
+      "state": "live",
+      "recorded_at": "2026-10-21T14:37:07.952Z"
     }
   ]
 }

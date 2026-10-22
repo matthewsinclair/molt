@@ -1,0 +1,15 @@
+{
+  "id": "01M5EX4K0S6AA7RDV21E3ZPJS9",
+  "ts": "2026-10-21T09:37:05.561Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ISSUE:0023 (medium; not started, hv quiesced for the move and travel): the first `molt upgrade` after a pull that changes lib/ runs the old library against the new liberators. bin/molt sources lib/ at start, cmd_upgrade re-sources only constants.sh after _upgrade_pull_repos, and liberator_load sources the pulled liberators, so with WP02 merged the first upgrade on every sleeve ends `2 liberator(s) failed` and renders no home; the second run works. Fix in cmd_upgrade's full path: record the framework HEAD before _upgrade_pull_repos; when it changed and the run is not a dry run, say so on one line and re-exec `\"$MOLT_ROOT/bin/molt\" upgrade` with an option that skips the pull (eg --no-pull), carrying the resleeve flags through, so the hooks and the resleeve run on the new code. Re-sourcing lib/*.sh in place is not enough: the old bin/molt does not know which new library files to source. One test: a scratch framework repo whose pull brings a liberator calling a function only the pulled lib/ defines; assert the liberator ran on the new code. Both bashes. Branch issue-0023 from main in a worktree, head to vc. Should land before rhadamanth moves; WP04's runbook works around it meanwhile (A1: `molt upgrade --self`, then `molt upgrade`). Full text: intent issues show 0023."
+  }
+}

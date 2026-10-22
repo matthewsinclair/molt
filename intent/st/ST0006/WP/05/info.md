@@ -2,14 +2,14 @@
 wp_id: WP-05
 title: docs/guides/sleeve-agents.md: naming, roles, layers, the move
 scope: S
-status: WIP
+status: Done
 ---
 
 # WP-05: docs/guides/sleeve-agents.md: naming, roles, layers, the move
 
 ## Objective
 
-_(not yet written)_
+Give the sleeve-agent feature its guide, `docs/guides/sleeve-agents.md`: what a sleeve agent is against a project agent, the `<hostname>-<role>` naming, the sysadm, ops and docs roles, the three layers, declaring an `[[agent]]` and what Molt renders, `molt agent list` and `molt agent config`, starting an agent in its home, moving Claude Code's state out of `$HOME` with its refusals and where the variable is published, the home-launch guard, what `molt doctor` reports, and the fence and the wall; with README and CHANGELOG entries, every quoted output checked against the code.
 
 Owner: molt-dc. Branch `st0006-wp05` in a git worktree; molt-vc reviews and merges.
 

@@ -1,0 +1,15 @@
+{
+  "id": "01M5FET0A6TW1MVZDYBQCSS52V",
+  "ts": "2026-10-21T14:45:53.094Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ISSUE:0026 at bb80d2b (branch issue-0026) with vc for review; after its merge, delete the guide's 'Until issue 0026' sentence on main by pathspec, on vc's word"
+  }
+}

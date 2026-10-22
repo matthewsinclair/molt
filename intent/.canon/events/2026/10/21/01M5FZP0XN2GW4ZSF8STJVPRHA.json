@@ -1,0 +1,15 @@
+{
+  "id": "01M5FZP0XN2GW4ZSF8STJVPRHA",
+  "ts": "2026-10-21T19:40:48.437Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Not building WP06 until vc's ACs for ST0006/06 exist (asked vc 21 Oct)."
+  }
+}

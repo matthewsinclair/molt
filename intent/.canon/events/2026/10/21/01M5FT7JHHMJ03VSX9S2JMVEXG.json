@@ -1,0 +1,15 @@
+{
+  "id": "01M5FT7JHHMJ03VSX9S2JMVEXG",
+  "ts": "2026-10-21T18:05:32.081Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ops/docs sandbox.credentials deny entries (hv's ruling): tested on rhadamanth, Molt-matts agents-creds at 2e13def with vc; after its merge, the guide's Fence and wall paragraph on main by pathspec"
+  }
+}

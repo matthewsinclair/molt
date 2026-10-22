@@ -1,0 +1,15 @@
+{
+  "id": "01M5FVNQBS9BXNSA7PE6YRD1CK",
+  "ts": "2026-10-21T18:30:44.345Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0029"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "molt_render_place backs up its own untouched render on every template change, warning that the file changed since last render"
+  }
+}

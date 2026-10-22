@@ -53,6 +53,45 @@ load "test_helper.bash"
     assert_output_contains "Checking"
 }
 
+@test "molt doctor prints a failing liberator's check lines as the check printed them (issue 0026)" {
+    require_command git
+    local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    cat > "$repo/molt.toml" <<'TOML'
+[[liberator]]
+name = "git"
+enabled = true
+TOML
+    mkdir -p "$BATS_TEST_TMPDIR/home"
+    # git's check fails: nothing in this HOME is linked to the repo's gitconfig.
+    HOME="$BATS_TEST_TMPDIR/home" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
+    assert_output_contains "         not installed: git"
+    assert_output_matches $'(^|\n)         Zen: git: '
+    refute_output_contains "git: Zen:"
+}
+
+@test "molt doctor runs every step for a manifest that declares no user_repo (issue 0028)" {
+    local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
+    MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
+    assert_output_contains "Checking manifest... ✓ $repo/molt.toml"
+    assert_output_contains "[15/15]"
+}
+
+@test "molt doctor reports a manifest it cannot read, and carries on (issue 0028)" {
+    [[ "$(id -u)" != 0 ]] || skip "root reads a mode-000 file"
+    local repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
+    chmod 000 "$repo/molt.toml"
+    MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
+    chmod 600 "$repo/molt.toml"
+    assert_output_contains "Checking manifest... ⚠ $repo/molt.toml"
+    assert_output_contains "could not be read"
+    assert_output_contains "[15/15]"
+}
+
 # --- Unknown command ---
 
 @test "unknown command returns error" {
@@ -101,6 +140,18 @@ load "test_helper.bash"
     HOSTNAME="" PATH="$BATS_TEST_TMPDIR/stub:$PATH" run molt_hostname
     assert_failure
     [ -z "$output" ]
+}
+
+# ST0006
+@test "molt help lists the agent command, and molt agent alone prints its usage and fails" {
+    # AT043 (ST0006 AC006).
+    run_molt help
+    assert_success
+    assert_output_contains "agent list"
+    assert_output_contains "agent config <name>"
+    run_molt agent
+    assert_failure
+    assert_output_contains "Usage: molt agent list"
 }
 
 # --- Foreign home-path detection (doctor check 10) ---
@@ -312,6 +363,146 @@ load "test_helper.bash"
     refute_output_contains "Sleeve ready"
 }
 
+# bin/molt sources lib/ once, before the pull, and liberator_load reads each
+# liberator from disk after it. A pull that brought a liberator calling a new
+# library function failed in that liberator until a second run (issue 0023).
+@test "a full molt upgrade whose pull changes the framework runs the hooks on the pulled code" {
+    local origin="$BATS_TEST_TMPDIR/origin" fw="$BATS_TEST_TMPDIR/fw" cfg="$BATS_TEST_TMPDIR/cfg"
+    local g=(git -c user.name=test -c user.email=test@example.com)
+    mkdir -p "$origin/liberators" "$cfg/Molt-$(whoami)/config"
+    cp -R "$MOLT_ROOT/bin" "$MOLT_ROOT/lib" "$MOLT_ROOT/VERSION" "$origin/"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { echo "zzz on the old code"; }\n' > "$origin/liberators/zzz.sh"
+    "${g[@]}" -C "$origin" init -q
+    "${g[@]}" -C "$origin" add -A
+    "${g[@]}" -C "$origin" commit -qm old
+    git clone -q "$origin" "$fw"
+    printf '\nmolt_pulled_only() { echo "zzz on the pulled lib"; }\n' >> "$origin/lib/molt.sh"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { molt_pulled_only; }\n' > "$origin/liberators/zzz.sh"
+    "${g[@]}" -C "$origin" commit -qam new
+    "${g[@]}" -C "$cfg/Molt-$(whoami)" init -q
+    run env -u MOLT_PRJ_DIR -u MOLT_LIBERATORS_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$cfg" \
+        "$fw/bin/molt" upgrade
+    assert_success
+    assert_output_contains "Framework updated"
+    assert_output_contains "zzz on the pulled lib"
+    refute_output_contains "Upgrade hook failed"
+    assert_output_contains "Running resleeve"
+    assert_output_contains "Sleeve ready"
+    [ "$(git -C "$fw" rev-parse HEAD)" = "$(git -C "$origin" rev-parse HEAD)" ]
+}
+
+# The commit is captured, so a warning printed inside the capture became its
+# value and reached nobody.
+@test "a full molt upgrade that cannot read the framework commit says so and carries on without restarting" {
+    local fw="$BATS_TEST_TMPDIR/fw" cfg="$BATS_TEST_TMPDIR/cfg"
+    mkdir -p "$fw/liberators" "$cfg/Molt-$(whoami)/config"
+    cp -R "$MOLT_ROOT/bin" "$MOLT_ROOT/lib" "$MOLT_ROOT/VERSION" "$fw/"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { echo "zzz upgraded"; }\n' > "$fw/liberators/zzz.sh"
+    git -C "$cfg/Molt-$(whoami)" init -q
+    run env -u MOLT_PRJ_DIR -u MOLT_LIBERATORS_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$cfg" \
+        GIT_CEILING_DIRECTORIES="$BATS_TEST_TMPDIR" "$fw/bin/molt" upgrade --no-resleeve
+    assert_success
+    assert_output_contains "Cannot read the framework commit in $fw; a pull that changes lib/ needs a second molt upgrade."
+    assert_output_contains "zzz upgraded"
+    refute_output_contains "restarting on the new code"
+}
+
+# --- A pull that fails (issue 0015) ---
+
+# A framework clone and a user config clone in the test directory, each
+# pulling from an origin beside it, and one liberator whose upgrade hook says
+# it ran. A pull is made to fail by removing its origin: git's own failure,
+# with no network involved.
+_pull_sleeve() {
+    ORIGIN="$BATS_TEST_TMPDIR/origin" FW="$BATS_TEST_TMPDIR/fw" CFG="$BATS_TEST_TMPDIR/cfg"
+    CFG_ORIGIN="$BATS_TEST_TMPDIR/cfg-origin"
+    USER_REPO="$CFG/Molt-$(whoami)"
+    G=(git -c user.name=test -c user.email=test@example.com)
+    mkdir -p "$ORIGIN/liberators" "$CFG_ORIGIN/config" "$CFG"
+    cp -R "$MOLT_ROOT/bin" "$MOLT_ROOT/lib" "$MOLT_ROOT/VERSION" "$ORIGIN/"
+    printf 'zzz_check() { return 0; }\nzzz_upgrade() { echo "zzz upgraded"; }\n' > "$ORIGIN/liberators/zzz.sh"
+    : > "$CFG_ORIGIN/config/.keep"
+    local r
+    for r in "$ORIGIN" "$CFG_ORIGIN"; do
+        "${G[@]}" -C "$r" init -q
+        "${G[@]}" -C "$r" add -A
+        "${G[@]}" -C "$r" commit -qm init
+    done
+    git clone -q "$ORIGIN" "$FW"
+    git clone -q "$CFG_ORIGIN" "$USER_REPO"
+}
+
+# molt upgrade, run from the framework clone, with $@.
+_pull_upgrade() {
+    run env -u MOLT_PRJ_DIR -u MOLT_LIBERATORS_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$CFG" \
+        "$FW/bin/molt" upgrade "$@"
+}
+
+@test "a repo with no upstream is the one pull molt upgrade skips: it warns, and the run goes on to Sleeve ready" {
+    _pull_sleeve
+    git -C "$USER_REPO" branch -q --unset-upstream
+    _pull_upgrade
+    assert_success
+    assert_output_contains "User config pull skipped: $USER_REPO has no upstream branch"
+    assert_output_contains "zzz upgraded"
+    assert_output_contains "Sleeve ready"
+}
+
+@test "a pull that fails is an error naming the repo and git's reason; the liberators still run, and the upgrade ends non-zero without Sleeve ready" {
+    _pull_sleeve
+    rm -rf "$ORIGIN"
+    _pull_upgrade
+    assert_failure
+    assert_output_contains "Framework pull failed in $FW:"
+    assert_output_contains "$ORIGIN"
+    refute_output_contains "pull skipped"
+    assert_output_contains "Pulling user config repo"
+    assert_output_contains "zzz upgraded"
+    assert_output_contains "Running resleeve"
+    assert_output_contains "Upgrade incomplete: the pull failed for the framework repo ($FW)"
+    refute_output_contains "Sleeve ready"
+
+    _pull_upgrade --self
+    [ "$status" -eq 1 ]
+    assert_output_contains "Framework pull failed in $FW:"
+}
+
+# git rev-parse @{upstream} fails for an upstream that is configured and gone,
+# as for none, but only none is a skip.
+@test "a pull from a configured upstream that is gone fails the upgrade; it is not a repo with no upstream" {
+    _pull_sleeve
+    git -C "$USER_REPO" config "branch.$(git -C "$USER_REPO" branch --show-current).merge" refs/heads/gone
+    _pull_upgrade
+    assert_failure
+    assert_output_contains "User config pull failed in $USER_REPO:"
+    assert_output_contains "gone"
+    refute_output_contains "User config pull skipped"
+    refute_output_contains "Sleeve ready"
+}
+
+# A pull that moved the framework restarts the upgrade in a new process
+# (issue 0023); a pull that failed before it must still fail the run.
+@test "a failed pull is carried through the restart a framework pull makes" {
+    _pull_sleeve
+    echo "# pulled" >> "$ORIGIN/VERSION.note"
+    "${G[@]}" -C "$ORIGIN" add -A
+    "${G[@]}" -C "$ORIGIN" commit -qm new
+    rm -rf "$CFG_ORIGIN"
+    _pull_upgrade
+    assert_failure
+    assert_output_contains "restarting on the new code"
+    assert_output_contains "User config pull failed in $USER_REPO:"
+    assert_output_contains "zzz upgraded"
+    assert_output_contains "Upgrade incomplete: the pull failed for the user config repo ($USER_REPO)"
+    refute_output_contains "Sleeve ready"
+}
+
+@test "molt upgrade refuses --self with --no-pull" {
+    run_molt upgrade --self --no-pull
+    assert_failure
+    assert_output_contains "cannot take --no-pull"
+}
+
 # molt upgrade runs resleeve on the left of `||`, where set -e does not apply,
 # so a failed lookup inside it has to be caught by hand.
 @test "molt resleeve fails, and does not say Sleeve ready, when there are no liberators to run" {
@@ -324,6 +515,76 @@ load "test_helper.bash"
     assert_output_contains "Liberators directory not found"
     assert_output_contains "there are no liberators to run"
     refute_output_contains "Sleeve ready"
+}
+
+# --- Where errors go (issue 0016) ---
+
+@test "molt_error writes to stderr, and warnings and the rest to stdout, so a captured call never takes an error for its value" {
+    load_molt_libs
+    [ "$(molt_error boom 2>/dev/null)" = "" ]
+    [ "$(molt_error boom 2>&1 >/dev/null)" = "Zen [error]: boom" ]
+    [ "$(molt_warn careful 2>/dev/null)" = "Zen [warning]: careful" ]
+    [ "$(molt_info hello 2>/dev/null)" = "Zen: hello" ]
+}
+
+# A sleeve with no user config repo, in this shell.
+_no_user_repo() {
+    unset MOLT_PRJ_DIR
+    export HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+    load_molt_libs
+}
+
+@test "a caller that captures molt_find_user_repo and fails on it no longer swallows what it searched" {
+    _no_user_repo
+    run molt_resleeve false true
+    assert_failure
+    assert_output_contains "Could not find user config repo (Molt-$(whoami))."
+    assert_output_contains "Searched:"
+    assert_output_contains "  $BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    assert_output_contains "Cannot resleeve without a user config repo."
+}
+
+@test "molt_find_user_repo leaves a caller's path as it was" {
+    _no_user_repo
+    local path=keep
+    molt_find_user_repo >/dev/null 2>&1 || true
+    [ "$path" = keep ]
+}
+
+@test "a caller that discards the lookup's stderr reads no repo, not the error's text" {
+    _no_user_repo
+    load_liberator git
+    run git_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: user config repo not found, so no git config link was checked"
+}
+
+@test "a lookup whose caller gives its own reason, where no repo can be a sleeve's normal state, says only that reason" {
+    _no_user_repo
+    run molt_instance_vars_file
+    assert_failure
+    [ "$output" = "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name" ]
+    run molt_agent_role_dir sysadm
+    assert_failure
+    [ "$output" = "" ]
+    run molt_config_stale config/zsh/zshrc "$HOME/.zshrc"
+    assert_success
+    [ "$output" = "Zen [warning]: molt_config_stale: no user repo — cannot tell whether $HOME/.zshrc is stale" ]
+}
+
+@test "molt upgrade and molt maintain name a liberator the manifest enables and the framework does not have" {
+    local libs="$BATS_TEST_TMPDIR/liberators" repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    mkdir -p "$libs" "$repo/config"
+    printf 'bbb_maintain() { echo "bbb maintained"; }\nbbb_upgrade() { echo "bbb upgraded"; }\n' > "$libs/bbb.sh"
+    printf '[[liberator]]\nname = "ghost"\nenabled = true\n\n[[liberator]]\nname = "bbb"\nenabled = true\n' > "$repo/molt.toml"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt maintain
+    assert_output_contains "Liberator not found: ghost"
+    assert_output_contains "bbb maintained"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt upgrade --no-pull
+    assert_output_contains "Liberator not found: ghost"
+    assert_output_contains "bbb upgraded"
 }
 
 @test "molt maintain names a failed maintain hook, runs the rest and exits non-zero" {
@@ -411,6 +672,28 @@ _use_digest_test_repo() {
     [ "$ab" = "$ba" ]
 }
 
+# ST0006. An agent's AGENTS.md names the sleeve's overlay as an extra input
+# whether or not the sleeve has one. Before the fix the digest failed for an
+# absent last extra, so a home with no overlay read stale however often it was
+# rendered.
+@test "molt_config_digest counts an absent extra input as none, and its arrival as a change" {
+    # AT044 (ST0006 AC005).
+    load_molt_libs
+    _use_digest_test_repo
+    local d="$BATS_TEST_TMPDIR/dg3"
+    mkdir -p "$d"
+    printf 'template body\n' > "$d/config.tmpl"
+    local base absent arrived
+    base="$(molt_config_digest "$d/config.tmpl")"
+    run molt_config_digest "$d/config.tmpl" "$d/overlay.md"
+    assert_success
+    absent="$output"
+    [ "$absent" = "$base" ]
+    printf 'host facts\n' > "$d/overlay.md"
+    arrived="$(molt_config_digest "$d/config.tmpl" "$d/overlay.md")"
+    [ "$arrived" != "$base" ]
+}
+
 # ---------------------------------------------------------------------------
 # molt_font_available -- the config names a font; does the machine have it?
 # ---------------------------------------------------------------------------
@@ -468,4 +751,135 @@ _use_digest_test_repo() {
     mkdir -p "$empty"
     PATH="$empty" run molt_font_available "Hack Nerd Font Mono"
     [ "$status" -eq 2 ]
+}
+
+# --- The managed floor (ST0006 WP06) ---
+
+# A sleeve in the test directory, in this shell: a user repo with a sysadm
+# role and its floor, a managed dir of the test's own, and a fake sudo that
+# runs what it is given unless FAKE_SUDO_STATUS says otherwise.
+_floor_sleeve() {
+    load_molt_libs
+    source "$MOLT_ROOT/liberators/agents.sh"
+    export HOME="$BATS_TEST_TMPDIR/home" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
+    REPO="$BATS_TEST_TMPDIR/repo"
+    INSTANCE="$REPO/instances/$(test_hostname)"
+    mkdir -p "$HOME" "$REPO/config/agents/roles/sysadm" "$INSTANCE"
+    eval "molt_find_user_repo() { echo \"$REPO\"; }"
+    eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
+    FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
+    printf '{"permissions": {"deny": ["Read(~/.ssh/id_*)", "Read(~/.aws/credentials)"]}}\n' \
+        > "$REPO/config/agents/roles/sysadm/floor.json"
+    printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "sysadm"\n' > "$INSTANCE/molt.toml"
+    printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" > "$INSTANCE/vars.sh"
+    install_fake_apparmor
+}
+
+@test "doctor check 14 warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent or no declared config dir carrying molt's, and passes otherwise" {
+    # AT072 (ST0006 AC019).
+    _floor_sleeve
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "         $FLOOR is missing"
+    _agents_floor >/dev/null
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ✓ in place: $FLOOR"
+    echo '{"permissions": {"deny": []}}' > "$FLOOR"
+    run cmd_doctor
+    assert_output_contains "         $FLOOR is not $REPO/config/agents/roles/sysadm/floor.json"
+
+    : > "$INSTANCE/vars.sh"
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
+    echo 'if then' > "$INSTANCE/vars.sh"
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "         MOLT_CLAUDE_CONFIG_DIR could not be read: $INSTANCE/vars.sh does not parse"
+    printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" > "$INSTANCE/vars.sh"
+
+    printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
+    rm -f "$FLOOR.molt-rendered"
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ✓ none needed; $FLOOR is not molt's, and is left"
+    rm -f "$FLOOR"
+    run cmd_doctor
+    assert_output_contains "[14/15] Checking managed floor... ✓ none needed, and none of molt's here"
+}
+
+@test "doctor check 15 warns on a Linux ops sleeve whose sandbox profile is not molt's, or not taking, and on one that takes none carrying molt's, and passes otherwise" {
+    _floor_sleeve
+    mkdir -p "$REPO/config/agents/roles/ops"
+    printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "ops"\n' > "$INSTANCE/molt.toml"
+    eval 'molt_platform() { echo linux; }'
+    local profile="$BATS_TEST_TMPDIR/apparmor.d/bwrap-userns-restrict"
+    echo "the distro's profile" > "$profile"
+    run cmd_doctor
+    assert_output_contains "[15/15] Checking sandbox profile... ⚠"
+    assert_output_contains "         $profile is not molt's, so bwrap's children are denied the sys_admin Claude Code's sandbox needs"
+    _agents_sandbox >/dev/null
+    run cmd_doctor
+    assert_output_contains "[15/15] Checking sandbox profile... ✓ in place: $profile"
+    FAKE_BWRAP_STATUS=1 run cmd_doctor
+    assert_output_contains "[15/15] Checking sandbox profile... ⚠"
+    assert_output_contains "         $profile is molt's, but bwrap's children still cannot make the sandbox's user namespace"
+
+    printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
+    run cmd_doctor
+    assert_output_contains "[15/15] Checking sandbox profile... ⚠"
+    assert_output_contains "         $profile is molt's, and this sleeve takes no sandbox profile: it enables no ops or docs agent, or is not Linux"
+    _agents_sandbox >/dev/null
+    run cmd_doctor
+    assert_output_contains "[15/15] Checking sandbox profile... ✓ none needed; $profile is not molt's, and is left"
+    rm -f "$profile"
+    run cmd_doctor
+    assert_output_contains "[15/15] Checking sandbox profile... ✓ none needed, and none of molt's here"
+}
+
+@test "the sudo helpers install a user copy, not the file named, refuse with sudo absent or refusing, and write nothing unprivileged" {
+    # AT073 (ST0006 AC019).
+    _floor_sleeve
+    local src="$REPO/config/agents/roles/sysadm/floor.json"
+    mkdir -p "$(dirname "$FLOOR")"
+
+    FAKE_SUDO_STATUS=1 run molt_sudo_install "$src" "$FLOOR"
+    assert_failure
+    assert_output_contains "sudo could not install $FLOOR"
+    [ ! -e "$FLOOR" ]
+
+    PATH="$BATS_TEST_TMPDIR/nosudo" run molt_sudo_install "$src" "$FLOOR"
+    assert_failure
+    assert_output_contains "sudo is not installed, so $FLOOR was not written"
+    [ ! -e "$FLOOR" ]
+
+    rm -f "$BATS_TEST_TMPDIR/sudo.log"
+    run molt_sudo_install "$src" "$FLOOR"
+    assert_success
+    cmp "$src" "$FLOOR"
+    [ "$(test_file_mode "$FLOOR")" = 644 ]
+    grep -q "^sudo install -m 644 " "$BATS_TEST_TMPDIR/sudo.log"
+    run grep -qF "install -m 644 $src " "$BATS_TEST_TMPDIR/sudo.log"
+    assert_failure
+    # The directory, there already, keeps its mode; a missing one is made.
+    run grep -q "install -d" "$BATS_TEST_TMPDIR/sudo.log"
+    assert_failure
+    rm -rf "$(dirname "$FLOOR")"
+    run molt_sudo_install "$src" "$FLOOR"
+    assert_success
+    grep -qF "sudo install -d -m 755 $(dirname "$FLOOR")" "$BATS_TEST_TMPDIR/sudo.log"
+    cmp "$src" "$FLOOR"
+
+    FAKE_SUDO_STATUS=1 run molt_sudo_remove "$FLOOR"
+    assert_failure
+    [ -e "$FLOOR" ]
+    PATH="$BATS_TEST_TMPDIR/nosudo" run molt_sudo_remove "$FLOOR"
+    assert_failure
+    assert_output_contains "sudo is not installed"
+    [ -e "$FLOOR" ]
+    run molt_sudo_remove "$FLOOR"
+    assert_success
+    [ ! -e "$FLOOR" ]
 }

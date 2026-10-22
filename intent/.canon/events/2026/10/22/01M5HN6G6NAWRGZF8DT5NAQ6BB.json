@@ -1,0 +1,16 @@
+{
+  "id": "01M5HN6G6NAWRGZF8DT5NAQ6BB",
+  "ts": "2026-10-22T11:16:02.901Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 12,
+    "text": "ISSUE:0032 guide: DRAFT on Molt branch issue-0032-guide at ad94722 (worktree Molt-wt/issue-0032-guide), '### The sandbox on Ubuntu' under Fence and wall. Route settled: the conffile copy (vc, 22 Oct; local include failed on kovacs). Placeholders: check 15, config line, fault rows, sidecar, Ubuntu version wait on cc's issue-0032 head; <BWRAP-RESULT> waits on hv's molt upgrade on kovacs, then hv runs ~/kovacs-creds.sh A and B"
+  }
+}

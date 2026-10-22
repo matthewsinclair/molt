@@ -1,0 +1,16 @@
+{
+  "id": "01M5EX474FM5CG9APRWWSA228K",
+  "ts": "2026-10-21T09:36:53.391Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP02 at st0006-wp02 b897a23, rebased onto main c815d23, committed and clean; all tests pass under both bashes. It carries the build, critic-shell's first review answered, AC014 (the guard refuses a launch in the agents root or below a home, the root baked from a quoted here-document, the drift row), one root validator molt_agt_dir_fault, AC016's preamble layer (molt_render_text), and the guard comparing the disk's spelling (/bin/pwd -P). On main: AT053-AT058 green (1f390c4), AT059-AT061 to-write until the merge. critic-shell's last pass is todo 3, vc's rulings todo 4, the design for the fixes todo 5; no fix is in code yet."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M5G113AHQ8KXQ0QE8WJH23GE",
+  "ts": "2026-10-21T20:04:19.921Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "WP06 merge order (vc): cc's st0006-wp06 head -> scratch merge, both bashes, shellcheck, mutation, replay, CI -> dc finishes wp06-guide (1efde2c; sidecar name, doctor 14 lines) and it lands on main -> Molt-matts st0006-wp06 (1421034: roles/sysadm/floor.json, role text) merges -> kovacs molt upgrade with hv at the sudo prompt -> kovacs-sysadm's molt agent config and doctor for AC020 (AT074) -> AT068-AT075 red/green, wp done ST0006/06."
+  }
+}

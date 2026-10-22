@@ -1,0 +1,16 @@
+{
+  "id": "01M5FTAEE3CAPCGGXS0ZQSG4TH",
+  "ts": "2026-10-21T18:07:06.179Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 15,
+    "text": "ops/docs sandbox.credentials.files denies: merged to Molt-matts main 45e344c (dc's agents-creds; hv's Seatbelt test 21 Oct). Next: dc corrects the guide's fence-and-wall paragraph on Molt main (Read() denies also refuse a cat naming the path; sandbox hides ~/.ssh whole; bubblewrap run owed). Owed by hv: the same harness on kovacs after B9; then the next molt upgrade on kovacs and rhadamanth re-renders ops and docs homes (stale until then)."
+  }
+}

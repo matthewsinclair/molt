@@ -77,15 +77,16 @@ _tiling_install_schema() {
     molt_error "tiling: Tactile's own schema does not compile, so it was not installed: $ours"
     return 1
   fi
-  if ! sudo cp "$ours" "$TACTILE_SYSTEM_SCHEMA_DIR/"; then
-    molt_error "tiling: could not install Tactile's gsettings schema into $TACTILE_SYSTEM_SCHEMA_DIR"
+  local why
+  if ! why="$(molt_sudo_install "$ours" "$installed")"; then
+    molt_error "tiling: could not install Tactile's gsettings schema into $TACTILE_SYSTEM_SCHEMA_DIR: $why"
     return 1
   fi
   if ! sudo glib-compile-schemas "$TACTILE_SYSTEM_SCHEMA_DIR/"; then
-    if sudo rm -f "$installed"; then
+    if why="$(molt_sudo_remove "$installed")"; then
       molt_error "tiling: could not compile the schemas in $TACTILE_SYSTEM_SCHEMA_DIR, so Tactile's copy was taken back out"
     else
-      molt_error "tiling: could not compile the schemas in $TACTILE_SYSTEM_SCHEMA_DIR, nor take Tactile's copy back out. Remove $installed by hand, or the next check passes over a stale database"
+      molt_error "tiling: could not compile the schemas in $TACTILE_SYSTEM_SCHEMA_DIR, nor take Tactile's copy back out ($why). Remove $installed by hand, or the next check passes over a stale database"
     fi
     return 1
   fi

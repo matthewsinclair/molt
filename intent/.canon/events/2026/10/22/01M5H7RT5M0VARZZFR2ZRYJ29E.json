@@ -1,0 +1,14 @@
+{
+  "id": "01M5H7RT5M0VARZZFR2ZRYJ29E",
+  "ts": "2026-10-22T07:21:22.868Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0006/AC020"
+  },
+  "payload": {
+    "evidence": "kovacs, 22 Oct 2026, after hv's molt upgrade from a plain terminal (Molt 842a080, Molt-matts 5220ca8): kovacs-sysadm ran, read-only, molt agent config kovacs-sysadm, which lists /etc/claude-code/managed-settings.d/molt-sysadm.json in the managed layer with Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the same two from the home's fence; and molt doctor, 14/14 passing with check 14 'Checking managed floor... in place: /etc/claude-code/managed-settings.d/molt-sysadm.json'; ls shows molt-sysadm.json and its .molt-rendered sidecar root:root 644. Output relayed verbatim to vc's session"
+  }
+}

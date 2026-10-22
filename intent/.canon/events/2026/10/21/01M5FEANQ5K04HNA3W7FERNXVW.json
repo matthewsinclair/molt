@@ -1,0 +1,15 @@
+{
+  "id": "01M5FEANQ5K04HNA3W7FERNXVW",
+  "ts": "2026-10-21T14:37:30.725Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0026"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "molt doctor prefixes a failing liberator's check lines with its name though they already carry molt's own `Zen: <lib>:` prefix"
+  }
+}

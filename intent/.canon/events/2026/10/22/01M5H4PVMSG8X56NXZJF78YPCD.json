@@ -1,0 +1,16 @@
+{
+  "id": "01M5H4PVMSG8X56NXZJF78YPCD",
+  "ts": "2026-10-22T06:27:53.113Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 11,
+    "text": "ST0006/06: AC021 guide merged (main 02f51a2), Molt-matts st0006-wp06 9b36722 merged, both worktrees removed. Next: AT075's joint text check with vc once kovacs-sysadm's run gives AC020's evidence"
+  }
+}

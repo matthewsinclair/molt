@@ -161,3 +161,10 @@ _utilz_checkout() {
     assert_failure
     assert_output_contains "brew trust --json=v1 failed, so whether brew upgrade includes matthewsinclair/utilz/utilz is unknown"
 }
+
+@test "checkout: utilz_upgrade reports Utilz updated, warns when it has no upstream, and fails, naming the repo and git's reason, when its pull fails" {
+    _utilz_sleeve
+    clone_test_origin "$UTILZ_HOME" bin/utilz
+    assert_upgrade_hook_pulls utilz_upgrade Utilz "$UTILZ_HOME"
+    [ ! -e "$FAKE_LOG" ]
+}

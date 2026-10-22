@@ -1,0 +1,15 @@
+{
+  "id": "01M5H5WKQ7BSTHGSQ1B2K4SKSF",
+  "ts": "2026-10-22T06:48:30.183Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issue 0034 handed to vc at issue-0034 9eae8ff (worktree ~/Devel/prj/Molt-wt/issue-0034): clone, build, systemctl enable/start, keyd reload each named and stopping; waiting on vc's merge, then remove the worktree and branch."
+  }
+}

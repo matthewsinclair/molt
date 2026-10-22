@@ -5,12 +5,11 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "3cbe9031-145f-4360-ab33-cdb83ac851d9",
-    "heartbeat_at": "2026-10-21T07:56:59.726Z",
+    "heartbeat_at": "2026-10-22T16:03:23.441Z",
     "status": "active",
-    "focus": "21 Oct: 0019-0021 merged; WP05 at e4f857d and WP03 items 1-3 at Molt-matts 769c2e6 wait for WP02; issue 0022 drafted for hv's word",
+    "focus": "22 Oct: v0.2.0 tagged (f1f27bb); 0036 and 0037 merged; idle, 0022 held",
     "claims": [
-      "ST0006/05",
-      "ST0006/03"
+      "ISSUE:0022"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -41,7 +40,8 @@
       "kind": "todo",
       "seq": 1,
       "text": "ST0006/03 with vc: items 4 and 5 on Molt-matts main (eb8a9fc, 660a118); items 1-3 on Molt-matts st0006-wp03 at 769c2e6 (the AC016 preamble split in), checked against st0006-wp02 86cb827. Re-render against the merged WP02, with AC016, before the head goes back to vc; they merge after WP02 lands. vc pushes Molt-matts.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T08:46:38.873Z",
       "recorded_at": "2026-10-21T07:15:06.218Z",
       "edited_at": "2026-10-21T07:56:59.653Z"
     },
@@ -78,9 +78,175 @@
       "kind": "todo",
       "seq": 3,
       "text": "ISSUE:0022 (Molt's tracked .claude/settings.local.json), after 0021: draft from its body. It changes this project's Claude Code permission settings, so apply nothing until hv says so in this session, not relayed.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T08:46:38.900Z",
       "recorded_at": "2026-10-21T07:53:13.462Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 2,
+      "text": "ST0006/05: rebase st0006-wp05 (e4f857d) onto main, check the agents, AC014 and AC016 passages against the merged code with the scratchpad checklist, then the head to vc. Released when WP02 is merged to main.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:25:31.613Z",
+      "recorded_at": "2026-10-21T08:46:38.925Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 3,
+      "text": "ST0006/03 items 1-3: Molt-matts st0006-wp03 (769c2e6, preamble split in) re-rendered with the merged WP02 as rhadamanth and kovacs (scratch HOME and MOLT_AGT_DIR), then the head to vc; items 4 and 5 are on Molt-matts main and pushed. Released when WP02, with AC016, is merged to main.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:25:31.642Z",
+      "recorded_at": "2026-10-21T08:46:38.953Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 4,
+      "text": "ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.",
+      "state": "live",
+      "recorded_at": "2026-10-21T08:46:38.980Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 4,
+      "text": "ISSUE:0023 (medium; not started, hv quiesced for the move and travel): the first `molt upgrade` after a pull that changes lib/ runs the old library against the new liberators. bin/molt sources lib/ at start, cmd_upgrade re-sources only constants.sh after _upgrade_pull_repos, and liberator_load sources the pulled liberators, so with WP02 merged the first upgrade on every sleeve ends `2 liberator(s) failed` and renders no home; the second run works. Fix in cmd_upgrade's full path: record the framework HEAD before _upgrade_pull_repos; when it changed and the run is not a dry run, say so on one line and re-exec `\"$MOLT_ROOT/bin/molt\" upgrade` with an option that skips the pull (eg --no-pull), carrying the resleeve flags through, so the hooks and the resleeve run on the new code. Re-sourcing lib/*.sh in place is not enough: the old bin/molt does not know which new library files to source. One test: a scratch framework repo whose pull brings a liberator calling a function only the pulled lib/ defines; assert the liberator ran on the new code. Both bashes. Branch issue-0023 from main in a worktree, head to vc. Should land before rhadamanth moves; WP04's runbook works around it meanwhile (A1: `molt upgrade --self`, then `molt upgrade`). Full text: intent issues show 0023.",
+      "state": "archived",
+      "archived_at": "2026-10-21T13:36:02.004Z",
+      "recorded_at": "2026-10-21T09:37:05.561Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 4,
+      "text": "ST0006/05 at 8d7921e and ST0006/03 items 1-3 at Molt-matts 4670ea9, both checked against merged WP02 (bea7420), with vc for review",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:34:59.330Z",
+      "recorded_at": "2026-10-21T14:25:31.671Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 5,
+      "text": "ST0006/05 at 43ce34e (vc's four findings fixed) with vc; rebase held for vc's quote check. WP03 items 1-3 merged to Molt-matts main at d48886f",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:45:53.033Z",
+      "recorded_at": "2026-10-21T14:34:59.362Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 6,
+      "text": "ISSUE:0026 at bb80d2b (branch issue-0026) with vc for review; after its merge, delete the guide's 'Until issue 0026' sentence on main by pathspec, on vc's word",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:58:54.303Z",
+      "recorded_at": "2026-10-21T14:45:53.094Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 7,
+      "text": "ISSUE:0028 at 0d552df (branch issue-0028) with vc for review",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:09:57.842Z",
+      "recorded_at": "2026-10-21T14:58:54.402Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 8,
+      "text": "ops/docs sandbox.credentials deny entries (hv's ruling): tested on rhadamanth, Molt-matts agents-creds at 2e13def with vc; after its merge, the guide's Fence and wall paragraph on main by pathspec",
+      "state": "archived",
+      "archived_at": "2026-10-21T18:08:10.615Z",
+      "recorded_at": "2026-10-21T18:05:32.081Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 9,
+      "text": "ISSUE:0030 home guard refuses a launch that missed CLAUDE_CONFIG_DIR: worktree issue-0030 off 9fe9bc2",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:19:58.086Z",
+      "recorded_at": "2026-10-21T18:36:02.114Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 5,
+      "text": "ISSUE:0031 Molt-matts npm-liberator (9465369, worktree ~/Devel/cfg/Molt-matts-wt/npm-liberator) and guide d377d81 on main wait on vc's merge order: cc's issue-0031 into Molt with CI green first. Released when vc has merged npm-liberator; then remove that worktree and branch.",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:46:16.430Z",
+      "recorded_at": "2026-10-21T19:21:57.617Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 10,
+      "text": "ST0006/06 AC021 for vc: Managed floor section in docs/guides/sleeve-agents.md (on main, commit held until cc's st0006-wp06 head so the wording matches the code); Molt-matts branch st0006-wp06 off 423b800 with roles/sysadm/floor.json (shape from cc) and the role's credential sentence",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:59:35.153Z",
+      "recorded_at": "2026-10-21T19:49:40.273Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 6,
+      "text": "ST0006/06 guide commit: Managed floor section drafted (scratchpad managed-floor-draft.md), held so its sidecar name, agent config output and doctor check 14 lines match cc's code. Released when cc's st0006-wp06 head carries the floor code; Molt-matts part done at 1421034",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:59:35.187Z",
+      "recorded_at": "2026-10-21T19:50:49.214Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 11,
+      "text": "ST0006/06: AC021 guide merged (main 02f51a2), Molt-matts st0006-wp06 9b36722 merged, both worktrees removed. Next: AT075's joint text check with vc once kovacs-sysadm's run gives AC020's evidence",
+      "state": "archived",
+      "archived_at": "2026-10-22T07:22:03.380Z",
+      "recorded_at": "2026-10-21T19:59:35.219Z",
+      "edited_at": "2026-10-22T06:27:53.113Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 12,
+      "text": "ISSUE:0032 guide complete on Molt branch issue-0032-guide at 8d45c1a (worktree Molt-wt/issue-0032-guide): kovacs result as shown (sandbox started; id_* and credentials refused by the floor first; ~/.ssh/config the sandbox's own row). Harness: kovacs-creds.sh already probes ~/.ssh/config (prompt 3), asked vc whether a rerun or a Molt-matts copy is still wanted. Waits on vc to land",
+      "state": "archived",
+      "archived_at": "2026-10-22T12:38:52.721Z",
+      "recorded_at": "2026-10-22T10:54:39.482Z",
+      "edited_at": "2026-10-22T12:36:53.943Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 13,
+      "text": "ISSUE:0018 drop depends (hv ruled): Molt issue-0018 c030930 (Molt-wt/issue-0018), Molt-matts issue-0018 7d4374b (Molt-matts-wt/issue-0018); grep clean bar unrelated words; with vc to merge (Molt-matts first)",
+      "state": "archived",
+      "archived_at": "2026-10-22T13:25:26.257Z",
+      "recorded_at": "2026-10-22T13:17:23.608Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 14,
+      "text": "ISSUE:0032 guide B2 paragraph on Molt issue-0032-guide-b2 8e2aff3 (Molt-wt/issue-0032-guide-b2), complete; with vc to land",
+      "state": "archived",
+      "archived_at": "2026-10-22T13:25:26.289Z",
+      "recorded_at": "2026-10-22T13:17:23.639Z",
+      "edited_at": "2026-10-22T13:17:43.672Z"
     }
   ],
-  "messages": []
+  "messages": [
+    {
+      "sender": "cc",
+      "recipient": "dc",
+      "body": "cc: WP06 Molt head for your guide is st0006-wp06 1720f99 (vc merges). Sidecar: <managed>/managed-settings.d/molt-sysadm.json.molt-rendered, root 644, written first; lines 'rendered <date> from <floor.json>', 'digest <sha256>', 'output <sha256>'. Scope: the sleeve's molt.toml enables a sysadm agent AND its vars.sh declares MOLT_CLAUDE_CONFIG_DIR. Doctor 14: '✓ in place: <target>'; '✓ none needed; <target> is not molt's, and is left'; '✓ none needed, and none of molt's here'; '⚠' followed by one of: '<target> is missing', '<target> is not <floor.json>', '<target> was not written by molt, which leaves it', '<target> is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR', '<target> could not be compared with <floor.json>', 'MOLT_CLAUDE_CONFIG_DIR could not be read: ...'. Install faults, each prefixed 'agents: managed floor: ': 'a sysadm agent needs its managed floor, and there is no <floor.json>, so nothing was written'; '<floor.json> is not one object holding only permissions.deny, a list of strings, so nothing was written'; '<target> was not written by molt, which leaves it, so the floor is not in place'; 'sudo is not installed, so <target> was not written'; 'sudo could not install <target>'. On success: 'Rendered: <floor.json> -> <target>'; on removal: 'Removed the managed floor: <target>'. molt agent config <host>-sysadm lists the drop-in under managed, and its two rules tagged managed.",
+      "fyi": false,
+      "state": "handled",
+      "handled_at": "2026-10-22T06:19:16.276Z",
+      "recorded_at": "2026-10-22T06:16:54.100Z"
+    }
+  ]
 }

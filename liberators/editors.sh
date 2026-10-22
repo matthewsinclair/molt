@@ -305,15 +305,13 @@ _editors_doom_sync() {
 }
 
 editors_upgrade() {
-  # Pull Doom Emacs config repo (reuse editors_repo for discovery)
-  local doom_repo
+  # Pull Doom Emacs config repo (reuse editors_repo for discovery). A pull that
+  # fails still syncs the config on disk, then fails the hook (issue 0015).
+  local doom_repo pulled=0
   if doom_repo="$(editors_repo)"; then
     molt_info "Pulling Doom config repo..."
-    if git -C "$doom_repo" pull --ff-only 2>/dev/null; then
-      molt_info "Doom config updated."
-    else
-      molt_warn "Doom config pull skipped (not on tracking branch or already up-to-date)."
-    fi
+    molt_git_pull "$doom_repo" "Doom config" || pulled=$?
+    [[ $pulled -ne 0 ]] || molt_info "Doom config updated."
   else
     molt_debug "No Doom config repo found — skipping"
   fi
@@ -323,6 +321,8 @@ editors_upgrade() {
     molt_error "editors: doom sync failed -- review Doom's output above"
     return 1
   fi
+  # Updated, or skipped for want of an upstream; anything else failed.
+  [[ $pulled -eq 0 || $pulled -eq 2 ]]
 }
 
 editors_maintain() {

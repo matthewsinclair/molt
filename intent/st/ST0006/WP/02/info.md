@@ -2,14 +2,14 @@
 wp_id: WP-02
 title: [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config
 scope: S
-status: Not Started
+status: Done
 ---
 
 # WP-02: [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config
 
 ## Objective
 
-_(not yet written)_
+Declare sleeve agents as `[[agent]]` tables in the sleeve's manifest, resolve one agents root (`MOLT_AGT_DIR`) through one validator, render each enabled agent's home (`AGENTS.md` from preamble, role and host overlay; `CLAUDE.md`; `.claude/settings.json`; `memory/`; `work/`) from the user repo's role, report and inspect them with `molt agent list` and `molt agent config`, and have the home-launch guard refuse a launch anywhere under the root that is not an agent home.
 
 
 Owner: molt-cc. Branch `st0006-wp02` in a git worktree, on top of WP01; molt-vc reviews and merges.

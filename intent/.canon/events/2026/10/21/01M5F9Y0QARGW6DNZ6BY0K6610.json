@@ -1,0 +1,16 @@
+{
+  "id": "01M5F9Y0QARGW6DNZ6BY0K6610",
+  "ts": "2026-10-21T13:20:41.706Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 2,
+    "text": "ST0006 WP04: runbook revised per vc's review at a943773 (on a1fe844, 41a096e), with vc for review; hv's two C3 questions open"
+  }
+}

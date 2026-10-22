@@ -1,0 +1,15 @@
+{
+  "id": "01M5G0TBJG7BQVCAP4MY07K90F",
+  "ts": "2026-10-21T20:00:38.992Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0032"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "Claude Code's sandbox cannot start on Ubuntu: bwrap-userns-restrict denies CAP_SYS_ADMIN to bwrap's children, so ops and docs fail closed on kovacs"
+  }
+}

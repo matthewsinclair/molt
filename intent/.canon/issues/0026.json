@@ -1,0 +1,12 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 26,
+  "slug": "molt-doctor-prefixes-a-failing-liberator-s-check",
+  "title": "molt doctor prefixes a failing liberator's check lines with its name though they already carry molt's own `Zen: <lib>:` prefix",
+  "status": "closed",
+  "severity": "low",
+  "created": "2026-10-21",
+  "closed": "2026-10-21",
+  "reporter": "Matthew Sinclair",
+  "body": "## What happens\n\n`molt doctor`'s enabled-liberators step prints `not installed: <libs>` and then, under it, the first three lines of each failing liberator's check output, each prefixed with the liberator's name. Those lines already carry molt's own prefix and the liberator's name, because the checks print through `molt_info`, `molt_warn` and `molt_error`, so each line reads `claude: Zen: claude: <report>`, or `agents: Zen: agents: <name>: <file> is missing`. The name appears twice and molt's `Zen` marker sits in the middle of the line.\n\n## Repro (main at 929487d)\n\nOn any sleeve whose enabled liberator's check fails, eg before `molt upgrade` has rendered the agent homes:\n\n```\nmolt doctor\n...\n[6/13] Enabled liberators... 15/16 installed\n         not installed: agents\n         agents: Zen: agents: kovacs-sysadm: ~/Devel/agt/kovacs-sysadm/AGENTS.md is missing\n         agents: Zen: agents: kovacs-sysadm: ~/Devel/agt/kovacs-sysadm/CLAUDE.md is missing\n         agents: Zen: agents: kovacs-sysadm: ~/Devel/agt/kovacs-sysadm/.claude/settings.json is missing\n```\n\n`docs/guides/sleeve-agents.md` (ST0006 WP05) describes the line as it prints today and cites this issue.\n\n## Cause\n\n`lib/molt.sh`, the loop at about line 1396 in `cmd_doctor`: `not_installed_why=\"${not_installed_why}         ${lib}: ${line}\"` for each of `head -3` of the captured `liberator_load` plus `liberator_check` output. The capture holds molt's prefixed lines, and the liberator's name is added again.\n\n## Fix\n\nPrint each captured line indented as it is: molt's prefix already names the liberator, and a line without it (a `liberator_load` failure, or a bare `echo` in a check) still names its liberator through the `not installed:` line above. Keep the three-line cut. One test in `test/molt.bats` pinning the shape of a failing liberator's lines under doctor. Severity low: the information is all there, read twice.\n"
+}

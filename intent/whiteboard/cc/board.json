@@ -5,13 +5,10 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-21T08:19:23.021Z",
+    "heartbeat_at": "2026-10-22T16:03:16.743Z",
     "status": "active",
-    "focus": "ST0006: WP01 merged (c815d23); WP02 at b897a23 with AC014 and AC016, suite and critic-shell running, then the head to vc; WP06 after",
-    "claims": [
-      "ST0006/01",
-      "ST0006/02"
-    ],
+    "focus": "22 Oct: idle after v0.2.0; 0015 and 0035 merged and closed, worktrees removed; nothing queued",
+    "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
@@ -21,18 +18,20 @@
       "kind": "doing",
       "seq": 1,
       "text": "ST0006 WP01 merged into main: 28062ea and fb5bf7d at 695e961, the second follow-up 4cfe31a at c815d23 (critic-shell's second pass answered). Done on my side.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-21T08:46:24.059Z",
       "recorded_at": "2026-10-21T04:54:10.680Z",
-      "edited_at": "2026-10-21T08:19:22.814Z"
+      "edited_at": "2026-10-22T04:46:37.152Z"
     },
     {
       "node": "cc",
       "kind": "doing",
       "seq": 2,
-      "text": "ST0006 WP02 at st0006-wp02 b897a23 on main c815d23: build, review fixes, AC014 (guard under MOLT_AGT_DIR), one root validator (molt_agt_dir_fault, no $HOME/Devel/agt guess), AC016 preamble layer (molt_render_text), guard compares the disk's spelling. AT053-AT058 red on main, AT059-AT061 to-write (897b46f). Suite under both bashes and critic-shell on 6caffe8+b897a23 running; then the head to vc.",
-      "state": "live",
+      "text": "ST0006 WP02 at st0006-wp02 8bd28c2 on main c815d23, committed and clean, with vc for review; all tests pass under both bashes. 8bd28c2 answers critic-shell's review of 6caffe8+b897a23 (W1-W4 and its recommendations, per vc's rulings in todo 4) and the critic's two follow-up passes. AT053-AT058 green on main; AT059-AT067 to-write until the merge (AT062-AT067 created at 75a3a19). After the merge: AT028-AT040, AT047, AT059-AT067 green on main, and AT055, AT057 re-noted.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:22:33.045Z",
       "recorded_at": "2026-10-21T05:53:24.815Z",
-      "edited_at": "2026-10-21T08:19:22.950Z"
+      "edited_at": "2026-10-21T14:00:53.248Z"
     },
     {
       "node": "cc",
@@ -67,6 +66,255 @@
       "state": "archived",
       "archived_at": "2026-10-21T06:41:15.575Z",
       "recorded_at": "2026-10-21T06:12:26.909Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 3,
+      "text": "ST0006 WP02 critic-shell findings on 6caffe8+b897a23 (0 critical, 4 W, 8 R, 1 S), to fix on st0006-wp02 after the compact, then the head to vc. W1: molt_agt_dir_fault compares spellings while the guard compares directories on disk (real_dir), so a root reaching HOME or a parent of MOLT_PRJ_DIR/MOLT_CFG_DIR by a symlink or another letter case passes and the guard then refuses every project: test containment with (cd && /bin/pwd -P) in one helper shared with the guard's logic, or refuse an existing root whose disk spelling differs. W2: the vars.sh check misses MOLT_AGT_DIR=x (plain), +=, and unset, because MOLT_AGT_DIR is already exported in molt's shell and molt_instance_var unsets then counts exports only; compare in a subshell with MOLT_AGT_DIR exported as resolved (unset reads as a difference), or restore it after sourcing in molt_render_text; add the cases to AT059 and AT057. W3: AGENTS.md is built in two places, so molt_render compares the bare role layer with the full file and backs it up on every re-render once a preamble or overlay exists; compose the layers before molt_render's compare/backup/move (also fixes the @@MOLT:BEGIN@@ duplicate-preamble rec and the half-written AGENTS.md on a failed prepend). W4: constants.bats:124 [[ -z ]] is inert under bash 3.2 errexit (not last); use [ ]. Recs: red controls for hostname-first, molt_agent_named status 2, the listing statuses, the line-break refusal, MOLT_CFG_DIR in the loop, the vars.sh-unreadable branch, the >/dev/null, and above all || exit after molt_render (unreadable role template plus a preamble installs PRE|PRE|contract|OVL|OVL); one shared absolute/canonical check with claude.sh's _claude_path_fault, and the repeated 'vars.sh cannot be found' message; refuse a root at or under ~/.claude or the declared config dir; rename one of the two 'preamble's; claude asks the validator even with no agents (blocks the move on a sleeve without MOLT_PRJ_DIR): ask vc whether intended; AT055's letter-case block into its own skipping test; per-test scratch MOLT_AGT_DIR. Style: say when the root came from MOLT_PRJ_DIR; test / before the canonical patterns.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:00:53.336Z",
+      "recorded_at": "2026-10-21T08:47:35.565Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 4,
+      "text": "vc's rulings on cc todo 3 (WP02 critic findings), 21 Oct: (a) claude keeps asking molt_agt_dir_fault unconditionally (a Molt sleeve always has MOLT_PRJ_DIR); the empty-root refusal reads exactly 'MOLT_AGT_DIR cannot be resolved: MOLT_PRJ_DIR is unset'. (b) W1: the validator resolves real paths the same way the guard does (/bin/pwd -P, builtin fallback) so the two never disagree. (c) W3: assemble the three AGENTS.md layers first and give molt_render the whole, so its compare is against what is on disk. W2 and W4 as described in todo 3. All on st0006-wp02 after the compact; b897a23 stays the head until then.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:00:53.362Z",
+      "recorded_at": "2026-10-21T08:48:23.949Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 5,
+      "text": "ST0006 WP02 design for todos 3 and 4, worked out on 21 Oct before the hold. No code is changed yet: st0006-wp02 is still at b897a23. (1) W3 is wider than AGENTS.md. A probe showed .claude/settings.json backed up on every re-render, because _agents_memory_dir_set rewrites it after molt_render's compare; the critic missed this. Split molt_render into molt_render_text and a new molt_render_place, which keeps the region above @@MOLT:BEGIN@@, compares, backs up, moves, writes the sidecar with the digest of the template, vars.sh and any extras, sets perms and logs. _agents_render_file builds the whole file in .molt-tmp first (preamble, role and overlay; the jq memory dir for settings.json) and hands it to molt_render_place, so a failed layer leaves the file as it was; AT035 then reads missing on a first install and stale after. (2) Composing alone still duplicates the preamble when a role template carries @@MOLT:BEGIN@@: keep the region only when the new render opens with the marker, as both ssh templates do, and rename molt_render's local preamble to kept. (3) W2: molt_instance_var takes an optional starting value, exported before vars.sh is sourced, as molt_render_text's subshell has it; molt_agt_dir_fault asks with $MOLT_AGT_DIR and refuses any difference, unset included. (4) W1: molt_disk_path in lib/molt.sh resolves the nearest existing ancestor with (cd && { /bin/pwd -P || pwd -P; }), the guard's real_dir method, and appends the rest; containment compares those. (5) Recs: a molt_path_fault shared by _claude_path_fault and _molt_agt_root_fault; molt_instance_vars_file prints the 'cannot be found' reason once; refuse a root at or under ~/.claude, molt_claude_config_dir or the declared MOLT_CLAUDE_CONFIG_DIR; handle / before the canonical test; name a derived root through a molt_agt_dir_derived in constants.sh; move the envsubst check to the start of molt_render_text; a per-test MOLT_AGT_DIR in test_helper's setup(), keeping the file-level line for the four files with setups of their own. (6) Tests: extend AT059 and AT057; new AT062 (entries or a role's files unreadable), AT063 (a layer that cannot render leaves AGENTS.md as it was, a vars.sh EXIT trap kept out of the reason), AT064 (AT055's letter case as its own skipping test), AT065 (the marker with a preamble), AT066 (no backup on a re-render without a hand edit); W4 at constants.bats lines 115 and 124. ssh's config.d append probably has the same render-then-append shape: unverified, and not WP02.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:00:53.391Z",
+      "recorded_at": "2026-10-21T09:36:53.251Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 1,
+      "text": "ST0006 WP02's fixes (todos 3 to 5), for hv's travel and the move: released when hv or vc says work resumes. st0006-wp02 stays at b897a23 until then.",
+      "state": "archived",
+      "archived_at": "2026-10-21T13:20:22.428Z",
+      "recorded_at": "2026-10-21T09:36:53.279Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 2,
+      "text": "ST0006 WP02: nothing more on st0006-wp02 until vc's verdict on 8bd28c2 (vc, 21 Oct); released by that verdict, or by hv. Next after it: AT028-AT040, AT047, AT059-AT067 green on main once merged, AT055 and AT057 re-noted, then WP06 (no ACs yet; ask vc).",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:22:33.071Z",
+      "recorded_at": "2026-10-21T14:03:40.501Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 3,
+      "text": "Issues 0024 (ssh config.d backups, medium) and 0025 (vars.sh EXIT trap, low) filed, not fixed, per vc (21 Oct); released when vc queues the fixes or hands cc its next work (WP06 needs ACs from vc).",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:24:28.000Z",
+      "recorded_at": "2026-10-21T14:22:33.098Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 3,
+      "text": "Issue 0024 (ssh config.d: build the whole file before the compare) on issue-0024 from 35b3670, then 0025 (vars.sh EXIT trap) on issue-0025, per vc's contract (21 Oct); each head to vc when green.",
+      "state": "archived",
+      "archived_at": "2026-10-21T14:54:16.185Z",
+      "recorded_at": "2026-10-21T14:24:28.028Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 4,
+      "text": "Issues 0024 (issue-0024 d11841a) and 0025 (issue-0025 a770a0b), both from 35b3670, with vc for review; all tests pass under both bashes, shellcheck clean, critic-shell's two passes answered. 0027 filed (ssh static path).",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:14:30.932Z",
+      "recorded_at": "2026-10-21T14:54:16.219Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 4,
+      "text": "Nothing more on issue-0024 or issue-0025 until vc's verdict (21 Oct); released by that verdict, or by hv. After the merges: remove both worktrees and branches; then WP06 (no ACs yet; ask vc).",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:14:30.960Z",
+      "recorded_at": "2026-10-21T14:54:16.249Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 5,
+      "text": "Issue 0027 (ssh refuses a static config/ssh/config, one render path) on issue-0027 bf5be02 from aae8623, per vc's approved route (21 Oct); critic-shell reviewing, then the head to vc.",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:23:06.634Z",
+      "recorded_at": "2026-10-21T15:14:31.084Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 6,
+      "text": "Issue 0027 at issue-0027 ed55610 (from aae8623) with vc for review; all tests pass under both bashes, shellcheck clean, critic-shell's findings answered.",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:29:33.177Z",
+      "recorded_at": "2026-10-21T15:23:06.665Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 5,
+      "text": "Nothing more on issue-0027 until vc's verdict (21 Oct); released by that verdict, or by hv. After the merge: remove its worktree and branch; then WP06 (no ACs yet; ask vc).",
+      "state": "archived",
+      "archived_at": "2026-10-21T15:29:33.207Z",
+      "recorded_at": "2026-10-21T15:23:06.693Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 6,
+      "text": "Nothing queued for cc (vc, 21 Oct): 0024, 0025 and 0027 merged. Released when hv names WP06's floor (the managed deny floor for sysadm), or by a new assignment from vc or hv.",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:40:48.370Z",
+      "recorded_at": "2026-10-21T15:29:33.266Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 6,
+      "text": "WP06 managed deny floor (hv 21 Oct: credentials only, sysadm sleeves only). vc's design: contents in Molt-matts config/agents/roles/sysadm/floor.json; a put/remove helper pair in lib/molt.sh (user tmp, then sudo install -m 644; tiling.sh shape, FAKE_SUDO_STATUS in tests); the agents liberator owns it, renders molt-sysadm.json to managed-settings.d with a root-owned 644 sidecar beside it, removes only a drop-in whose sidecar molt wrote; molt_claude_managed_dir comment changes; AT: the two rules tagged managed in molt agent config, absent without the floor; doctor check 14 both ways; guide notes the sudo prompt.",
+      "state": "archived",
+      "archived_at": "2026-10-21T20:08:46.577Z",
+      "recorded_at": "2026-10-21T19:40:48.406Z",
+      "edited_at": "2026-10-21T19:44:51.113Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 7,
+      "text": "Not building WP06 until vc's ACs for ST0006/06 exist (asked vc 21 Oct).",
+      "state": "archived",
+      "archived_at": "2026-10-21T19:44:15.844Z",
+      "recorded_at": "2026-10-21T19:40:48.437Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 8,
+      "text": "No WP06 branch until vc's ACs and ATs for ST0006/06 are on the thread (tonight after the kovacs tail, or tomorrow if hv calls it).",
+      "state": "archived",
+      "archived_at": "2026-10-21T20:08:46.545Z",
+      "recorded_at": "2026-10-21T19:44:16.023Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 7,
+      "text": "WP06 handed to vc at st0006-wp06 1720f99 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): both-bash suite passing, critic-shell fixed, mutation pass all killed; AT068-AT073. dc has the guide facts. Waiting on vc's merge; then remove the worktree and branch, record ATs from main when vc says. Rollout kovacs only (hv, 22 Oct).",
+      "state": "archived",
+      "archived_at": "2026-10-22T06:27:44.316Z",
+      "recorded_at": "2026-10-21T20:08:46.607Z",
+      "edited_at": "2026-10-22T06:16:54.237Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 9,
+      "text": "Issue 0033 (low, vc 22 Oct): keys.sh:73 and tiling.sh:80/85 use raw sudo cp/rm where molt_sudo_install/molt_sudo_remove exist; keyd make install, systemctl and keyd reload stay. Released when vc says the WP06 merge is pushed to main; then branch issue-0033 at ~/Devel/prj/Molt-wt/issue-0033 off main.",
+      "state": "archived",
+      "archived_at": "2026-10-22T06:27:44.283Z",
+      "recorded_at": "2026-10-22T06:20:05.082Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 8,
+      "text": "Issue 0033 on branch issue-0033 (worktree ~/Devel/prj/Molt-wt/issue-0033, off main 02f51a2): keys.sh and tiling.sh to molt_sudo_install/molt_sudo_remove",
+      "state": "archived",
+      "archived_at": "2026-10-22T06:48:30.080Z",
+      "recorded_at": "2026-10-22T06:27:44.412Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 10,
+      "text": "Issue 0033 commit (staged in ~/Devel/prj/Molt-wt/issue-0033, accepted by vc): released by vc's 'pushed' notice for the dc inbox view and vc's clear; then stash, merge main, stash pop, git checkout main -- intent if the hook rewrote it, commit with the gate on. Then 0034 (keys.sh sudo make install, systemctl, keyd reload unchecked), same shape.",
+      "state": "archived",
+      "archived_at": "2026-10-22T06:48:30.047Z",
+      "recorded_at": "2026-10-22T06:39:24.449Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 9,
+      "text": "Issue 0034 handed to vc at issue-0034 9eae8ff (worktree ~/Devel/prj/Molt-wt/issue-0034): clone, build, systemctl enable/start, keyd reload each named and stopping; waiting on vc's merge, then remove the worktree and branch.",
+      "state": "archived",
+      "archived_at": "2026-10-22T07:06:13.804Z",
+      "recorded_at": "2026-10-22T06:48:30.183Z",
+      "edited_at": "2026-10-22T06:58:07.496Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 10,
+      "text": "Issue 0032 on issue-0032 at fca6848 (worktree ~/Devel/prj/Molt-wt/issue-0032), handed to vc for scratch-merge: conffile route built (template, .molt-orig, sidecar first, parse check, reload, bwrap probe, restore), doctor 15, agent config line, CHANGELOG; both bashes green, mutation all killed, critic-shell fixed. Waiting on vc's merge, then hv's molt upgrade on kovacs. Never ssh to kovacs (vc).",
+      "state": "archived",
+      "archived_at": "2026-10-22T12:38:44.686Z",
+      "recorded_at": "2026-10-22T10:55:12.833Z",
+      "edited_at": "2026-10-22T11:59:39.471Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 11,
+      "text": "Remove the issue-0032 worktree (not the branch) once vc confirms CI green on 3919fcd; 0032 itself waits on hv's molt upgrade on kovacs, results relayed by vc",
+      "state": "archived",
+      "archived_at": "2026-10-22T12:16:48.238Z",
+      "recorded_at": "2026-10-22T12:14:19.125Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 11,
+      "text": "Issue 0016 on issue-0016 at 07955cb (worktree ~/Devel/prj/Molt-wt/issue-0016), handed to vc for scratch-merge: errors to stderr; call sites read and listed in the hand-over",
+      "state": "archived",
+      "archived_at": "2026-10-22T14:01:00.847Z",
+      "recorded_at": "2026-10-22T12:50:18.371Z",
+      "edited_at": "2026-10-22T13:19:54.389Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 7,
+      "text": "Issue 0015 after 0016 hands over: branch issue-0015 from main at or after 35270d3; hv ruled run on, fail at the end. _upgrade_pull_repos and editors_upgrade's Doom pull lose 2>/dev/null; no upstream warns and skips; any other pull failure errors naming repo and git's words, liberators still run, upgrade ends non-zero without Sleeve ready. Tests: no-upstream, pull fails, Doom pull; faked pulls only",
+      "state": "archived",
+      "archived_at": "2026-10-22T14:01:00.910Z",
+      "recorded_at": "2026-10-22T13:03:21.051Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 12,
+      "text": "Issue 0015 on issue-0015 (worktree ~/Devel/prj/Molt-wt/issue-0015), banked WIP at b85fc84 on main 57445e7: cad8a63 is the 0015 change, complete (both bashes green on the merged tree, mutation all killed, critic-shell fixed); b85fc84 is vc's local-path addition (red-first test green, shellcheck clean). Left: the full suite under both bashes on b85fc84, then the hand-over to vc. Never ssh to kovacs.",
+      "state": "archived",
+      "archived_at": "2026-10-22T16:03:16.681Z",
+      "recorded_at": "2026-10-22T13:21:16.274Z",
+      "edited_at": "2026-10-22T14:01:01.090Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 12,
+      "text": "Issue 0015 commit on issue-0015: green under both bashes on main f58c759 merged in, change staged and uncommitted; the gate's view-skew on vc/inbox.cc.md is an Intent store-build difference vc is tracing. Released when vc gives the route; run nothing in the worktree until then",
+      "state": "archived",
+      "archived_at": "2026-10-22T14:01:00.941Z",
+      "recorded_at": "2026-10-22T13:52:58.509Z"
     }
   ],
   "messages": [
@@ -75,7 +323,8 @@
       "recipient": "cc",
       "body": "For AC014's second guard rule, raised with vc, whose call it is: docs/hooks says the hook input's cwd follows a cd (\"the new directory after Claude runs cd\"), so a guard testing cwd would block every later prompt of a session that started in its home and then cd'd into work/. CLAUDE_PROJECT_DIR is \"the project root where the session started\" and stays put. The guide's guard passages are at st0006-wp05 b9cb22a, and I check them against your code at the merge.",
       "fyi": true,
-      "state": "live",
+      "state": "handled",
+      "handled_at": "2026-10-21T08:46:33.665Z",
       "recorded_at": "2026-10-21T06:59:27.612Z"
     }
   ]

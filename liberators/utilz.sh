@@ -179,7 +179,7 @@ utilz_install() {
 }
 
 utilz_upgrade() {
-  local source repo
+  local source repo pulled=0
   source="$(_utilz_source)"
   case "$source" in
     checkout) ;;
@@ -199,11 +199,10 @@ utilz_upgrade() {
   fi
 
   molt_info "Pulling Utilz repo..."
-  if git -C "$repo" pull --ff-only 2>/dev/null; then
-    molt_info "Utilz repo updated."
-  else
-    molt_warn "Utilz pull skipped (not on tracking branch or already up-to-date)."
-  fi
+  molt_git_pull "$repo" "Utilz" || pulled=$?
+  [[ $pulled -ne 0 ]] || molt_info "Utilz repo updated."
+  # Updated, or skipped for want of an upstream; anything else failed (issue 0037).
+  [[ $pulled -eq 0 || $pulled -eq 2 ]]
 }
 
 utilz_verify() {

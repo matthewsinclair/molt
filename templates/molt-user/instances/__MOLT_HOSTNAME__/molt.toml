@@ -23,7 +23,6 @@ os = ["linux", "macos"]
 name = "local-bin"
 enabled = true
 os = ["linux", "macos"]
-depends = ["system"]
 
 [[liberator]]
 name = "git"
@@ -41,7 +40,6 @@ os = ["linux", "macos"]
 name = "zsh"
 enabled = false
 os = ["linux", "macos"]
-depends = ["system"]
 
 [[liberator]]
 name = "tmux"
@@ -52,7 +50,6 @@ os = ["linux", "macos"]
 name = "editors"
 enabled = false
 os = ["linux", "macos"]
-depends = ["zsh", "git"]
 
 [[liberator]]
 name = "iterm2"
@@ -63,22 +60,23 @@ os = ["macos"]
 name = "vscode"
 enabled = false
 os = ["linux", "macos"]
-depends = ["zsh"]
 
 [[liberator]]
 name = "dev-tools"
 enabled = false
 os = ["linux", "macos"]
-depends = ["zsh"]
+
+[[liberator]]
+name = "npm"
+enabled = true
+os = ["linux", "macos"]
 
 [[liberator]]
 name = "brew"
 enabled = false
 os = ["macos"]
-depends = ["system"]
 
 [[liberator]]
 name = "claude"
 enabled = true
 os = ["linux", "macos"]
-depends = ["system"]

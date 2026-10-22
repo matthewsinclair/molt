@@ -1,0 +1,15 @@
+{
+  "id": "01M5G197RF74EZ437KKYN5T9S0",
+  "ts": "2026-10-21T20:08:46.607Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: full suite under both bashes, mutation pass, critic-shell, hand-over to vc, then dc's floor.json lands. Flag for hv: rhadamanth and gyges also declare an enabled sysadm agent, so the floor lands there too, binding every session on them."
+  }
+}

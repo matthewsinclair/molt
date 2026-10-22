@@ -1,0 +1,15 @@
+{
+  "id": "01M5FCCQ2NK5QHPTWN6ZWK5S6M",
+  "ts": "2026-10-21T14:03:40.501Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ST0006 WP02: nothing more on st0006-wp02 until vc's verdict on 8bd28c2 (vc, 21 Oct); released by that verdict, or by hv. Next after it: AT028-AT040, AT047, AT059-AT067 green on main once merged, AT055 and AT057 re-noted, then WP06 (no ACs yet; ask vc)."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M5FVY83M6FAJ032BPM29QVYF",
+  "ts": "2026-10-21T18:35:23.636Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0030"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "The home guard cannot refuse a launch that missed CLAUDE_CONFIG_DIR, because it lives in the config dir the launch missed"
+  }
+}

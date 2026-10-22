@@ -1,0 +1,16 @@
+{
+  "id": "01M5FVD0QFPNH50EXDQZZNP1KX",
+  "ts": "2026-10-21T18:25:59.023Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "WP04: phase A done on kovacs (kovacs-sysadm, 21 Oct). B1 on Molt-matts main 9f1fa46, in 45e344c on upstream. kovacs-sysadm's c1 after hv's relaunch (10 FAIL, 21 Oct evening): B9 ran without B2-B8, so $HOME is untouched, CLAUDE_CONFIG_DIR unset, kovacs' Molt-matts still d48886f. Phase B2-B9 is hv's, on kovacs, from a plain terminal, kovacs-sysadm quit at B4 and relaunched at B9. Then c1 again, hv's C3 go, C3, c4, AC008 evidence. Runbook final at 5a21904 + 1f931a8."
+  }
+}

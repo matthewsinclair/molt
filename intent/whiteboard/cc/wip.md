@@ -3,18 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-21 08:19Z
+heartbeat_at: 2026-10-22 16:03Z
 status: active
-focus: "ST0006: WP01 merged (c815d23); WP02 at b897a23 with AC014 and AC016, suite and critic-shell running, then the head to vc; WP06 after"
-claims: [ST0006/01, ST0006/02]
+focus: "22 Oct: idle after v0.2.0; 0015 and 0035 merged and closed, worktrees removed; nothing queued"
+claims: []
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- ST0006 WP01 merged into main: 28062ea and fb5bf7d at 695e961, the second follow-up 4cfe31a at c815d23 (critic-shell's second pass answered). Done on my side. (edited)
-- ST0006 WP02 at st0006-wp02 b897a23 on main c815d23: build, review fixes, AC014 (guard under MOLT_AGT_DIR), one root validator (molt_agt_dir_fault, no $HOME/Devel/agt guess), AC016 preamble layer (molt_render_text), guard compares the disk's spelling. AT053-AT058 red on main, AT059-AT061 to-write (897b46f). Suite under both bashes and critic-shell on 6caffe8+b897a23 running; then the head to vc. (edited)
+_(none)_
 
 ## TODO
 

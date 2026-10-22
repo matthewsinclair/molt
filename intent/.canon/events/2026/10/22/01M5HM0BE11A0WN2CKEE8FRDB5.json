@@ -1,0 +1,15 @@
+{
+  "id": "01M5HM0BE11A0WN2CKEE8FRDB5",
+  "ts": "2026-10-22T10:55:12.833Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issue 0032 on issue-0032 at 03bee17 (WIP; worktree ~/Devel/prj/Molt-wt/issue-0032): shared molt_root_file_state/_install/_remove banked, floor on them, agents+molt bats green. Left: sandbox predicate/state/faults, _agents_sandbox (install, apparmor_parser -r, bwrap probe; vc accepted the probe), doctor 15, agent config line, tests, CHANGELOG. Template route waits on kovacs-sysadm's priority=1 local/unpriv_bwrap experiment (vc relays). Never ssh to kovacs (vc)."
+  }
+}

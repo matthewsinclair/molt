@@ -1,0 +1,15 @@
+{
+  "id": "01M5FDMQGQD9E6WPT9JCBRB7WF",
+  "ts": "2026-10-21T14:25:31.671Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ST0006/05 at 8d7921e and ST0006/03 items 1-3 at Molt-matts 4670ea9, both checked against merged WP02 (bea7420), with vc for review"
+  }
+}

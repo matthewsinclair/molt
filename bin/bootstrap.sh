@@ -91,7 +91,16 @@ clone_or_pull() {
 
   if [[ -d "$dest/.git" ]]; then
     ok "$dest already exists — pulling latest"
-    git -C "$dest" pull --ff-only 2>/dev/null || info "pull skipped (not on tracking branch)"
+    # Only a branch with no upstream skips; any other failed pull stops the
+    # bootstrap, with git's own words above it (issue 0037).
+    local branch
+    if ! branch="$(git -C "$dest" symbolic-ref -q --short HEAD)" \
+      || ! git -C "$dest" config "branch.${branch}.merge" >/dev/null; then
+      info "pull skipped: $dest has no upstream branch"
+    elif ! git -C "$dest" pull --ff-only; then
+      error "pull failed in $dest: git's reason is above"
+      exit 1
+    fi
   elif [[ -d "$dest" ]]; then
     info "$dest exists but is not a git repo — skipping"
   else

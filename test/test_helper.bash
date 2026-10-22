@@ -31,6 +31,12 @@ export TERM=dumb
 # dir, whatever it did to HOME (ST0006). No test starts with either set.
 unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 
+# Nor with the agents root the shell running bats exports, which the user
+# repo's zshenv sets: a resleeve of an [[agent]] fixture would make homes there.
+# setup gives each test a root of its own; this one, removed with the run, is
+# for the files whose setup replaces it.
+export MOLT_AGT_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-agt"
+
 # ============================================================================
 # SETUP AND TEARDOWN
 # ============================================================================
@@ -52,6 +58,8 @@ teardown_file() {
 setup() {
     export BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
     mkdir -p "$BATS_TEST_TMPDIR"
+    # A root no other test, run or worktree shares (critic-shell, 21 Oct).
+    export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
     export ORIGINAL_PWD="$(pwd)"
     cd "$BATS_TEST_TMPDIR"
 }
@@ -83,6 +91,7 @@ load_molt_libs() {
     source "$MOLT_LIB_DIR/constants.sh"
     source "$MOLT_LIB_DIR/molt.sh"
     source "$MOLT_LIB_DIR/liberator.sh"
+    source "$MOLT_LIB_DIR/agent.sh"
 }
 
 # Load a specific liberator for function-level testing
@@ -109,6 +118,60 @@ test_hostname() {
     local name
     name="$(hostname -s 2>/dev/null || hostname)"
     echo "${name%%.*}"
+}
+
+# The permission bits of $1 in octal, eg 600, for a test to compare with the
+# mode it expects. GNU stat first: its -f means --file-system, so BSD's form
+# would print a block of filesystem facts on Linux.
+test_file_mode() {
+    stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1"
+}
+
+# Clone an origin made in the test directory, holding the executable files
+# named relative to it, into dest, and set TEST_ORIGIN to the origin, so a test
+# can unset the clone's upstream or remove the origin to make a pull fail.
+# Usage: clone_test_origin "$UTILZ_HOME" bin/utilz
+clone_test_origin() {
+    local dest="$1" f
+    shift
+    TEST_ORIGIN="$BATS_TEST_TMPDIR/$(basename "$dest")-origin"
+    mkdir -p "$TEST_ORIGIN"
+    for f in "$@"; do
+        mkdir -p "$TEST_ORIGIN/$(dirname "$f")"
+        printf '#!/bin/bash\n' > "$TEST_ORIGIN/$f"
+        chmod +x "$TEST_ORIGIN/$f"
+    done
+    : > "$TEST_ORIGIN/README"
+    git -C "$TEST_ORIGIN" init -q
+    git -C "$TEST_ORIGIN" add -A
+    git -c user.name=test -c user.email=test@example.com -C "$TEST_ORIGIN" commit -qm init
+    git clone -q "$TEST_ORIGIN" "$dest"
+}
+
+# An upgrade hook pulling the clone_test_origin repo at $repo reports it
+# updated; with no upstream it warns and passes; with its origin gone it fails,
+# naming the repo and git's reason (issue 0037).
+# Usage: assert_upgrade_hook_pulls web_upgrade web "$repo"
+assert_upgrade_hook_pulls() {
+    local hook="$1" label="$2" repo="$3"
+    run "$hook"
+    assert_success
+    assert_output_contains "$label repo updated."
+
+    git -C "$repo" branch -q --unset-upstream
+    run "$hook"
+    assert_success
+    assert_output_contains "$label pull skipped: $repo has no upstream branch"
+    refute_output_contains "$label repo updated."
+
+    git -C "$repo" branch -q --set-upstream-to="origin/$(git -C "$repo" branch --show-current)"
+    rm -rf "$TEST_ORIGIN"
+    run "$hook"
+    assert_failure
+    assert_output_contains "$label pull failed in $repo:"
+    assert_output_contains "$TEST_ORIGIN"
+    refute_output_contains "pull skipped"
+    refute_output_contains "$label repo updated."
 }
 
 # Create a mock molt-{user} repo with config/ directory
@@ -162,6 +225,50 @@ TOML
 # ============================================================================
 # FAKE HOMEBREW
 # ============================================================================
+
+# Puts a fake sudo first on PATH: it logs each call to $BATS_TEST_TMPDIR/sudo.log
+# and runs the command it is given, unless FAKE_SUDO_STATUS says otherwise.
+install_fake_sudo() {
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
+#!/usr/bin/env bash
+echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
+[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
+exec "$@"
+FAKE
+    chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+    case ":$PATH:" in
+        *":$BATS_TEST_TMPDIR/bin:"*) ;;
+        *) export PATH="$BATS_TEST_TMPDIR/bin:$PATH" ;;
+    esac
+}
+
+# AppArmor in the test directory: molt_apparmor_dir answers
+# $BATS_TEST_TMPDIR/apparmor.d, and a fake apparmor_parser, bwrap and unshare go
+# first on PATH, with the fake sudo. The parser logs each call to
+# $BATS_TEST_TMPDIR/apparmor.log and exits FAKE_PARSER_STATUS, or
+# FAKE_PARSER_CHECK_STATUS for a -Q parse that loads nothing; bwrap exits
+# FAKE_BWRAP_STATUS, saying why on stderr as unshare does. Neither the real
+# /etc/apparmor.d nor the kernel's policy is reached.
+install_fake_apparmor() {
+    install_fake_sudo
+    mkdir -p "$BATS_TEST_TMPDIR/apparmor.d"
+    eval "molt_apparmor_dir() { echo \"$BATS_TEST_TMPDIR/apparmor.d\"; }"
+    cat > "$BATS_TEST_TMPDIR/bin/apparmor_parser" <<'FAKE'
+#!/usr/bin/env bash
+echo "apparmor_parser $*" >> "$BATS_TEST_TMPDIR/apparmor.log"
+[ "$1" = -Q ] && exit "${FAKE_PARSER_CHECK_STATUS:-0}"
+exit "${FAKE_PARSER_STATUS:-0}"
+FAKE
+    cat > "$BATS_TEST_TMPDIR/bin/bwrap" <<'FAKE'
+#!/usr/bin/env bash
+[ "${FAKE_BWRAP_STATUS:-0}" -eq 0 ] && exit 0
+echo "unshare: write failed /proc/self/uid_map: Operation not permitted" >&2
+exit "$FAKE_BWRAP_STATUS"
+FAKE
+    printf '#!/bin/sh\nexit 0\n' > "$BATS_TEST_TMPDIR/bin/unshare"
+    chmod +x "$BATS_TEST_TMPDIR/bin/apparmor_parser" "$BATS_TEST_TMPDIR/bin/bwrap" "$BATS_TEST_TMPDIR/bin/unshare"
+}
 
 # A Homebrew prefix in the test directory holding one installed formula, and a
 # brew stub first on PATH that answers from it. Nothing reaches the real brew.
