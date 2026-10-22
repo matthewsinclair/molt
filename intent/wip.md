@@ -1,17 +1,16 @@
 ---
-verblock: "22 Oct 2026:v0.36: Matthew Sinclair - globalfold after v0.2.0; every issue but 0022 closed; rhadamanth's move and WP04 wait on hv at the keyboard"
+verblock: "22 Oct 2026:v0.37: Matthew Sinclair - globalfold after v0.2.0; kovacs on it, doctor clean; every issue but 0022 closed; rhadamanth's move and WP04 wait on hv at the keyboard"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Molt v0.2.0 is cut (f1f27bb, 22 Oct), the first release since v0.1.1 in March; ST0006, sleeve agents, has one work package left: WP04, the moves.** A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops`, `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, with Claude Code's state in `$XDG_CONFIG_HOME/claude`, a guard that refuses a launch from `$HOME` or from a shell that missed the config dir, for `sysadm` a managed deny floor root owns, and on a Linux sleeve with `ops` or `docs` a Molt-managed AppArmor profile so the sandbox can start. kovacs runs all of it; rhadamanth moves by the runbook with hv at a plain terminal; gyges later. The guide is `docs/guides/sleeve-agents.md`. Four project nodes share this checkout: vc specifies, validates and merges; cc builds code in `~/Devel/prj/Molt-wt/<branch>`; dc builds docs and fixes issues; ac authors. Everyone commits only their own paths from main, and only vc pushes.
+**Molt v0.2.0 is cut (f1f27bb, 22 Oct), the first release since v0.1.1 in March; ST0006, sleeve agents, has one work package left: WP04, the moves.** A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops`, `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, with Claude Code's state in `$XDG_CONFIG_HOME/claude`, a guard that refuses a launch from `$HOME` or from a shell that missed the config dir, for `sysadm` a managed deny floor root owns, and on a Linux sleeve with `ops` or `docs` a Molt-managed AppArmor profile so the sandbox can start. kovacs runs all of it on v0.2.0 (doctor 15/15, 22 Oct evening); rhadamanth moves by the runbook with hv at a plain terminal; gyges later. The guide is `docs/guides/sleeve-agents.md`. Four project nodes share this checkout: vc specifies, validates and merges; cc builds code in `~/Devel/prj/Molt-wt/<branch>`; dc builds docs and fixes issues; ac authors. Everyone commits only their own paths from main, and only vc pushes.
 
 ## DOING
 
 - **ST0006 WP04, rhadamanth's move, when hv is at the keyboard (hv, 22 Oct: today, after the globalfold).** Every node's board committed and every Claude quit, then hv runs the runbook's rhadamanth section at a plain terminal: Chrome's native host quit at B4, the floor installed at B5 with hv at the sudo prompt, check 14 and `molt agent config rhadamanth-sysadm` at B8, B9 only from a shell opened after the move. Then WP04 and ST0006 close with gyges carried as a todo, as hv ruled.
-- **kovacs onto v0.2.0, through kovacs-sysadm (go sent 22 Oct evening):** pull both checkouts, `molt upgrade`, `molt doctor`. It proves issue 0035's kovacs values: the ten GNOME keys now come from `instances/kovacs/desktop/gsettings` in gsettings' print form, unverified on GNOME until this upgrade reads each back; a "did not take: wanted X, got Y" line is a print-form mismatch to fix in that file.
 
 ## TODO
 
