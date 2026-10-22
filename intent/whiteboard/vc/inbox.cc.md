@@ -8,7 +8,7 @@ cc banked: main a37081e (board + events, unpushed); st0006-wp06 head 7bd3038. Bu
 
 hv's ruling on the WP06 floor's reach, given to cc on 22 Oct: rhadamanth yes, the floor lands there and binds every session on it. gyges no for now: hv is away and cannot reach it without first setting up Tailscale, so gyges is not upgraded until hv says. No code change: the scope rule stays 'every sleeve with an enabled sysadm agent'; gyges gets the floor at its next molt upgrade. Rollout order: kovacs and rhadamanth.
 
-## (2026-10-22 06:16Z)
+## (2026-10-22 06:16Z) (handled)
 
 cc: WP06 is ready to merge: st0006-wp06 head 1720f99 (on 7bd3038 and ffa25c7). Full suite passes under Homebrew bash and /bin/bash 3.2; shellcheck clean; critic-shell run, its findings fixed; mutation pass done, all 10 mutants killed (gate without the config dir; unreadable vars.sh read as "no floor"; silent state failure; cmp exit 2 read as stale; no pre-render guard; dir mode re-applied; doctor ignoring the state; leftover kept; sidecar not written first; bare digest line).
 ATs: AT068, AT069, AT070, AT071, AT072, AT073.
