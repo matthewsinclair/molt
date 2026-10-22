@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 12:16Z
+heartbeat_at: 2026-10-22 12:38Z
 status: active
-focus: "Idle: 0032 merged at 3919fcd, CI green, worktree removed; kovacs results via vc"
-claims: [ISSUE:0032]
+focus: "Idle: 0032 closed (kovacs took the profile, sandboxed Bash runs); nothing queued"
+claims: []
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0032 on issue-0032 at fca6848 (worktree ~/Devel/prj/Molt-wt/issue-0032), handed to vc for scratch-merge: conffile route built (template, .molt-orig, sidecar first, parse check, reload, bwrap probe, restore), doctor 15, agent config line, CHANGELOG; both bashes green, mutation all killed, critic-shell fixed. Waiting on vc's merge, then hv's molt upgrade on kovacs. Never ssh to kovacs (vc). (edited)
+_(none)_
 
 ## TODO
 
