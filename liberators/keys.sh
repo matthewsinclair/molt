@@ -48,18 +48,34 @@ keys_install() {
     molt_info "Building keyd from source..."
     molt_require_all git make gcc || return 1
 
-    local tmpdir
-    tmpdir="$(mktemp -d)"
-    git clone https://github.com/rvaiya/keyd "$tmpdir/keyd"
-    (cd "$tmpdir/keyd" && make && sudo make install)
-    rm -rf "$tmpdir"
+    local tmpdir why=""
+    if ! tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/molt-keyd.XXXXXX")"; then
+      molt_error "keys: no temporary directory could be made to build keyd in"
+      return 1
+    fi
+    if ! git clone https://github.com/rvaiya/keyd "$tmpdir/keyd"; then
+      why="keyd could not be cloned from https://github.com/rvaiya/keyd"
+    elif ! (cd "$tmpdir/keyd" && make && sudo make install); then
+      why="keyd could not be built and installed from source"
+    fi
+    rm -rf "$tmpdir" || molt_warn "keys: the build directory $tmpdir could not be removed"
+    if [[ -n "$why" ]]; then
+      molt_error "keys: $why"
+      return 1
+    fi
   fi
 
   # Enable and start service
   if ! systemctl is-active --quiet keyd 2>/dev/null; then
     molt_info "Enabling keyd service..."
-    sudo systemctl enable keyd
-    sudo systemctl start keyd
+    if ! sudo systemctl enable keyd; then
+      molt_error "keys: the keyd service could not be enabled"
+      return 1
+    fi
+    if ! sudo systemctl start keyd; then
+      molt_error "keys: the keyd service could not be started"
+      return 1
+    fi
   fi
 
   # Install config from instance directory if available
@@ -79,7 +95,10 @@ keys_install() {
       molt_error "keys: the keyd config was not installed: $why"
       return 1
     fi
-    sudo keyd reload
+    if ! sudo keyd reload; then
+      molt_error "keys: the keyd config is in place at $KEYD_CONFIG, but keyd did not reload it"
+      return 1
+    fi
   else
     molt_warn "No keyd config found for instance $hostname"
     molt_warn "Expected: $instance_keyd"
