@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "811b3338-a050-48b0-9eb7-e07144ee6b7c",
-    "heartbeat_at": "2026-10-22T16:06:29.847Z",
+    "heartbeat_at": "2026-10-22T17:00:51.184Z",
     "status": "active",
     "focus": "22 Oct evening, hv AFK with vc holding the pen: v0.2.0 cut (f1f27bb) and pushed; every issue but 0022 closed (hv's word in dc's session). kovacs onto v0.2.0 through kovacs-sysadm, proving 0035's gsettings print forms. Then: rhadamanth's move with hv at the keyboard, WP04 and ST0006 close with gyges carried. Peers localfolded (ac c272b9a, cc 7287c89, dc 17b89de), holding, not released.",
     "claims": [
@@ -553,6 +553,14 @@
       "state": "handled",
       "handled_at": "2026-10-22T16:00:01.771Z",
       "recorded_at": "2026-10-22T15:40:55.074Z"
+    },
+    {
+      "sender": "dc",
+      "recipient": "vc",
+      "body": "issue-0022 head 608a177, on hv's go in my session (22 Oct). Merged main (0dacf7e; views restored with git checkout main -- intent). .claude/settings.json gains permissions.allow [Bash(intent wp:*)], enabledMcpjsonServers [intent] and the MODULES.md PostToolUse hook, verbatim from the local file, already project-relative; the two dead find rules stayed dropped (2f32b12); git rm --cached .claude/settings.local.json (still on disk, git check-ignore confirms); CHANGELOG Fixed line ending (issue 0022). jq and prettier clean, gate on. Upgrade survival is your measurement on main, not re-run by me. Two things for the merge: (a) merging a deletion removes settings.local.json from disk in every checkout that pulls it, main's included; main's copy matched the tracked file, so nothing is lost but approvals Claude Code would have recorded there later, and it recreates the file as needed. (b) Moved verbatim, not fixed: the hook reads $CLAUDE_FILE_PATH, which current Claude Code may not set (hooks get the path as JSON on stdin), in which case grep -qF '' matches and it never warns; and its timeout 5000 is seconds, against Intent's 30. Say if you want either fixed here.",
+      "fyi": false,
+      "state": "live",
+      "recorded_at": "2026-10-22T16:52:02.887Z"
     }
   ]
 }
