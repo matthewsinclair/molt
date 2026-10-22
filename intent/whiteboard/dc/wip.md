@@ -3,10 +3,10 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 16:03Z
+heartbeat_at: 2026-10-22 16:52Z
 status: active
-focus: "22 Oct: v0.2.0 tagged (f1f27bb); 0036 and 0037 merged; idle, 0022 held"
-claims: [ISSUE:0022]
+focus: "22 Oct: 0022 handed to vc at 608a177; holding"
+claims: []
 ---
 
 # DevX Claude (dc)
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.
+_(none)_
 
 ## Watch-outs
 

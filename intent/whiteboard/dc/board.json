@@ -5,12 +5,10 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "3cbe9031-145f-4360-ab33-cdb83ac851d9",
-    "heartbeat_at": "2026-10-22T16:03:23.441Z",
+    "heartbeat_at": "2026-10-22T16:52:02.984Z",
     "status": "active",
-    "focus": "22 Oct: v0.2.0 tagged (f1f27bb); 0036 and 0037 merged; idle, 0022 held",
-    "claims": [
-      "ISSUE:0022"
-    ],
+    "focus": "22 Oct: 0022 handed to vc at 608a177; holding",
+    "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
   },
@@ -105,7 +103,8 @@
       "kind": "hold",
       "seq": 4,
       "text": "ISSUE:0022 untracking: issue-0022 (2f32b12) drops only the two find rules, as hv ruled; git rm --cached of .claude/settings.local.json waits, because intent claude upgrade --apply rewrites a settings.json carrying Intent's hooks whole. Released when Intent's canon carries the MCP enablement, the MODULES.md hook and Bash(intent wp:*), or keeps keys it does not own (vc raising with intent-vc), and hv confirms.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-22T16:52:02.919Z",
       "recorded_at": "2026-10-21T08:46:38.980Z"
     },
     {
