@@ -3,17 +3,18 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 12:38Z
+heartbeat_at: 2026-10-22 13:17Z
 status: active
-focus: "22 Oct: idle; 0032 guide landed (main 9b4fbe0); 0022 held"
-claims: [ISSUE:0022]
+focus: "22 Oct pm: 0018 heads with vc; 0032 B2 paragraph waits on B2's version; 0022 held"
+claims: [ISSUE:0022, ISSUE:0018]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- ISSUE:0018 drop depends (hv ruled): Molt issue-0018 c030930 (Molt-wt/issue-0018), Molt-matts issue-0018 7d4374b (Molt-matts-wt/issue-0018); grep clean bar unrelated words; with vc to merge (Molt-matts first)
+- ISSUE:0032 guide B2 paragraph on Molt issue-0032-guide-b2 cdb537e (Molt-wt/issue-0032-guide-b2); <B2-VERSION> waits on kovacs-sysadm's Claude Code version for B2; then head to vc
 
 ## TODO
 
