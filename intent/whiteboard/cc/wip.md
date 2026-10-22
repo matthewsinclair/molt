@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 15:11Z
+heartbeat_at: 2026-10-22 16:03Z
 status: active
-focus: "0015 banked WIP at b85fc84; on the bounce: suite on b85fc84, hand-over"
-claims: [ISSUE:0015]
+focus: "22 Oct: idle after v0.2.0; 0015 and 0035 merged and closed, worktrees removed; nothing queued"
+claims: []
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0015 on issue-0015 (worktree ~/Devel/prj/Molt-wt/issue-0015), banked WIP at b85fc84 on main 57445e7: cad8a63 is the 0015 change, complete (both bashes green on the merged tree, mutation all killed, critic-shell fixed); b85fc84 is vc's local-path addition (red-first test green, shellcheck clean). Left: the full suite under both bashes on b85fc84, then the hand-over to vc. Never ssh to kovacs. (edited)
+_(none)_
 
 ## TODO
 
