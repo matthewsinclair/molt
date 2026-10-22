@@ -51,7 +51,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC010
 
-- AC010 sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed -- satisfied: no (computed)
+- AC010 sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed -- satisfied: yes (computed)
 
 ### Group AC011
 
@@ -79,15 +79,15 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC017
 
-- AC017 On a sleeve whose manifest declares no enabled sysadm agent, or whose vars.sh declares no MOLT_CLAUDE_CONFIG_DIR, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not -- satisfied: no (computed)
+- AC017 On a sleeve whose manifest declares no enabled sysadm agent, or whose vars.sh declares no MOLT_CLAUDE_CONFIG_DIR, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not -- satisfied: yes (computed)
 
 ### Group AC018
 
-- AC018 The floor's contents come verbatim from Molt-matts config/agents/roles/sysadm/floor.json; a sysadm sleeve with no floor.json, or one that is not a single object with permissions.deny, fails check and install naming the file, and nothing is written -- satisfied: no (computed)
+- AC018 The floor's contents come verbatim from Molt-matts config/agents/roles/sysadm/floor.json; a sysadm sleeve with no floor.json, or one that is not a single object with permissions.deny, fails check and install naming the file, and nothing is written -- satisfied: yes (computed)
 
 ### Group AC019
 
-- AC019 molt doctor check 14 warns on a sleeve that takes the floor (an enabled sysadm agent and a declared MOLT_CLAUDE_CONFIG_DIR) whose floor is missing or stale, and on a sleeve that does not take it carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses -- satisfied: no (computed)
+- AC019 molt doctor check 14 warns on a sleeve that takes the floor (an enabled sysadm agent and a declared MOLT_CLAUDE_CONFIG_DIR) whose floor is missing or stale, and on a sleeve that does not take it carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses -- satisfied: yes (computed)
 
 ### Group AC020
 
@@ -95,7 +95,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC021
 
-- AC021 (non-test) The guide has a Managed floor section (what, where, the sudo prompt mid-upgrade, how to see it, the removal rule, that it binds every session on the sleeve), and Molt-matts' sysadm AGENTS.md.tmpl no longer says the floor is still to come -- satisfied: no
+- AC021 (non-test) The guide has a Managed floor section (what, where, the sudo prompt mid-upgrade, how to see it, the removal rule, that it binds every session on the sleeve), and Molt-matts' sysadm AGENTS.md.tmpl no longer says the floor is still to come -- evidence: docs/guides/sleeve-agents.md's Managed floor section (dc, 9a325d8, merged 02f51a2) covers what the floor is, where it lives per platform, the sudo prompt mid molt upgrade, how to see it (molt agent config example and doctor check 14), the removal rule and that it binds every session on the sleeve; Molt-matts config/agents/roles/sysadm/AGENTS.md.tmpl (dc, 9b36722, merged 5220ca8) no longer says the floor is still to come: where Molt has installed one the two denies hold, where not only the fence does. Text checked by dc and vc, 22 Oct 2026 -- satisfied: yes
 
 ### Group AT001
 
@@ -753,27 +753,27 @@ _(no tests in this group)_
 
 ### Group AT068
 
-- AT068 `test/liberators/agents.bats` -- covers AC010 -- status: to-write -- to-write: WP06 spec 21 Oct; agents install on a sleeve with an enabled sysadm agent renders managed-settings.d/molt-sysadm.json through faked sudo with exactly floor.json's deny list, mode 644, with a sidecar; a second run writes nothing
+- AT068 `test/liberators/agents.bats` -- covers AC010 -- status: green -- to-write: WP06 spec 21 Oct; agents install on a sleeve with an enabled sysadm agent renders managed-settings.d/molt-sysadm.json through faked sudo with exactly floor.json's deny list, mode 644, with a sidecar; a second run writes nothing. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
 
 ### Group AT069
 
-- AT069 `test/liberators/agents.bats` -- covers AC010 -- status: to-write -- to-write: molt agent config <host>-sysadm shows the floor's two rules tagged managed above the user layer on a sleeve carrying the floor, and no managed rule on one that does not
+- AT069 `test/liberators/agents.bats` -- covers AC010 -- status: green -- to-write: molt agent config <host>-sysadm shows the floor's two rules tagged managed above the user layer on a sleeve carrying the floor, and no managed rule on one that does not. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
 
 ### Group AT070
 
-- AT070 `test/liberators/agents.bats` -- covers AC017 -- status: to-write -- to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported
+- AT070 `test/liberators/agents.bats` -- covers AC017 -- status: green -- to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
 
 ### Group AT071
 
-- AT071 `test/liberators/agents.bats` -- covers AC018 -- status: to-write -- to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written
+- AT071 `test/liberators/agents.bats` -- covers AC018 -- status: green -- to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
 
 ### Group AT072
 
-- AT072 `test/molt.bats` -- covers AC019 -- status: to-write -- doctor check 14 warns on a sleeve that takes the floor with a missing or stale floor, and on a sleeve that does not take it (no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR) carrying a molt-written floor; passes otherwise
+- AT072 `test/molt.bats` -- covers AC019 -- status: green -- doctor check 14 warns on a sleeve that takes the floor with a missing or stale floor, and on a sleeve that does not take it (no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR) carrying a molt-written floor; passes otherwise. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
 
 ### Group AT073
 
-- AT073 `test/molt.bats` -- covers AC019 -- status: to-write -- to-write: the sudo helpers render to a user tmp first, refuse when sudo is absent or FAKE_SUDO_STATUS fails, and never write the managed dir unprivileged
+- AT073 `test/molt.bats` -- covers AC019 -- status: green -- to-write: the sudo helpers render to a user tmp first, refuse when sudo is absent or FAKE_SUDO_STATUS fails, and never write the managed dir unprivileged. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)
 
 ### Group AT074
 
@@ -781,7 +781,7 @@ _(no tests in this group)_
 
 ### Group AT075
 
-- AT075 (non-test) docs/guides/sleeve-agents.md has a Managed floor section covering what, where, the sudo prompt, how to see it, the removal rule and that it binds every session; Molt-matts roles/sysadm/AGENTS.md.tmpl's credential sentence says the floor is in place -- covers AC021 -- status: n/a -- to-write: dc and vc check the text
+- AT075 (non-test) docs/guides/sleeve-agents.md has a Managed floor section covering what, where, the sudo prompt, how to see it, the removal rule and that it binds every session; Molt-matts roles/sysadm/AGENTS.md.tmpl's credential sentence says the floor is in place -- covers AC021 -- status: n/a -- dc and vc check the text. Checked 22 Oct 2026: guide section at 9a325d8 (merged 02f51a2) and the sysadm role sentence at Molt-matts 9b36722 (merged 5220ca8); AC021 satisfied by evidence
 
 ---
 

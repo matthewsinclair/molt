@@ -244,7 +244,8 @@
       "text": "The guide has a Managed floor section (what, where, the sudo prompt mid-upgrade, how to see it, the removal rule, that it binds every session on the sleeve), and Molt-matts' sysadm AGENTS.md.tmpl no longer says the floor is still to come",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "docs/guides/sleeve-agents.md's Managed floor section (dc, 9a325d8, merged 02f51a2) covers what the floor is, where it lives per platform, the sudo prompt mid molt upgrade, how to see it (molt agent config example and doctor check 14), the removal rule and that it binds every session on the sleeve; Molt-matts config/agents/roles/sysadm/AGENTS.md.tmpl (dc, 9b36722, merged 5220ca8) no longer says the floor is still to come: where Molt has installed one the two denies hold, where not only the fence does. Text checked by dc and vc, 22 Oct 2026"
       }
     }
   ],
@@ -933,8 +934,8 @@
       "covers": [
         "AC010"
       ],
-      "status": "to-write",
-      "note": "to-write: WP06 spec 21 Oct; agents install on a sleeve with an enabled sysadm agent renders managed-settings.d/molt-sysadm.json through faked sudo with exactly floor.json's deny list, mode 644, with a sidecar; a second run writes nothing"
+      "status": "green",
+      "note": "to-write: WP06 spec 21 Oct; agents install on a sleeve with an enabled sysadm agent renders managed-settings.d/molt-sysadm.json through faked sudo with exactly floor.json's deny list, mode 644, with a sidecar; a second run writes nothing. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
     },
     {
       "id": "AT069",
@@ -943,8 +944,8 @@
       "covers": [
         "AC010"
       ],
-      "status": "to-write",
-      "note": "to-write: molt agent config <host>-sysadm shows the floor's two rules tagged managed above the user layer on a sleeve carrying the floor, and no managed rule on one that does not"
+      "status": "green",
+      "note": "to-write: molt agent config <host>-sysadm shows the floor's two rules tagged managed above the user layer on a sleeve carrying the floor, and no managed rule on one that does not. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
     },
     {
       "id": "AT070",
@@ -953,8 +954,8 @@
       "covers": [
         "AC017"
       ],
-      "status": "to-write",
-      "note": "to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported"
+      "status": "green",
+      "note": "to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
     },
     {
       "id": "AT071",
@@ -963,8 +964,8 @@
       "covers": [
         "AC018"
       ],
-      "status": "to-write",
-      "note": "to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written"
+      "status": "green",
+      "note": "to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
     },
     {
       "id": "AT072",
@@ -973,8 +974,8 @@
       "covers": [
         "AC019"
       ],
-      "status": "to-write",
-      "note": "doctor check 14 warns on a sleeve that takes the floor with a missing or stale floor, and on a sleeve that does not take it (no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR) carrying a molt-written floor; passes otherwise"
+      "status": "green",
+      "note": "doctor check 14 warns on a sleeve that takes the floor with a missing or stale floor, and on a sleeve that does not take it (no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR) carrying a molt-written floor; passes otherwise. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
     },
     {
       "id": "AT073",
@@ -983,8 +984,8 @@
       "covers": [
         "AC019"
       ],
-      "status": "to-write",
-      "note": "to-write: the sudo helpers render to a user tmp first, refuse when sudo is absent or FAKE_SUDO_STATUS fails, and never write the managed dir unprivileged"
+      "status": "green",
+      "note": "to-write: the sudo helpers render to a user tmp first, refuse when sudo is absent or FAKE_SUDO_STATUS fails, and never write the managed dir unprivileged. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
     },
     {
       "id": "AT074",
@@ -1004,7 +1005,7 @@
         "AC021"
       ],
       "status": "n-a",
-      "note": "to-write: dc and vc check the text"
+      "note": "dc and vc check the text. Checked 22 Oct 2026: guide section at 9a325d8 (merged 02f51a2) and the sysadm role sentence at Molt-matts 9b36722 (merged 5220ca8); AC021 satisfied by evidence"
     }
   ]
 }
