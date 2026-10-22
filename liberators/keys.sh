@@ -2,6 +2,10 @@
 # keys.sh — Liberator: keyboard remapping
 # Frees you from default key layouts.
 
+# keyd reads its config here; install puts the instance's copy there through
+# sudo. MOLT_KEYD_CONFIG stands in for it in tests.
+KEYD_CONFIG="${MOLT_KEYD_CONFIG:-/etc/keyd/default.conf}"
+
 keys_check() {
   local ok=0
   local platform
@@ -22,7 +26,7 @@ keys_check() {
     ok=1
   fi
 
-  if [[ ! -f /etc/keyd/default.conf ]]; then
+  if [[ ! -f "$KEYD_CONFIG" ]]; then
     molt_info "keys: keyd config not present"
     ok=1
   fi
@@ -70,7 +74,11 @@ keys_install() {
 
   if [[ -f "$instance_keyd" ]]; then
     molt_info "Installing keyd config from instance/$hostname..."
-    sudo cp "$instance_keyd" /etc/keyd/default.conf
+    local why
+    if ! why="$(molt_sudo_install "$instance_keyd" "$KEYD_CONFIG")"; then
+      molt_error "keys: the keyd config was not installed: $why"
+      return 1
+    fi
     sudo keyd reload
   else
     molt_warn "No keyd config found for instance $hostname"
