@@ -3,8 +3,8 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 3cbe9031-145f-4360-ab33-cdb83ac851d9
-heartbeat_at: 2026-10-22 05:12Z
-status: active
+heartbeat_at: 2026-10-22 05:48Z
+status: paused
 focus: "22 Oct: WP06 guide on wp06-guide 1efde2c waiting on cc's head 7bd3038 or later; Molt-matts st0006-wp06 1421034 ready; 0022 held"
 claims: [ISSUE:0022]
 ---

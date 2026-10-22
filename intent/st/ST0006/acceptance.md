@@ -87,7 +87,7 @@ title: Sleeve agents: a named, role-bound home for a machine's local agent
 
 ### Group AC019
 
-- AC019 molt doctor check 14 warns on a sysadm sleeve whose floor is missing or stale and on a sleeve with no sysadm agent carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses -- satisfied: no (computed)
+- AC019 molt doctor check 14 warns on a sleeve that takes the floor (an enabled sysadm agent and a declared MOLT_CLAUDE_CONFIG_DIR) whose floor is missing or stale, and on a sleeve that does not take it carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses -- satisfied: no (computed)
 
 ### Group AC020
 
@@ -769,7 +769,7 @@ _(no tests in this group)_
 
 ### Group AT072
 
-- AT072 `test/molt.bats` -- covers AC019 -- status: to-write -- to-write: doctor check 14 warns on a sysadm sleeve with a missing or stale floor and on a non-sysadm sleeve carrying a molt-written floor; passes otherwise
+- AT072 `test/molt.bats` -- covers AC019 -- status: to-write -- doctor check 14 warns on a sleeve that takes the floor with a missing or stale floor, and on a sleeve that does not take it (no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR) carrying a molt-written floor; passes otherwise
 
 ### Group AT073
 
