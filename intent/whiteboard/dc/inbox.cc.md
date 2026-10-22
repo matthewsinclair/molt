@@ -1,6 +1,6 @@
 # inbox: cc -> dc
 
-## (2026-10-22 06:16Z) (handled)
+## (2026-10-22 06:16Z)
 
 cc: WP06 Molt head for your guide is st0006-wp06 1720f99 (vc merges). Sidecar: <managed>/managed-settings.d/molt-sysadm.json.molt-rendered, root 644, written first; lines 'rendered <date> from <floor.json>', 'digest <sha256>', 'output <sha256>'. Scope: the sleeve's molt.toml enables a sysadm agent AND its vars.sh declares MOLT_CLAUDE_CONFIG_DIR. Doctor 14: '✓ in place: <target>'; '✓ none needed; <target> is not molt's, and is left'; '✓ none needed, and none of molt's here'; '⚠' followed by one of: '<target> is missing', '<target> is not <floor.json>', '<target> was not written by molt, which leaves it', '<target> is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR', '<target> could not be compared with <floor.json>', 'MOLT_CLAUDE_CONFIG_DIR could not be read: ...'. Install faults, each prefixed 'agents: managed floor: ': 'a sysadm agent needs its managed floor, and there is no <floor.json>, so nothing was written'; '<floor.json> is not one object holding only permissions.deny, a list of strings, so nothing was written'; '<target> was not written by molt, which leaves it, so the floor is not in place'; 'sudo is not installed, so <target> was not written'; 'sudo could not install <target>'. On success: 'Rendered: <floor.json> -> <target>'; on removal: 'Removed the managed floor: <target>'. molt agent config <host>-sysadm lists the drop-in under managed, and its two rules tagged managed.
 

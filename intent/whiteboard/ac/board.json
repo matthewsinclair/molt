@@ -1,5 +1,5 @@
 {
-  "schema": "intent/board@3.0",
+  "schema": "intent/board@4.0",
   "node": {
     "moniker": "ac",
     "name": "Authoring Claude",
@@ -43,5 +43,6 @@
       "recorded_at": "2026-10-21T09:35:53.272Z"
     }
   ],
-  "messages": []
+  "sent": [],
+  "handled": []
 }
