@@ -482,6 +482,124 @@ molt_agent_floor_faults() {
   esac
 }
 
+# --- The sandbox profile (issue 0032) ---
+
+# Claude Code's Linux sandbox runs each command under bwrap and makes a nested
+# user namespace there, which needs sys_admin. Ubuntu's bwrap-userns-restrict
+# denies bwrap's children every capability, so an ops or docs agent, fenced
+# with the sandbox and no unsandboxed commands, can run none. Molt's copy of
+# that profile denies them every capability but sys_admin. It replaces the
+# distro's, which is kept beside it as .molt-orig, once, and put back when the
+# sleeve no longer takes molt's. Only a profile beside molt's sidecar is ever
+# replaced by the distro's.
+
+# Molt's profile, in the framework.
+molt_agent_sandbox_source() {
+  echo "${MOLT_ROOT}/templates/apparmor/bwrap-userns-restrict.tmpl"
+}
+
+# The profile molt replaces; its sidecar is ${this}.molt-rendered.
+molt_agent_sandbox_target() {
+  echo "$(molt_apparmor_dir)/bwrap-userns-restrict"
+}
+
+# Where the distro's profile is kept while molt's is in place.
+molt_agent_sandbox_orig() {
+  echo "$(molt_agent_sandbox_target).molt-orig"
+}
+
+# True when this sleeve is Linux, gives an ops or docs agent a home, the roles
+# fenced with the sandbox, and has the distro's bwrap-userns-restrict, in place
+# or kept, so it takes molt's profile. A distro that ships none restricts no
+# bwrap, and needs none. Fails, with status 2 and printing why, when the
+# [[agent]] entries cannot be read.
+molt_agent_sandbox_wanted() {
+  local agents
+  [[ "$(molt_platform)" == linux ]] || return 1
+  if ! agents="$(molt_homed_agents)"; then
+    echo "the [[agent]] entries in molt.toml could not be read"
+    return 2
+  fi
+  printf '%s\n' "$agents" | awk -F'\t' '$2 == "ops" || $2 == "docs" { found = 1 } END { exit !found }' || return 1
+  [[ -e "$(molt_agent_sandbox_target)" || -e "$(molt_agent_sandbox_orig)" ]]
+}
+
+# The state of this sleeve's sandbox profile, one word: on a sleeve that takes
+# molt's, current, missing (the distro's is kept, and none is in place), stale,
+# or foreign (the distro's, or anybody's but molt's); on one that does not, absent, leftover (molt's, to put the distro's
+# back over), or unowned (the distro's, left alone). Fails, printing why
+# instead, when the [[agent]] entries cannot be read or the profile cannot be
+# compared with molt's.
+molt_agent_sandbox_state() {
+  local why wanted=0
+  why="$(molt_agent_sandbox_wanted)" || wanted=$?
+  if [[ $wanted -eq 2 ]]; then
+    echo "$why"
+    return 1
+  fi
+  molt_root_file_state "$(molt_agent_sandbox_source)" "$(molt_agent_sandbox_target)" "$wanted"
+}
+
+# Tries, unprivileged, what Claude Code's sandbox does first where molt's
+# profile is in place: a user namespace made inside bwrap, mapping root. It is
+# the check that the profile is loaded, since aa-status needs root and
+# apparmor_parser -Q never asks the kernel. bwrap binds / as it is, so the
+# unshare it runs is this sleeve's. Fails, printing why: with status 2 when
+# bwrap or unshare is not installed, so nothing could be tried, and 1 when
+# bwrap's children are refused.
+molt_agent_sandbox_probe() {
+  local out tool
+  for tool in bwrap unshare; do
+    if ! command -v "$tool" &>/dev/null; then
+      echo "$tool is not installed, so whether Claude Code's sandbox can start cannot be tried"
+      return 2
+    fi
+  done
+  if ! out="$(bwrap --unshare-user --unshare-pid --ro-bind / / --dev /dev --proc /proc unshare -U --map-root-user true 2>&1)"; then
+    out="$(printf '%s\n' "$out" | tail -n 1)"
+    echo "$(molt_tilde "$(molt_agent_sandbox_target)") is molt's, but bwrap's children still cannot make the sandbox's user namespace: ${out:-bwrap said nothing}"
+    return 1
+  fi
+}
+
+# Names, a line each, what stands between this sleeve and the sandbox profile
+# it should take: apparmor_parser absent; a profile missing, stale, or not
+# molt's, and somebody's other than the distro's kept copy; molt's in place but
+# bwrap's children still refused, or bwrap or unshare absent so that cannot be
+# tried, which it runs bwrap to find out; molt's left on a sleeve that no
+# longer takes it, and no .molt-orig to put back. Takes the state
+# molt_agent_sandbox_state gave as $1 where the caller has it.
+molt_agent_sandbox_faults() {
+  local state target orig why
+  target="$(molt_tilde "$(molt_agent_sandbox_target)")"
+  orig="$(molt_agent_sandbox_orig)"
+  if [[ $# -gt 0 ]]; then
+    state="$1"
+  elif ! state="$(molt_agent_sandbox_state)"; then
+    echo "$state"
+    return 0
+  fi
+  case "$state" in
+    current | missing | stale | foreign)
+      command -v apparmor_parser &>/dev/null \
+        || echo "apparmor_parser is not installed, so the sandbox profile cannot be loaded" ;;
+  esac
+  case "$state" in
+    current) why="$(molt_agent_sandbox_probe)" || echo "$why" ;;
+    missing) echo "$target is missing" ;;
+    stale) echo "$target is not $(molt_tilde "$(molt_agent_sandbox_source)")" ;;
+    foreign)
+      if [[ -e "$orig" ]] && ! cmp -s "$(molt_agent_sandbox_target)" "$orig"; then
+        echo "$target is neither molt's nor the distro's kept in $(molt_tilde "$orig"), so molt leaves it"
+      else
+        echo "$target is not molt's, so bwrap's children are denied the sys_admin Claude Code's sandbox needs"
+      fi ;;
+    leftover)
+      echo "$target is molt's, and this sleeve takes no sandbox profile: it enables no ops or docs agent, or is not Linux"
+      [[ -e "$orig" ]] || echo "there is no $(molt_tilde "$orig") to put back" ;;
+  esac
+}
+
 # --- Permissions ---
 
 # The settings files Claude Code reads permission rules from, for a session in
@@ -557,6 +675,24 @@ _agent_list() {
   molt_report_faults molt_warn "molt agent: " "molt.toml" "$(molt_agent_manifest_faults)"
 }
 
+# Whether this sleeve's sandbox profile is in place, for an agent the sandbox
+# fences, on one line: in place, none needed, or its faults.
+_agent_sandbox_line() {
+  local state faults
+  if ! state="$(molt_agent_sandbox_state)"; then
+    echo "$state"
+    return 0
+  fi
+  faults="$(molt_agent_sandbox_faults "$state")"
+  if [[ -n "$faults" ]]; then
+    printf '%s\n' "$faults" | awk 'NR > 1 { printf "; " } { printf "%s", $0 } END { print "" }'
+  elif [[ "$state" == current ]]; then
+    echo "in place: $(molt_tilde "$(molt_agent_sandbox_target)")"
+  else
+    echo "none needed on this sleeve"
+  fi
+}
+
 # The agent named $1: its role, harness, home, each rendered file's state, the
 # settings files read for it, and the permission rules in effect there, each
 # tagged with its layer. An undeclared name fails, listing the declared ones.
@@ -591,6 +727,9 @@ _agent_config() {
     printf '    %-24s %s\n' "$file" "$state"
   done <<< "$states"
   printf '  %-9s %s\n' guard "$(molt_agent_guard_state "$home")"
+  case "$role" in
+    ops | docs) printf '  %-9s %s\n' sandbox "$(_agent_sandbox_line)" ;;
+  esac
 
   echo "  settings, highest first"
   while IFS=$'\t' read -r layer path; do

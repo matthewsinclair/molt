@@ -1165,6 +1165,50 @@ molt_claude_managed_dir() {
   esac
 }
 
+# Where AppArmor reads its profiles on a Linux sleeve. Root-owned; molt writes
+# bwrap-userns-restrict there through sudo, with its sidecar and the distro's
+# copy beside it, and nothing else (issue 0032).
+molt_apparmor_dir() {
+  echo "/etc/apparmor.d"
+}
+
+# True when this sleeve's AppArmor parses the profile file $1, read with the
+# includes in molt_apparmor_dir, unprivileged and loading nothing. Fails,
+# printing why, with apparmor_parser absent or the parse refused; the parser's
+# own words go to stderr.
+molt_apparmor_parses() {
+  local profile
+  profile="$(molt_tilde "$1")"
+  if ! command -v apparmor_parser &>/dev/null; then
+    echo "apparmor_parser is not installed, so $profile cannot be parsed"
+    return 1
+  fi
+  if ! apparmor_parser -Q -K -I "$(molt_apparmor_dir)" "$1" >&2; then
+    echo "$profile does not parse under this sleeve's AppArmor"
+    return 1
+  fi
+}
+
+# Loads the AppArmor profile file $1 into the kernel, replacing what it holds of
+# it, through sudo. Fails, printing why, with apparmor_parser or sudo absent or
+# the load refused.
+molt_apparmor_load() {
+  local profile
+  profile="$(molt_tilde "$1")"
+  if ! command -v apparmor_parser &>/dev/null; then
+    echo "apparmor_parser is not installed, so $profile was not loaded"
+    return 1
+  fi
+  if ! command -v sudo &>/dev/null; then
+    echo "sudo is not installed, so $profile was not loaded"
+    return 1
+  fi
+  if ! sudo apparmor_parser -r "$1" >&2; then
+    echo "apparmor_parser could not load $profile"
+    return 1
+  fi
+}
+
 # Puts the bytes of $1 at $2, a root-owned path, mode 644, through sudo: copied
 # first to a temporary file of the user's, so what sudo installs is what was
 # read, then installed with the directory made as needed. Never written any
@@ -1397,7 +1441,7 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=14
+  local total=15
   local step=0
   local warnings=0
 
@@ -1769,6 +1813,31 @@ cmd_doctor() {
     while IFS= read -r floor_fault; do
       echo "         $floor_fault"
     done <<< "$floor_faults"
+    warnings=$((warnings + 1))
+  fi
+
+  # 15. The sandbox profile (issue 0032): on a Linux sleeve with an ops or docs
+  # agent, molt's bwrap-userns-restrict is in place and bwrap's children can
+  # make the sandbox's user namespace; on any other, none of molt's is left.
+  step=$((step + 1))
+  local sandbox_state sandbox_faults sandbox_fault
+  if sandbox_state="$(molt_agent_sandbox_state)"; then
+    sandbox_faults="$(molt_agent_sandbox_faults "$sandbox_state")"
+  else
+    sandbox_faults="$sandbox_state"
+  fi
+  if [[ -z "$sandbox_faults" ]]; then
+    case "$sandbox_state" in
+      current) sandbox_fault="in place: $(molt_tilde "$(molt_agent_sandbox_target)")" ;;
+      unowned) sandbox_fault="none needed; $(molt_tilde "$(molt_agent_sandbox_target)") is not molt's, and is left" ;;
+      *)       sandbox_fault="none needed, and none of molt's here" ;;
+    esac
+    echo "[$step/$total] Checking sandbox profile... ✓ $sandbox_fault"
+  else
+    echo "[$step/$total] Checking sandbox profile... ⚠"
+    while IFS= read -r sandbox_fault; do
+      echo "         $sandbox_fault"
+    done <<< "$sandbox_faults"
     warnings=$((warnings + 1))
   fi
 
