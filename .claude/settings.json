@@ -1,6 +1,7 @@
 {
   "permissions": {
-    "deny": ["Edit(/AGENTS.md)", "Edit(/.claude/AGENTS.md)"]
+    "deny": ["Edit(/AGENTS.md)", "Edit(/.claude/AGENTS.md)"],
+    "allow": ["Bash(intent wp:*)"]
   },
   "hooks": {
     "SessionStart": [
@@ -38,6 +39,19 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "p=''; command -v jq >/dev/null 2>&1 && p=\"$(jq -r '.tool_input.file_path // empty' 2>/dev/null)\"; [ -n \"$p\" ] || p=\"${CLAUDE_FILE_PATH:-}\"; p=\"${p#\"${CLAUDE_PROJECT_DIR:-$PWD}\"/}\"; if [ -n \"$p\" ] && [ -f intent/llm/MODULES.md ] && ! grep -qF \"$p\" intent/llm/MODULES.md 2>/dev/null; then echo \"Advisory: $p is not registered in MODULES.md. Run 'intent modules check' to review.\"; fi; exit 0",
+            "timeout": 5
+          }
+        ]
+      }
     ]
-  }
+  },
+  "enabledMcpjsonServers": ["intent"]
 }
