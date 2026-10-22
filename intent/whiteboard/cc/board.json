@@ -5,10 +5,12 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51",
-    "heartbeat_at": "2026-10-22T07:39:06.696Z",
+    "heartbeat_at": "2026-10-22T10:58:51.252Z",
     "status": "active",
-    "focus": "Idle: WP06, 0033, 0034 merged; queue empty (vc, 22 Oct)",
-    "claims": [],
+    "focus": "Issue 0032 at 03bee17 (WIP); route waits on vc's relay of the priority experiment",
+    "claims": [
+      "ISSUE:0032"
+    ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
@@ -258,6 +260,15 @@
       "archived_at": "2026-10-22T07:06:13.804Z",
       "recorded_at": "2026-10-22T06:48:30.183Z",
       "edited_at": "2026-10-22T06:58:07.496Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 10,
+      "text": "Issue 0032 on issue-0032 at 03bee17 (WIP; worktree ~/Devel/prj/Molt-wt/issue-0032): shared molt_root_file_state/_install/_remove banked, floor on them, agents+molt bats green. Left: sandbox predicate/state/faults, _agents_sandbox (install, apparmor_parser -r, bwrap probe; vc accepted the probe), doctor 15, agent config line, tests, CHANGELOG. Template route waits on kovacs-sysadm's priority=1 local/unpriv_bwrap experiment (vc relays). Never ssh to kovacs (vc).",
+      "state": "live",
+      "recorded_at": "2026-10-22T10:55:12.833Z",
+      "edited_at": "2026-10-22T10:58:51.134Z"
     }
   ],
   "messages": [

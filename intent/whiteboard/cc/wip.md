@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 07:39Z
+heartbeat_at: 2026-10-22 10:58Z
 status: active
-focus: "Idle: WP06, 0033, 0034 merged; queue empty (vc, 22 Oct)"
-claims: []
+focus: "Issue 0032 at 03bee17 (WIP); route waits on vc's relay of the priority experiment"
+claims: [ISSUE:0032]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-_(none)_
+- Issue 0032 on issue-0032 at 03bee17 (WIP; worktree ~/Devel/prj/Molt-wt/issue-0032): shared molt_root_file_state/_install/_remove banked, floor on them, agents+molt bats green. Left: sandbox predicate/state/faults, _agents_sandbox (install, apparmor_parser -r, bwrap probe; vc accepted the probe), doctor 15, agent config line, tests, CHANGELOG. Template route waits on kovacs-sysadm's priority=1 local/unpriv_bwrap experiment (vc relays). Never ssh to kovacs (vc). (edited)
 
 ## TODO
 
