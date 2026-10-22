@@ -4,9 +4,7 @@
 # built): every OPEN thread is declared, and nothing else. OPEN means every status
 # except Completed and Cancelled.
 #
-ISSUE:0015
 STEELTHREAD:ST0006
 ISSUE:0022
 ISSUE:0035
-ISSUE:0036
 ISSUE:0037
