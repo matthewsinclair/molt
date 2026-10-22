@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 06:27Z
+heartbeat_at: 2026-10-22 06:58Z
 status: active
-focus: "Issue 0033 (sudo helpers in keys.sh, tiling.sh) on issue-0033"
-claims: [ISSUE:0033]
+focus: "Issue 0034 handed to vc at 9eae8ff; waiting on merge"
+claims: [ISSUE:0034]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0033 on branch issue-0033 (worktree ~/Devel/prj/Molt-wt/issue-0033, off main 02f51a2): keys.sh and tiling.sh to molt_sudo_install/molt_sudo_remove
+- Issue 0034 handed to vc at issue-0034 9eae8ff (worktree ~/Devel/prj/Molt-wt/issue-0034): clone, build, systemctl enable/start, keyd reload each named and stopping; waiting on vc's merge, then remove the worktree and branch. (edited)
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Issue 0033 commit (staged in ~/Devel/prj/Molt-wt/issue-0033, accepted by vc): released by vc's 'pushed' notice for the dc inbox view and vc's clear; then stash, merge main, stash pop, git checkout main -- intent if the hook rewrote it, commit with the gate on. Then 0034 (keys.sh sudo make install, systemctl, keyd reload unchecked), same shape.
+_(none)_
 
 ## Watch-outs
 
