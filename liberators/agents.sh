@@ -182,8 +182,7 @@ _agents_floor() {
   local state target src sidecar why
   target="$(molt_agent_floor_target)"
   if ! state="$(molt_agent_floor_state)"; then
-    why="$(molt_agent_floor_fault)"
-    molt_error "agents: managed floor: ${why:-the [[agent]] entries in molt.toml could not be read}, so nothing was written"
+    molt_error "agents: managed floor: $state, so nothing was written"
     return 1
   fi
   case "$state" in
@@ -236,7 +235,7 @@ agents_install() {
     return 1
   fi
   # Nor any home a sysadm agent's floor cannot follow.
-  if molt_agent_floor_wanted && fault="$(molt_agent_floor_fault)" && [[ -n "$fault" ]]; then
+  if ! fault="$(molt_agent_floor_state)"; then
     molt_error "agents: managed floor: $fault, so nothing was written"
     return 1
   fi

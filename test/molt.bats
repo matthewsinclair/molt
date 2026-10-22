@@ -611,6 +611,7 @@ _floor_sleeve() {
     printf '{"permissions": {"deny": ["Read(~/.ssh/id_*)", "Read(~/.aws/credentials)"]}}\n' \
         > "$REPO/config/agents/roles/sysadm/floor.json"
     printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "sysadm"\n' > "$INSTANCE/molt.toml"
+    printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" > "$INSTANCE/vars.sh"
     cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
 #!/usr/bin/env bash
 echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
@@ -621,7 +622,7 @@ FAKE
     export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
 }
 
-@test "doctor check 14 warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent carrying molt's, and passes otherwise" {
+@test "doctor check 14 warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent or no declared config dir carrying molt's, and passes otherwise" {
     # AT072 (ST0006 AC019).
     _floor_sleeve
     run cmd_doctor
@@ -634,10 +635,20 @@ FAKE
     run cmd_doctor
     assert_output_contains "         $FLOOR is not $REPO/config/agents/roles/sysadm/floor.json"
 
+    : > "$INSTANCE/vars.sh"
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ⚠"
+    assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
+    echo 'if then' > "$INSTANCE/vars.sh"
+    run cmd_doctor
+    assert_output_contains "[14/14] Checking managed floor... ⚠"
+    assert_output_contains "         MOLT_CLAUDE_CONFIG_DIR could not be read: $INSTANCE/vars.sh does not parse"
+    printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" > "$INSTANCE/vars.sh"
+
     printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
     run cmd_doctor
     assert_output_contains "[14/14] Checking managed floor... ⚠"
-    assert_output_contains "         $FLOOR is molt's, and no sysadm agent here needs it"
+    assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
     rm -f "$FLOOR.molt-rendered"
     run cmd_doctor
     assert_output_contains "[14/14] Checking managed floor... ✓ none needed; $FLOOR is not molt's, and is left"

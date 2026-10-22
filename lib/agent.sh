@@ -398,12 +398,22 @@ molt_agent_floor_target() {
   echo "$(molt_claude_managed_dir)/managed-settings.d/molt-sysadm.json"
 }
 
-# True when this sleeve gives a sysadm agent a home, so it carries the floor.
-# Fails, with status 2, when the [[agent]] entries cannot be read.
+# True when this sleeve gives a sysadm agent a home and declares
+# MOLT_CLAUDE_CONFIG_DIR, the gate the home guard's hook keeps
+# (molt_agent_guard_hook), so it carries the floor. Fails, with status 2 and
+# printing why, when the [[agent]] entries or vars.sh cannot be read.
 molt_agent_floor_wanted() {
-  local agents
-  agents="$(molt_homed_agents)" || return 2
-  printf '%s\n' "$agents" | awk -F'\t' '$2 == "sysadm" { found = 1 } END { exit !found }'
+  local agents declared
+  if ! agents="$(molt_homed_agents)"; then
+    echo "the [[agent]] entries in molt.toml could not be read"
+    return 2
+  fi
+  printf '%s\n' "$agents" | awk -F'\t' '$2 == "sysadm" { found = 1 } END { exit !found }' || return 1
+  if ! declared="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
+    echo "MOLT_CLAUDE_CONFIG_DIR could not be read: $declared"
+    return 2
+  fi
+  [[ -n "$declared" ]]
 }
 
 # Why the floor's source cannot be installed, or nothing when it can: no user
@@ -427,13 +437,17 @@ molt_agent_floor_fault() {
 # The state of this sleeve's floor, one word: on a sleeve that carries it,
 # current, missing, stale, or foreign (a drop-in molt did not write, which it
 # leaves, so the floor is not in place); on one that does not, absent, leftover
-# (molt's, to remove), or unowned (somebody else's, left alone). Fails, printing nothing, when the [[agent]] entries or the floor's
-# source cannot be read; molt_agent_floor_fault says why.
+# (molt's, to remove), or unowned (somebody else's, left alone). Fails,
+# printing why instead, when the [[agent]] entries or vars.sh cannot be read,
+# or, on a sleeve that carries the floor, its source cannot be installed.
 molt_agent_floor_state() {
-  local target src wanted=0
+  local target src why wanted=0
   target="$(molt_agent_floor_target)"
-  molt_agent_floor_wanted || wanted=$?
-  [[ $wanted -ne 2 ]] || return 1
+  why="$(molt_agent_floor_wanted)" || wanted=$?
+  if [[ $wanted -eq 2 ]]; then
+    echo "$why"
+    return 1
+  fi
   if [[ $wanted -ne 0 ]]; then
     if [[ -f "${target}.molt-rendered" ]]; then
       echo leftover
@@ -444,7 +458,12 @@ molt_agent_floor_state() {
     fi
     return 0
   fi
-  [[ -z "$(molt_agent_floor_fault)" ]] || return 1
+  why="$(molt_agent_floor_fault)"
+  if [[ -n "$why" ]]; then
+    echo "$why"
+    return 1
+  fi
+  # The fault above names a source that cannot be found.
   src="$(molt_agent_floor_source)" || return 1
   if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
     echo foreign
@@ -461,11 +480,10 @@ molt_agent_floor_state() {
 # carry: the source's fault, a floor missing or stale, one molt did not write,
 # or molt's left on a sleeve that no longer carries it.
 molt_agent_floor_faults() {
-  local state target fault
+  local state target
   target="$(molt_tilde "$(molt_agent_floor_target)")"
   if ! state="$(molt_agent_floor_state)"; then
-    fault="$(molt_agent_floor_fault)"
-    echo "${fault:-the [[agent]] entries in molt.toml could not be read}"
+    echo "$state"
     return 0
   fi
   case "$state" in
@@ -473,7 +491,7 @@ molt_agent_floor_faults() {
     missing) echo "$target is missing" ;;
     stale) echo "$target is not $(molt_tilde "$(molt_agent_floor_source)")" ;;
     foreign) echo "$target was not written by molt, which leaves it" ;;
-    leftover) echo "$target is molt's, and no sysadm agent here needs it" ;;
+    leftover) echo "$target is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR" ;;
   esac
 }
 

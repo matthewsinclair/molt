@@ -615,6 +615,7 @@ with_role_files_unlisted() {
 @test "the permissions in effect are every rule from every layer, deny first, each tagged with its layer" {
     # AT037 (ST0006 AC006).
     setup_agents
+    declare_config_dir
     agents_install >/dev/null
     mkdir -p "$BATS_TEST_TMPDIR/managed/managed-settings.d" "$CLAUDE_CONFIG_DIR"
     echo '{"permissions": {"deny": ["Bash(sudo rm:*)"]}}' > "$BATS_TEST_TMPDIR/managed/managed-settings.json"
@@ -707,6 +708,7 @@ _ops_role() {
 @test "agents install renders floor.json's bytes as the managed drop-in through sudo, mode 644, with molt's sidecar, and a second run writes nothing" {
     # AT068 (ST0006 AC010).
     setup_agents
+    declare_config_dir
     run agents_check
     assert_failure
     assert_output_contains "agents: managed floor: $FLOOR is missing"
@@ -738,6 +740,7 @@ _ops_role() {
 @test "molt agent config shows the floor's rules tagged managed above the user layer where it is, and no managed rule where it is not" {
     # AT069 (ST0006 AC010).
     setup_agents
+    declare_config_dir
     agents_install >/dev/null
     mkdir -p "$CLAUDE_CONFIG_DIR"
     echo '{"permissions": {"deny": ["Bash(curl:*)"]}}' > "$CLAUDE_CONFIG_DIR/settings.json"
@@ -758,9 +761,29 @@ _ops_role() {
     [ "$output" = 0 ]
 }
 
-@test "with no enabled sysadm agent, install renders no floor and removes molt's, and leaves, naming it, one molt did not write" {
+@test "with no enabled sysadm agent, or no declared config dir, install renders no floor and removes molt's, and leaves, naming it, one molt did not write" {
     # AT070 (ST0006 AC017).
     setup_agents
+    local vars="$INSTANCE/vars.sh"
+    cp "$vars" "$BATS_TEST_TMPDIR/vars.sh"
+    # A sysadm agent on a sleeve that declares no config dir gets no floor.
+    run agents_install
+    assert_success
+    [ ! -e "$FLOOR" ]
+    declare_config_dir
+    agents_install >/dev/null
+    [ -f "$FLOOR.molt-rendered" ]
+    cp "$BATS_TEST_TMPDIR/vars.sh" "$vars"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
+    run agents_install
+    assert_success
+    assert_output_contains "Removed the managed floor: $FLOOR"
+    [ ! -e "$FLOOR" ]
+    [ ! -e "$FLOOR.molt-rendered" ]
+
+    declare_config_dir
     _ops_role
     write_manifest '[[agent]]' 'role = "ops"'
     run agents_install
@@ -772,7 +795,7 @@ _ops_role() {
     write_manifest '[[agent]]' 'role = "sysadm"' 'enabled = false' '' '[[agent]]' 'role = "ops"'
     run agents_check
     assert_failure
-    assert_output_contains "agents: managed floor: $FLOOR is molt's, and no sysadm agent here needs it"
+    assert_output_contains "agents: managed floor: $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
     run agents_install
     assert_success
     assert_output_contains "Removed the managed floor: $FLOOR"
@@ -787,6 +810,14 @@ _ops_role() {
     assert_output_contains "agents: managed floor: $FLOOR was not written by molt, which leaves it"
     [ "$(cat "$FLOOR")" = '{"permissions": {"deny": ["Bash(theirs)"]}}' ]
 
+    # A vars.sh that cannot be read is no answer: check names it, not a floor.
+    echo 'if then' >> "$vars"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars does not parse"
+    cp "$BATS_TEST_TMPDIR/vars.sh" "$vars"
+    declare_config_dir
+
     # Nor is one molt did not write replaced where the floor is wanted.
     write_manifest '[[agent]]' 'role = "sysadm"'
     run agents_install
@@ -798,6 +829,7 @@ _ops_role() {
 @test "a sysadm sleeve with no floor.json, or one that is not one object holding only permissions.deny, fails check and install naming it, and nothing is written" {
     # AT071 (ST0006 AC018).
     setup_agents
+    declare_config_dir
     local bad
     rm "$ROLE/floor.json"
     run agents_check
