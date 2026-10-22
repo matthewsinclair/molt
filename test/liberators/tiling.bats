@@ -10,8 +10,8 @@ _fake() {
 }
 
 # A Linux sleeve with Tactile installed, in a HOME of the test's own, with
-# fakes for the GNOME tools on PATH. Each fake logs what it was asked to do;
-# sudo runs the command it is given unless FAKE_SUDO_STATUS says otherwise.
+# fakes for the GNOME tools and sudo (install_fake_sudo) on PATH. Each fake
+# logs what it was asked to do.
 _tactile_sleeve() {
     export HOME="$BATS_TEST_TMPDIR/home"
     export MOLT_SYSTEM_SCHEMA_DIR="$BATS_TEST_TMPDIR/system-schemas"
@@ -20,11 +20,7 @@ _tactile_sleeve() {
     mkdir -p "$ext/schemas" "$MOLT_SYSTEM_SCHEMA_DIR" "$BATS_TEST_TMPDIR/bin"
     printf '<schemalist>v38</schemalist>\n' > "$ext/schemas/org.gnome.shell.extensions.tactile.gschema.xml"
 
-    _fake sudo <<'FAKE'
-#!/usr/bin/env bash
-[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
-exec "$@"
-FAKE
+    install_fake_sudo
     _fake glib-compile-schemas <<'FAKE'
 #!/usr/bin/env bash
 echo "glib-compile-schemas $*" >> "$FAKE_LOG"

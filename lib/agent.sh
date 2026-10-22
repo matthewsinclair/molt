@@ -467,22 +467,32 @@ molt_agent_floor_state() {
   src="$(molt_agent_floor_source)" || return 1
   if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
     echo foreign
+    return 0
   elif [[ ! -e "$target" ]]; then
     echo missing
-  elif cmp -s "$src" "$target"; then
-    echo current
-  else
-    echo stale
+    return 0
   fi
+  local differ=0
+  cmp -s "$src" "$target" || differ=$?
+  case $differ in
+    0) echo current ;;
+    1) echo stale ;;
+    *)
+      echo "$(molt_tilde "$target") could not be compared with $(molt_tilde "$src")"
+      return 1 ;;
+  esac
 }
 
 # Names, a line each, what stands between this sleeve and the floor it should
 # carry: the source's fault, a floor missing or stale, one molt did not write,
-# or molt's left on a sleeve that no longer carries it.
+# or molt's left on a sleeve that no longer carries it. Takes the state
+# molt_agent_floor_state gave as $1 where the caller has it.
 molt_agent_floor_faults() {
   local state target
   target="$(molt_tilde "$(molt_agent_floor_target)")"
-  if ! state="$(molt_agent_floor_state)"; then
+  if [[ $# -gt 0 ]]; then
+    state="$1"
+  elif ! state="$(molt_agent_floor_state)"; then
     echo "$state"
     return 0
   fi

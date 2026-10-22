@@ -604,7 +604,7 @@ _floor_sleeve() {
     export HOME="$BATS_TEST_TMPDIR/home" MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
     REPO="$BATS_TEST_TMPDIR/repo"
     INSTANCE="$REPO/instances/$(test_hostname)"
-    mkdir -p "$HOME" "$REPO/config/agents/roles/sysadm" "$INSTANCE" "$BATS_TEST_TMPDIR/bin"
+    mkdir -p "$HOME" "$REPO/config/agents/roles/sysadm" "$INSTANCE"
     eval "molt_find_user_repo() { echo \"$REPO\"; }"
     eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
     FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
@@ -612,14 +612,7 @@ _floor_sleeve() {
         > "$REPO/config/agents/roles/sysadm/floor.json"
     printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "sysadm"\n' > "$INSTANCE/molt.toml"
     printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" > "$INSTANCE/vars.sh"
-    cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
-#!/usr/bin/env bash
-echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
-[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
-exec "$@"
-FAKE
-    chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
-    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+    install_fake_sudo
 }
 
 @test "doctor check 14 warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent or no declared config dir carrying molt's, and passes otherwise" {
@@ -681,6 +674,14 @@ FAKE
     grep -q "^sudo install -m 644 " "$BATS_TEST_TMPDIR/sudo.log"
     run grep -qF "install -m 644 $src " "$BATS_TEST_TMPDIR/sudo.log"
     assert_failure
+    # The directory, there already, keeps its mode; a missing one is made.
+    run grep -q "install -d" "$BATS_TEST_TMPDIR/sudo.log"
+    assert_failure
+    rm -rf "$(dirname "$FLOOR")"
+    run molt_sudo_install "$src" "$FLOOR"
+    assert_success
+    grep -qF "sudo install -d -m 755 $(dirname "$FLOOR")" "$BATS_TEST_TMPDIR/sudo.log"
+    cmp "$src" "$FLOOR"
 
     FAKE_SUDO_STATUS=1 run molt_sudo_remove "$FLOOR"
     assert_failure

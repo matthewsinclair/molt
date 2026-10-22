@@ -636,16 +636,9 @@ molt_render_place() {
   # Leave a marker so we know this file was rendered (not symlinked), carrying
   # the digest of the inputs so molt_config_stale can tell whether they moved,
   # and of the file written, so the next render can tell a hand edit from it.
-  {
-    echo "rendered $(date -Iseconds) from $template"
-    local d
-    if d="$(molt_config_digest "$template" ${1+"$@"})" && [[ -n "$d" ]]; then
-      echo "digest $d"
-    fi
-    if d="$(molt_hash < "$target")" && [[ -n "$d" ]]; then
-      echo "output $d"
-    fi
-  } > "${target}.molt-rendered"
+  local d
+  d="$(molt_config_digest "$template" ${1+"$@"})" || d=""
+  molt_render_sidecar "$template" "$d" "$target" > "${target}.molt-rendered"
 
   # If parent directory is locked down (eg ~/.ssh at 700), restrict file perms
   # to match. sshd and similar tools reject files with open permissions.
@@ -656,6 +649,19 @@ molt_render_place() {
   fi
 
   molt_info "Rendered: $template -> $target"
+}
+
+# The text of a .molt-rendered sidecar: when the file $3 was rendered and from
+# what, $1, the digest $2 of its inputs, and the hash of $3 as written. A digest
+# or hash that could not be taken leaves its line out, so the file reads as
+# stale, or as not molt's own render, rather than as one that matches.
+molt_render_sidecar() {
+  local from="$1" digest="$2" written="$3" d
+  echo "rendered $(date -Iseconds) from $from"
+  [[ -z "$digest" ]] || echo "digest $digest"
+  if d="$(molt_hash < "$written")" && [[ -n "$d" ]]; then
+    echo "output $d"
+  fi
 }
 
 # The permission bits of $1 in octal, eg 700, on Linux and macOS. GNU stat is
@@ -1175,7 +1181,9 @@ molt_sudo_install() {
     echo "$src could not be copied to a temporary file, so $dest was not written"
     return 1
   fi
-  if ! sudo install -d -m 755 "$(dirname "$dest")" || ! sudo install -m 644 "$tmp" "$dest"; then
+  # An existing directory keeps the mode it has.
+  if ! { [[ -d "$(dirname "$dest")" ]] || sudo install -d -m 755 "$(dirname "$dest")"; } \
+      || ! sudo install -m 644 "$tmp" "$dest"; then
     rm -f "$tmp"
     echo "sudo could not install $dest"
     return 1
@@ -1678,10 +1686,14 @@ cmd_doctor() {
   # denies are in Claude Code's managed drop-in, where the agent cannot edit
   # them; on one without, no floor molt wrote is left behind.
   step=$((step + 1))
-  local floor_faults floor_fault
-  floor_faults="$(molt_agent_floor_faults)"
+  local floor_state floor_faults floor_fault
+  if floor_state="$(molt_agent_floor_state)"; then
+    floor_faults="$(molt_agent_floor_faults "$floor_state")"
+  else
+    floor_faults="$floor_state"
+  fi
   if [[ -z "$floor_faults" ]]; then
-    case "$(molt_agent_floor_state)" in
+    case "$floor_state" in
       current) floor_fault="in place: $(molt_tilde "$(molt_agent_floor_target)")" ;;
       unowned) floor_fault="none needed; $(molt_tilde "$(molt_agent_floor_target)") is not molt's, and is left" ;;
       *)       floor_fault="none needed, and none of molt's here" ;;

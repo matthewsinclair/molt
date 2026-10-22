@@ -21,17 +21,7 @@ setup_agents() {
     # root-owned managed file nor any real config dir is read.
     eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/claude-config"
-    # sudo runs the command it is given, logging it, unless FAKE_SUDO_STATUS
-    # says otherwise (as tiling.bats fakes it).
-    mkdir -p "$BATS_TEST_TMPDIR/bin"
-    cat > "$BATS_TEST_TMPDIR/bin/sudo" <<'FAKE'
-#!/usr/bin/env bash
-echo "sudo $*" >> "$BATS_TEST_TMPDIR/sudo.log"
-[ "${FAKE_SUDO_STATUS:-0}" -eq 0 ] || exit "$FAKE_SUDO_STATUS"
-exec "$@"
-FAKE
-    chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
-    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+    install_fake_sudo
     export FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
 
     cat > "$ROLE/AGENTS.md.tmpl" <<'EOF'
@@ -735,6 +725,16 @@ _ops_role() {
     run agents_install
     assert_success
     cmp "$ROLE/floor.json" "$FLOOR"
+
+    # A drop-in that cannot be read is named, not taken for a stale one.
+    chmod 000 "$FLOOR"
+    run agents_check
+    assert_failure
+    assert_output_contains "agents: managed floor: $FLOOR could not be compared with $ROLE/floor.json"
+    run agents_install
+    assert_failure
+    assert_output_contains "$FLOOR could not be compared with $ROLE/floor.json, so nothing was written"
+    chmod 644 "$FLOOR"
 }
 
 @test "molt agent config shows the floor's rules tagged managed above the user layer where it is, and no managed rule where it is not" {
@@ -773,6 +773,16 @@ _ops_role() {
     declare_config_dir
     agents_install >/dev/null
     [ -f "$FLOOR.molt-rendered" ]
+    # A vars.sh that cannot be read is a failure, not a sleeve with no floor:
+    # molt's floor stays.
+    echo 'if then' >> "$vars"
+    run molt_agent_floor_state
+    assert_failure
+    assert_output_contains "MOLT_CLAUDE_CONFIG_DIR could not be read: $vars does not parse"
+    run agents_install
+    assert_failure
+    [ -f "$FLOOR" ]
+    [ -f "$FLOOR.molt-rendered" ]
     cp "$BATS_TEST_TMPDIR/vars.sh" "$vars"
     run agents_check
     assert_failure
@@ -809,14 +819,6 @@ _ops_role() {
     assert_success
     assert_output_contains "agents: managed floor: $FLOOR was not written by molt, which leaves it"
     [ "$(cat "$FLOOR")" = '{"permissions": {"deny": ["Bash(theirs)"]}}' ]
-
-    # A vars.sh that cannot be read is no answer: check names it, not a floor.
-    echo 'if then' >> "$vars"
-    run agents_check
-    assert_failure
-    assert_output_contains "agents: managed floor: MOLT_CLAUDE_CONFIG_DIR could not be read: $vars does not parse"
-    cp "$BATS_TEST_TMPDIR/vars.sh" "$vars"
-    declare_config_dir
 
     # Nor is one molt did not write replaced where the floor is wanted.
     write_manifest '[[agent]]' 'role = "sysadm"'
