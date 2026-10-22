@@ -1,0 +1,16 @@
+{
+  "id": "01M5H5CDRQG4DM281R34J99192",
+  "ts": "2026-10-22T06:39:39.799Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 16,
+    "text": "WP06 landed 22 Oct: Molt merge 8656983 + guide, head 02f51a2, CI green at 3ae65ce; Molt-matts 5220ca8 (floor.json, role sentence); AT068-AT073 green, AC010/017/018/019/021 satisfied. Left: kovacs molt upgrade with hv at the sudo prompt, then kovacs-sysadm's molt agent config kovacs-sysadm and molt doctor (check 14 in place) as AC020/AT074 evidence, then wp done ST0006/06. Follow-ups with cc: issue 0033 (raw sudo in keys.sh/tiling.sh; built, landing once dc commits its inbox view), then 0034 (keys.sh's unchecked sudo commands)."
+  }
+}

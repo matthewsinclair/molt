@@ -1,0 +1,15 @@
+{
+  "id": "01M5H5BRGTWPQJPQNZG2A48DAZ",
+  "ts": "2026-10-22T06:39:18.042Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0034"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "keys.sh runs sudo make install, systemctl enable/start and keyd reload unchecked: a failure aborts the liberator with no line naming it"
+  }
+}

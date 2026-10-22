@@ -402,10 +402,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 16,
-      "text": "WP06 landed 22 Oct: Molt merge 8656983 + guide, head 02f51a2 (CI watched); Molt-matts 5220ca8 (floor.json, role sentence); AT068-AT073 green, AC010/017/018/019/021 satisfied. Left: kovacs molt upgrade with hv at the sudo prompt, then kovacs-sysadm's molt agent config kovacs-sysadm and molt doctor (check 14 in place) as AC020/AT074 evidence, then wp done ST0006/06. Issue 0033 (raw sudo in keys.sh/tiling.sh) queued to cc.",
+      "text": "WP06 landed 22 Oct: Molt merge 8656983 + guide, head 02f51a2, CI green at 3ae65ce; Molt-matts 5220ca8 (floor.json, role sentence); AT068-AT073 green, AC010/017/018/019/021 satisfied. Left: kovacs molt upgrade with hv at the sudo prompt, then kovacs-sysadm's molt agent config kovacs-sysadm and molt doctor (check 14 in place) as AC020/AT074 evidence, then wp done ST0006/06. Follow-ups with cc: issue 0033 (raw sudo in keys.sh/tiling.sh; built, landing once dc commits its inbox view), then 0034 (keys.sh's unchecked sudo commands).",
       "state": "live",
       "recorded_at": "2026-10-21T20:04:19.921Z",
-      "edited_at": "2026-10-22T06:28:36.210Z"
+      "edited_at": "2026-10-22T06:39:39.799Z"
     },
     {
       "node": "vc",
