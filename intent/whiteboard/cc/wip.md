@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 04:46Z
+heartbeat_at: 2026-10-22 05:50Z
 status: active
-focus: "WP06 at 7bd3038 on st0006-wp06; left: both-bash suite, mutation pass, critic-shell, hand-over; rollout kovacs + rhadamanth (hv), gyges later"
+focus: "WP06 at ffa25c7 on st0006-wp06 (WIP); left: critic warnings, both-bash suite, mutation pass, hand-over"
 claims: [ST0006/06]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006/06]
 
 ## DOING
 
-- WP06 managed deny floor on branch st0006-wp06 at 7bd3038 (worktree ~/Devel/prj/Molt-wt/st0006-wp06): built and AT068-AT073 green, shellcheck clean; left: both-bash full suite, mutation pass, critic-shell, hand-over to vc, then dc's floor.json. hv, 22 Oct: roll out on kovacs and rhadamanth; gyges not until hv can reach it. (edited)
+- WP06 on st0006-wp06 at ffa25c7 (WIP commit; worktree ~/Devel/prj/Molt-wt/st0006-wp06): hv 22 Oct scope built (sysadm agent AND declared MOLT_CLAUDE_CONFIG_DIR); floor state prints its own failure reason; new AT070/AT072 arms red-first then green. agents.bats and molt.bats green; shellcheck clean. Left: critic-shell's 2 warnings (bare digest line if molt_hash fails; stale comment fixed) and its recommendations (cmp exit 2 read as stale; doctor reads state twice); both-bash full suite; mutation pass; hand-over to vc. (edited)
 
 ## TODO
 
