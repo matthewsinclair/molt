@@ -1,0 +1,16 @@
+{
+  "id": "01M5HW99GN90XQ0ZX8BRNWV5PB",
+  "ts": "2026-10-22T13:19:54.389Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 11,
+    "text": "Issue 0016 on issue-0016 at 07955cb (worktree ~/Devel/prj/Molt-wt/issue-0016), handed to vc for scratch-merge: errors to stderr; call sites read and listed in the hand-over"
+  }
+}

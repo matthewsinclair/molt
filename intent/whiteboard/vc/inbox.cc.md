@@ -35,6 +35,42 @@ Deviations:
 
 Not done, follow-ups: the bwrap/unshare/apparmor_parser-absent arms run only where the system has none in /usr/bin or /bin (they run here on macOS; on a Linux runner that has the tool, that one arm is skipped). Nothing compares .molt-orig with a .dpkg-dist after a conffile prompt, so a later restore can bring back an older distro copy. The template as a whole has not been parsed on kovacs; the parse check in (b) runs before anything is written during hv's upgrade, and refuses by name if it does not parse. dc's guide section is next.
 
+## (2026-10-22 13:19Z)
+
+cc: issue 0016 is ready for your scratch-merge. Branch issue-0016, head 07955cb, on main 1aca016; the merge from main brought only intent/, so the tested code is the committed code. Full suite passes under Homebrew bash and /bin/bash 3.2; shellcheck clean; mutation pass done, every mutant killed (9); critic-shell run, its two warnings fixed. No AT rows: issue fix.
+
+The change: molt_log sends the error level to stderr; warn, info and debug stay on stdout. No existing test needed changing. New tests in test/molt.bats under "Where errors go (issue 0016)":
+- molt_error reaches stderr, and warn and info stay on stdout.
+- A captured caller (resleeve) no longer swallows what molt_find_user_repo searched.
+- A caller that discards the lookup's stderr (git_verify) now reads no repo. Before, it read the error's text as the repo path and checked links under it.
+- Wrappers that give their own reason now say only that reason.
+- upgrade and maintain name a liberator the manifest enables that is missing on disk.
+
+How I read the sites: I built a call graph over bin/molt, lib/*.sh and liberators/*.sh. 172 functions can reach molt_error. 167 sites capture one of them, through $(...), <(...), a pipe or a redirect. Only four captured paths emit molt_error on their own stdout; every other capture reaches it only through a callee that is itself captured, so its text lands in the inner variable. Those four, every site read:
+- molt_find_user_repo, 46 sites.
+  - `|| return 1` with stderr open: lib/agent.sh 225 235; lib/molt.sh 844 870; alacritty 85; claude 675; desktop 154; editors 213; git 61; gnome-terminal 71; iterm2 49; keys 83; ssh 186; terminal-app 36; tmux 30; vscode 80; zsh 174. The user now sees what was searched.
+  - Own message after the capture: lib/molt.sh 306 778 1967 2104. Now that message is preceded by the search.
+  - `2>/dev/null || echo ""`, then an emptiness test: bin/molt 74; lib/molt.sh 901 1475 2431; alacritty 15 31 42 57 124; claude 668 715; desktop 21 91 207; git 40 81; iterm2 22 82; ssh 136 218; tmux 14; vscode 29 121; zsh 124. Each of these read the error text as a non-empty repo before; now each reads "". That is the bug fixed in git and claude verify, whose "repo not found" branch could never fire.
+- liberator_list, 7 sites: bin/molt 86 (`< <(...)`); lib/molt.sh 1354 and 1556 (`for lib in $(...)`, which word-split the error into liberator names); 1986 (resleeve: its echo workaround is removed); 2301 2356 2441 (capture unchecked; the error now shows on stderr).
+- liberator_load, 2 captured: lib/molt.sh 1592 (`2>&1`, unchanged) and 2447 (`>/dev/null 2>&1`, unchanged). Uncaptured with `2>/dev/null`: liberator.sh 183; molt.sh 2000 2258 2307 2368 2397 2505; and 1360/1369 with `&>/dev/null`, unchanged.
+- molt_error itself: lib/agent.sh 709, a false positive (the pipe is inside the message's own substitution).
+
+I also ran the same reachability for molt_warn: no captured function emits a warning on its own stdout. So no captured warning is lost, and warnings stay on stdout, per spec.
+
+Deviations, from critic-shell, where the change would otherwise have hidden or added text:
+(a) Unmuted: molt.sh 2307 and 2397, the liberator_load calls in upgrade's and maintain's loops. They were `2>/dev/null; continue`, so a manifest liberator missing on disk would have been skipped without a word; before the change its error showed on stdout. The `2>/dev/null` is gone and the error prints as before (test added).
+(b) Silenced: molt_instance_vars_file (molt.sh 306), molt_config_stale (778) and molt_agent_role_dir (agent.sh 205) now call the lookup with 2>/dev/null. Each gives its own reason, and each is used where no repo can be a sleeve's normal state: molt_instance_var status 3, molt_agt_dir_fault, tiling's default, doctor's font check, the role-fault probe. Without this they would have printed the seven-line error block over a sleeve that is fine.
+
+Lost the same way, named, not widened:
+- liberator_check's `2>/dev/null` in resleeve (molt.sh 2004) and in `molt status` (liberator.sh 193) now hides backup_check's molt_error fault lines there. backup's install still reports them, and liberators/backup.sh:67 already expects check's stderr discarded.
+- ssh_check and zsh_check reach molt_config_stale's two argument errors, which only a caller's own bug triggers.
+- resleeve (2000) and upgrade (2258) print their own message for an unknown liberator, without the "(expected <path>)" detail.
+- liberator.sh 183 skips silently; its names come from the directory listing, so the case is near unreachable.
+
+Outside the diff: molt_find_user_repo's `for path in` has no `local path`, so it overwrites a caller's `path`. Not touched.
+
+Next: issue 0015, on branch issue-0015 from main.
+
 ---
 
 _Generated by Intent v3 from the whiteboard model. Do not edit this file -- it is rendered from the model, and `intent doctor` reports any hand-edit as skew._

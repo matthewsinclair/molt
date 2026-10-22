@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 12:50Z
+heartbeat_at: 2026-10-22 13:19Z
 status: active
-focus: "Issue 0016: molt_error to stderr, call-site sweep"
+focus: "0016 handed over at 07955cb; starting 0015"
 claims: [ISSUE:0016]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0016]
 
 ## DOING
 
-- Issue 0016 on issue-0016 (worktree ~/Devel/prj/Molt-wt/issue-0016, from 35270d3): molt_error to stderr; read every captured caller of a molt_error path; tests red first, both bashes, mutation, critic-shell; hand over with the head and the call sites read
+- Issue 0016 on issue-0016 at 07955cb (worktree ~/Devel/prj/Molt-wt/issue-0016), handed to vc for scratch-merge: errors to stderr; call sites read and listed in the hand-over (edited)
 
 ## TODO
 
