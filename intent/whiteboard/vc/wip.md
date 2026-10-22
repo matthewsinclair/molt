@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 811b3338-a050-48b0-9eb7-e07144ee6b7c
-heartbeat_at: 2026-10-22 12:39Z
+heartbeat_at: 2026-10-22 14:00Z
 status: active
-focus: "22 Oct pm: ST0006 WP06 done, issue 0032 closed (2026-10-22 12:39Z: profile on kovacs, sandbox runs, guide landed 9b4fbe0); WP04 rhadamanth on hv's date (runbook b3a39fb, floor at B5), gyges later; estate renames done; 0022/0015/0016/0018 as before."
+focus: "22 Oct, hv moving (2026-10-22 14:00Z): fold and hold on the bounce, likely from home. Closed today: 0032, 0018, 0016, ST0005; 0035 filed. Open: 0015 (cc's head banked on issue-0015, vc scratch-merge on the bounce), 0022 (dc, hv's word), ST0006 WP04 (rhadamanth's move when hv is home, then close with gyges carried). Rule: commit your board.json with every commit (watch-out 18)."
 claims: [ST0006]
 ---
 
@@ -22,7 +22,6 @@ _(none)_
 - **gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = "brew"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the `~/.claude/settings.json` attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has.
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there.
 - Report to intent-vc when a session is up (none on 21 Oct): (1) Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in a git worktree's own store, which can predate main, so intent/ views in the worktree go backwards (cc's watchout 2); (2) 'intent at list | grep -q' panics on the broken pipe instead of exiting quietly; (3) 'intent claude upgrade --apply' rewrites a .claude/settings.json that names 'intent claude hook' whole (intentsvcs/tests/canon_holds_a_settings_file_it_did_not_write.rs), so keys the project keeps there are lost: ask canon to carry enabledMcpjsonServers ["intent"], the PostToolUse MODULES.md advisory and Bash(intent wp:*), or to keep keys it does not own; Molt issue 0022 waits on it (dc, 21 Oct). (edited)
-- WP04 kovacs DONE 21 Oct ~23:50: phases A-C, c4 PASS, AC008 satisfied by evidence, kovacs-sysadm folded (session 1c7fdc09); ~/.npm gone, cache in ~/.cache/npm (issue 0031). WP04 started (WIP): rhadamanth's move is next when hv schedules it (runbook section 'rhadamanth', same three phases; B9 from a post-move shell; hv removes ~/.npm done already); gyges later (hv). hv to rule whether WP04 closes after rhadamanth with gyges carried as a todo. (edited)
 
 ## Holds
 
