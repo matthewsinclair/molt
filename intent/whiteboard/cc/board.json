@@ -222,6 +222,14 @@
       "state": "live",
       "recorded_at": "2026-10-21T20:08:46.607Z",
       "edited_at": "2026-10-22T06:16:54.237Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 9,
+      "text": "Issue 0033 (low, vc 22 Oct): keys.sh:73 and tiling.sh:80/85 use raw sudo cp/rm where molt_sudo_install/molt_sudo_remove exist; keyd make install, systemctl and keyd reload stay. Released when vc says the WP06 merge is pushed to main; then branch issue-0033 at ~/Devel/prj/Molt-wt/issue-0033 off main.",
+      "state": "live",
+      "recorded_at": "2026-10-22T06:20:05.082Z"
     }
   ],
   "messages": [

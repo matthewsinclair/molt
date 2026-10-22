@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- Issue 0033 (low, vc 22 Oct): keys.sh:73 and tiling.sh:80/85 use raw sudo cp/rm where molt_sudo_install/molt_sudo_remove exist; keyd make install, systemctl and keyd reload stay. Released when vc says the WP06 merge is pushed to main; then branch issue-0033 at ~/Devel/prj/Molt-wt/issue-0033 off main.
 
 ## Watch-outs
 
