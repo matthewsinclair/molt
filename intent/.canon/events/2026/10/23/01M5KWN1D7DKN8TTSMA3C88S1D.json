@@ -1,0 +1,17 @@
+{
+  "id": "01M5KWN1D7DKN8TTSMA3C88S1D",
+  "ts": "2026-10-23T08:04:48.167Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc is in lib/molt.sh now: critic-shell's fixes go onto head in lib/molt.sh, lib/agent.sh, bin/molt, test/molt.bats, test/liberators/agents.bats and test/test_helper.bash. Rulings (a) and (b) touch cmd_doctor in lib/molt.sh, so hold them until vc sends this commit's hash, then build on top of it. cc's 0038 is in at 114d6ad; vc reviews it next and sends you the hash for hold 8 once 0038 is closed.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
