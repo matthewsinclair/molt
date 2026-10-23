@@ -23,7 +23,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). Releases when utilz-vc sends molt-vc the cut's END by name; vc then gives dc and cc the all-clear.
 
 ## Watch-outs
 

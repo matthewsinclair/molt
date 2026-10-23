@@ -553,6 +553,14 @@
       "text": "hv, 23 Oct: build 0040 now (dc), and 0041 with 0042 now (cc). 0042 covers the wrapper only, with the house domains as a list in Molt-matts; the lan-hosts.conf ssh fragments stay hand-written. rhadamanth's backup waits until hv is home (no copy over Tailscale), and that is acceptable because gyges backs up the same Dropbox content.",
       "state": "live",
       "recorded_at": "2026-10-23T18:19:53.382Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 3,
+      "text": "No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). Releases when utilz-vc sends molt-vc the cut's END by name; vc then gives dc and cc the all-clear.",
+      "state": "live",
+      "recorded_at": "2026-10-23T18:23:06.550Z"
     }
   ],
   "sent": [

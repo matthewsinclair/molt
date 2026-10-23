@@ -1,0 +1,15 @@
+{
+  "id": "01M5N0169P339W0ZZ3VK4C2KCS",
+  "ts": "2026-10-23T18:23:06.550Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). Releases when utilz-vc sends molt-vc the cut's END by name; vc then gives dc and cc the all-clear."
+  }
+}
