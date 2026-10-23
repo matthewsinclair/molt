@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-23T19:05:15.369Z",
+    "heartbeat_at": "2026-10-23T20:32:18.963Z",
     "status": "active",
-    "focus": "23 Oct: localfold; 0041/0042 reviewed by vc (2cfb1b4, 431dc10, Molt-matts fec83d1), push waits on vc's full suite after the Utilz and Intent build ENDs; nothing queued",
+    "focus": "24 Oct: 0041/0042 pushed by vc (Molt 0d3ea85, Molt-matts fec83d1), CI green; nothing queued; heavy runs go through intent-vc's bats slot",
     "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"

@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 19:05Z
+heartbeat_at: 2026-10-23 20:32Z
 status: active
-focus: "23 Oct: localfold; 0041/0042 reviewed by vc (2cfb1b4, 431dc10, Molt-matts fec83d1), push waits on vc's full suite after the Utilz and Intent build ENDs; nothing queued"
+focus: "24 Oct: 0041/0042 pushed by vc (Molt 0d3ea85, Molt-matts fec83d1), CI green; nothing queued; heavy runs go through intent-vc's bats slot"
 claims: []
 ---
 
