@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 09:51Z
+heartbeat_at: 2026-10-23 11:21Z
 status: active
-focus: "23 Oct: the lift accepted by vc (e4aa225); hold 14 released at dc's 9810f94; nothing queued"
+focus: "23 Oct: localfold; lift accepted (e4aa225), all pushed at 24bbb8b; nothing queued, waiting on hv"
 claims: []
 ---
 
