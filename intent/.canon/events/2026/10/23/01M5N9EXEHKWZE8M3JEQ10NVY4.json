@@ -1,0 +1,16 @@
+{
+  "id": "01M5N9EXEHKWZE8M3JEQ10NVY4",
+  "ts": "2026-10-23T21:07:53.425Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 8,
+    "text": "**AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: \"STRICTLY FORBIDDEN. Purge that from the git record immediately\"). The purge recipe is in done 023 and vc's memory. Since issue 0040 the claude liberator writes the `attribution` object from Molt-matts `config/claude/attribution.json`, so a sleeve gets it at its next resleeve; the Git Commits rule is in the user-scope CLAUDE.md Molt links."
+  }
+}

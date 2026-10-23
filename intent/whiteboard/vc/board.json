@@ -195,7 +195,8 @@
       "kind": "decision",
       "seq": 4,
       "text": "(2026-09-08) **`intent fc` was invoked by hv, at hv's keyboard, both times.** `IN-AG-FIAT-001`. vc moved ST0003 and Molt-matts ST0001 out of Triage into WIP so the transition was legal, which is not the verb and not a route around it.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T21:07:52.986Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -211,7 +212,8 @@
       "kind": "decision",
       "seq": 6,
       "text": "(2026-09-15) **iTerm2 does not write into terminal config without hv knowing.** hv's ruling. No dynamic profile in Molt-matts carries `\"Rewritable\": true`; profile changes are made in git.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T21:07:53.025Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -219,7 +221,8 @@
       "kind": "decision",
       "seq": 7,
       "text": "(2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after a local all passing, and a stale AC001 question written into wip.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T21:07:53.062Z",
       "recorded_at": "2026-09-21T15:40:58.246Z",
       "edited_at": "2026-10-23T07:51:03.427Z"
     },
@@ -245,10 +248,10 @@
       "node": "vc",
       "kind": "watchout",
       "seq": 16,
-      "text": "**Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth -- its manifest disables Molt's intent liberator (Molt-matts 857d49c). gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes ON gyges or kovacs go through gyges-infra / kovacs-sysadm (not kovacs-infra, hv 15 Oct). gyges is at home in the UK: while hv travels, ssh gyges cannot resolve gyges.lan, which is distance, not a fault.",
+      "text": "**Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth; its manifest disables Molt's intent liberator (Molt-matts 857d49c). The one sanctioned write there is `intent issues add|edit` in ~/Devel/prj/Intent. gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes on gyges or kovacs go through their sleeve agents (gyges-sysadm, kovacs-sysadm), reached through rhadamanth-sysadm or hv.",
       "state": "live",
       "recorded_at": "2026-09-23T10:36:54.076Z",
-      "edited_at": "2026-10-15T13:13:51.555Z"
+      "edited_at": "2026-10-23T21:07:53.211Z"
     },
     {
       "node": "vc",
@@ -301,9 +304,10 @@
       "node": "vc",
       "kind": "decision",
       "seq": 8,
-      "text": "**AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: \"STRICTLY FORBIDDEN. Purge that from the git record immediately\"). Molt-matts `e3af373`'s trailers had been carried for days as \"rewriting pushed history is hv's call\". The purge recipe is in done 023 and vc's memory. Every sleeve whose Claude Code commits needs the attribution keys in `~/.claude/settings.json` and the Git Commits rule in `~/.claude/CLAUDE.md`. rhadamanth and kovacs have both; gyges is unchecked.",
+      "text": "**AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: \"STRICTLY FORBIDDEN. Purge that from the git record immediately\"). The purge recipe is in done 023 and vc's memory. Since issue 0040 the claude liberator writes the `attribution` object from Molt-matts `config/claude/attribution.json`, so a sleeve gets it at its next resleeve; the Git Commits rule is in the user-scope CLAUDE.md Molt links.",
       "state": "live",
-      "recorded_at": "2026-10-20T19:19:40.338Z"
+      "recorded_at": "2026-10-20T19:19:40.338Z",
+      "edited_at": "2026-10-23T21:07:53.425Z"
     },
     {
       "node": "vc",
@@ -450,7 +454,8 @@
       "kind": "todo",
       "seq": 18,
       "text": "Intent 0612 SHIPPED 22 Oct 19:08Z (intent 3.2.4 dcd9057d4); Molt re-rendered to board@4.0 in 2805f6a, checked field for field against the old boards. The commit rule is now: each node commits exactly what its verbs print on `wrote:` lines (own board.json and wip.md, the inbox views its asks render, its events); a `re-rendered:` line is another node's, leave it. Intent 3.2.5 (2e0e9215d) is live here, and 0613 (broken-pipe panic) and 0615 (stale settings-merge doc comment) shipped in it, both closed. hv confirmed 0612's ruling on 23 Oct (\"Confirmed. Why would we not do that?\"), recorded on the issue in Intent 74b3b6571 by vc with `intent issues edit` (hv: raise Intent matters there directly). Still open: Intent 0614 (worktree hooks sync an older store, medium), in Intent's lane, where dc's lead says the 3.2.5 pair is not yet driven. Molt's workaround stands: never run intent in a Molt worktree, and restore views there with git checkout.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T21:07:52.913Z",
       "recorded_at": "2026-10-22T17:06:29.056Z",
       "edited_at": "2026-10-23T07:25:52.020Z"
     },
@@ -551,7 +556,8 @@
       "kind": "decision",
       "seq": 12,
       "text": "hv, 23 Oct: build 0040 now (dc), and 0041 with 0042 now (cc). 0042 covers the wrapper only, with the house domains as a list in Molt-matts; the lan-hosts.conf ssh fragments stay hand-written. rhadamanth's backup waits until hv is home (no copy over Tailscale), and that is acceptable because gyges backs up the same Dropbox content.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T21:07:52.950Z",
       "recorded_at": "2026-10-23T18:19:53.382Z"
     },
     {
