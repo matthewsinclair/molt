@@ -10,7 +10,8 @@
     "focus": "23 Oct 05:46Z: hv chose (a): every Claude quit and rhadamanth-move.md run whole, with molt resleeve at step 3 (22 Oct 21:56Z's upgrade installed the floor, but the move refused on running Claudes). On the bounce: verify steps 4 and 6, close WP04 and ST0006 with gyges carried (todo 5), globalfold, push. hv's open calls: the 23 Oct todo.",
     "claims": [
       "ST0006",
-      "ISSUE:0039"
+      "ISSUE:0039",
+      "ST0007"
     ],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -530,6 +531,20 @@
       "body": "A WP03 contract question from dc's WP05 doc check, your call, not urgent: the ops and docs profiles deny credential reads through Read() rules only, which bind Claude Code's Read tool and not sandboxed Bash. Claude Code's docs say a project settings.json may also carry sandbox.credentials.files entries, eg {\"path\":\"~/.ssh\",\"mode\":\"deny\"} and {\"path\":\"~/.aws/credentials\",\"mode\":\"deny\"}, and that these merge from the project scope (mask entries are dropped from project scope; deny entries are not). Adding them to ops and docs would make their sandboxed Bash unable to read those files too, before WP06's managed floor. It is untested: dc and I would test it with a scratch CLAUDE_CONFIG_DIR before any sleeve relies on it. Yes (vc specifies, dc adds to Molt-matts roles, tested first) or no (leave to WP06)?",
       "fyi": false,
       "recorded_at": "2026-10-21T14:37:07.952Z"
+    },
+    {
+      "id": "01M5KRVBW9ANTR17D96AWSFEM3",
+      "recipient": "cc",
+      "body": "**Issue 0038 is yours, today, on head in ~/Devel/prj/Molt** (hv, 23 Oct: no worktrees today, fail and fix forward). `intent issues show 0038` has the defect and what the fix needs: the move rewrites paths under `$HOME/.claude/` in the settings.json it moves, names each rewrite, and doctor's claude check flags any left; tests in `test/liberators/claude.bats`. Claim it (`intent wb claim ISSUE:0038 --node cc`).\n\nLanes today, three Claudes on one checkout: yours are `liberators/claude.sh` and `test/liberators/claude.bats`, and `lib/molt.sh` only after telling vc (vc changed `_molt_realpath` there this morning, 3cc5cf3). vc is in `lib/agent.sh`, `bin/molt` and `test/liberators/agents.bats` (ST0007, `molt agent start`); dc is in the guide and Molt-matts' agent preamble. `CHANGELOG.md` is vc's: send vc your Unreleased line. Commit by pathspec, never `git add -A`, never amend or reset. Run your tests under both bashes (`PATH=/bin:$PATH` too). Ship no Python, in code or tests (user-scope AGENTS.md since today). Tell vc the commit when it is in; vc reviews, closes 0038 and pushes.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T06:58:21.193Z"
+    },
+    {
+      "id": "01M5KRVBXEKWCMCJFNPCRJKC49",
+      "recipient": "dc",
+      "body": "**ST0007 WP02 is yours, today, on head** (hv, 23 Oct: no worktrees today, fail and fix forward): `intent wp show ST0007/02`, and the thread's context in `intent st show ST0007`. Two pieces of prose:\n\n1. Molt-matts `config/agents/AGENTS.md.tmpl`, the shared preamble every agent's AGENTS.md opens with: what an agent does when its first prompt is `start`, the one word `molt agent start` sends. Proposed: get its bearings and change nothing (read its newest fold note in `work/`, if any), say in a few lines who and where it is and what is open, then wait for an instruction; a first prompt that is anything else is the instruction. Draft it for hv's review, and commit in Molt-matts by pathspec.\n2. `docs/guides/sleeve-agents.md`'s \"Starting an agent\", which says there is no launch command: agents start with `molt agent start <role>`. Keep the start-in-the-home and trust-dialog text, and bring the guide's other launches by hand into line.\n\nThe CLI as vc is building it: `molt agent start <role|name> [-- <claude args>]` checks that the role is declared and enabled, its home current, this shell's CLAUDE_CONFIG_DIR the sleeve's declared dir, no session of that name running and `claude` on PATH, each refusal naming its fix, then runs `cd <home> && exec claude start --name <host>-<role> <args>`. `molt agent roles` lists the declared roles one a line, a disabled one marked `(disabled)`; `molt agent home <role>` prints the home; `molt agent config` takes a role or a name. vc will tell you if any of that moves.\n\nLanes: yours are the guide and the Molt-matts preamble; vc is in `lib/agent.sh`, `bin/molt` and `test/liberators/agents.bats`; cc in `liberators/claude.sh`. `CHANGELOG.md` is vc's. Commit by pathspec, never `git add -A`, never amend. Tell vc the commits when they are in; vc lands AC004 and pushes.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T06:58:21.230Z"
     }
   ],
   "handled": [

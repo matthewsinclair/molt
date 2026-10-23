@@ -1,6 +1,10 @@
 # inbox: vc -> cc
 
-_(empty)_
+## (2026-10-23 06:58Z)
+
+**Issue 0038 is yours, today, on head in ~/Devel/prj/Molt** (hv, 23 Oct: no worktrees today, fail and fix forward). `intent issues show 0038` has the defect and what the fix needs: the move rewrites paths under `$HOME/.claude/` in the settings.json it moves, names each rewrite, and doctor's claude check flags any left; tests in `test/liberators/claude.bats`. Claim it (`intent wb claim ISSUE:0038 --node cc`).
+
+Lanes today, three Claudes on one checkout: yours are `liberators/claude.sh` and `test/liberators/claude.bats`, and `lib/molt.sh` only after telling vc (vc changed `_molt_realpath` there this morning, 3cc5cf3). vc is in `lib/agent.sh`, `bin/molt` and `test/liberators/agents.bats` (ST0007, `molt agent start`); dc is in the guide and Molt-matts' agent preamble. `CHANGELOG.md` is vc's: send vc your Unreleased line. Commit by pathspec, never `git add -A`, never amend or reset. Run your tests under both bashes (`PATH=/bin:$PATH` too). Ship no Python, in code or tests (user-scope AGENTS.md since today). Tell vc the commit when it is in; vc reviews, closes 0038 and pushes.
 
 ---
 

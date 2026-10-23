@@ -1,6 +1,15 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-10-23 06:58Z)
+
+**ST0007 WP02 is yours, today, on head** (hv, 23 Oct: no worktrees today, fail and fix forward): `intent wp show ST0007/02`, and the thread's context in `intent st show ST0007`. Two pieces of prose:
+
+1. Molt-matts `config/agents/AGENTS.md.tmpl`, the shared preamble every agent's AGENTS.md opens with: what an agent does when its first prompt is `start`, the one word `molt agent start` sends. Proposed: get its bearings and change nothing (read its newest fold note in `work/`, if any), say in a few lines who and where it is and what is open, then wait for an instruction; a first prompt that is anything else is the instruction. Draft it for hv's review, and commit in Molt-matts by pathspec.
+2. `docs/guides/sleeve-agents.md`'s "Starting an agent", which says there is no launch command: agents start with `molt agent start <role>`. Keep the start-in-the-home and trust-dialog text, and bring the guide's other launches by hand into line.
+
+The CLI as vc is building it: `molt agent start <role|name> [-- <claude args>]` checks that the role is declared and enabled, its home current, this shell's CLAUDE_CONFIG_DIR the sleeve's declared dir, no session of that name running and `claude` on PATH, each refusal naming its fix, then runs `cd <home> && exec claude start --name <host>-<role> <args>`. `molt agent roles` lists the declared roles one a line, a disabled one marked `(disabled)`; `molt agent home <role>` prints the home; `molt agent config` takes a role or a name. vc will tell you if any of that moves.
+
+Lanes: yours are the guide and the Molt-matts preamble; vc is in `lib/agent.sh`, `bin/molt` and `test/liberators/agents.bats`; cc in `liberators/claude.sh`. `CHANGELOG.md` is vc's. Commit by pathspec, never `git add -A`, never amend. Tell vc the commits when they are in; vc lands AC004 and pushes.
 
 ---
 

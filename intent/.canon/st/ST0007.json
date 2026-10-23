@@ -1,0 +1,123 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0007",
+  "title": "molt agent start: launch a sleeve agent by its role",
+  "slug": "molt-agent-start-launch-a-sleeve-agent-by-its-ro",
+  "status": "wip",
+  "created": "2026-10-23",
+  "objective": "Start a sleeve agent with one command. `molt agent start <role>` runs Claude Code in the agent's home as `claude start --name <host>-<role>`, the word `start` its first prompt, after the checks a launch by hand skips. `molt agent roles` lists the roles this sleeve declares, `molt agent home <role>` prints a home, and `molt agent config` takes a role as well as a name. Every agent's contract says what it does when its first prompt is `start`.",
+  "context": "hv, 23 Oct 2026, after rhadamanth's move (ST0006). Every sleeve agent is launched by hand, as `cd $MOLT_AGT_DIR/<host>-<role> && claude start --name <host>-<role>`: ST0006 gave each agent a home and a guard, but no launcher, and never said what an agent does first, so one launched without a first prompt waits for one (kovacs-sysadm and geodica-estate, 23 Oct; vc todo 20). `claude start` is not a Claude Code subcommand, and 2.1.309 has none of that name: it opens an interactive session whose first prompt is the word `start`.\n\nhv's spec:\n\n```\n# Start an agent on this host as <role>, ie:\n#   cd $MOLT_AGT_DIR/<host>-<role> && claude start --name \"<host>-<role>\"\nmolt agent start <role>\n\n# List all roles configured in molt for this host\nmolt agent roles [list|...]\n\n# ... and so on.\n```\n\nThe spec named the root `MOLT_AGENT_HOME`; Molt's agents root is `MOLT_AGT_DIR`, and stays the one variable. vc builds this on head, since only vc is working (hv: fail and fix forward).\n\nThe checks `start` makes before it hands over, each refusing with the fix and starting nothing:\n\n- the role is declared on this sleeve, and those that are get listed when it is not; and it is enabled;\n- its home is current, else `molt resleeve`;\n- on a sleeve that declares a config dir, this shell's `CLAUDE_CONFIG_DIR` is that dir, compared as the home guard compares it, since the guard would refuse the session's first prompt anyway;\n- no Claude Code session of that name is running;\n- `claude` is on PATH.\n\nArguments after `--` go to `claude` as they are.",
+  "body": "",
+  "preamble": "",
+  "wps": [
+    {
+      "seq": 1,
+      "title": "molt agent start, roles and home; config takes a role",
+      "scope": "S",
+      "status": "wip",
+      "objective": "",
+      "body": "Code, in `lib/agent.sh` beside `molt agent list` and `config`, and in `bin/molt`'s help:\n\n- one resolver for `start`, `home` and `config`: a role (`sysadm`) or a full name (`<host>-sysadm`), read through `molt_agents`, so the name is still derived in one place;\n- `molt agent start <role> [-- <claude args>]`: the thread's checks, then into the home and `exec claude start --name <name>` with whatever follows `--`;\n- `molt agent roles`: the declared roles, one a line, a disabled one marked `(disabled)`;\n- `molt agent home <role>`: the home's path, for `cd \"$(molt agent home sysadm)\"`.\n\nTests in `test/liberators/agents.bats`, with a stand-in `claude` on PATH that records the directory it ran in, its arguments and its `CLAUDE_CONFIG_DIR`; expected values come from the fixture, never from the code under test. CHANGELOG's Unreleased.\n",
+      "preamble": ""
+    },
+    {
+      "seq": 2,
+      "title": "The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start",
+      "scope": "S",
+      "status": "not-started",
+      "objective": "",
+      "body": "Prose, in two places:\n\n- The shared preamble, Molt-matts' `config/agents/AGENTS.md.tmpl`, which opens every agent's `AGENTS.md`, says what an agent does when its first prompt is `start`. It is written once there for every role, since the preamble holds what every agent is told (ST0006 AC016), and `molt resleeve` renders it into the homes.\n- `docs/guides/sleeve-agents.md`'s \"Starting an agent\", which says there is no launch command, starts agents with `molt agent start`, and the guide's other mentions of a launch by hand follow it.\n",
+      "preamble": ""
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC001",
+      "text": "molt agent start <role> runs Claude Code in the agent's home as claude start --name <host>-<role>, passing on whatever follows --; the agent's full name works as its role does",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC002",
+      "text": "molt agent start refuses, naming the fix and starting nothing, when the role is not declared (listing those that are) or not enabled, when its home is not current, when the sleeve declares a config dir and this shell's CLAUDE_CONFIG_DIR is not it, and while a session of that name runs",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC003",
+      "text": "molt agent roles lists the roles this sleeve declares, one a line, a disabled one marked; molt agent home <role> prints the home; molt agent config takes a role as well as a name; all three run through bin/molt",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC004",
+      "text": "The shared preamble in Molt-matts says what an agent does when its first prompt is start, and docs/guides/sleeve-agents.md starts agents with molt agent start",
+      "kind": "non-test",
+      "state": {
+        "is": "unsatisfied"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT001",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC001"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT002",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT003",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT004",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT005",
+      "kind": "test",
+      "file": "test/liberators/agents.bats",
+      "covers": [
+        "AC001",
+        "AC003"
+      ],
+      "status": "to-write"
+    },
+    {
+      "id": "AT006",
+      "kind": "non-test",
+      "prose": "The preamble's start section and the guide's Starting an agent, read against the CLI as built",
+      "covers": [
+        "AC004"
+      ],
+      "status": "n-a"
+    }
+  ]
+}

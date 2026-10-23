@@ -1,0 +1,15 @@
+{
+  "id": "01M5KRSC67C16RW198KVFJWGX8",
+  "ts": "2026-10-23T06:57:15.975Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0007/01"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "molt agent start, roles and home; config takes a role"
+  }
+}

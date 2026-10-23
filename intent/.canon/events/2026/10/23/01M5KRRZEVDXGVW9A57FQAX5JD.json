@@ -1,0 +1,14 @@
+{
+  "id": "01M5KRRZEVDXGVW9A57FQAX5JD",
+  "ts": "2026-10-23T06:57:02.939Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "st.new",
+  "subject": {
+    "type": "thread",
+    "id": "ST0007"
+  },
+  "payload": {
+    "title": "molt agent start: launch a sleeve agent by its role"
+  }
+}
