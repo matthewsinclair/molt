@@ -122,7 +122,7 @@ molt agent roles           # List the roles this sleeve declares, a disabled one
 molt agent start <role>    # Start the agent in its home, as claude start --name <hostname>-<role>
 molt agent home <role>     # Print the agent's home
 molt agent config <role>   # An agent's home, its files' state, and its permission rules by layer
-molt doctor                # System diagnostics and health checks (15 checks)
+molt doctor                # System diagnostics and health checks
 molt test [liberator]      # Run bats test suite (all or one liberator)
 molt version               # Show version
 molt help                  # Show help
