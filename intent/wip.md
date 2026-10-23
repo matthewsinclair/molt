@@ -1,5 +1,5 @@
 ---
-verblock: "23 Oct 2026:v0.39: Matthew Sinclair - globalfold after rhadamanth's move: ST0006 and ST0007 closed, issues 0038 and 0039 closed, no shipped Python, no stored counts; doctor's case check and pass lines and the claude lift in flight"
+verblock: "23 Oct 2026:v0.40: Matthew Sinclair - doctor passes on a healthy Mac, the lift into lib/molt.sh and the guard naming molt agent start are in; nothing in flight but hv's calls"
 ---
 
 # Work In Progress
@@ -10,9 +10,7 @@ verblock: "23 Oct 2026:v0.39: Matthew Sinclair - globalfold after rhadamanth's m
 
 ## DOING
 
-- **dc: `molt doctor`'s git case sensitivity check and its pass lines** (vc's rulings, 23 Oct). The case check passes where `core.ignorecase` matches what the disk does, read with git's own probe, so a Mac can close `All checks passed.`. A pass line carries no count, and a failure line says how many of how many and names them; the counts in the comment above the enabled-liberators line go with it. Then dc's docs for 0038 as built: the guide's move section and doctor table, and the home guard's refusals naming `molt agent start`. When the case check lands, vc retires its watch-out about the macOS case warning.
-- **cc: the lift**, after dc's `lib/molt.sh` commit. `_claude_processes` wraps `molt_claude_processes`, and claude.bats' process stubs move to `test_helper.bash`. `_claude_settings_write` becomes `molt_settings_write` in `lib/molt.sh`, used by claude.sh and agents.sh. One function compares `CLAUDE_CONFIG_DIR` with the declared config dir, the home guard's way, and one owns the `env.sh` path.
-- **vc:** reviews and lands both, adds their changelog lines, pushes, and checks CI on both runners.
+- **Nothing in flight.** What is left waits on hv or on gyges: rhadamanth's backup, and gyges' move when Tailscale is on (TODO below).
 
 ## TODO
 
