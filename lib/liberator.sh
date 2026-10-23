@@ -59,18 +59,6 @@ liberator_run() {
   fi
 }
 
-liberator_verify() {
-  local name="$1"
-
-  local verify_fn="${name}_verify"
-  if declare -f "$verify_fn" &>/dev/null; then
-    "$verify_fn"
-  else
-    # Fall back to check
-    liberator_check "$name"
-  fi
-}
-
 liberator_has_upgrade() {
   local name="$1"
 
@@ -149,21 +137,6 @@ liberator_repo() {
 }
 
 # --- Batch Operations ---
-
-liberator_run_all() {
-  local action="${1:-install}"
-  shift
-  local liberators=("$@")
-
-  local failed=0
-  for lib in "${liberators[@]}"; do
-    if ! liberator_run "$lib" "$action"; then
-      molt_error "Liberator failed: $lib"
-      failed=1
-    fi
-  done
-  return $failed
-}
 
 liberator_status_all() {
   local liberators=("$@")

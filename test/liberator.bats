@@ -58,13 +58,6 @@ load "test_helper.bash"
     [[ "$status" -ne 127 ]]
 }
 
-@test "liberator_verify falls back to check when no verify function" {
-    load_molt_libs
-    # git liberator — verify it doesn't crash
-    run liberator_verify "git"
-    [[ "$status" -ne 127 ]]
-}
-
 @test "liberator_list returns only .sh files" {
     load_molt_libs
     run liberator_list
