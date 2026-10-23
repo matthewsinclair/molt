@@ -1,0 +1,16 @@
+{
+  "id": "01M5KVVVSPTSCKVJEEWQTWMFZJ",
+  "ts": "2026-10-23T07:51:03.222Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 12,
+    "text": "`molt doctor`'s git case sensitivity check (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning."
+  }
+}

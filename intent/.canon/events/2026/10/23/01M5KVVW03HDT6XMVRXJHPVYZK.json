@@ -1,0 +1,16 @@
+{
+  "id": "01M5KVVW03HDT6XMVRXJHPVYZK",
+  "ts": "2026-10-23T07:51:03.427Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 7,
+    "text": "(2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after a local all passing, and a stale AC001 question written into wip."
+  }
+}

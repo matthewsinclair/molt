@@ -126,9 +126,10 @@
       "node": "vc",
       "kind": "watchout",
       "seq": 12,
-      "text": "`molt doctor` check 12 (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.",
+      "text": "`molt doctor`'s git case sensitivity check (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.",
       "state": "live",
-      "recorded_at": "2026-09-21T15:40:58.246Z"
+      "recorded_at": "2026-09-21T15:40:58.246Z",
+      "edited_at": "2026-10-23T07:51:03.222Z"
     },
     {
       "node": "vc",
@@ -216,9 +217,10 @@
       "node": "vc",
       "kind": "decision",
       "seq": 7,
-      "text": "(2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after \"179 passing\", and a stale AC001 question written into wip.",
+      "text": "(2026-09-15) **A local green under a different interpreter from CI's is not a pass**, and neither is a carried question copied forward without checking the artefact. Both happened this session: CI red after a local all passing, and a stale AC001 question written into wip.",
       "state": "live",
-      "recorded_at": "2026-09-21T15:40:58.246Z"
+      "recorded_at": "2026-09-21T15:40:58.246Z",
+      "edited_at": "2026-10-23T07:51:03.427Z"
     },
     {
       "node": "vc",
