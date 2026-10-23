@@ -10,7 +10,7 @@ verblock: "23 Oct 2026:v0.45: Matthew Sinclair - hv ruled 0040 to 0042 built now
 
 ## DOING
 
-- **Nothing in flight.** dc builds issue 0040; cc builds 0041 with 0042 (hv, 23 Oct). rhadamanth's backup waits until hv is home.
+- **dc builds issue 0040; cc builds 0041 with 0042** (hv, 23 Oct; TODO below has each). vc reviews and pushes.
 
 ## TODO
 
