@@ -691,6 +691,34 @@
       "body": "After your comment fixes, one code fix from dc's audit: molt_resleeve's failure line (lib/molt.sh:2189) says '<n> liberator(s) failed' with no 'of <m>', against hv's rule that a failure line says how many failed of how many ran. Count what ran as it runs, store nothing; add or adjust the test, both bashes, commit separately, unpushed, and tell vc.",
       "fyi": false,
       "recorded_at": "2026-10-23T12:46:06.306Z"
+    },
+    {
+      "id": "01M5MF1NBR3XFDZEF2PNZTNXR1",
+      "recipient": "hv",
+      "body": "vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:26:16.184Z"
+    },
+    {
+      "id": "01M5MF1NBR3XFDZEF2PNZTNXR2",
+      "recipient": "cc",
+      "body": "vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:26:16.184Z"
+    },
+    {
+      "id": "01M5MF1NBR3XFDZEF2PNZTNXR3",
+      "recipient": "dc",
+      "body": "vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:26:16.184Z"
+    },
+    {
+      "id": "01M5MF1NBR3XFDZEF2PNZTNXR4",
+      "recipient": "ac",
+      "body": "vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:26:16.184Z"
     }
   ],
   "handled": [

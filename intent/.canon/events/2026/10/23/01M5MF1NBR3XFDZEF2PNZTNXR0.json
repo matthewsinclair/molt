@@ -1,0 +1,20 @@
+{
+  "id": "01M5MF1NBR3XFDZEF2PNZTNXR0",
+  "ts": "2026-10-23T13:26:16.184Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.announce",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.",
+    "recipients": [
+      "hv",
+      "cc",
+      "dc",
+      "ac"
+    ]
+  }
+}
