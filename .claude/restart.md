@@ -10,7 +10,7 @@ This file is the entry point and holds no state. It says where to start; what is
 
 ## Nodes
 
-Two: `hv`, the human (`session_id: none`, heartbeat advisory), and `vc`, validation. Molt has no control node, so `vc` both validates and, when hv says so, builds.
+The roster is the one in [`intent/whiteboard/README.md`](../intent/whiteboard/README.md): who each node is, what it builds or checks, and who reads `hv/inbox.*`.
 
 ## Durable Facts
 
