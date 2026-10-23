@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The claude liberator writes the `attribution` object a user repo declares in `config/claude/attribution.json` into the user `settings.json`, changing that key and no other, as it does the statusLine, and its check names a sleeve whose settings do not carry it, so no sleeve's commit and pull request attribution is set by hand (issue 0040)
+
 ### Changed
+
+- The zsh liberator's check builds the iTerm2 ssh wrapper as install would and compares it with `~/.config/molt/iterm2-ssh-colors.sh`, so a change to any instance's `[terminal]` `bg_color` or `ssh_bg_color` now reaches the file, which was written only on a failed check before (issue 0041)
+- The iTerm2 ssh wrapper matches each host by its bare name and under each domain in the user repo's `config/network/local-domains`, one a line, in file order, in place of the `.lan` and `.local` written into Molt; without the file it matches bare names only (issue 0042)
 
 - The commit gate runs from a tracked `.githooks` (`core.hooksPath`), written by `intent claude upgrade --apply`, so a fresh clone gets it after one `git config core.hooksPath .githooks` and an upgrade; the installer's `.intent` carriers are ignored
 - `molt resleeve`'s failure line says how many liberators failed out of how many ran, and names them, eg `2 of 5 liberators failed: backup, agents`
