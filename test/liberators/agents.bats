@@ -778,6 +778,14 @@ end_session() {
     run cmd_agent start sysadm
     assert_success
     grep -qx "config=$HOME/.config/claude" "$CALLED"
+
+    # A role the user repo does not define is named, not sent to a resleeve.
+    rm "$CALLED"
+    write_manifest '[[agent]]' 'role = "sysadm"' '' '[[agent]]' 'role = "docs"'
+    run cmd_agent start docs
+    assert_failure
+    assert_output_contains "$SLEEVE-docs cannot start: role docs is not defined: there is no $TEST_USER_REPO/config/agents/roles/docs"
+    [ ! -e "$CALLED" ]
 }
 
 @test "molt agent start refuses while a session of that name runs, naming its pid, and not for one whose name only begins with it" {

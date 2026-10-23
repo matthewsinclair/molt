@@ -737,7 +737,7 @@ _agent_home() {
 # since the guard would refuse the session's first prompt; a session of that
 # name already running; and no claude on PATH (ST0007).
 _agent_start() {
-  local entry name role enabled harness home state declared want have pids status=0
+  local entry name role enabled harness home fault state declared want have pids status=0
   entry="$(_agent_entry "${1:-}")" || return 1
   shift
   [[ "${1:-}" != -- ]] || shift
@@ -746,6 +746,12 @@ _agent_start() {
 
   if [[ "$enabled" != true ]]; then
     molt_error "molt agent: $name is not enabled on this sleeve: its [[agent]] entry in molt.toml says enabled = $enabled"
+    return 1
+  fi
+  # A resleeve cannot define a role, so an undefined one says what is missing.
+  fault="$(molt_agent_role_fault "$role")"
+  if [[ -n "$fault" ]]; then
+    molt_error "molt agent: $name cannot start: $fault"
     return 1
   fi
   state="$(molt_agent_currency "$name" "$role")"
