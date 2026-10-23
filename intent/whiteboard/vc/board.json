@@ -523,6 +523,14 @@
       "state": "archived",
       "archived_at": "2026-10-23T13:02:30.139Z",
       "recorded_at": "2026-10-23T12:46:26.206Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 22,
+      "text": "**Every other sleeve's Molt clone (gyges through gyges-infra, kovacs through kovacs-sysadm, farcaster, pihole), at its next resync:** opt into the tracked gate (bef8f14, pushed 23 Oct): `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done.",
+      "state": "live",
+      "recorded_at": "2026-10-23T14:43:00.240Z"
     }
   ],
   "sent": [

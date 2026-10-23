@@ -1,0 +1,15 @@
+{
+  "id": "01M5MKE5GGRGGNN4A7GA0TF6JW",
+  "ts": "2026-10-23T14:43:00.240Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Every other sleeve's Molt clone (gyges through gyges-infra, kovacs through kovacs-sysadm, farcaster, pihole), at its next resync:** opt into the tracked gate (bef8f14, pushed 23 Oct): `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done."
+  }
+}
