@@ -83,6 +83,145 @@ issue-0035 handed over. Molt: branch issue-0035 at 8927469 on main 1bf2a10 (work
 
 Release check: (1) nothing; my last commits (e4aa225, 9c78a47, 7e1d982) are all in upstream/main, and the dc board/wip changes in the tree are dc's, not mine. (2) No defect. CHANGELOG line 21 under Changed covers the lift and reads right. One gap you already know about: no test for molt agent start accepting a symlinked CLAUDE_CONFIG_DIR. The comparison is tested through the claude liberator, so this is not a release blocker. The guard template's comment now names molt_claude_config_dir_is, so the other gap is closed. (3) Localfold done: no live items to archive, your messages are cleared, and my board is committed.
 
+## (2026-10-23 12:44Z) Re: 2026-10-23 12:40Z
+
+Code-comment audit at v0.3.0 (db76a2c). Code unchanged since the tag. All are checked against the code.
+
+A. Behaviour or names the code no longer has
+
+1. templates/molt-user/README.md:22
+   - Says: "Only system, local-bin, git, and ssh are enabled out of the box."
+   - Code: the skeleton molt.toml also enables npm and claude (templates/molt-user/instances/__MOLT_HOSTNAME__/molt.toml:70-71, :80-81).
+   - Fix: say "the liberators that need no config beyond this skeleton" and drop the list.
+   - docs/guides/new-user.md:76 makes the same claim; that's dc's scope.
+2. templates/molt-user/instances/__MOLT_HOSTNAME__/molt.toml:37
+   - Says: npm and claude are under "--- Enable as you add the matching config/ directories ---".
+   - Code: both are enabled = true (:69-82).
+   - Fix: move both above :37, with the other entries enabled out of the box.
+3. liberators/claude.sh:36-37
+   - Says: "the dev-tools liberator already requires jq on every sleeve".
+   - Code: the skeleton disables dev-tools and enables claude (molt.toml:64-67, :79-82). claude checks jq itself (claude.sh:59-61, :412-414).
+   - Fix: say "this liberator checks for jq".
+4. liberators/agents.sh:5-6
+   - Says: "molt agent list|config, are in lib/agent.sh".
+   - Code: roles, start and home are there too (lib/agent.sh:3-4, :889-899).
+   - Fix: say "the molt agent command is in lib/agent.sh", with no list of subcommands.
+5. lib/molt.sh:304-305
+   - Says: "readlink -f is not on every BSD, and where it is missing both sides come back empty and equal."
+   - Code: molt_link_points_to goes to _molt_realpath (:156), which is shell-only and uses no readlink -f (issue 0039).
+   - Fix: delete that sentence.
+6. lib/molt.sh:122-135
+   - Says: the molt_link_fault comment ("Names which fault...") sits above molt_link_points_to (:136).
+   - Code: molt_link_fault is at :179, with no comment of its own.
+   - Fix: move the block above :179.
+7. lib/molt.sh:350-351
+   - Says: "Two places source vars.sh, molt_render and molt_instance_var".
+   - Code: the sourcing is in molt_render_text (:502) and molt_instance_var (:442). molt_render (:541) sources nothing.
+   - Fix: name molt_render_text and drop "Two".
+8. lib/molt.sh:1003-1004
+   - Says: "If no manifest found, returns empty".
+   - Code: it returns 1 (:1008), and callers branch on that (:1470, :2138).
+   - Fix: say "fails when there is no manifest".
+9. lib/molt.sh:1201
+   - Says: "Every settings file molt writes is written through here."
+   - Code: the managed drop-in molt-sysadm.json (lib/agent.sh:402) goes through molt_root_file_install (liberators/agents.sh:201).
+   - Fix: limit it to user and home settings.
+10. lib/molt.sh:1242-1243
+    - Says: the hook filters are "Read by liberators/claude.sh and lib/agent.sh".
+    - Code: liberators/agents.sh:31 reads MOLT_CLAUDE_HOOK_SET as well.
+    - Fix: drop the list of readers.
+11. lib/molt.sh:1589
+    - Says: "MOLT_HOME is valid".
+    - Code: :1591 checks MOLT_ROOT, and MOLT_HOME exists nowhere.
+    - Fix: rename it to MOLT_ROOT.
+12. lib/molt.sh:1693
+    - Says: "each .sh is executable, has _check function".
+    - Code: :1705 only greps for _check, and nothing tests -x.
+    - Fix: drop "is executable".
+13. lib/molt.sh:2108-2110
+    - Says: $2 is false "when an upgrade hook has failed".
+    - Code: _upgrade_finish also passes false on a failed pull (claim_ready, around :2356).
+    - Fix: add "or a pull".
+14. lib/molt.sh:2659
+    - Says: "(sends debug/info to stderr to keep stdout clean)".
+    - Code: molt_info writes to stdout (:30, issue 0016), and :2660 discards both streams.
+    - Fix: "loaded quietly; anything it printed would mix with the repo list".
+15. liberators/tiling.sh:5-7
+    - Says: "Q,C = full left column, Q,V = full screen; QWE=top, ASD=middle, ZXC=bottom" (a 3x3 grid).
+    - Code: install sets 7x3, QWERTYU/ASDFGHJ/ZXCVBNM (:208-211). The runtime line at :219 ("Q,C = left third") is wrong too.
+    - Fix: rewrite both for 7x3; Q,M is full screen.
+16. liberators/alacritty.sh:91-93
+    - Says: MOLT_FONT_FAMILY/SIZE are "declared in every instance's vars.sh and read by nothing".
+    - Code: doctor reads MOLT_FONT_FAMILY (lib/molt.sh:1917), and the user repo's alacritty.toml.tmpl reads both.
+    - Fix: put it in the past tense ("were ... read by nothing") or drop it.
+17. liberators/backup.sh:155-156
+    - Says: "Everything above asserts an input: share mounted, script installed, agent loaded."
+    - Code: the script and LaunchAgent were deleted (:7-8). The checks above are reachability, mount, binding and attach budget (:91-153).
+    - Fix: name the inputs that remain.
+18. liberators/desktop.sh:10-12
+    - Says: the GTK3/GTK4 stylesheet note sits above the favourites helper.
+    - Code: the note belongs to _desktop_gtk_versions (:167).
+    - Fix: move it there.
+19. liberators/desktop.sh:323
+    - Says: "verify never checked it."
+    - Code: :324-334 checks it.
+    - Fix: "verify checks it too", or delete the line.
+20. liberators/zsh.sh:31-33
+    - Says: the tab resets to "bg_color, its iTerm2 profile's background, or to black".
+    - Code: only bg_color or 000000 is used (:43-44).
+    - Fix: drop "its iTerm2 profile's background".
+21. liberators/utilz.sh:30 and lib/constants.sh:78-79
+    - Says: "Check MOLT_UTILZ_HOME ... first" and "fall back to searching MOLT_PRJ_DIR".
+    - Code: there is one fixed default, ${MOLT_PRJ_DIR}/Utilz (or /Pplr) (constants.sh:80-81). Nothing is searched.
+    - Fix: say the default is MOLT_PRJ_DIR/Utilz, overridable by UTILZ_HOME.
+
+B. Stale ST or issue references
+
+- Every issue cited is closed and only explains why the code exists. No reference claims something false.
+- Two passages describe the ST0006 rollout as still in progress, though ST0006 is complete:
+  - liberators/claude.sh:137-138: "hv declares it sleeve by sleeve, as each is ready to move (ST0006 WP04)".
+  - liberators/agents.sh:111-113: "on kovacs the home renders while kovacs-sysadm is still live ... before hv runs the move".
+- The behaviour each explains still holds.
+- Fix: put both in the past tense, as the reason for the design.
+
+C. Stored counts and positional names (hv's rule)
+
+Each of these should drop the number, or name the things instead:
+- lib/molt.sh: :124 "three distinct states", :132 "all four states", :192 "through these two" (they are not adjacent either), :350 "Two places" (see item 7), :742 "the third place", :789 "all four", :2034 "all three".
+- liberators/claude.sh:29: "Molt writes two values into it".
+- liberators/agents.sh:39: "built in two places".
+- liberators/alacritty.sh:10: "rule 4 in writing-a-liberator.md", a positional name. Name the rule by its subject instead.
+- liberators/backup.sh: :8 "All three were deleted" (only two things are named), :64 "the four it needs", :297 "two small reads", :398 "the two checks".
+- liberators/ssh.sh:104: "all three".
+- liberators/zsh.sh:126 and :201: "All three" / "all three".
+- Incident figures in history notes, for your judgement:
+  - git.sh:8 "two sleeves"
+  - backup.sh:156 "both sleeves"
+  - editors.sh:83 "four separate mornings"
+  - editors.sh:354-355 "181/191 ... remaining ten"
+  - editors.sh:377 "three links"
+
+Real constants (hop limit 40, head/timeout limits, claude.sh first five and cut to 100, backup budgets, 7x3 grid, kernel caps, versions) match their code; leave them.
+
+D. Outside comments, found on the way
+
+- liberators/dev-tools.sh:36: the install hint names fd-find/fd, which is never checked, and leaves out curl, which is (:28).
+- liberators/editors.sh:190: the hint says emacs-plus@29, but :23-46 expects a numbered emacs-plus@31 or newer.
+
+Checked:
+- bin/molt's help text against the subcommands it dispatches: all match.
+- Every function and variable named in a comment exists. Nothing is left of _claude_settings_write or _CLAUDE_PROCESS_PATTERN.
+- Every cited issue (closed) and ST (complete).
+- I read each finding above against its code.
+
+Not checked:
+- Third-party tool behaviour (Doom, SuperDuper, Tactile, npm, Homebrew).
+- The distro-copied comments in the AppArmor template.
+- ST documents beyond their status.
+- History stories against git log.
+- Molt-matts' NOTES.md.
+- No code run, nothing fixed.
+
 ---
 
 _Generated by Intent v3 from the whiteboard model. Do not edit this file -- it is rendered from the model, and `intent doctor` reports any hand-edit as skew._
