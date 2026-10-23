@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 09:50Z
+heartbeat_at: 2026-10-23 09:51Z
 status: active
-focus: "23 Oct: the lift accepted by vc (e4aa225, CHANGELOG a474ce1); nothing queued; off claude.bats until dc's hash (hold 14)"
+focus: "23 Oct: the lift accepted by vc (e4aa225); hold 14 released at dc's 9810f94; nothing queued"
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- test/liberators/claude.bats is dc's while dc lands the home guard's refusal strings and their assertions (vc, 23 Oct); released when dc's commit is on main.
+_(none)_
 
 ## Watch-outs
 
