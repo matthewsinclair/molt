@@ -1,0 +1,15 @@
+{
+  "id": "01M5KV5ZYBYWGJ8KN1J88M64AH",
+  "ts": "2026-10-23T07:39:06.571Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "cmd_doctor derives its total and its failures from the run (hv, 23 Oct: no stored counts or check numbers anywhere): lib/molt.sh drops total=15 and the [n/N] prefix and closes with All checks passed or <warnings> of <checks> checks need attention; test/molt.bats asserts labels, not numbers. Released on vc's go, and after cc's 0038 commit if that touches cmd_doctor."
+  }
+}
