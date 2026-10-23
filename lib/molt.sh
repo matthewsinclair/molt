@@ -148,10 +148,11 @@ molt_link_points_to() {
 
 # The path $1 leads to, as the disk spells it: each symlink on the way followed,
 # a relative target from its link's directory, and the directory the chain ends
-# in named by molt_disk_path, which the home guard agrees with. Shell alone, the
-# same on every platform: realpath(1) is not on every macOS, readlink -f is not
-# on every BSD, and Molt ships no Python (issue 0039). $1 comes back as it was
-# when it cannot be resolved, or when 40 links have not ended the chain.
+# in named by molt_disk_path -P, which takes each .. after the link before it,
+# as realpath(1) does. Shell alone, the same on every platform: realpath(1) is
+# not on every macOS, readlink -f is not on every BSD, and Molt ships no Python
+# (issue 0039). $1 comes back as it was when it cannot be resolved, or when 40
+# links have not ended the chain.
 _molt_realpath() {
   local path="$1" link dir hops=0
   [[ "$path" == /* ]] || path="$PWD/$path"
@@ -162,12 +163,12 @@ _molt_realpath() {
     fi
     if [[ "$link" != /* ]]; then
       dir="${path%/*}"
-      dir="$(molt_disk_path "${dir:-/}")" || { echo "$1"; return 0; }
+      dir="$(molt_disk_path -P "${dir:-/}")" || { echo "$1"; return 0; }
       link="${dir%/}/$link"
     fi
     path="$link"
   done
-  molt_disk_path "$path" || echo "$1"
+  molt_disk_path -P "$path" || echo "$1"
 }
 
 # True when the paths $1 and $2 resolve to the same file.
@@ -235,11 +236,22 @@ molt_tilde() {
 # way (real_dir), so molt_agt_dir_fault and the guard never disagree about
 # which directories are one (ST0006 AC014). Fails for a relative path, and
 # when not even / can be entered.
+#
+# cd takes a .. off with the name before it, as text, before it follows any
+# link, so a/link/.. is a, wherever the link leads. That is the guard's
+# answer, and the directories it compares hold no .. to differ on. With -P
+# first, each .. is taken after the link before it, as realpath(1) takes it,
+# for _molt_realpath, whose link targets may hold one.
 molt_disk_path() {
-  local path="$1" rest="" real
+  local cd_opt=() path rest="" real
+  if [[ "${1:-}" == -P ]]; then
+    cd_opt=(-P)
+    shift
+  fi
+  path="${1:-}"
   # ${path%/*} of a relative path is itself, and the loop below would not end.
   [[ "$path" == /* ]] || return 1
-  until real="$(cd "${path:-/}" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })"; do
+  until real="$(cd ${cd_opt+"${cd_opt[@]}"} "${path:-/}" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })"; do
     [[ -n "$path" ]] || return 1
     rest="/${path##*/}$rest"
     path="${path%/*}"
@@ -289,8 +301,9 @@ molt_link() {
     return 1
   fi
 
-  # If target already points to source, nothing to do
-  if [[ -L "$target" ]] && [[ "$(readlink -f "$target")" == "$(readlink -f "$source")" ]]; then
+  # If target already points to source, nothing to do. readlink -f is not on
+  # every BSD, and where it is missing both sides come back empty and equal.
+  if molt_link_points_to "$target" "$source"; then
     molt_debug "Already linked: $target -> $source"
     return 0
   fi
@@ -1176,6 +1189,53 @@ molt_claude_hook_entry() {
 MOLT_CLAUDE_HOOK_GET='first(.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command))) // null'
 # shellcheck disable=SC2016,SC2034
 MOLT_CLAUDE_HOOK_SET='.hooks.UserPromptSubmit = ([.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command) | not)] + [$want])'
+
+# A Claude Code process: the native binary, which runs with argv0 claude, by
+# name or by an absolute path (the desktop app's has a space in it), or an npm
+# install, which node runs by its bin link or its cli.js. Matched against the
+# whole command line with pgrep -f; pgrep -x matches a process name, which
+# misses running processes on macOS. Every arm is anchored on argv0, so `ls
+# ~/.config/claude`, a grep or an npm ls naming the package is not Claude
+# Code. The path arm allows a space only where the next character starts no
+# other argument, ie is not / or -. A relative ./claude is not matched.
+MOLT_CLAUDE_PROCESS_PATTERN='^(/[^ ]*( [^/ -][^ ]*)*/)?claude( |$)|^([^ ]*/)?node ([^ ]*/)?claude( |$)|^([^ ]*/)?node .*@anthropic-ai/claude-code/cli'
+
+# The Claude Code processes this user is running, "pid command line" a line,
+# the command line whole; nothing when there are none. ps names them, because
+# procps' pgrep -l prints a process's name and macOS's its arguments; a process
+# that has gone by then is named by its pid alone. Fails when pgrep cannot
+# answer. The claude liberator asks it before it moves Claude Code's state, and
+# molt agent start before it starts a session under a name one already has.
+molt_claude_processes() {
+  local pids list rows rc=0 ancestors=()
+  # macOS's pgrep leaves out its own ancestors unless given -a, so molt run from
+  # inside a Claude Code session would not see that session. procps' pgrep
+  # leaves out only itself, and its -a means something else.
+  if [[ "$(molt_platform)" == "macos" ]]; then
+    ancestors=(-a)
+  fi
+  pids="$(pgrep ${ancestors+"${ancestors[@]}"} -u "$(id -u)" -f "$MOLT_CLAUDE_PROCESS_PATTERN")" || rc=$?
+  case "$rc" in
+    0) ;;
+    1) return 0 ;;
+    *) return 1 ;;
+  esac
+  list="$(printf '%s\n' "$pids" | paste -sd, -)"
+  # An argument can hold a newline, and ps prints it as it is: a line that
+  # starts with one of these pids starts a row, and any other line continues
+  # the row before it, so an argument after one, such as --name, is still read.
+  rows="$( { ps -o pid=,args= -p "$list" 2>/dev/null || true; } \
+            | awk -v pids=",$list," '
+                { sub(/^ +/, "") }
+                $1 ~ /^[0-9]+$/ && index(pids, "," $1 ",") { if (row != "") print row; row = $0; next }
+                row != "" { row = row " " $0 }
+                END { if (row != "") print row }')"
+  if [[ -n "$rows" ]]; then
+    echo "$rows"
+  else
+    echo "$pids"
+  fi
+}
 
 # Where Claude Code reads its managed settings, which nothing a user or an agent
 # writes can override: managed-settings.json, and the drop-ins beside it in

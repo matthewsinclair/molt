@@ -270,6 +270,44 @@ FAKE
     chmod +x "$BATS_TEST_TMPDIR/bin/apparmor_parser" "$BATS_TEST_TMPDIR/bin/bwrap" "$BATS_TEST_TMPDIR/bin/unshare"
 }
 
+# pgrep and ps first on PATH, answering from a process table in the test
+# directory, $FAKE_PROCS, never from this machine's, where a Claude Code may
+# well be running. pgrep applies the pattern it is given, so what counts as
+# Claude Code is decided here as it is in production, logs its arguments to
+# $FAKE_PROCS.args, for a test of -a, and exits FAKE_PGREP_STATUS where that is
+# set. The table starts empty; fake_processes fills it.
+install_fake_process_table() {
+    export FAKE_PROCS="$BATS_TEST_TMPDIR/procs"
+    : > "$FAKE_PROCS"
+    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    cat > "$BATS_TEST_TMPDIR/bin/pgrep" <<'FAKE'
+#!/bin/bash
+# pgrep [-a] -u <uid> -f <pattern>: the pids in $FAKE_PROCS whose command line
+# matches.
+echo "$*" >> "$FAKE_PROCS.args"
+[ -z "${FAKE_PGREP_STATUS:-}" ] || exit "$FAKE_PGREP_STATUS"
+for pattern; do :; done
+awk -v pat="$pattern" '{ args = $0; sub(/^[0-9]+ /, "", args) } args ~ pat { print $1; n++ } END { exit n ? 0 : 1 }' "$FAKE_PROCS"
+FAKE
+    cat > "$BATS_TEST_TMPDIR/bin/ps" <<'FAKE'
+#!/bin/bash
+# ps -o pid=,args= -p <pid,pid>: those rows of $FAKE_PROCS.
+for pids; do :; done
+awk -v pids=",$pids," 'index(pids, "," $1 ",")' "$FAKE_PROCS"
+FAKE
+    chmod +x "$BATS_TEST_TMPDIR/bin/pgrep" "$BATS_TEST_TMPDIR/bin/ps"
+    case ":$PATH:" in
+        *":$BATS_TEST_TMPDIR/bin:"*) ;;
+        *) export PATH="$BATS_TEST_TMPDIR/bin:$PATH" ;;
+    esac
+}
+
+# The process table the fake pgrep and ps answer from, one "pid command line"
+# per argument.
+fake_processes() {
+    printf '%s\n' "$@" > "$FAKE_PROCS"
+}
+
 # A Homebrew prefix in the test directory holding one installed formula, and a
 # brew stub first on PATH that answers from it. Nothing reaches the real brew.
 # Usage: fake_brew_formula <name> <version> <command> [<utility>...]

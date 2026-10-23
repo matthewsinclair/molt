@@ -4,13 +4,19 @@
 
 set -euo pipefail
 
-# Resolve symlinks so MOLT_ROOT works when invoked via ~/bin/molt symlink
+# Resolve symlinks so MOLT_ROOT works when invoked via ~/bin/molt symlink, a
+# relative target read from its link's directory. lib/molt.sh's _molt_realpath
+# does this for everything else, but cannot be sourced before MOLT_ROOT is known.
 _molt_self="${BASH_SOURCE[0]}"
 while [[ -L "$_molt_self" ]]; do
-  _molt_self="$(readlink "$_molt_self")"
+  _molt_link="$(readlink "$_molt_self")"
+  case "$_molt_link" in
+    /*) _molt_self="$_molt_link" ;;
+    *) _molt_self="$(dirname "$_molt_self")/$_molt_link" ;;
+  esac
 done
 MOLT_ROOT="$(cd "$(dirname "$_molt_self")/.." && pwd)"
-unset _molt_self
+unset _molt_self _molt_link
 
 # Source core libraries
 # shellcheck disable=SC1091

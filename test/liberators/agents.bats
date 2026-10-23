@@ -693,9 +693,10 @@ with_role_files_unlisted() {
 # --- Starting an agent (ST0007) ---
 
 # A claude that records the directory it runs in, its arguments and its
-# CLAUDE_CONFIG_DIR, and a hostname no sleeve has, first on PATH, so no session
-# running on the machine under test carries the agents' names. Called before
-# setup_agents, which reads the hostname.
+# CLAUDE_CONFIG_DIR, a hostname no sleeve has, and a process table of the test's
+# own, empty until fake_processes fills it, first on PATH, so no session running
+# on the machine under test is seen. Called before setup_agents, which reads
+# the hostname.
 fake_launch() {
     local bin="$BATS_TEST_TMPDIR/bin"
     mkdir -p "$bin"
@@ -707,23 +708,7 @@ fake_launch() {
 EOF
     chmod +x "$bin/hostname" "$bin/claude"
     export PATH="$bin:$PATH"
-}
-
-# A process whose command line carries --name $1, as a Claude Code session
-# started by name does, with its pid in RUNNING once pgrep can see it.
-fake_session() {
-    bash -c 'while :; do sleep 1; done' claude --name "$1" >/dev/null 2>&1 3>&- &
-    RUNNING=$!
-    local tries=0
-    until pgrep -f -- "--name $1( |\$)" >/dev/null; do
-        (( ++tries < 50 )) || return 1
-        sleep 0.1
-    done
-}
-
-end_session() {
-    kill "$RUNNING"
-    wait "$RUNNING" 2>/dev/null || true
+    install_fake_process_table
 }
 
 @test "molt agent start runs claude start --name <name> in the agent's home, by its role or its name, passing on what follows --" {
@@ -788,22 +773,69 @@ end_session() {
     [ ! -e "$CALLED" ]
 }
 
-@test "molt agent start refuses while a session of that name runs, naming its pid, and not for one whose name only begins with it" {
+# critic-shell, 23 Oct: the check was a pgrep of its own, without -a, so on
+# macOS a start from inside the session, its ancestor, did not see it, and it
+# took any process carrying the name for a session.
+@test "molt agent start refuses while a Claude Code session of that name runs, naming its pid, counting its own ancestors on macOS; not for a longer name or a process that is not Claude Code; and when the process table cannot say" {
     # AT003 (ST0007 AC002).
     fake_launch
     setup_agents
     agents_install >/dev/null
-    fake_session "$NAME"
+    fake_processes "501 claude start --name $NAME" "502 /usr/local/bin/claude --name=$NAME --resume"
     run cmd_agent start sysadm
-    end_session
     assert_failure
-    assert_output_contains "$NAME is already running (pid $RUNNING)"
+    assert_output_contains "$NAME is already running (pid 501, 502): go to that session, or quit it first"
     [ ! -e "$CALLED" ]
-    fake_session "${NAME}2"
+    grep -q -- '^-a -u ' "$FAKE_PROCS.args"
+
+    fake_processes "503 claude start --name ${NAME}2" "504 bash -c sleep claude --name $NAME" "505 grep -- --name $NAME"
     run cmd_agent start sysadm
-    end_session
     assert_success
     [ -e "$CALLED" ]
+
+    rm "$CALLED"
+    export FAKE_PGREP_STATUS=3
+    run cmd_agent start sysadm
+    unset FAKE_PGREP_STATUS
+    assert_failure
+    assert_output_contains "pgrep could not list processes, so whether $NAME is already running is unknown"
+    [ ! -e "$CALLED" ]
+}
+
+# critic-shell, 23 Oct: the harness went unread, so a home left from when the
+# agent was claude started it as claude.
+@test "molt agent start refuses an agent whose harness is not claude, starting nothing" {
+    fake_launch
+    setup_agents
+    agents_install >/dev/null
+    write_manifest '[[agent]]' 'role = "sysadm"' 'harness = "codex"'
+    run cmd_agent start sysadm
+    assert_failure
+    assert_output_contains "$NAME cannot start: its [[agent]] entry names harness codex, and claude is the only one"
+    [ ! -e "$CALLED" ]
+}
+
+# critic-shell, 23 Oct: the first entry whose name or role matched was taken,
+# so a role spelled like another agent's name could take its place.
+@test "molt agent names an agent by its name before a role spelled like that name, and says why when there is no molt.toml or no user repo" {
+    setup_agents
+    write_manifest '[[agent]]' "role = \"$NAME\"" '' '[[agent]]' 'role = "sysadm"'
+    run cmd_agent home "$NAME"
+    assert_success
+    [ "$output" = "$AGENT_HOME" ]
+    run cmd_agent home sysadm
+    [ "$output" = "$AGENT_HOME" ]
+    run cmd_agent home "$SLEEVE-$NAME"
+    [ "$output" = "$MOLT_AGT_DIR/$SLEEVE-$NAME" ]
+
+    rm "$INSTANCE/molt.toml"
+    run cmd_agent start sysadm
+    assert_failure
+    assert_output_contains "molt agent: this sleeve has no molt.toml, so it declares no agents"
+    eval 'molt_find_user_repo() { return 1; }'
+    run cmd_agent home sysadm
+    assert_failure
+    assert_output_contains "molt agent: the user repo cannot be found, so this sleeve's agents cannot be read"
 }
 
 @test "molt agent roles lists the declared roles one a line, a disabled one marked; molt agent home prints the home; molt agent config takes a role" {

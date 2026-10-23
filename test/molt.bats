@@ -329,6 +329,27 @@ TOML
     [ "$output" = "$want" ]
 }
 
+# critic-shell, 23 Oct: cd takes up/.. off as text before it follows up, so a ..
+# after a linked directory, in the path or in a link's target, named a file
+# beside the link, not the one the disk reaches.
+@test "_molt_realpath takes a .. after a linked directory where the link leads, in the path and in a link's target" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/dotdot" want
+    mkdir -p "$d/deep/inner"
+    : > "$d/deep/x"
+    ln -s "$d/deep/inner" "$d/up"
+    ln -s up/../x "$d/via"
+    want="$(cd "$d/deep" && /bin/pwd -P)/x"
+
+    run _molt_realpath "$d/up/../x"
+    assert_success
+    [ "$output" = "$want" ]
+    run _molt_realpath "$d/via"
+    [ "$output" = "$want" ]
+    run molt_same_file "$d/via" "$d/deep/x"
+    assert_success
+}
+
 @test "_molt_realpath gives back as it was a path in a link loop" {
     load_molt_libs
     local d="$BATS_TEST_TMPDIR/loop"
@@ -347,11 +368,29 @@ TOML
     run git ls-files -- '*.py'
     assert_success
     [ -z "$output" ]
-    # A comment may name it; a line of code may not.
-    hits="$(git grep -nIE '(^|[^[:alnum:]_./-])python[0-9.]*([^[:alnum:]_-]|$)' -- bin lib liberators templates .github |
-        grep -vE '^[^:]+:[0-9]+:[[:space:]]*#' || true)"
+    # A comment may name it; a line of code may not, nor a shebang, which a
+    # heredoc may write. A path or a default, /usr/bin/python3 or
+    # ${PYTHON:-python3}, is a call. git grep exits 1 when nothing matches, and
+    # any other failure must not read as nothing found (critic-shell, 23 Oct).
+    run git grep -nIE '(^|[^[:alnum:]_.])python[0-9.]*([^[:alnum:]_-]|$)' -- bin lib liberators templates .github
+    [ "$status" -le 1 ]
+    # grep -v exits 1 when every hit is a comment.
+    hits="$(printf '%s\n' "$output" | grep -vE '^[^:]+:[0-9]+:[[:space:]]*#([^!]|$)' || true)"
     echo "$hits"
     [ -z "$hits" ]
+}
+
+# critic-shell, 23 Oct: bin/molt read a relative link's target from the
+# directory it was run in, not from the link's.
+@test "molt runs through a relative link to bin/molt, from any directory" {
+    local d="$BATS_TEST_TMPDIR/rel"
+    mkdir -p "$d/bin"
+    ln -s "$MOLT_ROOT" "$d/molt-root"
+    ln -s ../molt-root/bin/molt "$d/bin/molt"
+    cd /
+    run "$d/bin/molt" help
+    assert_success
+    assert_output_contains "agent start <role>"
 }
 
 # The steps after the existence checks ran unchecked, and molt_link is called
