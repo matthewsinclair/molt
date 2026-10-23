@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 21:45Z
-status: paused
-focus: "24 Oct: folded at end of day; nothing queued, nothing for hv"
+heartbeat_at: 2026-10-23 21:46Z
+status: active
+focus: "booted and holding; waiting for hv or vc"
 claims: []
 ---
 
