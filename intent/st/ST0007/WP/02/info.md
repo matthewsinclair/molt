@@ -2,7 +2,7 @@
 wp_id: WP-02
 title: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
 scope: S
-status: Not Started
+status: WIP
 ---
 
 # WP-02: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start

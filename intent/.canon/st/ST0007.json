@@ -23,7 +23,7 @@
       "seq": 2,
       "title": "The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start",
       "scope": "S",
-      "status": "not-started",
+      "status": "wip",
       "objective": "",
       "body": "Prose, in two places:\n\n- The shared preamble, Molt-matts' `config/agents/AGENTS.md.tmpl`, which opens every agent's `AGENTS.md`, says what an agent does when its first prompt is `start`. It is written once there for every role, since the preamble holds what every agent is told (ST0006 AC016), and `molt resleeve` renders it into the homes.\n- `docs/guides/sleeve-agents.md`'s \"Starting an agent\", which says there is no launch command, starts agents with `molt agent start`, and the guide's other mentions of a launch by hand follow it.\n",
       "preamble": ""
