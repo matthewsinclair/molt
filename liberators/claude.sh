@@ -97,13 +97,43 @@ _claude_report_settings_fault() {
   fi
 }
 
+# Replaces the settings file $1 with what the command after it prints, through
+# a temporary file beside it that cp -p gives the file's mode, then a rename, so
+# Claude Code, which watches the file, never reads half of it. The merge below
+# and the move's rewrite of paths into ~/.claude both write through here. Every
+# step is checked by hand: resleeve runs install inside an `if`, where set -e
+# does not apply, so a failed copy or rename would otherwise run on to
+# "written". Fails, printing why, with the file as it was. Its callers refuse a
+# symlink first: the rename would silently turn a link into a copy.
+_claude_settings_write() {
+  local settings="$1" tmp
+  shift
+  if ! tmp="$(mktemp "${settings}.XXXXXX")"; then
+    echo "could not be written: no temporary file could be made beside it"
+    return 1
+  fi
+  if [[ -f "$settings" ]] && ! cp -p "$settings" "$tmp"; then
+    rm -f "$tmp"
+    echo "could not be written: it could not be copied"
+    return 1
+  fi
+  if ! "$@" >"$tmp"; then
+    rm -f "$tmp"
+    echo "could not be written: what was to replace it could not be made"
+    return 1
+  fi
+  if ! mv -f "$tmp" "$settings"; then
+    rm -f "$tmp"
+    echo "could not be written: it could not be replaced"
+    return 1
+  fi
+}
+
 # Writes into the user settings.json the value that $1 labels, $2 holds and the
 # filter $3 reads, with the filter $4, and changes no other key. A file that
-# already carries it is left alone. Every step is checked by hand: resleeve runs
-# install inside an `if`, where set -e does not apply, so a failed copy or
-# rename would otherwise run on to "written".
+# already carries it is left alone; one that does not is kept beside it first.
 _claude_settings_merge() {
-  local label="$1" source="$2" get="$3" set="$4" settings shown fault current tmp backup
+  local label="$1" source="$2" get="$3" set="$4" settings shown fault current backup why
   settings="$(molt_claude_config_dir)/settings.json"
   shown="$(molt_tilde "$settings")"
   if ! fault="$(_claude_settings_fault "$label" "$source" "$get")"; then
@@ -112,36 +142,21 @@ _claude_settings_merge() {
   fi
   [[ -n "$fault" ]] || return 0
 
-  current="$settings"
-  [[ -f "$current" ]] || current=/dev/null
-  tmp="$(mktemp "${settings}.XXXXXX")" || return 1
-  # cp -p gives tmp the file's mode, which the write below keeps.
-  if [[ -f "$settings" ]] && ! cp -p "$settings" "$tmp"; then
-    rm -f "$tmp"
-    molt_error "claude: could not copy $shown, so its $label was not written"
-    return 1
-  fi
-  # An absent or empty settings.json merges as {}.
-  if ! jq -n --slurpfile cur "$current" --slurpfile new "$source" \
-      '$new[0] as $want | ($cur[0] // {}) | '"$set" >"$tmp"; then
-    rm -f "$tmp"
-    molt_error "claude: $label not written; $shown was left as it was"
-    return 1
-  fi
-
   if [[ -f "$settings" ]]; then
     backup="${settings}.molt-backup.$(date +%Y%m%d%H%M%S)"
     if ! cp -p "$settings" "$backup"; then
-      rm -f "$tmp"
       molt_error "claude: could not back up $shown, so its $label was not written"
       return 1
     fi
     molt_warn "Backing up existing file: $settings -> $backup"
   fi
-  # A rename, so Claude Code, which watches this file, never reads half of it.
-  if ! mv -f "$tmp" "$settings"; then
-    rm -f "$tmp"
-    molt_error "claude: $label not written; $shown was left as it was"
+  current="$settings"
+  [[ -f "$current" ]] || current=/dev/null
+  # An absent or empty settings.json merges as {}.
+  # shellcheck disable=SC2016 # $new, $cur and $want are jq's, not the shell's
+  if ! why="$(_claude_settings_write "$settings" jq -n --slurpfile cur "$current" --slurpfile new "$source" \
+      '$new[0] as $want | ($cur[0] // {}) | '"$set")"; then
+    molt_error "claude: $shown $why, so its $label was not written"
     return 1
   fi
   molt_info "claude: $label written into $shown"
@@ -153,10 +168,11 @@ _claude_settings_merge() {
 # Code's state there, rather than in ~/.claude and ~/.claude.json. Nothing below
 # runs on a sleeve that declares none: hv declares it sleeve by sleeve, as each
 # is ready to move (ST0006 WP04). On one that does, claude_install moves the
-# state once, publishes CLAUDE_CONFIG_DIR only when the state is where it
-# points, and installs the hook that refuses a launch in $HOME. A variable
-# published before the move would start the next Claude empty in the new dir,
-# and the move would then meet a dir that is no longer empty.
+# state once, with the paths into it that its settings name, publishes
+# CLAUDE_CONFIG_DIR only when the state is where it points, and installs the
+# hook that refuses a launch in $HOME. A variable published before the move
+# would start the next Claude empty in the new dir, and the move would then
+# meet a dir that is no longer empty.
 
 # Why the path $2, named $1, cannot be written as it stands into the files that
 # publish it, or nothing when it can. They are env.sh, a plist and an
@@ -394,6 +410,116 @@ _claude_move() {
   molt_info "claude: moved Claude Code's state into $(molt_tilde "$dir"); the copies taken first are in $(molt_tilde "$backup")"
 }
 
+# --- Paths into ~/.claude ---
+#
+# The move takes ~/.claude whole, but a value in the settings.json it takes can
+# name a file there by path, and goes on naming the old place: on rhadamanth a
+# hook named its script so, and a hook whose script is missing blocks every
+# call it guards (issue 0038). So the move rewrites each such path to name the
+# config dir, and doctor names any found after it. A path counts in any string
+# value, an array's items included, where it starts the value or follows a
+# character other than a letter, a digit or one of ._~+@%-, so neither
+# $CLAUDE_PROJECT_DIR/.claude/ nor a longer path holding ~/.claude/ is one, and
+# nor is ~/.claude.json, or ~/.claude with no slash. It is spelt from the
+# absolute home, from ~, or from $HOME or ${HOME} for a shell to expand, and
+# keeps its spelling, unless the config dir is not under the home, when it
+# becomes absolute. The move and doctor read one list, so they never disagree
+# about what counts: each value as its key, a jq path, and as it is and as it
+# would be, both as JSON strings, so a line break in one keeps to its line.
+# The regexes anchor with \A and \z: Oniguruma's ^ and $ match at any line's
+# start and end, so a path starting a value's second line read as the tail of
+# a longer path.
+# shellcheck disable=SC2016 # $home, $abs, $tilde and $HOME are jq's, not the shell's
+_CLAUDE_HOME_PATHS='
+  def repoint($from; $to):
+    if contains($from) then
+      split($from) as $parts
+      | reduce range(1; $parts | length) as $i ($parts[0];
+          . + (if $parts[$i - 1] | test("[[:alnum:]._~+@%-]\\z") then $from else $to end) + $parts[$i])
+    else . end;
+  def spelt($home_as):
+    if $tilde | startswith("~/") then $home_as + ($tilde | ltrimstr("~")) else $abs end;
+  def keyname:
+    map(if type == "number" then "[\(.)]"
+        elif test("\\A[A-Za-z_][A-Za-z0-9_]*\\z") then ".\(.)"
+        else "[\(tojson)]" end)
+    | join("") | if startswith(".") then . else "." + . end;
+  def home_paths:
+    if type == "object" then . else error("not a JSON object") end
+    | [paths(type == "string") as $p
+       | getpath($p) as $was
+       | ($was | repoint($home + "/.claude/"; $abs + "/")
+               | repoint("~/.claude/"; $tilde + "/")
+               | repoint("$HOME/.claude/"; spelt("$HOME") + "/")
+               | repoint("${HOME}/.claude/"; spelt("${HOME}") + "/")) as $is
+       | select($is != $was)
+       | {path: $p, key: ($p | keyname), was: $was, is: $is}];
+  def home_paths_listed: home_paths[] | "\(.key)\t\(.was | tojson)\t\(.is | tojson)";
+  def home_paths_rewritten: reduce home_paths[] as $e (.; setpath($e.path; $e.is));
+'
+
+# Runs the definition $2 of _CLAUDE_HOME_PATHS on the settings file $3, for the
+# config dir $1. The output is raw, so each line it gives is printed as it is.
+_claude_home_paths_jq() {
+  jq -r --arg home "$HOME" --arg abs "$1" --arg tilde "$(molt_tilde "$1")" \
+    "$_CLAUDE_HOME_PATHS $2" "$3"
+}
+
+# Each value in the settings file $1 that names a path into ~/.claude, one
+# "key<TAB>was<TAB>is" line each, where is names it in the config dir $2
+# instead; nothing when there is none, or no file. Fails, printing why instead,
+# when it cannot tell.
+_claude_home_paths() {
+  local settings="$1" dir="$2" listed
+  [[ -e "$settings" ]] || return 0
+  if ! command -v jq &>/dev/null; then
+    echo "cannot be checked: jq is not installed"
+    return 1
+  fi
+  if ! listed="$(_claude_home_paths_jq "$dir" home_paths_listed "$settings" 2>/dev/null)"; then
+    echo "is not a JSON object"
+    return 1
+  fi
+  [[ -z "$listed" ]] || printf '%s\n' "$listed"
+}
+
+# Rewrites each value naming a path into ~/.claude in the settings.json the
+# move has just taken into the config dir $1, to name it there, and names each,
+# with its key, as it was and as it is. The move's copies hold the file as it
+# was, so none is taken here. Fails, naming each value it left, when it cannot:
+# as the merge does, it will not write a symlink, nor will it splice in a config
+# dir a shell would split or expand, and a file it cannot read or write it
+# leaves as it was.
+_claude_repoint() {
+  local dir="$1" settings shown listed why key was is
+  settings="$dir/settings.json"
+  shown="$(molt_tilde "$settings")"
+  if ! listed="$(_claude_home_paths "$settings" "$dir")"; then
+    molt_error "claude: $shown $listed, so no path into ~/.claude it names was rewritten"
+    return 1
+  fi
+  [[ -n "$listed" ]] || return 0
+
+  if [[ -L "$settings" ]]; then
+    why="is a symlink to $(readlink "$settings"), which molt will not write"
+  # A command names a path unquoted as often as not, so a dir with a space or
+  # a shell's syntax in it would break the command, and doctor would pass it,
+  # since it would no longer name ~/.claude (critic-shell, 23 Oct).
+  elif [[ "$dir" == *[![:alnum:]._/+@%:,=-]* ]]; then
+    why="was left: $(molt_tilde "$dir") holds a character a shell would split or expand, which would break a command naming it"
+  elif why="$(_claude_settings_write "$settings" _claude_home_paths_jq "$dir" home_paths_rewritten "$settings")"; then
+    while IFS=$'\t' read -r key was is; do
+      molt_info "claude: rewrote $key in $shown: $was -> $is"
+    done <<< "$listed"
+    return 0
+  fi
+  molt_error "claude: $shown $why, so these still name paths under ~/.claude, whose files are in $(molt_tilde "$dir") now; change them by hand:"
+  while IFS=$'\t' read -r key was _; do
+    molt_error "  $key: $was"
+  done <<< "$listed"
+  return 1
+}
+
 # The env file ~/.zshenv sources to set CLAUDE_CONFIG_DIR.
 _claude_env_file() {
   echo "$HOME/.config/molt/env.sh"
@@ -512,9 +638,11 @@ _claude_other_dir_fault() {
 
 # Puts Claude Code's state in the declared config dir $1, moving it out of $HOME
 # once, then publishes it. Refuses when it cannot, and says that the variable
-# was not published.
+# was not published. A move rewrites the paths into ~/.claude that its
+# settings.json names; when it cannot, the state is published all the same,
+# being in $1 by then, and the run fails after.
 _claude_relocate() {
-  local dir="$1" state why fault rc=0
+  local dir="$1" state why fault rc=0 repointed=0
   IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
   case "$state" in
     moved | none)
@@ -538,7 +666,8 @@ _claude_relocate() {
       elif [[ $rc -ne 0 ]]; then
         _claude_unpublished
         return 1
-      fi ;;
+      fi
+      _claude_repoint "$dir" || repointed=1 ;;
     both)
       molt_error "claude: $(molt_tilde "$dir") already holds $(_claude_contents "$dir"), so $(_claude_home_items) did not move into it; molt never merges the two"
       _claude_unpublished
@@ -548,7 +677,8 @@ _claude_relocate() {
       _claude_unpublished
       return 1 ;;
   esac
-  _claude_publish "$dir"
+  _claude_publish "$dir" || return 1
+  return $repointed
 }
 
 # Says that CLAUDE_CONFIG_DIR was not published and, unless $1 is "changed",
@@ -610,6 +740,25 @@ _claude_report_config_faults() {
   return $ok
 }
 
+# Reports, through $1 after the prefix $2, each value in the settings.json of
+# the config dir $3 that still names a path into ~/.claude, with its key. The
+# move rewrites those it finds, so one here came after it, or the rewrite
+# failed. Returns non-zero when it reported one, or could not tell.
+_claude_report_home_paths() {
+  local log="$1" prefix="$2" dir="$3" settings shown listed key was
+  settings="$dir/settings.json"
+  shown="$(molt_tilde "$settings")"
+  if ! listed="$(_claude_home_paths "$settings" "$dir")"; then
+    "$log" "${prefix}$shown $listed, so whether it names a path under ~/.claude is unknown"
+    return 1
+  fi
+  [[ -n "$listed" ]] || return 0
+  while IFS=$'\t' read -r key was _; do
+    "$log" "${prefix}$shown $key still names a path under ~/.claude, and this sleeve's config dir is $(molt_tilde "$dir"): $was"
+  done <<< "$listed"
+  return 1
+}
+
 # Reports, through $1 (molt_info or molt_error) after the prefix $2, everything
 # standing between this sleeve and the Claude Code config the user repo $3
 # declares. Returns non-zero when it reported anything.
@@ -649,6 +798,9 @@ _claude_report_faults() {
       return 1 ;;
   esac
 
+  # First: doctor shows only the start of a failing check's report, and a hook
+  # whose script has moved blocks every call it guards.
+  _claude_report_home_paths "$log" "$prefix" "$dir" || ok=1
   if [[ -z "${CLAUDE_CONFIG_DIR:-}" ]]; then
     "$log" "${prefix}CLAUDE_CONFIG_DIR is not set where molt runs; ~/.config/molt/env.sh sets it in a shell that sources it"
     ok=1
@@ -680,7 +832,8 @@ claude_install() {
   fi
   # On a refusal nothing below runs either: the links, statusLine and hook would
   # land in a ~/.claude that is about to move, or in the config dir the move
-  # must find empty.
+  # must find empty. Nor after a move whose paths could not be rewritten: the
+  # run fails there, and the next one writes them.
   if [[ -n "$dir" ]]; then
     _claude_relocate "$dir" || return 1
   fi

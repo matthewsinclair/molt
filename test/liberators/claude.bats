@@ -583,6 +583,116 @@ JSON
     [ -z "$output" ]
 }
 
+# --- Issue 0038: paths into ~/.claude in the settings the move takes ---
+#
+# The move took ~/.claude whole, but a hook on rhadamanth named its script in it
+# by path: the script moved, the line did not, and every Bash call in every
+# session was refused (23 Oct).
+
+@test "the move rewrites each path into ~/.claude that settings.json names, in its own spelling, naming each with its key, and leaves a .claude outside ~/.claude alone (issue 0038)" {
+    setup_declared
+    # The sleeve's own statusLine: one the user repo declared would replace it.
+    rm "$TEST_USER_REPO/config/claude/statusline.json"
+    # $HOME expands here, into an absolute path; \$HOME, \${HOME} and
+    # \$CLAUDE_PROJECT_DIR are left for the shell that runs the hook, and a
+    # path may start a value's second line. A permission rule spells an
+    # absolute path from //, and a backup volume's copy of the home is not it.
+    cat > "$HOME/.claude/settings.json" <<JSON
+{
+  "hooks": {
+    "PreToolUse": [ { "matcher": "Bash", "hooks": [ { "type": "command", "command": "python3 $HOME/.claude/hooks/guard.py" } ] } ],
+    "SessionStart": [ { "hooks": [ { "type": "command", "command": "\"\$HOME/.claude/hooks/x.sh\" \${HOME}/.claude/hooks/y.sh" } ] } ],
+    "Notification": [ { "hooks": [ { "type": "command", "command": "set -e\n~/.claude/hooks/notify.sh" } ] } ],
+    "Stop": [ { "hooks": [ { "type": "command", "command": "\$CLAUDE_PROJECT_DIR/.claude/hooks/stop.sh" } ] } ]
+  },
+  "permissions": { "allow": [ "Read(/$HOME/.claude/**)", "Read(/Volumes/Backup$HOME/.claude/**)" ] },
+  "statusLine": { "type": "command", "command": "~/.claude/statusline.sh" }
+}
+JSON
+    local settings="$CONFIG/settings.json" original backup written
+    original="$(cat "$HOME/.claude/settings.json")"
+    run claude_install
+    assert_success
+    [ "$(jq -r '.hooks.PreToolUse[0].hooks[0].command' "$settings")" = "python3 $CONFIG/hooks/guard.py" ]
+    [ "$(jq -r '.hooks.SessionStart[0].hooks[0].command' "$settings")" = '"$HOME/.config/claude/hooks/x.sh" ${HOME}/.config/claude/hooks/y.sh' ]
+    [ "$(jq -r '.hooks.Notification[0].hooks[0].command' "$settings")" = $'set -e\n~/.config/claude/hooks/notify.sh' ]
+    [ "$(jq -r .statusLine.command "$settings")" = "~/.config/claude/statusline.sh" ]
+    [ "$(jq -r '.hooks.Stop[0].hooks[0].command' "$settings")" = '$CLAUDE_PROJECT_DIR/.claude/hooks/stop.sh' ]
+    [ "$(jq -r '.permissions.allow[0]' "$settings")" = "Read(/$CONFIG/**)" ]
+    [ "$(jq -r '.permissions.allow[1]' "$settings")" = "Read(/Volumes/Backup$HOME/.claude/**)" ]
+    assert_output_contains "claude: rewrote .hooks.PreToolUse[0].hooks[0].command in ~/.config/claude/settings.json: \"python3 $HOME/.claude/hooks/guard.py\" -> \"python3 $CONFIG/hooks/guard.py\""
+    assert_output_contains 'claude: rewrote .hooks.SessionStart[0].hooks[0].command in ~/.config/claude/settings.json: "\"$HOME/.claude/hooks/x.sh\" ${HOME}/.claude/hooks/y.sh" -> "\"$HOME/.config/claude/hooks/x.sh\" ${HOME}/.config/claude/hooks/y.sh"'
+    assert_output_contains 'claude: rewrote .hooks.Notification[0].hooks[0].command in ~/.config/claude/settings.json: "set -e\n~/.claude/hooks/notify.sh" -> "set -e\n~/.config/claude/hooks/notify.sh"'
+    assert_output_contains 'claude: rewrote .statusLine.command in ~/.config/claude/settings.json: "~/.claude/statusline.sh" -> "~/.config/claude/statusline.sh"'
+    assert_output_contains "claude: rewrote .permissions.allow[0] in ~/.config/claude/settings.json: \"Read(/$HOME/.claude/**)\" -> \"Read(/$CONFIG/**)\""
+    refute_output_contains ".hooks.Stop"
+    refute_output_contains ".permissions.allow[1]"
+    # The move's copy holds the file as it was.
+    backup="$(ls -d "$CONFIG".molt-backup.*)"
+    [ "$(cat "$backup/.claude/settings.json")" = "$original" ]
+    # Doctor finds nothing left, and a second run rewrites nothing.
+    export CLAUDE_CONFIG_DIR="$CONFIG"
+    run claude_check
+    assert_success
+    written="$(cat "$settings")"
+    run claude_install
+    assert_success
+    refute_output_contains "claude: rewrote"
+    [ "$(cat "$settings")" = "$written" ]
+}
+
+@test "check and verify name a path into ~/.claude that settings.json names after the move, with its key, install leaves it, and a sleeve that declares no config dir hears nothing of it (issue 0038)" {
+    setup_moved
+    run claude_install
+    assert_success
+    export CLAUDE_CONFIG_DIR="$CONFIG"
+    run claude_check
+    assert_success
+    local settings="$CONFIG/settings.json" planted
+    jq --arg command "bash $HOME/.claude/hooks/late.sh" \
+        '.hooks.SessionStart = [{hooks: [{type: "command", command: $command}]}]' \
+        "$settings" > "$BATS_TEST_TMPDIR/settings.json"
+    mv "$BATS_TEST_TMPDIR/settings.json" "$settings"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.config/claude/settings.json .hooks.SessionStart[0].hooks[0].command still names a path under ~/.claude, and this sleeve's config dir is ~/.config/claude: \"bash $HOME/.claude/hooks/late.sh\""
+    run claude_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: ~/.config/claude/settings.json .hooks.SessionStart[0].hooks[0].command still names a path under ~/.claude"
+    # The move answers for the paths it moved; one named after it is the
+    # user's to change.
+    planted="$(cat "$settings")"
+    run claude_install
+    assert_success
+    [ "$(cat "$settings")" = "$planted" ]
+    # A sleeve that declares no config dir had nothing moved, and hears nothing.
+    rm "$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
+    run claude_check
+    assert_success
+}
+
+# critic-shell, 23 Oct: spliced into a command, a config dir with a space in it
+# splits the command there, and doctor would pass the value, since it no longer
+# names ~/.claude.
+@test "a config dir a shell would split or expand is not spliced into settings.json: the value is left and named, the run fails, and doctor names it (issue 0038)" {
+    setup_declared
+    local dir="$BATS_TEST_TMPDIR/claude config" command="python3 $HOME/.claude/hooks/guard.py"
+    declare_config_dir "$dir"
+    jq -n --arg command "$command" '{hooks: {PreToolUse: [{matcher: "Bash", hooks: [{type: "command", command: $command}]}]}}' \
+        > "$HOME/.claude/settings.json"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: $dir/settings.json was left: $dir holds a character a shell would split or expand"
+    assert_output_contains "  .hooks.PreToolUse[0].hooks[0].command: \"$command\""
+    [ "$(jq -r '.hooks.PreToolUse[0].hooks[0].command' "$dir/settings.json")" = "$command" ]
+    # The state is in the dir, so it is published all the same.
+    grep -qxF "export CLAUDE_CONFIG_DIR=\"$dir\"" "$HOME/.config/molt/env.sh"
+    export CLAUDE_CONFIG_DIR="$dir"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: $dir/settings.json .hooks.PreToolUse[0].hooks[0].command still names a path under ~/.claude, and this sleeve's config dir is $dir: \"$command\""
+}
+
 # --- ST0006: the home guard ---
 
 # Where the session was launched is CLAUDE_PROJECT_DIR, which stays put; the cwd
