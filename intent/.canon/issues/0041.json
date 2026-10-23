@@ -3,9 +3,10 @@
   "number": 41,
   "slug": "the-iterm2-ssh-wrapper-is-never-re-rendered-zsh",
   "title": "The iTerm2 ssh wrapper is never re-rendered: zsh_check does not look at it, so a [terminal] colour change never reaches the file",
-  "status": "open",
+  "status": "closed",
   "severity": "medium",
   "created": "2026-10-23",
+  "closed": "2026-10-23",
   "reporter": "Matthew Sinclair",
   "body": "Found by gyges-sysadm on 23 Oct during gyges' move, confirmed by rhadamanth-sysadm and by vc against the code. liberators/zsh.sh writes ~/.config/molt/iterm2-ssh-colors.sh only from zsh_install (_zsh_generate_iterm2_ssh_colors). zsh_check checks the starship render's staleness (molt_config_stale) but never looks at the wrapper. molt only installs a liberator whose check fails, so once zsh passes, a change to any instance's [terminal] bg_color or ssh_bg_color never reaches the file. On gyges, Molt-matts a9d491a declared bg_color 15191f; molt resleeve exited 0 with every liberator ok, and the wrapper still reset to 000000. gyges-sysadm regenerated it by calling Molt's own generator.\n\nThis is the same shape as 9f28dce (render only when the check fails), except this file has no staleness check at all. It will hit any sleeve that gains a bg_color, and every sleeve when a host is recoloured, since every wrapper carries every host's ssh_bg_color.\n\nProposed fix: zsh_check renders the wrapper into a temp file with the same generator and compares it with the file on disk; a difference (or a missing file where entries exist) makes the check fail, naming the file, so install re-renders it. That compares the output itself rather than a digest of the inputs, and keeps one generator. A test: change an instance's ssh_bg_color in a fixture and check that zsh_check fails and zsh_install rewrites the file."
 }

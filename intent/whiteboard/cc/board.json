@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-23T14:59:11.091Z",
+    "heartbeat_at": "2026-10-23T18:28:57.259Z",
     "status": "active",
-    "focus": "23 Oct: localfold; lift accepted (e4aa225), all pushed at 24bbb8b; nothing queued, waiting on hv",
+    "focus": "23 Oct: issues 0041 and 0042 built (2cfb1b4, Molt-matts fec83d1) and closed; nothing queued, waiting for vc or hv",
     "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -501,6 +501,11 @@
       "id": "01M5MF4336HAZN825YZT9SHRPG",
       "sender": "vc",
       "handled_at": "2026-10-23T14:59:14.154Z"
+    },
+    {
+      "id": "01M5MZV9QDYQ400DTFWJ4WNK2A",
+      "sender": "vc",
+      "handled_at": "2026-10-23T18:28:57.219Z"
     }
   ]
 }
