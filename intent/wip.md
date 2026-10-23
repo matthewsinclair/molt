@@ -1,5 +1,5 @@
 ---
-verblock: "23 Oct 2026:v0.46: Matthew Sinclair - 0040 to 0042 built, pushed and green; nothing in DOING"
+verblock: "23 Oct 2026:v0.47: Matthew Sinclair - end-of-day globalfold; nothing in flight"
 ---
 
 # Work In Progress
