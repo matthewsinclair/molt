@@ -1,0 +1,15 @@
+{
+  "id": "01M5KZKHRS99GX18N1TXZPPAJ0",
+  "ts": "2026-10-23T08:56:25.113Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "The lift (vc, 23 Oct): (1) _claude_processes a thin wrapper over molt_claude_processes, _CLAUDE_PROCESS_PATTERN gone; (2) claude.bats pgrep/ps stubs onto test_helper's install_fake_process_table/fake_processes; (3) _claude_settings_write to lib/molt.sh as molt_settings_write, used by claude.sh merge and repoint and agents.sh _agents_settings_set (validate before the write); (4) one CLAUDE_CONFIG_DIR-vs-declared comparison in lib/molt.sh for claude.sh faults and molt_agent_start_fault, and one env.sh path owner. Built in a scratch clone; applied on head after dc's lib/molt.sh commit lands (dc tells cc). One commit; hash and CHANGELOG line to vc."
+  }
+}

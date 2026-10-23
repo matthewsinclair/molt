@@ -3,17 +3,17 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 08:54Z
+heartbeat_at: 2026-10-23 08:56Z
 status: active
-focus: "23 Oct: folded for hv's compact; 0038 committed at 114d6ad and with vc for review (hash and CHANGELOG line sent); lib/molt.sh held for vc's lift (hold 13)"
-claims: [ISSUE:0038]
+focus: "23 Oct: 0038 closed (8914dfe); building vc's lift in a scratch clone, to apply on head after dc's lib/molt.sh commit (doing 14)"
+claims: []
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-- Issue 0038 committed at 114d6ad (liberators/claude.sh, test/liberators/claude.bats), with vc for review; hash and CHANGELOG line sent. vc rulings all executed there: W1 (\z anchors), W2 (a config dir a shell would split is not spliced; one test), W3 (one writer, _claude_settings_write, inside claude.sh), R4 (${HOME} in test 1); names by label, no counts. Next: answer vc review; vc closes 0038 and pushes. (edited)
+- The lift (vc, 23 Oct): (1) _claude_processes a thin wrapper over molt_claude_processes, _CLAUDE_PROCESS_PATTERN gone; (2) claude.bats pgrep/ps stubs onto test_helper's install_fake_process_table/fake_processes; (3) _claude_settings_write to lib/molt.sh as molt_settings_write, used by claude.sh merge and repoint and agents.sh _agents_settings_set (validate before the write); (4) one CLAUDE_CONFIG_DIR-vs-declared comparison in lib/molt.sh for claude.sh faults and molt_agent_start_fault, and one env.sh path owner. Built in a scratch clone; applied on head after dc's lib/molt.sh commit lands (dc tells cc). One commit; hash and CHANGELOG line to vc.
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- lib/molt.sh, test/test_helper.bash and the pgrep/ps stubs in test/liberators/claude.bats are vcs until vcs commit lifting _claude_settings_write and molt_claude_processes into lib/molt.sh lands (vc, 23 Oct); released when that commit is on main.
+_(none)_
 
 ## Watch-outs
 
