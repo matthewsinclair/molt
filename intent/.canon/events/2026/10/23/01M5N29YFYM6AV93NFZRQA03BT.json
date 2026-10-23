@@ -1,0 +1,16 @@
+{
+  "id": "01M5N29YFYM6AV93NFZRQA03BT",
+  "ts": "2026-10-23T19:02:50.622Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 3,
+    "text": "No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). intent-vc's build ended 18:41Z; it asks to be asked before any heavy run. Releases when utilz-vc sends molt-vc the cut's END and intent-vc clears a slot; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear."
+  }
+}

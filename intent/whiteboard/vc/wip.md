@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 15:03Z
+heartbeat_at: 2026-10-23 19:02Z
 status: active
-focus: "23 Oct: v0.3.0 released; as-written/as-built audit fixed and pushed; guards adopted (bef8f14) and pushed, CI green. Waiting on hv: rhadamanth's backup, gyges' move (Tailscale)"
+focus: "23 Oct: gyges moved; 0040-0042 built, reviewed and committed, unpushed. Waiting: Utilz 2.14.2 cut END, then intent-vc's slot, then full suite both bashes, then push Molt + Molt-matts (hold 3)"
 claims: [ST0006]
 ---
 
@@ -23,7 +23,7 @@ _(none)_
 
 ## Holds
 
-- No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct) and while intent-vc runs devbin build all on Intent (from 18:38Z). Releases when BOTH utilz-vc and intent-vc have sent molt-vc their END by name; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042), and gives dc and cc the all-clear. (edited)
+- No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). intent-vc's build ended 18:41Z; it asks to be asked before any heavy run. Releases when utilz-vc sends molt-vc the cut's END and intent-vc clears a slot; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear. (edited)
 
 ## Watch-outs
 
