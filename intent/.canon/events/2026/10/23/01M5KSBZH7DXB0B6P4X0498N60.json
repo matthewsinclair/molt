@@ -1,0 +1,15 @@
+{
+  "id": "01M5KSBZH7DXB0B6P4X0498N60",
+  "ts": "2026-10-23T07:07:25.607Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ST0007 WP02, the guide commit: docs/guides/sleeve-agents.md's Starting an agent and its other launches by hand, README.md's command list and line 247, docs/blog/bl0001 lines 78 and 81 (ac's brief, FYI to ac). Released when vc's WP01 CLI is committed in bin/molt and lib/agent.sh and vc has sent the refusal lines; the guide is then read against bin/molt as built."
+  }
+}
