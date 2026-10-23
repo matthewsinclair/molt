@@ -1,0 +1,15 @@
+{
+  "id": "01M5KTDAQNY16PKF2PMD1JSK57",
+  "ts": "2026-10-23T07:25:38.421Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "vc's items 2 and 3 (23 Oct, on head): the sleeve-agents guide's move section and doctor table for what issue 0038 changes, read from cc's code as built; then the home guard's refusals name molt agent start as the way back in (templates/claude/claude-home-guard.sh.tmpl, its claude.bats assertions, the guide's quotes of them), message strings only, claude.bats under both bashes, a CHANGELOG line sent to vc. Released when cc's 0038 commit is on main (vc sends the hash)."
+  }
+}

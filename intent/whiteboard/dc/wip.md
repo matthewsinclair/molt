@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-23 07:22Z
+heartbeat_at: 2026-10-23 07:25Z
 status: active
-focus: "23 Oct: ST0007 closed by vc (efb0b2f); WP02 was dc's (Molt b1db22d; Molt-matts e6d5d2d, 83a2588). Nothing queued for dc (vc: nothing else today); vc pushes Molt and Molt-matts and runs the one molt resleeve on rhadamanth; vc and hv are settling worktrees for the rest of the day"
+focus: "23 Oct: vc's three items, on head: README's doctor count dropped (a54d3fc); the guide for issue 0038 and the guard's refusals naming molt agent start wait on cc's 0038 commit (hold); then vc runs the one molt resleeve, folds and pushes"
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- vc's items 2 and 3 (23 Oct, on head): the sleeve-agents guide's move section and doctor table for what issue 0038 changes, read from cc's code as built; then the home guard's refusals name molt agent start as the way back in (templates/claude/claude-home-guard.sh.tmpl, its claude.bats assertions, the guide's quotes of them), message strings only, claude.bats under both bashes, a CHANGELOG line sent to vc. Released when cc's 0038 commit is on main (vc sends the hash).
 
 ## Watch-outs
 
