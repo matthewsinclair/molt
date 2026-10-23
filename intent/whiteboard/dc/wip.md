@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-23 12:02Z
+heartbeat_at: 2026-10-23 12:46Z
 status: active
-focus: "23 Oct: vc accepted 595347d, d9f6413 and 9810f94, pushed at 24bbb8b; nothing queued for dc. Idle and active, waiting for hv"
+focus: "23 Oct: applying the docs audit fixes per vc's 12:46Z rulings"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Apply the docs audit fixes per vc's 12:46Z rulings (1-6, 8-27; 2 drop Ubuntu release; 7 keep; 9 docs only; 11 keys exception; 18 tn0001 proposal; 20 dir tree; 21 add cmds + point at molt help; unwrap new-user.md). Docs only, commit by pathspec, unpushed, send vc the commit
 
 ## TODO
 

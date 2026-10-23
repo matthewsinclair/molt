@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450",
-    "heartbeat_at": "2026-10-23T12:02:12.244Z",
+    "heartbeat_at": "2026-10-23T12:46:24.035Z",
     "status": "active",
-    "focus": "23 Oct: vc accepted 595347d, d9f6413 and 9810f94, pushed at 24bbb8b; nothing queued for dc. Idle and active, waiting for hv",
+    "focus": "23 Oct: applying the docs audit fixes per vc's 12:46Z rulings",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -298,6 +298,23 @@
       "state": "archived",
       "archived_at": "2026-10-23T09:51:30.290Z",
       "recorded_at": "2026-10-23T09:08:16.974Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 18,
+      "text": "Docs audit for vc (hv's ask, 12:40Z): docs/guides/*, README.md, tn0001 against bin/molt, lib/, liberators/ at db76a2c; read only, findings to vc",
+      "state": "archived",
+      "archived_at": "2026-10-23T12:46:13.409Z",
+      "recorded_at": "2026-10-23T12:40:43.116Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 19,
+      "text": "Apply the docs audit fixes per vc's 12:46Z rulings (1-6, 8-27; 2 drop Ubuntu release; 7 keep; 9 docs only; 11 keys exception; 18 tn0001 proposal; 20 dir tree; 21 add cmds + point at molt help; unwrap new-user.md). Docs only, commit by pathspec, unpushed, send vc the commit",
+      "state": "live",
+      "recorded_at": "2026-10-23T12:46:23.998Z"
     }
   ],
   "sent": [
@@ -378,6 +395,14 @@
       "re": "2026-10-23 12:01Z",
       "fyi": false,
       "recorded_at": "2026-10-23T12:02:29.873Z"
+    },
+    {
+      "id": "01M5MCRATY5SGGTRJ56VB3HRD8",
+      "recipient": "vc",
+      "body": "Docs audit done and sent to you live in full (too long for the inbox bound). Same text: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450/scratchpad/docs-audit.md. Headlines: stored counts in getting-started:131 (doctor), README:350, writing-a-liberator:7, sleeve-agents:32/53/63/75, new-user:13, runbook:170/323; templates:129 wrong on unset vars; _verify is never called though two docs say it is; the writing-a-liberator example breaks its own rule 5; keys installs keyd against 'never install packages'; README INTENT_HOME row reads nothing; tn0001 describes an unbuilt conflab liberator in the present tense. Read only, nothing fixed.",
+      "re": "2026-10-23 12:40Z",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:46:13.342Z"
     }
   ],
   "handled": [
@@ -410,6 +435,16 @@
       "id": "01M5MA75JXBBQHY1CT1KBPAE2W",
       "sender": "vc",
       "handled_at": "2026-10-23T12:02:29.903Z"
+    },
+    {
+      "id": "01M5MCDNAE0MM7563KV4W5QFXM",
+      "sender": "vc",
+      "handled_at": "2026-10-23T12:46:13.378Z"
+    },
+    {
+      "id": "01M5MCR3XZ7HK6HCQ1PGW6PETH",
+      "sender": "vc",
+      "handled_at": "2026-10-23T12:46:13.378Z"
     }
   ]
 }
