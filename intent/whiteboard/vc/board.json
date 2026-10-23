@@ -558,10 +558,10 @@
       "node": "vc",
       "kind": "hold",
       "seq": 3,
-      "text": "No Molt bats at all on rhadamanth, not even a single bats file, while Utilz 2.14.2 is dry-run and cut (utilz-vc, 19:09Z: slot 251, utilz-dc's dry run with a 3600 s kill timeout, then hv's cut; its wrapper counts every bats process on the host). Releases when utilz-vc sends molt-vc the cut's END by name and intent-vc clears a slot; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear.",
+      "text": "No Molt bats on rhadamanth, single files included, until Molt's bats slot. Utilz 2.14.2's cut ENDed 19:44Z (utilz-vc, slot 252). intent-vc queued Molt next in the bats slot, after devbin-cc's WP-08 series (BSD then GNU, from about 20:01Z). Releases when intent-vc relays devbin-cc's END; vc then sends START with a census, runs the full suite under both bashes one at a time (Intent's cargo may run alongside, so re-run alone any timing arm that reds), sends END, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear.",
       "state": "live",
       "recorded_at": "2026-10-23T18:23:06.550Z",
-      "edited_at": "2026-10-23T19:10:15.978Z"
+      "edited_at": "2026-10-23T20:04:22.857Z"
     }
   ],
   "sent": [

@@ -1,0 +1,16 @@
+{
+  "id": "01M5N5TM69KTFNEH3ZQE64D050",
+  "ts": "2026-10-23T20:04:22.857Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 3,
+    "text": "No Molt bats on rhadamanth, single files included, until Molt's bats slot. Utilz 2.14.2's cut ENDed 19:44Z (utilz-vc, slot 252). intent-vc queued Molt next in the bats slot, after devbin-cc's WP-08 series (BSD then GNU, from about 20:01Z). Releases when intent-vc relays devbin-cc's END; vc then sends START with a census, runs the full suite under both bashes one at a time (Intent's cargo may run alongside, so re-run alone any timing arm that reds), sends END, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear."
+  }
+}
