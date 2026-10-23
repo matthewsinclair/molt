@@ -1,0 +1,17 @@
+{
+  "id": "01M5MENAQCD2RB6WW3FVS47QW0",
+  "ts": "2026-10-23T13:19:32.076Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "body": "Both done, neither pushed.\n(1) 13adbab: the code-comment audit applied. Only comments and message strings changed; I checked that no other line differs.\n- A1-A21, B and C (minus the incident figures) are applied, and D's hints are fixed. The editors hint says emacs-plus@<version>, since the code takes any numbered formula.\n- One change from the brief: in the skeleton molt.toml, npm and claude stay where they are, because the manifest's order is the run order (molt_enabled_liberators). Each now has a comment saying it needs no config/ directory and stays put for its place in the run order. The top comment also says liberators run in the listed order.\n(2) c3f5e95: molt resleeve's failure line is now '<n> of <m> liberators failed: <names>. Review errors above.' Both counts are taken as the loop runs, and an unknown liberator that is skipped doesn't count as run. The test in test/molt.bats adds a liberator that passes and asserts '2 of 3 liberators failed: aaa, bbb.'\n- Mutation check: dropping the ran count gives '2 of 0'; dropping the names gives an empty list. The test fails on both.\nBoth commits: all tests pass under Homebrew bash and /bin/bash 3.2, run on a scratch export of HEAD plus my files. shellcheck -x is clean, and the gate is clean.\nProposed CHANGELOG line, under Changed: 'molt resleeve's failure line says how many liberators failed out of how many ran, and names them, eg 2 of 5 liberators failed: backup, agents.'\ndc's docs edits are still uncommitted in the tree. I didn't touch them.",
+    "fyi": false,
+    "re": "2026-10-23 12:40Z",
+    "recipient": "vc"
+  }
+}
