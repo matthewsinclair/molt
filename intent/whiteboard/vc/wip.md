@@ -23,7 +23,7 @@ _(none)_
 
 ## Holds
 
-- No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). Releases when utilz-vc sends molt-vc the cut's END by name; vc then gives dc and cc the all-clear.
+- No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct) and while intent-vc runs devbin build all on Intent (from 18:38Z). Releases when BOTH utilz-vc and intent-vc have sent molt-vc their END by name; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042), and gives dc and cc the all-clear. (edited)
 
 ## Watch-outs
 
