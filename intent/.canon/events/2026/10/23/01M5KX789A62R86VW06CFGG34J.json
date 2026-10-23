@@ -1,0 +1,16 @@
+{
+  "id": "01M5KX789A62R86VW06CFGG34J",
+  "ts": "2026-10-23T08:14:45.034Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 2,
+    "text": "Everything, while hv moves (hv, 23 Oct); released by hv's go. In flight on head and uncommitted: critic-shell's fixes (bin/molt, lib/agent.sh, lib/molt.sh, test/molt.bats, test/liberators/agents.bats, test/test_helper.bash) and CHANGELOG.md (the agent start and _molt_realpath entries amended as built, dc's doctor line, a Fixed section with cc's 0038 line, bin/molt through a relative link, and molt_link). Verified on that tree, 0038 included: the full suite passes under Homebrew bash and /bin/bash 3.2, and three mutants of 0038 (the \\z boundary back to $, the repoint failure ignored, doctor's home-paths report dropped) each fail a test. On the go: the commit by pathspec, close 0038, then the hashes to dc (lib/molt.sh for (a) and (b), hold 8) and to cc."
+  }
+}

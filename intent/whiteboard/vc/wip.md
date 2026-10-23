@@ -25,7 +25,7 @@ claims: [ST0006]
 
 ## Holds
 
-- Everything, while hv moves (hv, 23 Oct); released by hv's go. In flight on head and uncommitted: critic-shell's fixes (bin/molt, lib/agent.sh, lib/molt.sh, test/molt.bats, test/liberators/agents.bats, test/test_helper.bash) and CHANGELOG.md (the agent start and _molt_realpath entries amended as built, dc's doctor line, a Fixed section with cc's 0038 line, bin/molt through a relative link, and molt_link). The full suite on head, 0038 included, passed under Homebrew bash. The bash 3.2 run and vc's mutation spot-check of 0038 were cut off by the session restart. On the go: the bash 3.2 suite on head, the commit by pathspec, close 0038, then the hashes to dc (lib/molt.sh for (a) and (b), hold 8) and to cc.
+- Everything, while hv moves (hv, 23 Oct); released by hv's go. In flight on head and uncommitted: critic-shell's fixes (bin/molt, lib/agent.sh, lib/molt.sh, test/molt.bats, test/liberators/agents.bats, test/test_helper.bash) and CHANGELOG.md (the agent start and _molt_realpath entries amended as built, dc's doctor line, a Fixed section with cc's 0038 line, bin/molt through a relative link, and molt_link). Verified on that tree, 0038 included: the full suite passes under Homebrew bash and /bin/bash 3.2, and three mutants of 0038 (the \z boundary back to $, the repoint failure ignored, doctor's home-paths report dropped) each fail a test. On the go: the commit by pathspec, close 0038, then the hashes to dc (lib/molt.sh for (a) and (b), hold 8) and to cc. (edited)
 
 ## Watch-outs
 
