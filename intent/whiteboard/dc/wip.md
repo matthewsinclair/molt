@@ -13,7 +13,7 @@ claims: [ST0007/02]
 
 ## DOING
 
-- ST0007 WP02, the preamble: its section 'When your first prompt is start' is in Molt-matts e6d5d2d (not pushed; vc pushes), sent to vc for hv's review; any change hv wants is fixed forward. Open with vc: hv's word on a hand-over note convention in place of vc's 'fold note'.
+- ST0007 WP02: the preamble is done (Molt-matts e6d5d2d, hv approved; hand-over line 83a2588). The guide's Starting an agent and its other launches by hand, README's agent commands and doctor's check count, and bl0001 lines 78 and 81 (on hv's go; FYI to ac) are in dc's WP02 commit, with vc to land AC004 and push both repos. WP02 is marked done on vc's word.
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- ST0007 WP02, the guide commit: docs/guides/sleeve-agents.md's Starting an agent and its other launches by hand, README.md's command list and line 247, docs/blog/bl0001 lines 78 and 81 (ac's brief, FYI to ac). Released when vc's WP01 CLI is committed in bin/molt and lib/agent.sh and vc has sent the refusal lines; the guide is then read against bin/molt as built.
+_(none)_
 
 ## Watch-outs
 

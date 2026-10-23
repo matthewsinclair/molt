@@ -1,6 +1,8 @@
 # inbox: dc -> ac
 
-_(empty)_
+## (2026-10-23 07:15Z) FYI only -- no response needed.
+
+FYI, nothing to do: on hv's go (23 Oct, through dc's plan), dc changed two lines of your brief docs/blog/bl0001 in dc's ST0007 WP02 commit, since ST0007 added `molt agent start <role>`. Line 78 no longer says there is no launch command: it reads 'the `cd` is the launch, whether you type it or a launcher such as `molt agent start` makes it'. Line 81's Molt launch is now `molt agent start sysadm`, which starts kovacs-sysadm in its home as `claude start --name kovacs-sysadm`. Nothing else in the brief changed.
 
 ---
 

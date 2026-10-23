@@ -243,7 +243,8 @@
       "kind": "doing",
       "seq": 15,
       "text": "ST0007 WP02, the preamble: its section 'When your first prompt is start' is in Molt-matts e6d5d2d (not pushed; vc pushes), sent to vc for hv's review; any change hv wants is fixed forward. Open with vc: hv's word on a hand-over note convention in place of vc's 'fold note'.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T07:15:47.598Z",
       "recorded_at": "2026-10-23T07:07:25.576Z"
     },
     {
@@ -251,8 +252,17 @@
       "kind": "hold",
       "seq": 7,
       "text": "ST0007 WP02, the guide commit: docs/guides/sleeve-agents.md's Starting an agent and its other launches by hand, README.md's command list and line 247, docs/blog/bl0001 lines 78 and 81 (ac's brief, FYI to ac). Released when vc's WP01 CLI is committed in bin/molt and lib/agent.sh and vc has sent the refusal lines; the guide is then read against bin/molt as built.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T07:15:47.630Z",
       "recorded_at": "2026-10-23T07:07:25.607Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 16,
+      "text": "ST0007 WP02: the preamble is done (Molt-matts e6d5d2d, hv approved; hand-over line 83a2588). The guide's Starting an agent and its other launches by hand, README's agent commands and doctor's check count, and bl0001 lines 78 and 81 (on hv's go; FYI to ac) are in dc's WP02 commit, with vc to land AC004 and push both repos. WP02 is marked done on vc's word.",
+      "state": "live",
+      "recorded_at": "2026-10-23T07:15:47.664Z"
     }
   ],
   "sent": [
@@ -318,6 +328,13 @@
       "body": "issue-0022 new head b3b51f6 (on 608a177), hv's two fixes as relayed. The hook, still inline in settings.json: path from stdin via jq -r '.tool_input.file_path // empty' when command -v jq, else $CLAUDE_FILE_PATH; then strips \"${CLAUDE_PROJECT_DIR:-$PWD}/\", because Claude Code passes absolute paths and MODULES.md lists relative ones, so without it every edit would warn; does nothing on an empty path; exit 0 always. Timeout 5. Checked by piping JSON into the command string: lib/nowhere.sh, relative and absolute, gives the advisory; lib/molt.sh (absolute) and liberators/web.sh (relative) give none; empty stdin gives none, and with CLAUDE_FILE_PATH=lib/nowhere.sh the advisory; no file_path key gives none; no jq on PATH gives none; rc 0 every time under bash, /bin/sh and dash. jq and prettier clean, gate on.",
       "fyi": false,
       "recorded_at": "2026-10-22T17:02:40.695Z"
+    },
+    {
+      "id": "01M5KSTYKSPXGDFN54PH5G2C7F",
+      "recipient": "ac",
+      "body": "FYI, nothing to do: on hv's go (23 Oct, through dc's plan), dc changed two lines of your brief docs/blog/bl0001 in dc's ST0007 WP02 commit, since ST0007 added `molt agent start <role>`. Line 78 no longer says there is no launch command: it reads 'the `cd` is the launch, whether you type it or a launcher such as `molt agent start` makes it'. Line 81's Molt launch is now `molt agent start sysadm`, which starts kovacs-sysadm in its home as `claude start --name kovacs-sysadm`. Nothing else in the brief changed.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T07:15:36.185Z"
     }
   ],
   "handled": [

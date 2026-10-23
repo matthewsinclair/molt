@@ -58,7 +58,7 @@ A role is a directory under your config repo's `config/agents/roles/`, so the se
 | `ops`    | operations and monitoring    | on, escape hatches closed   |
 | `docs`   | documentation of the machine | on, escape hatches closed   |
 
-`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, while its session starts in the home itself (see [Starting an agent](#starting-an-agent)). What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it. What every sleeve agent shares, such as its home and how to start in it, is in one preamble, `config/agents/AGENTS.md.tmpl`.
+`sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, while its session starts in the home itself (see [Starting an agent](#starting-an-agent)). What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it. What every sleeve agent shares, such as its home, how to start in it and what to do when started, is in one preamble, `config/agents/AGENTS.md.tmpl`.
 
 ## Three layers
 
@@ -74,12 +74,12 @@ The agent home is both the agent's config and the directory it runs in. Claude C
 
 A session started in a home reads four layers of instructions, widest first:
 
-| Layer      | File                                                                          | Carries                                                                                            |
-| ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| User scope | `CLAUDE.md` and `AGENTS.md` in the config dir, linked from `config/claude/`   | the rules every session on every sleeve follows                                                    |
-| Agent      | the home's `AGENTS.md`, first from `config/agents/AGENTS.md.tmpl`             | what every sleeve agent shares: who it is, its home and how to start in it, the files Molt renders |
-| Role       | the home's `AGENTS.md`, next from `config/agents/roles/<role>/AGENTS.md.tmpl` | the role's own text: what the role is for, what it may touch, what it must not                     |
-| Host       | `instances/<hostname>/agents/<role>.md`, appended to the home's `AGENTS.md`   | facts true on this machine only: its stack layout, what is installed, its known issues             |
+| Layer      | File                                                                          | Carries                                                                                                                                           |
+| ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User scope | `CLAUDE.md` and `AGENTS.md` in the config dir, linked from `config/claude/`   | the rules every session on every sleeve follows                                                                                                   |
+| Agent      | the home's `AGENTS.md`, first from `config/agents/AGENTS.md.tmpl`             | what every sleeve agent shares: who it is, its home and how to start in it, what it does when its first prompt is `start`, the files Molt renders |
+| Role       | the home's `AGENTS.md`, next from `config/agents/roles/<role>/AGENTS.md.tmpl` | the role's own text: what the role is for, what it may touch, what it must not                                                                    |
+| Host       | `instances/<hostname>/agents/<role>.md`, appended to the home's `AGENTS.md`   | facts true on this machine only: its stack layout, what is installed, its known issues                                                            |
 
 The home's `CLAUDE.md` is a one-line `@AGENTS.md` stub. Put each instruction in exactly one layer: a rule that holds everywhere belongs in user scope, one that holds for every sleeve agent in the preamble, and the role contract repeats neither. The preamble is optional; without one, the role's template opens the file.
 
@@ -149,8 +149,12 @@ A home renders whether or not the sleeve's Claude Code state has moved (see belo
 
 ```bash
 molt agent list
-molt agent config <name>
+molt agent roles
+molt agent home <role>
+molt agent config <role>
 ```
+
+A command that names an agent, these and `molt agent start`, takes its role on this sleeve, eg `sysadm`, or its full name, eg `kovacs-sysadm`.
 
 `molt agent list` prints each declared agent. Molt's messages carry `Zen:`, `Zen [warning]:` or `Zen [error]:`, which the samples in this guide leave off; the table, the `No agents:` line and `molt agent config` print bare:
 
@@ -162,7 +166,16 @@ kovacs-ops                   ops      false    role undefined ~/Devel/agt/kovacs
 
 `STATE` is one of `current`, `stale`, `not rendered` and `role undefined`; `stale` covers any rendered file missing or out of date, and a missing `memory/` or `work/`. Faults in the `[[agent]]` entries follow the table as warnings, each as `molt agent: molt.toml: <fault>` with the faults [molt doctor](#what-molt-doctor-reports) lists, and the command then exits 1. A sleeve whose `molt.toml` has no `[[agent]]` entries prints `No agents: this sleeve's molt.toml has no [[agent]] entries.`, and one with no `molt.toml` fails.
 
-`molt agent config <name>` prints one agent: its role, harness and home, and the currency of each rendered file; whether the home's settings run the home-launch guard, on a sleeve that declares its config dir; for an `ops` or `docs` agent, whether the [sandbox profile](#the-sandbox-on-ubuntu) is in place; then the settings files Claude Code merges for a session in the home, highest precedence first; then the effective permissions, each rule tagged with the layer it came from:
+`molt agent roles` prints the roles this sleeve declares, one a line, in `molt.toml`'s order, marking a disabled one, which `molt agent start` refuses; `molt agent roles list` prints the same:
+
+```
+sysadm
+ops (disabled)
+```
+
+`molt agent home <role>` prints the agent's home as an absolute path, rendered or not, so `cd "$(molt agent home sysadm)"` takes you there.
+
+`molt agent config <role>` prints one agent: its role, harness and home, and the currency of each rendered file; whether the home's settings run the home-launch guard, on a sleeve that declares its config dir; for an `ops` or `docs` agent, whether the [sandbox profile](#the-sandbox-on-ubuntu) is in place; then the settings files Claude Code merges for a session in the home, highest precedence first; then the effective permissions, each rule tagged with the layer it came from:
 
 ```
 kovacs-sysadm
@@ -184,17 +197,39 @@ kovacs-sysadm
     allow  Bash(uptime)                                 home
 ```
 
-The managed layer also lists any drop-ins in `managed-settings.d/`. A file the role has no template for shows `role <role> has no <template>`, and a session with no rules at any layer shows `none` under permissions. Reading the rules needs `jq`, and a layer that is not JSON with permission lists fails the command, naming the file. An undeclared name fails with `molt agent: <name> is not declared on this sleeve; declared: <the declared names>`.
+The managed layer also lists any drop-ins in `managed-settings.d/`. A file the role has no template for shows `role <role> has no <template>`, and a session with no rules at any layer shows `none` under permissions. Reading the rules needs `jq`, and a layer that is not JSON with permission lists fails the command, naming the file. A role or name this sleeve does not declare fails, from `home` and `start` as from `config`, with `molt agent: <role or name> is not declared on this sleeve; declared: <the declared names>`.
 
 ## Starting an agent
 
-There is no launch command. To start an agent, start Claude in its home:
+Start an agent with `molt agent start`, naming it by its role or its full name:
 
 ```bash
-cd "$MOLT_AGT_DIR/kovacs-sysadm" && claude
+molt agent start sysadm
 ```
 
-Start it in the home itself, never in a directory below it. Claude Code reads project settings only from `.claude/` in the directory a session starts in, with no fallback to a parent, while it reads `CLAUDE.md` from that directory and every one above it. An agent started in its `work/` therefore keeps its contract and loses its fence, its sandbox and its memory setting. Once it is started in its home, working under `work/` by path, or with a `cd` inside a command, is fine. On a sleeve whose state has moved, the home-launch guard blocks the prompts of a session started at the agents root or below a home, and of one that did not get the sleeve's config dir, as a Claude started from a shell opened before the move does, so start an agent from a shell opened after the move: `echo $CLAUDE_CONFIG_DIR` there prints the config dir (see [A Claude started in $HOME, below a home, or without the config dir, is refused](#a-claude-started-in-home-below-a-home-or-without-the-config-dir-is-refused)).
+It changes into the agent's home and replaces itself with Claude Code, run as `claude start --name <hostname>-<role>`. The session takes the agent's name, and its first prompt is the one word `start`: a prompt, not a Claude Code command, since Claude Code 2.1.309 has no command of that name. What an agent does with it is for its contract to say, and since every agent is started the same way, the place to say it is the preamble, `config/agents/AGENTS.md.tmpl`: eg get its bearings without changing anything, from its memory and the note its last session left in `work/`, say in a few lines who and where it is and what is open, and wait for an instruction, taking any other first prompt as the instruction itself. Arguments after `--` go to `claude` as they are, after `start`:
+
+```bash
+molt agent start ops -- --model sonnet
+```
+
+Before it starts anything, `molt agent start` makes the checks a launch by hand skips. When they pass, it prints `Starting <name> in <home>` and Claude Code takes over. When one fails, it prints one of these as a `Zen [error]:` line, the prefix left off below, starts nothing and exits 1:
+
+| Refusal                                                                                                                                                                                   | When                                                                                                                                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `molt agent: <role or name> is not declared on this sleeve; declared: <the declared names>`                                                                                               | no `[[agent]]` entry has that role or name; declare it as [Declaring an agent](#declaring-an-agent) says                                                                                                        |
+| `molt agent: <name> is not enabled on this sleeve: its [[agent]] entry in molt.toml says enabled = <value>`                                                                               | the entry's `enabled` is anything but `true`; set it to `true`, and `molt resleeve` renders the home                                                                                                            |
+| `molt agent: <name> cannot start: role <role> is not defined: there is no <path>`                                                                                                         | your config repo has no `config/agents/roles/<role>`; add the role, or fix the entry. When the config repo itself cannot be found, the line ends `the user repo cannot be found, so role <role> cannot be read` |
+| `molt agent: <name>'s home is <state>: run molt resleeve, then start it`                                                                                                                  | the home is `stale` or `not rendered`, as `molt agent list` shows it                                                                                                                                            |
+| `molt agent: MOLT_CLAUDE_CONFIG_DIR could not be read: <why>`                                                                                                                             | the sleeve's `vars.sh` cannot be read or sourced; fix it                                                                                                                                                        |
+| `molt agent: this shell's CLAUDE_CONFIG_DIR is <value or unset>, and this sleeve's is <config dir>: start agents from a shell opened after the move, which sources ~/.config/molt/env.sh` | the sleeve declares its config dir, and this shell has none or another, compared by where the paths lead, as the home-launch guard compares them, which would refuse the session's first prompt anyway          |
+| `molt agent: <name> is already running (pid <pids>): go to that session, or quit it first`                                                                                                | a process whose command line carries `--name <name>`, as every session `molt agent start` starts does, is running                                                                                               |
+| `molt agent: claude is not on PATH`                                                                                                                                                       | this shell cannot find `claude`                                                                                                                                                                                 |
+| `molt agent: cannot enter <home>`                                                                                                                                                         | the home is not a directory this shell can enter                                                                                                                                                                |
+
+When `pgrep` cannot list processes, `molt agent start` warns `molt agent: pgrep could not list processes, so whether <name> is already running is unknown`, and starts the agent all the same.
+
+`molt agent start` starts it in the home itself, never in a directory below it. Claude Code reads project settings only from `.claude/` in the directory a session starts in, with no fallback to a parent, while it reads `CLAUDE.md` from that directory and every one above it. An agent started in its `work/` would therefore keep its contract and lose its fence, its sandbox and its memory setting. Once it is started in its home, working under `work/` by path, or with a `cd` inside a command, is fine. On a sleeve whose state has moved, the home-launch guard blocks the prompts of a session started at the agents root or below a home, and of one that did not get the sleeve's config dir, as a Claude started from a shell opened before the move does. `molt agent start` refuses such a shell before it starts anything, so start agents from a shell opened after the move: `echo $CLAUDE_CONFIG_DIR` there prints the config dir (see [A Claude started in $HOME, below a home, or without the config dir, is refused](#a-claude-started-in-home-below-a-home-or-without-the-config-dir-is-refused)).
 
 Accept the trust prompt at the first launch in each home. The home's `permissions.allow` rules, hooks in settings files and the home's `autoMemoryDirectory` wait for that prompt, which an interactive session shows once per directory. Claude Code's documentation says a `claude -p` run never shows it, uses the hooks in the home's settings but not its allow rules, and warns `this workspace has not been trusted` on stderr; it gives `autoMemoryDirectory` the same trust rule as hooks. Molt has not tested this.
 
@@ -270,7 +305,7 @@ The GUI file takes effect at the next login, because Molt does not call `launchc
 
 ### After the move
 
-Start each agent from its home, as [Starting an agent](#starting-an-agent) says. The native installer's own paths stay where they are and are not clutter: `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`. `CLAUDE_CONFIG_DIR` does not move them. Leftovers from an npm-era install, `~/.cache/claude-cli-nodejs` and `~/.npm`, are not Claude Code's state either; the move leaves them, and removing them is a separate step. npm's own cache lives in `~/.cache/npm`, under `XDG_CACHE_HOME` where that is set, through the `~/.npmrc` the npm liberator renders, because the status line runs through `npx`, which would otherwise write `~/.npm` again at every refresh, so once `~/.npmrc` names the new cache, `~/.npm` can be removed for good.
+Start each agent with `molt agent start`, from a shell opened after the move, as [Starting an agent](#starting-an-agent) says. The native installer's own paths stay where they are and are not clutter: `~/.local/bin/claude`, `~/.local/share/claude`, `~/.local/state/claude` and `~/.cache/claude`. `CLAUDE_CONFIG_DIR` does not move them. Leftovers from an npm-era install, `~/.cache/claude-cli-nodejs` and `~/.npm`, are not Claude Code's state either; the move leaves them, and removing them is a separate step. npm's own cache lives in `~/.cache/npm`, under `XDG_CACHE_HOME` where that is set, through the `~/.npmrc` the npm liberator renders, because the status line runs through `npx`, which would otherwise write `~/.npm` again at every refresh, so once `~/.npmrc` names the new cache, `~/.npm` can be removed for good.
 
 ### A Claude started in $HOME, below a home, or without the config dir, is refused
 
@@ -294,7 +329,7 @@ The guard also blocks a session that did not get the sleeve's config dir. A Clau
 this Claude Code did not get CLAUDE_CONFIG_DIR (want <config dir>): quit it, open a new shell, or log out and in, and relaunch from the home
 ```
 
-A session whose `CLAUDE_CONFIG_DIR` names another directory gets `this Claude Code has CLAUDE_CONFIG_DIR <dir>, not <config dir>` and the same advice. Directories are compared by where they lead, so a symlinked spelling of the config dir passes. Such a session shows the trust dialog for the home first, since its fresh state has trusted nothing, and hooks in a project's settings run only once it is trusted. Its first prompt is then refused, but by then Claude Code has written its fresh state in `$HOME`, the login included, and `molt doctor` reports it, as below: quit the session, remove what it wrote, and relaunch from a new shell.
+A session whose `CLAUDE_CONFIG_DIR` names another directory gets `this Claude Code has CLAUDE_CONFIG_DIR <dir>, not <config dir>` and the same advice. Directories are compared by where they lead, so a symlinked spelling of the config dir passes. Such a session shows the trust dialog for the home first, since its fresh state has trusted nothing, and hooks in a project's settings run only once it is trusted. Its first prompt is then refused, but by then Claude Code has written its fresh state in `$HOME`, the login included, and `molt doctor` reports it, as below: quit the session, remove what it wrote, and start the agent again from a new shell. `molt agent start` checks the shell's `CLAUDE_CONFIG_DIR` before it starts anything, so only a launch by hand gets that far.
 
 ## What molt doctor reports
 

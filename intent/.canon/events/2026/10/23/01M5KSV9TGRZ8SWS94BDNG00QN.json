@@ -1,0 +1,15 @@
+{
+  "id": "01M5KSV9TGRZ8SWS94BDNG00QN",
+  "ts": "2026-10-23T07:15:47.664Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ST0007 WP02: the preamble is done (Molt-matts e6d5d2d, hv approved; hand-over line 83a2588). The guide's Starting an agent and its other launches by hand, README's agent commands and doctor's check count, and bl0001 lines 78 and 81 (on hv's go; FYI to ac) are in dc's WP02 commit, with vc to land AC004 and push both repos. WP02 is marked done on vc's word."
+  }
+}

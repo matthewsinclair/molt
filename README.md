@@ -118,8 +118,11 @@ molt new-user <user>       # Scaffold a new molt-{user} config repo (prompts for
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
 molt agent list            # List this sleeve's agents: name, role, enabled, state, home
-molt agent config <name>   # An agent's home, its files' state, and its permission rules by layer
-molt doctor                # System diagnostics and health checks (12 checks)
+molt agent roles           # List the roles this sleeve declares, a disabled one marked
+molt agent start <role>    # Start the agent in its home, as claude start --name <hostname>-<role>
+molt agent home <role>     # Print the agent's home
+molt agent config <role>   # An agent's home, its files' state, and its permission rules by layer
+molt doctor                # System diagnostics and health checks (15 checks)
 molt test [liberator]      # Run bats test suite (all or one liberator)
 molt version               # Show version
 molt help                  # Show help
@@ -244,7 +247,7 @@ enabled = true               # the default
 harness = "claude"           # the default, and the only harness for now
 ```
 
-An agent's name is derived, never written: `<hostname>-<role>`, eg `kovacs-sysadm`. The `agents` liberator renders its home at `$MOLT_AGT_DIR/<name>` from the role's `AGENTS.md.tmpl` and `settings.json.tmpl`, with `instances/<host>/agents/<role>.md` appended to `AGENTS.md` when the sleeve has one. The home is the agent's working directory: launch it from there.
+An agent's name is derived, never written: `<hostname>-<role>`, eg `kovacs-sysadm`. The `agents` liberator renders its home at `$MOLT_AGT_DIR/<name>` from the role's `AGENTS.md.tmpl` and `settings.json.tmpl`, with `instances/<host>/agents/<role>.md` appended to `AGENTS.md` when the sleeve has one. The home is the agent's working directory, and `molt agent start <role>` starts the agent there.
 
 ## Your config repo layout
 

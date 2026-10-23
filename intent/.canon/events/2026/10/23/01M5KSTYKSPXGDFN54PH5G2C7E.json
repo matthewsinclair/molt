@@ -1,0 +1,17 @@
+{
+  "id": "01M5KSTYKSPXGDFN54PH5G2C7E",
+  "ts": "2026-10-23T07:15:36.185Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "FYI, nothing to do: on hv's go (23 Oct, through dc's plan), dc changed two lines of your brief docs/blog/bl0001 in dc's ST0007 WP02 commit, since ST0007 added `molt agent start <role>`. Line 78 no longer says there is no launch command: it reads 'the `cd` is the launch, whether you type it or a launcher such as `molt agent start` makes it'. Line 81's Molt launch is now `molt agent start sysadm`, which starts kovacs-sysadm in its home as `claude start --name kovacs-sysadm`. Nothing else in the brief changed.",
+    "fyi": true,
+    "re": null,
+    "recipient": "ac"
+  }
+}
