@@ -1,0 +1,15 @@
+{
+  "id": "01M5KSQAHEBNFFS6MVJQV05P6F",
+  "ts": "2026-10-23T07:13:37.326Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issue 0038 (vc approved the plan, 23 Oct): the move rewrites every path into ~/.claude that the settings.json it moves names (absolute, ~, $HOME and ${HOME} spellings, each kept), naming each with its key, and doctor's claude check names any left on a sleeve that declares a config dir. liberators/claude.sh and test/liberators/claude.bats only; one commit, hash and CHANGELOG line to vc."
+  }
+}

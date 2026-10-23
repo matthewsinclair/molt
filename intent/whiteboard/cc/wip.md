@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 06:58Z
+heartbeat_at: 2026-10-23 07:13Z
 status: active
-focus: "23 Oct: booted and holding for hv; nothing in flight, nothing claimed; ready for the quit call"
+focus: "23 Oct: issue 0038 on head, vc's go on the plan; building the rewrite, the doctor check and the tests"
 claims: [ISSUE:0038]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0038]
 
 ## DOING
 
-_(none)_
+- Issue 0038 (vc approved the plan, 23 Oct): the move rewrites every path into ~/.claude that the settings.json it moves names (absolute, ~, $HOME and ${HOME} spellings, each kept), naming each with its key, and doctor's claude check names any left on a sleeve that declares a config dir. liberators/claude.sh and test/liberators/claude.bats only; one commit, hash and CHANGELOG line to vc.
 
 ## TODO
 
