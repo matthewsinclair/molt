@@ -19,3 +19,6 @@ intent/.cache/
 
 # D53: the event log lives in the store; its file form is produced by `intent export`.
 intent/.backup/
+
+# Intent's installer owns the hook carriers it writes beside each dispatcher.
+.githooks/*.intent
