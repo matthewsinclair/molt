@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 38,
+  "slug": "the-move-leaves-paths-into-claude-in-the-user-se",
+  "title": "The move leaves paths into ~/.claude in the user settings it moves: a hook left so blocked every Bash call on rhadamanth",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-23",
+  "reporter": "Matthew Sinclair",
+  "body": "Found on rhadamanth's move, 23 Oct 2026 (ST0006 WP04, vc on the bounce).\n\nThe move takes `~/.claude` to the declared config dir whole, but a value inside the moved `settings.json` that names a file under `~/.claude/` by absolute path still names the old place afterwards. rhadamanth's user settings carried a PreToolUse hook on Bash, `python3 /Users/matts/.claude/hooks/rg-replace-guard.py`, hand-installed in August and managed by nothing. The script moved with the state; the line did not. python3 exits 2 when it cannot open its script, and exit 2 from a PreToolUse hook blocks the call, so every Bash call in every session on the sleeve was refused until vc repointed the line at 06:20Z. hv is removing that hook (no shipped Python; the guard is not coming back as Python).\n\nkovacs moved clean because its settings named nothing under `~/.claude/`. gyges has not moved, and its settings are unchecked.\n\nWhat the fix needs:\n\n- The move rewrites, in the `settings.json` it moves, every string value that names a path under `$HOME/.claude/` to the same path under the config dir, and names each value it rewrote. The files moved, so the move owns the paths that point at them.\n- `molt doctor`'s claude check names, on a sleeve that declares a config dir, any value in the user settings that still points under `$HOME/.claude/`, with its key.\n- A test moves a fixture whose settings carry a hook command and a statusLine command naming `~/.claude/` by absolute path, and finds both rewritten; doctor flags one planted after the move.\n\ngyges' move (the WP04 runbook's gyges section, carried on vc's board as todo 5) waits on this.\n"
+}

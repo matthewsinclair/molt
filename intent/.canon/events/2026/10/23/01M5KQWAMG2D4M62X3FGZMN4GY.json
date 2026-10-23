@@ -1,0 +1,15 @@
+{
+  "id": "01M5KQWAMG2D4M62X3FGZMN4GY",
+  "ts": "2026-10-23T06:41:24.112Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0039"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "_molt_realpath falls back to python3: resolve in shell (Molt ships no Python)"
+  }
+}

@@ -8,14 +8,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 
 ## DOING
 
-- [-] ST0006: Sleeve agents: a named, role-bound home for a machine's local agent
-  - [x] 01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
-  - [x] 02: [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config
-  - [x] 03: Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs
-  - [-] 04: Move kovacs-sysadm into its home; then rhadamanth, then gyges
-  - [x] 05: docs/guides/sleeve-agents.md: naming, roles, layers, the move
-  - [x] 06: Managed deny floor for sysadm
-  - [x] 07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
+_(none)_
 
 ## TODO
 
@@ -57,6 +50,14 @@ _(none)_
   - [x] 01: Shared Homebrew check, trust gate included
   - [x] 02: utilz: a checkout or Homebrew, per sleeve
   - [x] 03: Roll out: kovacs on brew, rhadamanth and gyges as hv chooses
+- [x] ST0006: Sleeve agents: a named, role-bound home for a machine's local agent
+  - [x] 01: Harness state leaves $HOME: claude liberator honours CLAUDE_CONFIG_DIR, renders it, moves once, refuses $HOME launches
+  - [x] 02: [[agent]] manifest table, MOLT_AGT_DIR and the agents liberator; molt agent list|config
+  - [x] 03: Roles in Molt-matts: sysadm, ops, docs contracts and profiles; [[agent]] entries for rhadamanth, gyges, kovacs
+  - [x] 04: Move kovacs-sysadm into its home; then rhadamanth, then gyges
+  - [x] 05: docs/guides/sleeve-agents.md: naming, roles, layers, the move
+  - [x] 06: Managed deny floor for sysadm
+  - [x] 07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
 
 ---
 
