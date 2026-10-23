@@ -237,7 +237,8 @@
       "kind": "todo",
       "seq": 2,
       "text": "When Intent 3.2.1 reaches gyges: watch the first molt upgrade after brew upgrade repair the gate home (Intent 0527; see wip.md)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T17:16:23.086Z",
       "recorded_at": "2026-09-23T09:36:46.871Z"
     },
     {
@@ -281,7 +282,8 @@
       "kind": "todo",
       "seq": 5,
       "text": "**gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = \"brew\"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the user settings' attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has; (4) if its Molt clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: since 22 Oct Molt's config.json declares `formatters: [markdown]` and the shipped guard runs the check, so the stanza is a duplicate doctor reports (same for kovacs, through kovacs-sysadm); (5) its move, by the WP04 runbook's gyges section (ST0006 closed 23 Oct with this carried): once issue 0038 has landed, check its user settings name nothing under `~/.claude/` by path, then declare MOLT_CLAUDE_CONFIG_DIR, quit every Claude and Chrome, `molt upgrade` with hv at the sudo prompt for the floor, and where a logout is not on, `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.molt.claude-config-dir.plist` (rhadamanth, 23 Oct); gyges-infra becomes gyges-sysadm, started with `molt agent start sysadm` (ST0007).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T17:16:23.124Z",
       "recorded_at": "2026-10-20T18:54:19.126Z",
       "edited_at": "2026-10-23T06:41:56.368Z"
     },
@@ -528,17 +530,19 @@
       "node": "vc",
       "kind": "todo",
       "seq": 22,
-      "text": "**Every other sleeve's Molt clone (gyges through gyges-infra, kovacs through kovacs-sysadm, farcaster, pihole), at its next resync:** opt into the tracked gate (bef8f14, pushed 23 Oct): `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done.",
+      "text": "**kovacs (through kovacs-sysadm), farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14, pushed 23 Oct) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done. gyges did this on 23 Oct (rhadamanth-sysadm).",
       "state": "live",
-      "recorded_at": "2026-10-23T14:43:00.240Z"
+      "recorded_at": "2026-10-23T14:43:00.240Z",
+      "edited_at": "2026-10-23T17:16:23.271Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 23,
-      "text": "**gyges' move handed to rhadamanth-sysadm (hv, 23 Oct), sent live by SendMessage:** todos 2, 3 (less the Gtools estate deploy, gtools-vc's), 5 and 22's gyges part are its to run, through gyges-infra, once Tailscale is on. vc's part: answer its questions, push anything for Molt's upstream, and close those todos when it reports what landed.",
+      "text": "**gyges' move, handed to rhadamanth-sysadm (hv, 23 Oct), working through gyges-sysadm (which replaced gyges-infra):** resync, utilz from brew (Molt-matts 3319d76), sessionUrl off, tracked gate, Intent brew 3.2.5, MOLT_CLAUDE_CONFIG_DIR (Molt-matts 4f78dba) and the move by molt upgrade with the floor, doctor all passed, all reported landed 23 Oct. Left: todo 3's bg_color and ssh wrapper, then removing ~/.npm. Close this and 3's Molt part when it reports them.",
       "state": "live",
-      "recorded_at": "2026-10-23T16:12:56.830Z"
+      "recorded_at": "2026-10-23T16:12:56.830Z",
+      "edited_at": "2026-10-23T17:16:23.480Z"
     }
   ],
   "sent": [
