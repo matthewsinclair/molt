@@ -1,0 +1,16 @@
+{
+  "id": "01M5N9ER0JCQ405HNW72AMBC74",
+  "ts": "2026-10-23T21:07:47.858Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 1,
+    "text": "macOS pgrep leaves out its own ancestors unless given -a; procps' pgrep leaves out only itself, and its -a means full command lines, so pass -a on macOS only. Name processes with ps -o pid=,args=, not pgrep -l."
+  }
+}

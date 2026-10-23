@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 20:32Z
+heartbeat_at: 2026-10-23 21:07Z
 status: active
-focus: "24 Oct: 0041/0042 pushed by vc (Molt 0d3ea85, Molt-matts fec83d1), CI green; nothing queued; heavy runs go through intent-vc's bats slot"
+focus: "24 Oct: folded at end of day; nothing queued, nothing for hv"
 claims: []
 ---
 
@@ -25,8 +25,8 @@ _(none)_
 
 ## Watch-outs
 
-- macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=.
-- In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree.
+- macOS pgrep leaves out its own ancestors unless given -a; procps' pgrep leaves out only itself, and its -a means full command lines, so pass -a on macOS only. Name processes with ps -o pid=,args=, not pgrep -l. (edited)
+- In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main and roll intent/ views back. Restore them there with git checkout, and never commit them from a worktree. (edited)
 - Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing. (edited)
 
 ## Decisions

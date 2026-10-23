@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-23T20:32:18.963Z",
+    "heartbeat_at": "2026-10-23T21:07:48.174Z",
     "status": "active",
-    "focus": "24 Oct: 0041/0042 pushed by vc (Molt 0d3ea85, Molt-matts fec83d1), CI green; nothing queued; heavy runs go through intent-vc's bats slot",
+    "focus": "24 Oct: folded at end of day; nothing queued, nothing for hv",
     "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -37,17 +37,19 @@
       "node": "cc",
       "kind": "watchout",
       "seq": 1,
-      "text": "macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=.",
+      "text": "macOS pgrep leaves out its own ancestors unless given -a; procps' pgrep leaves out only itself, and its -a means full command lines, so pass -a on macOS only. Name processes with ps -o pid=,args=, not pgrep -l.",
       "state": "live",
-      "recorded_at": "2026-10-21T06:03:43.826Z"
+      "recorded_at": "2026-10-21T06:03:43.826Z",
+      "edited_at": "2026-10-23T21:07:47.858Z"
     },
     {
       "node": "cc",
       "kind": "watchout",
       "seq": 2,
-      "text": "In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree.",
+      "text": "In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main and roll intent/ views back. Restore them there with git checkout, and never commit them from a worktree.",
       "state": "live",
-      "recorded_at": "2026-10-21T06:03:43.850Z"
+      "recorded_at": "2026-10-21T06:03:43.850Z",
+      "edited_at": "2026-10-23T21:07:48.073Z"
     },
     {
       "node": "cc",
