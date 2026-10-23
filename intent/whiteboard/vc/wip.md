@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 08:03Z
+heartbeat_at: 2026-10-23 08:54Z
 status: active
 focus: "23 Oct, after vc's second compact: apply critic-shell's fixes from the scratch clone once dc's cmd_doctor commit lands, review cc's 0038, one molt resleeve, globalfold, push (vc doing 3)"
 claims: [ST0006]
@@ -25,7 +25,7 @@ claims: [ST0006]
 
 ## Holds
 
-- Everything, while hv moves (hv, 23 Oct); released by hv's go. In flight on head and uncommitted: critic-shell's fixes (bin/molt, lib/agent.sh, lib/molt.sh, test/molt.bats, test/liberators/agents.bats, test/test_helper.bash) and CHANGELOG.md (the agent start and _molt_realpath entries amended as built, dc's doctor line, a Fixed section with cc's 0038 line, bin/molt through a relative link, and molt_link). Verified on that tree, 0038 included: the full suite passes under Homebrew bash and /bin/bash 3.2, and three mutants of 0038 (the \z boundary back to $, the repoint failure ignored, doctor's home-paths report dropped) each fail a test. On the go: the commit by pathspec, close 0038, then the hashes to dc (lib/molt.sh for (a) and (b), hold 8) and to cc. (edited)
+_(none)_
 
 ## Watch-outs
 
