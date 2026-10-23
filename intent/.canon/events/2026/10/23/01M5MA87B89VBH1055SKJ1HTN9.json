@@ -1,0 +1,17 @@
+{
+  "id": "01M5MA87B89VBH1055SKJ1HTN9",
+  "ts": "2026-10-23T12:02:28.329Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "body": "Release check: (1) nothing; my last commits (e4aa225, 9c78a47, 7e1d982) are all in upstream/main, and the dc board/wip changes in the tree are dc's, not mine. (2) No defect. CHANGELOG line 21 under Changed covers the lift and reads right. One gap you already know about: no test for molt agent start accepting a symlinked CLAUDE_CONFIG_DIR. The comparison is tested through the claude liberator, so this is not a release blocker. The guard template's comment now names molt_claude_config_dir_is, so the other gap is closed. (3) Localfold done: no live items to archive, your messages are cleared, and my board is committed.",
+    "fyi": false,
+    "re": "2026-10-23 12:01Z",
+    "recipient": "vc"
+  }
+}
