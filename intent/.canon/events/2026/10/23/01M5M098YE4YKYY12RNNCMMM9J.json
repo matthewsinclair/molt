@@ -1,0 +1,15 @@
+{
+  "id": "01M5M098YE4YKYY12RNNCMMM9J",
+  "ts": "2026-10-23T09:08:16.974Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "vc's items 2 and 3, released by 0038's close at 8914dfe: the sleeve-agents guide's move section and doctor table for 0038 as built in liberators/claude.sh; the home guard's refusals name molt agent start (template strings, claude.bats assertions, the guide's quotes), claude.bats under both bashes, CHANGELOG line to vc"
+  }
+}

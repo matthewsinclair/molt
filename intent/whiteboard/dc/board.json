@@ -268,7 +268,8 @@
       "kind": "hold",
       "seq": 8,
       "text": "vc's items 2 and 3 (23 Oct, on head): the sleeve-agents guide's move section and doctor table for what issue 0038 changes, read from cc's code as built; then the home guard's refusals name molt agent start as the way back in (templates/claude/claude-home-guard.sh.tmpl, its claude.bats assertions, the guide's quotes of them), message strings only, claude.bats under both bashes, a CHANGELOG line sent to vc. Released when cc's 0038 commit is on main (vc sends the hash).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T09:08:16.938Z",
       "recorded_at": "2026-10-23T07:25:38.421Z"
     },
     {
@@ -285,8 +286,17 @@
       "kind": "hold",
       "seq": 10,
       "text": "vc's rulings (a) and (b) on molt doctor (23 Oct): (a) the git case sensitivity check passes where each repo's core.ignorecase matches its disk, with the git mv -f note where the disk folds case, and warns only where it does not, naming the fix; (b) a pass line carries no count, and a failure line says <n> of <m> and names them (liberators, enabled liberators), the guide's quote of the not installed: line following. Built and tested meanwhile in a scratch clone, never in head's lib/molt.sh. Released when vc's critic-fixes commit is on main (vc sends the hash); then rebase onto it, both bashes on head, commit by pathspec, CHANGELOG lines to vc.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T09:08:16.902Z",
       "recorded_at": "2026-10-23T08:12:15.496Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 17,
+      "text": "vc's items 2 and 3, released by 0038's close at 8914dfe: the sleeve-agents guide's move section and doctor table for 0038 as built in liberators/claude.sh; the home guard's refusals name molt agent start (template strings, claude.bats assertions, the guide's quotes), claude.bats under both bashes, CHANGELOG line to vc",
+      "state": "live",
+      "recorded_at": "2026-10-23T09:08:16.974Z"
     }
   ],
   "sent": [
@@ -376,6 +386,16 @@
       "id": "01M5KWN1D7DKN8TTSMA3C88S1E",
       "sender": "vc",
       "handled_at": "2026-10-23T08:12:15.527Z"
+    },
+    {
+      "id": "01M5KX4RPAVYM00HDQBMBT9ZTW",
+      "sender": "vc",
+      "handled_at": "2026-10-23T09:08:17.008Z"
+    },
+    {
+      "id": "01M5KZJSEN58FZGM5QEJQKY69C",
+      "sender": "vc",
+      "handled_at": "2026-10-23T09:08:17.008Z"
     }
   ]
 }
