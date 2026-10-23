@@ -719,6 +719,34 @@
       "body": "vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.",
       "fyi": true,
       "recorded_at": "2026-10-23T13:26:16.184Z"
+    },
+    {
+      "id": "01M5MF4336HAZN825YZT9SHRPF",
+      "recipient": "hv",
+      "body": "All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:27:35.782Z"
+    },
+    {
+      "id": "01M5MF4336HAZN825YZT9SHRPG",
+      "recipient": "cc",
+      "body": "All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:27:35.782Z"
+    },
+    {
+      "id": "01M5MF4336HAZN825YZT9SHRPH",
+      "recipient": "dc",
+      "body": "All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:27:35.782Z"
+    },
+    {
+      "id": "01M5MF4336HAZN825YZT9SHRPJ",
+      "recipient": "ac",
+      "body": "All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T13:27:35.782Z"
     }
   ],
   "handled": [

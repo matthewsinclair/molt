@@ -1,0 +1,20 @@
+{
+  "id": "01M5MF4336HAZN825YZT9SHRPE",
+  "ts": "2026-10-23T13:27:35.782Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.announce",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.",
+    "recipients": [
+      "hv",
+      "cc",
+      "dc",
+      "ac"
+    ]
+  }
+}
