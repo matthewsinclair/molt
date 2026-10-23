@@ -47,10 +47,31 @@ load "test_helper.bash"
 
 # --- Doctor ---
 
+# doctor stores no total: it counts its checks as they run, and closes with how
+# many did not pass out of how many ran. What this expects is read off the
+# run's own Checking lines, never written down here (hv, 23 Oct).
+assert_doctor_closed() {
+    local line mark ran=0 failed=0 want
+    for line in "${lines[@]}"; do
+        [[ "$line" == "Checking "* ]] || continue
+        ran=$((ran + 1))
+        mark="${line#*... }"
+        [[ "$mark" == "✓"* ]] || failed=$((failed + 1))
+    done
+    [ "$ran" -gt 0 ] || fail "doctor printed no Checking line:\n$output"
+    if [ "$failed" -eq 0 ]; then
+        want="All checks passed."
+    else
+        want="$failed of $ran checks did not pass. Review above for details."
+    fi
+    [ "${lines[${#lines[@]}-1]}" = "$want" ] || fail "Expected doctor to close with: '$want'\nActual output:\n$output"
+}
+
 @test "molt doctor runs without crashing" {
     run_molt doctor
     assert_success
     assert_output_contains "Checking"
+    assert_doctor_closed
 }
 
 @test "molt doctor prints a failing liberator's check lines as the check printed them (issue 0026)" {
@@ -76,7 +97,7 @@ TOML
     printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
     MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
     assert_output_contains "Checking manifest... ✓ $repo/molt.toml"
-    assert_output_contains "[15/15]"
+    assert_doctor_closed
 }
 
 @test "molt doctor reports a manifest it cannot read, and carries on (issue 0028)" {
@@ -89,7 +110,7 @@ TOML
     chmod 600 "$repo/molt.toml"
     assert_output_contains "Checking manifest... ⚠ $repo/molt.toml"
     assert_output_contains "could not be read"
-    assert_output_contains "[15/15]"
+    assert_doctor_closed
 }
 
 # --- Unknown command ---
@@ -158,7 +179,7 @@ TOML
     assert_output_contains "Usage: molt agent list"
 }
 
-# --- Foreign home-path detection (doctor check 10) ---
+# --- Foreign home-path detection (doctor's foreign home paths check) ---
 
 @test "molt_foreign_home_paths flags another user's home path (incl JSON-escaped)" {
     load_molt_libs
@@ -826,42 +847,42 @@ _floor_sleeve() {
     install_fake_apparmor
 }
 
-@test "doctor check 14 warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent or no declared config dir carrying molt's, and passes otherwise" {
+@test "doctor's managed floor check warns on a sysadm sleeve whose floor is missing or stale, and on one with no sysadm agent or no declared config dir carrying molt's, and passes otherwise" {
     # AT072 (ST0006 AC019).
     _floor_sleeve
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "Checking managed floor... ⚠"
     assert_output_contains "         $FLOOR is missing"
     _agents_floor >/dev/null
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ✓ in place: $FLOOR"
+    assert_output_contains "Checking managed floor... ✓ in place: $FLOOR"
     echo '{"permissions": {"deny": []}}' > "$FLOOR"
     run cmd_doctor
     assert_output_contains "         $FLOOR is not $REPO/config/agents/roles/sysadm/floor.json"
 
     : > "$INSTANCE/vars.sh"
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "Checking managed floor... ⚠"
     assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
     echo 'if then' > "$INSTANCE/vars.sh"
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "Checking managed floor... ⚠"
     assert_output_contains "         MOLT_CLAUDE_CONFIG_DIR could not be read: $INSTANCE/vars.sh does not parse"
     printf 'export MOLT_CLAUDE_CONFIG_DIR="%s"\n' "$HOME/.config/claude" > "$INSTANCE/vars.sh"
 
     printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ⚠"
+    assert_output_contains "Checking managed floor... ⚠"
     assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
     rm -f "$FLOOR.molt-rendered"
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ✓ none needed; $FLOOR is not molt's, and is left"
+    assert_output_contains "Checking managed floor... ✓ none needed; $FLOOR is not molt's, and is left"
     rm -f "$FLOOR"
     run cmd_doctor
-    assert_output_contains "[14/15] Checking managed floor... ✓ none needed, and none of molt's here"
+    assert_output_contains "Checking managed floor... ✓ none needed, and none of molt's here"
 }
 
-@test "doctor check 15 warns on a Linux ops sleeve whose sandbox profile is not molt's, or not taking, and on one that takes none carrying molt's, and passes otherwise" {
+@test "doctor's sandbox profile check warns on a Linux ops sleeve whose sandbox profile is not molt's, or not taking, and on one that takes none carrying molt's, and passes otherwise" {
     _floor_sleeve
     mkdir -p "$REPO/config/agents/roles/ops"
     printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "ops"\n' > "$INSTANCE/molt.toml"
@@ -869,25 +890,35 @@ _floor_sleeve() {
     local profile="$BATS_TEST_TMPDIR/apparmor.d/bwrap-userns-restrict"
     echo "the distro's profile" > "$profile"
     run cmd_doctor
-    assert_output_contains "[15/15] Checking sandbox profile... ⚠"
+    assert_output_contains "Checking sandbox profile... ⚠"
     assert_output_contains "         $profile is not molt's, so bwrap's children are denied the sys_admin Claude Code's sandbox needs"
     _agents_sandbox >/dev/null
     run cmd_doctor
-    assert_output_contains "[15/15] Checking sandbox profile... ✓ in place: $profile"
+    assert_output_contains "Checking sandbox profile... ✓ in place: $profile"
     FAKE_BWRAP_STATUS=1 run cmd_doctor
-    assert_output_contains "[15/15] Checking sandbox profile... ⚠"
+    assert_output_contains "Checking sandbox profile... ⚠"
     assert_output_contains "         $profile is molt's, but bwrap's children still cannot make the sandbox's user namespace"
 
     printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
     run cmd_doctor
-    assert_output_contains "[15/15] Checking sandbox profile... ⚠"
+    assert_output_contains "Checking sandbox profile... ⚠"
     assert_output_contains "         $profile is molt's, and this sleeve takes no sandbox profile: it enables no ops or docs agent, or is not Linux"
     _agents_sandbox >/dev/null
     run cmd_doctor
-    assert_output_contains "[15/15] Checking sandbox profile... ✓ none needed; $profile is not molt's, and is left"
+    assert_output_contains "Checking sandbox profile... ✓ none needed; $profile is not molt's, and is left"
     rm -f "$profile"
     run cmd_doctor
-    assert_output_contains "[15/15] Checking sandbox profile... ✓ none needed, and none of molt's here"
+    assert_output_contains "Checking sandbox profile... ✓ none needed, and none of molt's here"
+}
+
+@test "doctor closes with how many checks did not pass out of how many ran, a check that could not run among them" {
+    _floor_sleeve
+    printf 'export MOLT_FONT_FAMILY="Test Font"\n' >> "$INSTANCE/vars.sh"
+    eval 'molt_font_available() { return 2; }'
+    run cmd_doctor
+    assert_output_contains "Checking declared font... ? cannot verify Test Font"
+    refute_output_contains "All checks passed."
+    assert_doctor_closed
 }
 
 @test "the sudo helpers install a user copy, not the file named, refuse with sudo absent or refusing, and write nothing unprivileged" {

@@ -1464,21 +1464,23 @@ cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   echo ""
 
-  local total=15
-  local step=0
-  local warnings=0
+  # Counted as the checks run, never stored: a total written down is wrong as
+  # soon as a check is added (hv, 23 Oct). A check that could not run is not a
+  # pass, so it counts among the checks that did not pass.
+  local checks=0
+  local not_passed=0
 
-  # 1. MOLT_HOME is valid
-  step=$((step + 1))
+  # MOLT_HOME is valid
+  checks=$((checks + 1))
   if [[ -x "${MOLT_ROOT:-}/bin/molt" && -d "${MOLT_ROOT:-}/lib" ]]; then
-    echo "[$step/$total] Checking MOLT_ROOT... ✓ $MOLT_ROOT"
+    echo "Checking MOLT_ROOT... ✓ $MOLT_ROOT"
   else
-    echo "[$step/$total] Checking MOLT_ROOT... ✗ invalid or not found"
-    warnings=$((warnings + 1))
+    echo "Checking MOLT_ROOT... ✗ invalid or not found"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 2. Directory structure
-  step=$((step + 1))
+  # Directory structure
+  checks=$((checks + 1))
   local dirs_ok=1
   for dir in lib liberators test; do
     if [[ ! -d "${MOLT_ROOT}/$dir" ]]; then
@@ -1486,14 +1488,14 @@ cmd_doctor() {
     fi
   done
   if [[ "$dirs_ok" -eq 1 ]]; then
-    echo "[$step/$total] Checking directory structure... ✓ lib/ liberators/ test/"
+    echo "Checking directory structure... ✓ lib/ liberators/ test/"
   else
-    echo "[$step/$total] Checking directory structure... ⚠ missing directories"
-    warnings=$((warnings + 1))
+    echo "Checking directory structure... ⚠ missing directories"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 3. User stack repo
-  step=$((step + 1))
+  # User stack repo
+  checks=$((checks + 1))
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" && -d "$user_repo" ]]; then
@@ -1522,21 +1524,21 @@ cmd_doctor() {
       fi
     done
     if [[ "$real_repo" != "$want_repo" ]]; then
-      echo "[$step/$total] Checking user stack repo... ⚠ $user_repo"
+      echo "Checking user stack repo... ⚠ $user_repo"
       echo "         Directory is stored as '${real_repo}'; the convention is '${want_repo}'."
       echo "         Resolved via the compatibility fallback. Rename it and re-run"
       echo "         'molt resleeve' so the dotfile symlinks are regenerated too."
-      warnings=$((warnings + 1))
+      not_passed=$((not_passed + 1))
     else
-      echo "[$step/$total] Checking user stack repo... ✓ $user_repo"
+      echo "Checking user stack repo... ✓ $user_repo"
     fi
   else
-    echo "[$step/$total] Checking user stack repo... ✗ not found"
-    warnings=$((warnings + 1))
+    echo "Checking user stack repo... ✗ not found"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 4. Manifest
-  step=$((step + 1))
+  # Manifest
+  checks=$((checks + 1))
   local manifest
   manifest="$(molt_find_manifest 2>/dev/null || echo "")"
   if [[ -n "$manifest" && -f "$manifest" ]]; then
@@ -1555,25 +1557,25 @@ cmd_doctor() {
       declared_repo="$(printf '%s\n' "$declared_lines" | head -n 1 | sed -E 's/.*=[[:space:]]*"?([^"]*)"?.*/\1/')"
     fi
     if [[ $grep_status -gt 1 ]]; then
-      echo "[$step/$total] Checking manifest... ⚠ $manifest"
+      echo "Checking manifest... ⚠ $manifest"
       echo "         It could not be read for its user_repo declaration: ${declared_lines:-grep exited $grep_status}"
-      warnings=$((warnings + 1))
+      not_passed=$((not_passed + 1))
     elif [[ -n "$declared_repo" && -n "${real_repo:-}" && "$declared_repo" != "$real_repo" ]]; then
-      echo "[$step/$total] Checking manifest... ⚠ $manifest"
+      echo "Checking manifest... ⚠ $manifest"
       echo "         Declares user_repo = '${declared_repo}' but the directory is '${real_repo}'."
       echo "         Nothing reads this key, so the mismatch is silent -- fix it before"
       echo "         something starts trusting it."
-      warnings=$((warnings + 1))
+      not_passed=$((not_passed + 1))
     else
-      echo "[$step/$total] Checking manifest... ✓ $manifest"
+      echo "Checking manifest... ✓ $manifest"
     fi
   else
-    echo "[$step/$total] Checking manifest... ⚠ no molt.toml found"
-    warnings=$((warnings + 1))
+    echo "Checking manifest... ⚠ no molt.toml found"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 5. Liberators: each .sh is executable, has _check function
-  step=$((step + 1))
+  # Liberators: each .sh is executable, has _check function
+  checks=$((checks + 1))
   local lib_errors=0
   local lib_count=0
   for lib in $(liberator_list); do
@@ -1589,14 +1591,14 @@ cmd_doctor() {
     fi
   done
   if [[ "$lib_errors" -eq 0 ]]; then
-    echo "[$step/$total] Checking liberators... ✓ $lib_count liberators, all have _check"
+    echo "Checking liberators... ✓ $lib_count liberators, all have _check"
   else
-    echo "[$step/$total] Checking liberators... ⚠ $lib_errors of $lib_count have issues"
-    warnings=$((warnings + 1))
+    echo "Checking liberators... ⚠ $lib_errors of $lib_count have issues"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 6. Enabled liberator status
-  step=$((step + 1))
+  # Enabled liberator status
+  checks=$((checks + 1))
   if [[ -n "$manifest" ]]; then
     local enabled
     enabled="$(molt_enabled_liberators 2>/dev/null || echo "")"
@@ -1633,21 +1635,21 @@ cmd_doctor() {
     # when a liberator breaks estate-wide, this is the instrument that should
     # notice, and a green tick means it never will.
     if [[ "$installed_count" -eq "$enabled_count" ]]; then
-      echo "[$step/$total] Checking enabled liberators... ✓ $installed_count/$enabled_count installed"
+      echo "Checking enabled liberators... ✓ $installed_count/$enabled_count installed"
     else
-      echo "[$step/$total] Checking enabled liberators... ⚠ $installed_count/$enabled_count installed"
+      echo "Checking enabled liberators... ⚠ $installed_count/$enabled_count installed"
       echo "         not installed: ${not_installed}"
       [[ -n "$not_installed_why" ]] && printf '%s' "$not_installed_why"
       echo "         Run \`molt resleeve\` to install, or \`molt list\` for status."
-      warnings=$((warnings + 1))
+      not_passed=$((not_passed + 1))
     fi
   else
-    echo "[$step/$total] Checking enabled liberators... ⚠ no manifest (skipped)"
-    warnings=$((warnings + 1))
+    echo "Checking enabled liberators... ⚠ no manifest (skipped)"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 7. External dependencies
-  step=$((step + 1))
+  # External dependencies
+  checks=$((checks + 1))
   local deps_ok=1
   local missing_deps=""
   local required_deps=(bats envsubst)
@@ -1658,14 +1660,14 @@ cmd_doctor() {
     fi
   done
   if [[ "$deps_ok" -eq 1 ]]; then
-    echo "[$step/$total] Checking external dependencies... ✓ ${required_deps[*]}"
+    echo "Checking external dependencies... ✓ ${required_deps[*]}"
   else
-    echo "[$step/$total] Checking external dependencies... ⚠ missing:$missing_deps"
-    warnings=$((warnings + 1))
+    echo "Checking external dependencies... ⚠ missing:$missing_deps"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 8. SSH key (check common names + any key referenced in SSH config)
-  step=$((step + 1))
+  # SSH key (check common names + any key referenced in SSH config)
+  checks=$((checks + 1))
   local ssh_key_found=""
   for keyname in id_ed25519 id_rsa; do
     if [[ -f "$HOME/.ssh/$keyname" ]]; then
@@ -1682,14 +1684,14 @@ cmd_doctor() {
     fi
   fi
   if [[ -n "$ssh_key_found" ]]; then
-    echo "[$step/$total] Checking SSH key... ✓ ~/.ssh/$ssh_key_found"
+    echo "Checking SSH key... ✓ ~/.ssh/$ssh_key_found"
   else
-    echo "[$step/$total] Checking SSH key... ⚠ no SSH key found"
-    warnings=$((warnings + 1))
+    echo "Checking SSH key... ⚠ no SSH key found"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 9. GitHub auth
-  step=$((step + 1))
+  # GitHub auth
+  checks=$((checks + 1))
   local gh_auth_output
   if gh_auth_output="$(timeout 5 ssh -T git@github.com 2>&1)"; then
     :
@@ -1697,27 +1699,27 @@ cmd_doctor() {
   if [[ "$gh_auth_output" == *"successfully authenticated"* ]]; then
     local gh_user
     gh_user="$(echo "$gh_auth_output" | grep -o 'Hi [^!]*' | sed 's/Hi //')"
-    echo "[$step/$total] Checking GitHub auth... ✓ authenticated as $gh_user"
+    echo "Checking GitHub auth... ✓ authenticated as $gh_user"
   else
-    echo "[$step/$total] Checking GitHub auth... ⚠ not authenticated"
-    warnings=$((warnings + 1))
+    echo "Checking GitHub auth... ⚠ not authenticated"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 10. Config carries no foreign (other-user) absolute home paths
-  step=$((step + 1))
+  # Config carries no foreign (other-user) absolute home paths
+  checks=$((checks + 1))
   local foreign=""
   if [[ -n "$user_repo" ]]; then
     foreign="$(molt_foreign_home_paths "$user_repo/config")"
   fi
   if [[ -z "$foreign" ]]; then
-    echo "[$step/$total] Checking config for foreign home paths... ✓ none"
+    echo "Checking config for foreign home paths... ✓ none"
   else
-    echo "[$step/$total] Checking config for foreign home paths... ⚠ found in: $(echo "$foreign" | tr '\n' ' ')"
-    warnings=$((warnings + 1))
+    echo "Checking config for foreign home paths... ⚠ found in: $(echo "$foreign" | tr '\n' ' ')"
+    not_passed=$((not_passed + 1))
   fi
 
-  # 11. The stack itself lives on a local filesystem
-  step=$((step + 1))
+  # The stack itself lives on a local filesystem
+  checks=$((checks + 1))
   local foreign_fs=""
   local p
   for p in "${MOLT_ROOT:-}" "${user_repo:-}"; do
@@ -1730,18 +1732,18 @@ cmd_doctor() {
     esac
   done
   if [[ -z "$foreign_fs" ]]; then
-    echo "[$step/$total] Checking stack is on local storage... ✓"
+    echo "Checking stack is on local storage... ✓"
   else
-    echo "[$step/$total] Checking stack is on local storage... ⚠ ${foreign_fs}"
+    echo "Checking stack is on local storage... ⚠ ${foreign_fs}"
     echo "         This sleeve is running someone else's checkout over a network or"
     echo "         guest mount. It shares one working tree, index and HEAD with the"
     echo "         host, so every command here reports success while changing files"
     echo "         that do not belong to this machine. Clone the repos locally."
-    warnings=$((warnings + 1))
+    not_passed=$((not_passed + 1))
   fi
 
-  # 12. git is not folding case in the managed repos
-  step=$((step + 1))
+  # git is not folding case in the managed repos
+  checks=$((checks + 1))
   local ignorecase_repos=""
   for p in "${MOLT_ROOT:-}" "${user_repo:-}"; do
     [[ -n "$p" && -d "$p/.git" ]] || continue
@@ -1750,9 +1752,9 @@ cmd_doctor() {
     fi
   done
   if [[ -z "$ignorecase_repos" ]]; then
-    echo "[$step/$total] Checking git case sensitivity... ✓"
+    echo "Checking git case sensitivity... ✓"
   else
-    echo "[$step/$total] Checking git case sensitivity... ⚠ core.ignorecase=true in ${ignorecase_repos}"
+    echo "Checking git case sensitivity... ⚠ core.ignorecase=true in ${ignorecase_repos}"
     echo "         EXPECTED on macOS -- this is a standing condition, not a defect."
     echo "         git set it because the statement is true: APFS does fold case."
     echo "         Do NOT set it false to clear this warning. That makes git assert"
@@ -1765,17 +1767,17 @@ cmd_doctor() {
     echo "         What to do, at the moment you rename: 'git mv -f Old New', then"
     echo "         'git status' to confirm the rename is actually staged before you"
     echo "         commit. Nothing to do otherwise."
-    warnings=$((warnings + 1))
+    not_passed=$((not_passed + 1))
   fi
 
-  # 13. The font this instance declares is one the system can actually resolve
+  # The font this instance declares is one the system can actually resolve
   #
   # Nothing installs fonts. A fresh sleeve gets the config naming the font and
   # none of the font, and fontconfig then falls back silently -- the terminal
   # opens fine, just without powerline or devicon glyphs, with no error anywhere.
   # Same shape as the dangling-symlink and mtime defects: everything reports
   # success, the result is wrong.
-  step=$((step + 1))
+  checks=$((checks + 1))
   local font_family="" font_status=0
   font_family="$(molt_instance_var MOLT_FONT_FAMILY)" || font_status=$?
   # With no user repo, or no host name, nothing declares a font.
@@ -1783,41 +1785,42 @@ cmd_doctor() {
     font_family=""
   fi
   if [[ $font_status -eq 2 ]]; then
-    echo "[$step/$total] Checking declared font... ⚠ $font_family"
-    warnings=$((warnings + 1))
+    echo "Checking declared font... ⚠ $font_family"
+    not_passed=$((not_passed + 1))
   elif [[ -z "$font_family" ]]; then
-    echo "[$step/$total] Checking declared font... ⚠ this instance declares no MOLT_FONT_FAMILY"
-    warnings=$((warnings + 1))
+    echo "Checking declared font... ⚠ this instance declares no MOLT_FONT_FAMILY"
+    not_passed=$((not_passed + 1))
   else
     molt_font_available "$font_family"
     case $? in
       0)
-        echo "[$step/$total] Checking declared font... ✓ ${font_family}" ;;
+        echo "Checking declared font... ✓ ${font_family}" ;;
       1)
-        echo "[$step/$total] Checking declared font... ⚠ ${font_family} is NOT installed"
+        echo "Checking declared font... ⚠ ${font_family} is NOT installed"
         echo "         The config names this font; nothing on this machine provides it."
         echo "         fontconfig will fall back without erroring, so the terminal opens"
         echo "         looking fine and the powerline and devicon glyphs are simply gone."
         echo "         Install it into ~/.local/share/fonts (Linux, then 'fc-cache -f')"
         echo "         or ~/Library/Fonts (macOS)."
-        warnings=$((warnings + 1)) ;;
+        not_passed=$((not_passed + 1)) ;;
       *)
-        # Deliberately NOT a warning, and deliberately never a tick. "I could not
-        # measure this" is not a finding about the sleeve, and counting it would
-        # leave every fontconfig-less machine permanently yellow -- which is how
-        # a check trains people to ignore it. Saying so plainly is the honest
-        # middle, and the marker is not ✓ for exactly that reason.
-        echo "[$step/$total] Checking declared font... ? cannot verify ${font_family}"
+        # Never a tick, and not ⚠ either: "I could not measure this" is not a
+        # finding about the sleeve, so the marker is ?, and the lines below say
+        # why. Nor is it a pass: it counts among the checks that did not pass,
+        # since "All checks passed." would claim a check that never ran (hv,
+        # 23 Oct).
+        echo "Checking declared font... ? cannot verify ${font_family}"
         echo "         fc-list is not on this machine, so whether the font resolves is"
         echo "         unknown. Not reporting ok: that would assert something unmeasured."
-        echo "         Install fontconfig if you want this checked." ;;
+        echo "         Install fontconfig if you want this checked."
+        not_passed=$((not_passed + 1)) ;;
     esac
   fi
 
-  # 14. The managed floor (ST0006 WP06): on a sleeve with a sysadm agent, its
+  # The managed floor (ST0006 WP06): on a sleeve with a sysadm agent, its
   # denies are in Claude Code's managed drop-in, where the agent cannot edit
   # them; on one without, no floor molt wrote is left behind.
-  step=$((step + 1))
+  checks=$((checks + 1))
   local floor_state floor_faults floor_fault
   if floor_state="$(molt_agent_floor_state)"; then
     floor_faults="$(molt_agent_floor_faults "$floor_state")"
@@ -1830,19 +1833,19 @@ cmd_doctor() {
       unowned) floor_fault="none needed; $(molt_tilde "$(molt_agent_floor_target)") is not molt's, and is left" ;;
       *)       floor_fault="none needed, and none of molt's here" ;;
     esac
-    echo "[$step/$total] Checking managed floor... ✓ $floor_fault"
+    echo "Checking managed floor... ✓ $floor_fault"
   else
-    echo "[$step/$total] Checking managed floor... ⚠"
+    echo "Checking managed floor... ⚠"
     while IFS= read -r floor_fault; do
       echo "         $floor_fault"
     done <<< "$floor_faults"
-    warnings=$((warnings + 1))
+    not_passed=$((not_passed + 1))
   fi
 
-  # 15. The sandbox profile (issue 0032): on a Linux sleeve with an ops or docs
+  # The sandbox profile (issue 0032): on a Linux sleeve with an ops or docs
   # agent, molt's bwrap-userns-restrict is in place and bwrap's children can
   # make the sandbox's user namespace; on any other, none of molt's is left.
-  step=$((step + 1))
+  checks=$((checks + 1))
   local sandbox_state sandbox_faults sandbox_fault
   if sandbox_state="$(molt_agent_sandbox_state)"; then
     sandbox_faults="$(molt_agent_sandbox_faults "$sandbox_state")"
@@ -1855,20 +1858,20 @@ cmd_doctor() {
       unowned) sandbox_fault="none needed; $(molt_tilde "$(molt_agent_sandbox_target)") is not molt's, and is left" ;;
       *)       sandbox_fault="none needed, and none of molt's here" ;;
     esac
-    echo "[$step/$total] Checking sandbox profile... ✓ $sandbox_fault"
+    echo "Checking sandbox profile... ✓ $sandbox_fault"
   else
-    echo "[$step/$total] Checking sandbox profile... ⚠"
+    echo "Checking sandbox profile... ⚠"
     while IFS= read -r sandbox_fault; do
       echo "         $sandbox_fault"
     done <<< "$sandbox_faults"
-    warnings=$((warnings + 1))
+    not_passed=$((not_passed + 1))
   fi
 
   echo ""
-  if [[ "$warnings" -eq 0 ]]; then
+  if [[ "$not_passed" -eq 0 ]]; then
     echo "All checks passed."
   else
-    echo "$warnings warning(s). Review above for details."
+    echo "$not_passed of $checks checks did not pass. Review above for details."
   fi
 }
 
@@ -2143,13 +2146,13 @@ _upgrade_pull_repos() {
   local pulled
   _UPGRADE_FAILED_PULLS=""
 
-  # 1. Check framework repo
+  # Check framework repo
   molt_info "Checking framework repo: $MOLT_ROOT"
   if ! _upgrade_check_clean "$MOLT_ROOT" "Framework"; then
     return 1
   fi
 
-  # 2. Check user config repo
+  # Check user config repo
   local user_repo
   user_repo="$(molt_find_user_repo)" || {
     molt_error "Cannot upgrade without a user config repo."
@@ -2160,7 +2163,7 @@ _upgrade_pull_repos() {
     return 1
   fi
 
-  # 3. Pull framework repo
+  # Pull framework repo
   echo ""
   molt_info "Pulling framework repo..."
   if $dry_run; then
@@ -2175,7 +2178,7 @@ _upgrade_pull_repos() {
     esac
   fi
 
-  # 4. Pull user config repo
+  # Pull user config repo
   molt_info "Pulling user config repo..."
   if $dry_run; then
     echo "  config: WOULD PULL"
@@ -2189,7 +2192,7 @@ _upgrade_pull_repos() {
     esac
   fi
 
-  # 5. Re-source constants to pick up any version change
+  # Re-source constants to pick up any version change
   # shellcheck disable=SC1091
   source "${MOLT_LIB_DIR}/constants.sh"
   if [[ "$old_version" != "$MOLT_VERSION" ]]; then
@@ -2397,7 +2400,7 @@ cmd_upgrade() {
     molt_info "No liberators have upgrade hooks."
   fi
 
-  # 7. Resleeve (unless suppressed), then the verdict
+  # Resleeve (unless suppressed), then the verdict
   _upgrade_finish "$dry_run" "$do_resleeve" "$failed_hooks" "$failed_pulls"
 }
 
