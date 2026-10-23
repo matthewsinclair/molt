@@ -10,9 +10,10 @@
 # it into the user settings, keeping every other hook (issue 0030). $1 must
 # hold one JSON object: jq passes an empty render through as nothing and turns
 # null into an object, and either would leave settings that read current but
-# are not the role's. Fails, printing why instead, with $1 as it was.
+# are not the role's, so that is checked before molt_settings_write writes it.
+# Fails, printing why instead, with $1 as it was.
 _agents_settings_set() {
-  local target="$1" dir="$2" hook="$3" want=null tmp
+  local target="$1" dir="$2" hook="$3" want=null
   if ! command -v jq &>/dev/null; then
     echo "jq is not installed"
     return 1
@@ -21,22 +22,13 @@ _agents_settings_set() {
     echo "$(molt_tilde "$hook") holds no hook object"
     return 1
   fi
-  if ! tmp="$(mktemp "${target}.XXXXXX")"; then
-    echo "no temporary file could be made beside it"
-    return 1
-  fi
-  if ! jq -s --arg dir "$dir" --argjson want "$want" \
-      'if length == 1 and (.[0] | type) == "object" then .[0] | .autoMemoryDirectory = $dir | if $want == null then . else '"$MOLT_CLAUDE_HOOK_SET"' end else error("not one JSON object") end' \
-      "$target" > "$tmp" 2>/dev/null; then
-    rm -f "$tmp"
+  if ! jq -es 'length == 1 and (.[0] | type) == "object"' "$target" >/dev/null 2>&1; then
     echo "the template does not render to one JSON object"
     return 1
   fi
-  if ! mv -f "$tmp" "$target"; then
-    rm -f "$tmp"
-    echo "it could not be replaced"
-    return 1
-  fi
+  # shellcheck disable=SC2016 # $dir and $want are jq's, not the shell's
+  molt_settings_write "$target" jq --arg dir "$dir" --argjson want "$want" \
+    '.autoMemoryDirectory = $dir | if $want == null then . else '"$MOLT_CLAUDE_HOOK_SET"' end' "$target"
 }
 
 # Builds the whole of the file $2 of a home in ${2}.molt-tmp, from the template

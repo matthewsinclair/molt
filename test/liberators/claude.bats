@@ -24,35 +24,10 @@ setup_claude() {
     echo '{"version": 3}' > "$TEST_USER_REPO/config/ccstatusline/settings.json"
     echo "$STATUSLINE" > "$TEST_USER_REPO/config/claude/statusline.json"
 
-    # pgrep and ps answer from a process table in the test directory, never from
-    # this machine's, where a Claude Code may well be running. The pgrep stub
-    # applies the liberator's own pattern, so what counts as Claude Code is
-    # decided here as it is in production.
-    export FAKE_PROCS="$BATS_TEST_TMPDIR/procs"
-    : > "$FAKE_PROCS"
-    mkdir -p "$BATS_TEST_TMPDIR/stub"
-    cat > "$BATS_TEST_TMPDIR/stub/pgrep" <<'EOF'
-#!/bin/bash
-# pgrep [-a] -u <uid> -f <pattern>: the pids in $FAKE_PROCS whose command line
-# matches. Its arguments are logged, for the test of -a.
-echo "$*" >> "$FAKE_PROCS.args"
-for pattern; do :; done
-awk -v pat="$pattern" '{ args = $0; sub(/^[0-9]+ /, "", args) } args ~ pat { print $1; n++ } END { exit n ? 0 : 1 }' "$FAKE_PROCS"
-EOF
-    cat > "$BATS_TEST_TMPDIR/stub/ps" <<'EOF'
-#!/bin/bash
-# ps -o pid=,args= -p <pid,pid>: those rows of $FAKE_PROCS.
-for pids; do :; done
-awk -v pids=",$pids," 'index(pids, "," $1 ",")' "$FAKE_PROCS"
-EOF
-    chmod +x "$BATS_TEST_TMPDIR/stub/pgrep" "$BATS_TEST_TMPDIR/stub/ps"
-    export PATH="$BATS_TEST_TMPDIR/stub:$PATH"
-}
-
-# The process table the pgrep and ps stubs answer from, one "pid command line"
-# per argument.
-fake_processes() {
-    printf '%s\n' "$@" > "$FAKE_PROCS"
+    # pgrep and ps answer from a process table in the test directory, which
+    # fake_processes fills, never from this machine's, where a Claude Code may
+    # well be running.
+    install_fake_process_table
 }
 
 # Declares $1 as this sleeve's config dir in its vars.sh, as hv does sleeve by
@@ -253,15 +228,18 @@ JSON
     [ "$(jq -cS .statusLine "$CONFIG/settings.json")" = "$(jq -cS . <<<"$STATUSLINE")" ]
 }
 
-@test "the move refuses while Claude Code runs, names each process, and moves and publishes nothing" {
+@test "the move refuses while Claude Code runs, names each process, cut to 100 characters, and moves and publishes nothing" {
     # AT004 (ST0006 AC002, AC011).
     setup_declared
-    fake_processes "4242 claude --name kovacs-sysadm" "4243 /Users/x/.local/bin/claude --chrome-native-host" "77 -zsh"
+    local long="4244 claude --append-system-prompt $(printf 'x%.0s' {1..80})yz"
+    fake_processes "4242 claude --name kovacs-sysadm" "4243 /Users/x/.local/bin/claude --chrome-native-host" "77 -zsh" "$long"
     run claude_install
     assert_failure
     assert_output_contains "Claude Code is running"
     assert_output_contains "4242 claude --name kovacs-sysadm"
     assert_output_contains "4243 /Users/x/.local/bin/claude --chrome-native-host"
+    assert_output_contains "${long:0:100}"
+    refute_output_contains "${long:0:101}"
     refute_output_contains "77 -zsh"
     assert_output_contains "CLAUDE_CONFIG_DIR was not published"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
@@ -342,8 +320,8 @@ JSON
 @test "a move that fails after its copies are taken names them, and does not say nothing was changed" {
     # AT024 (ST0006 AC002, AC011).
     setup_declared
-    printf '#!/bin/bash\nexit 1\n' > "$BATS_TEST_TMPDIR/stub/cp"
-    chmod +x "$BATS_TEST_TMPDIR/stub/cp"
+    printf '#!/bin/bash\nexit 1\n' > "$BATS_TEST_TMPDIR/bin/cp"
+    chmod +x "$BATS_TEST_TMPDIR/bin/cp"
     run claude_install
     assert_failure
     assert_output_contains "could not copy ~/.claude into ~/.config/claude.molt-backup."
@@ -1050,7 +1028,7 @@ JSON
 
 # --- ST0006: what doctor reports ---
 
-@test "check reports CLAUDE_CONFIG_DIR unset where molt runs, or naming another dir, and passes once it names the config dir" {
+@test "check reports CLAUDE_CONFIG_DIR unset where molt runs, or naming another dir, and passes once it names the config dir, in any spelling the home guard takes for it" {
     # AT016 (ST0006 AC004).
     setup_moved
     run claude_install
@@ -1067,6 +1045,13 @@ JSON
     assert_success
     run claude_verify
     assert_success
+    # The guard resolves both before it compares, so a link to the config dir,
+    # or a trailing slash, is the config dir.
+    ln -s "$CONFIG" "$BATS_TEST_TMPDIR/linked"
+    for CLAUDE_CONFIG_DIR in "$BATS_TEST_TMPDIR/linked" "$CONFIG/"; do
+        run claude_check
+        assert_success
+    done
 }
 
 # The sign that a launch path missed the variable.

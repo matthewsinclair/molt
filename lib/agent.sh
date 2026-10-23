@@ -672,7 +672,7 @@ molt_agent_sessions() {
 # prompt; a session of that name running, or a process table that cannot say;
 # and no claude on PATH.
 molt_agent_start_fault() {
-  local name="$1" role="$2" enabled="$3" harness="$4" fault state declared want have pids
+  local name="$1" role="$2" enabled="$3" harness="$4" fault state declared pids
   if [[ "$enabled" != true ]]; then
     echo "$name is not enabled on this sleeve: its [[agent]] entry in molt.toml says enabled = $enabled"
     return 0
@@ -698,13 +698,8 @@ molt_agent_start_fault() {
     return 0
   fi
   if [[ -n "$declared" ]]; then
-    want="$(molt_disk_path "$declared")" || want="$declared"
-    have="${CLAUDE_CONFIG_DIR:-}"
-    if [[ -n "$have" ]]; then
-      have="$(molt_disk_path "$have")" || have="$CLAUDE_CONFIG_DIR"
-    fi
-    if [[ -z "$have" || "$have" != "$want" ]]; then
-      echo "this shell's CLAUDE_CONFIG_DIR is ${CLAUDE_CONFIG_DIR:-unset}, and this sleeve's is $(molt_tilde "$declared"): start agents from a shell opened after the move, which sources ~/.config/molt/env.sh"
+    if ! molt_claude_config_dir_is "$declared"; then
+      echo "this shell's CLAUDE_CONFIG_DIR is ${CLAUDE_CONFIG_DIR:-unset}, and this sleeve's is $(molt_tilde "$declared"): start agents from a shell opened after the move, which sources $(molt_tilde "$(molt_claude_env_file)")"
       return 0
     fi
   fi

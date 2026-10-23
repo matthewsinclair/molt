@@ -1171,6 +1171,62 @@ molt_claude_config_dir() {
   echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 }
 
+# Succeeds when this shell's CLAUDE_CONFIG_DIR is set and names the directory
+# $1, a sleeve's declared config dir, compared as the home guard compares them:
+# each as the disk spells it where it is a directory, so a symlinked spelling
+# or a trailing slash is the same directory, and as written where it is not.
+# The claude liberator's check and publish, and molt agent start, ask it, so
+# none of them passes a shell whose sessions the guard would refuse.
+molt_claude_config_dir_is() {
+  local want="$1" have="${CLAUDE_CONFIG_DIR:-}"
+  [[ -n "$have" ]] || return 1
+  if [[ -d "$want" ]]; then
+    want="$(molt_disk_path "$want")" || want="$1"
+  fi
+  if [[ -d "$have" ]]; then
+    have="$(molt_disk_path "$have")" || have="$CLAUDE_CONFIG_DIR"
+  fi
+  [[ "$have" == "$want" ]]
+}
+
+# The env file ~/.zshenv sources to set CLAUDE_CONFIG_DIR, which the claude
+# liberator publishes on a sleeve that declares a config dir.
+molt_claude_env_file() {
+  echo "$HOME/.config/molt/env.sh"
+}
+
+# Replaces the settings file $1 with what the command after it prints, through
+# a temporary file beside it that cp -p gives the file's mode, then a rename, so
+# Claude Code, which watches the file, never reads half of it. Every settings
+# file molt writes is written through here. Every step is checked by hand:
+# resleeve runs install inside an `if`, where set -e does not apply, so a
+# failed copy or rename would otherwise run on to "written". Fails, printing
+# why, with the file as it was. Its callers refuse a symlink first: the rename
+# would silently turn a link into a copy.
+molt_settings_write() {
+  local settings="$1" tmp
+  shift
+  if ! tmp="$(mktemp "${settings}.XXXXXX")"; then
+    echo "could not be written: no temporary file could be made beside it"
+    return 1
+  fi
+  if [[ -f "$settings" ]] && ! cp -p "$settings" "$tmp"; then
+    rm -f "$tmp"
+    echo "could not be written: it could not be copied"
+    return 1
+  fi
+  if ! "$@" >"$tmp"; then
+    rm -f "$tmp"
+    echo "could not be written: what was to replace it could not be made"
+    return 1
+  fi
+  if ! mv -f "$tmp" "$settings"; then
+    rm -f "$tmp"
+    echo "could not be written: it could not be replaced"
+    return 1
+  fi
+}
+
 # The settings entry that runs the home guard, as a file holding the JSON object
 # molt writes. One of Molt's own files, the same on every sleeve: it names the
 # guard as ~/.config/molt/claude-home-guard.sh, outside any Claude config dir,

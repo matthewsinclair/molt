@@ -97,38 +97,6 @@ _claude_report_settings_fault() {
   fi
 }
 
-# Replaces the settings file $1 with what the command after it prints, through
-# a temporary file beside it that cp -p gives the file's mode, then a rename, so
-# Claude Code, which watches the file, never reads half of it. The merge below
-# and the move's rewrite of paths into ~/.claude both write through here. Every
-# step is checked by hand: resleeve runs install inside an `if`, where set -e
-# does not apply, so a failed copy or rename would otherwise run on to
-# "written". Fails, printing why, with the file as it was. Its callers refuse a
-# symlink first: the rename would silently turn a link into a copy.
-_claude_settings_write() {
-  local settings="$1" tmp
-  shift
-  if ! tmp="$(mktemp "${settings}.XXXXXX")"; then
-    echo "could not be written: no temporary file could be made beside it"
-    return 1
-  fi
-  if [[ -f "$settings" ]] && ! cp -p "$settings" "$tmp"; then
-    rm -f "$tmp"
-    echo "could not be written: it could not be copied"
-    return 1
-  fi
-  if ! "$@" >"$tmp"; then
-    rm -f "$tmp"
-    echo "could not be written: what was to replace it could not be made"
-    return 1
-  fi
-  if ! mv -f "$tmp" "$settings"; then
-    rm -f "$tmp"
-    echo "could not be written: it could not be replaced"
-    return 1
-  fi
-}
-
 # Writes into the user settings.json the value that $1 labels, $2 holds and the
 # filter $3 reads, with the filter $4, and changes no other key. A file that
 # already carries it is left alone; one that does not is kept beside it first.
@@ -154,7 +122,7 @@ _claude_settings_merge() {
   [[ -f "$current" ]] || current=/dev/null
   # An absent or empty settings.json merges as {}.
   # shellcheck disable=SC2016 # $new, $cur and $want are jq's, not the shell's
-  if ! why="$(_claude_settings_write "$settings" jq -n --slurpfile cur "$current" --slurpfile new "$source" \
+  if ! why="$(molt_settings_write "$settings" jq -n --slurpfile cur "$current" --slurpfile new "$source" \
       '$new[0] as $want | ($cur[0] // {}) | '"$set")"; then
     molt_error "claude: $shown $why, so its $label was not written"
     return 1
@@ -300,45 +268,14 @@ _claude_state() {
   fi
 }
 
-# A Claude Code process: the native binary, which runs with argv0 claude, by
-# name or by an absolute path (the desktop app's has a space in it), or an npm
-# install, which node runs by its bin link or its cli.js. Matched against the
-# whole command line with pgrep -f; pgrep -x matches a process name, which
-# misses running processes on macOS (board watchout 6). Every arm is anchored
-# on argv0, so `ls ~/.config/claude`, a grep or an npm ls naming the package is
-# not Claude Code. The path arm allows a space only where the next character
-# starts no other argument, ie is not / or -. A relative ./claude is not
-# matched.
-_CLAUDE_PROCESS_PATTERN='^(/[^ ]*( [^/ -][^ ]*)*/)?claude( |$)|^([^ ]*/)?node ([^ ]*/)?claude( |$)|^([^ ]*/)?node .*@anthropic-ai/claude-code/cli'
-
-# The Claude Code processes this user is running, "pid command" a line, cut to
-# 100 characters; nothing when there are none. ps names them, because procps'
-# pgrep -l prints a process's name and macOS's its arguments; a process that
-# has gone by then is named by its pid alone. Fails when pgrep cannot answer.
+# The Claude Code processes this user is running, as molt_claude_processes
+# names them, each cut to 100 characters for the refusal that lists them;
+# nothing when there are none. Fails when pgrep cannot answer.
 _claude_processes() {
-  local pids named rc=0 ancestors=()
-  # macOS's pgrep leaves out its own ancestors unless given -a, so molt run from
-  # inside a Claude Code session would not see that session, the very one whose
-  # state it is about to move. procps' pgrep leaves out only itself, and its -a
-  # means something else.
-  if [[ "$(molt_platform)" == "macos" ]]; then
-    ancestors=(-a)
-  fi
-  pids="$(pgrep ${ancestors+"${ancestors[@]}"} -u "$(id -u)" -f "$_CLAUDE_PROCESS_PATTERN")" || rc=$?
-  case "$rc" in
-    0) ;;
-    1) return 0 ;;
-    *) return 1 ;;
-  esac
-  # A command line can hold newlines; only a line that starts with a pid is one
-  # of ps's rows.
-  named="$( { ps -o pid=,args= -p "$(printf '%s\n' "$pids" | paste -sd, -)" 2>/dev/null || true; } \
-             | awk '$1 ~ /^[0-9]+$/ { sub(/^ +/, ""); print substr($0, 1, 100) }')"
-  if [[ -n "$named" ]]; then
-    echo "$named"
-  else
-    echo "$pids"
-  fi
+  local running
+  running="$(molt_claude_processes)" || return 1
+  [[ -n "$running" ]] || return 0
+  printf '%s\n' "$running" | awk '{ print substr($0, 1, 100) }'
 }
 
 # Copies $1 into the directory $2, cloning where the filesystem can: an APFS
@@ -507,7 +444,7 @@ _claude_repoint() {
   # since it would no longer name ~/.claude (critic-shell, 23 Oct).
   elif [[ "$dir" == *[![:alnum:]._/+@%:,=-]* ]]; then
     why="was left: $(molt_tilde "$dir") holds a character a shell would split or expand, which would break a command naming it"
-  elif why="$(_claude_settings_write "$settings" _claude_home_paths_jq "$dir" home_paths_rewritten "$settings")"; then
+  elif why="$(molt_settings_write "$settings" _claude_home_paths_jq "$dir" home_paths_rewritten "$settings")"; then
     while IFS=$'\t' read -r key was is; do
       molt_info "claude: rewrote $key in $shown: $was -> $is"
     done <<< "$listed"
@@ -520,16 +457,11 @@ _claude_repoint() {
   return 1
 }
 
-# The env file ~/.zshenv sources to set CLAUDE_CONFIG_DIR.
-_claude_env_file() {
-  echo "$HOME/.config/molt/env.sh"
-}
-
 # The config dir the env file last published, when there is one: the value of
 # the export line templates/claude/env.sh.tmpl writes, found only in that form.
 _claude_env_dir() {
   local env_file
-  env_file="$(_claude_env_file)"
+  env_file="$(molt_claude_env_file)"
   [[ -f "$env_file" ]] || return 0
   sed -n 's/^export CLAUDE_CONFIG_DIR="\(.*\)"$/\1/p' "$env_file"
 }
@@ -555,7 +487,7 @@ _claude_other_dir() {
 # Molt, so a Molt installed any other way renders the same bytes.
 _claude_published() {
   local t="${MOLT_ROOT}/templates/claude"
-  printf '%s\t%s\t%s\n' "$t/env.sh.tmpl" "$(_claude_env_file)" 644
+  printf '%s\t%s\t%s\n' "$t/env.sh.tmpl" "$(molt_claude_env_file)" 644
   case "$(molt_platform)" in
     macos)
       printf '%s\t%s\t%s\n' "$t/com.molt.claude-config-dir.plist.tmpl" \
@@ -620,8 +552,8 @@ _claude_publish() {
       return 1
     fi
   done <<< "$(_claude_published)"
-  if [[ "${CLAUDE_CONFIG_DIR:-}" != "$dir" ]]; then
-    molt_warn "claude: CLAUDE_CONFIG_DIR is not $(molt_tilde "$dir") in this shell. Start Claude Code only from a new shell that sources ~/.config/molt/env.sh, and log out and in for apps started from the GUI"
+  if ! molt_claude_config_dir_is "$dir"; then
+    molt_warn "claude: CLAUDE_CONFIG_DIR is not $(molt_tilde "$dir") in this shell. Start Claude Code only from a new shell that sources $(molt_tilde "$(molt_claude_env_file)"), and log out and in for apps started from the GUI"
   fi
   export CLAUDE_CONFIG_DIR="$dir"
 }
@@ -802,9 +734,9 @@ _claude_report_faults() {
   # whose script has moved blocks every call it guards.
   _claude_report_home_paths "$log" "$prefix" "$dir" || ok=1
   if [[ -z "${CLAUDE_CONFIG_DIR:-}" ]]; then
-    "$log" "${prefix}CLAUDE_CONFIG_DIR is not set where molt runs; ~/.config/molt/env.sh sets it in a shell that sources it"
+    "$log" "${prefix}CLAUDE_CONFIG_DIR is not set where molt runs; $(molt_tilde "$(molt_claude_env_file)") sets it in a shell that sources it"
     ok=1
-  elif [[ "$CLAUDE_CONFIG_DIR" != "$dir" ]]; then
+  elif ! molt_claude_config_dir_is "$dir"; then
     "$log" "${prefix}CLAUDE_CONFIG_DIR is $(molt_tilde "$CLAUDE_CONFIG_DIR"), not this sleeve's config dir $(molt_tilde "$dir")"
     ok=1
   fi
