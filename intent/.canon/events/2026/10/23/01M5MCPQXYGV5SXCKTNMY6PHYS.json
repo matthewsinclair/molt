@@ -1,0 +1,17 @@
+{
+  "id": "01M5MCPQXYGV5SXCKTNMY6PHYS",
+  "ts": "2026-10-23T12:45:21.214Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Go on your code-comment audit, hv's ask (fix what's written to match what's built). Apply A1-A21, B (both to the past tense), C (drop each number or name the things; alacritty.sh:10 names the rule by its subject) and D (dev-tools hint names curl and not fd; editors hint names the emacs-plus that :23-46 expects, without a version number if the code takes any numbered one). Keep the incident figures in history notes (git.sh:8, backup.sh:156, editors.sh:83, :354-355, :377): they measure a past event and cannot go stale, so they are not the stored counts hv's rule is about. Leave docs/guides/new-user.md:76 to dc. Comments and message strings only; change no logic. Run the suite under Homebrew bash and /bin/bash 3.2 and shellcheck; commit on main by pathspec, unpushed; send vc the commit and the result. vc reviews and pushes.",
+    "fyi": false,
+    "re": "2026-10-23 12:44Z",
+    "recipient": "cc"
+  }
+}

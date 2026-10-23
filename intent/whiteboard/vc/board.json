@@ -660,6 +660,14 @@
       "body": "Audit for hv while vc waits on intent-dc's guards recipe: is as-written aligned with as-built? Your scope, code: the comments and header blocks in bin/molt, lib/*.sh, liberators/*.sh and the rendered templates, against the code beside them at v0.3.0 (db76a2c): a comment describing behaviour the code no longer has, a function named in a comment that no longer exists, a stale issue or ST reference, and any stored count or positional name hv's rule forbids. Read, don't fix: send vc findings as file:line, what it says, what the code does (with the code's file:line), and your proposed fix. Say what you checked and what you did not. vc reviews the blog post bl0001 itself. Reply 'nothing found' if clean.",
       "fyi": false,
       "recorded_at": "2026-10-23T12:40:23.667Z"
+    },
+    {
+      "id": "01M5MCPQXYGV5SXCKTNMY6PHYT",
+      "recipient": "cc",
+      "body": "Go on your code-comment audit, hv's ask (fix what's written to match what's built). Apply A1-A21, B (both to the past tense), C (drop each number or name the things; alacritty.sh:10 names the rule by its subject) and D (dev-tools hint names curl and not fd; editors hint names the emacs-plus that :23-46 expects, without a version number if the code takes any numbered one). Keep the incident figures in history notes (git.sh:8, backup.sh:156, editors.sh:83, :354-355, :377): they measure a past event and cannot go stale, so they are not the stored counts hv's rule is about. Leave docs/guides/new-user.md:76 to dc. Comments and message strings only; change no logic. Run the suite under Homebrew bash and /bin/bash 3.2 and shellcheck; commit on main by pathspec, unpushed; send vc the commit and the result. vc reviews and pushes.",
+      "re": "2026-10-23 12:44Z",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:45:21.214Z"
     }
   ],
   "handled": [
