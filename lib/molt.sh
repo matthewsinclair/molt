@@ -2149,7 +2149,8 @@ molt_resleeve() {
   fi
 
   local would_install=0
-  local failed=0
+  # A failure says how many of how many ran, both counted here, and names them.
+  local failed=0 ran=0 failed_names=""
   echo ""
 
   while IFS= read -r lib; do
@@ -2158,6 +2159,7 @@ molt_resleeve() {
       molt_warn "Skipping unknown liberator: $lib"
       continue
     fi
+    ran=$((ran + 1))
     if ! liberator_check "$lib" 2>/dev/null; then
       if $dry_run; then
         echo "  $lib: WOULD INSTALL"
@@ -2168,6 +2170,7 @@ molt_resleeve() {
         else
           molt_error "Liberator failed: $lib — continuing with remaining liberators"
           failed=$((failed + 1))
+          failed_names="${failed_names:+$failed_names, }$lib"
         fi
       fi
     else
@@ -2184,7 +2187,7 @@ molt_resleeve() {
     fi
   else
     if [[ $failed -gt 0 ]]; then
-      molt_error "$failed liberator(s) failed. Review errors above."
+      molt_error "$failed of $ran liberators failed: $failed_names. Review errors above."
       return 1
     elif $claim_ready; then
       molt_info "Sleeve ready. Welcome back."

@@ -410,6 +410,7 @@ TOML
 
 # Under bash 4.1 and later, ((failed++)) from 0 returned 1 and set -e ended
 # resleeve at the first failure, unreported. bash 3.2, CI's, carried on.
+# The failure line says how many of how many ran, and names them.
 @test "molt resleeve reports every liberator that failed and exits non-zero" {
     local libs="$BATS_TEST_TMPDIR/liberators"
     mkdir -p "$libs" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
@@ -417,12 +418,13 @@ TOML
     for name in aaa bbb; do
         printf '%s_check() { return 1; }\n%s_install() { return 1; }\n' "$name" "$name" > "$libs/$name.sh"
     done
+    printf 'ccc_check() { return 0; }\n' > "$libs/ccc.sh"
     run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
         MOLT_LIBERATORS_DIR="$libs" molt resleeve
     assert_failure
     assert_output_contains "Liberator failed: aaa"
     assert_output_contains "Liberator failed: bbb"
-    assert_output_contains "2 liberator(s) failed"
+    assert_output_contains "2 of 3 liberators failed: aaa, bbb."
     refute_output_contains "Sleeve ready"
 }
 
