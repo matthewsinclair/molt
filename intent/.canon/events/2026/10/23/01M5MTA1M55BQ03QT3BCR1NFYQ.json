@@ -1,0 +1,15 @@
+{
+  "id": "01M5MTA1M55BQ03QT3BCR1NFYQ",
+  "ts": "2026-10-23T16:43:05.221Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0040"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "Claude Code attribution settings are hand-set per sleeve; nothing in Molt or Molt-matts declares them"
+  }
+}
