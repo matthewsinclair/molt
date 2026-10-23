@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-23T09:40:55.458Z",
+    "heartbeat_at": "2026-10-23T09:50:31.507Z",
     "status": "active",
-    "focus": "23 Oct: the lift committed at e4aa225, with vc for review (hash and CHANGELOG line sent); claude.bats free for dc",
+    "focus": "23 Oct: the lift accepted by vc (e4aa225, CHANGELOG a474ce1); nothing queued; off claude.bats until dc's hash (hold 14)",
     "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -348,9 +348,18 @@
       "kind": "doing",
       "seq": 14,
       "text": "The lift committed at e4aa225 (lib/molt.sh molt_settings_write, molt_claude_config_dir_is, molt_claude_env_file; claude.sh _claude_processes a wrapper; claude.bats on test_helper's fake process table), on head after dc's 595347d; all tests passing under both bashes on a scratch export, a mutant per piece caught, critic-shell clean. Hash and CHANGELOG line sent to vc; claude.bats handed back to dc. Next: answer vc's review.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T09:50:31.403Z",
       "recorded_at": "2026-10-23T08:56:25.113Z",
       "edited_at": "2026-10-23T09:40:55.366Z"
+    },
+    {
+      "node": "cc",
+      "kind": "hold",
+      "seq": 14,
+      "text": "test/liberators/claude.bats is dc's while dc lands the home guard's refusal strings and their assertions (vc, 23 Oct); released when dc's commit is on main.",
+      "state": "live",
+      "recorded_at": "2026-10-23T09:50:31.439Z"
     }
   ],
   "sent": [

@@ -1,0 +1,15 @@
+{
+  "id": "01M5M2PM0FFRB7H8BD75V2GAJV",
+  "ts": "2026-10-23T09:50:31.439Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "test/liberators/claude.bats is dc's while dc lands the home guard's refusal strings and their assertions (vc, 23 Oct); released when dc's commit is on main."
+  }
+}

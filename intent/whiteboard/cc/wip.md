@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 09:40Z
+heartbeat_at: 2026-10-23 09:50Z
 status: active
-focus: "23 Oct: the lift committed at e4aa225, with vc for review (hash and CHANGELOG line sent); claude.bats free for dc"
+focus: "23 Oct: the lift accepted by vc (e4aa225, CHANGELOG a474ce1); nothing queued; off claude.bats until dc's hash (hold 14)"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- The lift committed at e4aa225 (lib/molt.sh molt_settings_write, molt_claude_config_dir_is, molt_claude_env_file; claude.sh _claude_processes a wrapper; claude.bats on test_helper's fake process table), on head after dc's 595347d; all tests passing under both bashes on a scratch export, a mutant per piece caught, critic-shell clean. Hash and CHANGELOG line sent to vc; claude.bats handed back to dc. Next: answer vc's review. (edited)
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- test/liberators/claude.bats is dc's while dc lands the home guard's refusal strings and their assertions (vc, 23 Oct); released when dc's commit is on main.
 
 ## Watch-outs
 
