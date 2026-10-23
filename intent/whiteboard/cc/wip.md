@@ -27,7 +27,7 @@ _(none)_
 
 - macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=.
 - In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree.
-- Run one bats suite at a time on this machine: agents.bats tests for molt agent start read the real process table, so a second run sees the first ones stand-in session (moltstart-sysadm is already running), until vc moves the stubs into test_helper.bash. Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing.
+- Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing. (edited)
 
 ## Decisions
 
