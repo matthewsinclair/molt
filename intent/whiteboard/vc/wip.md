@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 19:05Z
+heartbeat_at: 2026-10-23 20:32Z
 status: active
-focus: "23 Oct: gyges moved; 0040-0042 built, reviewed and committed, unpushed. Waiting: Utilz 2.14.2 cut END, then intent-vc's slot, then full suite both bashes, then push Molt + Molt-matts (hold 3)"
+focus: "23 Oct: 0040-0042 pushed (Molt 905305c, Molt-matts fec83d1), suite green under both bashes, CI green; nothing in flight"
 claims: [ST0006]
 ---
 
@@ -23,7 +23,7 @@ _(none)_
 
 ## Holds
 
-- No Molt bats on rhadamanth, single files included, until Molt's bats slot. Utilz 2.14.2's cut ENDed 19:44Z (utilz-vc, slot 252). intent-vc queued Molt next in the bats slot, after devbin-cc's WP-08 series (BSD then GNU, from about 20:01Z). Releases when intent-vc relays devbin-cc's END; vc then sends START with a census, runs the full suite under both bashes one at a time (Intent's cargo may run alongside, so re-run alone any timing arm that reds), sends END, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear. (edited)
+_(none)_
 
 ## Watch-outs
 
