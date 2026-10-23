@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- `liberator_verify` and `liberator_run_all` from `lib/liberator.sh`: nothing called either. `molt resleeve` and `molt doctor` run a liberator's `_check`; its own `_verify` stays, for its own use, and molt does not run it
+
 ## [0.3.0] - 2026-10-23
 
 ### Added
