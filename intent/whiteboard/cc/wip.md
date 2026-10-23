@@ -3,7 +3,7 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 08:04Z
+heartbeat_at: 2026-10-23 08:06Z
 status: active
 focus: "23 Oct: folded for hv's compact; 0038 committed at 114d6ad and with vc for review (hash and CHANGELOG line sent); lib/molt.sh held for vc's lift (hold 13)"
 claims: [ISSUE:0038]
