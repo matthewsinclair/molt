@@ -14,7 +14,7 @@ The protocol itself -- file layout, the single-writer rule, the header-block for
 | `dc` | DevX Claude       | devx       | session   | Builds the developer experience: guides, README, CHANGELOG, role contracts. Same worktree discipline as `cc`.                                                                                                  |
 | `ac` | Authoring Claude  | authoring  | session   | Authors prose for hv: briefs, structures and notes hv writes from (the blog brief, ST0006 WP07). Writes docs on main directly, no branch or worktree (hv, 21 Oct).                                             |
 
-The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent project uses the same six; Molt runs four of them for now.
+The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent project uses the same suffixes; the Here column says which Molt runs.
 
 | Suffix | Name              | Here |
 | ------ | ----------------- | ---- |
