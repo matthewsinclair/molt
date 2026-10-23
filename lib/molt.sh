@@ -146,14 +146,28 @@ molt_link_points_to() {
   molt_same_file "$target" "$expected"
 }
 
-# realpath(1) is not on every macOS; readlink -f is not on every BSD.
+# The path $1 leads to, as the disk spells it: each symlink on the way followed,
+# a relative target from its link's directory, and the directory the chain ends
+# in named by molt_disk_path, which the home guard agrees with. Shell alone, the
+# same on every platform: realpath(1) is not on every macOS, readlink -f is not
+# on every BSD, and Molt ships no Python (issue 0039). $1 comes back as it was
+# when it cannot be resolved, or when 40 links have not ended the chain.
 _molt_realpath() {
-  local p="$1"
-  if command -v realpath &>/dev/null; then
-    realpath "$p" 2>/dev/null || echo "$p"
-  else
-    python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$p" 2>/dev/null || echo "$p"
-  fi
+  local path="$1" link dir hops=0
+  [[ "$path" == /* ]] || path="$PWD/$path"
+  while [[ -L "$path" ]]; do
+    if (( ++hops > 40 )) || ! link="$(readlink "$path")"; then
+      echo "$1"
+      return 0
+    fi
+    if [[ "$link" != /* ]]; then
+      dir="${path%/*}"
+      dir="$(molt_disk_path "${dir:-/}")" || { echo "$1"; return 0; }
+      link="${dir%/}/$link"
+    fi
+    path="$link"
+  done
+  molt_disk_path "$path" || echo "$1"
 }
 
 # True when the paths $1 and $2 resolve to the same file.

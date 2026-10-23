@@ -282,6 +282,53 @@ TOML
     [ "$status" -eq 0 ]
 }
 
+# It ran python3 wherever realpath(1) was missing (issue 0039). The expected
+# path is /bin/pwd -P's, not the resolver's own.
+@test "_molt_realpath follows absolute and relative links, through a linked directory, to the file as the disk names it" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/resolve" want
+    mkdir -p "$d/dir"
+    : > "$d/dir/file"
+    ln -s "$d/dir" "$d/dirlink"
+    ln -s ../dirlink/file "$d/dir/rel"
+    ln -s "$d/dir/rel" "$d/abs"
+    want="$(cd "$d/dir" && /bin/pwd -P)/file"
+
+    run _molt_realpath "$d/abs"
+    assert_success
+    [ "$output" = "$want" ]
+    run _molt_realpath "$d/dirlink/file"
+    [ "$output" = "$want" ]
+    cd "$d"
+    run _molt_realpath abs
+    [ "$output" = "$want" ]
+}
+
+@test "_molt_realpath gives back as it was a path in a link loop" {
+    load_molt_libs
+    local d="$BATS_TEST_TMPDIR/loop"
+    mkdir -p "$d"
+    ln -s "$d/b" "$d/a"
+    ln -s "$d/a" "$d/b"
+    run _molt_realpath "$d/a"
+    assert_success
+    [ "$output" = "$d/a" ]
+}
+
+# hv, 23 Oct 2026: ship no Python in any repo. Molt is shell.
+@test "Molt ships no Python: no .py file, and no python call in what it runs" {
+    local hits
+    cd "$MOLT_ROOT"
+    run git ls-files -- '*.py'
+    assert_success
+    [ -z "$output" ]
+    # A comment may name it; a line of code may not.
+    hits="$(git grep -nIE '(^|[^[:alnum:]_./-])python[0-9.]*([^[:alnum:]_-]|$)' -- bin lib liberators templates .github |
+        grep -vE '^[^:]+:[0-9]+:[[:space:]]*#' || true)"
+    echo "$hits"
+    [ -z "$hits" ]
+}
+
 # The steps after the existence checks ran unchecked, and molt_link is called
 # inside `if` and `||`, where set -e does not apply.
 @test "molt_link fails, and does not say Linked, when it cannot make the link" {

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The Markdown formatter check runs from `"formatters": ["markdown"]` in `intent/.config/config.json`, which Intent's shipped staged-format guard reads in the pre-commit gate, so a fresh clone runs the same check as this one. It replaces a hand-wired copy of that guard in this clone's untracked `.git/hooks/pre-commit`, which no clone received and `intent doctor` reported; the copy is removed from the clone
+- `_molt_realpath`, behind `molt_same_file`, resolves in shell on every platform: it follows each symlink with plain `readlink`, a relative target from its link's directory, and names the directory the chain ends in with `molt_disk_path`, where it ran `realpath(1)` or, without one, `python3`. Molt ships no Python, and a test fails on a tracked `.py` file or a python call in `bin`, `lib`, `liberators`, `templates` or `.github` (issue 0039)
 
 ### Removed
 
