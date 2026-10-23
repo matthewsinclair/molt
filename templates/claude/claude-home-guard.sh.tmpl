@@ -76,7 +76,8 @@ MOLT_AGENTS_ROOT
 # a case-insensitive disk need not be the disk's, so /bin/pwd answers, and the
 # builtin only on a system without one. molt_disk_path in molt's lib/molt.sh
 # resolves the same way, so molt_agt_dir_fault refuses a root this guard would
-# take for HOME or for a parent of the projects.
+# take for HOME or for a parent of the projects, and molt_claude_config_dir_is
+# takes for the config dir what this guard does.
 real_dir() {
   (cd "$1" 2>/dev/null && { /bin/pwd -P 2>/dev/null || pwd -P; })
 }
@@ -85,7 +86,7 @@ here="$(real_dir "$CLAUDE_PROJECT_DIR")" || here="$CLAUDE_PROJECT_DIR"
 home="$(real_dir "$HOME")" || home="$HOME"
 
 if [ "$here" = "$home" ]; then
-  echo "launch from an agent home: molt agent list" >&2
+  echo "launch from an agent home: molt agent start <role>" >&2
   exit 2
 fi
 
@@ -99,11 +100,11 @@ esac
 if [ -n "$root" ]; then
   case "$here" in
     "$root")
-      echo "launch from an agent home, not the agents root: molt agent list" >&2
+      echo "launch from an agent home, not the agents root: molt agent start <role>" >&2
       exit 2 ;;
     "$root"/*/*)
       rest="${here#"$root"/}"
-      echo "launch from the agent home itself: cd $agt/${rest%%/*}" >&2
+      echo "launch from the agent home itself: molt agent start ${rest%%/*}" >&2
       exit 2 ;;
   esac
 fi
@@ -119,13 +120,13 @@ case "$want" in
   /*)
     have="${CLAUDE_CONFIG_DIR:-}"
     if [ -z "$have" ]; then
-      echo "this Claude Code did not get CLAUDE_CONFIG_DIR (want $want): quit it, open a new shell, or log out and in, and relaunch from the home" >&2
+      echo "this Claude Code did not get CLAUDE_CONFIG_DIR (want $want): quit it, open a new shell, or log out and in, and start it with molt agent start <role>" >&2
       exit 2
     fi
     wanted="$(real_dir "$want")" || wanted="$want"
     had="$(real_dir "$have")" || had="$have"
     if [ "$had" != "$wanted" ]; then
-      echo "this Claude Code has CLAUDE_CONFIG_DIR $have, not $want: quit it, open a new shell, or log out and in, and relaunch from the home" >&2
+      echo "this Claude Code has CLAUDE_CONFIG_DIR $have, not $want: quit it, open a new shell, or log out and in, and start it with molt agent start <role>" >&2
       exit 2
     fi ;;
 esac

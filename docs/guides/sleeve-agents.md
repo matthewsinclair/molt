@@ -332,13 +332,13 @@ Start each agent with `molt agent start`, from a shell opened after the move, as
 Once the variable is published, Molt also merges a `UserPromptSubmit` hook into the user settings, changing that key and no other, as it does for the statusLine, and the agents liberator writes the same hook into each home's `.claude/settings.json`, beside any hooks the role's profile has. The hook runs `~/.config/molt/claude-home-guard.sh`, a POSIX `sh` script that needs nothing beyond `sh`, so it does not depend on `molt` being on `PATH` when a prompt is sent. It checks the directory the session was started in, `CLAUDE_PROJECT_DIR`, which Claude Code sets on the hook's process. It never reads the hook's JSON input, whose `cwd` follows every `cd`, so a `cd` inside a command, or a worktree Claude enters, never trips it. Paths are compared by where they lead, so a symlinked spelling of `$HOME` is still `$HOME`. When the session was started in `$HOME`, the script prints this on stderr and exits 2, which blocks the prompt:
 
 ```
-launch from an agent home: molt agent list
+launch from an agent home: molt agent start <role>
 ```
 
-It blocks a session started in `MOLT_AGT_DIR` but not in an agent home itself the same way. At the agents root it prints `launch from an agent home, not the agents root: molt agent list`. Below a home, such as in its `work/`, it names the home to launch from:
+It blocks a session started in `MOLT_AGT_DIR` but not in an agent home itself the same way. At the agents root it prints `launch from an agent home, not the agents root: molt agent start <role>`. Below a home, such as in its `work/`, it names the agent whose home that is, by the name `molt agent start` takes as well as a role:
 
 ```
-launch from the agent home itself: cd <home>
+launch from the agent home itself: molt agent start <hostname>-<role>
 ```
 
 A session started in an agent home itself passes, as does one started anywhere else, so project agents are unaffected. A directory directly in `MOLT_AGT_DIR` is taken for a home, whether or not an agent is declared there. If the hook has no `CLAUDE_PROJECT_DIR` or no `HOME`, or either is not an absolute path, the script exits 1 with a line that says so, eg `claude-home-guard: the hook has no CLAUDE_PROJECT_DIR, so the launch directory was not checked`, which shows the line and blocks nothing.
@@ -346,7 +346,7 @@ A session started in an agent home itself passes, as does one started anywhere e
 The guard also blocks a session that did not get the sleeve's config dir. A Claude started from a shell opened before the move, or from an app started before you logged back in, has no `CLAUDE_CONFIG_DIR`, so it starts afresh in `$HOME`, with a second login and new `~/.claude` and `~/.claude.json`, and it never reads the user settings, which are in the config dir it missed. The home's own settings are read from the directory the session starts in, whatever config dir it uses, so the home's copy of the hook runs, and the guard lives in `~/.config/molt/`, outside any config dir, so it is there either way. Hooks get the session's own environment, so the guard sees what the session saw:
 
 ```
-this Claude Code did not get CLAUDE_CONFIG_DIR (want <config dir>): quit it, open a new shell, or log out and in, and relaunch from the home
+this Claude Code did not get CLAUDE_CONFIG_DIR (want <config dir>): quit it, open a new shell, or log out and in, and start it with molt agent start <role>
 ```
 
 A session whose `CLAUDE_CONFIG_DIR` names another directory gets `this Claude Code has CLAUDE_CONFIG_DIR <dir>, not <config dir>` and the same advice. Directories are compared by where they lead, so a symlinked spelling of the config dir passes. Such a session shows the trust dialog for the home first, since its fresh state has trusted nothing, and hooks in a project's settings run only once it is trusted. Its first prompt is then refused, but by then Claude Code has written its fresh state in `$HOME`, the login included, and `molt doctor` reports it, as below: quit the session, remove what it wrote, and start the agent again from a new shell. `molt agent start` checks the shell's `CLAUDE_CONFIG_DIR` before it starts anything, so only a launch by hand gets that far.

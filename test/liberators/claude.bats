@@ -684,7 +684,7 @@ JSON
     [ -x "$guard" ]
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$HOME" "$guard" <<< "{\"cwd\": \"$HOME/work\", \"prompt\": \"hello\"}"
     [ "$status" -eq 2 ]
-    [ "$output" = "launch from an agent home: molt agent list" ]
+    [ "$output" = "launch from an agent home: molt agent start <role>" ]
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$HOME/" "$guard" <<< '{"prompt": "a trailing slash is still home"}'
     [ "$status" -eq 2 ]
     ln -s "$HOME" "$BATS_TEST_TMPDIR/home-link"
@@ -756,10 +756,10 @@ JSON
     mkdir -p "$MOLT_AGT_DIR"
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$MOLT_AGT_DIR" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
-    [ "$output" = "launch from an agent home, not the agents root: molt agent list" ]
+    [ "$output" = "launch from an agent home, not the agents root: molt agent start <role>" ]
 }
 
-@test "the home guard refuses a session launched below an agent home, by any spelling, naming the home to launch from" {
+@test "the home guard refuses a session launched below an agent home, by any spelling, naming the agent to start" {
     # AT055 (ST0006 AC014).
     setup_moved
     run claude_install
@@ -768,11 +768,11 @@ JSON
     mkdir -p "$agent_home/work/x"
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
-    [ "$output" = "launch from the agent home itself: cd $agent_home" ]
+    [ "$output" = "launch from the agent home itself: molt agent start ${agent_home##*/}" ]
     ln -s "$agent_home/work" "$BATS_TEST_TMPDIR/work-link"
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$BATS_TEST_TMPDIR/work-link" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
-    [ "$output" = "launch from the agent home itself: cd $agent_home" ]
+    [ "$output" = "launch from the agent home itself: molt agent start ${agent_home##*/}" ]
 }
 
 # A root spelt in another letter case than the disk's is the same directory on
@@ -790,7 +790,7 @@ JSON
     assert_success
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home/work/x" "$HOME/.config/molt/claude-home-guard.sh" < /dev/null
     [ "$status" -eq 2 ]
-    [ "$output" = "launch from the agent home itself: cd $upper/kovacs-sysadm" ]
+    [ "$output" = "launch from the agent home itself: molt agent start kovacs-sysadm" ]
     export MOLT_AGT_DIR="${HOME%/*}/FAKEHOME"
     run molt_agt_dir_fault
     assert_output_contains "MOLT_AGT_DIR, ${HOME%/*}/FAKEHOME, is at or above ~: the home guard would refuse"
@@ -906,7 +906,7 @@ JSON
     run claude_install
     assert_success
     local guard="$HOME/.config/molt/claude-home-guard.sh" agent_home="$MOLT_AGT_DIR/kovacs-sysadm" shell
-    local missed="this Claude Code did not get CLAUDE_CONFIG_DIR (want $CONFIG): quit it, open a new shell, or log out and in, and relaunch from the home"
+    local missed="this Claude Code did not get CLAUDE_CONFIG_DIR (want $CONFIG): quit it, open a new shell, or log out and in, and start it with molt agent start <role>"
     mkdir -p "$agent_home"
     run env -u CLAUDE_CONFIG_DIR CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
     [ "$status" -eq 2 ]
@@ -916,7 +916,7 @@ JSON
     [ "$output" = "$missed" ]
     run env CLAUDE_CONFIG_DIR="$HOME/.claude" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
     [ "$status" -eq 2 ]
-    [ "$output" = "this Claude Code has CLAUDE_CONFIG_DIR $HOME/.claude, not $CONFIG: quit it, open a new shell, or log out and in, and relaunch from the home" ]
+    [ "$output" = "this Claude Code has CLAUDE_CONFIG_DIR $HOME/.claude, not $CONFIG: quit it, open a new shell, or log out and in, and start it with molt agent start <role>" ]
     run env CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/nowhere" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
     [ "$status" -eq 2 ]
     run env CLAUDE_CONFIG_DIR="$CONFIG" CLAUDE_PROJECT_DIR="$agent_home" "$guard" < /dev/null
