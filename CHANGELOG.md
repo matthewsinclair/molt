@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-23
+
 ### Added
 
 - `molt agent start <role> [-- <claude args>]` starts a sleeve agent in its home as `claude start --name <hostname>-<role>`, the word `start` its first prompt and what follows `--` after it, in place of molt's own process. It refuses, naming the fix and starting nothing, an agent this sleeve does not declare (listing those it does) or does not enable, one whose `[[agent]]` entry names a harness other than `claude`, a home that is not current, a shell whose `CLAUDE_CONFIG_DIR` is not the config dir the sleeve declares, compared as the home guard compares them, a Claude Code session already running under that `--name`, found in this user's whole command lines even where it is the shell's own ancestor, a process list it cannot read, and a `claude` not on PATH. A word that is one agent's name and another's role names the first. `molt agent roles` lists the roles the sleeve declares, one a line, a disabled one marked `(disabled)`; `molt agent home <role>` prints an agent's home; and `molt agent config` takes a role as well as a name, as `start` and `home` do (ST0007)
