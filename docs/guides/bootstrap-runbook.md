@@ -12,7 +12,7 @@ Steps are grouped by **liberator** (config module). Each step is tagged:
 
 ## What this covers, and what it does not
 
-**Current as at 2026-09-08. It covers 11 of the framework's 23 liberators.**
+**Current as at 2026-09-08. It covers some of the framework's liberators, not all: the two lists below name which.**
 
 Stating the gap rather than implying completeness is deliberate: a runbook that
 silently covers half the system is indistinguishable from one that covers all of
@@ -23,8 +23,8 @@ Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`,
 `desktop`, `dev-tools`, `ssh`, `intent`, `claude`.
 
 **NOT documented here** — these arrived after the Phase 1 resleeve and their
-steps have never been captured: `backup`, `brew`, `gnome-terminal`,
-`iterm2`, `local-bin`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`,
+steps have never been captured: `agents`, `backup`, `brew`, `gnome-terminal`,
+`iterm2`, `local-bin`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`,
 `web`. Read the liberator source for those; each has a `_check` that states its
 own preconditions.
 
