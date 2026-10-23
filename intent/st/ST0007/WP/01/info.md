@@ -2,7 +2,7 @@
 wp_id: WP-01
 title: molt agent start, roles and home; config takes a role
 scope: S
-status: WIP
+status: Done
 ---
 
 # WP-01: molt agent start, roles and home; config takes a role

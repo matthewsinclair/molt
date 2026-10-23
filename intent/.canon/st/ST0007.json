@@ -14,7 +14,7 @@
       "seq": 1,
       "title": "molt agent start, roles and home; config takes a role",
       "scope": "S",
-      "status": "wip",
+      "status": "done",
       "objective": "",
       "body": "Code, in `lib/agent.sh` beside `molt agent list` and `config`, and in `bin/molt`'s help:\n\n- one resolver for `start`, `home` and `config`: a role (`sysadm`) or a full name (`<host>-sysadm`), read through `molt_agents`, so the name is still derived in one place;\n- `molt agent start <role> [-- <claude args>]`: the thread's checks, then into the home and `exec claude start --name <name>` with whatever follows `--`;\n- `molt agent roles`: the declared roles, one a line, a disabled one marked `(disabled)`;\n- `molt agent home <role>`: the home's path, for `cd \"$(molt agent home sysadm)\"`.\n\nTests in `test/liberators/agents.bats`, with a stand-in `claude` on PATH that records the directory it ran in, its arguments and its `CLAUDE_CONFIG_DIR`; expected values come from the fixture, never from the code under test. CHANGELOG's Unreleased.\n",
       "preamble": ""
@@ -59,7 +59,8 @@
       "text": "The shared preamble in Molt-matts says what an agent does when its first prompt is start, and docs/guides/sleeve-agents.md starts agents with molt agent start",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "Molt b1db22d (guide's Starting an agent, README) and Molt-matts e6d5d2d, 83a2588 (the preamble's start section, approved by hv 23 Oct, and the hand-over line), read by vc against the CLI at 9c51fc3"
       }
     }
   ],
@@ -71,7 +72,7 @@
       "covers": [
         "AC001"
       ],
-      "status": "to-write"
+      "status": "green"
     },
     {
       "id": "AT002",
@@ -80,7 +81,7 @@
       "covers": [
         "AC002"
       ],
-      "status": "to-write"
+      "status": "green"
     },
     {
       "id": "AT003",
@@ -89,7 +90,7 @@
       "covers": [
         "AC002"
       ],
-      "status": "to-write"
+      "status": "green"
     },
     {
       "id": "AT004",
@@ -98,7 +99,7 @@
       "covers": [
         "AC003"
       ],
-      "status": "to-write"
+      "status": "green"
     },
     {
       "id": "AT005",
@@ -108,7 +109,7 @@
         "AC001",
         "AC003"
       ],
-      "status": "to-write"
+      "status": "green"
     },
     {
       "id": "AT006",

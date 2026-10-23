@@ -9,7 +9,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 ## DOING
 
 - [-] ST0007: molt agent start: launch a sleeve agent by its role
-  - [-] 01: molt agent start, roles and home; config takes a role
+  - [x] 01: molt agent start, roles and home; config takes a role
   - [-] 02: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
 
 ## TODO

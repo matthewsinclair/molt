@@ -15,19 +15,19 @@ title: molt agent start: launch a sleeve agent by its role
 
 ### Group AC001
 
-- AC001 molt agent start <role> runs Claude Code in the agent's home as claude start --name <host>-<role>, passing on whatever follows --; the agent's full name works as its role does -- satisfied: no (computed)
+- AC001 molt agent start <role> runs Claude Code in the agent's home as claude start --name <host>-<role>, passing on whatever follows --; the agent's full name works as its role does -- satisfied: yes (computed)
 
 ### Group AC002
 
-- AC002 molt agent start refuses, naming the fix and starting nothing, when the role is not declared (listing those that are) or not enabled, when its home is not current, when the sleeve declares a config dir and this shell's CLAUDE_CONFIG_DIR is not it, and while a session of that name runs -- satisfied: no (computed)
+- AC002 molt agent start refuses, naming the fix and starting nothing, when the role is not declared (listing those that are) or not enabled, when its home is not current, when the sleeve declares a config dir and this shell's CLAUDE_CONFIG_DIR is not it, and while a session of that name runs -- satisfied: yes (computed)
 
 ### Group AC003
 
-- AC003 molt agent roles lists the roles this sleeve declares, one a line, a disabled one marked; molt agent home <role> prints the home; molt agent config takes a role as well as a name; all three run through bin/molt -- satisfied: no (computed)
+- AC003 molt agent roles lists the roles this sleeve declares, one a line, a disabled one marked; molt agent home <role> prints the home; molt agent config takes a role as well as a name; all three run through bin/molt -- satisfied: yes (computed)
 
 ### Group AC004
 
-- AC004 (non-test) The shared preamble in Molt-matts says what an agent does when its first prompt is start, and docs/guides/sleeve-agents.md starts agents with molt agent start -- satisfied: no
+- AC004 (non-test) The shared preamble in Molt-matts says what an agent does when its first prompt is start, and docs/guides/sleeve-agents.md starts agents with molt agent start -- evidence: Molt b1db22d (guide's Starting an agent, README) and Molt-matts e6d5d2d, 83a2588 (the preamble's start section, approved by hv 23 Oct, and the hand-over line), read by vc against the CLI at 9c51fc3 -- satisfied: yes
 
 ### Group AT001
 
@@ -73,23 +73,23 @@ _(no tests in this group)_
 
 ### Group AT001
 
-- AT001 `test/liberators/agents.bats` -- covers AC001 -- status: to-write
+- AT001 `test/liberators/agents.bats` -- covers AC001 -- status: green
 
 ### Group AT002
 
-- AT002 `test/liberators/agents.bats` -- covers AC002 -- status: to-write
+- AT002 `test/liberators/agents.bats` -- covers AC002 -- status: green
 
 ### Group AT003
 
-- AT003 `test/liberators/agents.bats` -- covers AC002 -- status: to-write
+- AT003 `test/liberators/agents.bats` -- covers AC002 -- status: green
 
 ### Group AT004
 
-- AT004 `test/liberators/agents.bats` -- covers AC003 -- status: to-write
+- AT004 `test/liberators/agents.bats` -- covers AC003 -- status: green
 
 ### Group AT005
 
-- AT005 `test/liberators/agents.bats` -- covers AC001, AC003 -- status: to-write
+- AT005 `test/liberators/agents.bats` -- covers AC001, AC003 -- status: green
 
 ### Group AT006
 
