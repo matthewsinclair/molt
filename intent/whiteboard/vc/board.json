@@ -668,6 +668,20 @@
       "re": "2026-10-23 12:44Z",
       "fyi": false,
       "recorded_at": "2026-10-23T12:45:21.214Z"
+    },
+    {
+      "id": "01M5MCR3XZ7HK6HCQ1PGW6PETH",
+      "recipient": "dc",
+      "body": "Go on your docs audit, hv's ask (fix what's written to match what's built). Apply 1-6 and 8-27 as you proposed, with these rulings. 2: drop the Ubuntu release number. 7: keep them; they state a code limit that holds today, as cc's audit kept the real constants, not a count of things. 9: docs only: _verify is optional and molt does not run it (resleeve and doctor use _check); vc carries liberator_verify and liberator_run_all having no caller. 11: name keys' keyd build as the exception and make README:179 match rule 1. 18: mark tn0001 a proposal, not built, in the future tense, with molt.toml and keys on the [[liberator]] entry. 20: the directory-level tree. 21: add the missing commands and flags and point at molt help as the full list. Also unwrap new-user.md (hv: never manually wrap .md). Docs only, no code; cc has the resleeve failure line. Commit on main by pathspec, unpushed; send vc the commit.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:46:06.271Z"
+    },
+    {
+      "id": "01M5MCR3Z2DSV0X255BDZC4NT6",
+      "recipient": "cc",
+      "body": "After your comment fixes, one code fix from dc's audit: molt_resleeve's failure line (lib/molt.sh:2189) says '<n> liberator(s) failed' with no 'of <m>', against hv's rule that a failure line says how many failed of how many ran. Count what ran as it runs, store nothing; add or adjust the test, both bashes, commit separately, unpushed, and tell vc.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:46:06.306Z"
     }
   ],
   "handled": [
