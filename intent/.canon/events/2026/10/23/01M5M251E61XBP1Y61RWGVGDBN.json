@@ -1,0 +1,16 @@
+{
+  "id": "01M5M251E61XBP1Y61RWGVGDBN",
+  "ts": "2026-10-23T09:40:55.366Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 14,
+    "text": "The lift committed at e4aa225 (lib/molt.sh molt_settings_write, molt_claude_config_dir_is, molt_claude_env_file; claude.sh _claude_processes a wrapper; claude.bats on test_helper's fake process table), on head after dc's 595347d; all tests passing under both bashes on a scratch export, a mutant per piece caught, critic-shell clean. Hash and CHANGELOG line sent to vc; claude.bats handed back to dc. Next: answer vc's review."
+  }
+}

@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 08:56Z
+heartbeat_at: 2026-10-23 09:40Z
 status: active
-focus: "23 Oct: 0038 closed (8914dfe); building vc's lift in a scratch clone, to apply on head after dc's lib/molt.sh commit (doing 14)"
+focus: "23 Oct: the lift committed at e4aa225, with vc for review (hash and CHANGELOG line sent); claude.bats free for dc"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- The lift (vc, 23 Oct): (1) _claude_processes a thin wrapper over molt_claude_processes, _CLAUDE_PROCESS_PATTERN gone; (2) claude.bats pgrep/ps stubs onto test_helper's install_fake_process_table/fake_processes; (3) _claude_settings_write to lib/molt.sh as molt_settings_write, used by claude.sh merge and repoint and agents.sh _agents_settings_set (validate before the write); (4) one CLAUDE_CONFIG_DIR-vs-declared comparison in lib/molt.sh for claude.sh faults and molt_agent_start_fault, and one env.sh path owner. Built in a scratch clone; applied on head after dc's lib/molt.sh commit lands (dc tells cc). One commit; hash and CHANGELOG line to vc.
+- The lift committed at e4aa225 (lib/molt.sh molt_settings_write, molt_claude_config_dir_is, molt_claude_env_file; claude.sh _claude_processes a wrapper; claude.bats on test_helper's fake process table), on head after dc's 595347d; all tests passing under both bashes on a scratch export, a mutant per piece caught, critic-shell clean. Hash and CHANGELOG line sent to vc; claude.bats handed back to dc. Next: answer vc's review. (edited)
 
 ## TODO
 
