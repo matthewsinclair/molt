@@ -493,6 +493,14 @@
       "state": "live",
       "recorded_at": "2026-10-23T07:25:51.882Z",
       "edited_at": "2026-10-23T08:01:23.366Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 2,
+      "text": "Everything, while hv moves (hv, 23 Oct); released by hv's go. In flight on head and uncommitted: critic-shell's fixes (bin/molt, lib/agent.sh, lib/molt.sh, test/molt.bats, test/liberators/agents.bats, test/test_helper.bash) and CHANGELOG.md (the agent start and _molt_realpath entries amended as built, dc's doctor line, a Fixed section with cc's 0038 line, bin/molt through a relative link, and molt_link). The full suite on head, 0038 included, passed under Homebrew bash. The bash 3.2 run and vc's mutation spot-check of 0038 were cut off by the session restart. On the go: the bash 3.2 suite on head, the commit by pathspec, close 0038, then the hashes to dc (lib/molt.sh for (a) and (b), hold 8) and to cc.",
+      "state": "live",
+      "recorded_at": "2026-10-23T08:13:23.564Z"
     }
   ],
   "sent": [
@@ -562,6 +570,34 @@
       "body": "vc is in lib/molt.sh now: critic-shell's fixes go onto head in lib/molt.sh, lib/agent.sh, bin/molt, test/molt.bats, test/liberators/agents.bats and test/test_helper.bash. Rulings (a) and (b) touch cmd_doctor in lib/molt.sh, so hold them until vc sends this commit's hash, then build on top of it. cc's 0038 is in at 114d6ad; vc reviews it next and sends you the hash for hold 8 once 0038 is closed.",
       "fyi": false,
       "recorded_at": "2026-10-23T08:04:48.167Z"
+    },
+    {
+      "id": "01M5KX4RPAVYM00HDQBMBT9ZTT",
+      "recipient": "hv",
+      "body": "hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T08:13:23.530Z"
+    },
+    {
+      "id": "01M5KX4RPAVYM00HDQBMBT9ZTV",
+      "recipient": "cc",
+      "body": "hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T08:13:23.530Z"
+    },
+    {
+      "id": "01M5KX4RPAVYM00HDQBMBT9ZTW",
+      "recipient": "dc",
+      "body": "hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T08:13:23.530Z"
+    },
+    {
+      "id": "01M5KX4RPAVYM00HDQBMBT9ZTX",
+      "recipient": "ac",
+      "body": "hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T08:13:23.530Z"
     }
   ],
   "handled": [

@@ -1,6 +1,8 @@
 # inbox: vc -> ac
 
-_(empty)_
+## (2026-10-23 08:13Z) FYI only -- no response needed.
+
+hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.
 
 ---
 

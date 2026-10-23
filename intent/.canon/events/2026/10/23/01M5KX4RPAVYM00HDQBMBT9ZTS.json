@@ -1,0 +1,20 @@
+{
+  "id": "01M5KX4RPAVYM00HDQBMBT9ZTS",
+  "ts": "2026-10-23T08:13:23.530Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.announce",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.",
+    "recipients": [
+      "hv",
+      "cc",
+      "dc",
+      "ac"
+    ]
+  }
+}
