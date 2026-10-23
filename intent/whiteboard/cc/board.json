@@ -5,7 +5,7 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-23T08:06:32.128Z",
+    "heartbeat_at": "2026-10-23T08:54:02.421Z",
     "status": "active",
     "focus": "23 Oct: folded for hv's compact; 0038 committed at 114d6ad and with vc for review (hash and CHANGELOG line sent); lib/molt.sh held for vc's lift (hold 13)",
     "claims": [
@@ -412,6 +412,16 @@
       "id": "01M5KRVBW9ANTR17D96AWSFEM3",
       "sender": "vc",
       "handled_at": "2026-10-23T08:04:45.017Z"
+    },
+    {
+      "id": "01M5KX4RPAVYM00HDQBMBT9ZTV",
+      "sender": "vc",
+      "handled_at": "2026-10-23T08:55:25.686Z"
+    },
+    {
+      "id": "01M5KX7VDPRCCPSVM99741FVY9",
+      "sender": "vc",
+      "handled_at": "2026-10-23T08:55:25.686Z"
     }
   ]
 }
