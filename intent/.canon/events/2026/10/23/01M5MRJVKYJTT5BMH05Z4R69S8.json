@@ -1,0 +1,15 @@
+{
+  "id": "01M5MRJVKYJTT5BMH05Z4R69S8",
+  "ts": "2026-10-23T16:12:56.830Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**gyges' move handed to rhadamanth-sysadm (hv, 23 Oct), sent live by SendMessage:** todos 2, 3 (less the Gtools estate deploy, gtools-vc's), 5 and 22's gyges part are its to run, through gyges-infra, once Tailscale is on. vc's part: answer its questions, push anything for Molt's upstream, and close those todos when it reports what landed."
+  }
+}

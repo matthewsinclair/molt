@@ -531,6 +531,14 @@
       "text": "**Every other sleeve's Molt clone (gyges through gyges-infra, kovacs through kovacs-sysadm, farcaster, pihole), at its next resync:** opt into the tracked gate (bef8f14, pushed 23 Oct): `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done.",
       "state": "live",
       "recorded_at": "2026-10-23T14:43:00.240Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 23,
+      "text": "**gyges' move handed to rhadamanth-sysadm (hv, 23 Oct), sent live by SendMessage:** todos 2, 3 (less the Gtools estate deploy, gtools-vc's), 5 and 22's gyges part are its to run, through gyges-infra, once Tailscale is on. vc's part: answer its questions, push anything for Molt's upstream, and close those todos when it reports what landed.",
+      "state": "live",
+      "recorded_at": "2026-10-23T16:12:56.830Z"
     }
   ],
   "sent": [
