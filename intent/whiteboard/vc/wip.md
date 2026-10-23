@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 21:11Z
-status: paused
+heartbeat_at: 2026-10-23 21:46Z
+status: active
 focus: "23 Oct end of day: everything pushed, CI green, nothing in flight; hv's backup waits until hv is home"
 claims: [ST0006]
 ---
