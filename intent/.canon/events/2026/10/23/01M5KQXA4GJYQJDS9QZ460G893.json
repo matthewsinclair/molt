@@ -1,0 +1,16 @@
+{
+  "id": "01M5KQXA4GJYQJDS9QZ460G893",
+  "ts": "2026-10-23T06:41:56.368Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 5,
+    "text": "**gyges, next time Tailscale is on (hv, 20 Oct), through gyges-infra:** (1) set gyges' utilz entry to `source = \"brew\"` and run molt doctor (Molt ST0005 WP03; hv agreed brew); (2) resync its Molt and Molt-matts clones onto the purged histories (nothing local, fetch, `reset --hard`, reflog expire, gc; Molt main fe17190, Molt-matts main e567a83 or later); (3) check its Claude Code attribution config, the user settings' attribution keys and the CLAUDE.md Git Commits rule, as kovacs now has; (4) if its Molt clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: since 22 Oct Molt's config.json declares `formatters: [markdown]` and the shipped guard runs the check, so the stanza is a duplicate doctor reports (same for kovacs, through kovacs-sysadm); (5) its move, by the WP04 runbook's gyges section (ST0006 closed 23 Oct with this carried): once issue 0038 has landed, check its user settings name nothing under `~/.claude/` by path, then declare MOLT_CLAUDE_CONFIG_DIR, quit every Claude and Chrome, `molt upgrade` with hv at the sudo prompt for the floor, and where a logout is not on, `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.molt.claude-config-dir.plist` (rhadamanth, 23 Oct); gyges-infra becomes gyges-sysadm, started with `molt agent start sysadm` (ST0007)."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "01M5KQXAAWMBRE5X92T80N74R3",
+  "ts": "2026-10-23T06:41:56.572Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 20,
+    "text": "**hv's open call, from vc's 23 Oct boot:** confirm or overrule Intent 0612's ruling, which intent-vc recorded on vc's no-objection under hv's pen (todo 18). The boot's other three went ahead on hv's go of 23 Oct: the two overtaken vc->hv messages are cleared, `.claude/restart.md`'s Nodes section points at the README roster, and the sleeve agents' wake step became ST0007, `molt agent start`."
+  }
+}

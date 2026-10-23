@@ -1,0 +1,15 @@
+{
+  "id": "01M5KQXA6YKRMJ6S2FWZ34K4G6",
+  "ts": "2026-10-23T06:41:56.446Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "**A hook whose script is missing blocks every call it guards.** The interpreter exits 2 when it cannot open its script (python3 does), and 2 is a PreToolUse hook's block code, so the hook fails closed whatever fail-open logic the script itself carries. On rhadamanth's move (23 Oct) a hand-installed hook named its script under `~/.claude/` by path; the script moved and the line did not, and every Bash call in every session was refused until the line was repointed. Before a move, check the user settings for paths under `~/.claude/` (issue 0038)."
+  }
+}
