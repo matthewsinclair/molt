@@ -2,10 +2,10 @@
 node: cc
 name: Control Claude
 role: control
-session_id: 3c8f03ce-1074-4a24-b1bd-4c5c9ab43a51
-heartbeat_at: 2026-10-22 17:04Z
+session_id: 7ad99fa6-61b1-401c-a540-d5fa8e1635bd
+heartbeat_at: 2026-10-23 05:16Z
 status: active
-focus: "22 Oct: idle after v0.2.0; 0015 and 0035 merged and closed, worktrees removed; nothing queued"
+focus: "23 Oct: booted and holding for hv; nothing in flight, nothing claimed; ready for the quit call"
 claims: []
 ---
 
