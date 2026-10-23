@@ -22,6 +22,7 @@ _(none)_
 ## Holds
 
 - vc's items 2 and 3 (23 Oct, on head): the sleeve-agents guide's move section and doctor table for what issue 0038 changes, read from cc's code as built; then the home guard's refusals name molt agent start as the way back in (templates/claude/claude-home-guard.sh.tmpl, its claude.bats assertions, the guide's quotes of them), message strings only, claude.bats under both bashes, a CHANGELOG line sent to vc. Released when cc's 0038 commit is on main (vc sends the hash).
+- vc's rulings (a) and (b) on molt doctor (23 Oct): (a) the git case sensitivity check passes where each repo's core.ignorecase matches its disk, with the git mv -f note where the disk folds case, and warns only where it does not, naming the fix; (b) a pass line carries no count, and a failure line says <n> of <m> and names them (liberators, enabled liberators), the guide's quote of the not installed: line following. Built and tested meanwhile in a scratch clone, never in head's lib/molt.sh. Released when vc's critic-fixes commit is on main (vc sends the hash); then rebase onto it, both bashes on head, commit by pathspec, CHANGELOG lines to vc.
 
 ## Watch-outs
 

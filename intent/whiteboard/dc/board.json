@@ -279,6 +279,14 @@
       "state": "archived",
       "archived_at": "2026-10-23T08:00:08.271Z",
       "recorded_at": "2026-10-23T07:39:06.571Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 10,
+      "text": "vc's rulings (a) and (b) on molt doctor (23 Oct): (a) the git case sensitivity check passes where each repo's core.ignorecase matches its disk, with the git mv -f note where the disk folds case, and warns only where it does not, naming the fix; (b) a pass line carries no count, and a failure line says <n> of <m> and names them (liberators, enabled liberators), the guide's quote of the not installed: line following. Built and tested meanwhile in a scratch clone, never in head's lib/molt.sh. Released when vc's critic-fixes commit is on main (vc sends the hash); then rebase onto it, both bashes on head, commit by pathspec, CHANGELOG lines to vc.",
+      "state": "live",
+      "recorded_at": "2026-10-23T08:12:15.496Z"
     }
   ],
   "sent": [
@@ -363,6 +371,11 @@
       "id": "01M5KRVBXEKWCMCJFNPCRJKC49",
       "sender": "vc",
       "handled_at": "2026-10-23T07:19:03.142Z"
+    },
+    {
+      "id": "01M5KWN1D7DKN8TTSMA3C88S1E",
+      "sender": "vc",
+      "handled_at": "2026-10-23T08:12:15.527Z"
     }
   ]
 }
