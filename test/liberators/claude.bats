@@ -1,11 +1,13 @@
 #!/usr/bin/env bats
 # claude.bats — claude liberator (keybindings, rules, ccstatusline layout,
-# statusLine; and, on a sleeve that declares MOLT_CLAUDE_CONFIG_DIR, the config
-# dir, the one-time move, its publication and the home guard: ST0006)
+# statusLine, attribution; and, on a sleeve that declares
+# MOLT_CLAUDE_CONFIG_DIR, the config dir, the one-time move, its publication
+# and the home guard: ST0006)
 
 load "../test_helper.bash"
 
 STATUSLINE='{"type":"command","command":"npx -y ccstatusline@latest","padding":0}'
+ATTRIBUTION='{"commit":"(C) someone@example.com","pr":"(C) someone@example.com","sessionUrl":false}'
 
 setup_claude() {
     load_liberator claude
@@ -111,6 +113,54 @@ JSON
     run claude_verify
     assert_failure
     assert_output_contains "VERIFY FAIL: ~/.claude/settings.json has a different statusLine"
+}
+
+# Issue 0040: attribution was hand-set per sleeve, and a sleeve without it
+# writes AI attribution into history.
+@test "claude_check and claude_verify name an attribution the settings do not carry" {
+    setup_claude
+    echo "$ATTRIBUTION" > "$TEST_USER_REPO/config/claude/attribution.json"
+    echo "{\"statusLine\": $STATUSLINE}" > "$HOME/.claude/settings.json"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.claude/settings.json has no attribution"
+    run claude_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: ~/.claude/settings.json has no attribution"
+}
+
+@test "claude_install writes the attribution and leaves every other key alone; check passes" {
+    setup_claude
+    echo "$ATTRIBUTION" > "$TEST_USER_REPO/config/claude/attribution.json"
+    cat > "$HOME/.claude/settings.json" <<'JSON'
+{
+  "permissions": { "allow": ["Bash(ls:*)"] },
+  "hooks": { "Stop": [] },
+  "includeCoAuthoredBy": false
+}
+JSON
+    local others
+    others="$(jq -S 'del(.statusLine, .attribution)' "$HOME/.claude/settings.json")"
+    run claude_install
+    assert_success
+    [ "$(jq -S 'del(.statusLine, .attribution)' "$HOME/.claude/settings.json")" = "$others" ]
+    [ "$(jq -cS .attribution "$HOME/.claude/settings.json")" = "$(jq -cS . <<<"$ATTRIBUTION")" ]
+    run claude_check
+    assert_success
+}
+
+@test "claude_check and claude_verify flag an attribution that differs" {
+    setup_claude
+    echo "$ATTRIBUTION" > "$TEST_USER_REPO/config/claude/attribution.json"
+    claude_install >/dev/null
+    jq '.attribution.sessionUrl = true' "$HOME/.claude/settings.json" > "$BATS_TEST_TMPDIR/s.json"
+    mv "$BATS_TEST_TMPDIR/s.json" "$HOME/.claude/settings.json"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.claude/settings.json has a different attribution"
+    run claude_verify
+    assert_failure
+    assert_output_contains "VERIFY FAIL: ~/.claude/settings.json has a different attribution"
 }
 
 @test "claude_check and claude_verify flag a broken ccstatusline link" {

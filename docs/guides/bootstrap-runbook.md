@@ -340,6 +340,10 @@ Claude Code configuration.
 - Layout: `molt-{user}/config/ccstatusline/settings.json`, linked to `~/.config/ccstatusline/settings.json`. kovacs linked it by hand on 15 Oct 2026, before the liberator managed it, and the liberator adopts that link as it stands.
 - Command: `molt-{user}/config/claude/statusline.json` is written into the `statusLine` key of `settings.json` in Claude Code's config dir (`~/.claude` until the sleeve moves its state). No other key is touched, and the file is never linked: it holds each sleeve's own permissions, hooks and plugins.
 
+### 12.3 Claude attribution [agnostic]
+
+- `molt-{user}/config/claude/attribution.json` is written into the `attribution` key of the same `settings.json`, the same way: it sets the trailer Claude Code adds to commits and pull requests, and `sessionUrl`. No other key is touched. `includeCoAuthoredBy` is not written: the `attribution` object supersedes it.
+
 ---
 
 ## Config Symlink Summary

@@ -28,17 +28,21 @@ _claude_links() {
 # settings.json in the config dir is never linked: it holds each sleeve's own
 # permissions, hooks and plugins. Molt writes its own values into it and
 # leaves every other key as it was: the statusLine, from the user repo's
-# config/claude/statusline.json when it has one, and, on a sleeve that declares
-# its config dir, the hook that refuses a launch in $HOME. Each is named by a
-# label for messages, a file holding the JSON object molt writes, and two jq
-# filters with that object bound to $want: one reads the value as settings.json
-# holds it, null when it holds none, and one writes it in. jq -S compares, so
-# key order and layout are not differences; this liberator checks for jq
-# itself.
+# config/claude/statusline.json when it has one, the attribution Claude Code
+# writes into commits and pull requests, from config/claude/attribution.json
+# when it has one, and, on a sleeve that declares its config dir, the hook that
+# refuses a launch in $HOME. Each is named by a label for messages, a file
+# holding the JSON object molt writes, and two jq filters with that object
+# bound to $want: one reads the value as settings.json holds it, null when it
+# holds none, and one writes it in. jq -S compares, so key order and layout are
+# not differences; this liberator checks for jq itself.
 
 _CLAUDE_STATUSLINE_GET='.statusLine'
 # shellcheck disable=SC2016 # $want is jq's, not the shell's
 _CLAUDE_STATUSLINE_SET='.statusLine = $want'
+_CLAUDE_ATTRIBUTION_GET='.attribution'
+# shellcheck disable=SC2016 # $want is jq's, not the shell's
+_CLAUDE_ATTRIBUTION_SET='.attribution = $want'
 # The hook's entry and filters are molt_claude_hook_entry, MOLT_CLAUDE_HOOK_GET
 # and MOLT_CLAUDE_HOOK_SET in lib/molt.sh: the agents liberator writes the same
 # entry into each home's settings (issue 0030).
@@ -47,6 +51,13 @@ _CLAUDE_STATUSLINE_SET='.statusLine = $want'
 _claude_statusline() {
   if [[ -f "$1/config/claude/statusline.json" ]]; then
     echo "$1/config/claude/statusline.json"
+  fi
+}
+
+# The attribution the user repo $1 declares, as a file, when it declares one.
+_claude_attribution() {
+  if [[ -f "$1/config/claude/attribution.json" ]]; then
+    echo "$1/config/claude/attribution.json"
   fi
 }
 
@@ -660,11 +671,15 @@ _claude_report_published_faults() {
 # $3 declares that are not in place in the config dir, and the home-launch hook
 # too when $4 is "yes". Returns non-zero when it reported any.
 _claude_report_config_faults() {
-  local log="$1" prefix="$2" user_repo="$3" guarded="$4" statusline ok=0
+  local log="$1" prefix="$2" user_repo="$3" guarded="$4" statusline attribution ok=0
   molt_report_link_faults "$log" "$prefix" "$(_claude_links "$user_repo")" || ok=1
   statusline="$(_claude_statusline "$user_repo")"
   if [[ -n "$statusline" ]]; then
     _claude_report_settings_fault "$log" "$prefix" statusLine "$statusline" "$_CLAUDE_STATUSLINE_GET" || ok=1
+  fi
+  attribution="$(_claude_attribution "$user_repo")"
+  if [[ -n "$attribution" ]]; then
+    _claude_report_settings_fault "$log" "$prefix" attribution "$attribution" "$_CLAUDE_ATTRIBUTION_GET" || ok=1
   fi
   if [[ "$guarded" == "yes" ]]; then
     _claude_report_settings_fault "$log" "$prefix" "home-launch hook" "$(molt_claude_hook_entry)" "$MOLT_CLAUDE_HOOK_GET" || ok=1
@@ -755,14 +770,14 @@ claude_check() {
 }
 
 claude_install() {
-  local user_repo dir links statusline
+  local user_repo dir links statusline attribution
   user_repo="$(molt_find_user_repo)" || return 1
 
   if ! dir="$(_claude_declared_dir)"; then
     molt_error "claude: $dir"
     return 1
   fi
-  # On a refusal nothing below runs either: the links, statusLine and hook would
+  # On a refusal nothing below runs either: the links, settings and hook would
   # land in a ~/.claude that is about to move, or in the config dir the move
   # must find empty. Nor after a move whose paths could not be rewritten: the
   # run fails there, and the next one writes them.
@@ -778,13 +793,17 @@ claude_install() {
 
   links="$(_claude_links "$user_repo")"
   statusline="$(_claude_statusline "$user_repo")"
-  if [[ -z "$links" && -z "$statusline" && -z "$dir" ]]; then
+  attribution="$(_claude_attribution "$user_repo")"
+  if [[ -z "$links" && -z "$statusline" && -z "$attribution" && -z "$dir" ]]; then
     molt_warn "claude: nothing to manage -- $user_repo/config has no Claude Code config"
   fi
 
   molt_link_all "$links" || return 1
   if [[ -n "$statusline" ]]; then
     _claude_settings_merge statusLine "$statusline" "$_CLAUDE_STATUSLINE_GET" "$_CLAUDE_STATUSLINE_SET" || return 1
+  fi
+  if [[ -n "$attribution" ]]; then
+    _claude_settings_merge attribution "$attribution" "$_CLAUDE_ATTRIBUTION_GET" "$_CLAUDE_ATTRIBUTION_SET" || return 1
   fi
   if [[ -n "$dir" ]]; then
     _claude_settings_merge "home-launch hook" "$(molt_claude_hook_entry)" "$MOLT_CLAUDE_HOOK_GET" "$MOLT_CLAUDE_HOOK_SET" || return 1
