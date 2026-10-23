@@ -127,7 +127,8 @@
       "kind": "watchout",
       "seq": 12,
       "text": "`molt doctor`'s git case sensitivity check (`core.ignorecase=true`) is a **standing condition on macOS, not a defect**. The check says so itself. Do not set it false to clear the warning.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T09:12:20.137Z",
       "recorded_at": "2026-09-21T15:40:58.246Z",
       "edited_at": "2026-10-23T07:51:03.222Z"
     },
