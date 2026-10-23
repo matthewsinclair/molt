@@ -23,7 +23,7 @@ _(none)_
 
 ## Holds
 
-- No Molt bats suite or build on rhadamanth while Utilz 2.14.2 is cut (utilz-vc, hv's word, 23 Oct). intent-vc's build ended 18:41Z; it asks to be asked before any heavy run. Releases when utilz-vc sends molt-vc the cut's END and intent-vc clears a slot; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear. (edited)
+- No Molt bats at all on rhadamanth, not even a single bats file, while Utilz 2.14.2 is dry-run and cut (utilz-vc, 19:09Z: slot 251, utilz-dc's dry run with a 3600 s kill timeout, then hv's cut; its wrapper counts every bats process on the host). Releases when utilz-vc sends molt-vc the cut's END by name and intent-vc clears a slot; vc then runs the full suite under both bashes, pushes Molt and Molt-matts (0040 to 0042: Molt 2cfb1b4 431dc10 066305c 4af30b0 8e58acc; Molt-matts 3220359 fec83d1), and gives dc and cc the all-clear. (edited)
 
 ## Watch-outs
 
