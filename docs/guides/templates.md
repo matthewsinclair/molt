@@ -1,20 +1,20 @@
 # Template System
 
-Some config files need per-instance values — SSH key names, font families, project paths. MOLT's template system renders `.tmpl` files using `envsubst` with instance-specific variables.
+Some config files need per-instance values — SSH key names, font families, project paths. MOLT's template system renders `.tmpl` files using `envsubst` with instance-specific variables. Only `MOLT_*` variables are substituted; any other `$VAR` is left as written.
 
 ## How it works
 
-1. You create a template file (eg `config/ssh/config.tmpl`) with `${VARIABLE}` placeholders
+1. You create a template file (eg `config/ssh/config.tmpl`) with `${MOLT_*}` placeholders
 2. Each instance defines its variables in `instances/{hostname}/vars.sh`
 3. During resleeve, `molt_render` substitutes the variables and writes the rendered file
 
 ## Template files
 
-Template files are regular config files with `envsubst`-style variable placeholders:
+Template files are regular config files with `envsubst`-style `${MOLT_*}` placeholders:
 
 ```
 # config/ssh/config.tmpl
-Host github.com-{github}
+Host github.com-you
   HostName github.com
   User git
   IdentityFile ~/.ssh/${MOLT_SSH_KEY}
@@ -82,8 +82,9 @@ When `molt_render` writes a file, it also creates a `.molt-rendered` marker file
 - The source template path
 - The timestamp of rendering
 - A `digest` line: the SHA-256 of the template concatenated with the instance `vars.sh`
+- An `output` line: the SHA-256 of the file as molt wrote it
 
-The marker lets `molt doctor` and liberator `_check` functions distinguish rendered files from manually-created ones, and the digest lets them tell whether the rendered file still matches what it was rendered from.
+The marker lets `molt doctor` and liberator `_check` functions distinguish rendered files from manually-created ones, and the digest lets them tell whether the rendered file still matches what it was rendered from. The output hash lets the next render tell a hand edit from molt's own work: a file still as molt wrote it is replaced without a backup, and any other is backed up first.
 
 ## Detecting stale renders
 
@@ -126,7 +127,7 @@ Anything _below_ the marker is molt's to own and will be replaced. Content that 
 
 ## Graceful degradation
 
-If `vars.sh` doesn't exist for the current instance, `molt_render` warns and renders with environment variables only. Any `${VARIABLE}` without a value is replaced with an empty string — so templates still work, just with blanks where instance-specific values would go.
+If `vars.sh` doesn't exist for the current instance, `molt_render` warns and renders with environment variables only. Only the `MOLT_*` variables that `vars.sh` or the environment exports are substituted: any other `${...}`, and a `MOLT_*` variable nothing sets, is left in the rendered file as written, so a missing instance value shows up as its own placeholder. A `vars.sh` that exists but cannot be read, does not parse, or stops before its end when sourced is refused, and nothing is rendered.
 
 ## Permission handling
 

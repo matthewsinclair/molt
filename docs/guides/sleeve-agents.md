@@ -29,7 +29,7 @@ Physical machines take their names from the Hyperion Cantos: rhadamanth, gyges, 
 
 ### Project agents
 
-A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. The six suffixes below are the convention for Intent projects, named on 21 Oct 2026. Molt's whiteboard roster, [`intent/whiteboard/README.md`](../../intent/whiteboard/README.md), is the record, and this table repeats it:
+A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. The suffixes below are the convention for Intent projects, named on 21 Oct 2026. Molt's whiteboard roster, [`intent/whiteboard/README.md`](../../intent/whiteboard/README.md), is the record, and this table repeats it:
 
 | Suffix | Name              |
 | ------ | ----------------- |
@@ -50,7 +50,7 @@ Its content root is the directory Gtools registers as `GTOOLS_ESTATE` and deploy
 
 ## Roles
 
-A role is a directory under your config repo's `config/agents/roles/`, so the set is yours to define. The convention is three roles, the same on every sleeve:
+A role is a directory under your config repo's `config/agents/roles/`, so the set is yours to define. The convention is these roles, the same on every sleeve:
 
 | Role     | For                          | Sandbox                     |
 | -------- | ---------------------------- | --------------------------- |
@@ -60,7 +60,7 @@ A role is a directory under your config repo's `config/agents/roles/`, so the se
 
 `sysadm` may change the machine, which is why it cannot run sandboxed. `ops` observes and diagnoses, and writes only inside its home. In `ops` and `docs` the sandbox's escape hatches are closed, as [Fence and wall](#fence-and-wall) explains. Every agent's work goes in its home's `work/` directory, while its session starts in the home itself (see [Starting an agent](#starting-an-agent)). What each role may and may not touch is set out in its contract, `config/agents/roles/<role>/AGENTS.md.tmpl`, and its permission profile beside it. What every sleeve agent shares, such as its home, how to start in it and what to do when started, is in one preamble, `config/agents/AGENTS.md.tmpl`.
 
-## Three layers
+## The layers
 
 | Layer         | Where                                             | Owned by       | Holds                                                                                                                                                           |
 | ------------- | ------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -72,7 +72,7 @@ The agent home is both the agent's config and the directory it runs in. Claude C
 
 ### What a session in the home reads
 
-A session started in a home reads four layers of instructions, widest first:
+A session started in a home reads these layers of instructions, widest first:
 
 | Layer      | File                                                                          | Carries                                                                                                                                           |
 | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -245,7 +245,7 @@ A sleeve opts in by declaring `MOLT_CLAUDE_CONFIG_DIR` in its `instances/<hostna
 export MOLT_CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/claude"
 ```
 
-Until it does, the sleeve keeps today's behaviour: no move, no env or GUI file, no `$HOME` hook. Of what this thread adds, only the user-scope links described above are made either way; the links and the statusLine the claude liberator made before are made as they were. Once it does, the next `molt upgrade` or `molt resleeve` runs the move, so declare it when the sleeve is ready to move, and run that upgrade as the next section says.
+Until it does, the sleeve keeps today's behaviour: no move, no env or GUI file, no `$HOME` hook. Of what sleeve agents add, only the user-scope links described above are made either way; the links and the statusLine the claude liberator made before are made as they were. Once it does, the next `molt upgrade` or `molt resleeve` runs the move, so declare it when the sleeve is ready to move, and run that upgrade as the next section says.
 
 The value must be a path Molt can write unchanged into each file that publishes it. It must be absolute and canonical, with no trailing slash, no `//` and no `.` or `..` component. It must hold no character those files read as syntax: either quote, `$`, a backquote, a backslash, `<`, `>`, `&` or a line break. It must not end in whitespace, which environment.d strips. It must be a directory of its own, not `$HOME`, `~/.claude` or anything under it. `MOLT_AGT_DIR` must be an agents root Molt accepts, as [Declaring an agent](#declaring-an-agent) sets out, because the home-launch guard is rendered with it. A `vars.sh` that cannot be read, does not parse, or stops before its end when sourced is refused as well. In each case the claude liberator fails before it moves or writes anything, with a line that names the fault, eg `MOLT_CLAUDE_CONFIG_DIR is not a canonical path, with no trailing slash, // or . or .. component: <path>`, and `molt doctor` reports the same line.
 

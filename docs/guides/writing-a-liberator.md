@@ -4,7 +4,7 @@ A liberator is a config module that frees you from one default. Each one handles
 
 ## The contract
 
-Every liberator is a bash script in `liberators/` that implements three functions:
+Every liberator is a bash script in `liberators/` that implements `_check` and `_install`, and may add `_verify`:
 
 ```bash
 # {name}_check — Is this already configured?
@@ -19,14 +19,14 @@ myapp_install() {
   ...
 }
 
-# {name}_verify — Confirm installation is correct.
-# Called after install to validate the result.
+# {name}_verify — Optional. A fuller check, for the liberator's own use.
+# Molt does not run it: resleeve and doctor use _check.
 myapp_verify() {
   ...
 }
 ```
 
-The framework discovers scripts in `liberators/`, loads them on demand by sourcing the file, and calls these functions in order during `molt resleeve`.
+The framework discovers scripts in `liberators/` and loads them on demand by sourcing the file. `molt resleeve` calls `_check`, and `_install` only when the check fails; `molt doctor` reports each enabled liberator's `_check`.
 
 ### Optional callbacks
 
@@ -51,7 +51,7 @@ myapp_maintain() {
 
 ## Rules
 
-1. **Never install packages, except a liberator's own subject from a Homebrew tap.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. The exception is a tool that is the liberator's subject and comes from a Homebrew tap, as Intent does and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves.
+1. **Never install packages, except a liberator's own subject from a Homebrew tap, and keyd.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. One exception is a tool that is the liberator's subject and comes from a Homebrew tap, as Intent does and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves. The other is the `keys` liberator, which builds keyd from source and installs it with `sudo make install`.
 
 2. **Use `molt_link` for static config.** It handles backup, mkdir, and idempotency.
 
@@ -81,8 +81,8 @@ myapp_check() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/myapp/config.toml" ]]; then
-    if [[ ! -L "$HOME/.config/myapp/config.toml" ]]; then
-      molt_info "myapp: config not linked"
+    if ! molt_link_healthy "$HOME/.config/myapp/config.toml"; then
+      molt_info "myapp: ~/.config/myapp/config.toml $(molt_link_fault "$HOME/.config/myapp/config.toml")"
       return 1
     fi
   fi
@@ -114,8 +114,8 @@ myapp_verify() {
     errors=1
   fi
 
-  if [[ ! -L "$HOME/.config/myapp/config.toml" ]]; then
-    molt_error "VERIFY FAIL: myapp config not linked"
+  if ! molt_link_healthy "$HOME/.config/myapp/config.toml"; then
+    molt_error "VERIFY FAIL: ~/.config/myapp/config.toml $(molt_link_fault "$HOME/.config/myapp/config.toml")"
     errors=1
   fi
 

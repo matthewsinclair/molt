@@ -7,7 +7,7 @@ This guide walks you through setting up MOLT on a new machine.
 
 ## Prerequisites
 
-- bash 4+
+- bash 3.2 or later
 - git
 - `gettext` — provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
 - A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
@@ -60,8 +60,14 @@ molt resleeve
 MOLT loads your manifest, runs each enabled liberator, and links your config into place. Existing files are backed up before being replaced.
 
 ```
-MOLT v0.1.0 — My Opinionated Local Terminal
+MOLT v<version> — My Opinionated Local Terminal
 Needlecasting stack to new sleeve...
+Sleeve: <hostname> | Platform: linux
+
+Zen: Stack found: ...
+Zen: Loading liberators...
+Zen: Manifest: ...
+
   system: ✓ ok
   zsh: ✓ installed
   git: ✓ installed
@@ -128,7 +134,7 @@ The typical update sequence is:
 molt doctor
 ```
 
-Runs 12 diagnostic checks: directory structure, manifest validity (including that the manifest's `user_repo` still names the real directory), liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, and that git is not folding case in the managed repos.
+Runs its diagnostic checks, among them: Molt's own directory structure, manifest validity (including that the manifest's `user_repo` still names the real directory), liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, that each managed repo's `core.ignorecase` matches what its disk does with case, and the font the sleeve declares. It closes with `All checks passed.`, or how many of the checks that ran did not pass.
 
 ## Your config repo
 

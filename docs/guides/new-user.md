@@ -1,20 +1,12 @@
 # Creating a New User Config Repo
 
-MOLT uses a [two-repo model](../../README.md#two-repo-model): the framework
-(`molt`) and your personal config (`molt-{user}`). This guide covers creating
-that personal repo from scratch with `molt new-user`.
+MOLT uses a [two-repo model](../../README.md#two-repo-model): the framework (`molt`) and your personal config (`molt-{user}`). This guide covers creating that personal repo from scratch with `molt new-user`.
 
-You only do this once per person. After the repo exists, day-to-day setup is
-covered by [Getting Started](getting-started.md).
+You only do this once per person. After the repo exists, day-to-day setup is covered by [Getting Started](getting-started.md).
 
 ## Why a generator
 
-A personal config repo carries a small amount of identity — your name, email,
-GitHub handle, the first machine's hostname — threaded through a dozen files
-(`gitconfig`, the ssh config, `vars.sh`, the manifest, the README). Cloning
-someone else's repo and find-replacing those by hand is error-prone and leaks
-the original owner's details. `molt new-user` does it deterministically from a
-tokenised skeleton.
+A personal config repo carries a small amount of identity — your name, email, GitHub handle, the first machine's hostname — threaded through several files (`gitconfig`, the ssh config, `vars.sh`, the manifest, the README). Cloning someone else's repo and find-replacing those by hand is error-prone and leaks the original owner's details. `molt new-user` does it deterministically from a tokenised skeleton.
 
 ## Usage
 
@@ -41,8 +33,7 @@ molt new-user flynn \
 
 ## The identity surface
 
-These are the only values that vary per user. Everything else in the skeleton
-is shared structure.
+These are the only values that vary per user. Everything else in the skeleton is shared structure.
 
 | Token            | Example                    | Lands in                                      |
 | ---------------- | -------------------------- | --------------------------------------------- |
@@ -68,28 +59,20 @@ molt-flynn/
   instances/
     jormungandr/
       instance.toml
-      molt.toml                  # only system/local-bin/git/ssh enabled
+      molt.toml                  # enables only what needs no config of yours
       vars.sh
 ```
 
-Only the liberators that need no extra config (`system`, `local-bin`, `git`,
-`ssh`) are enabled out of the box. Enable the rest in the instance manifest as
-you add the matching `config/<name>/` directories.
+Only the liberators that need no config beyond what the skeleton ships are enabled out of the box: `system`, `local-bin`, `git` and `ssh`, and `npm` and `claude`, which need no `config/` directory at all. The instance `molt.toml` is the list. Enable the rest in the instance manifest as you add the matching `config/<name>/` directories.
 
 ## Two kinds of placeholder
 
-The skeleton deliberately uses **two distinct delimiter styles**, and the
-distinction matters:
+The skeleton deliberately uses **two distinct delimiter styles**, and the distinction matters:
 
-- `__MOLT_USER__`, `__MOLT_GITHUB__`, … — **scaffold-time** tokens. `molt
-new-user` substitutes these once, when the repo is created.
-- `${MOLT_SSH_KEY}`, `${MOLT_FONT_FAMILY}`, … — **resleeve-time** template
-  vars, rendered later by `molt_render` via `envsubst` using the instance's
-  `vars.sh`.
+- `__MOLT_USER__`, `__MOLT_GITHUB__`, … — **scaffold-time** tokens. `molt new-user` substitutes these once, when the repo is created.
+- `${MOLT_SSH_KEY}`, `${MOLT_FONT_FAMILY}`, … — **resleeve-time** template vars, rendered later by `molt_render` via `envsubst` using the instance's `vars.sh`.
 
-Because the delimiters differ, scaffolding never touches the runtime vars — a
-generated `config.tmpl` still contains a live `${MOLT_SSH_KEY}` for the ssh
-liberator to render per machine.
+Because the delimiters differ, scaffolding never touches the runtime vars — a generated `config.tmpl` still contains a live `${MOLT_SSH_KEY}` for the ssh liberator to render per machine.
 
 ## Git identity include
 
@@ -100,9 +83,7 @@ liberator to render per machine.
 	path = ~/.gitconfig_<github>
 ```
 
-The git liberator links **any** `config/git/gitconfig_*` file to
-`~/.<basename>`, so the filename can be whatever your handle is — nothing in the
-framework is hardcoded to a specific person.
+The git liberator links **any** `config/git/gitconfig_*` file to `~/.<basename>`, so the filename can be whatever your handle is — nothing in the framework is hardcoded to a specific person.
 
 ## Next steps
 
@@ -117,8 +98,7 @@ git push -u origin main
 MOLT_CFG_DIR="<parent>" molt resleeve --dry-run
 ```
 
-The remote URL uses the `github.com-<github>` ssh host alias that the generated
-`config/ssh/config.tmpl` defines, so it works once the ssh liberator has run.
+The remote URL uses the `github.com-<github>` ssh host alias that the generated `config/ssh/config.tmpl` defines, so it works once the ssh liberator has run.
 
 ## Adding more machines
 

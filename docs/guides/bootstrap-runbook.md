@@ -167,7 +167,7 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
   - `config.el` — thin coordinator, loads custom modules
   - `init.el` — Doom module declarations
   - `packages.el` — additional packages
-  - `custom/*.el` — 16 modular config files (000-editor through 150-corfu)
+  - `custom/*.el` — modular config files (000-editor through 150-corfu)
 - **Gotcha**: Font is platform-conditional (JetBrainsMono Nerd Font on Linux, Menlo on macOS).
 - Run `doom sync` after config changes.
 
@@ -307,6 +307,8 @@ ssh-keygen -t ed25519 -C "you@example.com"
 
 Intent project management integration.
 
+**The `intent` liberator has changed since this record.** It installs Intent from Homebrew (`brew install matthewsinclair/intent/intent`) and checks which Intent PATH runs and which install the pre-commit gate points at. There is no checkout and no link of Molt's own. The steps below are what was done by hand at the time.
+
 ### 11.1 Initialize Intent in repos [agnostic]
 
 ```bash
@@ -320,7 +322,7 @@ cd ~/Devel/prj/molt-{user} && intent init
 intent claude skills install --all
 ```
 
-- Installs all 12 `/in-*` skills to `~/.claude/skills/`
+- Installs the `/in-*` skills to `skills/` in Claude Code's config dir (`~/.claude` until the sleeve moves its state)
 - Intent added to PATH in zshrc when `~/Devel/prj/Intent` exists
 
 ---
@@ -331,12 +333,12 @@ Claude Code configuration.
 
 ### 12.1 Claude keybindings [agnostic]
 
-- Config: `molt-{user}/config/claude/keybindings.json`
+- Config: `molt-{user}/config/claude/keybindings.json`, linked into Claude Code's config dir (`~/.claude` until the sleeve moves its state)
 
 ### 12.2 Claude status line [agnostic]
 
 - Layout: `molt-{user}/config/ccstatusline/settings.json`, linked to `~/.config/ccstatusline/settings.json`. kovacs linked it by hand on 15 Oct 2026, before the liberator managed it, and the liberator adopts that link as it stands.
-- Command: `molt-{user}/config/claude/statusline.json` is written into the `statusLine` key of `~/.claude/settings.json`. No other key is touched, and the file is never linked: it holds each sleeve's own permissions, hooks and plugins.
+- Command: `molt-{user}/config/claude/statusline.json` is written into the `statusLine` key of `settings.json` in Claude Code's config dir (`~/.claude` until the sleeve moves its state). No other key is touched, and the file is never linked: it holds each sleeve's own permissions, hooks and plugins.
 
 ---
 
@@ -353,7 +355,7 @@ Claude Code configuration.
 | alacritty/alacritty.toml     | ~/.config/alacritty/alacritty.toml   |
 | starship/starship.toml       | ~/.config/starship.toml              |
 | ssh/config.tmpl (rendered)   | ~/.ssh/config                        |
-| claude/keybindings.json      | ~/.claude/keybindings.json           |
+| claude/keybindings.json      | <config dir>/keybindings.json        |
 | ccstatusline/settings.json   | ~/.config/ccstatusline/settings.json |
 
 Instance-specific config lives in `molt-{user}/instances/{hostname}/`.

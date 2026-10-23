@@ -63,10 +63,14 @@ molt resleeve
 ```
 
 ```
-MOLT v0.1.0 — My Opinionated Local Terminal
+MOLT v<version> — My Opinionated Local Terminal
 Needlecasting stack to new sleeve...
+Sleeve: <hostname> | Platform: linux
+
 Zen: Stack found: /home/you/cfg/Molt-you
 Zen: Loading liberators...
+Zen: Manifest: /home/you/cfg/Molt-you/instances/<hostname>/molt.toml
+
   system: ✓ ok
   zsh: ✓ installed
   git: ✓ installed
@@ -94,10 +98,9 @@ In Molt, your config is your cortical stack, your consciousness. Every machine i
 | -------------- | ---------------------------------------------------------------------------------- |
 | **stack**      | Your dotfiles and config bundle. The portable identity.                            |
 | **sleeve**     | A target machine that receives your stack.                                         |
-| **needlecast** | Push your stack to a remote machine.                                               |
+| **needlecast** | Push your stack to a remote machine. Not built yet: there is no such command.      |
 | **resleeve**   | Bootstrap a fresh machine from your stack.                                         |
-| **backup**     | Snapshot your current stack state.                                                 |
-| **zen**        | The bootstrap runner on each machine. Executes commands, reports status.           |
+| **zen**        | Molt's voice on each machine: the `Zen:` that opens its messages.                  |
 | **liberators** | Config modules. Each one frees you from a default.                                 |
 | **molt.toml**  | The manifest file. The authoritative source of truth for what your stack contains. |
 
@@ -111,6 +114,8 @@ molt upgrade --self        # Pull framework + config repos only (no hooks, no re
 molt upgrade --dry-run     # Preview what upgrade would do
 molt upgrade zsh,git       # Run upgrade hooks for specific liberators only
 molt upgrade --no-resleeve # Upgrade without resleeve
+molt upgrade --resleeve    # Resleeve after a targeted upgrade too
+molt upgrade --no-pull     # Upgrade without pulling first
 molt maintain              # Run system maintenance (brew upgrade, doom upgrade, etc.)
 molt maintain --dry-run    # Preview maintenance actions
 molt maintain brew         # Maintain specific liberators only
@@ -122,11 +127,14 @@ molt agent roles           # List the roles this sleeve declares, a disabled one
 molt agent start <role>    # Start the agent in its home, as claude start --name <hostname>-<role>
 molt agent home <role>     # Print the agent's home
 molt agent config <role>   # An agent's home, its files' state, and its permission rules by layer
+molt git <cmd>             # Run a git command across all managed repos
 molt doctor                # System diagnostics and health checks
 molt test [liberator]      # Run bats test suite (all or one liberator)
 molt version               # Show version
 molt help                  # Show help
 ```
+
+`molt help` is the full list, with every flag.
 
 ## Configuration
 
@@ -138,7 +146,7 @@ The only required setting. Tells molt where to find repos. Set it in your shell 
 export MOLT_PRJ_DIR="$HOME/Devel/prj"
 ```
 
-If unset, molt will search `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PRJ_DIR` is the intended path.
+If unset, molt searches `MOLT_CFG_DIR` when that is set, then `~/Molt-{user}`, `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PRJ_DIR` is the intended path.
 
 ### MOLT_CFG_DIR
 
@@ -154,7 +162,7 @@ Where your config repo lives, kept apart from development projects. Defaults to 
 | `MOLT_AGT_DIR`   | Where sleeve agents live      | `$(dirname "$MOLT_PRJ_DIR")/agt` |
 | `MOLT_LOCAL_BIN` | Where to symlink executables  | `~/bin`                          |
 | `UTILZ_HOME`     | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`            |
-| `INTENT_HOME`    | Override Intent repo location | `$MOLT_PRJ_DIR/Intent`           |
+| `PPLR_HOME`      | Override Pplr repo location   | `$MOLT_PRJ_DIR/Pplr`             |
 
 ### MOLT_CLAUDE_CONFIG_DIR
 
@@ -174,9 +182,9 @@ A liberator is a config module that frees you from one default. Each liberator i
 - `{name}_install` — Configure it (verify prerequisites, link config, set up).
 - `{name}_upgrade` — _(optional)_ Config sync hook. Fast, safe, runs during `molt upgrade`.
 - `{name}_maintain` — _(optional)_ System maintenance hook. Slow, runs during `molt maintain`.
-- `{name}_verify` — _(optional)_ Final verification.
+- `{name}_verify` — _(optional)_ A fuller check, for a liberator's own use. Molt does not run it: resleeve and doctor use `_check`.
 
-Liberators **never install packages**. They check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
+Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, and Utilz on a `source = "brew"` sleeve), and the `keys` liberator, which builds keyd from source. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
 
 The framework discovers liberator scripts in `liberators/`, loads them on demand, and runs them through the lifecycle automatically.
 
@@ -198,7 +206,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | desktop        | GNOME settings, GTK config, accessibility       | linux        |
 | tiling         | Tactile GNOME extension grid tiling             | linux        |
 | vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
-| dev-tools      | CLI tools (bat, rg, fd, fzf) + mise             | linux, macos |
+| dev-tools      | CLI tools (jq, tree, rg, fzf, curl) + mise      | linux, macos |
 | ssh            | SSH key detection, config rendering + fragments | linux, macos |
 | utilz          | Utilz, from a checkout or Homebrew, per sleeve  | linux, macos |
 | brew           | Homebrew maintenance and upgrade                | macos        |
@@ -208,6 +216,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | claude         | Claude Code config, and its state out of $HOME  | linux, macos |
 | npm            | ~/.npmrc, with npm's cache under XDG            | linux, macos |
 | agents         | A home for each sleeve agent, from its role     | linux, macos |
+| backup         | Checks the SuperDuper NAS backup; observes only | macos        |
 
 ### molt.toml
 
@@ -217,7 +226,7 @@ The manifest lives in your personal config repo. It declares which liberators to
 [stack]
 name = "my-stack"
 version = "0.1.0"
-user_repo = "molt-{user}"
+user_repo = "Molt-{user}"
 
 [sleeve]
 hostname = "mymachine"
@@ -289,48 +298,19 @@ MOLT has opinions and says so. The tone is dry, terse, and functional. Output du
 
 ```
 molt/
-  bin/
-    molt                   # CLI entry point (thin coordinator)
-    bootstrap.sh           # One-liner bootstrap for fresh machines
-  lib/
-    constants.sh           # All configurable paths and defaults (single source of truth)
-    molt.sh                # Core: logging, platform detection, symlinks, manifest parsing
-    liberator.sh           # Liberator loading, execution, and discovery
-  liberators/
-    system.sh              # Base system verification
-    zsh.sh                 # Shell + Starship prompt
-    git.sh                 # Git + git-lfs
-    tmux.sh                # Tmux
-    editors.sh             # Doom Emacs + LazyVim
-    alacritty.sh           # Alacritty
-    gnome-terminal.sh      # GNOME Terminal
-    iterm2.sh              # iTerm2
-    terminal-app.sh        # Terminal.app
-    keys.sh                # keyd
-    desktop.sh             # GNOME settings
-    tiling.sh              # Tactile grid tiling
-    vscode.sh              # VS Code
-    dev-tools.sh           # CLI tools + mise
-    npm.sh                 # npm cache under XDG
-    ssh.sh                 # SSH
-    local-bin.sh           # ~/bin setup
-    utilz.sh               # Utilz framework
-  test/
-    test_helper.bash       # Shared test infrastructure (HOME-sandboxed)
-    molt.bats              # CLI tests
-    constants.bats         # Constants tests
-    liberator.bats         # Framework tests
-    manifest.bats          # Manifest parsing tests
-    templates.bats         # Template rendering tests
-    liberators/
-      zsh.bats             # Exemplar liberator test
+  bin/           # molt, the CLI entry point (thin coordinator); bootstrap.sh; devbin, the dev launcher
+  lib/           # the framework; constants.sh holds every configurable path and default
+  liberators/    # one script per liberator
+  templates/     # what Molt renders: the molt-{user} skeleton, the claude and agents files, the AppArmor profile
+  test/          # bats suites (test_helper.bash is the HOME-sandboxed harness), liberators/ for each liberator's, manual/ for probes run by hand
+  docs/          # guides/ and notes/
 ```
 
 ## Dependencies
 
 MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tools plus:
 
-- **bash** 4+ (framework scripts)
+- **bash** 3.2 or later (framework scripts)
 - **awk** (manifest parsing)
 - **bats** (test suite — optional, for `molt test`)
 
@@ -347,7 +327,7 @@ Liberators verify their own prerequisites and fail with install hints if anythin
 
 ## Status
 
-Early development. Three sleeves operational: kovacs (Ubuntu 24.04 ARM64), rhadamanth (macOS M4), and gyges (macOS).
+Early development. Sleeves in use: kovacs (Ubuntu ARM64), rhadamanth (macOS M4) and gyges (macOS).
 
 ## License
 
