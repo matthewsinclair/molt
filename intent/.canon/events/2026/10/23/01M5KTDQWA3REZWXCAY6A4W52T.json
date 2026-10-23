@@ -1,0 +1,15 @@
+{
+  "id": "01M5KTDQWA3REZWXCAY6A4W52T",
+  "ts": "2026-10-23T07:25:51.882Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "**23 Oct bounce, continued after vc's compact (hv: localfold, compact, continue; all-in on head today, no worktrees).** In order: (1) **cc's 0038**: review its commit when cc sends the hash (plan approved: rewrite in `_claude_relocate`'s home arm after `_claude_move`, one jq predicate shared with doctor, `$HOME/` and `${HOME}/` spellings in with spelling kept, the symlink test out; doctor check first among the declared-dir checks); both bashes, then `intent issues close 0038`, `intent organize --apply`, commit; send dc the hash. (2) **dc's three**, each reviewed: README drops its doctor-check count (now); after cc, the guide's move section and doctor table for 0038 as built; the home guard's refusals name `molt agent start` (strings only, no exit code; claude.bats both bashes). (3) **critic-shell's review** of 3cc5cf3 and 8159642 is running as a background agent: read it when it lands, fix forward. (4) **One `molt resleeve` on rhadamanth** after (1) and (2) land: the homes are stale since dc's preamble (Molt-matts e6d5d2d, 83a2588); then `bin/molt agent start sysadm` must refuse on the running rhadamanth-sysadm (pid 49928) as a live check. (5) **globalfold**: wip.md, done.md 028 (the move verified, ST0006 and ST0007 closed, no shipped Python, issues 0038 and 0039, the hook removed by hv), restart.md; todo 5 drops its hand check once 0038 lands. (6) **push** Molt and Molt-matts to upstream main and check CI; Intent 74b3b6571 (hv's 0612 confirmation) is local and not vc's to push. Carried: claude.bats test 33 flaked once for cc (molt_instance_var printed its value and returned non-zero; not reproduced in 20 runs under load; cc's output in its scratchpad base-bash5.txt); cc's flag that a config dir with whitespace inside it would split a rewritten command."
+  }
+}
