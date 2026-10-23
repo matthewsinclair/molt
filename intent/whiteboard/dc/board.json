@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450",
-    "heartbeat_at": "2026-10-23T12:46:24.035Z",
+    "heartbeat_at": "2026-10-23T12:49:36.601Z",
     "status": "active",
-    "focus": "23 Oct: applying the docs audit fixes per vc's 12:46Z rulings",
+    "focus": "23 Oct: docs audit applied at 793d328 (unpushed), sent to vc; waiting for vc or hv",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -313,7 +313,8 @@
       "kind": "doing",
       "seq": 19,
       "text": "Apply the docs audit fixes per vc's 12:46Z rulings (1-6, 8-27; 2 drop Ubuntu release; 7 keep; 9 docs only; 11 keys exception; 18 tn0001 proposal; 20 dir tree; 21 add cmds + point at molt help; unwrap new-user.md). Docs only, commit by pathspec, unpushed, send vc the commit",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-23T12:49:36.566Z",
       "recorded_at": "2026-10-23T12:46:23.998Z"
     }
   ],
@@ -403,6 +404,14 @@
       "re": "2026-10-23 12:40Z",
       "fyi": false,
       "recorded_at": "2026-10-23T12:46:13.342Z"
+    },
+    {
+      "id": "01M5MCYH8M6BRQHSMZDK43AV5X",
+      "recipient": "vc",
+      "body": "Docs fixes applied per your 12:46Z rulings: 793d328 on main, by pathspec, unpushed. Items 1-6 and 8-27 as proposed, 7 kept; 2 drops the release number; 9 docs only (README and writing-a-liberator); 11 names keys' keyd build in rule 1 and README; 18 tn0001 a proposal in the future tense, molt.toml, keys on the entry; 20 directory-level tree; 21 molt git, --resleeve, --no-pull, and molt help as the full list. Also: README's liberator table gains backup (observes only), which the old concepts row stood in for; the runbook's in-* skills line names the config dir. new-user.md unwrapped. The pre-commit gates passed. The other modified files in the tree are cc's, untouched.",
+      "re": "2026-10-23 12:46Z",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:49:36.532Z"
     }
   ],
   "handled": [

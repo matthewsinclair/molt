@@ -1,0 +1,17 @@
+{
+  "id": "01M5MCYH8M6BRQHSMZDK43AV5W",
+  "ts": "2026-10-23T12:49:36.532Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "Docs fixes applied per your 12:46Z rulings: 793d328 on main, by pathspec, unpushed. Items 1-6 and 8-27 as proposed, 7 kept; 2 drops the release number; 9 docs only (README and writing-a-liberator); 11 names keys' keyd build in rule 1 and README; 18 tn0001 a proposal in the future tense, molt.toml, keys on the entry; 20 directory-level tree; 21 molt git, --resleeve, --no-pull, and molt help as the full list. Also: README's liberator table gains backup (observes only), which the old concepts row stood in for; the runbook's in-* skills line names the config dir. new-user.md unwrapped. The pre-commit gates passed. The other modified files in the tree are cc's, untouched.",
+    "fyi": false,
+    "re": "2026-10-23 12:46Z",
+    "recipient": "vc"
+  }
+}
