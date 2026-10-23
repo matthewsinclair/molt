@@ -1,21 +1,22 @@
 ---
-verblock: "23 Oct 2026:v0.43: Matthew Sinclair - gyges move finished; issues 0040 and 0041 open for hv to schedule"
+verblock: "23 Oct 2026:v0.44: Matthew Sinclair - issue 0042 (house domain from config) for hv to rule"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**ST0006, sleeve agents, and ST0007, `molt agent start`, are done; issues 0040 and 0041 are open.** rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
+**ST0006, sleeve agents, and ST0007, `molt agent start`, are done; issues 0040, 0041 and 0042 are open.** rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
 
 ## DOING
 
-- **Nothing in flight.** What is left waits on hv: rhadamanth's backup, and scheduling issues 0040 and 0041 (TODO below).
+- **Nothing in flight.** What is left waits on hv: rhadamanth's backup, and scheduling issues 0040 to 0042 (TODO below).
 
 ## TODO
 
 - **Issue 0040**, hv to schedule: the claude liberator declares Claude Code's `attribution` object from Molt-matts, as it does the statusLine, so no sleeve hand-sets it.
 - **Issue 0041**, hv to schedule: zsh_check never looks at the iTerm2 ssh wrapper, so a `[terminal]` colour change never reaches `~/.config/molt/iterm2-ssh-colors.sh`; the fix renders it to a temp file in the check and compares.
+- **Issue 0042**, hv to rule: the ssh wrapper hardcodes `.lan` and `.local`; the house domain (`hockenbury.internal` since 23 Oct) comes from one Molt-matts setting, perhaps feeding the `lan-hosts.conf` ssh fragments too. Build it with 0041.
 - **rhadamanth's backup, hv's call:** SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
 - **rhadamanth's `molt upgrade` refuses while the shared checkout carries live board views** (P4). Use `molt resleeve` on dev days; the condition ends when rhadamanth's Molt comes from brew. Molt from brew is coming (hv), with no thread yet; kovacs will be brew-only too.
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
