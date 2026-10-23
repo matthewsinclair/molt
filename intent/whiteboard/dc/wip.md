@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-23 07:05Z
+heartbeat_at: 2026-10-23 07:19Z
 status: active
-focus: "23 Oct: ST0007 WP02 (vc's 06:58Z ask; vc approved the plan): the start section in Molt-matts' agent preamble first (commit, hash to vc, hv reviews through vc), then the guide's Starting an agent, README and docs' launches by hand, against vc's CLI as built"
-claims: [ST0007/02]
+focus: "23 Oct: ST0007 WP02 done and accepted by vc (Molt b1db22d; Molt-matts e6d5d2d, 83a2588); localfold for hv's compact. On the bounce: nothing queued for dc (vc: nothing else today); vc closes ST0007, pushes, and runs the one molt resleeve on rhadamanth; vc and hv are settling worktrees for the rest of the day"
+claims: []
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ST0007 WP02: the preamble is done (Molt-matts e6d5d2d, hv approved; hand-over line 83a2588). The guide's Starting an agent and its other launches by hand, README's agent commands and doctor's check count, and bl0001 lines 78 and 81 (on hv's go; FYI to ac) are in dc's WP02 commit, with vc to land AC004 and push both repos. WP02 is marked done on vc's word.
+_(none)_
 
 ## TODO
 

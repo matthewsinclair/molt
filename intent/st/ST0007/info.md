@@ -46,7 +46,7 @@ Arguments after `--` go to `claude` as they are.
 | WP    | Title                                                                                                                  | Size | Status |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | ---- | ------ |
 | WP-01 | molt agent start, roles and home; config takes a role                                                                  | S    | Done   |
-| WP-02 | The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start | S    | WIP    |
+| WP-02 | The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start | S    | Done   |
 
 ## Acceptance
 

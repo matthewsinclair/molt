@@ -2,14 +2,14 @@
 wp_id: WP-02
 title: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
 scope: S
-status: WIP
+status: Done
 ---
 
 # WP-02: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
 
 ## Objective
 
-_(not yet written)_
+Every sleeve agent knows what to do when its first prompt is `start`, the one word `molt agent start` sends, because the shared preamble in Molt-matts says so once for every role; and the sleeve-agents guide, README and docs start agents with `molt agent start` instead of a launch by hand.
 
 Prose, in two places:
 
