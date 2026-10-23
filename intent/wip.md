@@ -1,28 +1,28 @@
 ---
-verblock: "23 Oct 2026:v0.42: Matthew Sinclair - gyges moved by rhadamanth-sysadm; issue 0040 open"
+verblock: "23 Oct 2026:v0.43: Matthew Sinclair - gyges move finished; issues 0040 and 0041 open for hv to schedule"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**ST0006, sleeve agents, and ST0007, `molt agent start`, are done; issue 0040 is open.** rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
+**ST0006, sleeve agents, and ST0007, `molt agent start`, are done; issues 0040 and 0041 are open.** rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
 
 ## DOING
 
-- **Nothing in flight.** What is left waits on hv: rhadamanth's backup, issue 0040, and gyges' remaining steps with rhadamanth-sysadm (TODO below).
+- **Nothing in flight.** What is left waits on hv: rhadamanth's backup, and scheduling issues 0040 and 0041 (TODO below).
 
 ## TODO
 
-- **gyges, the rest after its move** (rhadamanth-sysadm, through gyges-sysadm): declare `[terminal] bg_color` from its live iTerm2 profile and regenerate the ssh wrapper; remove `~/.npm`; the Gtools Sinclair estate deploy (gtools-vc's pen).
 - **Issue 0040**, hv to schedule: the claude liberator declares Claude Code's `attribution` object from Molt-matts, as it does the statusLine, so no sleeve hand-sets it.
+- **Issue 0041**, hv to schedule: zsh_check never looks at the iTerm2 ssh wrapper, so a `[terminal]` colour change never reaches `~/.config/molt/iterm2-ssh-colors.sh`; the fix renders it to a temp file in the check and compares.
 - **rhadamanth's backup, hv's call:** SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
 - **rhadamanth's `molt upgrade` refuses while the shared checkout carries live board views** (P4). Use `molt resleeve` on dev days; the condition ends when rhadamanth's Molt comes from brew. Molt from brew is coming (hv), with no thread yet; kovacs will be brew-only too.
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
 - **Every other sleeve's Molt clone, at its next resync** (kovacs, farcaster, pihole): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.
 - **How a sleeve moves its config repos** (for Flynn's jormungandr, parked by hv): pull Molt and Molt-matts; mv and resleeve as ONE command with `MOLT_PRJ_DIR` set and molt by absolute path, since `~/.zshenv` dangles after the mv; repoint `~/.config/gtools/config.yaml`, `intent discover ~/Devel/cfg --depth 1`, drop the old roots from `~/.config/intent/projects.json`; `molt doctor`'s manifest check names `~/Devel/cfg/Molt-matts`.
 - **Small, carried, below the gate**: claude.bats' `molt_instance_var` test flaked once for cc (it printed its value and returned non-zero; not reproduced since). By design, 0038 does not rewrite `~/.claude` with no slash or `"$HOME"/.claude/...`. After a move that half failed, only doctor names stale values. A jq without regex support reads as "not a JSON object". A real Claude Code run of `test/manual/sandbox-creds.sh` (hv, by hand). The sandbox profile's kept `.molt-orig` wants refreshing after an apparmor package update. The `desktop` check and verify pass silently when a gsettings file is declared but gsettings is absent. The `instances/<host>/...` path build is repeated across several files (a `molt_instance_file` helper, a later thread). A repo with no upstream gets two warnings on `molt upgrade` (accepted with issue 0037). `bin/bootstrap.sh`'s SC2088 notes.
-- **Not this project's**: Intent 0614 (worktree hooks sync an older store) and 0627 (no verb retires a handled message) are in Intent's lane; Molt's workaround stands: never run intent in a Molt worktree. The Gtools side of the estate-agent rename is with sinclair-estate, geodica-estate and gtools-vc on hv's go; Gtools `README.md:15` (gtools-vc); devbin's README snippet, its `dvb` body copies and the test counts in `bin/.devbin`'s comments (devbin-vc).
+- **Not this project's**: Intent 0614 (worktree hooks sync an older store) and 0627 (no verb retires a handled message) are in Intent's lane; Molt's workaround stands: never run intent in a Molt worktree. The Gtools side of the estate-agent rename is with sinclair-estate, geodica-estate and gtools-vc on hv's go; The Gtools Sinclair estate deploy on gyges (gtools-vc). Gtools `README.md:15` (gtools-vc); devbin's README snippet, its `dvb` body copies and the test counts in `bin/.devbin`'s comments (devbin-vc).
 
 ## Notes
 

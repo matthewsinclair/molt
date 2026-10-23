@@ -1,0 +1,15 @@
+{
+  "id": "01M5MWHK5T78PH4ESQP5XSTW3B",
+  "ts": "2026-10-23T17:22:09.723Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0041"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "The iTerm2 ssh wrapper is never re-rendered: zsh_check does not look at it, so a [terminal] colour change never reaches the file"
+  }
+}
