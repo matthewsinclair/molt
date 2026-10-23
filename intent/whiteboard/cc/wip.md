@@ -2,11 +2,11 @@
 node: cc
 name: Control Claude
 role: control
-session_id: 7ad99fa6-61b1-401c-a540-d5fa8e1635bd
-heartbeat_at: 2026-10-23 05:16Z
+session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
+heartbeat_at: 2026-10-23 06:58Z
 status: active
 focus: "23 Oct: booted and holding for hv; nothing in flight, nothing claimed; ready for the quit call"
-claims: []
+claims: [ISSUE:0038]
 ---
 
 # Control Claude (cc)
