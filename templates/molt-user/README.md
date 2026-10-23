@@ -19,9 +19,7 @@ molt resleeve --dry-run
 molt resleeve
 ```
 
-Only `system`, `local-bin`, `git`, and `ssh` are enabled out of the box.
-Enable more liberators in `instances/__MOLT_HOSTNAME__/molt.toml` as you add
-their config.
+The liberators that need no config beyond this skeleton are enabled out of the box. Enable more liberators in `instances/__MOLT_HOSTNAME__/molt.toml` as you add their config.
 
 ## Adding a machine
 

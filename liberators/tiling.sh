@@ -3,8 +3,8 @@
 # Frees you from manual window positioning with a Divvy-like grid picker.
 #
 # Tactile workflow: the activation binding shows the grid overlay, then you type
-# two keys to define a rectangle (eg Q,C = full left column, Q,V = full screen).
-# Keyboard maps to screen position: QWE=top, ASD=middle, ZXC=bottom.
+# two keys to define a rectangle (eg Q,Z = full left column, Q,M = full screen).
+# Keyboard maps to a 7x3 grid: QWERTYU=top, ASDFGHJ=middle, ZXCVBNM=bottom.
 
 TACTILE_UUID="tactile@lundal.io"
 TACTILE_SCHEMA="org.gnome.shell.extensions.tactile"
@@ -216,7 +216,7 @@ tiling_install() {
   done
 
   molt_info "Liberator complete: tiling"
-  molt_info "  Activate: $activate → type two keys to tile (eg Q,C = left third)"
+  molt_info "  Activate: $activate → type two keys to tile (eg Q,M = full screen)"
   molt_info "  Grid: Q W E R T Y U / A S D F G H J / Z X C V B N M"
 }
 

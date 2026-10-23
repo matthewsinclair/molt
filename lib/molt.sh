@@ -119,20 +119,6 @@ molt_link_healthy() {
   [[ -L "$1" ]] && [[ -e "$1" ]]
 }
 
-# Names which fault molt_link_healthy tripped on, for user-facing messages.
-#
-# molt_link_healthy is one boolean over three distinct states, and the messages
-# all said "is not a symlink". For the dangling case that is a false statement:
-# it IS a symlink, that is the whole problem. Someone debugging runs `ls -l`,
-# sees `.tmux.conf -> ...`, concludes the tool is wrong and stops looking --
-# which is exactly the wrong place to stop, because a dangling link is the
-# failure that hid the repo rename. Same defect class as a check reporting a
-# reason it no longer tests.
-#
-# Total over all four states, including the healthy one. Every call site today
-# is guarded by a failed molt_link_healthy, so the healthy branch is
-# unreachable from here -- but a helper that names a fault on a sound link is
-# the very bug this fixes, and the next caller will not be guarded.
 # True when target is a healthy symlink pointing at the expected source.
 #
 # molt_link_healthy asks only whether a link resolves, not whether it resolves
@@ -176,6 +162,20 @@ molt_same_file() {
   [[ "$(_molt_realpath "$1")" == "$(_molt_realpath "$2")" ]]
 }
 
+# Names which fault molt_link_healthy tripped on, for user-facing messages.
+#
+# molt_link_healthy is one boolean over distinct states, and the messages all
+# said "is not a symlink". For the dangling case that is a false statement:
+# it IS a symlink, that is the whole problem. Someone debugging runs `ls -l`,
+# sees `.tmux.conf -> ...`, concludes the tool is wrong and stops looking --
+# which is exactly the wrong place to stop, because a dangling link is the
+# failure that hid the repo rename. Same defect class as a check reporting a
+# reason it no longer tests.
+#
+# Total over every state, the healthy one included. Every call site today
+# is guarded by a failed molt_link_healthy, so the healthy branch is
+# unreachable from here -- but a helper that names a fault on a sound link is
+# the very bug this fixes, and the next caller will not be guarded.
 molt_link_fault() {
   local target="$1"
   if molt_link_healthy "$target"; then
@@ -191,8 +191,8 @@ molt_link_fault() {
 
 # A liberator that links several files from the user repo lists them once, as
 # "source<TAB>target" lines under $HOME, and its check, install and verify all
-# read that list through these two. Each liberator had its own copy of these
-# loops, and the copies drifted.
+# read that list through molt_report_link_faults and molt_link_all, further
+# down. Each liberator had its own copy of these loops, and the copies drifted.
 
 # Reports, through $1 (molt_info or molt_error) after the prefix $2, every line
 # of the list $3 whose target is not a link to its source. Returns non-zero when
@@ -301,8 +301,7 @@ molt_link() {
     return 1
   fi
 
-  # If target already points to source, nothing to do. readlink -f is not on
-  # every BSD, and where it is missing both sides come back empty and equal.
+  # If target already points to source, nothing to do.
   if molt_link_points_to "$target" "$source"; then
     molt_debug "Already linked: $target -> $source"
     return 0
@@ -347,9 +346,9 @@ molt_instance_vars_file() {
 }
 
 # Why the vars.sh at $1 cannot be sourced, or nothing when it can be, or is not
-# there. Two places source vars.sh, molt_render and molt_instance_var, each in
-# its own subshell so that a declare -x in the file is still in scope where it
-# is read; both ask here first, and everything else reads it through
+# there. molt_render_text and molt_instance_var source vars.sh, each in its own
+# subshell so that a declare -x in the file is still in scope where it is
+# read; each asks here first, and everything else reads it through
 # molt_instance_var. Refused: a file that cannot be read, does not parse, or
 # stops before its end when sourced (a return or an exit, or an error under a
 # set -u or set -e of its own). Each of those reads as though the file declared
@@ -738,9 +737,8 @@ molt_config_digest() {
   # result -- ssh's instance config.d fragments, for one. A fragment ADDED or
   # EDITED changes the file the sleeve ends up with while changing neither the
   # template nor vars.sh, so without this the digest looks straight past it,
-  # _check passes, _install never runs, and the fragment never lands. That is
-  # the third place this same bug has appeared: template, then vars.sh, now
-  # fragments. Include everything the output depends on, or the check is
+  # _check passes, _install never runs, and the fragment never lands. The same
+  # bug has now appeared in the template, then vars.sh, then the fragments. Include everything the output depends on, or the check is
   # answering a narrower question than the one being asked.
   #
   # Sorted so the digest does not depend on glob order across filesystems.
@@ -786,7 +784,7 @@ molt_config_digest() {
 #     Everything else here fails safe by over-rendering; that one fails quiet.
 #   - and a guest with no NTP has no clock authority to compare against at all.
 #
-# Digests are immune to all four, and cover vars.sh in the same move.
+# Digests are immune to each of these, and cover vars.sh in the same move.
 #
 # Fails CLOSED: when the digest cannot be computed we report stale, because
 # re-rendering costs a moment and skipping it is the failure mode above.
@@ -1001,7 +999,7 @@ _molt_table_entries() {
 
 # Parse enabled liberators from molt.toml.
 # Returns one liberator name per line for enabled liberators on this platform.
-# If no manifest found, returns empty (caller falls back to directory scan).
+# Fails when there is no manifest (callers then fall back to a directory scan).
 molt_enabled_liberators() {
   local manifest
   manifest="$(molt_find_manifest 2>/dev/null || echo "")"
@@ -1197,12 +1195,12 @@ molt_claude_env_file() {
 
 # Replaces the settings file $1 with what the command after it prints, through
 # a temporary file beside it that cp -p gives the file's mode, then a rename, so
-# Claude Code, which watches the file, never reads half of it. Every settings
-# file molt writes is written through here. Every step is checked by hand:
-# resleeve runs install inside an `if`, where set -e does not apply, so a
-# failed copy or rename would otherwise run on to "written". Fails, printing
-# why, with the file as it was. Its callers refuse a symlink first: the rename
-# would silently turn a link into a copy.
+# Claude Code, which watches the file, never reads half of it. Every user and
+# home settings file molt writes is written through here. Every step is
+# checked by hand: resleeve runs install inside an `if`, where set -e does not
+# apply, so a failed copy or rename would otherwise run on to "written". Fails,
+# printing why, with the file as it was. Its callers refuse a symlink first:
+# the rename would silently turn a link into a copy.
 molt_settings_write() {
   local settings="$1" tmp
   shift
@@ -1240,7 +1238,7 @@ molt_claude_hook_entry() {
 # The jq filters that read and write that entry, with it bound to $want. It is
 # the one UserPromptSubmit entry that runs the guard's command; any other entry
 # is somebody else's, and is kept. GET gives null when there is none. Read by
-# liberators/claude.sh and lib/agent.sh, and so unused here.
+# the liberators and lib/agent.sh, and so unused here.
 # shellcheck disable=SC2016,SC2034 # $want is jq's, not the shell's
 MOLT_CLAUDE_HOOK_GET='first(.hooks.UserPromptSubmit[]? | select(any(.hooks[]?; .command == $want.hooks[0].command))) // null'
 # shellcheck disable=SC2016,SC2034
@@ -1586,7 +1584,7 @@ cmd_doctor() {
   local checks=0
   local not_passed=0
 
-  # MOLT_HOME is valid
+  # MOLT_ROOT is valid
   checks=$((checks + 1))
   if [[ -x "${MOLT_ROOT:-}/bin/molt" && -d "${MOLT_ROOT:-}/lib" ]]; then
     echo "Checking MOLT_ROOT... ✓ $MOLT_ROOT"
@@ -1690,7 +1688,7 @@ cmd_doctor() {
     not_passed=$((not_passed + 1))
   fi
 
-  # Liberators: each .sh is executable, has _check function
+  # Liberators: each .sh has a _check function
   checks=$((checks + 1))
   # A pass carries no count; a failure says how many of how many, both counted
   # here, and names them (hv, 23 Oct).
@@ -2031,7 +2029,7 @@ cmd_test() {
   # been told the suite passed when it never ran. Say so instead. This is the
   # same absent-signal-read-as-positive shape as launchctl returning 0 for a
   # missing script and the old mtime check reporting fresh when it could not
-  # tell: the answer in all three is to fail loudly rather than quietly.
+  # tell: the answer in each is to fail loudly rather than quietly.
   if ! _test_shellcheck; then
     molt_error "TESTS DID NOT RUN. ShellCheck failed above; fix those first."
     return 1
@@ -2106,8 +2104,8 @@ _test_shellcheck() {
 
 # The resleeve itself, for `molt resleeve` and the end of `molt upgrade`. $1 is
 # true for a dry run. $2 is false when the sleeve must not be called ready even
-# though every liberator is: molt upgrade passes it when an upgrade hook has
-# failed, and gives the verdict itself.
+# though every liberator is: molt upgrade passes it when an upgrade hook or a
+# pull has failed, and gives the verdict itself.
 #
 # Every failure here is checked by hand. molt upgrade calls this on the left of
 # `||`, where set -e does not apply, so a failed lookup would otherwise run on
@@ -2656,7 +2654,7 @@ molt_all_repos() {
 
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
-    # Load liberator first (sends debug/info to stderr to keep stdout clean)
+    # Load liberator quietly: anything it printed would mix with the repo list
     liberator_load "$lib" >/dev/null 2>&1 || continue
     local repo_path
     local repo_fn="${lib}_repo"

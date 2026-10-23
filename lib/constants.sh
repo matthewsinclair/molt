@@ -74,9 +74,8 @@ MOLT_USER_REPO_SEARCH_PATHS+=(
 )
 
 # --- Tool repos ---
-# Where tool liberators look for their repos. Each can be overridden
-# individually via env var (eg UTILZ_HOME), or they fall back to
-# searching MOLT_PRJ_DIR.
+# Where tool liberators look for their repos: MOLT_PRJ_DIR/Utilz and
+# MOLT_PRJ_DIR/Pplr, each overridden by its own env var (eg UTILZ_HOME).
 MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Utilz}}"
 MOLT_PPLR_HOME="${PPLR_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Pplr}}"
 

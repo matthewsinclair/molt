@@ -29,8 +29,8 @@ _zsh_current_shell() {
 # Generate iTerm2 SSH background colors script from instance.toml data.
 # Reads [terminal] ssh_bg_color from all instances and writes a shell script
 # that wraps ssh with per-host background color changes. When ssh returns, the
-# tab goes back to this sleeve's own [terminal] bg_color, its iTerm2 profile's
-# background, or to black where the sleeve declares none.
+# tab goes back to this sleeve's own [terminal] bg_color, or to black where the
+# sleeve declares none.
 _zsh_generate_iterm2_ssh_colors() {
   local target="$1"
 
@@ -123,8 +123,8 @@ zsh_check() {
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]]; then
-    # All three are linked by _install, so all three must be checked. Checking
-    # only .zshrc let a broken .zshenv or .zprofile report healthy.
+    # _install links .zshrc, .zshenv and .zprofile, so each must be checked.
+    # Checking only .zshrc let a broken .zshenv or .zprofile report healthy.
     local zf
     for zf in .zshrc .zshenv .zprofile; do
       if ! molt_link_healthy "$HOME/$zf"; then
@@ -198,7 +198,7 @@ zsh_verify() {
     errors=1
   fi
 
-  # _install links all three; verifying only .zshrc let a broken .zshenv or
+  # _install links each of them; verifying only .zshrc let a broken .zshenv or
   # .zprofile pass verify after passing check. Same gap, one phase later.
   local zf
   for zf in .zshrc .zshenv .zprofile; do

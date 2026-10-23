@@ -27,7 +27,7 @@ _utilz_source() {
 }
 
 _utilz_find_repo() {
-  # Check MOLT_UTILZ_HOME from constants.sh first
+  # MOLT_UTILZ_HOME, from constants.sh: MOLT_PRJ_DIR/Utilz unless UTILZ_HOME names another
   if [[ -d "${MOLT_UTILZ_HOME}/bin" ]] && [[ -f "${MOLT_UTILZ_HOME}/bin/utilz" ]]; then
     echo "${MOLT_UTILZ_HOME}"
     return 0

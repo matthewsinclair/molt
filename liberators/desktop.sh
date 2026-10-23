@@ -7,9 +7,6 @@
 # each set is read back, so a key that did not take is an error, not silence
 # (issue 0035).
 
-# GTK3 and GTK4 read different paths and do not share a stylesheet. Linking
-# gtk-3.0 only left GTK4 apps -- now the common case -- unstyled, and molt could
-# not repair a gtk-4.0 link because it never created one.
 # Dock favourites, read from instances/<host>/desktop/favorite-apps.
 #
 # Instance-scoped like keys.sh (keyd/default.conf) and ssh.sh (ssh/config.d),
@@ -164,6 +161,9 @@ _desktop_favorites_wanted() {
   echo "$out"
 }
 
+# GTK3 and GTK4 read different paths and do not share a stylesheet. Linking
+# gtk-3.0 only left GTK4 apps -- now the common case -- unstyled, and molt could
+# not repair a gtk-4.0 link because it never created one.
 _desktop_gtk_versions() {
   echo "gtk-3.0 gtk-4.0"
 }
@@ -320,7 +320,7 @@ desktop_verify() {
     fi
   fi
 
-  # _install links the GTK stylesheet; verify never checked it.
+  # _install links the GTK stylesheet, so verify checks it too.
   local user_repo
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
   if [[ -n "$user_repo" ]] && [[ -f "$user_repo/config/gtk/gtk.css" ]]; then

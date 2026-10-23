@@ -11,8 +11,9 @@ hostname = "__MOLT_HOSTNAME__"
 instance_dir = "instances/__MOLT_HOSTNAME__"
 projects_dir = "~/Devel/prj"
 
-# Enabled out of the box: the liberators that need no extra config beyond
-# what this skeleton ships. Enable the rest as you add config/<name>/.
+# Liberators run in the order listed here. Enabled out of the box: the
+# liberators that need no extra config beyond what this skeleton ships. Enable
+# the rest as you add config/<name>/.
 
 [[liberator]]
 name = "system"
@@ -66,6 +67,8 @@ name = "dev-tools"
 enabled = false
 os = ["linux", "macos"]
 
+# Needs no config/ directory, so it is enabled; it stays here for its place
+# in the run order.
 [[liberator]]
 name = "npm"
 enabled = true
@@ -76,6 +79,8 @@ name = "brew"
 enabled = false
 os = ["macos"]
 
+# Needs no config/ directory, so it is enabled; it stays here for its place
+# in the run order.
 [[liberator]]
 name = "claude"
 enabled = true

@@ -187,7 +187,7 @@ editors_check() {
 editors_install() {
   # Verify emacs is installed
   if ! command -v emacs &>/dev/null; then
-    molt_error "emacs not found. Install it (eg apt install emacs, brew install emacs-plus@29) then re-run."
+    molt_error "emacs not found. Install it (eg apt install emacs, brew install emacs-plus@<version>) then re-run."
     return 1
   fi
 

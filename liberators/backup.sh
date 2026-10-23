@@ -5,13 +5,13 @@
 # nothing, because there is nothing here it can usefully own.
 #
 # It used to render a mount script and a LaunchAgent that mounted the SMB share
-# on every network change. All three were deleted on 7 Sep 2026. SuperDuper
-# mounts the share itself from the hostShareUrl in its own job definition, so
-# that machinery duplicated work already being done — and it was worse than
-# redundant. A share mounted for no reason is another volume for SuperDuper's
-# destination resolver to fall back onto when it cannot open the image, and on
-# 7 Sep it did exactly that: fell back onto an unrelated share and began a
-# Smart Update into its root.
+# on every network change. The script and the LaunchAgent were deleted on 7 Sep
+# 2026. SuperDuper mounts the share itself from the hostShareUrl in its own job
+# definition, so that machinery duplicated work already being done — and it was
+# worse than redundant. A share mounted for no reason is another volume for
+# SuperDuper's destination resolver to fall back onto when it cannot open the
+# image, and on 7 Sep it did exactly that: fell back onto an unrelated share
+# and began a Smart Update into its root.
 #
 # What is left is the only thing molt can honestly assert about a backup that
 # lives inside a GUI app's private state: whether one actually happened, whether
@@ -61,7 +61,7 @@ MOLT_SD_SCHEDULER_LOG="${MOLT_SD_SCHEDULER_LOG:-/Library/Logs/SuperDuper 4/sched
 
 # Sets each MOLT_BACKUP_* value to what this sleeve's vars.sh exports, empty
 # when it exports none, since the file declares and not the environment molt
-# runs in; and fails, saying which, when one of the four it needs is empty.
+# runs in; and fails, saying which, when one it needs is empty.
 # They are read through molt_instance_var, in a subshell: sourced into molt's
 # own shell, an unset name in vars.sh ended molt under its nounset, and
 # backup_check, whose stderr molt discards, died without a word.
@@ -152,11 +152,11 @@ _backup_sd_share_bound() {
     | /usr/bin/grep -q "$MOLT_BACKUP_SHARE"
 }
 
-# Everything above asserts an *input*: share mounted, script installed, agent
-# loaded. None of them imply a backup exists. On 7 Sep 2026 both sleeves printed
-# "backup: ok" for days while pointing at a share that had never held one, and
-# the image that did hold one was deleted without a single check going red. A
-# check that cannot fail is decoration.
+# Everything above asserts an *input*: share reachable and mounted, its SMB
+# dialect, SuperDuper bound to it. None of them imply a backup exists. On 7 Sep
+# 2026 both sleeves printed "backup: ok" for days while pointing at a share that
+# had never held one, and the image that did hold one was deleted without a
+# single check going red. A check that cannot fail is decoration.
 #
 # So ask SuperDuper directly. tiles.json nests a JSON document inside a JSON
 # string; plutil reads both and ships with macOS, so this needs no jq or python.
@@ -294,7 +294,7 @@ _backup_run_assess() {
 # How long a *full* image would take to attach. Deliberately does NOT count the
 # bands directory: enumerating it is the very operation that takes 21 minutes on
 # a sick image, so the check would be slowest exactly when things are worst.
-# band-size and size are two small reads from Info.plist, and the ceiling is
+# band-size and size are small reads from Info.plist, and the ceiling is
 # what matters anyway -- this warns while the image is still growing, not after.
 _backup_attach_projection() {
   local info="$MOLT_BACKUP_IMAGE/Info.plist" bs sz
@@ -395,7 +395,7 @@ backup_check() {
   fi
 
   # An unmounted share is no longer a fault: nothing here mounts it any more,
-  # and SuperDuper mounts it itself when a copy runs. It only costs us the two
+  # and SuperDuper mounts it itself when a copy runs. It only costs us the
   # checks that have to read the image, so say which were skipped and move on.
   # Everything derived from tiles.json is local and runs either way.
   local share_readable=0

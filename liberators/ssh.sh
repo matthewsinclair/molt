@@ -101,7 +101,7 @@ _ssh_config_fault() {
 }
 
 # What check, install and verify each read before they look at ~/.ssh/config,
-# read here once for all three: _SSH_FRAGS, this host's config.d fragments in
+# read here once for them all: _SSH_FRAGS, this host's config.d fragments in
 # sorted order, and _SSH_FAULT, why the ssh config of the user repo $1 cannot
 # be installed, or empty when it can. File-scoped rather than printed: a $()
 # would keep the array in its subshell, and bash 3.2 has no nameref.

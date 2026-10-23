@@ -26,15 +26,15 @@ _claude_links() {
 # --- The user settings.json ---
 #
 # settings.json in the config dir is never linked: it holds each sleeve's own
-# permissions, hooks and plugins. Molt writes two values into it and leaves
-# every other key as it was: the statusLine, from the user repo's
+# permissions, hooks and plugins. Molt writes its own values into it and
+# leaves every other key as it was: the statusLine, from the user repo's
 # config/claude/statusline.json when it has one, and, on a sleeve that declares
 # its config dir, the hook that refuses a launch in $HOME. Each is named by a
 # label for messages, a file holding the JSON object molt writes, and two jq
 # filters with that object bound to $want: one reads the value as settings.json
 # holds it, null when it holds none, and one writes it in. jq -S compares, so
-# key order and layout are not differences; the dev-tools liberator already
-# requires jq on every sleeve.
+# key order and layout are not differences; this liberator checks for jq
+# itself.
 
 _CLAUDE_STATUSLINE_GET='.statusLine'
 # shellcheck disable=SC2016 # $want is jq's, not the shell's
@@ -134,13 +134,13 @@ _claude_settings_merge() {
 #
 # A sleeve that declares MOLT_CLAUDE_CONFIG_DIR in its vars.sh keeps Claude
 # Code's state there, rather than in ~/.claude and ~/.claude.json. Nothing below
-# runs on a sleeve that declares none: hv declares it sleeve by sleeve, as each
-# is ready to move (ST0006 WP04). On one that does, claude_install moves the
-# state once, with the paths into it that its settings name, publishes
-# CLAUDE_CONFIG_DIR only when the state is where it points, and installs the
-# hook that refuses a launch in $HOME. A variable published before the move
-# would start the next Claude empty in the new dir, and the move would then
-# meet a dir that is no longer empty.
+# runs on a sleeve that declares none, so hv could declare it sleeve by sleeve,
+# as each was ready to move (ST0006 WP04). On one that does, claude_install
+# moves the state once, with the paths into it that its settings name,
+# publishes CLAUDE_CONFIG_DIR only when the state is where it points, and
+# installs the hook that refuses a launch in $HOME. A variable published
+# before the move would start the next Claude empty in the new dir, and the
+# move would then meet a dir that is no longer empty.
 
 # Why the path $2, named $1, cannot be written as it stands into the files that
 # publish it, or nothing when it can. They are env.sh, a plist and an

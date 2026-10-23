@@ -3,7 +3,7 @@
 # Frees a machine's local agent from running in $HOME with nothing to hold its
 # role: each [[agent]] entry in the sleeve's molt.toml gets a home under
 # MOLT_AGT_DIR, rendered from the role the user repo defines (ST0006). The
-# model, and molt agent list|config, are in lib/agent.sh.
+# model, and the molt agent command, are in lib/agent.sh.
 
 # Sets autoMemoryDirectory to $2 in the rendered settings.json $1, and, when $3
 # names the home guard's hook entry, writes it in as the claude liberator writes
@@ -36,8 +36,9 @@ _agents_settings_set() {
 # blank line before each, where they are there. molt_render_place then
 # compares, backs up and moves the whole, so a re-render is compared with what
 # is on disk, and a layer that fails leaves $2 as it was (critic-shell, 21
-# Oct: built in two places, AGENTS.md was backed up at every render once it
-# had a preamble or an overlay). Fails, printing why, with no .molt-tmp left.
+# Oct: built in more than one place, AGENTS.md was backed up at every render
+# once it had a preamble or an overlay). Fails, printing why, with no
+# .molt-tmp left.
 _agents_build() {
   local template="$1" target="$2" before="$3" after="$4" tmp="${2}.molt-tmp" why
   if ! why="$(molt_render_text "$template" "$tmp")"; then
@@ -108,9 +109,9 @@ _agents_render_file() {
 
 # Renders the home of the agent named $1, with the role $2: each file that is
 # missing or stale, then memory/ and work/ where they are missing. It does not
-# wait for the claude liberator's move: on kovacs the home renders while
-# kovacs-sysadm is still live and the move is refused, so it can copy its files
-# in before hv runs the move (ST0006).
+# wait for the claude liberator's move: on kovacs the home rendered while
+# kovacs-sysadm was still live and the move was refused, so it could copy its
+# files in before hv ran the move (ST0006).
 _agents_render() {
   local name="$1" role="$2" home fault files file template before after dir
   home="$(molt_agent_home "$name")"

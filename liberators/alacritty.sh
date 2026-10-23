@@ -7,9 +7,10 @@
 # A rendered config is a regular FILE, so molt_link_healthy fails on it forever
 # and the liberator reinstalls every run. A linked config has no digest, so
 # molt_config_stale is meaningless for it. The right test depends on which form
-# the repo carries, which is exactly what rule 4 in writing-a-liberator.md is
-# about -- and the trap that switching to molt_install_config would otherwise
-# have set for whoever first renamed this file to .tmpl.
+# the repo carries, which is exactly what writing-a-liberator.md's rule on
+# calling molt_config_stale in _check is about -- and the trap that switching
+# to molt_install_config would otherwise have set for whoever first renamed
+# this file to .tmpl.
 _alacritty_config_wrong() {
   local user_repo target="$HOME/.config/alacritty/alacritty.toml"
   user_repo="$(molt_find_user_repo 2>/dev/null || echo "")"
@@ -88,7 +89,7 @@ alacritty_install() {
     # Via molt_install_config, not molt_link, so alacritty.toml.tmpl is possible.
     # Linking directly meant the liberator only ever looked for the literal
     # filename: renaming the config to .tmpl made it vanish rather than render.
-    # That is why MOLT_FONT_FAMILY and MOLT_FONT_SIZE are declared in every
+    # That is why MOLT_FONT_FAMILY and MOLT_FONT_SIZE were declared in every
     # instance's vars.sh and read by nothing.
     molt_install_config "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml" || return 1
   fi
