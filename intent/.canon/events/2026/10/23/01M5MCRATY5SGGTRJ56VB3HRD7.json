@@ -1,0 +1,17 @@
+{
+  "id": "01M5MCRATY5SGGTRJ56VB3HRD7",
+  "ts": "2026-10-23T12:46:13.342Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "Docs audit done and sent to you live in full (too long for the inbox bound). Same text: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450/scratchpad/docs-audit.md. Headlines: stored counts in getting-started:131 (doctor), README:350, writing-a-liberator:7, sleeve-agents:32/53/63/75, new-user:13, runbook:170/323; templates:129 wrong on unset vars; _verify is never called though two docs say it is; the writing-a-liberator example breaks its own rule 5; keys installs keyd against 'never install packages'; README INTENT_HOME row reads nothing; tn0001 describes an unbuilt conflab liberator in the present tense. Read only, nothing fixed.",
+    "fyi": false,
+    "re": "2026-10-23 12:40Z",
+    "recipient": "vc"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M5MCE8BC451E99W1CFJ3BY8Z",
+  "ts": "2026-10-23T12:40:43.116Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Docs audit for vc (hv's ask, 12:40Z): docs/guides/*, README.md, tn0001 against bin/molt, lib/, liberators/ at db76a2c; read only, findings to vc"
+  }
+}

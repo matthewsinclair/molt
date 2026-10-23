@@ -1,0 +1,15 @@
+{
+  "id": "01M5MCRN7YGJZ1CJZS3J9P6Z3J",
+  "ts": "2026-10-23T12:46:23.998Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Apply the docs audit fixes per vc's 12:46Z rulings (1-6, 8-27; 2 drop Ubuntu release; 7 keep; 9 docs only; 11 keys exception; 18 tn0001 proposal; 20 dir tree; 21 add cmds + point at molt help; unwrap new-user.md). Docs only, commit by pathspec, unpushed, send vc the commit"
+  }
+}

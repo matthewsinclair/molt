@@ -514,6 +514,14 @@
       "state": "archived",
       "archived_at": "2026-10-23T09:57:04.434Z",
       "recorded_at": "2026-10-23T08:59:46.641Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 21,
+      "text": "liberator_verify and liberator_run_all (lib/liberator.sh) have no caller: resleeve and doctor use _check, and each liberator's _verify is never run (dc's docs audit, 23 Oct). Ask hv: wire _verify after install, or delete the two and say _verify is for hand use.",
+      "state": "live",
+      "recorded_at": "2026-10-23T12:46:26.206Z"
     }
   ],
   "sent": [

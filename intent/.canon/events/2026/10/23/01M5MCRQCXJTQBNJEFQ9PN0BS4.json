@@ -1,0 +1,15 @@
+{
+  "id": "01M5MCRQCXJTQBNJEFQ9PN0BS4",
+  "ts": "2026-10-23T12:46:26.206Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "liberator_verify and liberator_run_all (lib/liberator.sh) have no caller: resleeve and doctor use _check, and each liberator's _verify is never run (dc's docs audit, 23 Oct). Ask hv: wire _verify after install, or delete the two and say _verify is for hand use."
+  }
+}
