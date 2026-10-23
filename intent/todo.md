@@ -8,9 +8,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 
 ## DOING
 
-- [-] ST0007: molt agent start: launch a sleeve agent by its role
-  - [x] 01: molt agent start, roles and home; config takes a role
-  - [x] 02: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
+_(none)_
 
 ## TODO
 
@@ -60,6 +58,9 @@ _(none)_
   - [x] 05: docs/guides/sleeve-agents.md: naming, roles, layers, the move
   - [x] 06: Managed deny floor for sysadm
   - [x] 07: Blog brief: so you want to run a local agent (precis, structure, bullets; hv writes the piece)
+- [x] ST0007: molt agent start: launch a sleeve agent by its role
+  - [x] 01: molt agent start, roles and home; config takes a role
+  - [x] 02: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
 
 ---
 
