@@ -1636,24 +1636,25 @@ cmd_doctor() {
 
   # Liberators: each .sh is executable, has _check function
   checks=$((checks + 1))
+  # A pass carries no count; a failure says how many of how many, both counted
+  # here, and names them (hv, 23 Oct).
   local lib_errors=0
   local lib_count=0
+  local lib_unchecked=""
   for lib in $(liberator_list); do
     lib_count=$((lib_count + 1))
     local script="${MOLT_LIBERATORS_DIR}/${lib}.sh"
-    if [[ ! -f "$script" ]]; then
+    # Check for _check function (source and test); a script gone since the
+    # listing has none
+    if [[ ! -f "$script" ]] || ! grep -q "^${lib}_check()" "$script" 2>/dev/null; then
       lib_errors=$((lib_errors + 1))
-      continue
-    fi
-    # Check for _check function (source and test)
-    if ! grep -q "^${lib}_check()" "$script" 2>/dev/null; then
-      lib_errors=$((lib_errors + 1))
+      lib_unchecked="${lib_unchecked:+$lib_unchecked, }$lib"
     fi
   done
   if [[ "$lib_errors" -eq 0 ]]; then
-    echo "Checking liberators... ✓ $lib_count liberators, all have _check"
+    echo "Checking liberators... ✓ all have _check"
   else
-    echo "Checking liberators... ⚠ $lib_errors of $lib_count have issues"
+    echo "Checking liberators... ⚠ $lib_errors of $lib_count have no _check: $lib_unchecked"
     not_passed=$((not_passed + 1))
   fi
 
@@ -1663,7 +1664,7 @@ cmd_doctor() {
     local enabled
     enabled="$(molt_enabled_liberators 2>/dev/null || echo "")"
     local enabled_count=0
-    local installed_count=0
+    local not_installed_count=0
     local not_installed=""
     local not_installed_why=""
     local why=""
@@ -1674,31 +1675,30 @@ cmd_doctor() {
       # why it failed; &>/dev/null threw that away and left the operator with a
       # ratio and no lead. Assign separately from `local` -- `local x="$(...)"`
       # returns local's status, not the command's (SC2155).
-      if why="$(liberator_load "$lib" 2>&1 && liberator_check "$lib" 2>&1)"; then
-        installed_count=$((installed_count + 1))
-      else
-        not_installed="${not_installed:+$not_installed }$lib"
+      if ! why="$(liberator_load "$lib" 2>&1 && liberator_check "$lib" 2>&1)"; then
+        not_installed_count=$((not_installed_count + 1))
+        not_installed="${not_installed:+$not_installed, }$lib"
         # As the check printed them: molt's prefix already names the
-        # liberator, and the not installed: line names it for a line without
-        # one (issue 0026).
+        # liberator, and the verdict line names it, in the same order, for a
+        # line without one (issue 0026).
         while IFS= read -r line; do
           [[ -z "$line" ]] && continue
           not_installed_why="${not_installed_why}         ${line}"$'\n'
         done <<< "$(echo "$why" | head -3)"
       fi
     done <<< "$enabled"
-    # This printed ✓ for every ratio and raised no warning, so 0/16 rendered as
-    # a pass and the missing liberator was never named. A count is not a verdict:
-    # "15/16 installed" tells you something is wrong and refuses to say what,
-    # which is the same "reports ok while wrong" class as a check that passed on
-    # a dangling symlink. It matters most exactly when it is least visible --
-    # when a liberator breaks estate-wide, this is the instrument that should
-    # notice, and a green tick means it never will.
-    if [[ "$installed_count" -eq "$enabled_count" ]]; then
-      echo "Checking enabled liberators... ✓ $installed_count/$enabled_count installed"
+    # This once printed ✓ for every ratio, so a sleeve with nothing installed
+    # passed and the missing liberator was never named. A count is not a verdict: a pass
+    # carries none, and a failure says how many of how many, both counted
+    # here, and names them (hv, 23 Oct). It matters most when it is least
+    # visible: when a liberator breaks estate-wide, this is the instrument that
+    # should notice.
+    if [[ "$enabled_count" -eq 0 ]]; then
+      echo "Checking enabled liberators... ✓ none enabled"
+    elif [[ "$not_installed_count" -eq 0 ]]; then
+      echo "Checking enabled liberators... ✓ all installed"
     else
-      echo "Checking enabled liberators... ⚠ $installed_count/$enabled_count installed"
-      echo "         not installed: ${not_installed}"
+      echo "Checking enabled liberators... ⚠ $not_installed_count of $enabled_count not installed: ${not_installed}"
       [[ -n "$not_installed_why" ]] && printf '%s' "$not_installed_why"
       echo "         Run \`molt resleeve\` to install, or \`molt list\` for status."
       not_passed=$((not_passed + 1))
@@ -1802,31 +1802,50 @@ cmd_doctor() {
     not_passed=$((not_passed + 1))
   fi
 
-  # git is not folding case in the managed repos
+  # Each managed repo's core.ignorecase matches what its disk does with case
+  #
+  # git sets core.ignorecase true when it makes a repo on a disk that folds
+  # case, which it finds by asking for .git/CoNfIg and getting .git/config. On
+  # such a disk, every Mac's, true is the truth: this check warned on it, so
+  # doctor could never pass on a Mac (hv, 23 Oct). What is wrong is a value the
+  # disk does not bear out, as in a repo copied from another machine rather
+  # than cloned. false on a disk that folds case lets git track paths differing
+  # only in case, which the disk cannot hold apart, and true on a disk that
+  # keeps case hides a rename that changes only case. git's own question,
+  # asked here without writing anything, says what the disk does.
   checks=$((checks + 1))
-  local ignorecase_repos=""
+  local case_folds=0 case_wrong="" case_fixes="" folds disk ignorecase
   for p in "${MOLT_ROOT:-}" "${user_repo:-}"; do
     [[ -n "$p" && -d "$p/.git" ]] || continue
-    if [[ "$(git -C "$p" config --get core.ignorecase 2>/dev/null)" == "true" ]]; then
-      ignorecase_repos="${ignorecase_repos}${ignorecase_repos:+, }$(basename "$p")"
+    folds=false disk="keeps case"
+    if [[ "$p/.git/config" -ef "$p/.git/CoNfIg" ]]; then
+      folds=true disk="folds case"
+    fi
+    ignorecase="$(git -C "$p" config --bool --get core.ignorecase 2>/dev/null)" || ignorecase=false
+    if [[ "$ignorecase" != "$folds" ]]; then
+      case_wrong="${case_wrong}${case_wrong:+, }$(basename "$p")"
+      case_fixes="${case_fixes}         $(basename "$p") has core.ignorecase=${ignorecase} on a disk that ${disk}:"$'\n'
+      case_fixes="${case_fixes}           git -C $p config core.ignorecase ${folds}"$'\n'
+    elif [[ "$folds" == true ]]; then
+      case_folds=1
     fi
   done
-  if [[ -z "$ignorecase_repos" ]]; then
-    echo "Checking git case sensitivity... ✓"
+  if [[ -z "$case_wrong" ]]; then
+    echo "Checking git case sensitivity... ✓ core.ignorecase matches the disk"
+    if [[ "$case_folds" -eq 1 ]]; then
+      echo "         The disk folds case, so a rename that changes only case does not"
+      echo "         reach the index by itself, and a sleeve on a disk that keeps case"
+      echo "         then pulls the old spelling and every symlink to it dangles: that"
+      echo "         is what hid the repo rename. Rename with 'git mv -f Old New', then"
+      echo "         'git status' to confirm the rename is staged before you commit."
+    fi
   else
-    echo "Checking git case sensitivity... ⚠ core.ignorecase=true in ${ignorecase_repos}"
-    echo "         EXPECTED on macOS -- this is a standing condition, not a defect."
-    echo "         git set it because the statement is true: APFS does fold case."
-    echo "         Do NOT set it false to clear this warning. That makes git assert"
-    echo "         something false about the filesystem, permanently, and git then"
-    echo "         treats case-variant paths as distinct entries the filesystem"
-    echo "         cannot actually hold."
-    echo "         What it costs you: a rename differing ONLY in case will not reach"
-    echo "         the index, so a case-sensitive sleeve pulls the OLD spelling and"
-    echo "         every symlink to it dangles. That is what hid the repo rename."
-    echo "         What to do, at the moment you rename: 'git mv -f Old New', then"
-    echo "         'git status' to confirm the rename is actually staged before you"
-    echo "         commit. Nothing to do otherwise."
+    echo "Checking git case sensitivity... ⚠ core.ignorecase does not match the disk in ${case_wrong}"
+    printf '%s' "$case_fixes"
+    echo "         git sets it when it makes a repo, by asking the disk, so a repo"
+    echo "         copied from another machine rather than cloned keeps that"
+    echo "         machine's answer, and git and the disk then disagree about which"
+    echo "         paths name the same file."
     not_passed=$((not_passed + 1))
   fi
 

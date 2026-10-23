@@ -86,7 +86,7 @@ TOML
     mkdir -p "$BATS_TEST_TMPDIR/home"
     # git's check fails: nothing in this HOME is linked to the repo's gitconfig.
     HOME="$BATS_TEST_TMPDIR/home" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
-    assert_output_contains "         not installed: git"
+    assert_output_matches 'Checking enabled liberators\.\.\. ⚠ [0-9]+ of [0-9]+ not installed: git'
     assert_output_matches $'(^|\n)         Zen: git: '
     refute_output_contains "git: Zen:"
 }
@@ -958,6 +958,63 @@ _floor_sleeve() {
     assert_output_contains "Checking declared font... ? cannot verify Test Font"
     refute_output_contains "All checks passed."
     assert_doctor_closed
+}
+
+@test "doctor's liberator checks pass with no count, and on a failure say how many of how many, and name them" {
+    _floor_sleeve
+    MOLT_LIBERATORS_DIR="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$MOLT_LIBERATORS_DIR"
+    # The counts expected are the fixture's own, never written down.
+    local lib libs=(alpha beta gamma) unchecked=(gamma) failing=(beta gamma)
+    for lib in "${libs[@]}"; do
+        printf '%s_check() { :; }\n' "$lib" > "$MOLT_LIBERATORS_DIR/$lib.sh"
+        printf '\n[[liberator]]\nname = "%s"\n' "$lib" >> "$INSTANCE/molt.toml"
+    done
+    run cmd_doctor
+    assert_output_contains "Checking liberators... ✓ all have _check"
+    assert_output_contains "Checking enabled liberators... ✓ all installed"
+
+    printf 'beta_check() { echo "beta: not here"; return 1; }\n' > "$MOLT_LIBERATORS_DIR/beta.sh"
+    printf 'gamma_install() { :; }\n' > "$MOLT_LIBERATORS_DIR/gamma.sh"
+    run cmd_doctor
+    assert_output_contains "Checking liberators... ⚠ ${#unchecked[@]} of ${#libs[@]} have no _check: gamma"
+    assert_output_contains "Checking enabled liberators... ⚠ ${#failing[@]} of ${#libs[@]} not installed: beta, gamma"
+    assert_output_contains "         beta: not here"
+    assert_doctor_closed
+}
+
+# What the test's own disk does with case, found by making a file and asking
+# for it in another case, not by the question doctor asks.
+_disk_folds_case() {
+    touch "$BATS_TEST_TMPDIR/casefold"
+    [ -e "$BATS_TEST_TMPDIR/CASEFOLD" ]
+}
+
+@test "doctor's git case sensitivity check passes where core.ignorecase matches the disk, and warns, naming the fix, where it does not" {
+    _floor_sleeve
+    git init -q "$REPO"
+    local folds=false other=true
+    if _disk_folds_case; then
+        folds=true other=false
+    fi
+    git -C "$REPO" config core.ignorecase "$folds"
+    run cmd_doctor
+    assert_output_contains "Checking git case sensitivity... ✓ core.ignorecase matches the disk"
+    git -C "$REPO" config core.ignorecase "$other"
+    run cmd_doctor
+    assert_output_contains "Checking git case sensitivity... ⚠ core.ignorecase does not match the disk in ${REPO##*/}"
+    assert_output_contains "           git -C $REPO config core.ignorecase $folds"
+    assert_doctor_closed
+}
+
+@test "doctor's git case sensitivity check passes on a disk that folds case with core.ignorecase=true, and says how to rename" {
+    _floor_sleeve
+    _disk_folds_case || skip "this disk keeps case"
+    git init -q "$REPO"
+    git -C "$REPO" config core.ignorecase true
+    run cmd_doctor
+    assert_output_contains "Checking git case sensitivity... ✓ core.ignorecase matches the disk"
+    assert_output_contains "Rename with 'git mv -f Old New'"
 }
 
 @test "the sudo helpers install a user copy, not the file named, refuse with sudo absent or refusing, and write nothing unprivileged" {

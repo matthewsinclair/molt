@@ -333,7 +333,7 @@ A session whose `CLAUDE_CONFIG_DIR` names another directory gets `this Claude Co
 
 ## What molt doctor reports
 
-`molt doctor`'s check of the enabled liberators shows `not installed: claude`, followed by the first three lines the claude liberator's check printed, as it printed them, under the `not installed:` line; the agents liberator's the same. The tables below leave off the `Zen:` prefix, and the claude liberator's own `claude:`. Below, `~/.config/claude` stands for the sleeve's config dir, which is still `~/.claude` on a sleeve that has not moved.
+`molt doctor`'s check of the enabled liberators names claude on its verdict line, `⚠ <n> of <m> not installed: claude`, and under it the first three lines the claude liberator's check printed, as it printed them; the agents liberator's the same. The tables below leave off the `Zen:` prefix, and the claude liberator's own `claude:`. Below, `~/.config/claude` stands for the sleeve's config dir, which is still `~/.claude` on a sleeve that has not moved.
 
 On a sleeve that has declared `MOLT_CLAUDE_CONFIG_DIR`, the claude liberator reports:
 
