@@ -143,3 +143,80 @@ _zsh_env() {
     run grep -c '_iterm2_set_bg 000000' "$script"
     assert_output_contains "1"
 }
+
+# A user repo whose instances declare [terminal] colours: gyges' ssh_bg_color
+# is $1, and this sleeve's bg_color is $2 when given.
+_zsh_instances() {
+    local repo="$ZSH_ROOT/repo"
+    mkdir -p "$repo/instances/gyges" "$repo/instances/$(test_hostname)"
+    printf '[terminal]\nssh_bg_color = "%s"\n' "$1" > "$repo/instances/gyges/instance.toml"
+    if [[ -n "${2:-}" ]]; then
+        printf '[terminal]\nbg_color = "%s"\n' "$2" > "$repo/instances/$(test_hostname)/instance.toml"
+    else
+        printf '[instance]\n' > "$repo/instances/$(test_hostname)/instance.toml"
+    fi
+}
+
+# install wrote the wrapper only when a check failed, and zsh_check never looked
+# at it, so a [terminal] colour change never reached it (issue 0041).
+@test "zsh_check fails on a stale iTerm2 ssh wrapper, and install rewrites it" {
+    _zsh_env
+    _zsh_current_shell() { echo "$ZSH_ROOT/bin/zsh"; }
+    molt_render() { mkdir -p "$(dirname "$2")" && printf 'add_newline = false\n' > "$2"; }
+    local colors="$HOME/.config/molt/iterm2-ssh-colors.sh"
+    _zsh_instances 1a1a2e 15191f
+
+    run zsh_install
+    assert_success
+    grep -Fqx '      gyges) _iterm2_set_bg 1a1a2e ;;' "$colors"
+    run zsh_check
+    refute_output_contains "iterm2-ssh-colors.sh"
+
+    _zsh_instances 2b2b3f 15191f
+    # The check renders into a temp file, which it must not leave behind.
+    mkdir -p "$ZSH_ROOT/tmp"
+    TMPDIR="$ZSH_ROOT/tmp" run zsh_check
+    assert_failure
+    assert_output_contains "zsh: ~/.config/molt/iterm2-ssh-colors.sh differs"
+    refute_output_contains "Generated iTerm2"
+    [[ -z "$(ls -A "$ZSH_ROOT/tmp")" ]]
+    run zsh_install
+    assert_success
+    grep -Fqx '      gyges) _iterm2_set_bg 2b2b3f ;;' "$colors"
+
+    _zsh_instances 2b2b3f 222222
+    run zsh_check
+    assert_failure
+    assert_output_contains "zsh: ~/.config/molt/iterm2-ssh-colors.sh differs"
+    run zsh_install
+    assert_success
+    grep -Fqx '    _iterm2_set_bg 222222  # back to [terminal] bg_color' "$colors"
+    run zsh_check
+    refute_output_contains "iterm2-ssh-colors.sh"
+
+    rm "$colors"
+    run zsh_check
+    assert_failure
+    assert_output_contains "zsh: ~/.config/molt/iterm2-ssh-colors.sh is missing"
+}
+
+# The wrapper matched <host>.lan and <host>.local, written into Molt; the house
+# domains come from the user repo instead, in file order (issue 0042).
+@test "the iTerm2 ssh wrapper matches each host under config/network/local-domains" {
+    _zsh_env
+    _zsh_instances 1a1a2e
+    mkdir -p "$ZSH_ROOT/repo/config/network"
+    printf '# house domains\n\nhockenbury.internal\n  lan  # the router\nlocal\n' \
+        > "$ZSH_ROOT/repo/config/network/local-domains"
+    local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
+    _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
+    grep -Fqx '      gyges|gyges.hockenbury.internal|gyges.lan|gyges.local) _iterm2_set_bg 1a1a2e ;;' "$script"
+}
+
+@test "the iTerm2 ssh wrapper matches bare host names when there is no local-domains file" {
+    _zsh_env
+    _zsh_instances 1a1a2e
+    local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
+    _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
+    grep -Fqx '      gyges) _iterm2_set_bg 1a1a2e ;;' "$script"
+}

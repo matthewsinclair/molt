@@ -6,5 +6,7 @@ type = "physical"
 model = "TODO: your machine model"
 
 [terminal]
+# ssh_bg_color tints an iTerm2 tab while it is ssh-ed into this host, matched by
+# its bare name and under each domain in config/network/local-domains, if any.
 ssh_bg_color = "1a1a2e"  # dark navy
 # bg_color = "15191f"  # this sleeve's own iTerm2 background; ssh resets the tab to it (default 000000)

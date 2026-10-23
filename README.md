@@ -194,7 +194,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | -------------- | ----------------------------------------------- | ------------ |
 | system         | Verify sudo (linux) or brew (macos)             | linux, macos |
 | local-bin      | `~/bin` directory, molt CLI symlink             | linux, macos |
-| zsh            | Shell default, Starship prompt, config linking  | linux, macos |
+| zsh            | Shell, Starship, config links, ssh tab colours  | linux, macos |
 | git            | Git + git-lfs verification, gitconfig linking   | linux, macos |
 | tmux           | Tmux verification, config linking               | linux, macos |
 | editors        | Doom Emacs + LazyVim, config linking, dock pin  | linux, macos |
