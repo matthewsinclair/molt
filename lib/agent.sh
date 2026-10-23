@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # agent.sh — Sleeve agents: the [[agent]] entries in a sleeve's molt.toml, the
-# home each one gets under MOLT_AGT_DIR, and `molt agent list|config` (ST0006).
+# home each one gets under MOLT_AGT_DIR, and `molt agent list|config` (ST0006)
+# and `roles|start|home` (ST0007).
 #
 # A sleeve agent is a local agent, Claude Code for now, that does
 # machine-oriented work on one host as the user. Its name is derived, never
@@ -45,14 +46,15 @@ molt_homed_agents() {
   printf '%s\n' "$agents" | awk -F'\t' '$3 == "true" && $4 == "claude" { print $1 "\t" $2 }'
 }
 
-# The entry of the agent named $1, as molt_agents prints it. Fails, printing
-# nothing: with status 1 when this sleeve declares no agent of that name, and 2
-# when its [[agent]] entries cannot be read. awk reads to the end, so the
-# writer never meets a closed pipe under pipefail (issue 0008).
+# The entry of the agent $1 names, by its name or by its role on this sleeve,
+# as molt_agents prints it. Fails, printing nothing: with status 1 when this
+# sleeve declares no such agent, and 2 when its [[agent]] entries cannot be
+# read. awk reads to the end, so the writer never meets a closed pipe under
+# pipefail (issue 0008).
 molt_agent_named() {
   local agents
   agents="$(molt_agents)" || return 2
-  printf '%s\n' "$agents" | awk -F'\t' -v want="$1" '!found && $1 == want { print; found = 1 } END { exit !found }'
+  printf '%s\n' "$agents" | awk -F'\t' -v want="$1" '!found && ($1 == want || $2 == want) { print; found = 1 } END { exit !found }'
 }
 
 # Names, a line each, what is wrong with this sleeve's [[agent]] entries: an
@@ -649,21 +651,52 @@ molt_agent_permissions() {
 
 _agent_usage() {
   echo "Usage: molt agent list"
-  echo "       molt agent config <name>"
+  echo "       molt agent roles"
+  echo "       molt agent start <role> [-- <claude args>]"
+  echo "       molt agent home <role>"
+  echo "       molt agent config <role>"
+  echo "An agent is named by its role on this sleeve, or by its name, <hostname>-<role>."
+}
+
+# This sleeve's agents, as molt_agents prints them. Fails, saying why, when the
+# sleeve has no molt.toml or its [[agent]] entries cannot be read.
+_agent_declared() {
+  if ! molt_find_manifest >/dev/null 2>&1; then
+    molt_error "molt agent: this sleeve has no molt.toml, so it declares no agents"
+    return 1
+  fi
+  if ! molt_agents; then
+    molt_error "molt agent: the [[agent]] entries in molt.toml could not be read"
+    return 1
+  fi
+}
+
+# The entry of the agent $1 names, by its role or its name, as molt_agents
+# prints it. No name prints the usage; an undeclared one fails, listing the
+# declared agents.
+_agent_entry() {
+  local want="$1" entry status=0
+  if [[ -z "$want" ]]; then
+    _agent_usage >&2
+    return 1
+  fi
+  entry="$(molt_agent_named "$want")" || status=$?
+  case "$status" in
+    0) echo "$entry" ;;
+    1)
+      molt_error "molt agent: $want is not declared on this sleeve; declared: $(printf '%s\n' "$(molt_agents)" | cut -f1 | paste -sd, - | sed 's/,/, /g; s/^$/none/')"
+      return 1 ;;
+    *)
+      molt_error "molt agent: the [[agent]] entries in molt.toml could not be read"
+      return 1 ;;
+  esac
 }
 
 # Every agent this sleeve declares: name, role, enabled, the state of its home,
 # and the home. Faults in the entries themselves follow, and fail the command.
 _agent_list() {
   local agents name role enabled harness
-  if ! molt_find_manifest >/dev/null 2>&1; then
-    molt_error "molt agent: this sleeve has no molt.toml, so it declares no agents"
-    return 1
-  fi
-  if ! agents="$(molt_agents)"; then
-    molt_error "molt agent: the [[agent]] entries in molt.toml could not be read"
-    return 1
-  fi
+  agents="$(_agent_declared)" || return 1
   if [[ -z "$agents" ]]; then
     echo "No agents: this sleeve's molt.toml has no [[agent]] entries."
   else
@@ -674,6 +707,87 @@ _agent_list() {
     done <<< "$agents"
   fi
   molt_report_faults molt_warn "molt agent: " "molt.toml" "$(molt_agent_manifest_faults)"
+}
+
+# The roles this sleeve declares, one a line, in manifest order, a disabled one
+# marked, since molt agent start refuses it. `roles list` is the same.
+_agent_roles() {
+  local agents
+  case "${1:-list}" in
+    list) ;;
+    *) _agent_usage; return 1 ;;
+  esac
+  agents="$(_agent_declared)" || return 1
+  [[ -z "$agents" ]] || printf '%s\n' "$agents" | awk -F'\t' '{ print $2 ($3 == "true" ? "" : " (disabled)") }'
+}
+
+# The home of the agent $1 names, as cd "$(molt agent home sysadm)" wants it.
+_agent_home() {
+  local entry name rest
+  entry="$(_agent_entry "${1:-}")" || return 1
+  IFS=$'\t' read -r name rest <<< "$entry"
+  molt_agent_home "$name"
+}
+
+# Starts the agent $1 names in its home as `claude start --name <name>`, the
+# word start its first prompt and what follows -- after it, in place of this
+# process. Refuses, naming the fix and starting nothing: an agent not enabled;
+# a home that is not current; on a sleeve that declares a config dir, a shell
+# whose CLAUDE_CONFIG_DIR is another, compared as the home guard compares them,
+# since the guard would refuse the session's first prompt; a session of that
+# name already running; and no claude on PATH (ST0007).
+_agent_start() {
+  local entry name role enabled harness home state declared want have pids status=0
+  entry="$(_agent_entry "${1:-}")" || return 1
+  shift
+  [[ "${1:-}" != -- ]] || shift
+  IFS=$'\t' read -r name role enabled harness <<< "$entry"
+  home="$(molt_agent_home "$name")"
+
+  if [[ "$enabled" != true ]]; then
+    molt_error "molt agent: $name is not enabled on this sleeve: its [[agent]] entry in molt.toml says enabled = $enabled"
+    return 1
+  fi
+  state="$(molt_agent_currency "$name" "$role")"
+  if [[ "$state" != current ]]; then
+    molt_error "molt agent: $name's home is $state: run molt resleeve, then start it"
+    return 1
+  fi
+
+  if ! declared="$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR)"; then
+    molt_error "molt agent: MOLT_CLAUDE_CONFIG_DIR could not be read: $declared"
+    return 1
+  fi
+  if [[ -n "$declared" ]]; then
+    want="$(molt_disk_path "$declared")" || want="$declared"
+    have="${CLAUDE_CONFIG_DIR:-}"
+    if [[ -n "$have" ]]; then
+      have="$(molt_disk_path "$have")" || have="$CLAUDE_CONFIG_DIR"
+    fi
+    if [[ -z "$have" || "$have" != "$want" ]]; then
+      molt_error "molt agent: this shell's CLAUDE_CONFIG_DIR is ${CLAUDE_CONFIG_DIR:-unset}, and this sleeve's is $(molt_tilde "$declared"): start agents from a shell opened after the move, which sources ~/.config/molt/env.sh"
+      return 1
+    fi
+  fi
+
+  pids="$(pgrep -f -- "--name[= ]$name( |\$)")" || status=$?
+  case "$status" in
+    0)
+      molt_error "molt agent: $name is already running (pid $(printf '%s\n' "$pids" | paste -sd, - | sed 's/,/, /g')): go to that session, or quit it first"
+      return 1 ;;
+    1) ;;
+    *) molt_warn "molt agent: pgrep could not list processes, so whether $name is already running is unknown" ;;
+  esac
+  if ! command -v claude >/dev/null 2>&1; then
+    molt_error "molt agent: claude is not on PATH"
+    return 1
+  fi
+  if ! cd "$home"; then
+    molt_error "molt agent: cannot enter $(molt_tilde "$home")"
+    return 1
+  fi
+  molt_info "Starting $name in $(molt_tilde "$home")"
+  exec claude start --name "$name" "$@"
 }
 
 # Whether this sleeve's sandbox profile is in place, for an agent the sandbox
@@ -694,25 +808,12 @@ _agent_sandbox_line() {
   fi
 }
 
-# The agent named $1: its role, harness, home, each rendered file's state, the
+# The agent $1 names: its role, harness, home, each rendered file's state, the
 # settings files read for it, and the permission rules in effect there, each
-# tagged with its layer. An undeclared name fails, listing the declared ones.
+# tagged with its layer. An undeclared one fails, listing the declared ones.
 _agent_config() {
-  local want="${1:-}" entry status=0 name role enabled harness home states file state template layer path rules
-  if [[ -z "$want" ]]; then
-    _agent_usage
-    return 1
-  fi
-  entry="$(molt_agent_named "$want")" || status=$?
-  case "$status" in
-    0) ;;
-    1)
-      molt_error "molt agent: $want is not declared on this sleeve; declared: $(printf '%s\n' "$(molt_agents)" | cut -f1 | paste -sd, - | sed 's/,/, /g; s/^$/none/')"
-      return 1 ;;
-    *)
-      molt_error "molt agent: the [[agent]] entries in molt.toml could not be read"
-      return 1 ;;
-  esac
+  local entry name role enabled harness home states file state template layer path rules
+  entry="$(_agent_entry "${1:-}")" || return 1
   IFS=$'\t' read -r name role enabled harness <<< "$entry"
 
   home="$(molt_agent_home "$name")"
@@ -750,10 +851,13 @@ _agent_config() {
   fi
 }
 
-# molt agent list | molt agent config <name>
+# molt agent list | roles | start <role> [-- <args>] | home <role> | config <role>
 cmd_agent() {
   case "${1:-}" in
     list)   _agent_list ;;
+    roles)  shift; _agent_roles "$@" ;;
+    start)  shift; _agent_start "$@" ;;
+    home)   shift; _agent_home "$@" ;;
     config) shift; _agent_config "$@" ;;
     *)      _agent_usage; return 1 ;;
   esac

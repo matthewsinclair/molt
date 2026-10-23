@@ -148,7 +148,11 @@ TOML
     run_molt help
     assert_success
     assert_output_contains "agent list"
-    assert_output_contains "agent config <name>"
+    assert_output_contains "agent config <role>"
+    # ST0007 AC001, AC003.
+    assert_output_contains "agent start <role> [-- <claude args>]"
+    assert_output_contains "agent roles"
+    assert_output_contains "agent home <role>"
     run_molt agent
     assert_failure
     assert_output_contains "Usage: molt agent list"

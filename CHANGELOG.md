@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `molt agent start <role> [-- <claude args>]` starts a sleeve agent in its home as `claude start --name <hostname>-<role>`, the word `start` its first prompt and what follows `--` after it, in place of molt's own process. It refuses, naming the fix and starting nothing, an agent this sleeve does not declare (listing those it does) or does not enable, a home that is not current, a shell whose `CLAUDE_CONFIG_DIR` is not the config dir the sleeve declares, compared as the home guard compares them, a session of that name already running, and a `claude` not on PATH. `molt agent roles` lists the roles the sleeve declares, one a line, a disabled one marked `(disabled)`; `molt agent home <role>` prints an agent's home; and `molt agent config` takes a role as well as a name, as `start` and `home` do (ST0007)
+
 ### Changed
 
 - The Markdown formatter check runs from `"formatters": ["markdown"]` in `intent/.config/config.json`, which Intent's shipped staged-format guard reads in the pre-commit gate, so a fresh clone runs the same check as this one. It replaces a hand-wired copy of that guard in this clone's untracked `.git/hooks/pre-commit`, which no clone received and `intent doctor` reported; the copy is removed from the clone

@@ -49,9 +49,16 @@ Commands:
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   agent list  List this sleeve's agents: name, role, enabled, state, home
-  agent config <name>
+  agent roles List the roles this sleeve declares, one a line
+  agent start <role> [-- <claude args>]
+                        Start the agent in its home, as
+                        claude start --name <hostname>-<role>
+  agent home <role>
+                        Print the agent's home
+  agent config <role>
                         Show an agent's home, its files' state, the settings
                         read for it and its permission rules, by layer
+                        (an agent is named by its role, or <hostname>-<role>)
   git <cmd>    Run a git command across all managed repos
   doctor      System diagnostics and health checks
   test        Run bats test suite (molt test [liberator])

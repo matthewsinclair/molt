@@ -1,5 +1,6 @@
 #!/usr/bin/env bats
-# agents.bats — agents liberator and molt agent list|config (ST0006 WP02)
+# agents.bats — agents liberator and molt agent list|config (ST0006 WP02) and
+# roles|start|home (ST0007)
 
 load "../test_helper.bash"
 
@@ -687,6 +688,154 @@ with_role_files_unlisted() {
     run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent config kovacs-docs
     assert_failure
     assert_output_contains "kovacs-docs is not declared on this sleeve; declared: $NAME"
+}
+
+# --- Starting an agent (ST0007) ---
+
+# A claude that records the directory it runs in, its arguments and its
+# CLAUDE_CONFIG_DIR, and a hostname no sleeve has, first on PATH, so no session
+# running on the machine under test carries the agents' names. Called before
+# setup_agents, which reads the hostname.
+fake_launch() {
+    local bin="$BATS_TEST_TMPDIR/bin"
+    mkdir -p "$bin"
+    export CALLED="$BATS_TEST_TMPDIR/claude.called"
+    printf '#!/bin/sh\necho moltstart\n' > "$bin/hostname"
+    cat > "$bin/claude" <<EOF
+#!/bin/sh
+{ /bin/pwd -P; printf '%s\n' "\$@"; printf 'config=%s\n' "\${CLAUDE_CONFIG_DIR-unset}"; } > "$CALLED"
+EOF
+    chmod +x "$bin/hostname" "$bin/claude"
+    export PATH="$bin:$PATH"
+}
+
+# A process whose command line carries --name $1, as a Claude Code session
+# started by name does, with its pid in RUNNING once pgrep can see it.
+fake_session() {
+    bash -c 'while :; do sleep 1; done' claude --name "$1" >/dev/null 2>&1 3>&- &
+    RUNNING=$!
+    local tries=0
+    until pgrep -f -- "--name $1( |\$)" >/dev/null; do
+        (( ++tries < 50 )) || return 1
+        sleep 0.1
+    done
+}
+
+end_session() {
+    kill "$RUNNING"
+    wait "$RUNNING" 2>/dev/null || true
+}
+
+@test "molt agent start runs claude start --name <name> in the agent's home, by its role or its name, passing on what follows --" {
+    # AT001 (ST0007 AC001).
+    fake_launch
+    setup_agents
+    agents_install >/dev/null
+    local home_disk
+    home_disk="$(cd "$AGENT_HOME" && /bin/pwd -P)"
+    run cmd_agent start sysadm -- --effort max
+    assert_success
+    assert_output_contains "Starting $NAME in $AGENT_HOME"
+    [ "$(cat "$CALLED")" = "$(printf '%s\n' "$home_disk" start --name "$NAME" --effort max "config=$CLAUDE_CONFIG_DIR")" ]
+    rm "$CALLED"
+    run cmd_agent start "$NAME"
+    assert_success
+    [ "$(cat "$CALLED")" = "$(printf '%s\n' "$home_disk" start --name "$NAME" "config=$CLAUDE_CONFIG_DIR")" ]
+}
+
+@test "molt agent start refuses an undeclared role, a disabled agent, a home that is not current and a shell without the sleeve's config dir, naming the fix and starting nothing" {
+    # AT002 (ST0007 AC002).
+    fake_launch
+    setup_agents
+    write_manifest '[[agent]]' 'role = "sysadm"' '' '[[agent]]' 'role = "ops"' 'enabled = false'
+    agents_install >/dev/null
+
+    run cmd_agent start docs
+    assert_failure
+    assert_output_contains "docs is not declared on this sleeve; declared: $NAME, $SLEEVE-ops"
+    run cmd_agent start ops
+    assert_failure
+    assert_output_contains "$SLEEVE-ops is not enabled on this sleeve"
+    echo "Patch on Tuesdays." >> "$ROLE/AGENTS.md.tmpl"
+    run cmd_agent start sysadm
+    assert_failure
+    assert_output_contains "$NAME's home is stale: run molt resleeve, then start it"
+
+    declare_config_dir
+    agents_install >/dev/null
+    mkdir -p "$HOME/.config/claude"
+    unset CLAUDE_CONFIG_DIR
+    run cmd_agent start sysadm
+    assert_failure
+    assert_output_contains "this shell's CLAUDE_CONFIG_DIR is unset, and this sleeve's is ~/.config/claude"
+    export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/claude-config"
+    run cmd_agent start sysadm
+    assert_failure
+    assert_output_contains "this shell's CLAUDE_CONFIG_DIR is $BATS_TEST_TMPDIR/claude-config, and this sleeve's is ~/.config/claude"
+    [ ! -e "$CALLED" ]
+
+    export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+    run cmd_agent start sysadm
+    assert_success
+    grep -qx "config=$HOME/.config/claude" "$CALLED"
+}
+
+@test "molt agent start refuses while a session of that name runs, naming its pid, and not for one whose name only begins with it" {
+    # AT003 (ST0007 AC002).
+    fake_launch
+    setup_agents
+    agents_install >/dev/null
+    fake_session "$NAME"
+    run cmd_agent start sysadm
+    end_session
+    assert_failure
+    assert_output_contains "$NAME is already running (pid $RUNNING)"
+    [ ! -e "$CALLED" ]
+    fake_session "${NAME}2"
+    run cmd_agent start sysadm
+    end_session
+    assert_success
+    [ -e "$CALLED" ]
+}
+
+@test "molt agent roles lists the declared roles one a line, a disabled one marked; molt agent home prints the home; molt agent config takes a role" {
+    # AT004 (ST0007 AC003).
+    setup_agents
+    write_manifest '[[agent]]' 'role = "sysadm"' '' '[[agent]]' 'role = "ops"' 'enabled = false'
+    agents_install >/dev/null
+    run cmd_agent roles
+    assert_success
+    [ "$output" = "$(printf '%s\n' sysadm 'ops (disabled)')" ]
+    run cmd_agent roles list
+    assert_success
+    [ "$output" = "$(printf '%s\n' sysadm 'ops (disabled)')" ]
+    run cmd_agent home sysadm
+    assert_success
+    [ "$output" = "$AGENT_HOME" ]
+    run cmd_agent home docs
+    assert_failure
+    assert_output_contains "docs is not declared on this sleeve; declared: $NAME, $SLEEVE-ops"
+    run cmd_agent config sysadm
+    assert_success
+    assert_output_contains "$(printf '  %-9s %s' home "$AGENT_HOME")"
+}
+
+@test "molt agent roles, home and start run through bin/molt" {
+    # AT005 (ST0007 AC001, AC003).
+    fake_launch
+    setup_agents
+    agents_install >/dev/null
+    mkdir -p "$BATS_TEST_TMPDIR/cfg"
+    ln -s "$TEST_USER_REPO" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent roles
+    assert_success
+    [ "$output" = sysadm ]
+    run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent home sysadm
+    assert_success
+    [ "$output" = "$AGENT_HOME" ]
+    run env -u MOLT_PRJ_DIR HOME="$HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" molt agent start sysadm -- --resume
+    assert_success
+    [ "$(sed -n 2,5p "$CALLED")" = "$(printf '%s\n' start --name "$NAME" --resume)" ]
 }
 
 # --- The managed floor (WP06) ---
