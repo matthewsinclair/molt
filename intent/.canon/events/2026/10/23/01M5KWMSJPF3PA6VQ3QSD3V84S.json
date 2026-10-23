@@ -1,0 +1,15 @@
+{
+  "id": "01M5KWMSJPF3PA6VQ3QSD3V84S",
+  "ts": "2026-10-23T08:04:40.150Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "Run one bats suite at a time on this machine: agents.bats tests for molt agent start read the real process table, so a second run sees the first ones stand-in session (moltstart-sysadm is already running), until vc moves the stubs into test_helper.bash. Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing."
+  }
+}

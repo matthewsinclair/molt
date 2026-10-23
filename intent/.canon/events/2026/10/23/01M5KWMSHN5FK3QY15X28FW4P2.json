@@ -1,0 +1,15 @@
+{
+  "id": "01M5KWMSHN5FK3QY15X28FW4P2",
+  "ts": "2026-10-23T08:04:40.117Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "lib/molt.sh, test/test_helper.bash and the pgrep/ps stubs in test/liberators/claude.bats are vcs until vcs commit lifting _claude_settings_write and molt_claude_processes into lib/molt.sh lands (vc, 23 Oct); released when that commit is on main."
+  }
+}

@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 07:13Z
+heartbeat_at: 2026-10-23 08:04Z
 status: active
-focus: "23 Oct: issue 0038 on head, vc's go on the plan; building the rewrite, the doctor check and the tests"
+focus: "23 Oct: folded for hv's compact; 0038 committed at 114d6ad and with vc for review (hash and CHANGELOG line sent); lib/molt.sh held for vc's lift (hold 13)"
 claims: [ISSUE:0038]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0038]
 
 ## DOING
 
-- Issue 0038 (vc approved the plan, 23 Oct): the move rewrites every path into ~/.claude that the settings.json it moves names (absolute, ~, $HOME and ${HOME} spellings, each kept), naming each with its key, and doctor's claude check names any left on a sleeve that declares a config dir. liberators/claude.sh and test/liberators/claude.bats only; one commit, hash and CHANGELOG line to vc.
+- Issue 0038 committed at 114d6ad (liberators/claude.sh, test/liberators/claude.bats), with vc for review; hash and CHANGELOG line sent. vc rulings all executed there: W1 (\z anchors), W2 (a config dir a shell would split is not spliced; one test), W3 (one writer, _claude_settings_write, inside claude.sh), R4 (${HOME} in test 1); names by label, no counts. Next: answer vc review; vc closes 0038 and pushes. (edited)
 
 ## TODO
 
@@ -21,12 +21,13 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- lib/molt.sh, test/test_helper.bash and the pgrep/ps stubs in test/liberators/claude.bats are vcs until vcs commit lifting _claude_settings_write and molt_claude_processes into lib/molt.sh lands (vc, 23 Oct); released when that commit is on main.
 
 ## Watch-outs
 
 - macOS pgrep leaves out its own ancestors unless given -a, so molt run inside a Claude Code session did not see that session (claude liberator, ST0006). procps' pgrep leaves out only itself, and its -a lists full command lines, so the flag is macOS-only. procps' pgrep -l prints a process name only; name processes with ps -o pid=,args=.
 - In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main. cc's board views went backwards (old name, old focus). Restore intent/ views there with git checkout, and never commit them from a worktree.
+- Run one bats suite at a time on this machine: agents.bats tests for molt agent start read the real process table, so a second run sees the first ones stand-in session (moltstart-sysadm is already running), until vc moves the stubs into test_helper.bash. Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing.
 
 ## Decisions
 

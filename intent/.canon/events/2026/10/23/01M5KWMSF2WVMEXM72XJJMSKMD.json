@@ -1,0 +1,16 @@
+{
+  "id": "01M5KWMSF2WVMEXM72XJJMSKMD",
+  "ts": "2026-10-23T08:04:40.035Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 13,
+    "text": "Issue 0038 committed at 114d6ad (liberators/claude.sh, test/liberators/claude.bats), with vc for review; hash and CHANGELOG line sent. vc rulings all executed there: W1 (\\z anchors), W2 (a config dir a shell would split is not spliced; one test), W3 (one writer, _claude_settings_write, inside claude.sh), R4 (${HOME} in test 1); names by label, no counts. Next: answer vc review; vc closes 0038 and pushes."
+  }
+}
