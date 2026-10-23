@@ -1,0 +1,15 @@
+{
+  "id": "01M5KMR418GV542YE4G1B1ZEBZ",
+  "ts": "2026-10-23T05:46:40.552Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**hv's open calls, from vc's 23 Oct boot.** (1) Clear the two vc->hv messages of 21 Oct, both overtaken: kovacs' phase B ran (done 024), and ops and docs deny the credentials to sandboxed Bash too (Molt-matts 45e344c). hv runs `intent wb clear vc --node hv`, or tells vc to. (2) Confirm or overrule Intent 0612's ruling (todo 18). (3) `.claude/restart.md` says Molt has two nodes and that vc builds, against the README's five, and every node's launch prompt carries that file: replace its Nodes section with a pointer to the README roster. (4) A wake step for sleeve agents, which ST0006 never specified: kovacs-sysadm confirmed on 23 Oct that its contract, user-scope contract, memory, floor and guard all load at launch and nothing acts until the first prompt (its first turn was hv's /remote-control). Proposed: an issue for cc, `molt agent start <name>`, launching in the home with a per-role wake prompt. geodica-estate idled on 23 Oct for the same reason: launched without `start`, unlike sinclair-estate."
+  }
+}

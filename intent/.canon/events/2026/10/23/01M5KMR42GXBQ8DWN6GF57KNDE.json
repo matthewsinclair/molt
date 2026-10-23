@@ -1,0 +1,15 @@
+{
+  "id": "01M5KMR42GXBQ8DWN6GF57KNDE",
+  "ts": "2026-10-23T05:46:40.592Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "**A sleeve armed for the config-dir move (its vars.sh declares MOLT_CLAUDE_CONFIG_DIR) fails every `molt upgrade` and `molt resleeve` while any Claude process runs.** The claude liberator refuses the move and names each process, the run exits 1, and an `&&` chain stops there: hv's `molt upgrade --self && molt upgrade && molt maintain` on 23 Oct never reached maintain, which runs no liberators and can run alone. The agents liberator still installs the floor in the same run, so a refused move leaves the floor in and the state in ~/.claude (rhadamanth, 22 Oct 21:56Z). Arm and move in one sitting, with Chrome quit: its native host is a claude process."
+  }
+}

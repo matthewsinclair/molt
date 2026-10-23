@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "00ad2b2f-f321-4573-9b37-6767f1c8b394",
-    "heartbeat_at": "2026-10-23T05:12:21.672Z",
+    "heartbeat_at": "2026-10-23T05:46:40.821Z",
     "status": "active",
-    "focus": "22 Oct, 17:10Z-ish: v0.2.0 cut, every Molt issue closed (0022 last, d25828f), kovacs on v0.2.0, B1 for rhadamanth in Molt-matts f182813. Next: hv quits every Claude and runs the runbook's rhadamanth section (B4 to B9); on the bounce from a shell opened after B7, vc closes WP04 and ST0006 with gyges carried (todo 5). Peers ac c272b9a, cc d489f3a, dc d41df40 committed and holding, not released.",
+    "focus": "23 Oct 05:46Z: hv chose (a): every Claude quit and rhadamanth-move.md run whole, with molt resleeve at step 3 (22 Oct 21:56Z's upgrade installed the floor, but the move refused on running Claudes). On the bounce: verify steps 4 and 6, close WP04 and ST0006 with gyges carried (todo 5), globalfold, push. hv's open calls: the 23 Oct todo.",
     "claims": [
       "ST0006"
     ],
@@ -443,10 +443,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 18,
-      "text": "Intent 0612 SHIPPED 22 Oct 19:08Z (intent 3.2.4 dcd9057d4); Molt re-rendered to board@4.0 in 2805f6a, checked field for field against the old boards. The commit rule is now: each node commits exactly what its verbs print on `wrote:` lines (own board.json and wip.md, the inbox views its asks render, its events); a `re-rendered:` line is another node's, leave it. Still open: hv to confirm or overrule 0612's ruling, which intent-vc recorded on vc's no-objection under hv's pen; and Intent 0614 (worktree hooks sync an older store, medium, unreproduced) and 0615 (stale doc comment on the settings merge, low), no lane yet. 0613 (broken-pipe panic) is fixed in Intent's build #2 at 8bef2bb7a, live here since 22 Oct 20:03Z; Intent 3.2.5 is cut tonight and its build swaps the pair once more, schema unchanged.",
+      "text": "Intent 0612 SHIPPED 22 Oct 19:08Z (intent 3.2.4 dcd9057d4); Molt re-rendered to board@4.0 in 2805f6a, checked field for field against the old boards. The commit rule is now: each node commits exactly what its verbs print on `wrote:` lines (own board.json and wip.md, the inbox views its asks render, its events); a `re-rendered:` line is another node's, leave it. Intent 3.2.5 (2e0e9215d) is live here, and 0613 (broken-pipe panic) and 0615 (stale settings-merge doc comment) shipped in it, both closed. Still open: hv to confirm or overrule 0612's ruling, which intent-vc recorded on vc's no-objection under hv's pen; and Intent 0614 (worktree hooks sync an older store, medium), open in Intent's lane, where dc's lead says the 3.2.5 pair is not yet driven. Molt's workaround stands: never run intent in a Molt worktree, and restore views there with git checkout.",
       "state": "live",
       "recorded_at": "2026-10-22T17:06:29.056Z",
-      "edited_at": "2026-10-22T20:04:28.126Z"
+      "edited_at": "2026-10-23T05:46:40.734Z"
     },
     {
       "node": "vc",
@@ -456,6 +456,22 @@
       "state": "archived",
       "archived_at": "2026-10-22T19:11:49.841Z",
       "recorded_at": "2026-10-22T18:53:01.323Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 20,
+      "text": "**hv's open calls, from vc's 23 Oct boot.** (1) Clear the two vc->hv messages of 21 Oct, both overtaken: kovacs' phase B ran (done 024), and ops and docs deny the credentials to sandboxed Bash too (Molt-matts 45e344c). hv runs `intent wb clear vc --node hv`, or tells vc to. (2) Confirm or overrule Intent 0612's ruling (todo 18). (3) `.claude/restart.md` says Molt has two nodes and that vc builds, against the README's five, and every node's launch prompt carries that file: replace its Nodes section with a pointer to the README roster. (4) A wake step for sleeve agents, which ST0006 never specified: kovacs-sysadm confirmed on 23 Oct that its contract, user-scope contract, memory, floor and guard all load at launch and nothing acts until the first prompt (its first turn was hv's /remote-control). Proposed: an issue for cc, `molt agent start <name>`, launching in the home with a per-role wake prompt. geodica-estate idled on 23 Oct for the same reason: launched without `start`, unlike sinclair-estate.",
+      "state": "live",
+      "recorded_at": "2026-10-23T05:46:40.552Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 19,
+      "text": "**A sleeve armed for the config-dir move (its vars.sh declares MOLT_CLAUDE_CONFIG_DIR) fails every `molt upgrade` and `molt resleeve` while any Claude process runs.** The claude liberator refuses the move and names each process, the run exits 1, and an `&&` chain stops there: hv's `molt upgrade --self && molt upgrade && molt maintain` on 23 Oct never reached maintain, which runs no liberators and can run alone. The agents liberator still installs the floor in the same run, so a refused move leaves the floor in and the state in ~/.claude (rhadamanth, 22 Oct 21:56Z). Arm and move in one sitting, with Chrome quit: its native host is a claude process.",
+      "state": "live",
+      "recorded_at": "2026-10-23T05:46:40.592Z"
     }
   ],
   "sent": [
