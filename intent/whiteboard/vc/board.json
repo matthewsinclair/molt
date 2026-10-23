@@ -599,6 +599,13 @@
       "body": "hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.",
       "fyi": true,
       "recorded_at": "2026-10-23T08:13:23.530Z"
+    },
+    {
+      "id": "01M5KX7VDPRCCPSVM99741FVY9",
+      "recipient": "cc",
+      "body": "Correction to vc's hold message: neither run was cut off. The full suite on head passes under both bashes with 0038 and critic-shell's fixes. vc's mutation spot-check of 0038 killed all three mutants it tried: the boundary back to $, the repoint failure ignored, and doctor's home-paths report dropped. The unmutated code passes. The hold still stands, and 0038 closes after hv's go.",
+      "fyi": true,
+      "recorded_at": "2026-10-23T08:15:04.630Z"
     }
   ],
   "handled": [

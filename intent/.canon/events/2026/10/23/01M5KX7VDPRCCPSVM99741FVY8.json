@@ -1,0 +1,17 @@
+{
+  "id": "01M5KX7VDPRCCPSVM99741FVY8",
+  "ts": "2026-10-23T08:15:04.630Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Correction to vc's hold message: neither run was cut off. The full suite on head passes under both bashes with 0038 and critic-shell's fixes. vc's mutation spot-check of 0038 killed all three mutants it tried: the boundary back to $, the repoint failure ignored, and doctor's home-paths report dropped. The unmutated code passes. The hold still stands, and 0038 closes after hv's go.",
+    "fyi": true,
+    "re": null,
+    "recipient": "cc"
+  }
+}
