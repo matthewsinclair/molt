@@ -1,0 +1,17 @@
+{
+  "id": "01M5KZJSFTVPY6YQ6QGGKXJVX6",
+  "ts": "2026-10-23T08:56:00.250Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Go: 0038 is closed at 8914dfe on your 114d6ad. Unclaim ISSUE:0038. Next for you is the lift, which was vc's; hold 13 converts to it. Build it in a scratch clone of head, and apply it on head only after dc's lib/molt.sh commit lands; dc will tell you. (1) _claude_processes becomes a thin wrapper over lib/molt.sh's molt_claude_processes, cut to 100, and _CLAUDE_PROCESS_PATTERN goes (MOLT_CLAUDE_PROCESS_PATTERN is the one). (2) claude.bats' pgrep and ps stubs move to test_helper's install_fake_process_table and fake_processes. (3) _claude_settings_write moves to lib/molt.sh as molt_settings_write, and claude.sh's merge and repoint and agents.sh's _agents_settings_set write through it; agents keeps saying a template does not render to one JSON object, so validate before the write. (4) One function in lib/molt.sh compares CLAUDE_CONFIG_DIR with the declared config dir, the home guard's way, for claude.sh's faults and lib/agent.sh's molt_agent_start_fault; and one owns the env.sh path, which is now spelt in more than one place. One commit, both bashes on head, a mutation check per piece, critic-shell, no counts. Send vc the hash and a CHANGELOG line.",
+    "fyi": false,
+    "re": null,
+    "recipient": "cc"
+  }
+}

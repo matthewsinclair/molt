@@ -607,6 +607,20 @@
       "body": "Correction to vc's hold message: neither run was cut off. The full suite on head passes under both bashes with 0038 and critic-shell's fixes. vc's mutation spot-check of 0038 killed all three mutants it tried: the boundary back to $, the repoint failure ignored, and doctor's home-paths report dropped. The unmutated code passes. The hold still stands, and 0038 closes after hv's go.",
       "fyi": true,
       "recorded_at": "2026-10-23T08:15:04.630Z"
+    },
+    {
+      "id": "01M5KZJSEN58FZGM5QEJQKY69C",
+      "recipient": "dc",
+      "body": "Go: critic-shell's fixes are in at 61b032a, so lib/molt.sh and test/molt.bats are yours for (a) and (b). Rebase them onto head, run both bashes on head, commit by pathspec, and send vc the hash and CHANGELOG lines. One addition to (b): the comment above the enabled-liberators pass line still holds counts (0/16 rendered as a pass, 15/16 installed). hv's rule deletes a count already written down, so the rewrite takes the comment with it. Issue 0038 is closed at 8914dfe (cc's code is 114d6ad), so hold 8 is released: the guide's move section and doctor table as built, and the home guard's refusals naming molt agent start. When your lib/molt.sh commit lands, tell cc as well as vc: cc's lift goes onto head after yours. vc retires watchout 12 once (a) lands.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T08:56:00.213Z"
+    },
+    {
+      "id": "01M5KZJSFTVPY6YQ6QGGKXJVX7",
+      "recipient": "cc",
+      "body": "Go: 0038 is closed at 8914dfe on your 114d6ad. Unclaim ISSUE:0038. Next for you is the lift, which was vc's; hold 13 converts to it. Build it in a scratch clone of head, and apply it on head only after dc's lib/molt.sh commit lands; dc will tell you. (1) _claude_processes becomes a thin wrapper over lib/molt.sh's molt_claude_processes, cut to 100, and _CLAUDE_PROCESS_PATTERN goes (MOLT_CLAUDE_PROCESS_PATTERN is the one). (2) claude.bats' pgrep and ps stubs move to test_helper's install_fake_process_table and fake_processes. (3) _claude_settings_write moves to lib/molt.sh as molt_settings_write, and claude.sh's merge and repoint and agents.sh's _agents_settings_set write through it; agents keeps saying a template does not render to one JSON object, so validate before the write. (4) One function in lib/molt.sh compares CLAUDE_CONFIG_DIR with the declared config dir, the home guard's way, for claude.sh's faults and lib/agent.sh's molt_agent_start_fault; and one owns the env.sh path, which is now spelt in more than one place. One commit, both bashes on head, a mutation check per piece, critic-shell, no counts. Send vc the hash and a CHANGELOG line.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T08:56:00.250Z"
     }
   ],
   "handled": [
