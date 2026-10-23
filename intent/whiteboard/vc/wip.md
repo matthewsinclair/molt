@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 14:59Z
+heartbeat_at: 2026-10-23 15:03Z
 status: active
 focus: "23 Oct: v0.3.0 released; as-written/as-built audit fixed and pushed; guards adopted (bef8f14) and pushed, CI green. Waiting on hv: rhadamanth's backup, gyges' move (Tailscale)"
 claims: [ST0006]
