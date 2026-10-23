@@ -545,6 +545,14 @@
       "archived_at": "2026-10-23T17:22:13.903Z",
       "recorded_at": "2026-10-23T16:12:56.830Z",
       "edited_at": "2026-10-23T17:16:23.480Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 12,
+      "text": "hv, 23 Oct: build 0040 now (dc), and 0041 with 0042 now (cc). 0042 covers the wrapper only, with the house domains as a list in Molt-matts; the lan-hosts.conf ssh fragments stay hand-written. rhadamanth's backup waits until hv is home (no copy over Tailscale), and that is acceptable because gyges backs up the same Dropbox content.",
+      "state": "live",
+      "recorded_at": "2026-10-23T18:19:53.382Z"
     }
   ],
   "sent": [
@@ -769,6 +777,20 @@
       "body": "All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.",
       "fyi": true,
       "recorded_at": "2026-10-23T13:27:35.782Z"
+    },
+    {
+      "id": "01M5MZV9PBG3T28SAS1BFAF2BP",
+      "recipient": "dc",
+      "body": "hv's go (23 Oct): build issue 0040, specified live by SendMessage. The claude liberator merges Claude Code's attribution object into the user settings.json from Molt-matts config/claude/attribution.json, the way it does statusline.json (GET .attribution, SET .attribution = $want, same check and merge path); Molt-matts declares commit, pr and sessionUrl: false. Test it under both bashes, commit by pathspec, close 0040, and tell vc; vc pushes.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T18:19:53.419Z"
+    },
+    {
+      "id": "01M5MZV9QDYQ400DTFWJ4WNK2A",
+      "recipient": "cc",
+      "body": "hv's go (23 Oct): build issues 0041 and 0042 together, specified live by SendMessage. 0041: zsh_check renders the iTerm2 ssh wrapper to a temp file with the same generator and fails, naming the file, when it differs from disk or is missing. 0042: the generator takes the house domains from Molt-matts config/network/local-domains (one per line, # comments) and writes <host>|<host>.<domain>... for each; lan, local and hockenbury.internal go in that file. Test under both bashes, commit by pathspec, close both, tell vc; vc pushes.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T18:19:53.453Z"
     }
   ],
   "handled": [

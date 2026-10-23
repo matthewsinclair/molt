@@ -1,0 +1,17 @@
+{
+  "id": "01M5MZV9PBG3T28SAS1BFAF2BN",
+  "ts": "2026-10-23T18:19:53.419Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "hv's go (23 Oct): build issue 0040, specified live by SendMessage. The claude liberator merges Claude Code's attribution object into the user settings.json from Molt-matts config/claude/attribution.json, the way it does statusline.json (GET .attribution, SET .attribution = $want, same check and merge path); Molt-matts declares commit, pr and sessionUrl: false. Test it under both bashes, commit by pathspec, close 0040, and tell vc; vc pushes.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

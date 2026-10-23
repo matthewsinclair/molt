@@ -1,5 +1,5 @@
 ---
-verblock: "23 Oct 2026:v0.44: Matthew Sinclair - issue 0042 (house domain from config) for hv to rule"
+verblock: "23 Oct 2026:v0.45: Matthew Sinclair - hv ruled 0040 to 0042 built now; backup waits until hv is home"
 ---
 
 # Work In Progress
@@ -10,14 +10,14 @@ verblock: "23 Oct 2026:v0.44: Matthew Sinclair - issue 0042 (house domain from c
 
 ## DOING
 
-- **Nothing in flight.** What is left waits on hv: rhadamanth's backup, and scheduling issues 0040 to 0042 (TODO below).
+- **Nothing in flight.** dc builds issue 0040; cc builds 0041 with 0042 (hv, 23 Oct). rhadamanth's backup waits until hv is home.
 
 ## TODO
 
-- **Issue 0040**, hv to schedule: the claude liberator declares Claude Code's `attribution` object from Molt-matts, as it does the statusLine, so no sleeve hand-sets it.
-- **Issue 0041**, hv to schedule: zsh_check never looks at the iTerm2 ssh wrapper, so a `[terminal]` colour change never reaches `~/.config/molt/iterm2-ssh-colors.sh`; the fix renders it to a temp file in the check and compares.
-- **Issue 0042**, hv to rule: the ssh wrapper hardcodes `.lan` and `.local`; the house domain (`hockenbury.internal` since 23 Oct) comes from one Molt-matts setting, perhaps feeding the `lan-hosts.conf` ssh fragments too. Build it with 0041.
-- **rhadamanth's backup, hv's call:** SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
+- **Issue 0040**, dc building (hv, 23 Oct): the claude liberator declares Claude Code's `attribution` object from Molt-matts, as it does the statusLine, so no sleeve hand-sets it.
+- **Issue 0041**, cc building with 0042 (hv, 23 Oct): zsh_check never looks at the iTerm2 ssh wrapper, so a `[terminal]` colour change never reaches `~/.config/molt/iterm2-ssh-colors.sh`; the fix renders it to a temp file in the check and compares.
+- **Issue 0042**, cc building with 0041 (hv, 23 Oct): the ssh wrapper takes the house domains from Molt-matts `config/network/local-domains` instead of hardcoding `.lan` and `.local`; the wrapper only, so the `lan-hosts.conf` ssh fragments stay hand-written.
+- **rhadamanth's backup, when hv is home** (no copy over Tailscale; acceptable meanwhile, since gyges backs up the same Dropbox content): SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
 - **rhadamanth's `molt upgrade` refuses while the shared checkout carries live board views** (P4). Use `molt resleeve` on dev days; the condition ends when rhadamanth's Molt comes from brew. Molt from brew is coming (hv), with no thread yet; kovacs will be brew-only too.
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
 - **Every other sleeve's Molt clone, at its next resync** (kovacs, farcaster, pihole): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.
