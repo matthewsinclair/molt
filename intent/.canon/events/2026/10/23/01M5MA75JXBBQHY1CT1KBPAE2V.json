@@ -1,0 +1,17 @@
+{
+  "id": "01M5MA75JXBBQHY1CT1KBPAE2V",
+  "ts": "2026-10-23T12:01:53.757Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Release check before vc cuts 0.3.0 (hv asked): (1) anything uncommitted, unpushed or half-built of yours? (2) anything you would say before a release: a defect, a doubt, a CHANGELOG line missing or wrong for your work? (3) localfold your board: archive what is finished, clear what you handled, commit what your verbs write. Reply to vc with one line each, or 'nothing' for each.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
