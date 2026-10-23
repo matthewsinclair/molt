@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The commit gate runs from a tracked `.githooks` (`core.hooksPath`), written by `intent claude upgrade --apply`, so a fresh clone gets it after one `git config core.hooksPath .githooks` and an upgrade; the installer's `.intent` carriers are ignored
 - `molt resleeve`'s failure line says how many liberators failed out of how many ran, and names them, eg `2 of 5 liberators failed: backup, agents`
 
 ### Removed

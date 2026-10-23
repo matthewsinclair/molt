@@ -1,9 +1,11 @@
 # Generated views have ONE writer, and it is the renderer -- hv's ruling in
-# Intent's own tree, 2026-08-19 (ST0056 AC-03.17). This repo qualifies on a
-# read of the hook, not on the family resemblance: `.git/hooks/pre-commit`
-# runs `prettier --write` over every staged .md and `git add`s the rewrite
-# back, so the formatter writes the views behind the renderer and the commit
-# carries its edit silently.
+# Intent's own tree, 2026-08-19 (ST0056 AC-03.17). Until 22 Oct this repo's
+# hand-wired pre-commit ran `prettier --write` over every staged .md and
+# `git add`ed the rewrite back, so the formatter wrote the views behind the
+# renderer. Since then Intent's staged-format guard (from `.githooks`, since
+# 23 Oct) checks staged .md against `"formatters": ["markdown"]` and refuses
+# rather than rewrites, so a view prettier disagrees with would refuse the
+# commit that carries it. Either way the views stay out of prettier's reach.
 #
 # MEASURED HERE, 2026-08-26: NO SKEW TODAY. `intent doctor` reports 0 findings
 # over 26 views, and prettier renders all 24 tracked candidates byte-identical
@@ -38,8 +40,5 @@ intent/issues/*.md
 # Generated views have ONE writer, and it is the renderer. A formatter
 # editing these rewrites markup the author wrote, and `intent doctor` then
 # reports the drift as a hand-edit on a file nobody touched.
-intent/st/*/info.md
-intent/st/*/acceptance.md
-intent/st/*/WP/*/info.md
 intent/whiteboard/*/wip.md
 intent/whiteboard/*/inbox.*.md
