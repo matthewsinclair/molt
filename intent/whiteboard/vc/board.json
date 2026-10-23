@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "06e18903-885b-49b1-849a-a441be7fdbe1",
-    "heartbeat_at": "2026-10-23T11:25:41.621Z",
+    "heartbeat_at": "2026-10-23T12:25:27.093Z",
     "status": "active",
-    "focus": "23 Oct: the day's queue is done and pushed at 24bbb8b, CI green on Ubuntu and macOS (dispatch 39935162872); waiting on hv: rhadamanth's backup, gyges' move when Tailscale is on",
+    "focus": "23 Oct: v0.3.0 released (db76a2c, CI green on Ubuntu and macOS, GitHub release up); next, on hv's word: the guards adoption on intent-dc's recipe. Waiting on hv: rhadamanth's backup, gyges' move",
     "claims": [
       "ST0006"
     ],
