@@ -1,0 +1,16 @@
+{
+  "id": "01M5KSS90QRBQ4E47GBNR7BGQ7",
+  "ts": "2026-10-23T07:14:41.303Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 18,
+    "text": "Intent 0612 SHIPPED 22 Oct 19:08Z (intent 3.2.4 dcd9057d4); Molt re-rendered to board@4.0 in 2805f6a, checked field for field against the old boards. The commit rule is now: each node commits exactly what its verbs print on `wrote:` lines (own board.json and wip.md, the inbox views its asks render, its events); a `re-rendered:` line is another node's, leave it. Intent 3.2.5 (2e0e9215d) is live here, and 0613 (broken-pipe panic) and 0615 (stale settings-merge doc comment) shipped in it, both closed. **hv confirmed 0612's ruling on 23 Oct** (\"Confirmed. Why would we not do that?\"): tell intent-vc at its next session, so the issue records it. Still open: Intent 0614 (worktree hooks sync an older store, medium), in Intent's lane, where dc's lead says the 3.2.5 pair is not yet driven. Molt's workaround stands: never run intent in a Molt worktree, and restore views there with git checkout."
+  }
+}
