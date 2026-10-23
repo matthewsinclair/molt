@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-23 07:39Z
+heartbeat_at: 2026-10-23 08:00Z
 status: active
-focus: "23 Oct: hv's rule, no stored counts or check numbers anywhere: README a54d3fc, runbook d9ca5e5, docs by label 7f959b7, user-scope rule Molt-matts 22239d5; cmd_doctor deriving its total waits on vc's go (hold 9); vc's items 2 and 3 wait on cc's 0038 commit (hold 8)"
+focus: "23 Oct: hv's rule, no stored counts and nothing named by position, done in dc's lane: README a54d3fc, runbook d9ca5e5, docs by label 7f959b7, user-scope rule Molt-matts 22239d5, molt doctor counting its own checks with the upgrade step comments unnumbered d26dd53 (suite green under both bashes). Localfold for hv's compact. On the bounce: hold 8, vc's items 2 and 3 (the guide for issue 0038, the guard's refusals naming molt agent start), when vc sends cc's 0038 hash"
 claims: []
 ---
 
@@ -22,7 +22,6 @@ _(none)_
 ## Holds
 
 - vc's items 2 and 3 (23 Oct, on head): the sleeve-agents guide's move section and doctor table for what issue 0038 changes, read from cc's code as built; then the home guard's refusals name molt agent start as the way back in (templates/claude/claude-home-guard.sh.tmpl, its claude.bats assertions, the guide's quotes of them), message strings only, claude.bats under both bashes, a CHANGELOG line sent to vc. Released when cc's 0038 commit is on main (vc sends the hash).
-- cmd_doctor derives its total and its failures from the run (hv, 23 Oct: no stored counts or check numbers anywhere): lib/molt.sh drops total=15 and the [n/N] prefix and closes with All checks passed or <warnings> of <checks> checks need attention; test/molt.bats asserts labels, not numbers. Released on vc's go, and after cc's 0038 commit if that touches cmd_doctor.
 
 ## Watch-outs
 
