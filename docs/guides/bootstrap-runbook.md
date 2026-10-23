@@ -207,7 +207,7 @@ diverged. kovacs runs **MesloLGS Nerd Font at 11.0**, set by `6e99b17`.
 Other settings: copy-on-select, Super+C/V/X clipboard bindings for Parallels,
 Shift-Enter kitty-protocol encoding.
 
-`molt doctor` check 13 asserts the declared font is one fontconfig can resolve;
+`molt doctor`'s `Checking declared font...` asserts the declared font is one fontconfig can resolve;
 nothing installs fonts, so a fresh sleeve gets the config naming the font and
 none of the font.
 
