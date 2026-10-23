@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-23 08:02Z
+heartbeat_at: 2026-10-23 09:51Z
 status: active
-focus: "23 Oct: hv's rule, no stored counts and nothing named by position, done in dc's lane: README a54d3fc, runbook d9ca5e5, docs by label 7f959b7, user-scope rule Molt-matts 22239d5, molt doctor counting its own checks with the upgrade step comments unnumbered d26dd53 (suite green under both bashes). Localfold for hv's compact. On the bounce: hold 8, vc's items 2 and 3 (the guide for issue 0038, the guard's refusals naming molt agent start), when vc sends cc's 0038 hash"
+focus: "23 Oct: vc's three items done: doctor rulings (a)+(b) 595347d, the guide for 0038 d9f6413, the guard's refusals naming molt agent start 9810f94 (suite green under both bashes each time). Waiting on vc for what's next; vc's resleeve makes rhadamanth's guard current"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- vc's items 2 and 3, released by 0038's close at 8914dfe: the sleeve-agents guide's move section and doctor table for 0038 as built in liberators/claude.sh; the home guard's refusals name molt agent start (template strings, claude.bats assertions, the guide's quotes), claude.bats under both bashes, CHANGELOG line to vc
+_(none)_
 
 ## TODO
 
