@@ -46,7 +46,7 @@ Molt itself runs `vc`, `cc`, `dc` and `ac`. A suffix names a project session's j
 
 An estate agent is named `<estate>-estate`: `sinclair-estate`, `geodica-estate`. An estate has one agent, so the suffix never varies. Gtools provisions it, with `gtools doctor` and the contract it deploys, and Molt does not manage it.
 
-Its content root is the directory Gtools registers as `GTOOLS_ESTATE` and deploys the estate's `.claude/` into: `~/Dropbox/Sinclair-Shared` for sinclair, and `~/Dropbox/Geodica/Consulting` for geodica today. Start the session in that directory or below it. Claude Code loads `CLAUDE.md` and settings from the launch directory and its parents, never from a child, so a geodica session started in `~/Dropbox/Geodica` loads none of them.
+Its content root is the directory Gtools registers as `GTOOLS_ESTATE` and deploys the estate's `.claude/` into; `gtools estate list` names each estate's. Start the session in that directory or below it, eg `cd ~/Dropbox/Sinclair-Shared && claude start --name sinclair-estate`. Claude Code loads `CLAUDE.md` and settings from the launch directory and its parents, never from a child, so a session started above the content root loads none of them, and its `gtools` calls are not pinned to the estate. `molt agent start` starts sleeve agents only, and refuses an estate agent's name.
 
 ## Roles
 
