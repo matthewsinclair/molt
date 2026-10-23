@@ -1,0 +1,17 @@
+{
+  "id": "01M5MCDNBK4VG2N2QMZ17WTXQR",
+  "ts": "2026-10-23T12:40:23.667Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Audit for hv while vc waits on intent-dc's guards recipe: is as-written aligned with as-built? Your scope, code: the comments and header blocks in bin/molt, lib/*.sh, liberators/*.sh and the rendered templates, against the code beside them at v0.3.0 (db76a2c): a comment describing behaviour the code no longer has, a function named in a comment that no longer exists, a stale issue or ST reference, and any stored count or positional name hv's rule forbids. Read, don't fix: send vc findings as file:line, what it says, what the code does (with the code's file:line), and your proposed fix. Say what you checked and what you did not. vc reviews the blog post bl0001 itself. Reply 'nothing found' if clean.",
+    "fyi": false,
+    "re": null,
+    "recipient": "cc"
+  }
+}

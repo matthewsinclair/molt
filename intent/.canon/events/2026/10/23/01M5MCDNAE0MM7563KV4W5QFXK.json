@@ -1,0 +1,17 @@
+{
+  "id": "01M5MCDNAE0MM7563KV4W5QFXK",
+  "ts": "2026-10-23T12:40:23.630Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Audit for hv while vc waits on intent-dc's guards recipe: is as-written aligned with as-built? Your scope, docs: every guide under docs/guides/, README.md and docs/notes/tn0001 against what bin/molt, lib/ and liberators/ do at v0.3.0 (db76a2c): commands, flags, refusals, paths, file names, env vars, examples, and any stored count or positional name (check 14) hv's rule forbids. Read, don't fix: send vc findings as file:line, what it says, what the code does (with the code's file:line), and your proposed fix. Say what you checked and what you did not. vc reviews the blog post bl0001 itself. Reply 'nothing found' if clean.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

@@ -646,6 +646,20 @@
       "body": "Release check before vc cuts 0.3.0 (hv asked): (1) anything uncommitted, unpushed or half-built of yours? (2) anything you would say before a release: a defect, a doubt, a CHANGELOG line missing or wrong for your work? (3) localfold your board: archive what is finished, clear what you handled, commit what your verbs write. Reply to vc with one line each, or 'nothing' for each.",
       "fyi": false,
       "recorded_at": "2026-10-23T12:01:53.757Z"
+    },
+    {
+      "id": "01M5MCDNAE0MM7563KV4W5QFXM",
+      "recipient": "dc",
+      "body": "Audit for hv while vc waits on intent-dc's guards recipe: is as-written aligned with as-built? Your scope, docs: every guide under docs/guides/, README.md and docs/notes/tn0001 against what bin/molt, lib/ and liberators/ do at v0.3.0 (db76a2c): commands, flags, refusals, paths, file names, env vars, examples, and any stored count or positional name (check 14) hv's rule forbids. Read, don't fix: send vc findings as file:line, what it says, what the code does (with the code's file:line), and your proposed fix. Say what you checked and what you did not. vc reviews the blog post bl0001 itself. Reply 'nothing found' if clean.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:40:23.630Z"
+    },
+    {
+      "id": "01M5MCDNBK4VG2N2QMZ17WTXQS",
+      "recipient": "cc",
+      "body": "Audit for hv while vc waits on intent-dc's guards recipe: is as-written aligned with as-built? Your scope, code: the comments and header blocks in bin/molt, lib/*.sh, liberators/*.sh and the rendered templates, against the code beside them at v0.3.0 (db76a2c): a comment describing behaviour the code no longer has, a function named in a comment that no longer exists, a stale issue or ST reference, and any stored count or positional name hv's rule forbids. Read, don't fix: send vc findings as file:line, what it says, what the code does (with the code's file:line), and your proposed fix. Say what you checked and what you did not. vc reviews the blog post bl0001 itself. Reply 'nothing found' if clean.",
+      "fyi": false,
+      "recorded_at": "2026-10-23T12:40:23.667Z"
     }
   ],
   "handled": [
