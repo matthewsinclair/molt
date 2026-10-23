@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 08:54Z
+heartbeat_at: 2026-10-23 09:57Z
 status: active
-focus: "23 Oct, after vc's second compact: apply critic-shell's fixes from the scratch clone once dc's cmd_doctor commit lands, review cc's 0038, one molt resleeve, globalfold, push (vc doing 3)"
+focus: "23 Oct: the day's queue is done and pushed at 24bbb8b, CI green on Ubuntu and macOS (dispatch 39935162872); waiting on hv: rhadamanth's backup, gyges' move when Tailscale is on"
 claims: [ST0006]
 ---
 
@@ -13,7 +13,7 @@ claims: [ST0006]
 
 ## DOING
 
-- 23 Oct, hv AFK, vc has the pen. Landed: critic-shell's fixes 61b032a, issue 0038 closed 8914dfe, rhadamanth's agent homes re-rendered (agents liberator only; backup left for hv), the live start refusal checked, Molt and Molt-matts pushed, globalfold written. Next: review and land dc's doctor case check and pass lines, then dc's 0038 docs (hold 8 released); then cc's lift (process lister, test stubs, molt_settings_write, one config-dir comparison and env.sh owner), after dc's lib/molt.sh commit; each with a CHANGELOG line, both bashes, a push and CI on both runners; retire watchout 12 once the case check lands; add both to done.md 028.
+_(none)_
 
 ## TODO
 
