@@ -1,0 +1,15 @@
+{
+  "id": "01M5PHW0QHQ3Q0TBWY556W03PA",
+  "ts": "2026-10-24T08:54:05.809Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0048"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "vscode links code into a hardcoded ~/bin, not MOLT_LOCAL_BIN"
+  }
+}
