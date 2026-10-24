@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-24T10:49:33.275Z",
+    "heartbeat_at": "2026-10-24T12:31:17.851Z",
     "status": "active",
-    "focus": "ST0008 WP05 env writer committed f4fdebc (unpushed), awaiting vc's full-suite validation; Molt-matts env entries + UTILZ_INSTALL_PREFIX drafted, held until green",
+    "focus": "ST0008 WP05 done and pushed (Molt ec5fe42, Molt-matts 91a71ff); holding for hv's Molt cut, then the tap, formula publish and 9c418e2 back with ac's held findings (todo 13)",
     "claims": [
       "ST0008/01",
       "ST0008/02",
