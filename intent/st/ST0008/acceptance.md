@@ -51,7 +51,7 @@ title: Molt from brew: dev, opt and brew trees
 
 ### Group AC010
 
-- AC010 (non-test) README, getting-started and the bootstrap runbook describe the three trees and molt use; all tests passing under both bashes; CI green -- satisfied: no
+- AC010 (non-test) README, getting-started and the bootstrap runbook describe the three trees and molt use; all tests passing under both bashes; CI green -- evidence: README, getting-started and bootstrap-runbook describe dev/opt/brew and molt use (cc 2129890, ac findings fixed); all tests passing under brew bash 5.3 and /bin/bash 3.2 at 5f65465 (vc slot 313); no runtime-set change since; CI green: dispatch 40100323993 (macOS), tag 40100946997, push 40101779843 -- satisfied: yes
 
 ### Group AT001
 
