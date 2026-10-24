@@ -12,8 +12,9 @@ instance_dir = "instances/__MOLT_HOSTNAME__"
 projects_dir = "~/Devel/prj"
 
 # Liberators run in the order listed here. Enabled out of the box: the
-# liberators that need no extra config beyond what this skeleton ships. Enable
-# the rest as you add config/<name>/.
+# liberators that work on any sleeve. The rest are off until you want them:
+# what each needs is its tool installed, and it links or renders whatever
+# config/<name>/ holds once you add it.
 
 [[liberator]]
 name = "system"
@@ -35,7 +36,7 @@ name = "ssh"
 enabled = true
 os = ["linux", "macos"]
 
-# --- Enable as you add the matching config/ directories ---
+# --- Off until you want them; each needs its tool installed ---
 
 [[liberator]]
 name = "zsh"
