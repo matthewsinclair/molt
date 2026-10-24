@@ -1,0 +1,15 @@
+{
+  "id": "01M5PAR9M4EG4KPYTP27JGAVJJ",
+  "ts": "2026-10-24T06:49:43.813Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**One dev/opt/brew contract for Molt, Utilz, Intent and devbin** (hv, 24 Oct, by TUI). (B) your links first: formulas link into brew's bin as normal; Molt-matts puts ~/.local/bin ahead of brew's bin on every sleeve; <tool> use dev|opt|brew switches the per-user link set in ~/.local/bin (no link means brew); doctor names a shadow, comparing resolved dirs. The one contract text lives in Devbin's docs, drafted by devbin-vc, agreed SAME by molt-vc, utilz-vc and intent-vc before anything lands. Molt consequences: revert D6's links-nothing, MOLT_LOCAL_BIN moves to ~/.local/bin (kovacs has them as different dirs), and the zshrc PATH order change."
+  }
+}
