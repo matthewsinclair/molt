@@ -3,10 +3,10 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 12:31Z
+heartbeat_at: 2026-10-24 13:20Z
 status: active
-focus: "ST0008 WP05 done and pushed (Molt ec5fe42, Molt-matts 91a71ff); holding for hv's Molt cut, then the tap, formula publish and 9c418e2 back with ac's held findings (todo 13)"
-claims: [ST0008/01, ST0008/02, ST0008/03, ST0008/04]
+focus: "Holding for hv's Molt v1.0.0 cut (ST0008 WP05 pushed at ec5fe42; AT ids d4c0305). Next: the 9c418e2 reapply after the tap, with ac's held findings fixed first (todo 13); then todo 12 once the fleet has resleeved"
+claims: []
 ---
 
 # Control Claude (cc)
@@ -17,7 +17,6 @@ _(none)_
 
 ## TODO
 
-- ST0008 WP04 scratch-tap end-to-end run on rhadamanth, plan accepted by vc with its additions: cc scratchpad (session a38ae972) scratch-tap-plan.md. Prep done: scratchpad/tap-run/src clone at ca040c1 plus a file-url commit, scratch tag v0.3.0-scratch (the real repo already has v0.3.0), molt.rb rendered. Waits for vc's GO when the slot desk reopens after the compact. Every brew call with HOMEBREW_NO_AUTO_UPDATE=1 and HOMEBREW_NO_INSTALL_CLEANUP=1; unlink straight after install. If the build dir has no .git, stop, uninstall, untap, report. Finish: no /opt/homebrew/bin/molt, no molt in brew list, ~/.local/bin/molt still -> ~/Devel/prj/Molt/bin/molt.
 - Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct).
 - When 9c418e2 (the brew-first install docs) comes back after the tap is published, fix ac's held findings in it first: intent/ref/2026-10-24-doc-review-findings.md, every item marked held (eg B3, B17, B18, A23 and A24 in getting-started and the runbook). C16 (gyges-infra vs gyges-sysadm in sleeve-agents.md :24) waits on the live session name.
 
@@ -30,7 +29,6 @@ _(none)_
 - macOS pgrep leaves out its own ancestors unless given -a; procps' pgrep leaves out only itself, and its -a means full command lines, so pass -a on macOS only. Name processes with ps -o pid=,args=, not pgrep -l. (edited)
 - In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main and roll intent/ views back. Restore them there with git checkout, and never commit them from a worktree. (edited)
 - Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing. (edited)
-- ST0008 docs 9c418e2 (getting-started, bootstrap-runbook) are committed but held unpushed by vc on purpose until the tap exists and a release carries molt install. Leave them for vc to push.
 
 ## Decisions
 

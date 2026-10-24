@@ -5,15 +5,10 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-24T12:31:17.851Z",
+    "heartbeat_at": "2026-10-24T13:20:12.161Z",
     "status": "active",
-    "focus": "ST0008 WP05 done and pushed (Molt ec5fe42, Molt-matts 91a71ff); holding for hv's Molt cut, then the tap, formula publish and 9c418e2 back with ac's held findings (todo 13)",
-    "claims": [
-      "ST0008/01",
-      "ST0008/02",
-      "ST0008/03",
-      "ST0008/04"
-    ],
+    "focus": "Holding for hv's Molt v1.0.0 cut (ST0008 WP05 pushed at ec5fe42; AT ids d4c0305). Next: the 9c418e2 reapply after the tap, with ac's held findings fixed first (todo 13); then todo 12 once the fleet has resleeved",
+    "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
@@ -411,7 +406,8 @@
       "kind": "todo",
       "seq": 11,
       "text": "ST0008 WP04 scratch-tap end-to-end run on rhadamanth, plan accepted by vc with its additions: cc scratchpad (session a38ae972) scratch-tap-plan.md. Prep done: scratchpad/tap-run/src clone at ca040c1 plus a file-url commit, scratch tag v0.3.0-scratch (the real repo already has v0.3.0), molt.rb rendered. Waits for vc's GO when the slot desk reopens after the compact. Every brew call with HOMEBREW_NO_AUTO_UPDATE=1 and HOMEBREW_NO_INSTALL_CLEANUP=1; unlink straight after install. If the build dir has no .git, stop, uninstall, untap, report. Finish: no /opt/homebrew/bin/molt, no molt in brew list, ~/.local/bin/molt still -> ~/Devel/prj/Molt/bin/molt.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-24T13:20:11.693Z",
       "recorded_at": "2026-10-24T09:49:42.939Z"
     },
     {
@@ -419,7 +415,8 @@
       "kind": "watchout",
       "seq": 4,
       "text": "ST0008 docs 9c418e2 (getting-started, bootstrap-runbook) are committed but held unpushed by vc on purpose until the tap exists and a release carries molt install. Leave them for vc to push.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-24T13:20:11.771Z",
       "recorded_at": "2026-10-24T09:49:42.982Z"
     },
     {
