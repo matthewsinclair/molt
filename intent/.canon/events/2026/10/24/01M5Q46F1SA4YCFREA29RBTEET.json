@@ -1,0 +1,16 @@
+{
+  "id": "01M5Q46F1SA4YCFREA29RBTEET",
+  "ts": "2026-10-24T14:14:22.521Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 5,
+    "text": "ST0008, Molt from brew. v1.0.0 CUT by vc on hv's word ('You do it'): release 3842239, annotated tag v1.0.0, pushed; CI green on the tag (Ubuntu + macOS). matthewsinclair/homebrew-molt created (public), formula published (cca72154, tag v1.0.0, revision 38422394). NEXT: cc reapplies 9c418e2 with ac's held findings fixed, vc pushes; rhadamanth: hv's molt resleeve (publishes UTILZ_INSTALL_PREFIX, clears doctor's env drift), then use opt, then brew; kovacs brew via kovacs-sysadm; then satisfy AC007-010 and close ST0008 (hv: close after release)."
+  }
+}
