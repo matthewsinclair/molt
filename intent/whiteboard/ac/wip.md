@@ -3,8 +3,8 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: 88cdd7cd-d7d9-4418-a8c4-f1e891584c7f
-heartbeat_at: 2026-10-24 14:37Z
-status: paused
+heartbeat_at: 2026-10-24 15:01Z
+status: active
 focus: "24 Oct: the doc review and bl0001 are closed on hv's word (bl0001 at a8ab0db); a hold reads bl0001's check: bullets against Claude Code's docs again before print"
 claims: []
 ---
