@@ -1,0 +1,15 @@
+{
+  "id": "01M5PQNGACVVT4PC6B4Y45RANT",
+  "ts": "2026-10-24T10:35:23.852Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**The Molt release waits for WP05** (hv, 24 Oct 10:33Z by TUI). The scratch-tap brew install passed end to end (slot 287, 10:29-10:31Z; teardown verified by vc). The first brew Molt carries the env writer, so the tap repo, formula publish and 9c418e2 all wait for a release cut after WP05 lands. Order: cc's WP05 Molt commits, then the Molt-matts commit (env in all five armed molt.toml files, UTILZ_INSTALL_PREFIX on rhadamanth), then vc validates with dc's 0048 and pushes, then hv cuts."
+  }
+}
