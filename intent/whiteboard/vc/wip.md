@@ -13,7 +13,8 @@ claims: [ST0006, ST0008]
 
 ## DOING
 
-- ST0008, Molt from brew (dev, opt and brew trees): cc built WP01-04 (5bf482a, 3add4f8, unpushed). The vc review found 4 must-fix items (D5 restart keys on commit not keg, drift hardcodes the runtime dirs, --force over a non-Molt manifest, local-bin replaces non-tree links) and 7 smaller ones, all sent to cc, who fixes them together with the D4/D6 shadow and no-bin-link work. Design D4 corrected in a0c1b2e. Next: cc commits; vc pushes and checks CI; cc runs the scratch-tap end to end (hv: go); vc creates matthewsinclair/homebrew-molt (hv: approved); WP05 sleeves. (edited)
+- ST0008, Molt from brew: conforms to the one dev/opt/brew contract (devbin docs/dev-opt-brew.md at aeed31e4; design D0, 83e9fd4). Pushed and CI green: cc's WP01-04 and review fixes (82266c1), the conformance (ca040c1). Molt-matts a258ad0 (pushed) puts ~/.local/bin first on PATH. HELD unpushed on purpose: 9c418e2, the brew-first docs, until the tap exists. Next: cc's scratch-tap brew install end to end (plan accepted, queued); then vc creates matthewsinclair/homebrew-molt (hv approved); a release with molt install is hv's cut; WP05: env writer for UTILZ_INSTALL_PREFIX before Utilz 2.14.3, rhadamanth use opt then brew, kovacs brew-only via kovacs-sysadm. (edited)
+- **Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md. At the 09:48Z fold: slot 285 (Utilz s0106-diag) in flight; queue by READY: laksa-cc 0045 gate, molt-cc scratch-tap, devbin 0213 landing (land213 49787686), laksa-dc 0006 window. Desk CLOSED for new STARTs until vc reopens after the compact. Rules: one heavy; one light beside at load<60; no .app light beside a Utilz LS run; START/END by name.
 
 ## TODO
 

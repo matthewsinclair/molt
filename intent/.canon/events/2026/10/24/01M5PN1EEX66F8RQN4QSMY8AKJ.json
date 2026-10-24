@@ -1,0 +1,15 @@
+{
+  "id": "01M5PN1EEX66F8RQN4QSMY8AKJ",
+  "ts": "2026-10-24T09:49:29.437Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md. At the 09:48Z fold: slot 285 (Utilz s0106-diag) in flight; queue by READY: laksa-cc 0045 gate, molt-cc scratch-tap, devbin 0213 landing (land213 49787686), laksa-dc 0006 window. Desk CLOSED for new STARTs until vc reopens after the compact. Rules: one heavy; one light beside at load<60; no .app light beside a Utilz LS run; START/END by name."
+  }
+}

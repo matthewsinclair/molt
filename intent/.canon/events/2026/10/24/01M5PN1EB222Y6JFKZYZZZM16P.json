@@ -1,0 +1,16 @@
+{
+  "id": "01M5PN1EB222Y6JFKZYZZZM16P",
+  "ts": "2026-10-24T09:49:29.315Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 5,
+    "text": "ST0008, Molt from brew: conforms to the one dev/opt/brew contract (devbin docs/dev-opt-brew.md at aeed31e4; design D0, 83e9fd4). Pushed and CI green: cc's WP01-04 and review fixes (82266c1), the conformance (ca040c1). Molt-matts a258ad0 (pushed) puts ~/.local/bin first on PATH. HELD unpushed on purpose: 9c418e2, the brew-first docs, until the tap exists. Next: cc's scratch-tap brew install end to end (plan accepted, queued); then vc creates matthewsinclair/homebrew-molt (hv approved); a release with molt install is hv's cut; WP05: env writer for UTILZ_INSTALL_PREFIX before Utilz 2.14.3, rhadamanth use opt then brew, kovacs brew-only via kovacs-sysadm."
+  }
+}
