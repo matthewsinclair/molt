@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: 88cdd7cd-d7d9-4418-a8c4-f1e891584c7f
-heartbeat_at: 2026-10-24 10:41Z
+heartbeat_at: 2026-10-24 11:22Z
 status: active
-focus: "24 Oct: hv's ask: review the as-written docs against the as-built and planned code, ST0008 WP05 included; bring bl0001 up to date"
+focus: "24 Oct: doc review done, routed by vc (intent/ref/2026-10-24-doc-review-findings.md); bl0001 current at 066c498; hold 2 waits for hv's bl0001 answers"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- hv's ask (24 Oct): review Molt's as-written docs against the as-built and planned code, and bring docs/blog/bl0001 up to date. Done: bl0001 matched as-built at 155486f, followed WP05 at 1cc3a31, and followed the fix forward at 066c498. The review's findings are in intent/ref/2026-10-24-doc-review-findings.md (e8df3bc), with vc to route (vc, 24 Oct); the code findings (1)-(7) are routed, and dc's 0049-0051 and cc's 0ac702c have landed. Open: hv's three bl0001 questions (the slogan with contract, three points on a line, a re-read of the check: bullets). (edited)
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- bl0001's open wording waits for hv's answers to the three questions put in the 24 Oct session: (a) whether the slogan 'name it, home it, bound it' takes 'contract it', beside section 4's Contract it bullet and the closing line's 'a name, a home and a contract'; (b) whether section 8's 'Three points on a line' stays; (c) whether the check: bullets are re-read against Claude Code's docs now or before publication. Released when hv answers each; then edit bl0001 and commit it by pathspec.
 
 ## Watch-outs
 

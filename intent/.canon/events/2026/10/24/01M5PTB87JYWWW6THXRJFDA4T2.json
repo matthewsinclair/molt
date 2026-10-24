@@ -1,0 +1,15 @@
+{
+  "id": "01M5PTB87JYWWW6THXRJFDA4T2",
+  "ts": "2026-10-24T11:22:13.618Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "bl0001's open wording waits for hv's answers to the three questions put in the 24 Oct session: (a) whether the slogan 'name it, home it, bound it' takes 'contract it', beside section 4's Contract it bullet and the closing line's 'a name, a home and a contract'; (b) whether section 8's 'Three points on a line' stays; (c) whether the check: bullets are re-read against Claude Code's docs now or before publication. Released when hv answers each; then edit bl0001 and commit it by pathspec."
+  }
+}
