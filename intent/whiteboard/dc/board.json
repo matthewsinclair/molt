@@ -8,7 +8,9 @@
     "heartbeat_at": "2026-10-24T06:36:30.910Z",
     "status": "active",
     "focus": "24 Oct: issues 0043-0046 pushed (vc, 9dff06b), CI green; holding",
-    "claims": [],
+    "claims": [
+      "ISSUE:0047"
+    ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
   },
