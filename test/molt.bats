@@ -30,10 +30,13 @@ load "test_helper.bash"
 
 # --- Version ---
 
-@test "molt version shows version string" {
+@test "molt version names the version, the dev tree and its root" {
     run_molt version
     assert_success
-    assert_output_contains "MOLT v"
+    assert_output_contains "molt $(cat "$MOLT_ROOT/VERSION") (dev, "
+    run_molt --version
+    assert_success
+    assert_output_contains "molt $(cat "$MOLT_ROOT/VERSION") (dev, "
 }
 
 # --- List ---

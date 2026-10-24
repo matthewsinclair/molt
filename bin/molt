@@ -27,6 +27,8 @@ source "${MOLT_ROOT}/lib/liberator.sh"
 source "${MOLT_ROOT}/lib/newuser.sh"
 # shellcheck disable=SC1091
 source "${MOLT_ROOT}/lib/agent.sh"
+# shellcheck disable=SC1091
+source "${MOLT_ROOT}/lib/install.sh"
 
 # --- Commands ---
 
@@ -52,6 +54,10 @@ Commands:
   new-user <user> [--name N] [--email E] [--github GH] [--hostname H] [--dest DIR]
                         Scaffold a new molt-{user} config repo from the skeleton.
                         Prompts for anything not passed as a flag.
+  install [--prefix DIR] [--force] [--managed-by molt|brew]
+                        Publish this dev tree to DIR (default: MOLT_INSTALL_PREFIX
+                        in vars.sh) as the opt tree, with a manifest
+  use [dev|opt|brew]   Point ~/bin/molt at that tree; with none, show the tree it serves
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   agent list  List this sleeve's agents: name, role, enabled, state, home
@@ -68,7 +74,7 @@ Commands:
   git <cmd>    Run a git command across all managed repos
   doctor      System diagnostics and health checks
   test        Run bats test suite (molt test [liberator])
-  version     Show version
+  version     Show the version, the tree (dev, opt or brew), its commit and root
   help        Show this help message
 
 EOF
@@ -114,6 +120,8 @@ case "${1:-help}" in
   resleeve) shift; cmd_resleeve "$@" ;;
   upgrade)  shift; cmd_upgrade "$@" ;;
   maintain) shift; cmd_maintain "$@" ;;
+  install)  shift; cmd_install "$@" ;;
+  use)      shift; cmd_use "$@" ;;
   new-user) shift; cmd_new_user "$@" ;;
   git)      shift; cmd_git "$@" ;;
   status)   cmd_status ;;
@@ -121,7 +129,7 @@ case "${1:-help}" in
   agent)    shift; cmd_agent "$@" ;;
   doctor)   cmd_doctor ;;
   test)     shift; cmd_test "$@" ;;
-  version)  cmd_version ;;
+  version|--version) molt_version_line ;;
   help)     cmd_help ;;
   *)
     molt_error "Unknown command: $1"

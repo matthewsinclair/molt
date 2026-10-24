@@ -1450,10 +1450,6 @@ molt_root_file_remove() {
 
 # --- CLI Commands ---
 
-cmd_version() {
-  echo "${MOLT_NAME} v${MOLT_VERSION}"
-}
-
 cmd_list() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Liberators"
   echo ""
@@ -1574,6 +1570,7 @@ molt_foreign_home_paths() {
 
 cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
+  molt_version_line
   echo ""
 
   # Counted as the checks run, never stored: a total written down is wrong as
@@ -1591,20 +1588,39 @@ cmd_doctor() {
     not_passed=$((not_passed + 1))
   fi
 
-  # Directory structure
+  # The tree molt runs from (ST0008). A dev tree carries test/; opt and brew
+  # carry none, and are checked file by file against their manifest instead.
   checks=$((checks + 1))
-  local dirs_ok=1
-  for dir in lib liberators test; do
-    if [[ ! -d "${MOLT_ROOT}/$dir" ]]; then
-      dirs_ok=0
-    fi
-  done
-  if [[ "$dirs_ok" -eq 1 ]]; then
-    echo "Checking directory structure... ✓ lib/ liberators/ test/"
-  else
-    echo "Checking directory structure... ⚠ missing directories"
-    not_passed=$((not_passed + 1))
-  fi
+  local tree tree_drift line
+  tree="$(molt_tree)"
+  case "$tree" in
+    dev)
+      local dirs_ok=1
+      for dir in lib liberators test; do
+        if [[ ! -d "${MOLT_ROOT}/$dir" ]]; then
+          dirs_ok=0
+        fi
+      done
+      if [[ "$dirs_ok" -eq 1 ]]; then
+        echo "Checking tree... ✓ dev: lib/ liberators/ test/"
+      else
+        echo "Checking tree... ⚠ dev, missing directories"
+        not_passed=$((not_passed + 1))
+      fi ;;
+    opt|brew)
+      if tree_drift="$(molt_install_drift "$MOLT_ROOT")" && [[ -z "$tree_drift" ]]; then
+        echo "Checking tree... ✓ $tree: every file matches its manifest"
+      else
+        echo "Checking tree... ⚠ $tree, not what its manifest says"
+        while IFS= read -r line; do
+          [[ -z "$line" ]] || echo "         $line"
+        done <<< "$tree_drift"
+        not_passed=$((not_passed + 1))
+      fi ;;
+    *)
+      echo "Checking tree... ✗ $MOLT_ROOT is no dev, opt or brew tree"
+      not_passed=$((not_passed + 1)) ;;
+  esac
 
   # User stack repo
   checks=$((checks + 1))
@@ -2009,6 +2025,10 @@ cmd_doctor() {
 cmd_test() {
   local target="${1:-}"
 
+  # In opt and brew there is no test/, and the lint would check bytes the
+  # manifest already vouches for: both run in the dev tree (ST0008).
+  molt_require_dev_tree "molt test" || return 1
+
   if ! command -v bats &>/dev/null; then
     molt_error "bats is required to run tests. Install via: utilz or apt install bats"
     return 1
@@ -2277,14 +2297,22 @@ _upgrade_warn_unpushed() {
 _upgrade_pull_repos() {
   local dry_run="${1:-false}"
   local old_version="$MOLT_VERSION"
-  local pulled
+  local pulled tree
   _UPGRADE_FAILED_PULLS=""
 
-  # Check framework repo
-  molt_info "Checking framework repo: $MOLT_ROOT"
-  if ! _upgrade_check_clean "$MOLT_ROOT" "Framework"; then
-    return 1
-  fi
+  # Only a dev tree is a framework repo to check and pull (ST0008 D5). An opt
+  # or brew tree has no checkout of its own, so the board views a shared
+  # checkout carries no longer stop the upgrade of a sleeve that runs one.
+  tree="$(molt_tree)"
+  case "$tree" in
+    dev)
+      molt_info "Checking framework repo: $MOLT_ROOT"
+      if ! _upgrade_check_clean "$MOLT_ROOT" "Framework"; then
+        return 1
+      fi ;;
+    opt|brew) ;;
+    *) molt_warn "Framework: $MOLT_ROOT is no dev, opt or brew tree, so it is not upgraded; molt doctor says why." ;;
+  esac
 
   # Check user config repo
   local user_repo
@@ -2297,20 +2325,26 @@ _upgrade_pull_repos() {
     return 1
   fi
 
-  # Pull framework repo
   echo ""
-  molt_info "Pulling framework repo..."
-  if $dry_run; then
-    echo "  molt: WOULD PULL"
-  else
-    pulled=0
-    molt_git_pull "$MOLT_ROOT" "Framework" || pulled=$?
-    case $pulled in
-      0) molt_info "Framework repo updated." ;;
-      2) ;;
-      *) _UPGRADE_FAILED_PULLS="the framework repo ($MOLT_ROOT)" ;;
-    esac
-  fi
+  case "$tree" in
+    dev)
+      molt_info "Pulling framework repo..."
+      if $dry_run; then
+        echo "  molt: WOULD PULL"
+      else
+        pulled=0
+        molt_git_pull "$MOLT_ROOT" "Framework" || pulled=$?
+        case $pulled in
+          0) molt_info "Framework repo updated." ;;
+          2) ;;
+          *) _UPGRADE_FAILED_PULLS="the framework repo ($MOLT_ROOT)" ;;
+        esac
+      fi ;;
+    opt) _upgrade_opt_framework ;;
+    brew)
+      _upgrade_brew_framework "$dry_run" \
+        || _UPGRADE_FAILED_PULLS="the brew upgrade of $MOLT_BREW_FORMULA" ;;
+  esac
 
   # Pull user config repo
   molt_info "Pulling user config repo..."
@@ -2326,12 +2360,16 @@ _upgrade_pull_repos() {
     esac
   fi
 
-  # Re-source constants to pick up any version change
-  # shellcheck disable=SC1091
-  source "${MOLT_LIB_DIR}/constants.sh"
-  if [[ "$old_version" != "$MOLT_VERSION" ]]; then
-    echo ""
-    molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
+  # Re-source constants to pick up any version change. Only a pull changes
+  # this tree in place: brew upgrade installs a new keg, and may remove this
+  # one, so a brew upgrade says what changed as it restarts on the new keg.
+  if [[ "$tree" == dev ]]; then
+    # shellcheck disable=SC1091
+    source "${MOLT_LIB_DIR}/constants.sh"
+    if [[ "$old_version" != "$MOLT_VERSION" ]]; then
+      echo ""
+      molt_info "Version changed: v${old_version} -> v${MOLT_VERSION}"
+    fi
   fi
   [[ -z "$_UPGRADE_FAILED_PULLS" ]] || return 2
 }
@@ -2369,11 +2407,82 @@ _upgrade_finish() {
   return $status
 }
 
-# The framework commit, or nothing and a failure when git cannot read it. It
-# prints only the commit, since its callers capture it; they say what an
-# unread commit means.
+# The opt tree is never pulled: a publish is a verb hv types. Says so, and
+# names the dev tree's commit when it is ahead of this install's.
+_upgrade_opt_framework() {
+  local dev installed head
+  molt_info "Framework: the opt tree at $(molt_tilde "$MOLT_ROOT") is not pulled; upgrade it from the dev tree with molt install --force."
+  dev="$(_molt_use_root dev)" || return 0
+  installed="$(molt_install_field "$MOLT_ROOT" source_commit)"
+  head="$(git -C "$dev" rev-parse HEAD 2>/dev/null)" || return 0
+  if [[ -n "$installed" && "$head" != "$installed" ]] \
+      && git -C "$dev" merge-base --is-ancestor "$installed" "$head" 2>/dev/null; then
+    molt_info "  The dev tree at $(molt_tilde "$dev") is at ${head:0:7}, ahead of this install's ${installed:0:7}."
+  fi
+}
+
+# Upgrades the formula when brew outdated names it. brew outdated exits 0,
+# saying nothing, for a current formula, and 1, naming it, for an outdated one;
+# anything else is brew failing to say, and fails here, as a failed brew
+# upgrade does, so the verdict counts it (issue 0015).
+_upgrade_brew_framework() {
+  local dry_run="$1" out err status=0
+  molt_info "Asking brew whether $MOLT_BREW_FORMULA is outdated..."
+  # Its stderr is kept apart: brew's auto-update writes there, and would read
+  # as an answer if it shared stdout with the names.
+  if ! err="$(mktemp "${TMPDIR:-/tmp}/molt-brew-outdated.XXXXXX")"; then
+    molt_error "Cannot ask brew whether $MOLT_BREW_FORMULA is outdated: mktemp failed."
+    return 1
+  fi
+  out="$(brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
+  if [[ "$status" -eq 0 && -z "$out" ]]; then
+    rm -f "$err"
+    molt_info "Framework: $MOLT_BREW_FORMULA is current."
+    return 0
+  fi
+  if [[ "$status" -ne 1 ]] || ! printf '%s\n' "$out" | grep -qxE "(${MOLT_BREW_FORMULA%/*}/)?molt"; then
+    molt_error "brew outdated could not say whether $MOLT_BREW_FORMULA is current (exit $status):"
+    { printf '%s\n' "$out"; cat "$err"; } | sed 's/^/    /' >&2
+    rm -f "$err"
+    return 1
+  fi
+  rm -f "$err"
+  if $dry_run; then
+    echo "  molt: WOULD BREW UPGRADE $MOLT_BREW_FORMULA"
+    return 0
+  fi
+  if ! brew upgrade "$MOLT_BREW_FORMULA"; then
+    molt_error "brew upgrade $MOLT_BREW_FORMULA failed (above)."
+    return 1
+  fi
+  molt_info "Framework: $MOLT_BREW_FORMULA upgraded."
+}
+
+# The root the framework is upgraded in and restarted from: MOLT_ROOT, except
+# in brew, where brew upgrade installs a new keg beside the running one, so it
+# is the formula's opt link, which follows the upgrade.
+_upgrade_framework_root() {
+  if [[ "$(molt_tree)" == brew ]]; then
+    _molt_use_root brew
+  else
+    echo "$MOLT_ROOT"
+  fi
+}
+
+# The framework commit, or nothing and a failure when it cannot be read: HEAD
+# in dev, and the manifest's source commit in opt and brew. It prints only the
+# commit, since its callers capture it; they say what an unread commit means.
 _upgrade_framework_head() {
-  git -C "$MOLT_ROOT" rev-parse HEAD 2>/dev/null
+  local root commit
+  root="$(_upgrade_framework_root)" || return 1
+  case "$(molt_tree "$root")" in
+    dev) git -C "$root" rev-parse HEAD 2>/dev/null ;;
+    opt|brew)
+      commit="$(molt_install_field "$root" source_commit)"
+      [[ -n "$commit" ]] || return 1
+      echo "$commit" ;;
+    *) return 1 ;;
+  esac
 }
 
 # This process sourced lib/ before the pull, but liberator_load reads each
@@ -2384,19 +2493,23 @@ _upgrade_framework_head() {
 # of the upgrade runs in one, without pulling again, told which pulls failed
 # ($3) so that its verdict still counts them.
 _upgrade_restart_if_pulled() {
-  local head_before="$1" do_resleeve="$2" failed_pulls="${3:-}" head_after
+  local head_before="$1" do_resleeve="$2" failed_pulls="${3:-}" head_after root
   [[ -n "$head_before" ]] || return 0
   head_after="$(_upgrade_framework_head)" || {
     molt_warn "Cannot read the framework commit in $MOLT_ROOT after the pull; if it changed lib/, run molt upgrade again."
     return 0
   }
   [[ "$head_after" != "$head_before" ]] || return 0
+  root="$(_upgrade_framework_root)" || {
+    molt_warn "Cannot find the upgraded framework to restart on: $root. Run molt upgrade again."
+    return 0
+  }
   echo ""
   molt_info "Framework updated (${head_before:0:7} -> ${head_after:0:7}); restarting on the new code."
   if [[ "$do_resleeve" == "yes" ]]; then
-    MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --resleeve
+    MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$root/bin/molt" upgrade --no-pull --resleeve
   fi
-  MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$MOLT_ROOT/bin/molt" upgrade --no-pull --no-resleeve
+  MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$root/bin/molt" upgrade --no-pull --no-resleeve
 }
 
 cmd_upgrade() {
