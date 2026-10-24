@@ -19,6 +19,7 @@ _(none)_
 
 - ST0008 review fixes from vc on 5bf482a/3add4f8 (one or two commits, both bashes via intent-vc slot booked through vc): MUST 1 brew restart keys on keg version/path not commit (revision bump), with test; 2 molt_install_drift dirs from _molt_runtime_pathspecs; 3 --force only when managed_by is molt, refuse other manifests by name; 4 local-bin links only when missing or broken, else refuse naming what is there, never replace a file (install.bats local-bin tests). SHOULD 5 checked restore mv naming $stage.old; 6 resolve prefix parent with pwd -P for the in-dev-tree guard, refuse --prefix /; 7 chmod 755 stage; 8 dirty check keeps git stderr apart; 9 HOMEBREW_NO_AUTO_UPDATE=1 for dry-run outdated; 10 one commit-of-tree function; 11 formula.bats isolates git config (HOME or GIT_CONFIG_GLOBAL)
 - ST0008 WP04 scratch-tap end to end on rhadamanth (hv: go; every brew probe HOMEBREW_NO_AUTO_UPDATE=1), after vc pushes the review fixes: decides whether brew's build dir keeps .git; if not, install fails saying why and the formula changes, not install
+- ST0008 contract v0.4 conformance, once hold 15 lifts: plan and vc's five rulings in cc's scratchpad, st0008-contract-v0.4-plan.md. Rulings: force over old-form opt with managed_by molt only; drop +unreadable for unknown in the sha field, doctor fails; T6 SAME with an explicit, counted brew update under HOMEBREW_NO_AUTO_UPDATE=1, skipped in a dry run; cc drafts getting-started and bootstrap-runbook docs (WP05) after the code; vscode's code link left alone, named in the commit.
 
 ## Holds
 

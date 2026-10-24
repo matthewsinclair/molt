@@ -1,0 +1,15 @@
+{
+  "id": "01M5PBTWXVMM24A6ECNB7Y1RBA",
+  "ts": "2026-10-24T07:08:37.691Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0008 contract v0.4 conformance, once hold 15 lifts: plan and vc's five rulings in cc's scratchpad, st0008-contract-v0.4-plan.md. Rulings: force over old-form opt with managed_by molt only; drop +unreadable for unknown in the sha field, doctor fails; T6 SAME with an explicit, counted brew update under HOMEBREW_NO_AUTO_UPDATE=1, skipped in a dry run; cc drafts getting-started and bootstrap-runbook docs (WP05) after the code; vscode's code link left alone, named in the commit."
+  }
+}

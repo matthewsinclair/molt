@@ -393,6 +393,14 @@
       "text": "ST0008 rule (B), from vc for hv: revert D6 (molt.rb links bin/molt into brew's bin again and drops the use-brew caveat; use brew links to opt/molt/libexec/bin/molt; the shadow check stays; MOLT_LOCAL_BIN may become ~/.local/bin). Released when devbin-vc's shared spec lands in Devbin's docs and vc amends the design. No manifest, version line or verb shape changes before then.",
       "state": "live",
       "recorded_at": "2026-10-24T06:49:36.293Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 10,
+      "text": "ST0008 contract v0.4 conformance, once hold 15 lifts: plan and vc's five rulings in cc's scratchpad, st0008-contract-v0.4-plan.md. Rulings: force over old-form opt with managed_by molt only; drop +unreadable for unknown in the sha field, doctor fails; T6 SAME with an explicit, counted brew update under HOMEBREW_NO_AUTO_UPDATE=1, skipped in a dry run; cc drafts getting-started and bootstrap-runbook docs (WP05) after the code; vscode's code link left alone, named in the commit.",
+      "state": "live",
+      "recorded_at": "2026-10-24T07:08:37.691Z"
     }
   ],
   "sent": [
