@@ -47,6 +47,8 @@ Every caller asks this one function (Highlander).
 
 Each switch refuses a tree that isn't there, naming the step that makes it, then prints the new `molt version` line.
 
+**The switch works only if `~/bin/molt` is the first `molt` on PATH.** On rhadamanth `/opt/homebrew/bin` comes before `~/bin`, and a stray `~/.local/bin/molt` from March comes before both (vc, 24 Oct). Doctor, and `molt use` with no argument, fail when the first `molt` that `type -ap molt` finds is not `$MOLT_LOCAL_BIN/molt`, and name what shadows it.
+
 **The local-bin liberator stops choosing.** Today `local-bin_install` links `~/bin/molt` to whichever tree is running. Under this design, `bin/molt resleeve` from the checkout would flip a sleeve on opt back to dev. Instead:
 
 - check passes on a healthy link to any of the three trees' `bin/molt`;
@@ -67,7 +69,7 @@ The config repos (Molt-matts) are pulled in every tree, as today. The framework 
 - **The template:** `packaging/homebrew/molt.rb` is a template, as devbin's is, and is never installed from. It holds placeholders for the tag and the revision.
 - **The render tool:** a zsh script, `tools/formula` (no Python), offers `render <tag> <out>` and `publish`. `render` reads the tag's commit from git. `publish` renders the newest release tag into a checkout of `matthewsinclair/homebrew-molt` and pushes it. Nobody types a tag or a commit.
 - **The formula's url** is `https://github.com/matthewsinclair/molt.git`, at the tag and revision, because the repo is public.
-- **Install and dependencies:** `install` runs `bin/molt install --prefix libexec --managed-by brew`, and `bin.install_symlink libexec/"bin/molt"`. No `depends_on "bash"`: Molt supports macOS's own bash 3.2, and CI's macOS runner proves it. The formula says so in a comment. `test do` checks `molt version`.
+- **Install and dependencies:** `install` runs `bin/molt install --prefix libexec --managed-by brew`, and links nothing into `bin`. A `bin/molt` in the Homebrew prefix would shadow `~/bin/molt` wherever Homebrew comes first on PATH, and the switch would stop working. The caveats say to run `$(brew --prefix)/opt/molt/libexec/bin/molt use brew` once. No `depends_on "bash"`: Molt supports macOS's own bash 3.2, and CI's macOS runner proves it. The formula says so in a comment. `test do` runs `libexec/bin/molt version`.
 - **The tap repo:** hv approved creating the public `matthewsinclair/homebrew-molt` on 24 Oct. vc creates it once WP04's render has been run end to end against a scratch tap.
 - **The release steps:** `docs/releasing.md`, or the existing release notes in `intent/wip.md`'s Notes, gains the formula publish as the step after the tag push.
 
