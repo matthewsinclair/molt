@@ -1,0 +1,15 @@
+{
+  "id": "01M5PA8ZM2NR47E1V1XM775BZ9",
+  "ts": "2026-10-24T06:41:22.050Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0008 review fixes from vc on 5bf482a/3add4f8 (one or two commits, both bashes via intent-vc slot booked through vc): MUST 1 brew restart keys on keg version/path not commit (revision bump), with test; 2 molt_install_drift dirs from _molt_runtime_pathspecs; 3 --force only when managed_by is molt, refuse other manifests by name; 4 local-bin links only when missing or broken, else refuse naming what is there, never replace a file (install.bats local-bin tests). SHOULD 5 checked restore mv naming $stage.old; 6 resolve prefix parent with pwd -P for the in-dev-tree guard, refuse --prefix /; 7 chmod 755 stage; 8 dirty check keeps git stderr apart; 9 HOMEBREW_NO_AUTO_UPDATE=1 for dry-run outdated; 10 one commit-of-tree function; 11 formula.bats isolates git config (HOME or GIT_CONFIG_GLOBAL)"
+  }
+}

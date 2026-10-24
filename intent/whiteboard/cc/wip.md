@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 05:56Z
+heartbeat_at: 2026-10-24 06:41Z
 status: active
-focus: "ST0008 WP01-04 (Molt from brew): plan sent to vc; WP01 next, lib/install.sh"
+focus: "ST0008: 5bf482a, 3add4f8, 96ae9e4 in (unpushed); next vc's review fixes, then the scratch-tap run"
 claims: [ST0008/01, ST0008/02, ST0008/03, ST0008/04]
 ---
 
@@ -17,7 +17,8 @@ _(none)_
 
 ## TODO
 
-_(none)_
+- ST0008 review fixes from vc on 5bf482a/3add4f8 (one or two commits, both bashes via intent-vc slot booked through vc): MUST 1 brew restart keys on keg version/path not commit (revision bump), with test; 2 molt_install_drift dirs from _molt_runtime_pathspecs; 3 --force only when managed_by is molt, refuse other manifests by name; 4 local-bin links only when missing or broken, else refuse naming what is there, never replace a file (install.bats local-bin tests). SHOULD 5 checked restore mv naming $stage.old; 6 resolve prefix parent with pwd -P for the in-dev-tree guard, refuse --prefix /; 7 chmod 755 stage; 8 dirty check keeps git stderr apart; 9 HOMEBREW_NO_AUTO_UPDATE=1 for dry-run outdated; 10 one commit-of-tree function; 11 formula.bats isolates git config (HOME or GIT_CONFIG_GLOBAL)
+- ST0008 WP04 scratch-tap end to end on rhadamanth (hv: go; every brew probe HOMEBREW_NO_AUTO_UPDATE=1), after vc pushes the review fixes: decides whether brew's build dir keeps .git; if not, install fails saying why and the formula changes, not install
 
 ## Holds
 

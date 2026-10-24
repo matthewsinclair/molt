@@ -1,0 +1,15 @@
+{
+  "id": "01M5PA8ZN74DAKR5AF7PTQZK9F",
+  "ts": "2026-10-24T06:41:22.087Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0008 WP04 scratch-tap end to end on rhadamanth (hv: go; every brew probe HOMEBREW_NO_AUTO_UPDATE=1), after vc pushes the review fixes: decides whether brew's build dir keeps .git; if not, install fails saying why and the formula changes, not install"
+  }
+}
