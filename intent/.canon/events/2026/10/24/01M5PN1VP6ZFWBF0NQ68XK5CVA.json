@@ -1,0 +1,15 @@
+{
+  "id": "01M5PN1VP6ZFWBF0NQ68XK5CVA",
+  "ts": "2026-10-24T09:49:42.982Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "ST0008 docs 9c418e2 (getting-started, bootstrap-runbook) are committed but held unpushed by vc on purpose until the tap exists and a release carries molt install. Leave them for vc to push."
+  }
+}

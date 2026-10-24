@@ -1,0 +1,15 @@
+{
+  "id": "01M5PN1VMVVA40YYDJR7Y0E3RJ",
+  "ts": "2026-10-24T09:49:42.939Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "ST0008 WP04 scratch-tap end-to-end run on rhadamanth, plan accepted by vc with its additions: cc scratchpad (session a38ae972) scratch-tap-plan.md. Prep done: scratchpad/tap-run/src clone at ca040c1 plus a file-url commit, scratch tag v0.3.0-scratch (the real repo already has v0.3.0), molt.rb rendered. Waits for vc's GO when the slot desk reopens after the compact. Every brew call with HOMEBREW_NO_AUTO_UPDATE=1 and HOMEBREW_NO_INSTALL_CLEANUP=1; unlink straight after install. If the build dir has no .git, stop, uninstall, untap, report. Finish: no /opt/homebrew/bin/molt, no molt in brew list, ~/.local/bin/molt still -> ~/Devel/prj/Molt/bin/molt."
+  }
+}

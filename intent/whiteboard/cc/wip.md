@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 06:43Z
+heartbeat_at: 2026-10-24 09:49Z
 status: active
-focus: "ST0008: 5bf482a, 3add4f8, 96ae9e4 in (unpushed); next vc's review fixes, then the scratch-tap run"
+focus: "ST0008: conformance ca040c1 pushed (CI green); docs 9c418e2 held by vc until the tap; next the scratch-tap run on vc's GO"
 claims: [ST0008/01, ST0008/02, ST0008/03, ST0008/04]
 ---
 
@@ -17,19 +17,18 @@ _(none)_
 
 ## TODO
 
-- ST0008 review fixes from vc on 5bf482a/3add4f8 (one or two commits, both bashes via intent-vc slot booked through vc): MUST 1 brew restart keys on keg version/path not commit (revision bump), with test; 2 molt_install_drift dirs from _molt_runtime_pathspecs; 3 --force only when managed_by is molt, refuse other manifests by name; 4 local-bin links only when missing or broken, else refuse naming what is there, never replace a file (install.bats local-bin tests). SHOULD 5 checked restore mv naming $stage.old; 6 resolve prefix parent with pwd -P for the in-dev-tree guard, refuse --prefix /; 7 chmod 755 stage; 8 dirty check keeps git stderr apart; 9 HOMEBREW_NO_AUTO_UPDATE=1 for dry-run outdated; 10 one commit-of-tree function; 11 formula.bats isolates git config (HOME or GIT_CONFIG_GLOBAL)
-- ST0008 WP04 scratch-tap end to end on rhadamanth (hv: go; every brew probe HOMEBREW_NO_AUTO_UPDATE=1), after vc pushes the review fixes: decides whether brew's build dir keeps .git; if not, install fails saying why and the formula changes, not install
-- ST0008 contract v0.4 conformance, once hold 15 lifts: plan and vc's five rulings in cc's scratchpad, st0008-contract-v0.4-plan.md. Rulings: force over old-form opt with managed_by molt only; drop +unreadable for unknown in the sha field, doctor fails; T6 SAME with an explicit, counted brew update under HOMEBREW_NO_AUTO_UPDATE=1, skipped in a dry run; cc drafts getting-started and bootstrap-runbook docs (WP05) after the code; vscode's code link left alone, named in the commit.
+- ST0008 WP04 scratch-tap end-to-end run on rhadamanth, plan accepted by vc with its additions: cc scratchpad (session a38ae972) scratch-tap-plan.md. Prep done: scratchpad/tap-run/src clone at ca040c1 plus a file-url commit, scratch tag v0.3.0-scratch (the real repo already has v0.3.0), molt.rb rendered. Waits for vc's GO when the slot desk reopens after the compact. Every brew call with HOMEBREW_NO_AUTO_UPDATE=1 and HOMEBREW_NO_INSTALL_CLEANUP=1; unlink straight after install. If the build dir has no .git, stop, uninstall, untap, report. Finish: no /opt/homebrew/bin/molt, no molt in brew list, ~/.local/bin/molt still -> ~/Devel/prj/Molt/bin/molt.
 
 ## Holds
 
-- ST0008 rule (B), from vc for hv: revert D6 (molt.rb links bin/molt into brew's bin again and drops the use-brew caveat; use brew links to opt/molt/libexec/bin/molt; the shadow check stays; MOLT_LOCAL_BIN may become ~/.local/bin). Released when devbin-vc's shared spec lands in Devbin's docs and vc amends the design. No manifest, version line or verb shape changes before then.
+_(none)_
 
 ## Watch-outs
 
 - macOS pgrep leaves out its own ancestors unless given -a; procps' pgrep leaves out only itself, and its -a means full command lines, so pass -a on macOS only. Name processes with ps -o pid=,args=, not pgrep -l. (edited)
 - In a git worktree, Intent's post-merge, post-checkout and post-rewrite hooks run intent sync in the worktree's own store, which can predate main and roll intent/ views back. Restore them there with git checkout, and never commit them from a worktree. (edited)
 - Verify a commit against a scratch export of HEAD plus your files (git init it for the no-Python test), not the shared tree a peer is editing. (edited)
+- ST0008 docs 9c418e2 (getting-started, bootstrap-runbook) are committed but held unpushed by vc on purpose until the tap exists and a release carries molt install. Leave them for vc to push.
 
 ## Decisions
 
