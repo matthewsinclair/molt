@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 51,
+  "slug": "molt-toml-example-enables-a-terminal-liberator-t",
+  "title": "molt.toml.example enables a terminal liberator that does not exist",
+  "status": "open",
+  "severity": "high",
+  "created": "2026-10-24",
+  "reporter": "Matthew Sinclair",
+  "body": "templates/molt.toml.example enables a liberator named `terminal` for Linux. There is no such liberator in liberators/, so a stack copied from the example fails doctor on Linux.\n\nFix: name the terminal liberators that exist: gnome-terminal for Linux, terminal-app and iterm2 for macOS, and alacritty. Add a test that every liberator named in molt.toml.example and in the molt-user skeleton's molt.toml exists, checked against a listing of liberators/ made by the test itself.\n\nFound by ac's docs review; vc checked it.\n"
+}
