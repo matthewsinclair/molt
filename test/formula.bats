@@ -41,6 +41,7 @@ setup() {
     make_formula_repos
 }
 
+# ST0008 AT006
 @test "render writes the tag and the tag's commit, read from git, into the formula" {
     run "$SRC/tools/formula" render v0.1.0 "$BATS_TEST_TMPDIR/out/molt.rb"
     assert_success
@@ -52,6 +53,7 @@ setup() {
     [[ "$output" == 0 ]]
 }
 
+# ST0008 AT006
 @test "render refuses a missing tag, a lightweight tag and a name that is no tag" {
     run "$SRC/tools/formula" render v9.9.9 "$BATS_TEST_TMPDIR/a.rb"
     assert_failure
@@ -64,6 +66,7 @@ setup() {
     [[ ! -e "$BATS_TEST_TMPDIR/a.rb" ]]
 }
 
+# ST0008 AT006
 @test "render refuses a template without exactly one tag and one revision placeholder" {
     echo '# @@TAG@@' >> "$SRC/packaging/homebrew/molt.rb"
     run "$SRC/tools/formula" render v0.1.0 "$BATS_TEST_TMPDIR/a.rb"

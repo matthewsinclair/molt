@@ -70,6 +70,7 @@ setup() {
 
 # --- molt install ---
 
+# ST0008 AT001
 @test "install publishes the runtime set git names and a manifest that checks" {
     run "$DEV/bin/molt" install --prefix "$OPT"
     assert_success
@@ -102,6 +103,7 @@ setup() {
     [[ -f "$OPT/.molt-install" ]]
 }
 
+# ST0008 AT001
 @test "install with no prefix is refused by name, writing nothing" {
     run "$DEV/bin/molt" install
     assert_failure
@@ -109,6 +111,7 @@ setup() {
     [[ ! -e "$BATS_TEST_TMPDIR/opt" ]]
 }
 
+# ST0008 AT001
 @test "install from a changed, staged or untracked runtime file is refused" {
     echo "# changed" >> "$DEV/lib/molt.sh"
     run "$DEV/bin/molt" install --prefix "$OPT"
@@ -131,6 +134,7 @@ setup() {
     assert_success
 }
 
+# ST0008 AT001
 @test "install is refused from an opt tree and from a brew tree" {
     "$DEV/bin/molt" install --prefix "$OPT"
     run "$OPT/bin/molt" install --prefix "$BATS_TEST_TMPDIR/again"
@@ -208,6 +212,7 @@ setup() {
 
 # --- Tree identity ---
 
+# ST0008 AT002
 @test "molt_tree names dev, opt, brew and unknown" {
     "$DEV/bin/molt" install --prefix "$OPT"
     "$DEV/bin/molt" install --prefix "$BATS_TEST_TMPDIR/keg" --managed-by brew
@@ -220,6 +225,7 @@ setup() {
     [[ "$(molt_tree "$BATS_TEST_TMPDIR/bare")" == unknown ]]
 }
 
+# ST0008 AT002
 @test "the version line names the tree, its commit and its root, +dirty for a changed dev tree" {
     "$DEV/bin/molt" install --prefix "$OPT"
     load_molt_libs
@@ -309,6 +315,7 @@ setup() {
 
 # --- molt use ---
 
+# ST0008 AT004
 @test "use dev points ~/.local/bin/molt at the checkout under MOLT_PRJ_DIR and prints its version line" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     run "$DEV/bin/molt" use dev
@@ -317,6 +324,7 @@ setup() {
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
 }
 
+# ST0008 AT004
 @test "use dev with no MOLT_PRJ_DIR is refused by name" {
     run "$DEV/bin/molt" use dev
     assert_failure
@@ -324,6 +332,7 @@ setup() {
     [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
 }
 
+# ST0008 AT004
 @test "use opt refuses a prefix with no install, naming molt install, then links one" {
     user_repo_declaring_prefix "$OPT"
     run "$DEV/bin/molt" use opt
@@ -337,12 +346,14 @@ setup() {
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
 }
 
+# ST0008 AT004
 @test "use opt with no MOLT_INSTALL_PREFIX is refused by name" {
     run "$DEV/bin/molt" use opt
     assert_failure
     assert_output_contains "MOLT_INSTALL_PREFIX"
 }
 
+# ST0008 AT004
 @test "use opt over a prefix holding the brew tree is refused" {
     user_repo_declaring_prefix "$OPT"
     "$DEV/bin/molt" install --managed-by brew
@@ -351,6 +362,7 @@ setup() {
     assert_output_contains "is the brew tree, not the opt tree"
 }
 
+# ST0008 AT004
 @test "use brew refuses a missing keg, naming brew install, then removes the link" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     install_fake_brew
@@ -371,6 +383,7 @@ setup() {
     assert_success
 }
 
+# ST0008 AT004
 @test "use brew refuses a file or a link to no tree at ~/.local/bin/molt, and leaves it" {
     install_fake_brew
     "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
@@ -385,6 +398,7 @@ setup() {
     [[ "$(readlink "$HOME/.local/bin/molt")" == /etc/hosts ]]
 }
 
+# ST0008 AT004
 @test "with no link, use and doctor fail when PATH's first molt is not brew's" {
     install_fake_brew
     "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
@@ -399,6 +413,7 @@ setup() {
     assert_output_contains "Checking molt on PATH... ✓ brew's, with no ~/.local/bin/molt"
 }
 
+# ST0008 AT004
 @test "a link that Homebrew's molt shadows is named as Homebrew's bin ahead of ~/.local/bin" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     install_fake_brew
@@ -409,6 +424,7 @@ setup() {
     assert_output_contains "PATH runs Homebrew's $BATS_TEST_TMPDIR/brew/bin/molt ahead of ~/.local/bin/molt"
 }
 
+# ST0008 AT004
 @test "use with no argument reports the tree ~/.local/bin/molt serves, and changes nothing" {
     run "$DEV/bin/molt" use
     assert_failure
@@ -420,6 +436,7 @@ setup() {
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
 }
 
+# ST0008 AT004
 @test "use takes only dev, opt or brew" {
     run "$DEV/bin/molt" use beta
     assert_failure
@@ -458,6 +475,7 @@ setup() {
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$KEG/bin/molt" ]]
 }
 
+# ST0008 AT004
 @test "local-bin keeps a healthy link to another tree when run from the checkout" {
     "$DEV/bin/molt" install --prefix "$OPT"
     mkdir -p "$HOME/.local/bin" && ln -s "$OPT/bin/molt" "$HOME/.local/bin/molt"
@@ -527,6 +545,7 @@ setup() {
     [[ "$output" == "$want" ]]
 }
 
+# ST0008 AT003
 @test "molt test is refused in opt, naming the dev tree" {
     "$DEV/bin/molt" install --prefix "$OPT"
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
@@ -536,6 +555,7 @@ setup() {
     assert_output_contains "run it in $DEV"
 }
 
+# ST0008 AT003
 @test "doctor checks an opt tree against its manifest, not for test/" {
     "$DEV/bin/molt" install --prefix "$OPT"
     run "$OPT/bin/molt" doctor
@@ -621,6 +641,7 @@ FAKE
     chmod +x "$BATS_TEST_TMPDIR/bin/brew"
 }
 
+# ST0008 AT005
 @test "upgrade in opt pulls no framework, names molt install --force and the dev tree's newer commit" {
     upgrade_user_repo
     "$DEV/bin/molt" install --prefix "$OPT"
@@ -636,6 +657,7 @@ FAKE
     assert_output_contains "Checking user config repo"
 }
 
+# ST0008 AT005
 @test "upgrade in brew upgrades nothing when brew outdated says the formula is current" {
     upgrade_user_repo
     install_brew_with_upgrade
@@ -647,6 +669,7 @@ FAKE
     [[ "$output" == 0 ]]
 }
 
+# ST0008 AT005
 @test "upgrade in brew runs brew upgrade for an outdated formula and restarts on the new keg" {
     upgrade_user_repo
     install_brew_with_upgrade
@@ -664,6 +687,7 @@ FAKE
     [[ "$output" == 0 ]]
 }
 
+# ST0008 AT005
 @test "a brew update that fails is counted in the verdict, and nothing is upgraded" {
     upgrade_user_repo
     install_brew_with_upgrade
@@ -728,6 +752,7 @@ FAKE
 
 # --- What PATH runs for molt ---
 
+# ST0008 AT004
 @test "use fails, naming it, when another molt is ahead of ~/.local/bin/molt on PATH" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     mkdir -p "$BATS_TEST_TMPDIR/stray"
