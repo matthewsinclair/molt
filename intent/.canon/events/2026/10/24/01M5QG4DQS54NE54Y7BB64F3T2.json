@@ -1,0 +1,14 @@
+{
+  "id": "01M5QG4DQS54NE54Y7BB64F3T2",
+  "ts": "2026-10-24T17:42:58.553Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0008/AC009"
+  },
+  "payload": {
+    "evidence": "kovacs (kovacs-sysadm, 2026-10-24 17:42Z): brew install matthewsinclair/molt/molt rc 0; molt use brew; ~/bin/molt (clone link) removed; type -a molt finds only /home/linuxbrew/.linuxbrew/bin/molt; molt 1.0.0 (brew, 38422394d8d7); hv's molt resleeve on v1.0.0 installed env; molt doctor rc 0, all checks passed"
+  }
+}

@@ -47,7 +47,7 @@ title: Molt from brew: dev, opt and brew trees
 
 ### Group AC009
 
-- AC009 (non-test) kovacs runs molt from brew only (through kovacs-sysadm), or the reason it cannot yet is recorded -- satisfied: no
+- AC009 (non-test) kovacs runs molt from brew only (through kovacs-sysadm), or the reason it cannot yet is recorded -- evidence: kovacs (kovacs-sysadm, 2026-10-24 17:42Z): brew install matthewsinclair/molt/molt rc 0; molt use brew; ~/bin/molt (clone link) removed; type -a molt finds only /home/linuxbrew/.linuxbrew/bin/molt; molt 1.0.0 (brew, 38422394d8d7); hv's molt resleeve on v1.0.0 installed env; molt doctor rc 0, all checks passed -- satisfied: yes
 
 ### Group AC010
 
