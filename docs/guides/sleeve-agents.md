@@ -25,7 +25,7 @@ gyges' agent is still called `gyges-infra`, from before this convention. It beco
 
 ### Hosts
 
-Physical machines take their names from the Hyperion Cantos: rhadamanth, gyges, shrike, yggdrasil, farcaster. Virtual machines take Altered Carbon envoy and sleeve names: kovacs.
+Physical machines take their names from the Hyperion Cantos: rhadamanth, gyges, yggdrasil, farcaster. Virtual machines take Altered Carbon envoy and sleeve names: kovacs.
 
 ### Project agents
 
