@@ -1,0 +1,15 @@
+{
+  "id": "01M5PSKW0EB3BGBCVE3SJG7TH5",
+  "ts": "2026-10-24T11:09:27.438Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0049"
+  },
+  "payload": {
+    "severity": "high",
+    "title": "bootstrap clones the framework into lowercase molt, not Molt, so on Linux use dev refuses it"
+  }
+}
