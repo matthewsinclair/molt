@@ -61,7 +61,7 @@ Bullets come in kinds, so the notes scan:
 
 ### 4. What are some good ways to manage these risks?
 
-- The principle: name it, home it, bound it. Name it for what it is: which machine and which job, `<hostname>-<role>`, a name you can address, search for and reason about.
+- Name it for what it is: which machine and which job, `<hostname>-<role>`, a name you can address, search for and reason about.
 - Home it: one directory that is both the agent's configuration and its working directory, so the permissions it runs under are the permissions in its home by construction, as long as it starts there (section 5). Memory and work live in the home, not under a slug in the harness state. Then take `$HOME` away as a launch place: keep the harness state in one declared place outside it, and refuse a session started in `$HOME` with a hook that blocks its first prompt, so a `~/.claude` that reappears says some launch path missed the setting, and a check can say so. check: a `UserPromptSubmit` hook that exits 2 blocks the prompt and shows its stderr to the user without adding it to the context (docs: hooks); section 5 says when hooks wait for trust.
 - Contract it: an instruction file in the home that says who the agent is, what the role is for, what it may touch, where its work goes, and how a session opens and closes. Put each rule in exactly one layer: rules for every session everywhere at user scope, what every machine agent shares in a preamble that opens each contract, the role's rules in the role contract, facts true of this machine only in a host overlay.
 - Least privilege by role: split what you want done by how much power it needs, not by topic. One role may change the machine; one observes and diagnoses and writes only inside its home; one writes documentation. Sandbox every role but the one that changes the machine, and close the sandbox's escape hatches in the same settings: no excluded commands, and `allowUnsandboxedCommands` set to `false`.
@@ -110,7 +110,7 @@ Bullets come in kinds, so the notes scan:
 
 ### 8. Who is this advice for?
 
-- Three points on a line. At one end, "just use the agent app": no machine access, nothing here applies, the app's defaults are the right fence. At the other, tens of coding agents in swarms with their own orchestration and infrastructure: you built this already, in a bigger shape.
+- Where this sits. At one end, "just use the agent app": no machine access, nothing here applies, the app's defaults are the right fence. At the other, tens of coding agents in swarms with their own orchestration and infrastructure: you built this already, in a bigger shape.
 - The middle, which is this piece: one person, a few machines, an agentic CLI already in use for code, wanting machine work done safely. Nobody writes this down for them, because the app readers do not need it and the swarm operators did it themselves.
 - Where the advice keeps scaling: naming, homes, contracts, fence and wall, one source rendered everywhere all apply to a swarm as much as to one agent.
 - Where it stops: at the point where agents need their own accounts, their own machines or an orchestrator, which this piece does not cover.
