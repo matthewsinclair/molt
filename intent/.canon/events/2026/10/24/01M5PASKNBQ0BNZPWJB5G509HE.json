@@ -1,0 +1,15 @@
+{
+  "id": "01M5PASKNBQ0BNZPWJB5G509HE",
+  "ts": "2026-10-24T06:50:26.859Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**molt-vc runs resource contention on rhadamanth** (hv, 24 Oct 06:50Z, going AFK). Heavy runs (bats suites, cargo builds, brew installs or upgrades) from every project book with molt-vc, start on its GO, and report START and END; intent-vc handed the slot desk over. Each project's VC still directs its own Claudes."
+  }
+}

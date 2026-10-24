@@ -605,6 +605,14 @@
       "text": "**One dev/opt/brew contract for Molt, Utilz, Intent and devbin** (hv, 24 Oct, by TUI). (B) your links first: formulas link into brew's bin as normal; Molt-matts puts ~/.local/bin ahead of brew's bin on every sleeve; <tool> use dev|opt|brew switches the per-user link set in ~/.local/bin (no link means brew); doctor names a shadow, comparing resolved dirs. The one contract text lives in Devbin's docs, drafted by devbin-vc, agreed SAME by molt-vc, utilz-vc and intent-vc before anything lands. Molt consequences: revert D6's links-nothing, MOLT_LOCAL_BIN moves to ~/.local/bin (kovacs has them as different dirs), and the zshrc PATH order change.",
       "state": "live",
       "recorded_at": "2026-10-24T06:49:43.813Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 14,
+      "text": "**molt-vc runs resource contention on rhadamanth** (hv, 24 Oct 06:50Z, going AFK). Heavy runs (bats suites, cargo builds, brew installs or upgrades) from every project book with molt-vc, start on its GO, and report START and END; intent-vc handed the slot desk over. Each project's VC still directs its own Claudes.",
+      "state": "live",
+      "recorded_at": "2026-10-24T06:50:26.859Z"
     }
   ],
   "sent": [
