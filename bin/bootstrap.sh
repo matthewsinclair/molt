@@ -139,7 +139,8 @@ find_existing_repo() {
 echo ""
 info "Setting up molt in $MOLT_PRJ_DIR and your config repo in $MOLT_CFG_DIR"
 
-molt_dir="$(find_existing_repo "molt" "$MOLT_PRJ_DIR")" || true
+# Exact-case Molt, where molt use dev looks for the dev tree (issue 0049).
+molt_dir="$(find_existing_repo "Molt" "$MOLT_PRJ_DIR")" || true
 # A user repo cloned before MOLT_CFG_DIR existed lives in MOLT_PRJ_DIR; use it
 # where it is rather than cloning a second copy.
 user_dir="$(find_existing_repo "$MOLT_USER_DIR" "$MOLT_CFG_DIR" "$MOLT_PRJ_DIR")" || true

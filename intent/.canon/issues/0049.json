@@ -3,9 +3,10 @@
   "number": 49,
   "slug": "bootstrap-clones-the-framework-into-lowercase-mo",
   "title": "bootstrap clones the framework into lowercase molt, not Molt, so on Linux use dev refuses it",
-  "status": "open",
+  "status": "closed",
   "severity": "high",
   "created": "2026-10-24",
+  "closed": "2026-10-24",
   "reporter": "Matthew Sinclair",
   "body": "On a fresh machine bootstrap.sh clones the framework into `$MOLT_PRJ_DIR/molt`, lowercase. It calls `find_existing_repo \"molt\" \"$MOLT_PRJ_DIR\"`, and when nothing is found that function falls back to `<dir>/molt`, which becomes the clone target. `molt use dev` and `molt_require_dev_tree` (lib/install.sh) look for `$MOLT_PRJ_DIR/Molt`. Repo names are exact-case.\n\nOn APFS the two names are one directory, so the Macs never see the bug. On a case-sensitive Linux disk the bootstrapped checkout is not the dev tree, and `molt use dev` refuses.\n\nFix: bootstrap looks for and clones `Molt`. The case-insensitive search still finds an existing checkout, whatever its case; only the default and the clone target change.\n\nFound by ac's docs review; vc checked it against the source.\n"
 }
