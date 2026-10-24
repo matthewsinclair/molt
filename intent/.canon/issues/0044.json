@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 44,
+  "slug": "one-helper-for-instances-host-paths-highlander",
+  "title": "One helper for instances/<host>/ paths (Highlander)",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-24",
+  "reporter": "Matthew Sinclair",
+  "body": "The instances/<host>/... path is built by hand in lib/agent.sh:231, lib/molt.sh:345 and :943, liberators/desktop.sh:44, liberators/ssh.sh:33 and liberators/keys.sh:89 (grep for instances/ to be sure the list is whole). Add one helper in lib/molt.sh, eg molt_instance_file <relative path>, that resolves the user repo and this host and prints the path, failing with a reason when either cannot be found; move every caller onto it. No behaviour change; the suite passes under both bashes."
+}
