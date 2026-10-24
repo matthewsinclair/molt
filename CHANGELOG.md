@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-24
+
 ### Added
 
 - `molt install [--prefix <dir>] [--managed-by molt|brew] [--force]` publishes the running dev tree's runtime set (`bin/molt`, `lib/`, `liberators/`, `templates/` and `VERSION`, as git names them) into an opt tree, `MOLT_INSTALL_PREFIX` by default, with a `.molt-install` manifest: `# tool:`, `# version:`, `# source_commit:` and `# managed_by:` headers over a sorted digest of every file. It refuses a dirty runtime set, a prefix that is `/` or not Molt's own, and, without `--force`, an existing install; `--force` replaces only one Molt manages, never Homebrew's (ST0008 WP01)
@@ -241,7 +243,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/matthewsinclair/molt/compare/v0.3.0...v1.0.0
 [0.3.0]: https://github.com/matthewsinclair/molt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/matthewsinclair/molt/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/matthewsinclair/molt/compare/v0.1.0...v0.1.1
