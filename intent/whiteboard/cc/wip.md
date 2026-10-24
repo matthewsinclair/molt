@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 09:49Z
+heartbeat_at: 2026-10-24 10:49Z
 status: active
-focus: "ST0008: conformance ca040c1 pushed (CI green); docs 9c418e2 held by vc until the tap; next the scratch-tap run on vc's GO"
+focus: "ST0008 WP05 env writer committed f4fdebc (unpushed), awaiting vc's full-suite validation; Molt-matts env entries + UTILZ_INSTALL_PREFIX drafted, held until green"
 claims: [ST0008/01, ST0008/02, ST0008/03, ST0008/04]
 ---
 
@@ -18,6 +18,7 @@ _(none)_
 ## TODO
 
 - ST0008 WP04 scratch-tap end-to-end run on rhadamanth, plan accepted by vc with its additions: cc scratchpad (session a38ae972) scratch-tap-plan.md. Prep done: scratchpad/tap-run/src clone at ca040c1 plus a file-url commit, scratch tag v0.3.0-scratch (the real repo already has v0.3.0), molt.rb rendered. Waits for vc's GO when the slot desk reopens after the compact. Every brew call with HOMEBREW_NO_AUTO_UPDATE=1 and HOMEBREW_NO_INSTALL_CLEANUP=1; unlink straight after install. If the build dir has no .git, stop, uninstall, untap, report. Finish: no /opt/homebrew/bin/molt, no molt in brew list, ~/.local/bin/molt still -> ~/Devel/prj/Molt/bin/molt.
+- Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct).
 
 ## Holds
 

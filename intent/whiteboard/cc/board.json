@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-24T09:49:43.028Z",
+    "heartbeat_at": "2026-10-24T10:49:33.275Z",
     "status": "active",
-    "focus": "ST0008: conformance ca040c1 pushed (CI green); docs 9c418e2 held by vc until the tap; next the scratch-tap run on vc's GO",
+    "focus": "ST0008 WP05 env writer committed f4fdebc (unpushed), awaiting vc's full-suite validation; Molt-matts env entries + UTILZ_INSTALL_PREFIX drafted, held until green",
     "claims": [
       "ST0008/01",
       "ST0008/02",
@@ -421,6 +421,14 @@
       "text": "ST0008 docs 9c418e2 (getting-started, bootstrap-runbook) are committed but held unpushed by vc on purpose until the tap exists and a release carries molt install. Leave them for vc to push.",
       "state": "live",
       "recorded_at": "2026-10-24T09:49:42.982Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 12,
+      "text": "Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct).",
+      "state": "live",
+      "recorded_at": "2026-10-24T10:35:40.221Z"
     }
   ],
   "sent": [

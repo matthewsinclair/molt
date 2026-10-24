@@ -1,0 +1,15 @@
+{
+  "id": "01M5PQP09XT5ZBTRQT8NM0YH94",
+  "ts": "2026-10-24T10:35:40.221Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct)."
+  }
+}
