@@ -31,6 +31,24 @@ _desktop_gsettings_file() {
   _desktop_instance_file gsettings
 }
 
+# True when gsettings is here to read and set GNOME keys.
+_desktop_gsettings_available() {
+  command -v gsettings &>/dev/null
+}
+
+# Says through $1 (molt_info, molt_warn or molt_error), after the lead $2, each
+# desktop file this instance declares that only gsettings can check or apply,
+# when gsettings is not here to do it. True when there is none. A declared
+# setting nothing can check used to read as healthy (issue 0043).
+_desktop_unreachable() {
+  local log="$1" lead="$2" f faults=""
+  _desktop_gsettings_available && return 0
+  for f in "$(_desktop_gsettings_file)" "$(_desktop_favorites_file)"; do
+    [[ -n "$f" ]] && faults+="${f#"$HOME/"} is declared, but gsettings is not available"$'\n'
+  done
+  molt_report_faults "$log" "$lead" desktop "${faults%$'\n'}"
+}
+
 # The path of instances/<host>/desktop/$1 in the user repo, failing when it has
 # none.
 _desktop_instance_file() {
@@ -178,7 +196,8 @@ desktop_check() {
     return 0
   fi
 
-  if ! command -v gsettings &>/dev/null; then
+  _desktop_unreachable molt_info "" || return 1
+  if ! _desktop_gsettings_available; then
     molt_debug "desktop: gsettings not available (no GNOME?)"
     return 0
   fi
@@ -213,7 +232,7 @@ desktop_check() {
 
   # Dock favourites drift
   local fav_file
-  if fav_file="$(_desktop_favorites_file)" && command -v gsettings &>/dev/null; then
+  if fav_file="$(_desktop_favorites_file)"; then
     if _desktop_favorites_empty "$fav_file"; then
       molt_warn "desktop: ${fav_file#"$HOME/"} has no entries -- ignoring it."
       molt_warn "        Applying it would empty the dock, which is far more likely"
@@ -241,7 +260,8 @@ desktop_install() {
     return 0
   fi
 
-  if ! command -v gsettings &>/dev/null; then
+  _desktop_unreachable molt_error "" || return 1
+  if ! _desktop_gsettings_available; then
     molt_info "desktop: no GNOME desktop detected, skipping"
     return 0
   fi
@@ -279,7 +299,7 @@ desktop_install() {
       molt_warn "desktop: refusing to apply ${fav_file#"$HOME/"} -- it has no entries."
       molt_warn "        That would empty the dock. Fix the file, or delete it if you"
       molt_warn "        want molt to leave dock favourites alone entirely."
-    elif command -v gsettings &>/dev/null; then
+    else
       local want
       want="$(_desktop_favorites_wanted "$fav_file")"
       if gsettings set org.gnome.shell favorite-apps "$want" 2>/dev/null; then
@@ -287,8 +307,6 @@ desktop_install() {
       else
         molt_warn "desktop: could not set dock favourites (gsettings refused '${want}')"
       fi
-    else
-      molt_warn "desktop: ${fav_file#"$HOME/"} present but gsettings is not available"
     fi
   fi
 
@@ -296,8 +314,12 @@ desktop_install() {
   molt_info "Liberator complete: desktop"
 }
 
+# Exit codes, as backup_verify's:
+#   0  every check ran and passed
+#   1  a check ran and failed
+#   2  nothing that ran failed, but a declared file could not be checked
 desktop_verify() {
-  local errors=0
+  local errors=0 unchecked=0
   local platform
   platform="$(molt_platform)"
 
@@ -306,8 +328,10 @@ desktop_verify() {
     return 0
   fi
 
+  _desktop_unreachable molt_warn "VERIFY INCOMPLETE: " || unchecked=1
+
   local gs_file drift line
-  if command -v gsettings &>/dev/null && gs_file="$(_desktop_gsettings_file)"; then
+  if _desktop_gsettings_available && gs_file="$(_desktop_gsettings_file)"; then
     if drift="$(_desktop_gsettings_drift "$gs_file")"; then
       if [[ -n "$drift" ]]; then
         while IFS= read -r line; do
@@ -333,8 +357,7 @@ desktop_verify() {
     done
   fi
 
-  if [[ $errors -eq 0 ]]; then
-    molt_info "Verified: desktop liberator is fully operational"
-  fi
-  return $errors
+  [[ $errors -eq 0 ]] || return 1
+  [[ $unchecked -eq 0 ]] || return 2
+  molt_info "Verified: desktop liberator is fully operational"
 }

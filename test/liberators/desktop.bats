@@ -216,3 +216,37 @@ org.gnome.desktop.wm.keybindings switch-windows ['<Alt>Tab', '<Super>Tab']"
     run desktop_verify
     assert_success
 }
+
+# --- A declared file gsettings is not here to check (issue 0043) ---
+
+@test "a declared desktop file with no gsettings fails check and install and leaves verify incomplete" {
+    _gs_env "$_GS_PAIRS"
+    printf 'org.gnome.Terminal.desktop\n' > "$(dirname "$GS_FILE")/favorite-apps"
+    # No stylesheet, so an unlinked one cannot fail verify before it reaches 2.
+    rm "$BATS_TEST_TMPDIR/repo/config/gtk/gtk.css"
+    _desktop_gsettings_available() { return 1; }
+    run desktop_check
+    assert_failure
+    assert_output_contains "desktop/gsettings is declared, but gsettings is not available"
+    assert_output_contains "desktop/favorite-apps is declared, but gsettings is not available"
+    run desktop_install
+    assert_failure
+    assert_output_contains "desktop/gsettings is declared, but gsettings is not available"
+    [ ! -e "$GS_LOG" ]
+    run desktop_verify
+    [ "$status" -eq 2 ]
+    assert_output_contains "VERIFY INCOMPLETE: desktop:"
+    assert_output_contains "desktop/favorite-apps is declared, but gsettings is not available"
+    refute_output_contains "Verified:"
+}
+
+@test "no declared desktop file and no gsettings is a quiet pass" {
+    _gs_env ""
+    _desktop_gsettings_available() { return 1; }
+    run desktop_check
+    assert_success
+    refute_output_contains "is declared"
+    run desktop_install
+    assert_success
+    refute_output_contains "is declared"
+}
