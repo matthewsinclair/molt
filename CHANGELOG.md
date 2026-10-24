@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-24
+
 ### Fixed
 
 - On Linux the env writer's GUI PATH now starts from the `PATH=` line of `/etc/environment` (`MOLT_ETC_ENVIRONMENT`), as PAM sets it for a desktop session. It used to start from zsh's compiled default, which left out `/usr/sbin`, `/sbin` and `/snap/bin` and put in `/usr/ucb`. macOS, where `path_helper` builds the base PATH, is unchanged, and the caller's own PATH is never used (issue 0056)
@@ -247,7 +249,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/matthewsinclair/molt/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/matthewsinclair/molt/compare/v0.3.0...v1.0.0
 [0.3.0]: https://github.com/matthewsinclair/molt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/matthewsinclair/molt/compare/v0.1.1...v0.2.0
