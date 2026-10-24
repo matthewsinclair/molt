@@ -3,8 +3,9 @@
 #
 # Each liberator has an "enabled" flag. Set to false to skip it.
 # Only the liberators listed and enabled for this platform run; one that is not
-# listed does not run. A manifest that enables none for this platform runs
-# every liberator Molt ships, so enable at least one.
+# listed does not run. A manifest that enables none for this platform is
+# refused: resleeve, upgrade and maintain fail, naming it. Only a sleeve with
+# no manifest at all runs every liberator Molt ships.
 
 [stack]
 name = "my-stack"                    # Your stack name (typically molt-{userid})

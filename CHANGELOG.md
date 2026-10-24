@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The iTerm2 ssh wrapper matches each host by its bare name and under each domain in the user repo's `config/network/local-domains`, one a line, in file order, in place of the `.lan` and `.local` written into Molt; without the file it matches bare names only (issue 0042)
 - The commit gate runs from a tracked `.githooks` (`core.hooksPath`), written by `intent claude upgrade --apply`, so a fresh clone gets it after one `git config core.hooksPath .githooks` and an upgrade; the installer's `.intent` carriers are ignored
 - `molt resleeve`'s failure line says how many liberators failed out of how many ran, and names them, eg `2 of 5 liberators failed: backup, agents`
+- `molt resleeve`, `molt upgrade` and `molt maintain` refuse a `molt.toml` that enables no liberator for this platform, naming it, where they had run every liberator Molt ships; only a sleeve with no manifest runs them all (issue 0054)
 - `molt doctor` exits 1 when any check did not pass, and 0 only when all passed, where it had exited 0 whatever its closing line said (issue 0055)
 - The brew liberator's maintain fails, naming each step that failed, when `brew update`, `brew upgrade`, `brew upgrade --cask` or `brew cleanup` fails, where it had reported maintenance complete; the other steps still run (issue 0052)
 

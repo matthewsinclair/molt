@@ -1022,6 +1022,25 @@ molt_enabled_liberators() {
   '
 }
 
+# The liberators a run covers, one a line: those the manifest enables for this
+# platform, or every liberator Molt ships when there is no manifest. A manifest
+# that enables none for this platform is refused, not read as "run them all":
+# fails, printing why and naming the manifest (issue 0054, hv's ruling).
+molt_run_liberators() {
+  local manifest liberators
+  if ! manifest="$(molt_find_manifest 2>/dev/null)"; then
+    liberators="$(liberator_list)" || { echo "there are no liberators to run"; return 1; }
+    echo "$liberators"
+    return 0
+  fi
+  liberators="$(molt_enabled_liberators)"
+  if [[ -z "$liberators" ]]; then
+    echo "$(molt_tilde "$manifest") enables no liberator for $(molt_platform); enable one, or remove the manifest to run them all"
+    return 1
+  fi
+  echo "$liberators"
+}
+
 # Prints the value of key $2 on the [[liberator]] entry named $1 in this
 # sleeve's molt.toml, read by _molt_table_entries like every other key.
 # Fails when there is no manifest, no such entry or no such key.
@@ -2295,20 +2314,14 @@ molt_resleeve() {
   molt_info "Stack found: $user_repo"
   molt_info "Loading liberators..."
 
-  # Use manifest if available, otherwise fall back to directory scan
-  local liberators
-  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
-    local manifest
-    if ! manifest="$(molt_find_manifest)"; then
-      molt_error "Cannot resleeve: the manifest that names the liberators could not be found."
-      return 1
-    fi
+  local liberators manifest
+  if ! liberators="$(molt_run_liberators)"; then
+    molt_error "Cannot resleeve: $liberators"
+    return 1
+  fi
+  if manifest="$(molt_find_manifest 2>/dev/null)"; then
     molt_info "Manifest: $manifest"
   else
-    if ! liberators="$(liberator_list)"; then
-      molt_error "Cannot resleeve: there are no liberators to run."
-      return 1
-    fi
     molt_info "No manifest found, using all available liberators"
   fi
 
@@ -2793,10 +2806,9 @@ cmd_upgrade() {
   echo ""
   molt_info "Running liberator upgrade hooks..."
   local liberators
-  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
-    :
-  else
-    liberators="$(liberator_list)"
+  if ! liberators="$(molt_run_liberators)"; then
+    molt_error "Cannot upgrade: $liberators"
+    return 1
   fi
 
   local upgrade_count=0 failed_hooks=""
@@ -2848,10 +2860,9 @@ cmd_maintain() {
 
   # Get enabled liberators
   local liberators
-  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
-    :
-  else
-    liberators="$(liberator_list)"
+  if ! liberators="$(molt_run_liberators)"; then
+    molt_error "Cannot maintain: $liberators"
+    return 1
   fi
 
   if [[ -n "$target_liberators" ]]; then
@@ -2920,7 +2931,13 @@ cmd_maintain() {
 
 # --- Multi-Repo Git ---
 
+# Prints a "label:path" line per managed repo: the framework, the config repo
+# and each run liberator's _repo. Fails, printing only why, when the manifest
+# names no liberator to run (issue 0054), so no list hides the refusal.
 molt_all_repos() {
+  local liberators
+  liberators="$(molt_run_liberators)" || { echo "$liberators"; return 1; }
+
   # Framework repo (always included)
   echo "molt:${MOLT_ROOT}"
 
@@ -2932,13 +2949,6 @@ molt_all_repos() {
   fi
 
   # Liberator repos (enabled liberators only)
-  local liberators
-  if liberators="$(molt_enabled_liberators 2>/dev/null)" && [[ -n "$liberators" ]]; then
-    :
-  else
-    liberators="$(liberator_list)"
-  fi
-
   while IFS= read -r lib; do
     [[ -z "$lib" ]] && continue
     # Load liberator quietly: anything it printed would mix with the repo list
@@ -2992,7 +3002,11 @@ cmd_git() {
   fi
 
   local git_cmd="$1"
-  local errors=0
+  local errors=0 repos
+  if ! repos="$(molt_all_repos)"; then
+    molt_error "Cannot run git: $repos"
+    return 1
+  fi
 
   while IFS=: read -r label repo_path; do
     [[ -z "$label" ]] && continue
@@ -3038,7 +3052,7 @@ cmd_git() {
       fi
     fi
     echo ""
-  done <<< "$(molt_all_repos)"
+  done <<< "$repos"
 
   if [[ $errors -gt 0 ]]; then
     molt_warn "${errors} repo(s) had errors"
