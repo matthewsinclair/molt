@@ -19,6 +19,7 @@ claims: [ST0006, ST0008]
 
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **kovacs (through kovacs-sysadm), farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14, pushed 23 Oct) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done. gyges did this on 23 Oct (rhadamanth-sysadm). (edited)
+- **For hv when back:** (1) should Molt set launchd's PATH so GUI-spawned processes (Claude Code desktop, Chrome native host, hooks, MCP) see ~/.local/bin first, like login shells under the (B) ruling? Without it they resolve brew's copy while hv is on dev (intent-vc's finding). (2) contract v0.3 has use brew REMOVE the link rather than point it at the keg; the effect is the same, vc accepted it. (3) kovacs keyfile delete and any PATH reorder after issue 0047 lands.
 
 ## Holds
 

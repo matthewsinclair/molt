@@ -1,0 +1,15 @@
+{
+  "id": "01M5PB6MSKM50HP7ECXBR2ZHPV",
+  "ts": "2026-10-24T06:57:34.003Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**For hv when back:** (1) should Molt set launchd's PATH so GUI-spawned processes (Claude Code desktop, Chrome native host, hooks, MCP) see ~/.local/bin first, like login shells under the (B) ruling? Without it they resolve brew's copy while hv is on dev (intent-vc's finding). (2) contract v0.3 has use brew REMOVE the link rather than point it at the keg; the effect is the same, vc accepted it. (3) kovacs keyfile delete and any PATH reorder after issue 0047 lands."
+  }
+}

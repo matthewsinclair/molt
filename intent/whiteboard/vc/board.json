@@ -613,6 +613,14 @@
       "text": "**molt-vc runs resource contention on rhadamanth** (hv, 24 Oct 06:50Z, going AFK). Heavy runs (bats suites, cargo builds, brew installs or upgrades) from every project book with molt-vc, start on its GO, and report START and END; intent-vc handed the slot desk over. Each project's VC still directs its own Claudes.",
       "state": "live",
       "recorded_at": "2026-10-24T06:50:26.859Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 25,
+      "text": "**For hv when back:** (1) should Molt set launchd's PATH so GUI-spawned processes (Claude Code desktop, Chrome native host, hooks, MCP) see ~/.local/bin first, like login shells under the (B) ruling? Without it they resolve brew's copy while hv is on dev (intent-vc's finding). (2) contract v0.3 has use brew REMOVE the link rather than point it at the keg; the effect is the same, vc accepted it. (3) kovacs keyfile delete and any PATH reorder after issue 0047 lands.",
+      "state": "live",
+      "recorded_at": "2026-10-24T06:57:34.003Z"
     }
   ],
   "sent": [
