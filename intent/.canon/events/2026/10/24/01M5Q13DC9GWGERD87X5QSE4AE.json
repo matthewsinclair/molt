@@ -1,0 +1,16 @@
+{
+  "id": "01M5Q13DC9GWGERD87X5QSE4AE",
+  "ts": "2026-10-24T13:20:16.777Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 5,
+    "text": "ST0008, Molt from brew, toward hv's v1.0.0 cut (hv, 24 Oct: 'Definitely 1'). Pushed, CI green: WP01-05 code to ec5fe42 (env writer, fix-forward, C11, dc 0049-0055); Molt-matts 91a71ff (zprofile owns ~/.local/bin first; env liberator on armed sleeves). 9c418e2 reverted (282e3a6) until the tap. On main, unpushed: d4c0305 (AT ids), df0c686 (AC001-006 satisfied, WP01-04 done), dc 84dc161 (0054 refuse-by-name, untested). NEXT: dc's 0054 light run, then vc full suite (heavy, after slot 311) at HEAD, push, then hv cuts v1.0.0 (bump VERSION, close CHANGELOG Unreleased, annotated tag, push); then vc creates matthewsinclair/homebrew-molt (hv approved), tools/formula publish, cc reapplies 9c418e2 fixing ac's held findings; rhadamanth use opt then brew; kovacs brew via kovacs-sysadm; then satisfy AC007-010 and close ST0008 (hv: close after release)."
+  }
+}

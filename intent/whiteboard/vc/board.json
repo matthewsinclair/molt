@@ -575,10 +575,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 5,
-      "text": "ST0008, Molt from brew: conforms to the one dev/opt/brew contract (devbin docs/dev-opt-brew.md at aeed31e4; design D0, 83e9fd4). Pushed and CI green: cc's WP01-04 and review fixes (82266c1), the conformance (ca040c1). Molt-matts a258ad0 (pushed) puts ~/.local/bin first on PATH. HELD unpushed on purpose: 9c418e2, the brew-first docs, until the tap exists. Next: cc's scratch-tap brew install end to end (plan accepted, queued); then vc creates matthewsinclair/homebrew-molt (hv approved); a release with molt install is hv's cut; WP05: env writer for UTILZ_INSTALL_PREFIX before Utilz 2.14.3, rhadamanth use opt then brew, kovacs brew-only via kovacs-sysadm.",
+      "text": "ST0008, Molt from brew, toward hv's v1.0.0 cut (hv, 24 Oct: 'Definitely 1'). Pushed, CI green: WP01-05 code to ec5fe42 (env writer, fix-forward, C11, dc 0049-0055); Molt-matts 91a71ff (zprofile owns ~/.local/bin first; env liberator on armed sleeves). 9c418e2 reverted (282e3a6) until the tap. On main, unpushed: d4c0305 (AT ids), df0c686 (AC001-006 satisfied, WP01-04 done), dc 84dc161 (0054 refuse-by-name, untested). NEXT: dc's 0054 light run, then vc full suite (heavy, after slot 311) at HEAD, push, then hv cuts v1.0.0 (bump VERSION, close CHANGELOG Unreleased, annotated tag, push); then vc creates matthewsinclair/homebrew-molt (hv approved), tools/formula publish, cc reapplies 9c418e2 fixing ac's held findings; rhadamanth use opt then brew; kovacs brew via kovacs-sysadm; then satisfy AC007-010 and close ST0008 (hv: close after release).",
       "state": "live",
       "recorded_at": "2026-10-24T06:31:23.257Z",
-      "edited_at": "2026-10-24T09:49:29.315Z"
+      "edited_at": "2026-10-24T13:20:16.777Z"
     },
     {
       "node": "vc",
@@ -618,16 +618,18 @@
       "node": "vc",
       "kind": "todo",
       "seq": 25,
-      "text": "**For hv when back:** (1) should Molt set launchd's PATH so GUI-spawned processes (Claude Code desktop, Chrome native host, hooks, MCP) see ~/.local/bin first, like login shells under the (B) ruling? Without it they resolve brew's copy while hv is on dev (intent-vc's finding). (2) contract v0.3 has use brew REMOVE the link rather than point it at the keg; the effect is the same, vc accepted it. (3) kovacs keyfile delete and any PATH reorder after issue 0047 lands.",
+      "text": "**For hv:** the kovacs keyfile delete (and old ~/bin/molt there), still open. (launchd PATH ruled 09:57Z and built in WP05; use brew removing the link accepted.)",
       "state": "live",
-      "recorded_at": "2026-10-24T06:57:34.003Z"
+      "recorded_at": "2026-10-24T06:57:34.003Z",
+      "edited_at": "2026-10-24T13:20:18.073Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 26,
       "text": "**ST0008 WP05, sleeve env for tool prefixes:** publish UTILZ_INSTALL_PREFIX (and any other declared tool prefix) to shells through Molt's one env writer (~/.config/molt/env.sh, plus the plist and environment.d the claude liberator already writes for CLAUDE_CONFIG_DIR), declared once in vars.sh as \"$MOLT_OPT_DIR/utilz\" on rhadamanth. Must be live before Utilz 2.14.3 is cut (utilz-vc's ask, 24 Oct). The same writer is the natural answer to hv's launchd PATH question (todo 25).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-24T13:20:18.486Z",
       "recorded_at": "2026-10-24T07:04:12.420Z"
     },
     {
@@ -642,9 +644,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 6,
-      "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md. At the 09:48Z fold: slot 285 (Utilz s0106-diag) in flight; queue by READY: laksa-cc 0045 gate, molt-cc scratch-tap, devbin 0213 landing (land213 49787686), laksa-dc 0006 window. Desk CLOSED for new STARTs until vc reopens after the compact. Rules: one heavy; one light beside at load<60; no .app light beside a Utilz LS run; START/END by name.",
+      "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md. At the 13:19Z fold the desk is CLOSED to new GOs. In flight: 311 laksa-cc security window (Mac heavy), 309 Intent widened preflight e39e60104 (kovacs, ~1h, from ~12:52Z), devbin-cc 0207-0209 (light). Heavy queue: molt-vc v1.0.0 validation (hv's cut priority), laksa-ic follow-up, laksa-dc (B), intent-dc 0635 judge, utilz-cc run-0105-c, intent-vc PATH-clean sweep; devbin land+cand pair rebooks when READY. Light queue: molt-dc 0054, devbin-dc 0216 workroom x3. Rules: one heavy; one light beside at load<60; one cargo at a time machine-wide, except a jobs-1 kovacs preflight beside one Mac cargo; no .app light beside a Utilz LS run; START/END by name; brew upgrades book too.",
       "state": "live",
-      "recorded_at": "2026-10-24T09:49:29.437Z"
+      "recorded_at": "2026-10-24T09:49:29.437Z",
+      "edited_at": "2026-10-24T13:20:17.435Z"
     },
     {
       "node": "vc",

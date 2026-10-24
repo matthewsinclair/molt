@@ -1,0 +1,16 @@
+{
+  "id": "01M5Q13EMRMMR0Y08B8EZ4BVXZ",
+  "ts": "2026-10-24T13:20:18.073Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 25,
+    "text": "**For hv:** the kovacs keyfile delete (and old ~/bin/molt there), still open. (launchd PATH ruled 09:57Z and built in WP05; use brew removing the link accepted.)"
+  }
+}
