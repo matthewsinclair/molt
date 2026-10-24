@@ -2,18 +2,19 @@
 
 This guide walks you through setting up MOLT on a new machine.
 
-> **Don't have a `molt-{user}` repo yet?** Create one first with
-> [`molt new-user`](new-user.md), then come back here to resleeve a machine.
+> **Don't have a `Molt-{user}` repo yet?** Create one first with [`molt new-user`](new-user.md), then come back here to resleeve a machine.
 
 ## Prerequisites
 
 - bash 3.2 or later
 - git
 - `gettext` — provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
+- `bats` — the test suite; `molt doctor` checks for it, with `envsubst`
+- `timeout`, from coreutils — `molt doctor`'s GitHub check and the bootstrap run `timeout 5 ssh -T`. Linux has it; on macOS run `brew install coreutils`, or doctor reports GitHub as not authenticated
 - A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
 - A terminal you're comfortable in
 
-## 1. Set MOLT_PRJ_DIR
+## Set MOLT_PRJ_DIR
 
 MOLT needs to know where your repos live. There is no default — you choose the layout per machine:
 
@@ -23,11 +24,11 @@ export MOLT_PRJ_DIR="$HOME/Projects"
 
 Add this to your `.zshenv` or `.bashrc` so it persists.
 
-## 2. Clone both repos
+## Clone both repos
 
 ```bash
-# The framework
-git clone https://github.com/you/molt "$MOLT_PRJ_DIR/molt"
+# The framework: the dev tree, exact-case Molt
+git clone https://github.com/you/molt "$MOLT_PRJ_DIR/Molt"
 
 # Your personal config
 git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
@@ -35,15 +36,16 @@ git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-y
 
 The framework finds your config repo by looking for `Molt-$(whoami)` in `$MOLT_CFG_DIR`, which defaults to the `cfg/` directory beside `$MOLT_PRJ_DIR`, and then in `$MOLT_PRJ_DIR` itself.
 
-## 3. Add molt to PATH
+## Put molt on PATH
 
 ```bash
-export PATH="$MOLT_PRJ_DIR/molt/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+"$MOLT_PRJ_DIR/Molt/bin/molt" use dev
 ```
 
-Or use the bootstrap script (see below) which handles this for you.
+`molt use dev` links `~/.local/bin/molt` to the checkout. Keep `~/.local/bin` first on PATH, rather than the checkout's `bin/`, or `molt doctor` reports that something else shadows the link. The bootstrap script (see below) makes the link for you.
 
-## 4. Preview with dry-run
+## Preview with dry-run
 
 ```bash
 molt resleeve --dry-run
@@ -51,7 +53,7 @@ molt resleeve --dry-run
 
 This shows what would happen without changing anything. You'll see which liberators are already configured and which would be installed.
 
-## 5. Resleeve
+## Resleeve
 
 ```bash
 molt resleeve
@@ -85,14 +87,16 @@ MOLT_PRJ_DIR=$HOME/Projects \
   bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
 ```
 
-The bootstrap script clones the framework into `$MOLT_PRJ_DIR` and your config repo into `$MOLT_CFG_DIR`, symlinks `molt` into `~/bin`, shows a dry-run, and prompts before applying.
+The bootstrap script clones the framework into `$MOLT_PRJ_DIR/Molt` and your config repo into `$MOLT_CFG_DIR/Molt-$(whoami)`, symlinks `molt` into `~/.local/bin`, shows a dry-run, and asks at the terminal before applying.
+
+It clones the framework from `MOLT_REPO` (default `matthewsinclair/molt`) and your config repo from `$MOLT_USER_GH/molt-$(whoami)`, where `MOLT_USER_GH` defaults to your login name. Set `MOLT_USER_GH` when your GitHub handle differs from it.
 
 ## Keeping up to date
 
-After the initial resleeve, use `molt upgrade` to pull the latest framework and config, run upgrade hooks, then resleeve:
+After the initial resleeve, use `molt upgrade` to update the framework and config, run upgrade hooks, then resleeve. In the dev tree it pulls the checkout; the opt tree is published again with `molt install --force`; the brew tree runs `brew update` and `brew upgrade`:
 
 ```bash
-molt upgrade              # pull + upgrade hooks + resleeve
+molt upgrade              # update + upgrade hooks + resleeve
 molt upgrade --dry-run    # preview only
 molt upgrade zsh,git      # upgrade specific liberators only
 molt upgrade --no-resleeve # upgrade without resleeve
@@ -105,7 +109,7 @@ molt upgrade --no-resleeve # upgrade without resleeve
 To update just the framework and config repos without running hooks or resleeving:
 
 ```bash
-molt upgrade --self       # pull framework + config repos only
+molt upgrade --self       # update framework + config repos only
 ```
 
 This is useful as a first step before a full upgrade, or when you just want to sync the repos.
@@ -138,10 +142,10 @@ Runs its diagnostic checks, among them: Molt's own directory structure, manifest
 
 ## Your config repo
 
-Your personal repo (`molt-{user}`) has this layout:
+Your personal repo (`Molt-{user}`) has this layout:
 
 ```
-molt-you/
+Molt-you/
   config/
     zsh/zshrc               # -> ~/.zshrc
     zsh/zshenv              # -> ~/.zshenv
@@ -162,6 +166,6 @@ Each machine gets its own directory under `instances/` with a manifest and optio
 
 ## Next steps
 
-- [Creating a New User Config Repo](new-user.md) — scaffold a fresh `molt-{user}` repo
+- [Creating a New User Config Repo](new-user.md) — scaffold a fresh `Molt-{user}` repo
 - [Writing a Liberator](writing-a-liberator.md) — add your own config modules
 - [Template System](templates.md) — per-instance config rendering
