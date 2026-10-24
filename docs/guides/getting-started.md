@@ -7,13 +7,22 @@ This guide walks you through setting up MOLT on a new machine.
 
 ## Prerequisites
 
+- [Homebrew](https://brew.sh), on macOS or Linux
 - bash 3.2 or later
 - git
 - `gettext` — provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
 - A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
 - A terminal you're comfortable in
 
-## 1. Set MOLT_PRJ_DIR
+## 1. Install molt
+
+```bash
+brew install matthewsinclair/molt/molt
+```
+
+The formula installs Molt into its keg and links `molt` into Homebrew's `bin`, so the `molt` on your PATH is it. `molt version` names the install, eg `molt 0.3.0 (brew, 905305c1a2b3) at /opt/homebrew/opt/molt/libexec`.
+
+## 2. Set MOLT_PRJ_DIR
 
 MOLT needs to know where your repos live. There is no default — you choose the layout per machine:
 
@@ -23,25 +32,13 @@ export MOLT_PRJ_DIR="$HOME/Projects"
 
 Add this to your `.zshenv` or `.bashrc` so it persists.
 
-## 2. Clone both repos
+## 3. Clone your config repo
 
 ```bash
-# The framework
-git clone https://github.com/you/molt "$MOLT_PRJ_DIR/molt"
-
-# Your personal config
 git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
 ```
 
-The framework finds your config repo by looking for `Molt-$(whoami)` in `$MOLT_CFG_DIR`, which defaults to the `cfg/` directory beside `$MOLT_PRJ_DIR`, and then in `$MOLT_PRJ_DIR` itself.
-
-## 3. Add molt to PATH
-
-```bash
-export PATH="$MOLT_PRJ_DIR/molt/bin:$PATH"
-```
-
-Or use the bootstrap script (see below) which handles this for you.
+Molt finds your config repo by looking for `Molt-$(whoami)` in `$MOLT_CFG_DIR`, which defaults to the `cfg/` directory beside `$MOLT_PRJ_DIR`, and then in `$MOLT_PRJ_DIR` itself.
 
 ## 4. Preview with dry-run
 
@@ -76,36 +73,27 @@ Zen: Manifest: ...
 Zen: Sleeve ready. Welcome back.
 ```
 
-## Bootstrap script
-
-For a completely fresh machine where nothing is set up yet:
-
-```bash
-MOLT_PRJ_DIR=$HOME/Projects \
-  bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
-```
-
-The bootstrap script clones the framework into `$MOLT_PRJ_DIR` and your config repo into `$MOLT_CFG_DIR`, symlinks `molt` into `~/bin`, shows a dry-run, and prompts before applying.
-
 ## Keeping up to date
 
-After the initial resleeve, use `molt upgrade` to pull the latest framework and config, run upgrade hooks, then resleeve:
+After the initial resleeve, use `molt upgrade` to bring Molt and your config forward, run upgrade hooks, then resleeve:
 
 ```bash
-molt upgrade              # pull + upgrade hooks + resleeve
+molt upgrade              # upgrade Molt + pull config + upgrade hooks + resleeve
 molt upgrade --dry-run    # preview only
 molt upgrade zsh,git      # upgrade specific liberators only
 molt upgrade --no-resleeve # upgrade without resleeve
 ```
 
-`upgrade` requires clean working trees in both repos (no uncommitted changes).
+From brew, `molt upgrade` runs `brew update`, asks `brew outdated` whether the formula has a new release, and runs `brew upgrade matthewsinclair/molt/molt` when it has, then carries on in the new install. A failed update or upgrade is named in the verdict. `--dry-run` skips `brew update` and says so. `brew upgrade matthewsinclair/molt/molt` on its own does the same for Molt alone.
+
+`upgrade` requires a clean working tree in your config repo (no uncommitted changes).
 
 ### Self-update
 
-To update just the framework and config repos without running hooks or resleeving:
+To update just Molt and your config repo without running hooks or resleeving:
 
 ```bash
-molt upgrade --self       # pull framework + config repos only
+molt upgrade --self       # Molt + config repo only
 ```
 
 This is useful as a first step before a full upgrade, or when you just want to sync the repos.
@@ -159,6 +147,55 @@ molt-you/
 ```
 
 Each machine gets its own directory under `instances/` with a manifest and optional overrides. See [Template System](templates.md) for how `.tmpl` files work.
+
+## For the maintainer of a dev checkout
+
+**This section is for whoever works on Molt itself, in a dev checkout of its repository.** A user installs from brew ([Install molt](#1-install-molt)) and needs none of it.
+
+Molt reaches a machine in three trees, dev, opt and brew, which are dev, stage and prod, as devbin's `docs/dev-opt-brew.md` has them for every tool released through Homebrew:
+
+```
+$MOLT_PRJ_DIR/Molt                 dev    the git checkout: edited, committed, tested
+$MOLT_INSTALL_PREFIX               opt    published from the checkout, only from a CLEAN runtime set
+$HOMEBREW_PREFIX/opt/molt/libexec  brew   the formula, published from a release tag
+```
+
+The checkout is the bleeding edge. The opt install is a published copy of it, which keeps what works apart from what is mid-development. The brew formula is the one publish to prod: what users install. (`opt` names the tier; Homebrew's own `opt/` path, on the brew line, is a different thing.)
+
+### The switch: `molt use`
+
+`~/.local/bin/molt` is the switch, and `molt use` is the one verb that sets it:
+
+```bash
+molt use          # show which tree serves molt, and change nothing
+molt use dev      # link ~/.local/bin/molt to the checkout
+molt use opt      # link it to the opt install
+molt use brew     # remove it, so Homebrew's molt answers
+```
+
+**No link means brew.** A user who never runs `molt use` has no `~/.local/bin/molt`, and runs Homebrew's. For the switch to take, `~/.local/bin` must come before Homebrew's `bin` on PATH, ahead of the first one `brew shellenv` adds. `molt use` with no argument and `molt doctor` fail, naming it, when another `molt` runs instead. Resleeve never moves the switch: it makes a missing link only from a dev or opt tree, and nothing at all from brew.
+
+### Publishing to opt: `molt install`
+
+```bash
+cd "$MOLT_PRJ_DIR/Molt"
+bin/molt install            # publish to $MOLT_INSTALL_PREFIX; refuses a dirty runtime set
+bin/molt install --force    # replace the opt install with this commit
+bin/molt use opt
+```
+
+The prefix comes from `--prefix <dir>`, else `MOLT_INSTALL_PREFIX` in the sleeve's `vars.sh`; there is no default, and with neither, `molt install` refuses by name. It copies what git names under `bin/molt`, `lib/`, `liberators/`, `templates/` and `VERSION`, and writes a checksum manifest, `.molt-install`, that `molt doctor` checks the install against. An opt install is never pulled: `molt upgrade` there names `molt install --force` and the checkout's commit when it is ahead. `molt test` runs only in the checkout.
+
+### Bootstrap script
+
+For a completely fresh machine where nothing is set up yet, the bootstrap script sets up a dev checkout:
+
+```bash
+MOLT_PRJ_DIR=$HOME/Projects \
+  bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
+```
+
+It clones the framework into `$MOLT_PRJ_DIR` and your config repo into `$MOLT_CFG_DIR`, links `molt` into `~/.local/bin`, shows a dry-run, and prompts before applying. In a dev tree, `molt upgrade` pulls the checkout and requires a clean working tree in both repos.
 
 ## Next steps
 
