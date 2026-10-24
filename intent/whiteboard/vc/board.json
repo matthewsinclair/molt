@@ -661,6 +661,14 @@
       "text": "**The Molt release waits for WP05** (hv, 24 Oct 10:33Z by TUI). The scratch-tap brew install passed end to end (slot 287, 10:29-10:31Z; teardown verified by vc). The first brew Molt carries the env writer, so the tap repo, formula publish and 9c418e2 all wait for a release cut after WP05 lands. Order: cc's WP05 Molt commits, then the Molt-matts commit (env in all five armed molt.toml files, UTILZ_INSTALL_PREFIX on rhadamanth), then vc validates with dc's 0048 and pushes, then hv cuts.",
       "state": "live",
       "recorded_at": "2026-10-24T10:35:23.852Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 23,
+      "text": "**An agent session keeps the PATH it started with.** On 24 Oct devbin-cc's T10 switch looked shadowed because its Bash tool still had /opt/homebrew/bin ahead of ~/.local/bin, while a fresh login shell (env -i ... zsh -lic) had ~/.local/bin first per Molt-matts a258ad0. A PATH or zshrc change reaches only sessions started after it; judge any use dev|opt|brew proof in a fresh login shell.",
+      "state": "live",
+      "recorded_at": "2026-10-24T11:44:24.796Z"
     }
   ],
   "sent": [

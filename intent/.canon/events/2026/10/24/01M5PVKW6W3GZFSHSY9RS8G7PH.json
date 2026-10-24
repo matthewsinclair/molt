@@ -1,0 +1,15 @@
+{
+  "id": "01M5PVKW6W3GZFSHSY9RS8G7PH",
+  "ts": "2026-10-24T11:44:24.796Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "**An agent session keeps the PATH it started with.** On 24 Oct devbin-cc's T10 switch looked shadowed because its Bash tool still had /opt/homebrew/bin ahead of ~/.local/bin, while a fresh login shell (env -i ... zsh -lic) had ~/.local/bin first per Molt-matts a258ad0. A PATH or zshrc change reaches only sessions started after it; judge any use dev|opt|brew proof in a fresh login shell."
+  }
+}
