@@ -9,10 +9,14 @@ _vscode_settings_dir() {
   esac
 }
 
+# The 'code' CLI inside the macOS app bundle, there whether or not it is on PATH.
+_vscode_app_bin() {
+  echo "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+}
+
 _vscode_has_code() {
   command -v code &>/dev/null && return 0
-  # macOS: check app bundle even if 'code' not on PATH
-  [[ -x "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" ]] && return 0
+  [[ -x "$(_vscode_app_bin)" ]] && return 0
   return 1
 }
 
@@ -67,13 +71,17 @@ vscode_install() {
     return 1
   fi
 
-  # On macOS, ensure 'code' CLI is on PATH via ~/bin symlink
+  # On macOS, put the app's 'code' CLI on PATH by linking it into
+  # MOLT_LOCAL_BIN, where molt links itself (issue 0048).
   if [[ "$(molt_platform)" == "macos" ]] && ! command -v code &>/dev/null; then
-    local app_bin="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+    local app_bin
+    app_bin="$(_vscode_app_bin)"
     if [[ -x "$app_bin" ]]; then
-      mkdir -p "$HOME/bin"
-      ln -sf "$app_bin" "$HOME/bin/code"
-      molt_info "Symlinked 'code' CLI to ~/bin/code"
+      if ! mkdir -p "$MOLT_LOCAL_BIN" || ! ln -sf "$app_bin" "$MOLT_LOCAL_BIN/code"; then
+        molt_error "vscode: could not link 'code' into $(molt_tilde "$MOLT_LOCAL_BIN")"
+        return 1
+      fi
+      molt_info "Symlinked 'code' CLI to $(molt_tilde "$MOLT_LOCAL_BIN/code")"
     fi
   fi
 
