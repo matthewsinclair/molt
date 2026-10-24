@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- On Linux the env writer's GUI PATH now starts from the `PATH=` line of `/etc/environment` (`MOLT_ETC_ENVIRONMENT`), as PAM sets it for a desktop session. It used to start from zsh's compiled default, which left out `/usr/sbin`, `/sbin` and `/snap/bin` and put in `/usr/ucb`. macOS, where `path_helper` builds the base PATH, is unchanged, and the caller's own PATH is never used (issue 0056)
+
 ## [1.0.0] - 2026-10-24
 
 ### Added
