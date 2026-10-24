@@ -9,7 +9,8 @@
     "status": "active",
     "focus": "24 Oct: Molt from brew (lead, cc builds once vc's spec lands); dc on issues 0043-0046",
     "claims": [
-      "ST0006"
+      "ST0006",
+      "ST0008"
     ],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -814,6 +815,13 @@
       "body": "hv, 24 Oct: dc takes issues 0043-0046 (the small carried defects; each issue's body is the spec) in parallel with cc's lead item, Molt from brew. Work on main in this checkout, commit by pathspec, your own paths only; one issue per commit, closing each with intent issues close in the same commit. Before any bats run, ask intent-vc for a heavy-run slot (START/END with a census). Run the suite under both bashes before you call one done, then send me the commit ids and I validate and push. 0044 touches lib/molt.sh, which cc may also touch for the brew work: tell me before you start 0044, and I will sequence it against cc.",
       "fyi": false,
       "recorded_at": "2026-10-24T05:31:43.456Z"
+    },
+    {
+      "id": "01M5P7M4R6TPPP4P8R1J6M8SGC",
+      "recipient": "cc",
+      "body": "hv, 24 Oct: cc builds ST0008, Molt from brew (dev, opt and brew trees). The spec is intent/st/ST0008/design.md, read it first; the ACs are in acceptance.md. Build order: WP01, then 02, 03, 04, with 05 being vc's and hv's. Put the install and tree-identity code in a new lib/install.sh, sourced by bin/molt, rather than growing lib/molt.sh. dc is landing issue 0044 in lib/molt.sh, agent.sh, desktop.sh, keys.sh and ssh.sh right now, uncommitted, so don't edit those until I tell you 0044 is in. Work on main in this checkout, commit by pathspec, your own paths only, one WP per commit or a few, each with its tests. Ask intent-vc for a slot before any bats run. Run the suite under both bashes before you call a WP done, then send me the commit ids and I validate and push. Take any design question to me, not round it.",
+      "fyi": false,
+      "recorded_at": "2026-10-24T05:55:02.022Z"
     }
   ],
   "handled": [

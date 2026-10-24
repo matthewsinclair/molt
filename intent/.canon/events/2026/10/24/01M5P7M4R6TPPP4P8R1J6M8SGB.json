@@ -1,0 +1,17 @@
+{
+  "id": "01M5P7M4R6TPPP4P8R1J6M8SGB",
+  "ts": "2026-10-24T05:55:02.022Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "hv, 24 Oct: cc builds ST0008, Molt from brew (dev, opt and brew trees). The spec is intent/st/ST0008/design.md, read it first; the ACs are in acceptance.md. Build order: WP01, then 02, 03, 04, with 05 being vc's and hv's. Put the install and tree-identity code in a new lib/install.sh, sourced by bin/molt, rather than growing lib/molt.sh. dc is landing issue 0044 in lib/molt.sh, agent.sh, desktop.sh, keys.sh and ssh.sh right now, uncommitted, so don't edit those until I tell you 0044 is in. Work on main in this checkout, commit by pathspec, your own paths only, one WP per commit or a few, each with its tests. Ask intent-vc for a slot before any bats run. Run the suite under both bashes before you call a WP done, then send me the commit ids and I validate and push. Take any design question to me, not round it.",
+    "fyi": false,
+    "re": null,
+    "recipient": "cc"
+  }
+}
