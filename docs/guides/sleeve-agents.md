@@ -309,19 +309,21 @@ The order matters. Published first, the variable would start the next Claude emp
 
 ### Where the variable is published
 
-| File                                                                                                  | Reaches                                                                    |
-| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `~/.config/molt/env.sh`, holding `export CLAUDE_CONFIG_DIR="<dir>"`                                   | every zsh, through the `zshenv` line below, including ssh and TTY logins   |
-| `~/Library/LaunchAgents/com.molt.claude-config-dir.plist` (macOS), label `com.molt.claude-config-dir` | GUI apps: at login it runs `/bin/launchctl setenv CLAUDE_CONFIG_DIR <dir>` |
-| `~/.config/environment.d/claude.conf` (Linux), holding `CLAUDE_CONFIG_DIR=<dir>`                      | the user session: on GNOME, every GUI and terminal child                   |
+The `env` liberator publishes it, after `claude`, through Molt's one env writer (`lib/env.sh`), together with every `<TOOL>_INSTALL_PREFIX` the sleeve's `vars.sh` exports and, for GUI apps only, the PATH a login shell builds. `claude` hands over the variable only once the state is in the declared directory. A sleeve whose `molt.toml` names its liberators must enable `env`, after `claude`: otherwise the claude check fails, naming the missing entry.
 
-Each carries a `.molt-rendered` digest sidecar. Your config repo's `zshenv` sources the env file when it exists, which is safe on a sleeve that has not moved:
+| File                                                                           | Reaches                                                                         |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `~/.config/molt/env.sh`, holding `export CLAUDE_CONFIG_DIR="<dir>"`            | every zsh, through the `zshenv` line below, including ssh and TTY logins        |
+| `~/Library/LaunchAgents/com.molt.env.plist` (macOS), label `com.molt.env`      | GUI apps: at login it runs `/bin/launchctl setenv`, with each variable and PATH |
+| `~/.config/environment.d/molt.conf` (Linux), holding `CLAUDE_CONFIG_DIR=<dir>` | the user session: on GNOME, every GUI and terminal child                        |
+
+These replace the claude liberator's `com.molt.claude-config-dir.plist` and `claude.conf`. The `env` liberator removes each old file that is still exactly what Molt rendered, and refuses, by name, one that is not. Each carries a `.molt-rendered` digest sidecar. Your config repo's `zshenv` sources the env file when it exists, which is safe on a sleeve that has not moved:
 
 ```sh
 [ -r ~/.config/molt/env.sh ] && . ~/.config/molt/env.sh
 ```
 
-The GUI file takes effect at the next login, because Molt does not call `launchctl` or `systemctl` itself, so log out and back in after the move. Nothing Molt renders for this names a Molt checkout: the hook script, the env file and the GUI file refer only to `~/.config/molt/`, the config dir, `$HOME` and, in the hook script, the agents root `MOLT_AGT_DIR`, so they do not depend on where Molt is installed.
+The GUI file takes effect for apps launched after the next login, because Molt does not call `launchctl` or `systemctl` itself, so log out and back in after the move. Nothing Molt renders for this names a Molt checkout: the hook script, the env file and the GUI file refer only to `~/.config/molt/`, the config dir, `$HOME` and, in the hook script, the agents root `MOLT_AGT_DIR`, so they do not depend on where Molt is installed.
 
 ### After the move
 

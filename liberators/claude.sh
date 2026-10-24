@@ -153,33 +153,9 @@ _claude_settings_merge() {
 # before the move would start the next Claude empty in the new dir, and the
 # move would then meet a dir that is no longer empty.
 
-# Why the path $2, named $1, cannot be written as it stands into the files that
-# publish it, or nothing when it can. They are env.sh, a plist and an
-# environment.d file, and env.sh is read back, so a path is refused rather than
-# rewritten: a copy tidied here would be compared with files that hold the
-# untidied one, and a path spelt with . or .. would get past the comparison
-# with ~/.claude. Refused: anything molt_path_fault refuses, a character any
-# of those files reads as syntax, and trailing whitespace, which environment.d
-# strips. environment.d expands $ and backslash escapes, never % specifiers,
-# which belong to unit files.
-_claude_path_fault() {
-  local name="$1" path="$2" fault
-  fault="$(molt_path_fault "$name" "$path")"
-  if [[ -n "$fault" ]]; then
-    echo "$fault"
-    return
-  fi
-  case "$path" in
-    *[\"\'\$\`\\\<\>\&]* | *$'\n'*)
-      echo "$name holds a character env.sh, a plist or environment.d would read as syntax: $path" ;;
-    *[[:space:]])
-      echo "$name ends in whitespace, which environment.d would strip: '$path'" ;;
-  esac
-}
-
 # Prints the config dir this sleeve declares, or nothing when it declares none.
 # Fails, printing why instead, when the value cannot be read or used: a path
-# _claude_path_fault refuses, or $HOME, ~/.claude or anything under it. It fails
+# molt_env_value_fault refuses, or $HOME, ~/.claude or anything under it. It fails
 # too when molt_agt_dir_fault refuses MOLT_AGT_DIR: the home guard is published
 # with the config dir and rendered with the agents root, which the agents
 # liberator makes the homes under and asks the same of (AC014).
@@ -190,7 +166,7 @@ _claude_declared_dir() {
     return 1
   fi
   [[ -n "$dir" ]] || return 0
-  fault="$(_claude_path_fault MOLT_CLAUDE_CONFIG_DIR "$dir")"
+  fault="$(molt_env_value_fault MOLT_CLAUDE_CONFIG_DIR "$dir" path)"
   if [[ -z "$fault" ]]; then
     fault="$(molt_agt_dir_fault)"
   fi
@@ -479,15 +455,6 @@ _claude_repoint() {
   return 1
 }
 
-# The config dir the env file last published, when there is one: the value of
-# the export line templates/claude/env.sh.tmpl writes, found only in that form.
-_claude_env_dir() {
-  local env_file
-  env_file="$(molt_claude_env_file)"
-  [[ -f "$env_file" ]] || return 0
-  sed -n 's/^export CLAUDE_CONFIG_DIR="\(.*\)"$/\1/p' "$env_file"
-}
-
 # A directory other than the config dir $1 that Claude Code's state may be in:
 # one CLAUDE_CONFIG_DIR names, in this shell or as the env file last published
 # it, that exists. Nothing when there is none, as on a sleeve Claude Code has
@@ -495,7 +462,7 @@ _claude_env_dir() {
 # the old one, and publishing the new, empty one would start Claude afresh.
 _claude_other_dir() {
   local dir="$1" named
-  for named in "${CLAUDE_CONFIG_DIR:-}" "$(_claude_env_dir)"; do
+  for named in "${CLAUDE_CONFIG_DIR:-}" "$(molt_env_published CLAUDE_CONFIG_DIR)"; do
     if [[ -n "$named" && "$named" != "$dir" && -d "$named" ]]; then
       echo "$named"
       return
@@ -503,21 +470,48 @@ _claude_other_dir() {
   done
 }
 
-# The files that publish the config dir, one "template<TAB>target<TAB>mode"
-# line each: env.sh, which ~/.zshenv sources; the GUI environment on this
-# platform; and the home guard the hook runs. None of them names a checkout of
-# Molt, so a Molt installed any other way renders the same bytes.
+# The files the claude liberator renders for the config dir, one
+# "template<TAB>target<TAB>mode" line each: the home guard the hook runs, which
+# names no checkout of Molt, so a Molt installed any other way renders the
+# same bytes. CLAUDE_CONFIG_DIR itself goes out through the env liberator, from
+# claude_env_pairs.
 _claude_published() {
-  local t="${MOLT_ROOT}/templates/claude"
-  printf '%s\t%s\t%s\n' "$t/env.sh.tmpl" "$(molt_claude_env_file)" 644
-  case "$(molt_platform)" in
-    macos)
-      printf '%s\t%s\t%s\n' "$t/com.molt.claude-config-dir.plist.tmpl" \
-        "$HOME/Library/LaunchAgents/com.molt.claude-config-dir.plist" 644 ;;
-    linux)
-      printf '%s\t%s\t%s\n' "$t/claude.conf.tmpl" "$HOME/.config/environment.d/claude.conf" 644 ;;
-  esac
-  printf '%s\t%s\t%s\n' "$t/claude-home-guard.sh.tmpl" "$HOME/.config/molt/claude-home-guard.sh" 755
+  printf '%s\t%s\t%s\n' "${MOLT_ROOT}/templates/claude/claude-home-guard.sh.tmpl" "$HOME/.config/molt/claude-home-guard.sh" 755
+}
+
+# CLAUDE_CONFIG_DIR as the env liberator publishes it, one
+# "NAME<TAB>scope<TAB>value" line: the declared config dir once Claude Code's
+# state is in it, and until then whatever env.sh already publishes, so a
+# variable never goes out ahead of the move, nor is dropped while one is
+# pending. Nothing on a sleeve that declares no config dir. Fails, printing
+# why, when the declared dir cannot be used.
+claude_env_pairs() {
+  local dir state why value
+  if ! dir="$(_claude_declared_dir)"; then
+    echo "$dir"
+    return 1
+  fi
+  [[ -n "$dir" ]] || return 0
+  IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
+  if [[ "$state" == moved ]]; then
+    value="$dir"
+  else
+    value="$(molt_env_published CLAUDE_CONFIG_DIR)"
+  fi
+  [[ -z "$value" ]] || printf 'CLAUDE_CONFIG_DIR\tall\t%s\n' "$value"
+}
+
+# Why CLAUDE_CONFIG_DIR would go unpublished on this sleeve, or nothing when it
+# would not: the env liberator publishes it, so a molt.toml that names
+# liberators and does not enable env leaves env.sh and the GUI file as they
+# were, with nothing to keep them. With no manifest every liberator runs.
+_claude_env_unlisted_fault() {
+  local enabled manifest
+  enabled="$(molt_enabled_liberators 2>/dev/null)" || return 0
+  [[ -n "$enabled" ]] || return 0
+  ! grep -qx env <<< "$enabled" || return 0
+  manifest="$(molt_find_manifest 2>/dev/null)" || manifest="this sleeve's molt.toml"
+  echo "CLAUDE_CONFIG_DIR is published by the env liberator, which $(molt_tilde "$manifest") does not enable: add a [[liberator]] named env after claude"
 }
 
 # A value the home guard at $1 was rendered with: the line after the
@@ -557,11 +551,12 @@ _claude_published_state() {
   fi
 }
 
-# Renders each published file that is not current, then exports
-# CLAUDE_CONFIG_DIR as $1 for the rest of this run, so the links, statusLine and
-# hook written after it, and any liberator after this one, land in $1 and none
-# recreates ~/.claude. Called only once Claude Code's state is in $1. Nothing
-# here runs launchctl or systemctl: the GUI file takes effect at the next login.
+# Renders the home guard when it is not current, then exports CLAUDE_CONFIG_DIR
+# as $1 for the rest of this run, so the links, statusLine and hook written
+# after it, and any liberator after this one, land in $1 and none recreates
+# ~/.claude. Called only once Claude Code's state is in $1, which is when
+# claude_env_pairs gives the env liberator, later in the run, the variable to
+# publish in env.sh and the GUI file.
 _claude_publish() {
   local dir="$1" template target mode
   while IFS=$'\t' read -r template target mode; do
@@ -575,7 +570,7 @@ _claude_publish() {
     fi
   done <<< "$(_claude_published)"
   if ! molt_claude_config_dir_is "$dir"; then
-    molt_warn "claude: CLAUDE_CONFIG_DIR is not $(molt_tilde "$dir") in this shell. Start Claude Code only from a new shell that sources $(molt_tilde "$(molt_claude_env_file)"), and log out and in for apps started from the GUI"
+    molt_warn "claude: CLAUDE_CONFIG_DIR is not $(molt_tilde "$dir") in this shell. Start Claude Code only from a new shell that sources $(molt_tilde "$(molt_env_file)"), and log out and in for apps started from the GUI"
   fi
   export CLAUDE_CONFIG_DIR="$dir"
 }
@@ -731,6 +726,12 @@ _claude_report_faults() {
     return
   fi
 
+  fault="$(_claude_env_unlisted_fault)"
+  if [[ -n "$fault" ]]; then
+    "$log" "${prefix}$fault"
+    ok=1
+  fi
+
   IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
   case "$state" in
     moved | none)
@@ -760,7 +761,7 @@ _claude_report_faults() {
   # whose script has moved blocks every call it guards.
   _claude_report_home_paths "$log" "$prefix" "$dir" || ok=1
   if [[ -z "${CLAUDE_CONFIG_DIR:-}" ]]; then
-    "$log" "${prefix}CLAUDE_CONFIG_DIR is not set where molt runs; $(molt_tilde "$(molt_claude_env_file)") sets it in a shell that sources it"
+    "$log" "${prefix}CLAUDE_CONFIG_DIR is not set where molt runs; $(molt_tilde "$(molt_env_file)") sets it in a shell that sources it"
     ok=1
   elif ! molt_claude_config_dir_is "$dir"; then
     "$log" "${prefix}CLAUDE_CONFIG_DIR is $(molt_tilde "$CLAUDE_CONFIG_DIR"), not this sleeve's config dir $(molt_tilde "$dir")"
@@ -818,6 +819,14 @@ claude_install() {
   fi
   if [[ -n "$dir" ]]; then
     _claude_settings_merge "home-launch hook" "$(molt_claude_hook_entry)" "$MOLT_CLAUDE_HOOK_GET" "$MOLT_CLAUDE_HOOK_SET" || return 1
+  fi
+  if [[ -n "$dir" ]]; then
+    local fault
+    fault="$(_claude_env_unlisted_fault)"
+    if [[ -n "$fault" ]]; then
+      molt_error "claude: $fault"
+      return 1
+    fi
   fi
 
   molt_info "Liberator complete: claude"

@@ -93,6 +93,7 @@ load_molt_libs() {
     source "$MOLT_LIB_DIR/liberator.sh"
     source "$MOLT_LIB_DIR/agent.sh"
     source "$MOLT_LIB_DIR/install.sh"
+    source "$MOLT_LIB_DIR/env.sh"
     no_gsettings
 }
 

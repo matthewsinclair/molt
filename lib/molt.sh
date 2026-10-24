@@ -1277,12 +1277,6 @@ molt_claude_config_dir_is() {
   [[ "$have" == "$want" ]]
 }
 
-# The env file ~/.zshenv sources to set CLAUDE_CONFIG_DIR, which the claude
-# liberator publishes on a sleeve that declares a config dir.
-molt_claude_env_file() {
-  echo "$HOME/.config/molt/env.sh"
-}
-
 # Replaces the settings file $1 with what the command after it prints, through
 # a temporary file beside it that cp -p gives the file's mode, then a rename, so
 # Claude Code, which watches the file, never reads half of it. Every user and

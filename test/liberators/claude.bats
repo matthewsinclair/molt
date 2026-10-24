@@ -11,12 +11,19 @@ ATTRIBUTION='{"commit":"(C) someone@example.com","pr":"(C) someone@example.com",
 
 setup_claude() {
     load_liberator claude
+    load_liberator env
 
     export HOME="$BATS_TEST_TMPDIR/fakehome"
     mkdir -p "$HOME/.claude"
     # The agents root the home guard is rendered with, in the test directory
     # rather than the one constants.sh derived from this machine's MOLT_PRJ_DIR.
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
+    # The env liberator publishes what claude gives it, with the PATH of a
+    # login shell faked here, never this machine's.
+    export MOLT_LOCAL_BIN="$HOME/.local/bin"
+    export MOLT_LOGIN_SHELL="$BATS_TEST_TMPDIR/login-shell"
+    printf '#!/bin/sh\necho "molt-path:%s:/usr/bin:/bin"\n' "$MOLT_LOCAL_BIN" > "$MOLT_LOGIN_SHELL"
+    chmod +x "$MOLT_LOGIN_SHELL"
 
     export TEST_USER_REPO="$BATS_TEST_TMPDIR/molt-testuser"
     mkdir -p "$TEST_USER_REPO/config/claude" "$TEST_USER_REPO/config/ccstatusline"
@@ -63,8 +70,8 @@ setup_moved() {
 # The GUI file this platform publishes.
 gui_file() {
     case "$(molt_platform)" in
-        macos) echo "$HOME/Library/LaunchAgents/com.molt.claude-config-dir.plist" ;;
-        *)     echo "$HOME/.config/environment.d/claude.conf" ;;
+        macos) echo "$HOME/Library/LaunchAgents/com.molt.env.plist" ;;
+        *)     echo "$HOME/.config/environment.d/molt.conf" ;;
     esac
 }
 
@@ -332,6 +339,8 @@ JSON
     backup="$(ls -d "$CONFIG".molt-backup.*)"
     [ "$(cat "$backup/.claude/projects/session.jsonl")" = "transcript" ]
     [ "$(jq -r .userID "$backup/.claude.json")" = "u" ]
+    run env_install
+    assert_success
     grep -qxF "export CLAUDE_CONFIG_DIR=\"$CONFIG\"" "$HOME/.config/molt/env.sh"
     grep -qF "$CONFIG" "$(gui_file)"
     # What the run wrote after the move went to the config dir.
@@ -466,12 +475,16 @@ JSON
     setup_moved
     run claude_install
     assert_success
+    run env_install
+    assert_success
     local old="$CONFIG"
     declare_config_dir "$HOME/.local/claude"
     run claude_install
     assert_failure
     assert_output_contains "~/.local/claude holds nothing, and CLAUDE_CONFIG_DIR named ~/.config/claude, which exists"
     assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    run env_install
+    assert_success
     grep -qxF "export CLAUDE_CONFIG_DIR=\"$old\"" "$HOME/.config/molt/env.sh"
     [ ! -e "$HOME/.local/claude" ]
     run claude_check
@@ -596,6 +609,8 @@ JSON
     run claude_install
     assert_success
     [ -d "$CONFIG" ]
+    run env_install
+    assert_success
     grep -qxF "export CLAUDE_CONFIG_DIR=\"$CONFIG\"" "$HOME/.config/molt/env.sh"
     [ ! -e "$HOME/.claude" ]
     [ -z "$(ls -d "$CONFIG".molt-backup.* 2>/dev/null)" ]
@@ -608,17 +623,19 @@ JSON
     eval 'molt_platform() { echo macos; }'
     run claude_install
     assert_success
-    local plist="$HOME/Library/LaunchAgents/com.molt.claude-config-dir.plist"
-    grep -qF "<string>com.molt.claude-config-dir</string>" "$plist"
+    run env_install
+    assert_success
+    local plist="$HOME/Library/LaunchAgents/com.molt.env.plist"
+    grep -qF "<string>com.molt.env</string>" "$plist"
     grep -qF "<string>setenv</string>" "$plist"
     grep -qF "<string>$CONFIG</string>" "$plist"
     if command -v plutil >/dev/null; then
         plutil -lint "$plist"
     fi
     eval 'molt_platform() { echo linux; }'
-    run claude_install
+    run env_install
     assert_success
-    grep -qxF "CLAUDE_CONFIG_DIR=$CONFIG" "$HOME/.config/environment.d/claude.conf"
+    grep -qxF "CLAUDE_CONFIG_DIR=$CONFIG" "$HOME/.config/environment.d/molt.conf"
     # The templates take the sleeve's config dir and the agents root (AC014),
     # and nothing else of molt's, so no install of Molt can put its own path
     # into them.
@@ -626,7 +643,7 @@ JSON
     assert_success
     [ "$(printf '%s\n' "$output" | sort -u)" = "$(printf '%s\n' '${MOLT_AGT_DIR' '${MOLT_CLAUDE_CONFIG_DIR')" ]
     run grep -lE '\$\{?MOLT_|/Molt' "$HOME/.config/molt/env.sh" "$HOME/.config/molt/claude-home-guard.sh" \
-        "$plist" "$HOME/.config/environment.d/claude.conf"
+        "$plist" "$HOME/.config/environment.d/molt.conf"
     assert_failure
     [ -z "$output" ]
 }
@@ -734,6 +751,8 @@ JSON
     assert_output_contains "  .hooks.PreToolUse[0].hooks[0].command: \"$command\""
     [ "$(jq -r '.hooks.PreToolUse[0].hooks[0].command' "$dir/settings.json")" = "$command" ]
     # The state is in the dir, so it is published all the same.
+    run env_install
+    assert_success
     grep -qxF "export CLAUDE_CONFIG_DIR=\"$dir\"" "$HOME/.config/molt/env.sh"
     export CLAUDE_CONFIG_DIR="$dir"
     run claude_check
@@ -1164,25 +1183,21 @@ JSON
     assert_success
 }
 
-@test "check and verify report env.sh, the GUI file or the guard missing or stale, and the hook missing from settings.json" {
-    # AT019 (ST0006 AC004).
+@test "check and verify report the guard missing or stale, and the hook missing from settings.json" {
+    # AT019 (ST0006 AC004); env.sh and the GUI file are the env liberator's (env.bats).
     setup_moved
     run claude_install
     assert_success
     export CLAUDE_CONFIG_DIR="$CONFIG"
-    local gui
-    gui="$(gui_file)"
-    rm "$HOME/.config/molt/env.sh" "$gui"
+    rm "$HOME/.config/molt/claude-home-guard.sh"
     run claude_check
     assert_failure
-    assert_output_contains "claude: ~/.config/molt/env.sh is missing"
-    assert_output_contains "claude: $(molt_tilde "$gui") is missing"
+    assert_output_contains "claude: ~/.config/molt/claude-home-guard.sh is missing"
     run claude_install
     assert_success
     echo 'export MOLT_FONT_SIZE=12' >> "$TEST_USER_REPO/instances/$(test_hostname)/vars.sh"
     run claude_check
     assert_failure
-    assert_output_contains "claude: ~/.config/molt/env.sh differs from its template or this sleeve's vars.sh"
     assert_output_contains "claude: ~/.config/molt/claude-home-guard.sh differs from its template or this sleeve's vars.sh"
     run claude_install
     assert_success
@@ -1249,4 +1264,24 @@ JSON
     run claude_verify
     assert_failure
     assert_output_contains "VERIFY FAIL: ~/.claude/CLAUDE.md is a broken symlink"
+}
+
+# vc, 24 Oct: once the env liberator publishes CLAUDE_CONFIG_DIR, a molt.toml
+# without it would stop publishing it, silently.
+@test "a sleeve that declares a config dir and whose molt.toml does not enable env fails check and install by name" {
+    setup_moved
+    local manifest="$TEST_USER_REPO/instances/$(test_hostname)/molt.toml"
+    printf '[[liberator]]\nname = "claude"\n' > "$manifest"
+    export CLAUDE_CONFIG_DIR="$CONFIG"
+    run claude_install
+    assert_failure
+    assert_output_contains "claude: CLAUDE_CONFIG_DIR is published by the env liberator, which $(molt_tilde "$manifest") does not enable: add a [[liberator]] named env after claude"
+    run claude_check
+    assert_failure
+    assert_output_contains "does not enable: add a [[liberator]] named env after claude"
+    printf '[[liberator]]\nname = "claude"\n\n[[liberator]]\nname = "env"\n' > "$manifest"
+    run claude_install
+    assert_success
+    run claude_check
+    assert_success
 }

@@ -29,6 +29,8 @@ source "${MOLT_ROOT}/lib/newuser.sh"
 source "${MOLT_ROOT}/lib/agent.sh"
 # shellcheck disable=SC1091
 source "${MOLT_ROOT}/lib/install.sh"
+# shellcheck disable=SC1091
+source "${MOLT_ROOT}/lib/env.sh"
 
 # --- Commands ---
 

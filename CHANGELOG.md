@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - The claude liberator writes the `attribution` object a user repo declares in `config/claude/attribution.json` into the user `settings.json`, changing that key and no other, as it does the statusLine, and its check names a sleeve whose settings do not carry it, so no sleeve's commit and pull request attribution is set by hand (issue 0040)
+- The `env` liberator and Molt's one env writer, `lib/env.sh` (ST0008 WP05). They publish `CLAUDE_CONFIG_DIR`, each `<TOOL>_INSTALL_PREFIX` a sleeve's `vars.sh` exports, and, for GUI apps only, the PATH a login shell builds, with `~/.local/bin` first. These go into `~/.config/molt/env.sh` and the GUI file, `~/Library/LaunchAgents/com.molt.env.plist` or `~/.config/environment.d/molt.conf`. It takes over from the claude liberator's `com.molt.claude-config-dir.plist` and `claude.conf`: each old file is removed when it is still what Molt rendered, and refused by name when it is not. A sleeve whose `molt.toml` names its liberators must enable `env` after `claude`, and the claude check fails, naming it, until it does
 
 ### Changed
 
