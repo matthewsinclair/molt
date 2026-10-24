@@ -30,26 +30,28 @@ Each instance defines its variables in `instances/{hostname}/vars.sh`. Variables
 ```bash
 # instances/kovacs/vars.sh
 export MOLT_SSH_KEY="id_ed25519"
-export MOLT_FONT_FAMILY="JetBrainsMono Nerd Font"
-export MOLT_FONT_SIZE="14"
+export MOLT_FONT_FAMILY="MesloLGS Nerd Font"
+export MOLT_FONT_SIZE=11.0
 
 # instances/rhadamanth/vars.sh
 export MOLT_SSH_KEY="personalid"
-export MOLT_FONT_FAMILY="Menlo"
-export MOLT_FONT_SIZE="12"
+export MOLT_FONT_FAMILY="Hack Nerd Font Mono"
+export MOLT_FONT_SIZE=12.0
 ```
 
 Variables are sourced in a subshell during rendering — they don't leak into the framework environment.
+
+`vars.sh` is read for more than templates. Molt also reads `MOLT_INSTALL_PREFIX` from it (where `molt install` publishes the opt tree), `MOLT_CLAUDE_CONFIG_DIR` (where the `claude` liberator keeps Claude Code's state) and `MOLT_FONT_FAMILY` (the font `molt doctor` checks for). The `env` liberator publishes each `<TOOL>_INSTALL_PREFIX` it exports, other than `MOLT_` ones, to shells and GUI apps.
 
 ## Using templates in liberators
 
 The simplest approach is `molt_install_config`, which auto-picks between rendering and symlinking:
 
 ```bash
-# If config/tmux/tmux.conf.tmpl exists → render with instance vars
-# If config/tmux/tmux.conf exists → symlink
+# If config/alacritty/alacritty.toml.tmpl exists → render with instance vars
+# If config/alacritty/alacritty.toml exists → symlink
 # If neither exists → warn and return 1
-molt_install_config "config/tmux/tmux.conf" "$HOME/.tmux.conf"
+molt_install_config "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
 ```
 
 A liberator whose target must be a regular file renders it and never links it. `ssh` is one: ssh refuses a linked `~/.ssh/config`, so the `ssh` liberator renders `config/ssh/config.tmpl` and refuses a static `config/ssh/config`, which as `config.tmpl` renders as it stands.
@@ -57,8 +59,10 @@ A liberator whose target must be a regular file renders it and never links it. `
 For direct control, use `molt_render`:
 
 ```bash
-molt_render "$user_repo/config/ssh/config.tmpl" "$HOME/.ssh/config"
+molt_render "$user_repo/config/starship/starship.toml.tmpl" "$HOME/.config/starship.toml"
 ```
+
+`ssh` does not call `molt_render`: it builds its file with fragments, as [Instance-scoped liberator config](#instance-scoped-liberator-config) describes.
 
 ## Config fragments
 
@@ -84,7 +88,7 @@ When `molt_render` writes a file, it also creates a `.molt-rendered` marker file
 - A `digest` line: the SHA-256 of the template concatenated with the instance `vars.sh`
 - An `output` line: the SHA-256 of the file as molt wrote it
 
-The marker lets `molt doctor` and liberator `_check` functions distinguish rendered files from manually-created ones, and the digest lets them tell whether the rendered file still matches what it was rendered from. The output hash lets the next render tell a hand edit from molt's own work: a file still as molt wrote it is replaced without a backup, and any other is backed up first.
+The marker lets `molt doctor` and liberator `_check` functions distinguish rendered files from manually-created ones, and the digest lets them tell whether the rendered file still matches what it was rendered from. The output hash lets the next render tell a hand edit from molt's own work: a file still as molt wrote it is replaced without a backup, and any other is backed up first. An existing symlink at the target is removed, never backed up.
 
 ## Detecting stale renders
 
@@ -93,11 +97,13 @@ molt renders a config only when its liberator's `_check` reports not-ok. A chang
 `molt_config_stale <source> <target>` closes that. Liberators that render **must** fold it into their `_check`:
 
 ```bash
-if molt_config_stale "config/ssh/config" "$HOME/.ssh/config"; then
-  molt_info "ssh: ~/.ssh/config differs from its template or instance vars — re-rendering"
+if molt_config_stale "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"; then
+  molt_info "alacritty: ~/.config/alacritty/alacritty.toml differs from its template or instance vars — re-rendering"
   ok=1
 fi
 ```
+
+`<source>` is repo-relative and without `.tmpl`, and is looked for in the user repo. A liberator that renders with extra inputs, as `ssh` does with its fragments, passes them after the target. A template Molt itself ships uses `molt_render_stale`.
 
 It compares the digest recorded in `.molt-rendered` against a freshly computed one. It is **not** an mtime comparison, deliberately:
 
@@ -131,21 +137,23 @@ If `vars.sh` doesn't exist for the current instance, `molt_render` warns and ren
 
 ## Permission handling
 
-For sensitive directories like `~/.ssh` (which has `700` permissions), `molt_render` automatically:
+When `molt_render` places a file:
 
-- Removes existing symlinks rather than backing them up (symlinks in `~/.ssh` break SSH)
-- Sets rendered files and markers to `600` permissions
+- An existing symlink at the target is removed, never backed up, wherever it is (symlinks in `~/.ssh` break SSH)
+- Where the target's parent directory is `700`, as `~/.ssh` is, the rendered file and its marker are set to `600`; elsewhere their permissions are left as they are written
 
 ## Instance-scoped liberator config
 
 Some liberators read per-machine files from `instances/<hostname>/` rather than from `config/`, because the value is genuinely machine-specific rather than shared:
 
-| Liberator | File                                     | Shape                                                                                                                                                                                           |
-| --------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `keys`    | `instances/<host>/keyd/default.conf`     | keyd config, copied to `/etc/keyd/`                                                                                                                                                             |
-| `ssh`     | `instances/<host>/ssh/config.d/*.conf`   | fragments appended to the rendered `~/.ssh/config`                                                                                                                                              |
-| `desktop` | `instances/<host>/desktop/favorite-apps` | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored                                                                                                      |
-| `desktop` | `instances/<host>/desktop/gsettings`     | one `<schema> <key> <value>` per line, the value to the end of the line as `gsettings get` prints it; blank lines and `#` comments ignored; applied on install, read back and compared by check |
+| Liberator | File                                          | Shape                                                                                                                                                                                                                                                     |
+| --------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `keys`    | `instances/<host>/keyd/default.conf`          | keyd config, copied to `/etc/keyd/`                                                                                                                                                                                                                       |
+| `ssh`     | `instances/<host>/ssh/config.d/*.conf`        | fragments appended to the rendered `~/.ssh/config`                                                                                                                                                                                                        |
+| `desktop` | `instances/<host>/desktop/favorite-apps`      | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored                                                                                                                                                                |
+| `desktop` | `instances/<host>/desktop/gsettings`          | one `<schema> <key> <value>` per line, the value to the end of the line as `gsettings get` prints it; blank lines and lines starting with `#` ignored, a `#` later in a line being part of the value; applied on install, read back and compared by check |
+| `agents`  | `instances/<host>/agents/<role>.md`           | appended to the agent's `AGENTS.md`, after the role's template, when the sleeve has one                                                                                                                                                                   |
+| `zsh`     | `instances/<host>/instance.toml` `[terminal]` | `bg_color` and `ssh_bg_color`: every instance's `ssh_bg_color` and this sleeve's `bg_color` build `~/.config/molt/iterm2-ssh-colors.sh`, the iTerm2 ssh wrapper                                                                                           |
 
 A liberator that builds a rendered file from one of these as well (as `ssh` does, putting its fragments after the template's render) builds the whole file before it is placed: `molt_render_tmp` into `<target>.molt-tmp` (which renders with `molt_render_text`), its own additions there, then `molt_render_place` with those files as extra inputs, so the sidecar's digest covers them. It passes the same files to `molt_config_stale` in `_check`; pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run. A file added to after it is placed differs from every new render, so each install backs it up.
 
