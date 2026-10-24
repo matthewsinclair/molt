@@ -136,21 +136,42 @@ molt_env_prefix_pairs() {
   done <<< "$(sed -n 's/^[[:space:]]*export[[:space:]]\{1,\}\([A-Z][A-Z0-9_]*_INSTALL_PREFIX\)=.*/\1/p' "$vars_file" | grep -v '^MOLT_' | LC_ALL=C sort -u)"
 }
 
+# The base PATH a Linux desktop session starts from: the value of the last
+# PATH= line in MOLT_ETC_ENVIRONMENT, less one pair of surrounding quotes, or
+# nothing when the file is missing or has no such line. Nothing on macOS, where
+# /etc/zprofile's path_helper builds the base PATH inside the login shell.
+molt_env_base_path() {
+  local line
+  [[ "$(molt_platform)" == linux && -f "$MOLT_ETC_ENVIRONMENT" ]] || return 0
+  line="$(sed -n 's/^[[:space:]]*PATH=//p' "$MOLT_ETC_ENVIRONMENT" | tail -n 1)"
+  case "$line" in
+    \"*\") line="${line#\"}"; line="${line%\"}" ;;
+    \'*\') line="${line#\'}"; line="${line%\'}" ;;
+  esac
+  printf '%s' "$line"
+}
+
 # The PATH a login shell builds, read from one started with nothing but HOME,
 # USER, LOGNAME, SHELL and TERM, so the PATH molt itself runs with plays no
-# part. The shell is MOLT_LOGIN_SHELL when set, or zsh. Its startup files may
-# print, so the PATH is the last line it prints after a marker. Fails, printing
-# why, when the shell is missing, fails or prints no PATH: a PATH molt has not
-# read is never published.
+# part, and with PATH set to molt_env_base_path when there is one, as PAM sets
+# it for a Linux session (issue 0056). With none, the shell starts from its
+# own default PATH, which for zsh is not the system's. The shell is
+# MOLT_LOGIN_SHELL when set, or zsh. Its startup files may print, so the PATH
+# is the last line it prints after a marker. Fails, printing why, when the
+# shell is missing, fails or prints no PATH: a PATH molt has not read is never
+# published.
 molt_env_login_path() {
-  local sh="${MOLT_LOGIN_SHELL:-}" out line
+  local sh="${MOLT_LOGIN_SHELL:-}" base out line
+  local -a seed=()
   if [[ -z "$sh" ]] && ! sh="$(command -v zsh)"; then
     echo "there is no zsh to read a login shell's PATH from"
     return 1
   fi
+  base="$(molt_env_base_path)"
+  [[ -z "$base" ]] || seed=(PATH="$base")
   # shellcheck disable=SC2016 # $PATH is the login shell's to expand
   if ! out="$(env -i HOME="$HOME" USER="${USER:-}" LOGNAME="${LOGNAME:-${USER:-}}" SHELL="$sh" TERM=dumb \
-      "$sh" -lic 'printf "molt-path:%s\n" "$PATH"' </dev/null 2>/dev/null)"; then
+      ${seed[@]+"${seed[@]}"} "$sh" -lic 'printf "molt-path:%s\n" "$PATH"' </dev/null 2>/dev/null)"; then
     echo "a login shell ($sh -lic) failed, so its PATH was not read"
     return 1
   fi

@@ -26,6 +26,9 @@ setup_env() {
     # PATH it built, which login_path sets.
     export MOLT_LOGIN_SHELL="$BATS_TEST_TMPDIR/login-shell"
     login_path "$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin"
+
+    # No /etc/environment unless a test writes one.
+    export MOLT_ETC_ENVIRONMENT="$BATS_TEST_TMPDIR/etc-environment"
 }
 
 # The fake login shell prints $1 as its PATH.
@@ -139,6 +142,65 @@ $HOME/.config/environment.d/molt.conf:0" ]
     run env_install
     assert_success
     grep -qxF "PATH=$HOME/.local/bin:/leak-none:/home-$HOME" "$HOME/.config/environment.d/molt.conf"
+}
+
+# The fake login shell puts ~/.local/bin ahead of the PATH it was started
+# with, as a zshrc does, and alone when it was started with none: a shell's
+# own default PATH is not in its environment.
+login_path_from_env() {
+    printf '#!/bin/sh\np="$(/usr/bin/env | sed -n "s/^PATH=//p")"\necho "molt-path:%s${p:+:$p}"\n' "$MOLT_LOCAL_BIN" > "$MOLT_LOGIN_SHELL"
+    chmod +x "$MOLT_LOGIN_SHELL"
+}
+
+# Ubuntu's /etc/environment, with a comment and another variable around it.
+ETC_ENVIRONMENT='# set by the installer
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+LANG=en_GB.UTF-8
+'
+
+@test "on Linux the login shell starts from /etc/environment's PATH (issue 0056)" {
+    setup_env
+    on_linux
+    login_path_from_env
+    printf '%s' "$ETC_ENVIRONMENT" > "$MOLT_ETC_ENVIRONMENT"
+    run env_install
+    assert_success
+    [ "$(sed -n 's/^PATH=//p' "$HOME/.config/environment.d/molt.conf")" = "$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin" ]
+    run grep -c /usr/ucb "$HOME/.config/environment.d/molt.conf"
+    [ "$output" = 0 ]
+    printf "PATH='/usr/bin:/bin'\n" > "$MOLT_ETC_ENVIRONMENT"
+    run env_install
+    assert_success
+    grep -qxF "PATH=$HOME/.local/bin:/usr/bin:/bin" "$HOME/.config/environment.d/molt.conf"
+}
+
+@test "with no /etc/environment, or no PATH line in it, or on macOS, the login shell gets no PATH" {
+    setup_env
+    login_path_from_env
+    local want="$HOME/.local/bin"
+    on_linux
+    run env_install
+    assert_success
+    grep -qxF "PATH=$want" "$HOME/.config/environment.d/molt.conf"
+    printf 'LANG=en_GB.UTF-8\n' > "$MOLT_ETC_ENVIRONMENT"
+    run env_install
+    assert_success
+    grep -qxF "PATH=$want" "$HOME/.config/environment.d/molt.conf"
+    on_macos
+    printf '%s' "$ETC_ENVIRONMENT" > "$MOLT_ETC_ENVIRONMENT"
+    run molt_env_login_path
+    assert_success
+    [ "$output" = "$want" ]
+}
+
+@test "the login shell never starts from molt's own PATH" {
+    setup_env
+    on_linux
+    login_path_from_env
+    PATH="/molt-caller:$PATH" run env_install
+    assert_success
+    run grep -c /molt-caller "$HOME/.config/environment.d/molt.conf"
+    [ "$output" = 0 ]
 }
 
 @test "CLAUDE_CONFIG_DIR is not published ahead of the move, and one already published is kept while a move is pending" {

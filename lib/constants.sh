@@ -84,6 +84,11 @@ MOLT_PPLR_HOME="${PPLR_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Pplr}}"
 # T5). It was $HOME/bin until that contract; on rhadamanth the two are one directory.
 MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/.local/bin}"
 
+# --- System environment ---
+# PAM's session environment on Linux, whose PATH= line is the base PATH a
+# desktop session starts from (issue 0056).
+MOLT_ETC_ENVIRONMENT="${MOLT_ETC_ENVIRONMENT:-/etc/environment}"
+
 # --- Framework ---
 MOLT_VERSION="$(cat "${MOLT_ROOT}/VERSION" 2>/dev/null || echo "0.1.0")"
 MOLT_NAME="MOLT"
