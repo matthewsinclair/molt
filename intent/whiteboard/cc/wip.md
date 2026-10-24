@@ -3,7 +3,7 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 06:41Z
+heartbeat_at: 2026-10-24 06:43Z
 status: active
 focus: "ST0008: 5bf482a, 3add4f8, 96ae9e4 in (unpushed); next vc's review fixes, then the scratch-tap run"
 claims: [ST0008/01, ST0008/02, ST0008/03, ST0008/04]
@@ -22,7 +22,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- ST0008 rule (B), from vc for hv: revert D6 (molt.rb links bin/molt into brew's bin again and drops the use-brew caveat; use brew links to opt/molt/libexec/bin/molt; the shadow check stays; MOLT_LOCAL_BIN may become ~/.local/bin). Released when devbin-vc's shared spec lands in Devbin's docs and vc amends the design. No manifest, version line or verb shape changes before then.
 
 ## Watch-outs
 

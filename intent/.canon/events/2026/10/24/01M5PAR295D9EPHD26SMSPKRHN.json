@@ -1,0 +1,15 @@
+{
+  "id": "01M5PAR295D9EPHD26SMSPKRHN",
+  "ts": "2026-10-24T06:49:36.293Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ST0008 rule (B), from vc for hv: revert D6 (molt.rb links bin/molt into brew's bin again and drops the use-brew caveat; use brew links to opt/molt/libexec/bin/molt; the shadow check stays; MOLT_LOCAL_BIN may become ~/.local/bin). Released when devbin-vc's shared spec lands in Devbin's docs and vc amends the design. No manifest, version line or verb shape changes before then."
+  }
+}
