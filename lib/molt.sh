@@ -1682,9 +1682,12 @@ cmd_doctor() {
 
   # The tree molt runs from (ST0008). A dev tree carries test/; opt and brew
   # carry none, and are checked file by file against their manifest instead.
+  # An old-form or missing manifest fails opt and is a note in brew (devbin
+  # docs/dev-opt-brew.md T3, as decision 58 amends it).
   checks=$((checks + 1))
-  local tree tree_drift line
+  local tree tree_drift line form_fault commit_fault
   tree="$(molt_tree)"
+  form_fault="$(molt_install_form_fault "$MOLT_ROOT")"
   case "$tree" in
     dev)
       local dirs_ok=1
@@ -1693,36 +1696,59 @@ cmd_doctor() {
           dirs_ok=0
         fi
       done
-      if [[ "$dirs_ok" -eq 1 ]]; then
+      commit_fault="$(molt_tree_commit_fault "$MOLT_ROOT")"
+      if [[ -n "$commit_fault" ]]; then
+        echo "Checking tree... ✗ dev, its commit cannot be read: $commit_fault"
+        not_passed=$((not_passed + 1))
+      elif [[ "$dirs_ok" -eq 1 ]]; then
         echo "Checking tree... ✓ dev: lib/ liberators/ test/"
       else
         echo "Checking tree... ⚠ dev, missing directories"
         not_passed=$((not_passed + 1))
       fi ;;
-    opt|brew)
-      if tree_drift="$(molt_install_drift "$MOLT_ROOT")" && [[ -z "$tree_drift" ]]; then
-        echo "Checking tree... ✓ $tree: every file matches its manifest"
+    brew)
+      if [[ -n "$form_fault" ]]; then
+        echo "Checking tree... ✓ brew; note: $form_fault"
+      elif tree_drift="$(molt_install_drift "$MOLT_ROOT")" && [[ -z "$tree_drift" ]]; then
+        echo "Checking tree... ✓ brew: every file matches its manifest"
       else
-        echo "Checking tree... ⚠ $tree, not what its manifest says"
+        echo "Checking tree... ⚠ brew, not what its manifest says"
+        while IFS= read -r line; do
+          [[ -z "$line" ]] || echo "         $line"
+        done <<< "$tree_drift"
+        not_passed=$((not_passed + 1))
+      fi ;;
+    opt)
+      if tree_drift="$(molt_install_drift "$MOLT_ROOT")" && [[ -z "$tree_drift" ]]; then
+        echo "Checking tree... ✓ opt: every file matches its manifest"
+      else
+        echo "Checking tree... ⚠ opt, not what its manifest says"
         while IFS= read -r line; do
           [[ -z "$line" ]] || echo "         $line"
         done <<< "$tree_drift"
         not_passed=$((not_passed + 1))
       fi ;;
     *)
-      echo "Checking tree... ✗ $MOLT_ROOT is no dev, opt or brew tree"
+      if [[ -n "$form_fault" ]]; then
+        echo "Checking tree... ✗ $form_fault"
+      else
+        echo "Checking tree... ✗ $MOLT_ROOT is no dev, opt or brew tree"
+      fi
       not_passed=$((not_passed + 1)) ;;
   esac
 
-  # ~/bin/molt is the switch molt use sets, so it must be what PATH runs.
+  # The switch molt use sets must be what PATH runs: the link when there is
+  # one, and Homebrew's molt when there is none.
   checks=$((checks + 1))
   local shadow
   shadow="$(molt_path_shadow)"
-  if [[ -z "$shadow" ]]; then
-    echo "Checking molt on PATH... ✓ $(molt_tilde "$MOLT_LOCAL_BIN/molt")"
-  else
+  if [[ -n "$shadow" ]]; then
     echo "Checking molt on PATH... ⚠ $shadow"
     not_passed=$((not_passed + 1))
+  elif [[ -e "$(molt_switch_link)" || -L "$(molt_switch_link)" ]]; then
+    echo "Checking molt on PATH... ✓ $(molt_tilde "$(molt_switch_link)")"
+  else
+    echo "Checking molt on PATH... ✓ brew's, with no $(molt_tilde "$(molt_switch_link)")"
   fi
 
   # User stack repo
@@ -2461,8 +2487,13 @@ _upgrade_pull_repos() {
       fi ;;
     opt) _upgrade_opt_framework ;;
     brew)
-      _upgrade_brew_framework "$dry_run" \
-        || _UPGRADE_FAILED_PULLS="the brew upgrade of $MOLT_BREW_FORMULA" ;;
+      pulled=0
+      _upgrade_brew_framework "$dry_run" || pulled=$?
+      case $pulled in
+        0) ;;
+        3) _UPGRADE_FAILED_PULLS="brew update" ;;
+        *) _UPGRADE_FAILED_PULLS="the brew upgrade of $MOLT_BREW_FORMULA" ;;
+      esac ;;
   esac
 
   # Pull user config repo
@@ -2536,34 +2567,36 @@ _upgrade_opt_framework() {
   head="$(git -C "$dev" rev-parse HEAD 2>/dev/null)" || return 0
   if [[ "$head" != "$installed" ]] \
       && git -C "$dev" merge-base --is-ancestor "$installed" "$head" 2>/dev/null; then
-    molt_info "  The dev tree at $(molt_tilde "$dev") is at ${head:0:7}, ahead of this install's ${installed:0:7}."
+    molt_info "  The dev tree at $(molt_tilde "$dev") is at ${head:0:12}, ahead of this install's ${installed:0:12}."
   fi
 }
 
-# Upgrades the formula when brew outdated names it. brew outdated exits 0,
-# saying nothing, for a current formula, and 1, naming it, for an outdated one;
-# anything else is brew failing to say, and fails here, as a failed brew
-# upgrade does, so the verdict counts it (issue 0015).
+# Upgrades the formula in the brew tree, with HOMEBREW_NO_AUTO_UPDATE=1 on
+# every brew call (devbin docs/dev-opt-brew.md T6): brew update, a step of its
+# own, then brew outdated, then brew upgrade when that names the formula. brew
+# outdated exits 0, saying nothing, for a current formula, and 1, naming it,
+# for an outdated one; anything else is brew failing to say. A dry run changes
+# nothing, Homebrew's taps included, so it skips the update and says so.
+# Fails with 3 when brew update fails, and 1 when brew cannot say or the
+# upgrade fails, so the verdict counts each by name (issue 0015).
 _upgrade_brew_framework() {
   local dry_run="$1" out err status=0
-  # A dry run changes nothing, Homebrew's taps included, so it answers from
-  # what brew last fetched.
   if $dry_run; then
-    molt_info "Asking brew, without updating it, whether $MOLT_BREW_FORMULA is outdated..."
+    molt_info "Dry run: skipping brew update, so brew outdated answers from what brew last fetched."
   else
-    molt_info "Asking brew whether $MOLT_BREW_FORMULA is outdated..."
+    molt_info "Updating Homebrew..."
+    if ! HOMEBREW_NO_AUTO_UPDATE=1 brew update; then
+      molt_error "brew update failed (above), so whether $MOLT_BREW_FORMULA is outdated was not asked."
+      return 3
+    fi
   fi
-  # Its stderr is kept apart: brew's auto-update writes there, and would read
-  # as an answer if it shared stdout with the names.
+  molt_info "Asking brew whether $MOLT_BREW_FORMULA is outdated..."
+  # Its stderr is kept apart, so nothing brew warns of reads as an answer.
   if ! err="$(mktemp "${TMPDIR:-/tmp}/molt-brew-outdated.XXXXXX")"; then
     molt_error "Cannot ask brew whether $MOLT_BREW_FORMULA is outdated: mktemp failed."
     return 1
   fi
-  if $dry_run; then
-    out="$(HOMEBREW_NO_AUTO_UPDATE=1 brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
-  else
-    out="$(brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
-  fi
+  out="$(HOMEBREW_NO_AUTO_UPDATE=1 brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
   if [[ "$status" -eq 0 && -z "$out" ]]; then
     rm -f "$err"
     molt_info "Framework: $MOLT_BREW_FORMULA is current."
@@ -2580,7 +2613,7 @@ _upgrade_brew_framework() {
     echo "  molt: WOULD BREW UPGRADE $MOLT_BREW_FORMULA"
     return 0
   fi
-  if ! brew upgrade "$MOLT_BREW_FORMULA"; then
+  if ! HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$MOLT_BREW_FORMULA"; then
     molt_error "brew upgrade $MOLT_BREW_FORMULA failed (above)."
     return 1
   fi
@@ -2620,7 +2653,7 @@ _upgrade_framework_mark() {
 _upgrade_mark_label() {
   case "$1" in
     /*) basename "$(dirname "$1")" ;;
-    *) echo "${1:0:7}" ;;
+    *) echo "${1:0:12}" ;;
   esac
 }
 

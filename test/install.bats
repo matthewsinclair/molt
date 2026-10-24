@@ -25,12 +25,15 @@ make_dev_tree() {
 }
 
 # A brew first on PATH whose --prefix is $BATS_TEST_TMPDIR/brew, and KEG the
-# formula's libexec under it, where molt use brew looks.
+# formula's libexec under it, where molt use brew looks. Homebrew's bin, with
+# the formula's link into the keg, comes after ~/.local/bin, as "your links
+# first" has it, so no ~/.local/bin/molt means brew's molt runs.
 install_fake_brew() {
-    mkdir -p "$BATS_TEST_TMPDIR/bin"
+    mkdir -p "$BATS_TEST_TMPDIR/bin" "$BATS_TEST_TMPDIR/brew/bin"
     printf '#!/usr/bin/env bash\n[ "$1" = --prefix ] && echo "%s"\n' "$BATS_TEST_TMPDIR/brew" > "$BATS_TEST_TMPDIR/bin/brew"
     chmod +x "$BATS_TEST_TMPDIR/bin/brew"
-    export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
+    ln -s ../opt/molt/libexec/bin/molt "$BATS_TEST_TMPDIR/brew/bin/molt"
+    export PATH="$BATS_TEST_TMPDIR/bin:$HOME/.local/bin:$BATS_TEST_TMPDIR/brew/bin:$PATH"
     KEG="$BATS_TEST_TMPDIR/brew/opt/molt/libexec"
 }
 
@@ -58,9 +61,9 @@ setup() {
     export ORIGINAL_PWD="$(pwd)"
     cd "$BATS_TEST_TMPDIR"
     no_user_repo
-    # ~/bin first, as a sleeve's PATH has it, ahead of the checkout's bin/
+    # ~/.local/bin first, as a sleeve's PATH has it, ahead of the checkout's bin/
     # that test_helper puts there, so the switch molt use sets is what runs.
-    export PATH="$HOME/bin:$PATH"
+    export PATH="$HOME/.local/bin:$PATH"
     make_dev_tree
     OPT="$BATS_TEST_TMPDIR/opt/molt"
 }
@@ -70,7 +73,7 @@ setup() {
 @test "install publishes the runtime set git names and a manifest that checks" {
     run "$DEV/bin/molt" install --prefix "$OPT"
     assert_success
-    assert_output_contains "Installed: molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=7 HEAD)) at"
+    assert_output_contains "Installed: molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD)) at"
 
     (cd "$DEV" && git ls-files -- bin/molt lib liberators templates VERSION | sort) > "$BATS_TEST_TMPDIR/want"
     (cd "$OPT" && find . -type f ! -name .molt-install | sed 's,^\./,,' | sort) > "$BATS_TEST_TMPDIR/got"
@@ -79,9 +82,14 @@ setup() {
     [[ ! -e "$OPT/test" ]]
     [[ -x "$OPT/bin/molt" ]]
 
-    grep -qx "source_commit: $(git -C "$DEV" rev-parse HEAD)" "$OPT/.molt-install"
-    grep -qx "version: $(cat "$DEV/VERSION")" "$OPT/.molt-install"
-    grep -qx "managed_by: molt" "$OPT/.molt-install"
+    grep -qx "# source_commit: $(git -C "$DEV" rev-parse HEAD)" "$OPT/.molt-install"
+    grep -qx "# version: $(cat "$DEV/VERSION")" "$OPT/.molt-install"
+    grep -qx "# managed_by: molt" "$OPT/.molt-install"
+    grep -qx "# tool: molt" "$OPT/.molt-install"
+    grep -v '^# ' "$OPT/.molt-install" | sed 's/^[0-9a-f]*  //' > "$BATS_TEST_TMPDIR/body"
+    (cd "$DEV" && git ls-files -- bin/molt lib liberators templates VERSION | LC_ALL=C sort) > "$BATS_TEST_TMPDIR/want-sorted"
+    run diff "$BATS_TEST_TMPDIR/want-sorted" "$BATS_TEST_TMPDIR/body"
+    assert_success
     cd "$OPT"
     run bash -c "grep -E '^[0-9a-f]{64}  ' .molt-install | shasum -a 256 -c --quiet"
     assert_success
@@ -144,7 +152,7 @@ setup() {
     git -C "$DEV" -c user.name=t -c user.email=t@t commit -qam next
     run "$DEV/bin/molt" install --prefix "$OPT" --force
     assert_success
-    grep -qx "source_commit: $(git -C "$DEV" rev-parse HEAD)" "$OPT/.molt-install"
+    grep -qx "# source_commit: $(git -C "$DEV" rev-parse HEAD)" "$OPT/.molt-install"
     cmp -s "$DEV/lib/molt.sh" "$OPT/lib/molt.sh"
     run bash -c "ls -A '$(dirname "$OPT")'"
     [[ "$output" == "molt" ]]
@@ -195,7 +203,7 @@ setup() {
     run "$DEV/bin/molt" install --prefix "$OPT" --force
     assert_failure
     assert_output_contains "brew upgrade"
-    grep -qx "managed_by: brew" "$OPT/.molt-install"
+    grep -qx "# managed_by: brew" "$OPT/.molt-install"
 }
 
 # --- Tree identity ---
@@ -217,12 +225,69 @@ setup() {
     load_molt_libs
     source "$MOLT_LIB_DIR/install.sh"
     local short version
-    short="$(git -C "$DEV" rev-parse --short=7 HEAD)"
+    short="$(git -C "$DEV" rev-parse --short=12 HEAD)"
     version="$(cat "$DEV/VERSION")"
     [[ "$(molt_version_line "$OPT")" == "molt $version (opt, $short) at $OPT" ]]
     [[ "$(molt_version_line "$DEV")" == "molt $version (dev, $short) at $DEV" ]]
     touch "$DEV/lib/stray.sh"
     [[ "$(molt_version_line "$DEV")" == "molt $version (dev, ${short}+dirty) at $DEV" ]]
+}
+
+@test "a dev tree git cannot read shows unknown for its commit, and doctor fails saying why" {
+    echo junk > "$DEV/.git/index"
+    run "$DEV/bin/molt" version
+    [[ "$output" == "molt $(cat "$DEV/VERSION") (dev, unknown) at $DEV" ]]
+    run "$DEV/bin/molt" doctor
+    assert_output_contains "Checking tree... ✗ dev, its commit cannot be read: git status failed in $DEV"
+}
+
+@test "a brew tree is named by the formula's opt link, never its Cellar keg" {
+    install_fake_brew
+    install_brew_keg 0.3.0
+    run "$KEG/bin/molt" version
+    assert_success
+    [[ "$output" == "molt $(cat "$DEV/VERSION") (brew, $(git -C "$DEV" rev-parse --short=12 HEAD)) at $(cd "$BATS_TEST_TMPDIR/brew" && pwd -P)/opt/molt/libexec" ]]
+}
+
+@test "an old-form opt manifest is unknown, fails doctor naming install --force, which replaces it" {
+    "$DEV/bin/molt" install --prefix "$OPT"
+    # The manifest form before the contract: bare headers and no tool.
+    sed -e '/^# tool:/d' -e 's/^# //' "$OPT/.molt-install" > "$BATS_TEST_TMPDIR/old" && mv "$BATS_TEST_TMPDIR/old" "$OPT/.molt-install"
+    run "$OPT/bin/molt" version
+    assert_output_contains "(unknown, unknown)"
+    run "$OPT/bin/molt" doctor
+    assert_output_contains "Checking tree... ✗ $OPT/.molt-install is an old manifest, from before the dev/opt/brew contract; republish with molt install --force"
+    run "$DEV/bin/molt" install --prefix "$OPT"
+    assert_failure
+    assert_output_contains "--force"
+    run "$DEV/bin/molt" install --prefix "$OPT" --force
+    assert_success
+    grep -qx "# tool: molt" "$OPT/.molt-install"
+}
+
+@test "an old-form or manifest-less brew keg is still brew, and doctor only notes it" {
+    install_fake_brew
+    install_brew_keg 0.3.0
+    sed -e '/^# tool:/d' -e 's/^# //' "$KEG/.molt-install" > "$BATS_TEST_TMPDIR/old" && mv "$BATS_TEST_TMPDIR/old" "$KEG/.molt-install"
+    run "$KEG/bin/molt" version
+    [[ "$output" == "molt $(cat "$DEV/VERSION") (brew, unknown) at $(cd "$BATS_TEST_TMPDIR/brew" && pwd -P)/opt/molt/libexec" ]]
+    run "$KEG/bin/molt" doctor
+    assert_output_contains "Checking tree... ✓ brew; note: "
+    assert_output_contains "is an old manifest, from before the dev/opt/brew contract; brew upgrade matthewsinclair/molt/molt writes a current one"
+    rm "$KEG/.molt-install"
+    run "$KEG/bin/molt" version
+    assert_output_contains "(brew, unknown)"
+    run "$KEG/bin/molt" doctor
+    assert_output_contains "is Homebrew's keg with no manifest; brew upgrade matthewsinclair/molt/molt writes one"
+}
+
+@test "--force is refused over a current manifest whose tool is not molt" {
+    mkdir -p "$OPT" && echo "mine" > "$OPT/notes.txt"
+    printf '# tool: other\n# managed_by: molt\n' > "$OPT/.molt-install"
+    run "$DEV/bin/molt" install --prefix "$OPT" --force
+    assert_failure
+    assert_output_contains "says tool: other, not molt"
+    [[ "$(cat "$OPT/notes.txt")" == "mine" ]]
 }
 
 @test "molt_install_drift names a changed, a missing and an unlisted file" {
@@ -244,19 +309,19 @@ setup() {
 
 # --- molt use ---
 
-@test "use dev points ~/bin/molt at the checkout under MOLT_PRJ_DIR and prints its version line" {
+@test "use dev points ~/.local/bin/molt at the checkout under MOLT_PRJ_DIR and prints its version line" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     run "$DEV/bin/molt" use dev
     assert_success
     assert_output_contains "(dev, "
-    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
 }
 
 @test "use dev with no MOLT_PRJ_DIR is refused by name" {
     run "$DEV/bin/molt" use dev
     assert_failure
     assert_output_contains "MOLT_PRJ_DIR is not set"
-    [[ ! -e "$HOME/bin/molt" && ! -L "$HOME/bin/molt" ]]
+    [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
 }
 
 @test "use opt refuses a prefix with no install, naming molt install, then links one" {
@@ -264,12 +329,12 @@ setup() {
     run "$DEV/bin/molt" use opt
     assert_failure
     assert_output_contains "molt install"
-    [[ ! -L "$HOME/bin/molt" ]]
+    [[ ! -L "$HOME/.local/bin/molt" ]]
     "$DEV/bin/molt" install
     run "$DEV/bin/molt" use opt
     assert_success
     assert_output_contains "(opt, "
-    [[ "$(readlink "$HOME/bin/molt")" == "$OPT/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
 }
 
 @test "use opt with no MOLT_INSTALL_PREFIX is refused by name" {
@@ -286,27 +351,73 @@ setup() {
     assert_output_contains "is the brew tree, not the opt tree"
 }
 
-@test "use brew refuses a missing keg, naming brew install, then links the formula's" {
+@test "use brew refuses a missing keg, naming brew install, then removes the link" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     install_fake_brew
+    "$DEV/bin/molt" use dev
     run "$DEV/bin/molt" use brew
     assert_failure
     assert_output_contains "brew install matthewsinclair/molt/molt"
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
     "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
     run "$DEV/bin/molt" use brew
     assert_success
     assert_output_contains "(brew, "
-    [[ "$(readlink "$HOME/bin/molt")" == "$KEG/bin/molt" ]]
+    [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
+    run "$DEV/bin/molt" use
+    assert_success
+    assert_output_contains "There is no ~/.local/bin/molt, so brew serves molt $(cat "$DEV/VERSION") (brew, "
+    run "$DEV/bin/molt" use brew
+    assert_success
 }
 
-@test "use with no argument reports the tree ~/bin/molt serves, and changes nothing" {
+@test "use brew refuses a file or a link to no tree at ~/.local/bin/molt, and leaves it" {
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    mkdir -p "$HOME/.local/bin" && echo mine > "$HOME/.local/bin/molt"
+    run "$DEV/bin/molt" use brew
+    assert_failure
+    assert_output_contains "is not a symlink; it is left as it is"
+    [[ "$(cat "$HOME/.local/bin/molt")" == mine ]]
+    rm "$HOME/.local/bin/molt" && ln -s /etc/hosts "$HOME/.local/bin/molt"
+    run "$DEV/bin/molt" use brew
+    assert_failure
+    [[ "$(readlink "$HOME/.local/bin/molt")" == /etc/hosts ]]
+}
+
+@test "with no link, use and doctor fail when PATH's first molt is not brew's" {
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    mkdir -p "$BATS_TEST_TMPDIR/stray"
+    ln -s "$DEV/bin/molt" "$BATS_TEST_TMPDIR/stray/molt"
+    PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" use
+    assert_failure
+    assert_output_contains "so brew should serve molt, but PATH runs $BATS_TEST_TMPDIR/stray/molt, which is no brew tree's"
+    PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" doctor
+    assert_output_contains "Checking molt on PATH... ⚠ there is no ~/.local/bin/molt, so brew should serve molt"
+    run "$DEV/bin/molt" doctor
+    assert_output_contains "Checking molt on PATH... ✓ brew's, with no ~/.local/bin/molt"
+}
+
+@test "a link that Homebrew's molt shadows is named as Homebrew's bin ahead of ~/.local/bin" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    "$DEV/bin/molt" use dev
+    PATH="$BATS_TEST_TMPDIR/brew/bin:$PATH" run "$DEV/bin/molt" use
+    assert_failure
+    assert_output_contains "PATH runs Homebrew's $BATS_TEST_TMPDIR/brew/bin/molt ahead of ~/.local/bin/molt"
+}
+
+@test "use with no argument reports the tree ~/.local/bin/molt serves, and changes nothing" {
     run "$DEV/bin/molt" use
     assert_failure
     "$DEV/bin/molt" install --prefix "$OPT"
-    mkdir -p "$HOME/bin" && ln -s "$OPT/bin/molt" "$HOME/bin/molt"
+    mkdir -p "$HOME/.local/bin" && ln -s "$OPT/bin/molt" "$HOME/.local/bin/molt"
     run "$DEV/bin/molt" use
     assert_success
     assert_output_contains "serves molt $(cat "$DEV/VERSION") (opt, "
-    [[ "$(readlink "$HOME/bin/molt")" == "$OPT/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
 }
 
 @test "use takes only dev, opt or brew" {
@@ -317,16 +428,46 @@ setup() {
 
 # --- The local-bin liberator stops choosing ---
 
+@test "local-bin in a brew run creates no link, and no link passes as brew" {
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    mkdir -p "$HOME/.local/bin"
+    load_liberator local-bin
+    MOLT_ROOT="$KEG"
+    run local-bin_check
+    assert_success
+    run local-bin_install
+    assert_success
+    [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
+    run local-bin_verify
+    assert_success
+    assert_output_contains "there is no ~/.local/bin/molt, so brew serves molt $(cat "$DEV/VERSION") (brew, "
+}
+
+@test "local-bin keeps a link into the brew tree, and check names molt use brew to remove it" {
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    mkdir -p "$HOME/.local/bin" && ln -s "$KEG/bin/molt" "$HOME/.local/bin/molt"
+    load_liberator local-bin
+    MOLT_ROOT="$KEG"
+    run local-bin_check
+    assert_failure
+    assert_output_contains "leads into the brew tree; run molt use brew"
+    run local-bin_install
+    assert_success
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$KEG/bin/molt" ]]
+}
+
 @test "local-bin keeps a healthy link to another tree when run from the checkout" {
     "$DEV/bin/molt" install --prefix "$OPT"
-    mkdir -p "$HOME/bin" && ln -s "$OPT/bin/molt" "$HOME/bin/molt"
+    mkdir -p "$HOME/.local/bin" && ln -s "$OPT/bin/molt" "$HOME/.local/bin/molt"
     load_liberator local-bin
     MOLT_ROOT="$DEV"
     run local-bin_check
     assert_success
     run local-bin_install
     assert_success
-    [[ "$(readlink "$HOME/bin/molt")" == "$OPT/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
     run local-bin_verify
     assert_success
     assert_output_contains "serves molt $(cat "$DEV/VERSION") (opt, "
@@ -338,18 +479,18 @@ setup() {
     run local-bin_check
     assert_failure
     local-bin_install
-    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
-    rm "$HOME/bin/molt" && ln -s "$BATS_TEST_TMPDIR/gone/bin/molt" "$HOME/bin/molt"
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
+    rm "$HOME/.local/bin/molt" && ln -s "$BATS_TEST_TMPDIR/gone/bin/molt" "$HOME/.local/bin/molt"
     run local-bin_check
     assert_failure
     local-bin_install
-    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
 }
 
 @test "local-bin fails a link that leads to no tree's bin/molt, and leaves it" {
-    mkdir -p "$HOME/bin" "$BATS_TEST_TMPDIR/elsewhere/bin"
+    mkdir -p "$HOME/.local/bin" "$BATS_TEST_TMPDIR/elsewhere/bin"
     echo '#!/bin/sh' > "$BATS_TEST_TMPDIR/elsewhere/bin/molt"
-    ln -s "$BATS_TEST_TMPDIR/elsewhere/bin/molt" "$HOME/bin/molt"
+    ln -s "$BATS_TEST_TMPDIR/elsewhere/bin/molt" "$HOME/.local/bin/molt"
     load_liberator local-bin
     run local-bin_check
     assert_failure
@@ -358,18 +499,18 @@ setup() {
     run local-bin_install
     assert_failure
     assert_output_contains "no dev, opt or brew tree's bin/molt; it is left as it is"
-    [[ "$(readlink "$HOME/bin/molt")" == "$BATS_TEST_TMPDIR/elsewhere/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$BATS_TEST_TMPDIR/elsewhere/bin/molt" ]]
 }
 
-@test "local-bin refuses a file at ~/bin/molt that is not a link, and leaves it" {
-    mkdir -p "$HOME/bin" && echo "mine" > "$HOME/bin/molt"
+@test "local-bin refuses a file at ~/.local/bin/molt that is not a link, and leaves it" {
+    mkdir -p "$HOME/.local/bin" && echo "mine" > "$HOME/.local/bin/molt"
     load_liberator local-bin
     MOLT_ROOT="$DEV"
     run local-bin_install
     assert_failure
     assert_output_contains "is not a symlink; it is left as it is"
-    [[ ! -L "$HOME/bin/molt" && "$(cat "$HOME/bin/molt")" == mine ]]
-    run bash -c "ls \"$HOME\"/bin"
+    [[ ! -L "$HOME/.local/bin/molt" && "$(cat "$HOME/.local/bin/molt")" == mine ]]
+    run bash -c "ls \"$HOME\"/.local/bin"
     [[ "$output" == molt ]]
 }
 
@@ -378,7 +519,7 @@ setup() {
 @test "molt version and --version name the opt tree, its commit and its root" {
     "$DEV/bin/molt" install --prefix "$OPT"
     local want
-    want="molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=7 HEAD)) at $OPT"
+    want="molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD)) at $OPT"
     run "$OPT/bin/molt" version
     assert_success
     [[ "$output" == "$want" ]]
@@ -444,9 +585,10 @@ install_brew_keg() {
     ln -sfn "../Cellar/molt/$1" "$brew/opt/molt"
 }
 
-# A brew first on PATH: --prefix answers $BATS_TEST_TMPDIR/brew; outdated
-# answers as FAKE_BREW_OUTDATED says (current, outdated or broken), and logs
-# "no auto-update" when HOMEBREW_NO_AUTO_UPDATE is set; upgrade publishes the
+# A brew first on PATH: --prefix answers $BATS_TEST_TMPDIR/brew; any other call
+# made without HOMEBREW_NO_AUTO_UPDATE logs "auto-update on"; update fails with
+# FAKE_BREW_UPDATE_STATUS; outdated answers as FAKE_BREW_OUTDATED says
+# (current, outdated or broken); upgrade publishes the
 # dev tree's HEAD as the keg of version FAKE_BREW_NEW_KEG, points opt/molt at
 # it and removes the old keg, as brew cleanup can, or fails with
 # FAKE_BREW_UPGRADE_STATUS. Each call is logged to brew.log.
@@ -456,10 +598,13 @@ install_brew_with_upgrade() {
 #!/usr/bin/env bash
 echo "brew \$*" >> "$BATS_TEST_TMPDIR/brew.log"
 case "\$1" in
-  --prefix) echo "$BATS_TEST_TMPDIR/brew" ;;
+  --prefix) echo "$BATS_TEST_TMPDIR/brew"; exit 0 ;;
+esac
+[ -n "\${HOMEBREW_NO_AUTO_UPDATE:-}" ] || echo "auto-update on: \$*" >> "$BATS_TEST_TMPDIR/brew.log"
+case "\$1" in
+  update) exit "\${FAKE_BREW_UPDATE_STATUS:-0}" ;;
   outdated)
-    [ -z "\${HOMEBREW_NO_AUTO_UPDATE:-}" ] || echo "no auto-update" >> "$BATS_TEST_TMPDIR/brew.log"
-    echo "==> Auto-updated Homebrew!" >&2
+    echo "Warning: something brew says aside" >&2
     case "\${FAKE_BREW_OUTDATED:-current}" in
       current) exit 0 ;;
       outdated) echo molt; exit 1 ;;
@@ -487,7 +632,7 @@ FAKE
     assert_success
     refute_output_contains "Checking framework repo"
     assert_output_contains "is not pulled; upgrade it from the dev tree with molt install --force"
-    assert_output_contains "is at $(git -C "$DEV" rev-parse --short=7 HEAD), ahead of this install's"
+    assert_output_contains "is at $(git -C "$DEV" rev-parse --short=12 HEAD), ahead of this install's"
     assert_output_contains "Checking user config repo"
 }
 
@@ -514,6 +659,22 @@ FAKE
     assert_output_contains "Framework updated (0.3.0 -> 0.4.0); restarting on the new code"
     assert_output_contains "zzz on new"
     refute_output_contains "zzz on old"
+    [[ "$(grep -v -- --prefix "$BATS_TEST_TMPDIR/brew.log" | head -n 2)" == "brew update"$'\n'"brew outdated --quiet matthewsinclair/molt/molt" ]]
+    run grep -c "auto-update on" "$BATS_TEST_TMPDIR/brew.log"
+    [[ "$output" == 0 ]]
+}
+
+@test "a brew update that fails is counted in the verdict, and nothing is upgraded" {
+    upgrade_user_repo
+    install_brew_with_upgrade
+    dev_tree_with_one_liberator old
+    install_brew_keg 0.3.0
+    FAKE_BREW_UPDATE_STATUS=1 FAKE_BREW_OUTDATED=outdated run "$KEG/bin/molt" upgrade --no-resleeve
+    assert_failure
+    assert_output_contains "brew update failed"
+    assert_output_contains "Upgrade incomplete: the pull failed for brew update"
+    run grep -c "brew outdated\\|brew upgrade" "$BATS_TEST_TMPDIR/brew.log"
+    [[ "$output" == 0 ]]
 }
 
 @test "a revision bump, a new keg of the same commit, restarts on the new keg" {
@@ -559,16 +720,15 @@ FAKE
     install_brew_keg 0.3.0
     FAKE_BREW_OUTDATED=outdated run "$KEG/bin/molt" upgrade --self --dry-run
     assert_success
-    assert_output_contains "without updating it"
+    assert_output_contains "Dry run: skipping brew update"
     assert_output_contains "WOULD BREW UPGRADE matthewsinclair/molt/molt"
-    grep -qx "no auto-update" "$BATS_TEST_TMPDIR/brew.log"
-    run grep -c "brew upgrade" "$BATS_TEST_TMPDIR/brew.log"
+    run grep -c "auto-update on\\|brew update\\|brew upgrade" "$BATS_TEST_TMPDIR/brew.log"
     [[ "$output" == 0 ]]
 }
 
 # --- What PATH runs for molt ---
 
-@test "use fails, naming it, when another molt is ahead of ~/bin/molt on PATH" {
+@test "use fails, naming it, when another molt is ahead of ~/.local/bin/molt on PATH" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     mkdir -p "$BATS_TEST_TMPDIR/stray"
     ln -s "$DEV/bin/molt" "$BATS_TEST_TMPDIR/stray/molt"
@@ -576,7 +736,7 @@ FAKE
     assert_failure
     assert_output_contains "(dev, "
     assert_output_contains "PATH runs $BATS_TEST_TMPDIR/stray/molt ahead of"
-    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
     PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" use
     assert_failure
     assert_output_contains "serves molt"
@@ -585,7 +745,7 @@ FAKE
     assert_success
 }
 
-@test "doctor passes ~/bin/molt as what PATH runs, and names what shadows it" {
+@test "doctor passes ~/.local/bin/molt as what PATH runs, and names what shadows it" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     "$DEV/bin/molt" use dev
     run "$DEV/bin/molt" doctor
@@ -596,10 +756,10 @@ FAKE
     assert_output_contains "Checking molt on PATH... ⚠ PATH runs $BATS_TEST_TMPDIR/stray/molt ahead of"
 }
 
-@test "a PATH entry that is ~/bin by another name runs ~/bin/molt, and is no shadow" {
+@test "a PATH entry that is ~/bin by another name runs ~/.local/bin/molt, and is no shadow" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     "$DEV/bin/molt" use dev
-    ln -s "$HOME/bin" "$BATS_TEST_TMPDIR/bin-by-another-name"
+    ln -s "$HOME/.local/bin" "$BATS_TEST_TMPDIR/bin-by-another-name"
     PATH="$BATS_TEST_TMPDIR/bin-by-another-name:$PATH" run "$DEV/bin/molt" use
     assert_success
     refute_output_contains "ahead of"

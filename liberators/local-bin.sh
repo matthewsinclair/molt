@@ -2,13 +2,44 @@
 # local-bin.sh — Liberator: local bin directory
 # Frees you from scattering executables.
 #
-# $MOLT_LOCAL_BIN/molt is the switch between the dev, opt and brew trees
-# (ST0008), and molt use is what flips it. This liberator does not choose: a
-# link to any tree's bin/molt is healthy, and install makes one, to the running
-# tree, only when it is missing or broken. Anything else there, a file or a
-# link to no tree, is somebody's, and install refuses it by name rather than
-# replace it. Before, install linked it to whichever tree was running, so a
-# resleeve from the checkout flipped an opt sleeve back to dev.
+# $MOLT_LOCAL_BIN/molt is the switch between the dev, opt and brew trees, and
+# molt use is what flips it (ST0008; devbin docs/dev-opt-brew.md T5). This
+# liberator does not choose: a link to a dev or opt tree's bin/molt is kept,
+# and no link at all is brew. Install makes a missing or broken link only when
+# the running tree is dev or opt, pointing it at that tree; in brew it makes
+# nothing, since a link into the keg would undo molt use brew at the next
+# resleeve. It never removes a link, and anything else at the link's path, a
+# file or a link to no tree, is somebody's, and is refused by name. Before,
+# install linked it to whichever tree was running, so a resleeve from the
+# checkout flipped an opt sleeve back to dev.
+
+# Why the switch is not as this liberator wants it, or nothing when it is:
+# a healthy link to a dev or opt tree, or no link while brew is running. A
+# link into the brew tree is the old way to choose brew, which molt use brew
+# now does by removing it.
+_local-bin_fault() {
+  local link root
+  link="$(molt_switch_link)"
+  if [[ ! -e "$link" && ! -L "$link" ]] && [[ "$(molt_tree)" == brew ]]; then
+    return 0
+  fi
+  if ! root="$(molt_served_tree)"; then
+    echo "$root"
+  elif [[ "$(molt_tree "$root")" == brew ]]; then
+    echo "$(molt_tilde "$link") leads into the brew tree; run molt use brew, which removes it, since no link means brew"
+  fi
+}
+
+# What serves molt, as verify names it: the link's tree, or brew with no link.
+_local-bin_served_line() {
+  local link root
+  link="$(molt_switch_link)"
+  if root="$(molt_served_tree)"; then
+    echo "$(molt_tilde "$link") serves $(molt_version_line "$root")"
+  else
+    echo "there is no $(molt_tilde "$link"), so brew serves $(molt_version_line)"
+  fi
+}
 
 local-bin_check() {
   local ok=0
@@ -24,9 +55,10 @@ local-bin_check() {
     molt_debug "local-bin: $MOLT_LOCAL_BIN is not on PATH (expected if not running from zsh)"
   fi
 
-  local served
-  if ! served="$(molt_served_tree)"; then
-    molt_info "local-bin: $served"
+  local fault
+  fault="$(_local-bin_fault)"
+  if [[ -n "$fault" ]]; then
+    molt_info "local-bin: $fault"
     ok=1
   fi
 
@@ -40,13 +72,26 @@ local-bin_install() {
   fi
 
   # A link to any tree is the sleeve's choice, made with molt use, and kept.
-  local link="$MOLT_LOCAL_BIN/molt" fault
+  local link fault tree
+  link="$(molt_switch_link)"
+  tree="$(molt_tree)"
   if ! fault="$(molt_served_tree)"; then
     if [[ -e "$link" ]]; then
       molt_error "local-bin: $fault; it is left as it is, so move it aside, then run molt use dev, opt or brew"
       return 1
     fi
-    molt_link "$MOLT_ROOT/bin/molt" "$link" || return 1
+    case "$tree" in
+      dev|opt) molt_link "$MOLT_ROOT/bin/molt" "$link" || return 1 ;;
+      brew)
+        if [[ -L "$link" ]]; then
+          molt_error "local-bin: $fault; it is left as it is, so remove it with molt use brew"
+          return 1
+        fi
+        molt_info "local-bin: no $(molt_tilde "$link"), so brew serves molt" ;;
+      *)
+        molt_error "local-bin: $(molt_tilde "$MOLT_ROOT") is no dev, opt or brew tree, so $(molt_tilde "$link") is not made"
+        return 1 ;;
+    esac
   fi
 
   molt_info "Liberator complete: local-bin"
@@ -60,14 +105,15 @@ local-bin_verify() {
     errors=1
   fi
 
-  local served
-  if ! served="$(molt_served_tree)"; then
-    molt_error "VERIFY FAIL: $served"
+  local fault
+  fault="$(_local-bin_fault)"
+  if [[ -n "$fault" ]]; then
+    molt_error "VERIFY FAIL: $fault"
     errors=1
   fi
 
   if [[ $errors -eq 0 ]]; then
-    molt_info "Verified: local-bin liberator is fully operational; $(molt_tilde "$MOLT_LOCAL_BIN/molt") serves $(molt_version_line "$served")"
+    molt_info "Verified: local-bin liberator is fully operational; $(_local-bin_served_line)"
   fi
   return $errors
 }

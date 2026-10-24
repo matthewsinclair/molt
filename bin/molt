@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-# Resolve symlinks so MOLT_ROOT works when invoked via ~/bin/molt symlink, a
+# Resolve symlinks so MOLT_ROOT works when invoked via the ~/.local/bin/molt symlink, a
 # relative target read from its link's directory. lib/molt.sh's _molt_realpath
 # does this for everything else, but cannot be sourced before MOLT_ROOT is known.
 _molt_self="${BASH_SOURCE[0]}"
@@ -57,7 +57,7 @@ Commands:
   install [--prefix DIR] [--force] [--managed-by molt|brew]
                         Publish this dev tree to DIR (default: MOLT_INSTALL_PREFIX
                         in vars.sh) as the opt tree, with a manifest
-  use [dev|opt|brew]   Point ~/bin/molt at that tree; with none, show the tree it serves
+  use [dev|opt|brew]   Link ~/.local/bin/molt to dev or opt, or remove it for brew; with none, show what serves molt
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   agent list  List this sleeve's agents: name, role, enabled, state, home

@@ -80,7 +80,9 @@ MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Utilz}}"
 MOLT_PPLR_HOME="${PPLR_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Pplr}}"
 
 # --- Local bin ---
-MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/bin}"
+# The directory of the per-user link that molt use sets (devbin docs/dev-opt-brew.md
+# T5). It was $HOME/bin until that contract; on rhadamanth the two are one directory.
+MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/.local/bin}"
 
 # --- Framework ---
 MOLT_VERSION="$(cat "${MOLT_ROOT}/VERSION" 2>/dev/null || echo "0.1.0")"

@@ -51,10 +51,10 @@ load "test_helper.bash"
     [[ "$MOLT_OPT_DIR" == "/custom/opt" ]]
 }
 
-@test "MOLT_LOCAL_BIN defaults to \$HOME/bin" {
+@test "MOLT_LOCAL_BIN defaults to \$HOME/.local/bin" {
     unset MOLT_LOCAL_BIN
     load_molt_libs
-    [[ "$MOLT_LOCAL_BIN" == "$HOME/bin" ]]
+    [[ "$MOLT_LOCAL_BIN" == "$HOME/.local/bin" ]]
 }
 
 @test "MOLT_LOCAL_BIN respects env var override" {

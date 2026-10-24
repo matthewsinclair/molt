@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # bootstrap.sh — Molt bootstrap script
-# Clones molt + user repo, links molt into ~/bin, runs dry-run.
+# Clones molt + user repo, links molt into ~/.local/bin, runs dry-run.
 #
 # Usage:
 #   MOLT_PRJ_DIR=~/Devel/prj bash bootstrap.sh
@@ -147,21 +147,23 @@ user_dir="$(find_existing_repo "$MOLT_USER_DIR" "$MOLT_CFG_DIR" "$MOLT_PRJ_DIR")
 clone_or_pull "$MOLT_REPO" "$molt_dir"
 clone_or_pull "$MOLT_USER_REPO_FULL" "$user_dir"
 
-# --- Link molt into ~/bin ---
+# --- Link molt into ~/.local/bin ---
 
+# The switch molt use sets (devbin docs/dev-opt-brew.md T5): a bootstrap is
+# a dev tree, so it links the checkout.
 echo ""
-info "Linking molt into ~/bin"
-mkdir -p "$HOME/bin"
+info "Linking molt into ~/.local/bin"
+mkdir -p "$HOME/.local/bin"
 
-if [[ -L "$HOME/bin/molt" ]]; then
+if [[ -L "$HOME/.local/bin/molt" ]]; then
   # shellcheck disable=SC2088 # a message naming the path as a person writes it
-  ok "~/bin/molt already linked"
-elif [[ -e "$HOME/bin/molt" ]]; then
+  ok "~/.local/bin/molt already linked"
+elif [[ -e "$HOME/.local/bin/molt" ]]; then
   # shellcheck disable=SC2088 # a message naming the path as a person writes it
-  error "~/bin/molt exists but is not a symlink — skipping"
+  error "~/.local/bin/molt exists but is not a symlink — skipping"
 else
-  ln -s "$molt_dir/bin/molt" "$HOME/bin/molt"
-  ok "Linked ~/bin/molt → $molt_dir/bin/molt"
+  ln -s "$molt_dir/bin/molt" "$HOME/.local/bin/molt"
+  ok "Linked ~/.local/bin/molt → $molt_dir/bin/molt"
 fi
 
 # --- Dry run ---
