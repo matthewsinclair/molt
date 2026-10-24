@@ -33,24 +33,6 @@ for what the liberators automate. It is not the install procedure — that is
 `molt resleeve`. Where the two disagree, the liberator is authoritative and this
 document is stale.
 
-## Molt itself
-
-A sleeve gets Molt from Homebrew, on macOS and on Linux alike, then resleeves from it:
-
-```bash
-brew install matthewsinclair/molt/molt
-molt resleeve --dry-run
-molt resleeve
-```
-
-The [Getting Started](getting-started.md) guide has the whole route, the config repo included. `molt version` names the install, eg `molt 0.3.0 (brew, 905305c1a2b3) at /home/linuxbrew/.linuxbrew/opt/molt/libexec`, and `molt upgrade` moves it to the next release with `brew upgrade`.
-
-### For the maintainer of a dev checkout
-
-**This is for whoever works on Molt itself.** A sleeve installed from brew needs none of it.
-
-kovacs was bootstrapped in Phase 1 from a dev checkout, cloned by `bin/bootstrap.sh`, which still sets one up and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `molt use` and `molt install`. kovacs itself moves to brew only, through kovacs-sysadm (ST0008), and its old `~/bin/molt` gives way to Homebrew's `molt`; `~/bin` and `~/.local/bin` are different directories there.
-
 ---
 
 ## 1. system
