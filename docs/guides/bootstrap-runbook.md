@@ -20,6 +20,26 @@ Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`,
 
 This is a record of what was done BY HAND on kovacs. It is not the install procedure — that is `molt resleeve`. The liberators automate the configuration recorded here. The packages they mostly do not install: `system`, `zsh`, `git`, `alacritty` and `dev-tools` check for theirs and name the install when one is missing. Where this record and a liberator disagree, the liberator is authoritative and this document is stale.
 
+## Molt itself
+
+A sleeve gets Molt from Homebrew, on macOS and on Linux alike, then resleeves from it. Resleeve needs `MOLT_PRJ_DIR` set and the sleeve's config repo cloned first, as [Getting Started](getting-started.md) sets out:
+
+```bash
+export MOLT_PRJ_DIR="$HOME/Devel/prj"
+git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
+brew install matthewsinclair/molt/molt
+molt resleeve --dry-run
+molt resleeve
+```
+
+`molt version` names the install, as `molt <version> (brew, <commit>) at /home/linuxbrew/.linuxbrew/opt/molt/libexec`, and `molt upgrade` moves it to the next release with `brew upgrade`.
+
+### For the maintainer of a dev checkout
+
+**This is for whoever works on Molt itself.** A sleeve installed from brew needs none of it.
+
+kovacs was bootstrapped in Phase 1 from a dev checkout, `$MOLT_PRJ_DIR/Molt`, cloned by `bin/bootstrap.sh`, which still sets one up there and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `molt use` and `molt install`. kovacs itself moves to brew only, through kovacs-sysadm (ST0008), and its old `~/bin/molt` gives way to Homebrew's `molt`; `~/bin` and `~/.local/bin` are different directories there.
+
 ---
 
 ## system
