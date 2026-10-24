@@ -47,7 +47,7 @@ Every caller asks this one function (Highlander).
 
 Each switch refuses a tree that isn't there, naming the step that makes it, then prints the new `molt version` line.
 
-**The switch works only if `~/bin/molt` is the first `molt` on PATH.** On rhadamanth `/opt/homebrew/bin` comes before `~/bin`, and a stray `~/.local/bin/molt` from March comes before both (vc, 24 Oct). Doctor, and `molt use` with no argument, fail when the first `molt` that `type -ap molt` finds is not `$MOLT_LOCAL_BIN/molt`, and name what shadows it.
+**The switch works only if `~/bin/molt` is the first `molt` on PATH.** On rhadamanth `/opt/homebrew/bin` comes before `~/bin` (vc, 24 Oct), so a formula that linked into Homebrew's `bin` would shadow the switch. Doctor, and `molt use` with no argument, fail when the first `molt` that `type -ap molt` finds is not `$MOLT_LOCAL_BIN/molt`, and name what shadows it. The comparison is of resolved directories, never path strings: on rhadamanth `~/bin` is a symlink to `~/.local/bin`, so both PATH entries name one link.
 
 **The local-bin liberator stops choosing.** Today `local-bin_install` links `~/bin/molt` to whichever tree is running. Under this design, `bin/molt resleeve` from the checkout would flip a sleeve on opt back to dev. Instead:
 
