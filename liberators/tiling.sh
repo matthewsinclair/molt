@@ -139,10 +139,11 @@ tiling_check() {
   _tiling_report_schema_fault molt_info "tiling: " || ok=1
 
   # Check grid is configured as 7x3
-  if command -v gsettings &>/dev/null; then
+  molt_gsettings_unreachable molt_info "" tiling || ok=1
+  if molt_gsettings_find; then
     local col6 row2
-    col6="$(gsettings get "$TACTILE_SCHEMA" col-6 2>/dev/null || echo "0")"
-    row2="$(gsettings get "$TACTILE_SCHEMA" row-2 2>/dev/null || echo "0")"
+    col6="$(molt_gsettings get "$TACTILE_SCHEMA" col-6 2>/dev/null || echo "0")"
+    row2="$(molt_gsettings get "$TACTILE_SCHEMA" row-2 2>/dev/null || echo "0")"
     if [[ "$col6" != "1" ]] || [[ "$row2" != "1" ]]; then
       molt_info "tiling: Tactile grid not configured as 7x3"
       ok=1
@@ -197,6 +198,8 @@ tiling_install() {
   gnome-extensions enable "$TACTILE_UUID" 2>/dev/null || \
     molt_warn "Could not enable Tactile (shell restart may be needed)"
 
+  molt_gsettings_unreachable molt_error "" tiling || return 1
+
   # A 7x3 grid of equal-weight columns and rows, the activation binding (see
   # MOLT_TACTILE_ACTIVATE above), the window gap and maximize. Every write is
   # checked: resleeve runs install inside an `if`, where set -e does not apply.
@@ -209,7 +212,7 @@ tiling_install() {
   for setting in col-0=1 col-1=1 col-2=1 col-3=1 col-4=1 col-5=1 col-6=1 \
       grid-cols=7 grid-rows=3 row-0=1 row-1=1 row-2=1 row-3=0 row-4=0 \
       "show-tiles=['$activate']" gap-size=4 maximize=true; do
-    if ! gsettings set "$TACTILE_SCHEMA" "${setting%%=*}" "${setting#*=}"; then
+    if ! molt_gsettings set "$TACTILE_SCHEMA" "${setting%%=*}" "${setting#*=}"; then
       molt_error "tiling: could not set Tactile's ${setting%%=*}"
       return 1
     fi
@@ -237,9 +240,10 @@ tiling_verify() {
     _tiling_report_schema_fault molt_error "VERIFY FAIL: " || errors=1
   fi
 
-  if command -v gsettings &>/dev/null; then
+  molt_gsettings_unreachable molt_error "VERIFY FAIL: " tiling || errors=1
+  if molt_gsettings_find; then
     local col6
-    col6="$(gsettings get "$TACTILE_SCHEMA" col-6 2>/dev/null || echo "0")"
+    col6="$(molt_gsettings get "$TACTILE_SCHEMA" col-6 2>/dev/null || echo "0")"
     if [[ "$col6" != "1" ]]; then
       molt_error "VERIFY FAIL: Tactile grid not configured"
       errors=1

@@ -34,6 +34,7 @@ exit 0
 FAKE
     _fake gsettings <<'FAKE'
 #!/usr/bin/env bash
+case "$1" in list-*) echo x; exit 0 ;; esac
 [ "$1" = get ] && { echo 1; exit 0; }
 echo "gsettings $*" >> "$FAKE_LOG"
 exit "${FAKE_GSETTINGS_STATUS:-0}"
@@ -42,6 +43,7 @@ FAKE
 
     load_liberator tiling
     molt_platform() { echo linux; }
+    gsettings_from_path
     # No user repo, so the activation binding is the default rather than
     # whatever this machine's own vars.sh declares.
     MOLT_USER_REPO_SEARCH_PATHS=("$BATS_TEST_TMPDIR/no-repo")

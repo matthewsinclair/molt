@@ -3,9 +3,10 @@
   "number": 47,
   "slug": "linux-gsettings-without-a-dconf-backend-liberato",
   "title": "Linux gsettings without a dconf backend: liberators write a keyfile GNOME never reads",
-  "status": "open",
+  "status": "closed",
   "severity": "high",
   "created": "2026-10-24",
+  "closed": "2026-10-24",
   "reporter": "Matthew Sinclair",
   "body": "On Linux, Molt's liberators run whichever `gsettings` comes first on PATH. On kovacs that is Homebrew's (glib 2.90.1, pulled in by Elixir's wxwidgets/gtk+3 dependencies, at /home/linuxbrew/.linuxbrew/bin/gsettings), and it has no dconf GIO module: its lib/gio/modules is empty. Instead of reaching dconf, it silently falls back to the keyfile backend at ~/.config/glib-2.0/settings/keyfile, which GNOME never reads.\n\nReported by kovacs-sysadm, 24 Oct:\n\n- Repro: `XDG_CONFIG_HOME=/nonexistent gsettings get org.gnome.mutter overlay-key` prints 'Super', but `dconf read /org/gnome/mutter/overlay-key` prints ''.\n- `molt doctor` reported editors, alacritty, desktop, tiling and vscode as \"not installed\". It was reading schema defaults while dconf held the right values.\n- The next `molt upgrade && molt maintain` wrote those values into the keyfile, so doctor passes now. The keyfile is a second store, though, and it diverges from dconf as soon as anyone changes a setting in GNOME.\n\nCallers: liberators/desktop.sh, alacritty.sh, gnome-terminal.sh and tiling.sh. Each calls bare `gsettings` and guards on `command -v gsettings`. issue 0043 added `_desktop_gsettings_available`.\n\nFix (vc's direction):\n- One helper owns `gsettings` on Linux (Highlander). Every caller goes through it.\n- The helper chooses a gsettings whose backend is dconf, and refuses by name when the only one on PATH would use the keyfile or memory backend. That refusal counts as a fault, never as \"not installed\".\n- Doctor names a gsettings without a dconf backend.\n- Detect the backend by asking the binary, not by trusting a path. Don't hardcode /usr/bin/gsettings as the answer.\n- Tests fake both binaries.\n\nReordering PATH on kovacs is hv's decision. Once the fix is in, deleting kovacs's keyfile is a separate step, on hv's go, through kovacs-sysadm.\n"
 }

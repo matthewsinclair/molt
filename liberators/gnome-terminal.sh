@@ -36,9 +36,11 @@ gnome-terminal_check() {
     ok=1
   fi
 
+  molt_gsettings_unreachable molt_info "" gnome-terminal || ok=1
+
   # Check if our profile is the default
   local default_profile
-  default_profile="$(gsettings get org.gnome.Terminal.ProfilesList default 2>/dev/null || echo "")"
+  default_profile="$(molt_gsettings get org.gnome.Terminal.ProfilesList default 2>/dev/null || echo "")"
   if [[ "$default_profile" != "'${MOLT_GNOME_TERMINAL_UUID}'" ]]; then
     molt_info "gnome-terminal: Molt profile not set as default"
     ok=1
@@ -81,23 +83,25 @@ gnome-terminal_install() {
   molt_info "Loading GNOME Terminal profile..."
   dconf load "$dconf_path" < "$profile_dconf"
 
+  molt_gsettings_unreachable molt_error "" gnome-terminal || return 1
+
   # Register our UUID in the profile list
   local current_list
-  current_list="$(gsettings get org.gnome.Terminal.ProfilesList list 2>/dev/null || echo "[]")"
+  current_list="$(molt_gsettings get org.gnome.Terminal.ProfilesList list 2>/dev/null || echo "[]")"
   if [[ "$current_list" != *"${MOLT_GNOME_TERMINAL_UUID}"* ]]; then
     # Add our UUID to the list
     if [[ "$current_list" == "@as []" ]] || [[ "$current_list" == "[]" ]]; then
-      gsettings set org.gnome.Terminal.ProfilesList list "['${MOLT_GNOME_TERMINAL_UUID}']"
+      molt_gsettings set org.gnome.Terminal.ProfilesList list "['${MOLT_GNOME_TERMINAL_UUID}']"
     else
       # Append to existing list
       local new_list
       new_list="${current_list/]/, \'${MOLT_GNOME_TERMINAL_UUID}\']}"
-      gsettings set org.gnome.Terminal.ProfilesList list "$new_list"
+      molt_gsettings set org.gnome.Terminal.ProfilesList list "$new_list"
     fi
   fi
 
   # Set as default profile
-  gsettings set org.gnome.Terminal.ProfilesList default "'${MOLT_GNOME_TERMINAL_UUID}'"
+  molt_gsettings set org.gnome.Terminal.ProfilesList default "'${MOLT_GNOME_TERMINAL_UUID}'"
 
   molt_info "Liberator complete: gnome-terminal"
 }
@@ -127,9 +131,11 @@ gnome-terminal_verify() {
     errors=1
   fi
 
+  molt_gsettings_unreachable molt_error "VERIFY FAIL: " gnome-terminal || errors=1
+
   # Check default
   local default_profile
-  default_profile="$(gsettings get org.gnome.Terminal.ProfilesList default 2>/dev/null || echo "")"
+  default_profile="$(molt_gsettings get org.gnome.Terminal.ProfilesList default 2>/dev/null || echo "")"
   if [[ "$default_profile" != "'${MOLT_GNOME_TERMINAL_UUID}'" ]]; then
     molt_error "VERIFY FAIL: Molt profile not set as default"
     errors=1

@@ -114,10 +114,12 @@ _alac_template() {
     # get answers with a favourites list; set fails.
     cat > "$BATS_TEST_TMPDIR/bin/gsettings" <<'EOF'
 #!/bin/sh
+case "$1" in list-*) echo x; exit 0 ;; esac
 [ "$1" = get ] && { echo "['org.gnome.Nautilus.desktop']"; exit 0; }
 exit 1
 EOF
     chmod +x "$BATS_TEST_TMPDIR/bin/gsettings"
+    gsettings_from_path
 
     run alacritty_install
     assert_failure

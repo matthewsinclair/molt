@@ -1155,6 +1155,98 @@ molt_report_faults() {
   return 1
 }
 
+# --- GNOME settings ---
+
+# Chooses, once per run, the gsettings molt reads and sets GNOME keys with: the
+# first on PATH whose backend is dconf, the store GNOME reads. A gsettings with
+# no dconf module falls back, without a word, to a keyfile under
+# ~/.config/glib-2.0 that GNOME never reads. On kovacs the first on PATH was
+# Homebrew's, so every key molt set went there and doctor read schema defaults
+# (issue 0047). Each candidate is asked, not judged by where it lives.
+#
+# Status: 0 one reaches dconf, and molt_gsettings runs it; 1 there is no
+# gsettings on PATH; 2 there is, but none reaches dconf. MOLT_GSETTINGS_FAULT
+# says why on 1 and 2. Call it directly, never in $(...), so that the choice
+# outlives the call and later calls ask nothing.
+molt_gsettings_find() {
+  if [[ -n "${_MOLT_GSETTINGS_STATUS:-}" ]]; then
+    return "$_MOLT_GSETTINGS_STATUS"
+  fi
+  local gs why seen=$'\n' faults=""
+  _MOLT_GSETTINGS=""
+  while IFS= read -r gs; do
+    # A directory PATH names twice gives the same binary twice.
+    [[ -n "$gs" && "$seen" != *$'\n'"$gs"$'\n'* ]] || continue
+    seen+="$gs"$'\n'
+    if why="$(_molt_gsettings_dconf_fault "$gs")"; then
+      _MOLT_GSETTINGS="$gs"
+      MOLT_GSETTINGS_FAULT=""
+      _MOLT_GSETTINGS_STATUS=0
+      return 0
+    fi
+    faults+="${faults:+; }$(molt_tilde "$gs") $why"
+  done <<< "$(type -ap gsettings || true)"
+  if [[ -z "$faults" ]]; then
+    MOLT_GSETTINGS_FAULT="gsettings is not on PATH"
+    _MOLT_GSETTINGS_STATUS=1
+  else
+    MOLT_GSETTINGS_FAULT="no gsettings on PATH reaches dconf, the store GNOME reads: $faults"
+    _MOLT_GSETTINGS_STATUS=2
+  fi
+  return "$_MOLT_GSETTINGS_STATUS"
+}
+
+# Asks the gsettings $1 to read one key through dconf. True when it does, and
+# says nothing; otherwise false, saying why. One without the dconf module warns
+# that it cannot find it, then reads from its fallback and exits 0, so what it
+# says is the only sign, and a read that says anything does not qualify. One that fails and says nothing gives no
+# reason to trust it either.
+_molt_gsettings_dconf_fault() {
+  local gs="$1" schemas schema keys key out status=0
+  schemas="$("$gs" list-schemas 2>/dev/null)" || schemas=""
+  schema="${schemas%%$'\n'*}"
+  if [[ -n "$schema" ]]; then
+    keys="$("$gs" list-keys "$schema" 2>/dev/null)" || keys=""
+    key="${keys%%$'\n'*}"
+  fi
+  if [[ -z "$schema" || -z "${key:-}" ]]; then
+    echo "cannot be asked: it lists no schema with a key to read"
+    return 1
+  fi
+  out="$(GSETTINGS_BACKEND=dconf "$gs" get "$schema" "$key" 2>&1 >/dev/null)" || status=$?
+  if [[ -n "$out" ]]; then
+    # GLib opens a warning with a blank line.
+    out="${out#"${out%%[![:space:]]*}"}"
+    echo "does not read through dconf: ${out%%$'\n'*}"
+    return 1
+  fi
+  if [[ $status -ne 0 ]]; then
+    echo "cannot tell: asked to read $schema $key through dconf, it exited $status and said nothing"
+    return 1
+  fi
+}
+
+# Runs the gsettings molt_gsettings_find chose, with the arguments given, or
+# fails saying why there is none.
+molt_gsettings() {
+  if ! molt_gsettings_find; then
+    echo "$MOLT_GSETTINGS_FAULT" >&2
+    return 1
+  fi
+  "$_MOLT_GSETTINGS" "$@"
+}
+
+# Says through $1 (molt_info, molt_warn or molt_error), after the lead $2 and
+# the label $3, that gsettings is on PATH but none reaches dconf, and is false
+# then. True otherwise: with no gsettings at all there is no GNOME to set, and
+# each caller passes that by as it always has.
+molt_gsettings_unreachable() {
+  local status=0
+  molt_gsettings_find || status=$?
+  [[ $status -eq 2 ]] || return 0
+  molt_report_faults "$1" "$2" "$3" "$MOLT_GSETTINGS_FAULT"
+}
+
 # --- Claude Code ---
 
 # Where Claude Code keeps its state on this machine: CLAUDE_CONFIG_DIR when it
@@ -1735,6 +1827,22 @@ cmd_doctor() {
   else
     echo "Checking liberators... ⚠ $lib_errors of $lib_count have no _check: $lib_unchecked"
     not_passed=$((not_passed + 1))
+  fi
+
+  # GNOME keys go through the one gsettings that reaches dconf, chosen here so
+  # the liberator checks below ask nothing again. One that does not reaches a
+  # keyfile GNOME never reads, and the checks read schema defaults (issue 0047).
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    checks=$((checks + 1))
+    local gs_status=0
+    molt_gsettings_find || gs_status=$?
+    case $gs_status in
+      0) echo "Checking gsettings... ✓ $(molt_tilde "$_MOLT_GSETTINGS") reaches dconf" ;;
+      1) echo "Checking gsettings... ✓ none on PATH, so no GNOME keys to set" ;;
+      *)
+        echo "Checking gsettings... ⚠ $MOLT_GSETTINGS_FAULT"
+        not_passed=$((not_passed + 1)) ;;
+    esac
   fi
 
   # Enabled liberator status

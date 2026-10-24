@@ -102,6 +102,8 @@ _gs_env() {
 #!/bin/sh
 d="$GS_STORE/$2"
 case "$1" in
+  list-schemas) echo molt.probe ;;
+  list-keys) echo k ;;
   set)
     echo "set $2 $3 $4" >> "$GS_LOG"
     if [ -e "$d/$3.refuse" ]; then echo "No such key “$3”" >&2; exit 1; fi
@@ -113,6 +115,10 @@ esac
 FAKE
     chmod +x "$root/bin/gsettings"
     export PATH="$root/bin:$PATH"
+    # A key for molt to ask the fake through dconf before it chooses it.
+    mkdir -p "$GS_STORE/molt.probe"
+    echo "'v'" > "$GS_STORE/molt.probe/k"
+    gsettings_from_path
     MOLT_USER_REPO_SEARCH_PATHS=("$root/repo")
     molt_platform() { echo linux; }
 }
@@ -224,25 +230,25 @@ org.gnome.desktop.wm.keybindings switch-windows ['<Alt>Tab', '<Super>Tab']"
     printf 'org.gnome.Terminal.desktop\n' > "$(dirname "$GS_FILE")/favorite-apps"
     # No stylesheet, so an unlinked one cannot fail verify before it reaches 2.
     rm "$BATS_TEST_TMPDIR/repo/config/gtk/gtk.css"
-    _desktop_gsettings_available() { return 1; }
+    no_gsettings
     run desktop_check
     assert_failure
-    assert_output_contains "desktop/gsettings is declared, but gsettings is not available"
-    assert_output_contains "desktop/favorite-apps is declared, but gsettings is not available"
+    assert_output_contains "desktop/gsettings is declared, but gsettings is not on PATH"
+    assert_output_contains "desktop/favorite-apps is declared, but gsettings is not on PATH"
     run desktop_install
     assert_failure
-    assert_output_contains "desktop/gsettings is declared, but gsettings is not available"
+    assert_output_contains "desktop/gsettings is declared, but gsettings is not on PATH"
     [ ! -e "$GS_LOG" ]
     run desktop_verify
     [ "$status" -eq 2 ]
     assert_output_contains "VERIFY INCOMPLETE: desktop:"
-    assert_output_contains "desktop/favorite-apps is declared, but gsettings is not available"
+    assert_output_contains "desktop/favorite-apps is declared, but gsettings is not on PATH"
     refute_output_contains "Verified:"
 }
 
 @test "no declared desktop file and no gsettings is a quiet pass" {
     _gs_env ""
-    _desktop_gsettings_available() { return 1; }
+    no_gsettings
     run desktop_check
     assert_success
     refute_output_contains "is declared"

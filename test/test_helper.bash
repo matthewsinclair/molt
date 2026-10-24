@@ -93,6 +93,21 @@ load_molt_libs() {
     source "$MOLT_LIB_DIR/liberator.sh"
     source "$MOLT_LIB_DIR/agent.sh"
     source "$MOLT_LIB_DIR/install.sh"
+    no_gsettings
+}
+
+# molt has looked for gsettings and found none, so the host's own cannot
+# decide what a liberator says on Linux (issue 0047). load_molt_libs starts
+# every test here.
+no_gsettings() {
+    _MOLT_GSETTINGS_STATUS=1
+    MOLT_GSETTINGS_FAULT="gsettings is not on PATH"
+}
+
+# Lets molt choose a gsettings from PATH again, for a test that has put its own
+# fake there.
+gsettings_from_path() {
+    unset _MOLT_GSETTINGS_STATUS
 }
 
 # Load a specific liberator for function-level testing

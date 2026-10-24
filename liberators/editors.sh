@@ -172,9 +172,10 @@ editors_check() {
   fi
 
   # On Linux/GNOME, check Emacs is in dock favorites
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_info "" editors || ok=1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"emacs.desktop"* ]]; then
       molt_info "editors: Emacs not in GNOME dock favorites"
       ok=1
@@ -243,13 +244,14 @@ editors_install() {
   fi
 
   # On Linux/GNOME, add Emacs to dock favorites
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_error "" editors || return 1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"emacs.desktop"* ]]; then
       local new_favorites
       new_favorites="${favorites/]/, \'emacs.desktop\']}"
-      gsettings set org.gnome.shell favorite-apps "$new_favorites"
+      molt_gsettings set org.gnome.shell favorite-apps "$new_favorites"
       molt_info "Added Emacs to GNOME dock favorites"
     fi
   fi

@@ -144,6 +144,8 @@ myapp_verify() {
 | `molt_brew_install formula`                | `brew install` by full formula name, and `brew trust --formula` for an installed formula Homebrew does not trust                                                |
 | `molt_path_runs_fault cmd path label`      | Names what PATH runs for `cmd` when it is not `path`                                                                                                            |
 | `molt_report_faults log lead label faults` | Logs each line of `faults` through `log`; true when there are none                                                                                              |
+| `molt_gsettings args`                      | Runs the gsettings that reaches dconf, the store GNOME reads. Never call bare `gsettings`: one with no dconf module writes a keyfile GNOME never reads          |
+| `molt_gsettings_unreachable`               | Takes `log lead label`; logs, and is false, when gsettings is on PATH but none reaches dconf. True when one does, or when there is none (no GNOME)              |
 | `molt_platform`                            | Return `linux` or `macos`                                                                                                                                       |
 | `molt_distro`                              | Return distro name (eg `ubuntu`, `fedora`, `macos`)                                                                                                             |
 | `molt_arch`                                | Return architecture (eg `arm64`, `x86_64`)                                                                                                                      |

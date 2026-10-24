@@ -64,9 +64,10 @@ alacritty_check() {
   fi
 
   # On Linux/GNOME, check Alacritty is in the dock favorites
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_info "" alacritty || ok=1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
       molt_info "alacritty: not in GNOME dock favorites"
       ok=1
@@ -95,14 +96,15 @@ alacritty_install() {
   fi
 
   # On Linux/GNOME, add Alacritty to dock favorites if not already there
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_error "" alacritty || return 1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
       # Append Alacritty.desktop to the favorites list
       local new_favorites
       new_favorites="${favorites/]/, \'Alacritty.desktop\']}"
-      if ! gsettings set org.gnome.shell favorite-apps "$new_favorites"; then
+      if ! molt_gsettings set org.gnome.shell favorite-apps "$new_favorites"; then
         molt_error "alacritty: gsettings could not add Alacritty to the GNOME dock favorites"
         return 1
       fi
@@ -131,9 +133,10 @@ alacritty_verify() {
   fi
 
   # On Linux/GNOME, verify Alacritty is in dock favorites
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_error "VERIFY FAIL: " alacritty || errors=1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"Alacritty.desktop"* ]]; then
       molt_error "VERIFY FAIL: Alacritty not in GNOME dock favorites"
       errors=1

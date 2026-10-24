@@ -46,9 +46,10 @@ vscode_check() {
   fi
 
   # On Linux/GNOME, check VSCode is in dock favorites
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_info "" vscode || ok=1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"code.desktop"* ]]; then
       molt_info "vscode: not in GNOME dock favorites"
       ok=1
@@ -95,13 +96,14 @@ vscode_install() {
   fi
 
   # On Linux/GNOME, add to dock favorites
-  if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+  if [[ "$(molt_platform)" == "linux" ]]; then
+    molt_gsettings_unreachable molt_error "" vscode || return 1
     local favorites
-    favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+    favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"code.desktop"* ]]; then
       local new_favorites
       new_favorites="${favorites/]/, \'code.desktop\']}"
-      gsettings set org.gnome.shell favorite-apps "$new_favorites"
+      molt_gsettings set org.gnome.shell favorite-apps "$new_favorites"
       molt_info "Added VS Code to GNOME dock favorites"
     fi
   fi

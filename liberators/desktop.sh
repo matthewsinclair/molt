@@ -31,20 +31,15 @@ _desktop_gsettings_file() {
   _desktop_instance_file gsettings
 }
 
-# True when gsettings is here to read and set GNOME keys.
-_desktop_gsettings_available() {
-  command -v gsettings &>/dev/null
-}
-
 # Says through $1 (molt_info, molt_warn or molt_error), after the lead $2, each
 # desktop file this instance declares that only gsettings can check or apply,
-# when gsettings is not here to do it. True when there is none. A declared
-# setting nothing can check used to read as healthy (issue 0043).
+# when no gsettings here reaches dconf to do it. True when there is none. A
+# declared setting nothing can check used to read as healthy (issue 0043).
 _desktop_unreachable() {
   local log="$1" lead="$2" f faults=""
-  _desktop_gsettings_available && return 0
+  molt_gsettings_find && return 0
   for f in "$(_desktop_gsettings_file)" "$(_desktop_favorites_file)"; do
-    [[ -n "$f" ]] && faults+="${f#"$HOME/"} is declared, but gsettings is not available"$'\n'
+    [[ -n "$f" ]] && faults+="${f#"$HOME/"} is declared, but $MOLT_GSETTINGS_FAULT"$'\n'
   done
   molt_report_faults "$log" "$lead" desktop "${faults%$'\n'}"
 }
@@ -81,12 +76,12 @@ _desktop_gsettings_pairs() {
 # A key gsettings cannot read answers with gsettings' words, and fails.
 _desktop_gsettings_get() {
   local got
-  if got="$(gsettings get "$1" "$2" 2>/dev/null)"; then
+  if got="$(molt_gsettings get "$1" "$2" 2>/dev/null)"; then
     printf '%s\n' "$got"
     return 0
   fi
   # Asked again for its reason; a get changes nothing.
-  { gsettings get "$1" "$2" >/dev/null; } 2>&1
+  { molt_gsettings get "$1" "$2" >/dev/null; } 2>&1
   return 1
 }
 
@@ -122,7 +117,7 @@ _desktop_gsettings_apply() {
   fi
   molt_info "Setting GNOME keys from ${f#"$HOME/"}..."
   while IFS=$'\t' read -r schema key value; do
-    if ! out="$(gsettings set "$schema" "$key" "$value" 2>&1)"; then
+    if ! out="$(molt_gsettings set "$schema" "$key" "$value" 2>&1)"; then
       molt_error "desktop: gsettings refused $schema $key:"
       _desktop_gsettings_words "$out"
       failed=1
@@ -148,7 +143,7 @@ _desktop_gsettings_apply() {
 # "Present but empty" is almost always a malformed file or a glob that matched
 # nothing, not a deliberate request for a bare dock -- and applying it wipes
 # every pinned app, which the user sees immediately. kovacs demonstrated this
-# for real while testing the empty case: one gsettings set with an empty list
+# for real while testing the empty case: one molt_gsettings set with an empty list
 # emptied the live dock. Recoverable only because the favourites file existed
 # to restore from. Refuse it rather than apply it.
 _desktop_favorites_empty() {
@@ -191,8 +186,8 @@ desktop_check() {
   fi
 
   _desktop_unreachable molt_info "" || return 1
-  if ! _desktop_gsettings_available; then
-    molt_debug "desktop: gsettings not available (no GNOME?)"
+  if ! molt_gsettings_find; then
+    molt_debug "desktop: $MOLT_GSETTINGS_FAULT (no GNOME?)"
     return 0
   fi
 
@@ -234,7 +229,7 @@ desktop_check() {
     else
       local want have
       want="$(_desktop_favorites_wanted "$fav_file")"
-      have="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+      have="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
       if [[ "$want" != "$have" ]]; then
         molt_info "desktop: dock favourites differ from ${fav_file#"$HOME/"}"
         ok=1
@@ -255,7 +250,7 @@ desktop_install() {
   fi
 
   _desktop_unreachable molt_error "" || return 1
-  if ! _desktop_gsettings_available; then
+  if ! molt_gsettings_find; then
     molt_info "desktop: no GNOME desktop detected, skipping"
     return 0
   fi
@@ -296,7 +291,7 @@ desktop_install() {
     else
       local want
       want="$(_desktop_favorites_wanted "$fav_file")"
-      if gsettings set org.gnome.shell favorite-apps "$want" 2>/dev/null; then
+      if molt_gsettings set org.gnome.shell favorite-apps "$want" 2>/dev/null; then
         molt_info "Dock favourites set from ${fav_file#"$HOME/"}"
       else
         molt_warn "desktop: could not set dock favourites (gsettings refused '${want}')"
@@ -325,7 +320,7 @@ desktop_verify() {
   _desktop_unreachable molt_warn "VERIFY INCOMPLETE: " || unchecked=1
 
   local gs_file drift line
-  if _desktop_gsettings_available && gs_file="$(_desktop_gsettings_file)"; then
+  if molt_gsettings_find && gs_file="$(_desktop_gsettings_file)"; then
     if drift="$(_desktop_gsettings_drift "$gs_file")"; then
       if [[ -n "$drift" ]]; then
         while IFS= read -r line; do
