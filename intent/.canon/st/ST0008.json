@@ -110,7 +110,8 @@
       "text": "matthewsinclair/homebrew-molt exists and carries the formula for the current release; the release steps name the formula publish",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "tap matthewsinclair/homebrew-molt cca72154 carries molt 1.0.0 (tag v1.0.0, rev 38422394); release steps in intent/wip.md name tools/formula publish (7582bd5)"
       }
     },
     {
@@ -118,7 +119,8 @@
       "text": "rhadamanth's everyday molt runs from opt or brew, and molt upgrade there no longer refuses over the shared checkout's board views",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "rhadamanth: molt use brew, molt is /opt/homebrew/bin/molt, molt 1.0.0 (brew, 38422394d8d7); molt upgrade --dry-run asks brew outdated (current), no board-view refusal (2026-10-24 15:15Z)"
       }
     },
     {

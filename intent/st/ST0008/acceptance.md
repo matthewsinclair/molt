@@ -39,11 +39,11 @@ title: Molt from brew: dev, opt and brew trees
 
 ### Group AC007
 
-- AC007 (non-test) matthewsinclair/homebrew-molt exists and carries the formula for the current release; the release steps name the formula publish -- satisfied: no
+- AC007 (non-test) matthewsinclair/homebrew-molt exists and carries the formula for the current release; the release steps name the formula publish -- evidence: tap matthewsinclair/homebrew-molt cca72154 carries molt 1.0.0 (tag v1.0.0, rev 38422394); release steps in intent/wip.md name tools/formula publish (7582bd5) -- satisfied: yes
 
 ### Group AC008
 
-- AC008 (non-test) rhadamanth's everyday molt runs from opt or brew, and molt upgrade there no longer refuses over the shared checkout's board views -- satisfied: no
+- AC008 (non-test) rhadamanth's everyday molt runs from opt or brew, and molt upgrade there no longer refuses over the shared checkout's board views -- evidence: rhadamanth: molt use brew, molt is /opt/homebrew/bin/molt, molt 1.0.0 (brew, 38422394d8d7); molt upgrade --dry-run asks brew outdated (current), no board-view refusal (2026-10-24 15:15Z) -- satisfied: yes
 
 ### Group AC009
 

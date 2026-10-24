@@ -1,0 +1,14 @@
+{
+  "id": "01M5Q7P8WDA6VRYGC9PT94X0SC",
+  "ts": "2026-10-24T15:15:26.222Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0008/AC007"
+  },
+  "payload": {
+    "evidence": "tap matthewsinclair/homebrew-molt cca72154 carries molt 1.0.0 (tag v1.0.0, rev 38422394); release steps in intent/wip.md name tools/formula publish (7582bd5)"
+  }
+}

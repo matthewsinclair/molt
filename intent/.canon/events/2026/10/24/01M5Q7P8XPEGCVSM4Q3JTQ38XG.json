@@ -1,0 +1,14 @@
+{
+  "id": "01M5Q7P8XPEGCVSM4Q3JTQ38XG",
+  "ts": "2026-10-24T15:15:26.262Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0008/AC008"
+  },
+  "payload": {
+    "evidence": "rhadamanth: molt use brew, molt is /opt/homebrew/bin/molt, molt 1.0.0 (brew, 38422394d8d7); molt upgrade --dry-run asks brew outdated (current), no board-view refusal (2026-10-24 15:15Z)"
+  }
+}
