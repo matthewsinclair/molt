@@ -575,9 +575,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 5,
-      "text": "ST0008, Molt from brew (dev, opt and brew trees): cc built WP01-04 (5bf482a, 3add4f8, unpushed, both bashes green in a slot) and is re-testing D4/D6 changes (formula links nothing into bin; doctor fails a molt that shadows ~/bin/molt). Next: vc reviews 5bf482a and 3add4f8 and pushes with 27d1f98 (CI zsh) and 4f2fa51 (design); cc runs the scratch-tap end to end (hv: go, 24 Oct); vc creates matthewsinclair/homebrew-molt (hv: approved); WP05 sleeves.",
+      "text": "ST0008, Molt from brew (dev, opt and brew trees): cc built WP01-04 (5bf482a, 3add4f8, unpushed). The vc review found 4 must-fix items (D5 restart keys on commit not keg, drift hardcodes the runtime dirs, --force over a non-Molt manifest, local-bin replaces non-tree links) and 7 smaller ones, all sent to cc, who fixes them together with the D4/D6 shadow and no-bin-link work. Design D4 corrected in a0c1b2e. Next: cc commits; vc pushes and checks CI; cc runs the scratch-tap end to end (hv: go); vc creates matthewsinclair/homebrew-molt (hv: approved); WP05 sleeves.",
       "state": "live",
-      "recorded_at": "2026-10-24T06:31:23.257Z"
+      "recorded_at": "2026-10-24T06:31:23.257Z",
+      "edited_at": "2026-10-24T06:40:32.698Z"
     },
     {
       "node": "vc",
