@@ -3,10 +3,10 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-23 21:46Z
+heartbeat_at: 2026-10-24 05:56Z
 status: active
-focus: "booted and holding; waiting for hv or vc"
-claims: []
+focus: "ST0008 WP01-04 (Molt from brew): plan sent to vc; WP01 next, lib/install.sh"
+claims: [ST0008/01, ST0008/02, ST0008/03, ST0008/04]
 ---
 
 # Control Claude (cc)

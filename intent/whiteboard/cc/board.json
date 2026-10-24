@@ -5,10 +5,15 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-23T21:46:10.824Z",
+    "heartbeat_at": "2026-10-24T05:56:50.604Z",
     "status": "active",
-    "focus": "booted and holding; waiting for hv or vc",
-    "claims": [],
+    "focus": "ST0008 WP01-04 (Molt from brew): plan sent to vc; WP01 next, lib/install.sh",
+    "claims": [
+      "ST0008/01",
+      "ST0008/02",
+      "ST0008/03",
+      "ST0008/04"
+    ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
@@ -508,6 +513,11 @@
       "id": "01M5MZV9QDYQ400DTFWJ4WNK2A",
       "sender": "vc",
       "handled_at": "2026-10-23T18:28:57.219Z"
+    },
+    {
+      "id": "01M5P7M4R6TPPP4P8R1J6M8SGC",
+      "sender": "vc",
+      "handled_at": "2026-10-24T05:56:58.740Z"
     }
   ]
 }
