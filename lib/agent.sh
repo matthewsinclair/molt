@@ -225,10 +225,7 @@ molt_agent_role_fault() {
 # on this machine only, which the role's template, one file for every host,
 # cannot hold. Fails when there is no user repo.
 molt_agent_overlay() {
-  local user_repo host
-  user_repo="$(molt_find_user_repo)" || return 1
-  host="$(molt_hostname)" || return 1
-  echo "${user_repo}/instances/${host}/agents/$1.md"
+  molt_instance_file "agents/$1.md"
 }
 
 # The role-independent preamble every agent's AGENTS.md opens with, whether or

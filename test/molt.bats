@@ -674,7 +674,7 @@ _no_user_repo() {
 
 @test "a lookup whose caller gives its own reason, where no repo can be a sleeve's normal state, says only that reason" {
     _no_user_repo
-    run molt_instance_vars_file
+    run molt_instance_file vars.sh
     assert_failure
     [ "$output" = "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name" ]
     run molt_agent_role_dir sysadm

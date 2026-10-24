@@ -52,14 +52,8 @@ _desktop_unreachable() {
 # The path of instances/<host>/desktop/$1 in the user repo, failing when it has
 # none.
 _desktop_instance_file() {
-  local user_repo hostname
-  user_repo="$(molt_find_user_repo 2>/dev/null || echo "")" || return 1
-  [[ -n "$user_repo" ]] || return 1
-  # molt_hostname, as every reader of instances/ asks. This copy fell back to
-  # "unknown" where the others fall back to the long hostname, so a host whose
-  # hostname -s failed looked in instances/unknown/ (issue 0020).
-  hostname="$(molt_hostname)" || return 1
-  local f="$user_repo/instances/$hostname/desktop/$1"
+  local f
+  f="$(molt_instance_file "desktop/$1")" || return 1
   [[ -f "$f" ]] || return 1
   echo "$f"
 }

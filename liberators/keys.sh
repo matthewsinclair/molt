@@ -79,17 +79,14 @@ keys_install() {
   fi
 
   # Install config from instance directory if available
-  local user_repo
-  user_repo="$(molt_find_user_repo)" || return 1
-  local hostname
-  if ! hostname="$(molt_hostname)"; then
-    molt_error "keys: this host gives no hostname, so its instances/ directory cannot be found"
+  local instance_keyd
+  if ! instance_keyd="$(molt_instance_file keyd/default.conf)"; then
+    molt_error "keys: $instance_keyd"
     return 1
   fi
-  local instance_keyd="$user_repo/instances/$hostname/keyd/default.conf"
 
   if [[ -f "$instance_keyd" ]]; then
-    molt_info "Installing keyd config from instance/$hostname..."
+    molt_info "Installing keyd config from $(molt_tilde "$instance_keyd")..."
     local why
     if ! why="$(molt_sudo_install "$instance_keyd" "$KEYD_CONFIG")"; then
       molt_error "keys: the keyd config was not installed: $why"
@@ -100,7 +97,7 @@ keys_install() {
       return 1
     fi
   else
-    molt_warn "No keyd config found for instance $hostname"
+    molt_warn "No keyd config found for this instance"
     molt_warn "Expected: $instance_keyd"
   fi
 

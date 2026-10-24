@@ -331,18 +331,19 @@ molt_link() {
 
 # --- Instance Vars ---
 
-# The path of this sleeve's instances/<host>/vars.sh in the user repo, whether
-# or not it exists. Fails, printing why instead, when there is no repo, and
-# when this host has no name.
-molt_instance_vars_file() {
+# The path of $1 under this sleeve's instances/<host>/ in the user repo,
+# whether or not it exists. Fails, printing why instead, when there is no repo,
+# and when this host has no name. Every reader of instances/ asks this, so none
+# spells the path, or finds the host, its own way (issue 0044).
+molt_instance_file() {
   local user_repo host
   # The reason below is the whole answer: a sleeve with no repo reads its
   # variables as undeclared, so the lookup's own error is not the user's.
   if ! user_repo="$(molt_find_user_repo 2>/dev/null)" || ! host="$(molt_hostname)"; then
-    echo "this sleeve's vars.sh cannot be found: there is no user config repo, or this host has no name"
+    echo "this sleeve's $1 cannot be found: there is no user config repo, or this host has no name"
     return 1
   fi
-  echo "${user_repo}/instances/${host}/vars.sh"
+  echo "${user_repo}/instances/${host}/$1"
 }
 
 # Why the vars.sh at $1 cannot be sourced, or nothing when it can be, or is not
@@ -410,7 +411,7 @@ molt_instance_vars_fault() {
 # user repo.
 molt_instance_var() {
   local vars_file fault out
-  if ! vars_file="$(molt_instance_vars_file)"; then
+  if ! vars_file="$(molt_instance_file vars.sh)"; then
     echo "$vars_file"
     return 3
   fi
@@ -481,7 +482,7 @@ molt_render_text() {
     echo "envsubst not found; install gettext (macOS: brew install gettext && brew link --force gettext; linux: apt install gettext), then re-run"
     return 1
   fi
-  if ! vars_file="$(molt_instance_vars_file)"; then
+  if ! vars_file="$(molt_instance_file vars.sh)"; then
     echo "$vars_file"
     return 1
   fi
@@ -525,7 +526,7 @@ molt_render_tmp() {
   fi
 
   local vars_file why
-  if vars_file="$(molt_instance_vars_file)" && [[ ! -e "$vars_file" ]]; then
+  if vars_file="$(molt_instance_file vars.sh)" && [[ ! -e "$vars_file" ]]; then
     molt_warn "No vars.sh for instance $(molt_hostname) — rendering template with env only"
   fi
 
@@ -731,7 +732,7 @@ molt_config_digest() {
   [[ -f "$template" ]] || return 1
 
   local vars_file
-  vars_file="$(molt_instance_vars_file)" || return 1
+  vars_file="$(molt_instance_file vars.sh)" || return 1
 
   # Any remaining arguments are extra inputs that also determine the rendered
   # result -- ssh's instance config.d fragments, for one. A fragment ADDED or
@@ -938,13 +939,10 @@ molt_find_manifest() {
   # Instance-specific overrides repo-level. A host with no name has no
   # instance, and takes the repo-level manifest, as it did before
   # molt_hostname could say so.
-  local host instance_manifest
-  if host="$(molt_hostname)"; then
-    instance_manifest="$user_repo/instances/$host/molt.toml"
-    if [[ -f "$instance_manifest" ]]; then
-      echo "$instance_manifest"
-      return 0
-    fi
+  local instance_manifest
+  if instance_manifest="$(molt_instance_file molt.toml)" && [[ -f "$instance_manifest" ]]; then
+    echo "$instance_manifest"
+    return 0
   fi
 
   # Repo-level default

@@ -27,10 +27,9 @@ _ssh_find_key() {
 # lands -- which is what happened on gyges. Editing one has the same shape and
 # is the six-month drift seen on rhadamanth.
 _ssh_fragments() {
-  local user_repo="$1" hostname config_d
-  [[ -n "$user_repo" ]] || return 0
-  hostname="$(molt_hostname)" || return 1
-  config_d="$user_repo/instances/$hostname/ssh/config.d"
+  local config_d
+  [[ -n "$1" ]] || return 0
+  config_d="$(molt_instance_file ssh/config.d)" || return 1
   [[ -d "$config_d" ]] || return 0
   local f
   # An if, not an &&: the loop's status is its last command's, and an

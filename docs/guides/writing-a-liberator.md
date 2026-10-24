@@ -139,6 +139,7 @@ myapp_verify() {
 | `molt_config_stale`                        | True when a rendered file no longer matches its template + instance vars. Renderers **must** use this in `_check`                                               |
 | `molt_find_user_repo`                      | Return path to the user's config repo                                                                                                                           |
 | `molt_liberator_field name key`            | This sleeve's value of `key` on the `[[liberator]]` entry `name` in molt.toml. Fails when there is none                                                         |
+| `molt_instance_file path`                  | This sleeve's path to `path` under `instances/<host>/` in the user repo, whether or not it exists. Fails, printing why, when there is no repo or no host name   |
 | `molt_brew_faults formula cmd`             | One line per fault between the sleeve and "Homebrew's `cmd` is what PATH runs", an untrusted formula included. Fails when nothing past the fault can be checked |
 | `molt_brew_install formula`                | `brew install` by full formula name, and `brew trust --formula` for an installed formula Homebrew does not trust                                                |
 | `molt_path_runs_fault cmd path label`      | Names what PATH runs for `cmd` when it is not `path`                                                                                                            |

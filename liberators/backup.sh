@@ -67,7 +67,7 @@ MOLT_SD_SCHEDULER_LOG="${MOLT_SD_SCHEDULER_LOG:-/Library/Logs/SuperDuper 4/sched
 # backup_check, whose stderr molt discards, died without a word.
 _backup_vars() {
   local vars v value missing=()
-  if ! vars="$(molt_instance_vars_file)"; then
+  if ! vars="$(molt_instance_file vars.sh)"; then
     molt_error "backup: the user config repo cannot be found"
     return 1
   fi
