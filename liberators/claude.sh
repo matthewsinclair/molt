@@ -413,6 +413,11 @@ _claude_home_paths_jq() {
     "$_CLAUDE_HOME_PATHS $2" "$3"
 }
 
+# True when this jq matches regexes, which a build without Oniguruma does not.
+_claude_jq_regex() {
+  jq -n '"a" | test("a")' &>/dev/null
+}
+
 # Each value in the settings file $1 that names a path into ~/.claude, one
 # "key<TAB>was<TAB>is" line each, where is names it in the config dir $2
 # instead; nothing when there is none, or no file. Fails, printing why instead,
@@ -422,6 +427,12 @@ _claude_home_paths() {
   [[ -e "$settings" ]] || return 0
   if ! command -v jq &>/dev/null; then
     echo "cannot be checked: jq is not installed"
+    return 1
+  fi
+  # The definition matches with test(), which a jq built without Oniguruma
+  # fails, and that failure read as a malformed file (issue 0045).
+  if ! _claude_jq_regex; then
+    echo "cannot be checked: jq has no regex support"
     return 1
   fi
   if ! listed="$(_claude_home_paths_jq "$dir" home_paths_listed "$settings" 2>/dev/null)"; then

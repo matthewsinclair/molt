@@ -212,6 +212,26 @@ JSON
     [ "$(cat "$HOME/.claude/settings.json")" = '{"permissions": ' ]
 }
 
+# A jq built without Oniguruma fails test(), which read as a malformed file
+# (issue 0045).
+@test "a jq with no regex support is named as that, not as a settings.json that is not a JSON object" {
+    setup_claude
+    printf '{"model": "opus"}' > "$HOME/.claude/settings.json"
+    run _claude_home_paths "$HOME/.claude/settings.json" "$HOME/.claude"
+    assert_success
+    _claude_jq_regex() { return 1; }
+    run _claude_home_paths "$HOME/.claude/settings.json" "$HOME/.claude"
+    assert_failure
+    assert_output_contains "cannot be checked: jq has no regex support"
+    refute_output_contains "not a JSON object"
+    printf '["opus"]' > "$HOME/.claude/settings.json"
+    unset -f _claude_jq_regex
+    load_liberator claude
+    run _claude_home_paths "$HOME/.claude/settings.json" "$HOME/.claude"
+    assert_failure
+    assert_output_contains "is not a JSON object"
+}
+
 # Writing would replace the link with a copy, and edits to the linked file would
 # silently stop reaching this sleeve.
 @test "claude_install refuses to write a settings.json that is a symlink" {
