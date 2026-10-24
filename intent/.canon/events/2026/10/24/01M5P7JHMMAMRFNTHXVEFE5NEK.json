@@ -1,0 +1,15 @@
+{
+  "id": "01M5P7JHMMAMRFNTHXVEFE5NEK",
+  "ts": "2026-10-24T05:54:09.684Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0008/01"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "molt install and tree identity (D1-D3)"
+  }
+}
