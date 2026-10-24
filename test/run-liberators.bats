@@ -30,7 +30,7 @@ os = ["macos"]
 
 @test "resleeve, upgrade, maintain and molt git refuse a manifest that enables nothing here, and run no liberator" {
     _run_env "$MACOS_ONLY"
-    run molt_resleeve
+    run molt_resleeve false true
     assert_failure
     assert_output_contains "Cannot resleeve: $REPO/molt.toml enables no liberator for linux"
     refute_output_contains "Sleeve ready"
