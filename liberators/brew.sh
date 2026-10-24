@@ -55,17 +55,20 @@ brew_maintain() {
     return 1
   fi
 
+  # Each step that fails is named and fails the hook; the rest still run, so
+  # one failed step does not leave the others undone (issue 0052).
+  local failed=""
   molt_info "Updating Homebrew formulae..."
-  brew update
+  brew update || failed+="${failed:+, }brew update"
 
   molt_info "Upgrading Homebrew packages..."
-  brew upgrade
+  brew upgrade || failed+="${failed:+, }brew upgrade"
 
   molt_info "Upgrading Homebrew casks..."
-  brew upgrade --cask
+  brew upgrade --cask || failed+="${failed:+, }brew upgrade --cask"
 
   molt_info "Cleaning up old versions..."
-  brew cleanup -s
+  brew cleanup -s || failed+="${failed:+, }brew cleanup -s"
 
   molt_info "Running brew doctor..."
   brew doctor || molt_warn "brew doctor reported warnings (review above)"
@@ -79,5 +82,9 @@ brew_maintain() {
     npm update --location=global || molt_warn "npm global update had warnings"
   fi
 
+  if [[ -n "$failed" ]]; then
+    molt_error "Homebrew maintenance failed: $failed (above)"
+    return 1
+  fi
   molt_info "Homebrew maintenance complete."
 }

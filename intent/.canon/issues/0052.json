@@ -3,9 +3,10 @@
   "number": 52,
   "slug": "brew-maintain-ignores-a-failed-brew-update-upgra",
   "title": "brew_maintain ignores a failed brew update, upgrade or cleanup",
-  "status": "open",
+  "status": "closed",
   "severity": "medium",
   "created": "2026-10-24",
+  "closed": "2026-10-24",
   "reporter": "Matthew Sinclair",
   "body": "brew_maintain (liberators/brew.sh) runs `brew update`, `brew upgrade`, `brew upgrade --cask` and `brew cleanup -s` without checking any of them, and ends with molt_info. A failed upgrade returns 0, so `molt maintain` reports brew maintained over the failure.\n\nFix: each of update, upgrade, upgrade --cask and cleanup that fails fails the hook, naming the step. brew doctor and brew missing stay advisory. Test with a fake brew that fails each step in turn.\n\nFound by ac's 24 Oct doc review (code notes); vc routed it to dc.\n"
 }
