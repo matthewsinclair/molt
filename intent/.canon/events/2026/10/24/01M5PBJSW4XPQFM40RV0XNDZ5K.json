@@ -1,0 +1,15 @@
+{
+  "id": "01M5PBJSW4XPQFM40RV0XNDZ5K",
+  "ts": "2026-10-24T07:04:12.420Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**ST0008 WP05, sleeve env for tool prefixes:** publish UTILZ_INSTALL_PREFIX (and any other declared tool prefix) to shells through Molt's one env writer (~/.config/molt/env.sh, plus the plist and environment.d the claude liberator already writes for CLAUDE_CONFIG_DIR), declared once in vars.sh as \"$MOLT_OPT_DIR/utilz\" on rhadamanth. Must be live before Utilz 2.14.3 is cut (utilz-vc's ask, 24 Oct). The same writer is the natural answer to hv's launchd PATH question (todo 25)."
+  }
+}

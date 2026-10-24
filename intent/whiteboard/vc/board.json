@@ -621,6 +621,14 @@
       "text": "**For hv when back:** (1) should Molt set launchd's PATH so GUI-spawned processes (Claude Code desktop, Chrome native host, hooks, MCP) see ~/.local/bin first, like login shells under the (B) ruling? Without it they resolve brew's copy while hv is on dev (intent-vc's finding). (2) contract v0.3 has use brew REMOVE the link rather than point it at the keg; the effect is the same, vc accepted it. (3) kovacs keyfile delete and any PATH reorder after issue 0047 lands.",
       "state": "live",
       "recorded_at": "2026-10-24T06:57:34.003Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 26,
+      "text": "**ST0008 WP05, sleeve env for tool prefixes:** publish UTILZ_INSTALL_PREFIX (and any other declared tool prefix) to shells through Molt's one env writer (~/.config/molt/env.sh, plus the plist and environment.d the claude liberator already writes for CLAUDE_CONFIG_DIR), declared once in vars.sh as \"$MOLT_OPT_DIR/utilz\" on rhadamanth. Must be live before Utilz 2.14.3 is cut (utilz-vc's ask, 24 Oct). The same writer is the natural answer to hv's launchd PATH question (todo 25).",
+      "state": "live",
+      "recorded_at": "2026-10-24T07:04:12.420Z"
     }
   ],
   "sent": [
