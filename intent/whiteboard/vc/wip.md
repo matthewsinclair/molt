@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-23 21:46Z
+heartbeat_at: 2026-10-24 05:31Z
 status: active
-focus: "24 Oct: booted and holding; waiting for hv"
+focus: "24 Oct: Molt from brew (lead, cc builds once vc's spec lands); dc on issues 0043-0046"
 claims: [ST0006]
 ---
 

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "06e18903-885b-49b1-849a-a441be7fdbe1",
-    "heartbeat_at": "2026-10-23T21:46:33.767Z",
+    "heartbeat_at": "2026-10-24T05:31:43.491Z",
     "status": "active",
-    "focus": "24 Oct: booted and holding; waiting for hv",
+    "focus": "24 Oct: Molt from brew (lead, cc builds once vc's spec lands); dc on issues 0043-0046",
     "claims": [
       "ST0006"
     ],
@@ -807,6 +807,13 @@
       "body": "hv's go (23 Oct): build issues 0041 and 0042 together, specified live by SendMessage. 0041: zsh_check renders the iTerm2 ssh wrapper to a temp file with the same generator and fails, naming the file, when it differs from disk or is missing. 0042: the generator takes the house domains from Molt-matts config/network/local-domains (one per line, # comments) and writes <host>|<host>.<domain>... for each; lan, local and hockenbury.internal go in that file. Test under both bashes, commit by pathspec, close both, tell vc; vc pushes.",
       "fyi": false,
       "recorded_at": "2026-10-23T18:19:53.453Z"
+    },
+    {
+      "id": "01M5P69EZ02VB1H5QE5H6JGWTB",
+      "recipient": "dc",
+      "body": "hv, 24 Oct: dc takes issues 0043-0046 (the small carried defects; each issue's body is the spec) in parallel with cc's lead item, Molt from brew. Work on main in this checkout, commit by pathspec, your own paths only; one issue per commit, closing each with intent issues close in the same commit. Before any bats run, ask intent-vc for a heavy-run slot (START/END with a census). Run the suite under both bashes before you call one done, then send me the commit ids and I validate and push. 0044 touches lib/molt.sh, which cc may also touch for the brew work: tell me before you start 0044, and I will sequence it against cc.",
+      "fyi": false,
+      "recorded_at": "2026-10-24T05:31:43.456Z"
     }
   ],
   "handled": [

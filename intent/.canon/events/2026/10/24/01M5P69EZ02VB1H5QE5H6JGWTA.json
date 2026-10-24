@@ -1,0 +1,17 @@
+{
+  "id": "01M5P69EZ02VB1H5QE5H6JGWTA",
+  "ts": "2026-10-24T05:31:43.456Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "hv, 24 Oct: dc takes issues 0043-0046 (the small carried defects; each issue's body is the spec) in parallel with cc's lead item, Molt from brew. Work on main in this checkout, commit by pathspec, your own paths only; one issue per commit, closing each with intent issues close in the same commit. Before any bats run, ask intent-vc for a heavy-run slot (START/END with a census). Run the suite under both bashes before you call one done, then send me the commit ids and I validate and push. 0044 touches lib/molt.sh, which cc may also touch for the brew work: tell me before you start 0044, and I will sequence it against cc.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
