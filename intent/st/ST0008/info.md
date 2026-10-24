@@ -1,9 +1,9 @@
 ---
 st_id: ST0008
 title: Molt from brew: dev, opt and brew trees
-status: WIP
+status: Completed
 created: 2026-10-24
-completed:
+completed: 2026-10-24
 ---
 
 # ST0008: Molt from brew: dev, opt and brew trees
@@ -24,13 +24,13 @@ Why now: rhadamanth's `molt upgrade` refuses while the shared checkout carries u
 
 ## Work Packages
 
-| WP    | Title                                                | Size | Status      |
-| ----- | ---------------------------------------------------- | ---- | ----------- |
-| WP-01 | molt install and tree identity (D1-D3)               | S    | Done        |
-| WP-02 | molt use dev/opt/brew; local-bin stops choosing (D4) | S    | Done        |
-| WP-03 | molt upgrade by tree (D5)                            | S    | Done        |
-| WP-04 | Formula template, render and publish; the tap (D6)   | S    | Done        |
-| WP-05 | Sleeves onto their trees, and the docs (D7)          | S    | Not Started |
+| WP    | Title                                                | Size | Status |
+| ----- | ---------------------------------------------------- | ---- | ------ |
+| WP-01 | molt install and tree identity (D1-D3)               | S    | Done   |
+| WP-02 | molt use dev/opt/brew; local-bin stops choosing (D4) | S    | Done   |
+| WP-03 | molt upgrade by tree (D5)                            | S    | Done   |
+| WP-04 | Formula template, render and publish; the tap (D6)   | S    | Done   |
+| WP-05 | Sleeves onto their trees, and the docs (D7)          | S    | Done   |
 
 ## Acceptance
 

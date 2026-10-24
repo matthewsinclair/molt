@@ -8,12 +8,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 
 ## DOING
 
-- [-] ST0008: Molt from brew: dev, opt and brew trees
-  - [x] 01: molt install and tree identity (D1-D3)
-  - [x] 02: molt use dev|opt|brew; local-bin stops choosing (D4)
-  - [x] 03: molt upgrade by tree (D5)
-  - [x] 04: Formula template, render and publish; the tap (D6)
-  - [ ] 05: Sleeves onto their trees, and the docs (D7)
+_(none)_
 
 ## TODO
 
@@ -66,6 +61,12 @@ _(none)_
 - [x] ST0007: molt agent start: launch a sleeve agent by its role
   - [x] 01: molt agent start, roles and home; config takes a role
   - [x] 02: The wake word: the shared preamble says what an agent does on start, and the guide starts agents with molt agent start
+- [x] ST0008: Molt from brew: dev, opt and brew trees
+  - [x] 01: molt install and tree identity (D1-D3)
+  - [x] 02: molt use dev|opt|brew; local-bin stops choosing (D4)
+  - [x] 03: molt upgrade by tree (D5)
+  - [x] 04: Formula template, render and publish; the tap (D6)
+  - [x] 05: Sleeves onto their trees, and the docs (D7)
 
 ---
 

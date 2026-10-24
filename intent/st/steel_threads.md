@@ -4,7 +4,7 @@ An index of every steel thread in the project. A steel thread is a self-containe
 
 | ID     | Title                                                               | Status    | Created    | Completed  |
 | ------ | ------------------------------------------------------------------- | --------- | ---------- | ---------- |
-| ST0008 | Molt from brew: dev, opt and brew trees                             | WIP       | 2026-10-24 |            |
+| ST0008 | Molt from brew: dev, opt and brew trees                             | Completed | 2026-10-24 | 2026-10-24 |
 | ST0007 | molt agent start: launch a sleeve agent by its role                 | Completed | 2026-10-23 | 2026-10-23 |
 | ST0006 | Sleeve agents: a named, role-bound home for a machine's local agent | Completed | 2026-10-21 | 2026-10-23 |
 | ST0005 | Utilz liberator: a checkout or Homebrew, per sleeve                 | Completed | 2026-10-20 | 2026-10-22 |
