@@ -629,6 +629,14 @@
       "text": "**ST0008 WP05, sleeve env for tool prefixes:** publish UTILZ_INSTALL_PREFIX (and any other declared tool prefix) to shells through Molt's one env writer (~/.config/molt/env.sh, plus the plist and environment.d the claude liberator already writes for CLAUDE_CONFIG_DIR), declared once in vars.sh as \"$MOLT_OPT_DIR/utilz\" on rhadamanth. Must be live before Utilz 2.14.3 is cut (utilz-vc's ask, 24 Oct). The same writer is the natural answer to hv's launchd PATH question (todo 25).",
       "state": "live",
       "recorded_at": "2026-10-24T07:04:12.420Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 22,
+      "text": "**A suite run in the shared checkout tests every peer's uncommitted work too.** On 24 Oct cc's slot 267 suite ran in ~/Devel/prj/Molt while dc's half-built issue 0047 work (liberators, test_helper, a new bats file) sat uncommitted beside it, so the verdict covered a tree no commit holds. While a suite runs, peers keep work in progress out of the shared tree, and vc validates the committed head in a clean worktree before pushing.",
+      "state": "live",
+      "recorded_at": "2026-10-24T07:05:58.751Z"
     }
   ],
   "sent": [

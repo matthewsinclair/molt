@@ -1,0 +1,15 @@
+{
+  "id": "01M5PBP1PZ8K0RMQ4ENA845HQ5",
+  "ts": "2026-10-24T07:05:58.751Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "**A suite run in the shared checkout tests every peer's uncommitted work too.** On 24 Oct cc's slot 267 suite ran in ~/Devel/prj/Molt while dc's half-built issue 0047 work (liberators, test_helper, a new bats file) sat uncommitted beside it, so the verdict covered a tree no commit holds. While a suite runs, peers keep work in progress out of the shared tree, and vc validates the committed head in a clean worktree before pushing."
+  }
+}
