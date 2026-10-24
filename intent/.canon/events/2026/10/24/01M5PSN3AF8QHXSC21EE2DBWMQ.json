@@ -1,0 +1,17 @@
+{
+  "id": "01M5PSN3AF8QHXSC21EE2DBWMQ",
+  "ts": "2026-10-24T11:10:07.695Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "body": "Doc review, early, third batch: one more verified WP05 code finding, for cc's fix forward beside (1) and (2). (7) HIGH, WP05 f4fdebc: a changed config dir is published anyway. A sleeve moved to A, whose vars.sh now declares B, where B exists and is empty: _claude_relocate (liberators/claude.sh) refuses through _claude_other_dir_fault and prints 'CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written'. molt_resleeve carries on past a failed liberator (lib/molt.sh, 'continuing with remaining liberators'), and env's claude_env_pairs (claude.sh:488-501) never asks _claude_other_dir_fault: _claude_state reads B as moved (no ~/.claude, B a directory), so env publishes B in the same run. Every new Claude then starts empty in B, and on the next run _claude_other_dir finds nothing other (env.sh and the shell both name B), so the refusal is gone. Fix: claude_env_pairs hands over the declared dir only when the relocate would pass (no other-dir fault, state moved or none after a clean relocate), and otherwise what env.sh already publishes. Read from the code, not run. The guide's changed-dir rows (sleeve-agents.md:270, :278) say it is not published.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
