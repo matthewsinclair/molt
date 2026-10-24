@@ -2424,9 +2424,9 @@ _upgrade_opt_framework() {
   local dev installed head
   molt_info "Framework: the opt tree at $(molt_tilde "$MOLT_ROOT") is not pulled; upgrade it from the dev tree with molt install --force."
   dev="$(_molt_use_root dev)" || return 0
-  installed="$(molt_install_field "$MOLT_ROOT" source_commit)"
+  installed="$(molt_tree_source_commit "$MOLT_ROOT")" || return 0
   head="$(git -C "$dev" rev-parse HEAD 2>/dev/null)" || return 0
-  if [[ -n "$installed" && "$head" != "$installed" ]] \
+  if [[ "$head" != "$installed" ]] \
       && git -C "$dev" merge-base --is-ancestor "$installed" "$head" 2>/dev/null; then
     molt_info "  The dev tree at $(molt_tilde "$dev") is at ${head:0:7}, ahead of this install's ${installed:0:7}."
   fi
@@ -2438,14 +2438,24 @@ _upgrade_opt_framework() {
 # upgrade does, so the verdict counts it (issue 0015).
 _upgrade_brew_framework() {
   local dry_run="$1" out err status=0
-  molt_info "Asking brew whether $MOLT_BREW_FORMULA is outdated..."
+  # A dry run changes nothing, Homebrew's taps included, so it answers from
+  # what brew last fetched.
+  if $dry_run; then
+    molt_info "Asking brew, without updating it, whether $MOLT_BREW_FORMULA is outdated..."
+  else
+    molt_info "Asking brew whether $MOLT_BREW_FORMULA is outdated..."
+  fi
   # Its stderr is kept apart: brew's auto-update writes there, and would read
   # as an answer if it shared stdout with the names.
   if ! err="$(mktemp "${TMPDIR:-/tmp}/molt-brew-outdated.XXXXXX")"; then
     molt_error "Cannot ask brew whether $MOLT_BREW_FORMULA is outdated: mktemp failed."
     return 1
   fi
-  out="$(brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
+  if $dry_run; then
+    out="$(HOMEBREW_NO_AUTO_UPDATE=1 brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
+  else
+    out="$(brew outdated --quiet "$MOLT_BREW_FORMULA" 2>"$err")" || status=$?
+  fi
   if [[ "$status" -eq 0 && -z "$out" ]]; then
     rm -f "$err"
     molt_info "Framework: $MOLT_BREW_FORMULA is current."
@@ -2480,19 +2490,29 @@ _upgrade_framework_root() {
   fi
 }
 
-# The framework commit, or nothing and a failure when it cannot be read: HEAD
-# in dev, and the manifest's source commit in opt and brew. It prints only the
-# commit, since its callers capture it; they say what an unread commit means.
-_upgrade_framework_head() {
-  local root commit
+# What the framework is at, as the restart compares it before and after the
+# pull, or nothing and a failure when it cannot be read: the tree's commit in
+# dev and opt, and in brew the keg the formula's opt link resolves to. A
+# revision bump (0.3.0 to 0.3.0_1) installs a new keg of the same commit, and
+# brew cleanup can remove the running one, so in brew the commit cannot say.
+# It prints only the mark, since its callers capture it; they say what an
+# unread one means.
+_upgrade_framework_mark() {
+  local root
   root="$(_upgrade_framework_root)" || return 1
   case "$(molt_tree "$root")" in
-    dev) git -C "$root" rev-parse HEAD 2>/dev/null ;;
-    opt|brew)
-      commit="$(molt_install_field "$root" source_commit)"
-      [[ -n "$commit" ]] || return 1
-      echo "$commit" ;;
+    brew) _molt_realpath "$root" ;;
+    dev|opt) molt_tree_source_commit "$root" ;;
     *) return 1 ;;
+  esac
+}
+
+# The mark $1 as the restart names it: a keg by its version, the directory it
+# sits in, and a commit short.
+_upgrade_mark_label() {
+  case "$1" in
+    /*) basename "$(dirname "$1")" ;;
+    *) echo "${1:0:7}" ;;
   esac
 }
 
@@ -2504,19 +2524,19 @@ _upgrade_framework_head() {
 # of the upgrade runs in one, without pulling again, told which pulls failed
 # ($3) so that its verdict still counts them.
 _upgrade_restart_if_pulled() {
-  local head_before="$1" do_resleeve="$2" failed_pulls="${3:-}" head_after root
-  [[ -n "$head_before" ]] || return 0
-  head_after="$(_upgrade_framework_head)" || {
+  local mark_before="$1" do_resleeve="$2" failed_pulls="${3:-}" mark_after root
+  [[ -n "$mark_before" ]] || return 0
+  mark_after="$(_upgrade_framework_mark)" || {
     molt_warn "Cannot read the framework commit in $MOLT_ROOT after the pull; if it changed lib/, run molt upgrade again."
     return 0
   }
-  [[ "$head_after" != "$head_before" ]] || return 0
+  [[ "$mark_after" != "$mark_before" ]] || return 0
   root="$(_upgrade_framework_root)" || {
     molt_warn "Cannot find the upgraded framework to restart on: $root. Run molt upgrade again."
     return 0
   }
   echo ""
-  molt_info "Framework updated (${head_before:0:7} -> ${head_after:0:7}); restarting on the new code."
+  molt_info "Framework updated ($(_upgrade_mark_label "$mark_before") -> $(_upgrade_mark_label "$mark_after")); restarting on the new code."
   if [[ "$do_resleeve" == "yes" ]]; then
     MOLT_UPGRADE_FAILED_PULLS="$failed_pulls" exec "$root/bin/molt" upgrade --no-pull --resleeve
   fi
@@ -2612,15 +2632,15 @@ cmd_upgrade() {
   # 0015). An upgrade restarted after a pull is told by the one that pulled.
   local failed_pulls=""
   if $pull; then
-    local head_before pulled=0
-    head_before="$(_upgrade_framework_head)" || {
-      head_before=""
+    local mark_before pulled=0
+    mark_before="$(_upgrade_framework_mark)" || {
+      mark_before=""
       molt_warn "Cannot read the framework commit in $MOLT_ROOT; a pull that changes lib/ needs a second molt upgrade."
     }
     _upgrade_pull_repos "$dry_run" || pulled=$?
     [[ $pulled -ne 1 ]] || return 1
     failed_pulls="${_UPGRADE_FAILED_PULLS:-}"
-    $dry_run || _upgrade_restart_if_pulled "$head_before" "$do_resleeve" "$failed_pulls"
+    $dry_run || _upgrade_restart_if_pulled "$mark_before" "$do_resleeve" "$failed_pulls"
   else
     failed_pulls="${MOLT_UPGRADE_FAILED_PULLS:-}"
   fi

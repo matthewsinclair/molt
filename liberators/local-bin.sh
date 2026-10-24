@@ -5,9 +5,10 @@
 # $MOLT_LOCAL_BIN/molt is the switch between the dev, opt and brew trees
 # (ST0008), and molt use is what flips it. This liberator does not choose: a
 # link to any tree's bin/molt is healthy, and install makes one, to the running
-# tree, only when there is none to keep. Before, install linked it to whichever
-# tree was running, so a resleeve from the checkout flipped an opt sleeve back
-# to dev.
+# tree, only when it is missing or broken. Anything else there, a file or a
+# link to no tree, is somebody's, and install refuses it by name rather than
+# replace it. Before, install linked it to whichever tree was running, so a
+# resleeve from the checkout flipped an opt sleeve back to dev.
 
 local-bin_check() {
   local ok=0
@@ -39,13 +40,13 @@ local-bin_install() {
   fi
 
   # A link to any tree is the sleeve's choice, made with molt use, and kept.
-  local fault
+  local link="$MOLT_LOCAL_BIN/molt" fault
   if ! fault="$(molt_served_tree)"; then
-    # What is replaced is named; molt_link backs up a file that is not a link.
-    if [[ -e "$MOLT_LOCAL_BIN/molt" || -L "$MOLT_LOCAL_BIN/molt" ]]; then
-      molt_info "local-bin: relinking to the running tree, since $fault"
+    if [[ -e "$link" ]]; then
+      molt_error "local-bin: $fault; it is left as it is, so move it aside, then run molt use dev, opt or brew"
+      return 1
     fi
-    molt_link "$MOLT_ROOT/bin/molt" "$MOLT_LOCAL_BIN/molt" || return 1
+    molt_link "$MOLT_ROOT/bin/molt" "$link" || return 1
   fi
 
   molt_info "Liberator complete: local-bin"

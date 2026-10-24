@@ -35,11 +35,13 @@ molt_runtime_set() {
 # shows them (staged, unstaged and untracked-but-not-ignored alike), and fails
 # when there are none. An untracked file counts: git does not name it, so it
 # would not publish, yet it runs in dev. Fails with status 2, printing why,
-# when git cannot say.
+# when git cannot say. git's stderr is kept out of the changes, so a warning
+# git prints is never read as a changed file.
 molt_runtime_set_dirty() {
   local root="$1" specs=() out
   while IFS= read -r spec; do specs+=("$spec"); done < <(_molt_runtime_pathspecs)
-  if ! out="$(git -C "$root" status --porcelain --untracked-files=all -- "${specs[@]}" 2>&1)"; then
+  if ! out="$(git -C "$root" status --porcelain --untracked-files=all -- "${specs[@]}" 2>/dev/null)"; then
+    out="$(git -C "$root" status --porcelain --untracked-files=all -- "${specs[@]}" 2>&1 >/dev/null)"
     echo "git status failed in $root: $out"
     return 2
   fi
@@ -80,20 +82,28 @@ molt_tree() {
   fi
 }
 
-# The commit the tree $1 runs, short: the manifest's source commit in opt and
-# brew, and HEAD in dev, with +dirty when its runtime set has changes. Prints
-# "unknown commit" when neither can be read.
+# The commit the tree $1 was made from, in full: HEAD in dev, and the
+# manifest's source commit in opt and brew. Fails, printing nothing, when it
+# cannot be read. Every reader of a tree's commit asks this.
+molt_tree_source_commit() {
+  local root="$1" commit=""
+  case "$(molt_tree "$root")" in
+    dev) commit="$(git -C "$root" rev-parse HEAD 2>/dev/null)" || commit="" ;;
+    opt|brew) commit="$(molt_install_field "$root" source_commit)" ;;
+  esac
+  [[ -n "$commit" ]] || return 1
+  echo "$commit"
+}
+
+# The commit the tree $1 runs, short, with +dirty when it is a dev tree whose
+# runtime set has changes. Prints "unknown commit" when it cannot be read.
 molt_tree_commit() {
   local root="$1" commit dirty_status=1
-  case "$(molt_tree "$root")" in
-    opt|brew) commit="$(molt_install_field "$root" source_commit)" ;;
-    dev)
-      commit="$(git -C "$root" rev-parse HEAD 2>/dev/null)" || commit=""
-      dirty_status=0
-      molt_runtime_set_dirty "$root" >/dev/null || dirty_status=$?
-      ;;
-    *) commit="" ;;
-  esac
+  commit="$(molt_tree_source_commit "$root")" || commit=""
+  if [[ -n "$commit" && "$(molt_tree "$root")" == dev ]]; then
+    dirty_status=0
+    molt_runtime_set_dirty "$root" >/dev/null || dirty_status=$?
+  fi
   if [[ -z "$commit" ]]; then
     echo "unknown commit"
     return 0
@@ -115,9 +125,9 @@ molt_version_line() {
 }
 
 # Names each file in the opt or brew tree $1 that differs from its manifest:
-# changed, missing, or under bin/, lib/, liberators/ or templates/ without
-# being listed. Prints nothing when the tree is what the manifest says. Fails,
-# printing why, when the manifest cannot be read.
+# changed, missing, or under a directory the runtime set's pathspecs start in
+# without being listed. Prints nothing when the tree is what the manifest says.
+# Fails, printing why, when the manifest cannot be read.
 molt_install_drift() {
   local root="$1" manifest="$1/$MOLT_INSTALL_MANIFEST" sum path actual
   if [[ ! -r "$manifest" ]]; then
@@ -137,14 +147,17 @@ molt_install_drift() {
       echo "$path has changed"
     fi
   done < "$manifest"
-  local dir f
-  for dir in bin lib liberators templates; do
-    [[ -d "$root/$dir" ]] || continue
+  # Each pathspec's first directory, once: bin/molt scans all of bin/.
+  local spec dir f scanned=$'\n'
+  while IFS= read -r spec; do
+    dir="${spec%%/*}"
+    [[ "$scanned" != *$'\n'"$dir"$'\n'* && -d "$root/$dir" ]] || continue
+    scanned+="$dir"$'\n'
     while IFS= read -r f; do
       f="${f#"$root"/}"
       [[ $'\n'"$listed" == *$'\n'"$f"$'\n'* ]] || echo "$f is not in the manifest"
     done < <(find "$root/$dir" -type f -o -type l)
-  done
+  done < <(_molt_runtime_pathspecs)
 }
 
 # Writes the manifest for the files of the runtime set $3 (one per line), as
@@ -197,8 +210,9 @@ _molt_dir_entries() {
 
 # Names why the prefix $1 cannot take a publish managed by $2 (molt or brew)
 # with force $3, and prints nothing when it can. A missing or empty directory is
-# fresh; one with Molt's manifest is replaced only with --force; anything else
-# is refused, --force or not.
+# fresh; one whose manifest says Molt manages it is replaced only with --force,
+# and one Homebrew manages only by Homebrew; anything else is refused, --force
+# or not, since a replace removes what was there.
 _molt_install_prefix_fault() {
   local prefix="$1" managed_by="$2" force="$3" held
   if [[ -e "$prefix" && ! -d "$prefix" ]]; then
@@ -208,11 +222,16 @@ _molt_install_prefix_fault() {
   [[ -d "$prefix" ]] || return 0
   if [[ -f "$prefix/$MOLT_INSTALL_MANIFEST" ]]; then
     held="$(molt_install_field "$prefix" managed_by)"
-    if [[ "$held" == brew && "$managed_by" != brew ]]; then
-      echo "$(molt_tilde "$prefix") is Homebrew's install of molt; upgrade it with brew upgrade $MOLT_BREW_FORMULA"
-    elif ! $force; then
-      echo "$(molt_tilde "$prefix") already holds an install of molt; pass --force to replace it"
-    fi
+    case "$held" in
+      molt|brew)
+        if [[ "$held" == brew && "$managed_by" != brew ]]; then
+          echo "$(molt_tilde "$prefix") is Homebrew's install of molt; upgrade it with brew upgrade $MOLT_BREW_FORMULA"
+        elif ! $force; then
+          echo "$(molt_tilde "$prefix") already holds an install of molt; pass --force to replace it"
+        fi ;;
+      "") echo "$(molt_tilde "$prefix/$MOLT_INSTALL_MANIFEST") names no managed_by, so $(molt_tilde "$prefix") is no install Molt can replace, and it is left as it is" ;;
+      *) echo "$(molt_tilde "$prefix/$MOLT_INSTALL_MANIFEST") says managed_by: $held, which is neither molt nor brew, so $(molt_tilde "$prefix") is left as it is" ;;
+    esac
     return 0
   fi
   held="$(_molt_dir_entries "$prefix" | tr "\n" " ")"
@@ -264,9 +283,20 @@ cmd_install() {
     molt_error "molt install: the prefix must be an absolute path, not $prefix"
     return 1
   fi
+  if [[ "$prefix" =~ ^/+$ ]]; then
+    molt_error "molt install: the prefix cannot be /"
+    return 1
+  fi
   prefix="${prefix%/}"
-  case "$prefix/" in
-    "$MOLT_ROOT"/*)
+  # Compared where each lands on disk, so a prefix reached through a symlink
+  # into the dev tree is caught as well as one spelled inside it.
+  local landed_prefix landed_root
+  if ! landed_prefix="$(molt_disk_path -P "$prefix")" || ! landed_root="$(molt_disk_path -P "$MOLT_ROOT")"; then
+    molt_error "molt install: where $(molt_tilde "$prefix") lands on disk could not be read"
+    return 1
+  fi
+  case "${landed_prefix%/}/" in
+    "${landed_root%/}"/*)
       molt_error "molt install: the prefix $(molt_tilde "$prefix") is inside the dev tree it would publish"
       return 1 ;;
   esac
@@ -306,7 +336,9 @@ cmd_install() {
     molt_error "molt install: no staging directory could be made in $(molt_tilde "$parent")"
     return 1
   fi
-  if ! _molt_install_copy "$MOLT_ROOT" "$stage" "$files" \
+  # mktemp -d makes the stage 0700, and it becomes the prefix as it is.
+  if ! chmod 755 "$stage" \
+      || ! _molt_install_copy "$MOLT_ROOT" "$stage" "$files" \
       || ! _molt_install_write_manifest "$stage" "$MOLT_ROOT" "$files" "$managed_by"; then
     rm -rf "$stage"
     molt_error "molt install: the runtime set could not be copied to $(molt_tilde "$stage"); $(molt_tilde "$prefix") is unchanged"
@@ -327,9 +359,12 @@ cmd_install() {
     fi
   fi
   if ! mv "$stage" "$prefix"; then
-    [[ -z "$old" ]] || mv "$old" "$prefix"
     rm -rf "$stage"
-    molt_error "molt install: the new install could not be moved to $(molt_tilde "$prefix")"
+    if [[ -n "$old" ]] && ! mv "$old" "$prefix"; then
+      molt_error "molt install: the new install could not be moved to $(molt_tilde "$prefix"), nor the old one back; it is at $(molt_tilde "$old")"
+      return 1
+    fi
+    molt_error "molt install: the new install could not be moved to $(molt_tilde "$prefix")${old:+; the old one is back in place}"
     return 1
   fi
   [[ -z "$old" ]] || rm -rf "$old"

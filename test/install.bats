@@ -148,6 +148,8 @@ setup() {
     cmp -s "$DEV/lib/molt.sh" "$OPT/lib/molt.sh"
     run bash -c "ls -A '$(dirname "$OPT")'"
     [[ "$output" == "molt" ]]
+    run ls -ld "$OPT"
+    [[ "$output" == drwxr-xr-x* ]]
 }
 
 @test "a prefix holding files Molt did not write is refused, --force or not" {
@@ -156,6 +158,30 @@ setup() {
     assert_failure
     assert_output_contains "notes.txt"
     [[ "$(cat "$OPT/notes.txt")" == "mine" ]]
+}
+
+@test "--force is refused over a manifest that names no Molt or Homebrew install" {
+    mkdir -p "$OPT" && echo "mine" > "$OPT/notes.txt"
+    echo "source_commit: abc" > "$OPT/.molt-install"
+    run "$DEV/bin/molt" install --prefix "$OPT" --force
+    assert_failure
+    assert_output_contains "names no managed_by"
+    echo "managed_by: someone" >> "$OPT/.molt-install"
+    run "$DEV/bin/molt" install --prefix "$OPT" --force
+    assert_failure
+    assert_output_contains "says managed_by: someone"
+    [[ "$(cat "$OPT/notes.txt")" == "mine" ]]
+}
+
+@test "the prefix / and a prefix that lands inside the dev tree are refused" {
+    run "$DEV/bin/molt" install --prefix /
+    assert_failure
+    assert_output_contains "cannot be /"
+    ln -s "$DEV/lib" "$BATS_TEST_TMPDIR/into-dev"
+    run "$DEV/bin/molt" install --prefix "$BATS_TEST_TMPDIR/into-dev/opt"
+    assert_failure
+    assert_output_contains "inside the dev tree"
+    [[ ! -e "$DEV/lib/opt" ]]
 }
 
 @test "an empty prefix directory takes a publish" {
@@ -208,11 +234,12 @@ setup() {
     [[ -z "$output" ]]
     echo "# drift" >> "$OPT/lib/molt.sh"
     rm "$OPT/liberators/git.sh"
-    touch "$OPT/liberators/extra.sh"
+    touch "$OPT/liberators/extra.sh" "$OPT/bin/extra"
     run molt_install_drift "$OPT"
     assert_output_contains "lib/molt.sh has changed"
     assert_output_contains "liberators/git.sh is missing"
     assert_output_contains "liberators/extra.sh is not in the manifest"
+    assert_output_contains "bin/extra is not in the manifest"
 }
 
 # --- molt use ---
@@ -319,7 +346,7 @@ setup() {
     [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
 }
 
-@test "local-bin fails a link that leads to no tree's bin/molt" {
+@test "local-bin fails a link that leads to no tree's bin/molt, and leaves it" {
     mkdir -p "$HOME/bin" "$BATS_TEST_TMPDIR/elsewhere/bin"
     echo '#!/bin/sh' > "$BATS_TEST_TMPDIR/elsewhere/bin/molt"
     ln -s "$BATS_TEST_TMPDIR/elsewhere/bin/molt" "$HOME/bin/molt"
@@ -329,22 +356,21 @@ setup() {
     assert_output_contains "no dev, opt or brew tree's bin/molt"
     MOLT_ROOT="$DEV"
     run local-bin_install
-    assert_success
-    assert_output_contains "relinking to the running tree, since"
-    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
-    [[ -f "$BATS_TEST_TMPDIR/elsewhere/bin/molt" ]]
+    assert_failure
+    assert_output_contains "no dev, opt or brew tree's bin/molt; it is left as it is"
+    [[ "$(readlink "$HOME/bin/molt")" == "$BATS_TEST_TMPDIR/elsewhere/bin/molt" ]]
 }
 
-@test "local-bin backs up a file at ~/bin/molt that is not a link, and names it" {
+@test "local-bin refuses a file at ~/bin/molt that is not a link, and leaves it" {
     mkdir -p "$HOME/bin" && echo "mine" > "$HOME/bin/molt"
     load_liberator local-bin
     MOLT_ROOT="$DEV"
     run local-bin_install
-    assert_success
-    assert_output_contains "relinking to the running tree, since"
-    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
-    run bash -c "cat \"$HOME\"/bin/molt.molt-backup.*"
-    [[ "$output" == mine ]]
+    assert_failure
+    assert_output_contains "is not a symlink; it is left as it is"
+    [[ ! -L "$HOME/bin/molt" && "$(cat "$HOME/bin/molt")" == mine ]]
+    run bash -c "ls \"$HOME\"/bin"
+    [[ "$output" == molt ]]
 }
 
 # --- molt version, doctor and test by tree ---
@@ -408,9 +434,21 @@ dev_tree_with_one_liberator() {
     git -C "$DEV" -c user.name=t -c user.email=t@t commit -qm "$1"
 }
 
+# The dev tree's HEAD published as the keg of version $1, laid out as Homebrew
+# lays a formula out: the keg under Cellar/molt/$1, and opt/molt a link to it,
+# so KEG, the formula's libexec, resolves into it.
+install_brew_keg() {
+    local brew="$BATS_TEST_TMPDIR/brew"
+    "$DEV/bin/molt" install --prefix "$brew/Cellar/molt/$1/libexec" --managed-by brew >/dev/null
+    mkdir -p "$brew/opt"
+    ln -sfn "../Cellar/molt/$1" "$brew/opt/molt"
+}
+
 # A brew first on PATH: --prefix answers $BATS_TEST_TMPDIR/brew; outdated
-# answers as FAKE_BREW_OUTDATED says (current, outdated or broken); upgrade
-# publishes the dev tree's HEAD into the keg, or fails with
+# answers as FAKE_BREW_OUTDATED says (current, outdated or broken), and logs
+# "no auto-update" when HOMEBREW_NO_AUTO_UPDATE is set; upgrade publishes the
+# dev tree's HEAD as the keg of version FAKE_BREW_NEW_KEG, points opt/molt at
+# it and removes the old keg, as brew cleanup can, or fails with
 # FAKE_BREW_UPGRADE_STATUS. Each call is logged to brew.log.
 install_brew_with_upgrade() {
     install_fake_brew
@@ -420,6 +458,7 @@ echo "brew \$*" >> "$BATS_TEST_TMPDIR/brew.log"
 case "\$1" in
   --prefix) echo "$BATS_TEST_TMPDIR/brew" ;;
   outdated)
+    [ -z "\${HOMEBREW_NO_AUTO_UPDATE:-}" ] || echo "no auto-update" >> "$BATS_TEST_TMPDIR/brew.log"
     echo "==> Auto-updated Homebrew!" >&2
     case "\${FAKE_BREW_OUTDATED:-current}" in
       current) exit 0 ;;
@@ -428,7 +467,10 @@ case "\$1" in
     esac ;;
   upgrade)
     [ "\${FAKE_BREW_UPGRADE_STATUS:-0}" -eq 0 ] || exit "\$FAKE_BREW_UPGRADE_STATUS"
-    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew --force >/dev/null ;;
+    old="\$(readlink "$BATS_TEST_TMPDIR/brew/opt/molt")"
+    "$DEV/bin/molt" install --prefix "$BATS_TEST_TMPDIR/brew/Cellar/molt/\$FAKE_BREW_NEW_KEG/libexec" --managed-by brew >/dev/null || exit 1
+    ln -sfn "../Cellar/molt/\$FAKE_BREW_NEW_KEG" "$BATS_TEST_TMPDIR/brew/opt/molt"
+    rm -rf "$BATS_TEST_TMPDIR/brew/opt/\$old" ;;
 esac
 FAKE
     chmod +x "$BATS_TEST_TMPDIR/bin/brew"
@@ -452,7 +494,7 @@ FAKE
 @test "upgrade in brew upgrades nothing when brew outdated says the formula is current" {
     upgrade_user_repo
     install_brew_with_upgrade
-    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    install_brew_keg 0.3.0
     run "$KEG/bin/molt" upgrade --self
     assert_success
     assert_output_contains "matthewsinclair/molt/molt is current"
@@ -464,21 +506,33 @@ FAKE
     upgrade_user_repo
     install_brew_with_upgrade
     dev_tree_with_one_liberator old
-    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    install_brew_keg 0.3.0
     dev_tree_with_one_liberator new
-    FAKE_BREW_OUTDATED=outdated run "$KEG/bin/molt" upgrade --no-resleeve
+    FAKE_BREW_OUTDATED=outdated FAKE_BREW_NEW_KEG=0.4.0 run "$KEG/bin/molt" upgrade --no-resleeve
     assert_success
     grep -qx "brew upgrade matthewsinclair/molt/molt" "$BATS_TEST_TMPDIR/brew.log"
-    assert_output_contains "restarting on the new code"
+    assert_output_contains "Framework updated (0.3.0 -> 0.4.0); restarting on the new code"
     assert_output_contains "zzz on new"
     refute_output_contains "zzz on old"
+}
+
+@test "a revision bump, a new keg of the same commit, restarts on the new keg" {
+    upgrade_user_repo
+    install_brew_with_upgrade
+    dev_tree_with_one_liberator old
+    install_brew_keg 0.3.0
+    FAKE_BREW_OUTDATED=outdated FAKE_BREW_NEW_KEG=0.3.0_1 run "$KEG/bin/molt" upgrade --no-resleeve
+    assert_success
+    [[ ! -e "$BATS_TEST_TMPDIR/brew/Cellar/molt/0.3.0" ]]
+    assert_output_contains "Framework updated (0.3.0 -> 0.3.0_1); restarting on the new code"
+    assert_output_contains "zzz on old"
 }
 
 @test "a brew upgrade that fails is counted in the verdict as a failed pull" {
     upgrade_user_repo
     install_brew_with_upgrade
     dev_tree_with_one_liberator old
-    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    install_brew_keg 0.3.0
     FAKE_BREW_OUTDATED=outdated FAKE_BREW_UPGRADE_STATUS=1 run "$KEG/bin/molt" upgrade --no-resleeve
     assert_failure
     assert_output_contains "brew upgrade matthewsinclair/molt/molt failed"
@@ -490,7 +544,7 @@ FAKE
     upgrade_user_repo
     install_brew_with_upgrade
     dev_tree_with_one_liberator old
-    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    install_brew_keg 0.3.0
     FAKE_BREW_OUTDATED=broken run "$KEG/bin/molt" upgrade --no-resleeve
     assert_failure
     assert_output_contains "brew outdated could not say whether matthewsinclair/molt/molt is current (exit 1)"
@@ -502,10 +556,12 @@ FAKE
 @test "a dry run in brew says it would upgrade an outdated formula, and does not" {
     upgrade_user_repo
     install_brew_with_upgrade
-    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    install_brew_keg 0.3.0
     FAKE_BREW_OUTDATED=outdated run "$KEG/bin/molt" upgrade --self --dry-run
     assert_success
+    assert_output_contains "without updating it"
     assert_output_contains "WOULD BREW UPGRADE matthewsinclair/molt/molt"
+    grep -qx "no auto-update" "$BATS_TEST_TMPDIR/brew.log"
     run grep -c "brew upgrade" "$BATS_TEST_TMPDIR/brew.log"
     [[ "$output" == 0 ]]
 }

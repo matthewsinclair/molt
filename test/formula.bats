@@ -33,6 +33,10 @@ setup() {
     mkdir -p "$BATS_TEST_TMPDIR"
     export ORIGINAL_PWD="$(pwd)"
     cd "$BATS_TEST_TMPDIR"
+    # git reads none of the user's or the machine's config: a signing key, a
+    # hook path or a url rewrite there would change what publish does here.
+    export GIT_CONFIG_GLOBAL="$BATS_TEST_TMPDIR/gitconfig" GIT_CONFIG_NOSYSTEM=1
+    : > "$GIT_CONFIG_GLOBAL"
     export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@t
     make_formula_repos
 }
