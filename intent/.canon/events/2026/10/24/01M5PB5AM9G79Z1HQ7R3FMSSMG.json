@@ -1,0 +1,15 @@
+{
+  "id": "01M5PB5AM9G79Z1HQ7R3FMSSMG",
+  "ts": "2026-10-24T06:56:50.825Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0047"
+  },
+  "payload": {
+    "severity": "high",
+    "title": "Linux gsettings without a dconf backend: liberators write a keyfile GNOME never reads"
+  }
+}
