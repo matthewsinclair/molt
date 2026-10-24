@@ -1,5 +1,7 @@
 # Instance variables for __MOLT_HOSTNAME__
-# Sourced by molt_render when rendering .tmpl files.
+# Sourced by molt_render when rendering .tmpl files, and read by molt for
+# MOLT_INSTALL_PREFIX, MOLT_CLAUDE_CONFIG_DIR and MOLT_FONT_FAMILY. The env
+# liberator publishes each other <TOOL>_INSTALL_PREFIX exported here.
 # All variables must be exported for envsubst.
 
 export MOLT_HOSTNAME="__MOLT_HOSTNAME__"

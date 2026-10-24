@@ -6,6 +6,8 @@ type = "physical"
 model = "TODO: your machine model"
 
 [terminal]
+# The zsh liberator builds the iTerm2 ssh wrapper from these, so they take effect
+# only once zsh is enabled in molt.toml; this skeleton ships it disabled.
 # ssh_bg_color tints an iTerm2 tab while it is ssh-ed into this host, matched by
 # its bare name and under each domain in config/network/local-domains, if any.
 ssh_bg_color = "1a1a2e"  # dark navy
