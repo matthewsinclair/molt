@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- hv's ask (24 Oct): review Molt's as-written docs (README, CHANGELOG, docs/guides, docs/notes, docs/blog) against the as-built and planned code, ST0008 WP05's env writer included, and bring docs/blog/bl0001 up to date. ac edits bl0001 only; drift in another doc goes to its owner through vc. The details of the new work are asked of vc.
+- hv's ask (24 Oct): review Molt's as-written docs (README, CHANGELOG, docs/guides, docs/notes, docs/blog) against the as-built and planned code, ST0008 WP05's env writer included, and bring docs/blog/bl0001 up to date. bl0001 as-built at 155486f; its WP05 lines are hold 1. The review runs in four read-only slices; findings outside bl0001 go to vc, who routes them (vc, 24 Oct). No claim: ST0008 stays with vc. (edited)
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- bl0001's WP05 lines (env after claude in the setup bullet, the one env writer, the GUI PATH a desktop session's hooks resolve from) are drafted in ac's scratchpad (session 88cdd7cd, review/bl0001-wp05-draft.md). Released when cc's ST0008 WP05 commit is on main: git log -- lib/env.sh names a commit. Then check the draft against it as committed, apply, and commit by pathspec.
 
 ## Watch-outs
 

@@ -1,0 +1,15 @@
+{
+  "id": "01M5PRJ304VC9CKXV8D05FPFCS",
+  "ts": "2026-10-24T10:51:00.484Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "bl0001's WP05 lines (env after claude in the setup bullet, the one env writer, the GUI PATH a desktop session's hooks resolve from) are drafted in ac's scratchpad (session 88cdd7cd, review/bl0001-wp05-draft.md). Released when cc's ST0008 WP05 commit is on main: git log -- lib/env.sh names a commit. Then check the draft against it as committed, apply, and commit by pathspec."
+  }
+}
