@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "06e18903-885b-49b1-849a-a441be7fdbe1",
-    "heartbeat_at": "2026-10-24T05:31:43.491Z",
+    "heartbeat_at": "2026-10-24T06:31:23.330Z",
     "status": "active",
-    "focus": "24 Oct: Molt from brew (lead, cc builds once vc's spec lands); dc on issues 0043-0046",
+    "focus": "24 Oct: ST0008 Molt from brew; cc builds, vc validates and pushes; issues 0043-0046 done",
     "claims": [
       "ST0006",
       "ST0008"
@@ -570,6 +570,22 @@
       "archived_at": "2026-10-23T20:31:55.253Z",
       "recorded_at": "2026-10-23T18:23:06.550Z",
       "edited_at": "2026-10-23T20:04:22.857Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 5,
+      "text": "ST0008, Molt from brew (dev, opt and brew trees): cc built WP01-04 (5bf482a, 3add4f8, unpushed, both bashes green in a slot) and is re-testing D4/D6 changes (formula links nothing into bin; doctor fails a molt that shadows ~/bin/molt). Next: vc reviews 5bf482a and 3add4f8 and pushes with 27d1f98 (CI zsh) and 4f2fa51 (design); cc runs the scratch-tap end to end (hv: go, 24 Oct); vc creates matthewsinclair/homebrew-molt (hv: approved); WP05 sleeves.",
+      "state": "live",
+      "recorded_at": "2026-10-24T06:31:23.257Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 24,
+      "text": "On 24 Oct, with hv's ok, vc removed a stray ~/.local/bin/molt (a March symlink to the checkout, first on PATH). Minutes later the real ~/bin/molt was missing (not vc's doing); vc restored it, and both links were then present again, ~/.local/bin/molt recreated by something unknown. cc is checking its ST0008 tests for a HOME leak. Open: what recreates ~/.local/bin/molt (Utilz relinks ~/.local/bin; check whether anything there links molt), and whether MOLT_LOCAL_BIN should be ~/.local/bin, where Utilz and Intent link.",
+      "state": "live",
+      "recorded_at": "2026-10-24T06:31:23.293Z"
     }
   ],
   "sent": [

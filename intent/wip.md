@@ -1,5 +1,5 @@
 ---
-verblock: "23 Oct 2026:v0.47: Matthew Sinclair - end-of-day globalfold; nothing in flight"
+verblock: "24 Oct 2026:v0.48: Matthew Sinclair - ST0008 Molt from brew in flight"
 ---
 
 # Work In Progress
@@ -10,12 +10,11 @@ verblock: "23 Oct 2026:v0.47: Matthew Sinclair - end-of-day globalfold; nothing 
 
 ## DOING
 
-_(nothing in flight)_
+- **ST0008, Molt from brew: dev, opt and brew trees** (hv, 24 Oct). The spec is `intent/st/ST0008/design.md`. cc builds WP01-04; vc validates, pushes, creates the public tap `matthewsinclair/homebrew-molt` (hv approved) once cc's scratch-tap run passes (hv: go on rhadamanth); WP05 moves the sleeves: rhadamanth to opt then brew, kovacs brew only through kovacs-sysadm, gyges later.
 
 ## TODO
 
 - **rhadamanth's backup, when hv is home** (no copy over Tailscale; acceptable meanwhile, since gyges backs up the same Dropbox content): SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
-- **rhadamanth's `molt upgrade` refuses while the shared checkout carries live board views** (P4). Use `molt resleeve` on dev days; the condition ends when rhadamanth's Molt comes from brew. Molt from brew is coming (hv), with no thread yet; kovacs will be brew-only too.
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
 - **Every other sleeve's Molt clone, at its next resync** (kovacs, farcaster, pihole): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.
 - **How a sleeve moves its config repos** (for Flynn's jormungandr, parked by hv): pull Molt and Molt-matts; mv and resleeve as ONE command with `MOLT_PRJ_DIR` set and molt by absolute path, since `~/.zshenv` dangles after the mv; repoint `~/.config/gtools/config.yaml`, `intent discover ~/Devel/cfg --depth 1`, drop the old roots from `~/.config/intent/projects.json`; `molt doctor`'s manifest check names `~/Devel/cfg/Molt-matts`.

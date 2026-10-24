@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-24 05:31Z
+heartbeat_at: 2026-10-24 06:31Z
 status: active
-focus: "24 Oct: Molt from brew (lead, cc builds once vc's spec lands); dc on issues 0043-0046"
+focus: "24 Oct: ST0008 Molt from brew; cc builds, vc validates and pushes; issues 0043-0046 done"
 claims: [ST0006, ST0008]
 ---
 
@@ -13,12 +13,13 @@ claims: [ST0006, ST0008]
 
 ## DOING
 
-_(none)_
+- ST0008, Molt from brew (dev, opt and brew trees): cc built WP01-04 (5bf482a, 3add4f8, unpushed, both bashes green in a slot) and is re-testing D4/D6 changes (formula links nothing into bin; doctor fails a molt that shadows ~/bin/molt). Next: vc reviews 5bf482a and 3add4f8 and pushes with 27d1f98 (CI zsh) and 4f2fa51 (design); cc runs the scratch-tap end to end (hv: go, 24 Oct); vc creates matthewsinclair/homebrew-molt (hv: approved); WP05 sleeves.
 
 ## TODO
 
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **kovacs (through kovacs-sysadm), farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14, pushed 23 Oct) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done. gyges did this on 23 Oct (rhadamanth-sysadm). (edited)
+- On 24 Oct, with hv's ok, vc removed a stray ~/.local/bin/molt (a March symlink to the checkout, first on PATH). Minutes later the real ~/bin/molt was missing (not vc's doing); vc restored it, and both links were then present again, ~/.local/bin/molt recreated by something unknown. cc is checking its ST0008 tests for a HOME leak. Open: what recreates ~/.local/bin/molt (Utilz relinks ~/.local/bin; check whether anything there links molt), and whether MOLT_LOCAL_BIN should be ~/.local/bin, where Utilz and Intent link.
 
 ## Holds
 

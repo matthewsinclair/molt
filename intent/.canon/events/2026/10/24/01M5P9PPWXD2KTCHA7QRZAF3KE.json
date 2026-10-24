@@ -1,0 +1,15 @@
+{
+  "id": "01M5P9PPWXD2KTCHA7QRZAF3KE",
+  "ts": "2026-10-24T06:31:23.293Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "On 24 Oct, with hv's ok, vc removed a stray ~/.local/bin/molt (a March symlink to the checkout, first on PATH). Minutes later the real ~/bin/molt was missing (not vc's doing); vc restored it, and both links were then present again, ~/.local/bin/molt recreated by something unknown. cc is checking its ST0008 tests for a HOME leak. Open: what recreates ~/.local/bin/molt (Utilz relinks ~/.local/bin; check whether anything there links molt), and whether MOLT_LOCAL_BIN should be ~/.local/bin, where Utilz and Intent link."
+  }
+}
