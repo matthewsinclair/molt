@@ -2,10 +2,10 @@
 node: ac
 name: Authoring Claude
 role: authoring
-session_id: d1da0c2b-7939-45d0-b367-098542eec60e
-heartbeat_at: 2026-10-22 16:03Z
+session_id: 88cdd7cd-d7d9-4418-a8c4-f1e891584c7f
+heartbeat_at: 2026-10-24 10:41Z
 status: active
-focus: "22 Oct: idle, nothing queued; WP04 runbook current with WP06's floor (b3a39fb); rhadamanth section may take a date line once hv names one"
+focus: "24 Oct: hv's ask: review the as-written docs against the as-built and planned code, ST0008 WP05 included; bring bl0001 up to date"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- hv's ask (24 Oct): review Molt's as-written docs (README, CHANGELOG, docs/guides, docs/notes, docs/blog) against the as-built and planned code, ST0008 WP05's env writer included, and bring docs/blog/bl0001 up to date. ac edits bl0001 only; drift in another doc goes to its owner through vc. The details of the new work are asked of vc.
 
 ## TODO
 

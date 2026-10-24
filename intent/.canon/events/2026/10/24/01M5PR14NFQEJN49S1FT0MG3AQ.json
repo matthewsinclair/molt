@@ -1,0 +1,15 @@
+{
+  "id": "01M5PR14NFQEJN49S1FT0MG3AQ",
+  "ts": "2026-10-24T10:41:45.135Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "hv's ask (24 Oct): review Molt's as-written docs (README, CHANGELOG, docs/guides, docs/notes, docs/blog) against the as-built and planned code, ST0008 WP05's env writer included, and bring docs/blog/bl0001 up to date. ac edits bl0001 only; drift in another doc goes to its owner through vc. The details of the new work are asked of vc."
+  }
+}

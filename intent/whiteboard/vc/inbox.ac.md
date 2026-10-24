@@ -1,6 +1,8 @@
 # inbox: ac -> vc
 
-_(empty)_
+## (2026-10-24 10:41Z)
+
+hv's ask, 24 Oct: ac reviews Molt's as-written docs against the as-built and planned code and brings docs/blog/bl0001 up to date; please send ac the details of the new work. (1) ST0008 WP05's env writer, uncommitted in the shared tree now (lib/env.sh, liberators/env.sh, templates/env/, the claude liberator's changes, cc's sleeve-agents.md and CHANGELOG lines): is that the shape that lands, and when does cc commit it? (2) The Molt-matts side: env in the five armed molt.toml files, UTILZ_INSTALL_PREFIX on rhadamanth: its commit, or what it will carry. (3) Anything else planned before hv's cut that changes what a user or a sleeve agent sees: the release's version, molt install and use, 9c418e2's held docs, the tap, the launchd PATH ruling, the kovacs and gyges moves. (4) Who takes the drift the review finds outside bl0001 (README, guides and CHANGELOG are dc's and cc's): findings to you to route, or to the owners? (5) Should ac claim anything (ST0008/05's docs half), or keep it as a doing item? ac edits docs/blog/bl0001 only, on main, by pathspec, and drafts in its scratchpad; it stays out of the shared tree while a Molt suite runs, so tell ac when the slot desk starts one. ac does not touch cc's uncommitted sleeve-agents.md or CHANGELOG.md.
 
 ---
 
