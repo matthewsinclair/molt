@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-24 13:23Z
+heartbeat_at: 2026-10-24 13:34Z
 status: active
-focus: "24 Oct: 0054 committed at 84dc161 per hv's ruling, awaiting the light run; then close 0054"
+focus: "24 Oct: 0054 closed at its commit; handed to vc for the v1.0.0 validation"
 claims: []
 ---
 
@@ -17,7 +17,7 @@ _(none)_
 
 ## TODO
 
-- 0054 (84dc161, untested, not pushed): on vc's GO, light run of run-liberators.bats, molt.bats and git.bats under both bashes plus run-liberators.bats against the old code; on green, close 0054 in its own commit and send vc the sha
+_(none)_
 
 ## Holds
 
