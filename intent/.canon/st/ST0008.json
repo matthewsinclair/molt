@@ -14,7 +14,7 @@
       "seq": 1,
       "title": "molt install and tree identity (D1-D3)",
       "scope": "S",
-      "status": "not-started",
+      "status": "done",
       "objective": "",
       "body": "",
       "preamble": ""
@@ -23,7 +23,7 @@
       "seq": 2,
       "title": "molt use dev|opt|brew; local-bin stops choosing (D4)",
       "scope": "S",
-      "status": "not-started",
+      "status": "done",
       "objective": "",
       "body": "",
       "preamble": ""
@@ -32,7 +32,7 @@
       "seq": 3,
       "title": "molt upgrade by tree (D5)",
       "scope": "S",
-      "status": "not-started",
+      "status": "done",
       "objective": "",
       "body": "",
       "preamble": ""
@@ -41,7 +41,7 @@
       "seq": 4,
       "title": "Formula template, render and publish; the tap (D6)",
       "scope": "S",
-      "status": "not-started",
+      "status": "done",
       "objective": "",
       "body": "",
       "preamble": ""
@@ -136,6 +136,68 @@
       "state": {
         "is": "unsatisfied"
       }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT001",
+      "kind": "test",
+      "file": "test/install.bats",
+      "covers": [
+        "AC001"
+      ],
+      "status": "green",
+      "note": "install.bats: publishes the runtime set and a checking manifest; refuses no prefix, a dirty runtime set, opt and brew trees, and a prefix Molt did not write. All tests passing both bashes at ec5fe42 (slot 302), CI green."
+    },
+    {
+      "id": "AT002",
+      "kind": "test",
+      "file": "test/install.bats",
+      "covers": [
+        "AC002"
+      ],
+      "status": "green",
+      "note": "install.bats: molt_tree names dev, opt, brew and unknown; the version line names tree, commit and root. Passing both bashes at ec5fe42, CI green."
+    },
+    {
+      "id": "AT003",
+      "kind": "test",
+      "file": "test/install.bats",
+      "covers": [
+        "AC003"
+      ],
+      "status": "green",
+      "note": "install.bats: molt test refused in opt naming the dev tree; doctor checks the manifest checksums. Passing both bashes at ec5fe42, CI green."
+    },
+    {
+      "id": "AT004",
+      "kind": "test",
+      "file": "test/install.bats",
+      "covers": [
+        "AC004"
+      ],
+      "status": "green",
+      "note": "install.bats: molt use reports and repoints the link, refuses a missing tree; local-bin leaves a healthy link. Passing both bashes at ec5fe42, CI green."
+    },
+    {
+      "id": "AT005",
+      "kind": "test",
+      "file": "test/install.bats",
+      "covers": [
+        "AC005"
+      ],
+      "status": "green",
+      "note": "install.bats: upgrade by tree in opt (no framework pull, names install --force) and brew (current, outdated with restart, a failed brew update counted). The dev-tree pull is molt.bats' existing upgrade tests, unchanged by ST0008. Passing both bashes at ec5fe42, CI green."
+    },
+    {
+      "id": "AT006",
+      "kind": "test",
+      "file": "test/formula.bats",
+      "covers": [
+        "AC006"
+      ],
+      "status": "green",
+      "note": "formula.bats: render writes the tag and its commit from git. End to end: molt-cc's scratch-tap brew install at slot 287 (24 Oct 10:29-10:31Z) printed molt 0.3.0 (brew, 4e67722c8017) and brew test passed; teardown verified by vc."
     }
   ],
   "attachments": [

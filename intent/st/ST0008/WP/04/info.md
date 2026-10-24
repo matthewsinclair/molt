@@ -2,7 +2,7 @@
 wp_id: WP-04
 title: Formula template, render and publish; the tap (D6)
 scope: S
-status: Not Started
+status: Done
 ---
 
 # WP-04: Formula template, render and publish; the tap (D6)

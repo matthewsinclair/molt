@@ -9,10 +9,10 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 ## DOING
 
 - [-] ST0008: Molt from brew: dev, opt and brew trees
-  - [ ] 01: molt install and tree identity (D1-D3)
-  - [ ] 02: molt use dev|opt|brew; local-bin stops choosing (D4)
-  - [ ] 03: molt upgrade by tree (D5)
-  - [ ] 04: Formula template, render and publish; the tap (D6)
+  - [x] 01: molt install and tree identity (D1-D3)
+  - [x] 02: molt use dev|opt|brew; local-bin stops choosing (D4)
+  - [x] 03: molt upgrade by tree (D5)
+  - [x] 04: Formula template, render and publish; the tap (D6)
   - [ ] 05: Sleeves onto their trees, and the docs (D7)
 
 ## TODO

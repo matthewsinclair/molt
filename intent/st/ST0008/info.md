@@ -26,10 +26,10 @@ Why now: rhadamanth's `molt upgrade` refuses while the shared checkout carries u
 
 | WP    | Title                                                | Size | Status      |
 | ----- | ---------------------------------------------------- | ---- | ----------- |
-| WP-01 | molt install and tree identity (D1-D3)               | S    | Not Started |
-| WP-02 | molt use dev/opt/brew; local-bin stops choosing (D4) | S    | Not Started |
-| WP-03 | molt upgrade by tree (D5)                            | S    | Not Started |
-| WP-04 | Formula template, render and publish; the tap (D6)   | S    | Not Started |
+| WP-01 | molt install and tree identity (D1-D3)               | S    | Done        |
+| WP-02 | molt use dev/opt/brew; local-bin stops choosing (D4) | S    | Done        |
+| WP-03 | molt upgrade by tree (D5)                            | S    | Done        |
+| WP-04 | Formula template, render and publish; the tap (D6)   | S    | Done        |
 | WP-05 | Sleeves onto their trees, and the docs (D7)          | S    | Not Started |
 
 ## Acceptance

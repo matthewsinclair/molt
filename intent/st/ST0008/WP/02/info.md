@@ -2,7 +2,7 @@
 wp_id: WP-02
 title: molt use dev|opt|brew; local-bin stops choosing (D4)
 scope: S
-status: Not Started
+status: Done
 ---
 
 # WP-02: molt use dev|opt|brew; local-bin stops choosing (D4)
