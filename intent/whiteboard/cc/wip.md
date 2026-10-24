@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 18:25Z
+heartbeat_at: 2026-10-24 18:26Z
 status: active
-focus: "Holding for todo 12. rhadamanth resleeved at v1.0.0 on 24 Oct; its GUI env waits for hv's next login. kovacs and gyges still have to resleeve"
+focus: "Holding for todo 12. rhadamanth resleeved at v1.0.0 and kovacs is on Molt 1.0.1 from brew with its clone removed (vc relaying kovacs-sysadm, 24 Oct); rhadamanth's GUI env waits for hv's next login. Only gyges still has to resleeve"
 claims: []
 ---
 
