@@ -318,7 +318,7 @@ JSON
     assert_output_contains "${long:0:100}"
     refute_output_contains "${long:0:101}"
     refute_output_contains "77 -zsh"
-    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not handed over"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
     [ "$(jq -r .userID "$HOME/.claude.json")" = "u" ]
     # Not the config dir, not its copies, not env.sh: nothing under ~/.config.
@@ -405,7 +405,7 @@ JSON
     assert_failure
     assert_output_contains "could not copy ~/.claude into ~/.config/claude.molt-backup."
     assert_output_contains "so nothing was moved; the copies are in"
-    assert_output_contains "CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not handed over: the env liberator keeps the CLAUDE_CONFIG_DIR env.sh already publishes, if any"
     refute_output_contains "nothing else was changed"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
     [ ! -e "$CONFIG" ]
@@ -420,7 +420,7 @@ JSON
     assert_failure
     assert_output_contains "~/.config/claude already holds plugins, settings.json"
     assert_output_contains "molt never merges the two"
-    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not handed over"
     [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
     [ "$(jq -r .userID "$HOME/.claude.json")" = "u" ]
     [ "$(ls -A "$CONFIG" | tr '\n' ' ')" = "plugins settings.json " ]
@@ -447,7 +447,7 @@ JSON
     run claude_install
     assert_failure
     assert_output_contains "~/.claude is a symlink to $BATS_TEST_TMPDIR/elsewhere"
-    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not handed over"
     [ -L "$HOME/.claude" ]
     [ ! -e "$HOME/.config" ]
     [ ! -e "$(gui_file)" ]
@@ -462,7 +462,7 @@ JSON
     run claude_install
     assert_failure
     assert_output_contains "~/.claude/.claude.json and ~/.claude.json both exist, and molt will not choose between them"
-    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not handed over"
     [ "$(jq -r .userID "$HOME/.claude/.claude.json")" = "inner" ]
     [ "$(jq -r .userID "$HOME/.claude.json")" = "u" ]
     [ ! -e "$HOME/.config" ]
@@ -482,7 +482,7 @@ JSON
     run claude_install
     assert_failure
     assert_output_contains "~/.local/claude holds nothing, and CLAUDE_CONFIG_DIR named ~/.config/claude, which exists"
-    assert_output_contains "CLAUDE_CONFIG_DIR was not published"
+    assert_output_contains "CLAUDE_CONFIG_DIR was not handed over"
     run env_install
     assert_success
     grep -qxF "export CLAUDE_CONFIG_DIR=\"$old\"" "$HOME/.config/molt/env.sh"

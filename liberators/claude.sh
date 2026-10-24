@@ -636,13 +636,17 @@ _claude_relocate() {
   return $repointed
 }
 
-# Says that CLAUDE_CONFIG_DIR was not published and, unless $1 is "changed",
+# Says that CLAUDE_CONFIG_DIR was not handed over and, unless $1 is "changed",
 # that nothing else was changed either: a refusal before anything was written.
+# The env liberator still runs after this one, and claude_env_pairs then gives
+# it what env.sh already publishes, so env.sh and the GUI file may be rewritten
+# in the same run, with the old value or none (ac, 24 Oct, C11).
 _claude_unpublished() {
+  local kept="the env liberator keeps the CLAUDE_CONFIG_DIR env.sh already publishes, if any"
   if [[ "${1:-}" == "changed" ]]; then
-    molt_error "claude: CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written"
+    molt_error "claude: CLAUDE_CONFIG_DIR was not handed over: $kept"
   else
-    molt_error "claude: CLAUDE_CONFIG_DIR was not published: no env.sh or GUI file was written, and nothing else was changed"
+    molt_error "claude: CLAUDE_CONFIG_DIR was not handed over: $kept, and nothing else was changed"
   fi
 }
 
