@@ -1,0 +1,17 @@
+{
+  "id": "01M5PSK8FEADFRFP74C3V7ESVJ",
+  "ts": "2026-10-24T11:09:07.438Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "body": "Doc review, early, second batch: three more verified code findings for you to route; the first is a WP05 regression to catch before your push. (4) WP05 f4fdebc, certain: lib/agent.sh:699 calls molt_claude_env_file, which f4fdebc removed from lib/molt.sh, and nothing at HEAD defines it (git grep finds it only in board text). So molt agent start's refusal for a shell opened before the move prints 'command not found' and loses its path. Fix: call molt_env_file. (5) HIGH, bin/bootstrap.sh: the usage at :7 advertises curl ... | bash, and under a pipe the read -rp at :177 reads the script's next line, :178, as its answer, so :179's molt resleeve runs without being asked and :180's else is a syntax error. Demonstrated on /bin/bash 3.2 with the same if/read/else shape: the guarded line ran, then 'syntax error near unexpected token else', exit 2. The ssh -T at :76 has no -n and may swallow script text too (reasoned, not run). Fix: read the answer from /dev/tty, and ssh -n. (6) HIGH, templates/molt.toml.example:50-53 enables a terminal liberator that does not exist (no liberators/terminal.sh), so resleeve skips it as unknown and doctor's enabled-liberators check fails on every Linux run. Fix: alacritty and gnome-terminal for linux, iterm2 and terminal-app for macos.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
