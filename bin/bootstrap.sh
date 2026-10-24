@@ -15,6 +15,9 @@ MOLT_PRJ_DIR="${MOLT_PRJ_DIR:-}"
 MOLT_CFG_DIR="${MOLT_CFG_DIR:-${MOLT_PRJ_DIR:+$(dirname "$MOLT_PRJ_DIR")/cfg}}"
 # GitHub owner/repo of the framework. Override to bootstrap from your own fork.
 MOLT_REPO="${MOLT_REPO:-matthewsinclair/molt}"
+# Where the closing question is asked. Not stdin: piped from curl, stdin is the
+# rest of this script (issue 0050).
+MOLT_BOOTSTRAP_TTY="${MOLT_BOOTSTRAP_TTY:-/dev/tty}"
 
 # Detect current user for user repo name. The GitHub repo is lowercase; the
 # local directory is Capitalised, which is what molt doctor checks for.
@@ -73,7 +76,8 @@ git_url() {
   local repo="$1" ssh_out
   # Capture, then match: a pipeline into `grep -q` can lose under pipefail
   # (issue 0008). ssh -T exits 1 even when it authenticates, hence || true.
-  ssh_out="$(timeout 5 ssh -T git@github.com 2>&1 || true)"
+  # -n: piped from curl, stdin is the rest of this script (issue 0050).
+  ssh_out="$(timeout 5 ssh -n -T git@github.com 2>&1 || true)"
   if [[ "$ssh_out" == *"successfully authenticated"* ]]; then
     echo "git@github.com:${repo}.git"
   else
@@ -175,7 +179,12 @@ echo ""
 MOLT_PRJ_DIR="$MOLT_PRJ_DIR" MOLT_CFG_DIR="$MOLT_CFG_DIR" "$molt_dir/bin/molt" resleeve --dry-run
 
 echo ""
-read -rp "Run molt resleeve now? [y/N] " answer
+if ! { exec 3<"$MOLT_BOOTSTRAP_TTY"; } 2>/dev/null; then
+  error "no terminal ($MOLT_BOOTSTRAP_TTY) to ask whether to run molt resleeve; run 'molt resleeve' when ready"
+  exit 1
+fi
+read -rp "Run molt resleeve now? [y/N] " answer <&3
+exec 3<&-
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   MOLT_PRJ_DIR="$MOLT_PRJ_DIR" MOLT_CFG_DIR="$MOLT_CFG_DIR" "$molt_dir/bin/molt" resleeve
 else

@@ -3,9 +3,10 @@
   "number": 50,
   "slug": "bootstrap-piped-from-curl-reads-its-own-source-a",
   "title": "bootstrap piped from curl reads its own source as the resleeve answer",
-  "status": "open",
+  "status": "closed",
   "severity": "high",
   "created": "2026-10-24",
+  "closed": "2026-10-24",
   "reporter": "Matthew Sinclair",
   "body": "bootstrap.sh's usage advertises `curl -fsSL <raw-url>/bin/bootstrap.sh | MOLT_PRJ_DIR=~/Devel/prj bash`. Piped that way, the script's stdin is the script itself. The final `read -rp \"Run molt resleeve now? [y/N] \"` then reads the script's next line as its answer, so resleeve's prompt is answered by source text rather than the person, and bash is left mid-script, so the `else` becomes a syntax error. ac reproduced it on /bin/bash 3.2. The `ssh -T git@github.com` probe in git_url has the same exposure: ssh reads stdin and can swallow the rest of the piped script.\n\nFix: read the answer from /dev/tty, and refuse by name when there is no terminal to ask. Give the ssh probe `-n` so it never reads stdin.\n\nFound by ac's docs review; vc checked it.\n"
 }
