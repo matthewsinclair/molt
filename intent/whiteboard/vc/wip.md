@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-24 06:36Z
+heartbeat_at: 2026-10-24 09:56Z
 status: active
 focus: "24 Oct: ST0008 Molt from brew; cc builds, vc validates and pushes; issues 0043-0046 done"
 claims: [ST0006, ST0008]
@@ -61,6 +61,7 @@ _(none)_
 - (2026-10-22) **Three agent kinds, three naming schemes** (hv): sleeve agents <hostname>-<role>, project agents <project>-<suffix>, estate agents <estate>-estate (sinclair-estate, geodica-estate; the -vc suffix on those two was wrong). Estate agents are Gtools-provisioned and start in the estate's content root (GTOOLS_ESTATE), where the deployed .claude/ is; a launch above that root loads no contract, because Claude Code reads CLAUDE.md and settings from the launch dir and its parents, never a child.
 - **One dev/opt/brew contract for Molt, Utilz, Intent and devbin** (hv, 24 Oct, by TUI). (B) your links first: formulas link into brew's bin as normal; Molt-matts puts ~/.local/bin ahead of brew's bin on every sleeve; <tool> use dev|opt|brew switches the per-user link set in ~/.local/bin (no link means brew); doctor names a shadow, comparing resolved dirs. The one contract text lives in Devbin's docs, drafted by devbin-vc, agreed SAME by molt-vc, utilz-vc and intent-vc before anything lands. Molt consequences: revert D6's links-nothing, MOLT_LOCAL_BIN moves to ~/.local/bin (kovacs has them as different dirs), and the zshrc PATH order change.
 - **molt-vc runs resource contention on rhadamanth** (hv, 24 Oct 06:50Z, going AFK). Heavy runs (bats suites, cargo builds, brew installs or upgrades) from every project book with molt-vc, start on its GO, and report START and END; intent-vc handed the slot desk over. Each project's VC still directs its own Claudes.
+- **hv's rulings, 24 Oct 09:57Z by TUI.** (1) The 27 Aug block on a devbin `use` builtin is lifted for the contract; devbin 0213 lands on green. (2) launchd PATH follows login shells: Molt's one env writer publishes ~/.local/bin-first PATH to launchd, built with WP05's UTILZ_INSTALL_PREFIX (todo 26), which closes todo 25 item 1. (3) Issue 0048: vscode links through MOLT_LOCAL_BIN; dc builds it.
 
 ---
 
