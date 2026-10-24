@@ -3,9 +3,10 @@
   "number": 53,
   "slug": "liberator-has-repo-and-liberator-repo-have-no-ca",
   "title": "liberator_has_repo and liberator_repo have no caller",
-  "status": "open",
+  "status": "closed",
   "severity": "low",
   "created": "2026-10-24",
+  "closed": "2026-10-24",
   "reporter": "Matthew Sinclair",
   "body": "lib/liberator.sh defines liberator_has_repo and liberator_repo. Nothing calls either one: not lib/, not bin/, not liberators/, not Molt-matts. Only test/git.bats tests them.\n\nFix: delete both, and their git.bats tests.\n\nFound by ac's 24 Oct doc review (code notes); vc routed it to dc.\n"
 }

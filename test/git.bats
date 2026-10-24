@@ -163,36 +163,6 @@ BASH
 }
 
 # ============================================================================
-# LIBERATOR REPO CONVENTION TESTS
-# ============================================================================
-
-@test "liberator_has_repo returns true when _repo exists" {
-    load_molt_libs
-    load_liberator utilz
-    run liberator_has_repo utilz
-    assert_success
-}
-
-@test "liberator_has_repo returns false when _repo missing" {
-    load_molt_libs
-    load_liberator system
-    run liberator_has_repo system
-    assert_failure
-}
-
-@test "liberator_repo calls the _repo function" {
-    setup_isolated_molt
-    local lib_repo="$BATS_TEST_TMPDIR/test-repo"
-    create_git_repo "$lib_repo"
-    create_mock_liberator "testrepo" "$lib_repo"
-
-    liberator_load testrepo
-    run liberator_repo testrepo
-    assert_success
-    assert_output_contains "$lib_repo"
-}
-
-# ============================================================================
 # CMD_GIT WHITELIST TESTS
 # ============================================================================
 
