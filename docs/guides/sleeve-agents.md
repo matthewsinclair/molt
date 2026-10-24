@@ -21,8 +21,6 @@ This guide is about sleeve agents. A project agent is a session run inside an In
 
 A sleeve agent is always named `<hostname>-<role>`: `rhadamanth-sysadm`, `kovacs-ops`, `gyges-docs`. The hostname is the sleeve's short hostname, the name of its `instances/<hostname>/` directory, and the role is one of the roles below. You never write the name: Molt derives it from the `[[agent]]` entry, so it cannot be mistyped.
 
-gyges' agent is still called `gyges-infra`, from before this convention. It becomes `gyges-sysadm` when gyges is moved, which happens later.
-
 ### Hosts
 
 Physical machines take their names from the Hyperion Cantos: rhadamanth, gyges, yggdrasil, farcaster. Virtual machines take Altered Carbon envoy and sleeve names: kovacs.
