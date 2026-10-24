@@ -644,10 +644,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 6,
-      "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md. Reopened 13:24Z after the fold. Heavy now: 317 laksa-dc 0006 (B). Heavy queue: laksa-cc security follow-up (when READY), intent-dc 0635 judge, intent build all (after 0635; restarts intentd), utilz-cc run-0105-c, intent-vc PATH-clean sweep. Light: free; devbin-dc 0216 workroom x3 rebooks when READY. Rules: one heavy; one light beside at load<60; one cargo at a time machine-wide, except a jobs-1 kovacs preflight beside one Mac cargo; no .app light beside a Utilz LS run; START/END by name; brew upgrades book too.",
+      "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md (QUEUE AT FOLD line is the full order). hv's estate-wide localfold+compact drill called 14:58Z: desk CLOSED, nothing in flight. Reopen after compact with a census, then GO in order. HEAVY: intent-cc ST0086 rerun; laksa (2) dc retirement+verify; intent-dc 0632 step 1; intent build all (intent-vc announces the intentd restart first); intent-vc sweep; laksa (3) dc 0018+verify; laksa (4) dc 0006 (C)+verify; devbin-vc heavy PAIR after devbin-dc's light; laksa-cc security takes the next Laksa place when READY; utilz-dc kovacs twins on START. LIGHT first: devbin-dc W1-W3 workroom + T (0219 scans). Rules: one heavy; one light beside at load<60; one cargo at a time machine-wide, except a jobs-1 kovacs preflight beside one Mac cargo; no .app light beside a Utilz LS run; START/END by name; brew upgrades book too. kovacs-sysadm is reachable by name (new session 01J3MS38, 24 Oct). prodinfra-cc, geodica-estate and sinclair-estate are not reachable.",
       "state": "live",
       "recorded_at": "2026-10-24T09:49:29.437Z",
-      "edited_at": "2026-10-24T14:14:22.744Z"
+      "edited_at": "2026-10-24T14:59:25.902Z"
     },
     {
       "node": "vc",
