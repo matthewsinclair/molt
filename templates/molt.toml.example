@@ -48,9 +48,24 @@ enabled = true
 os = ["linux", "macos"]
 
 [[liberator]]
-name = "terminal"
+name = "gnome-terminal"
 enabled = true
 os = ["linux"]
+
+[[liberator]]
+name = "terminal-app"
+enabled = true
+os = ["macos"]
+
+[[liberator]]
+name = "iterm2"
+enabled = false                      # enable once iTerm2 is installed
+os = ["macos"]
+
+[[liberator]]
+name = "alacritty"
+enabled = false                      # enable once Alacritty is installed
+os = ["linux", "macos"]
 
 [[liberator]]
 name = "keys"
