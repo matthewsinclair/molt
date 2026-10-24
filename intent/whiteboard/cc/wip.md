@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-24 13:20Z
+heartbeat_at: 2026-10-24 14:16Z
 status: active
-focus: "Holding for hv's Molt v1.0.0 cut (ST0008 WP05 pushed at ec5fe42; AT ids d4c0305). Next: the 9c418e2 reapply after the tap, with ac's held findings fixed first (todo 13); then todo 12 once the fleet has resleeved"
+focus: "Holding after 2129890 (9c418e2 reapplied with ac's held findings fixed). Next: todo 12 once rhadamanth, kovacs and gyges have resleeved onto the env liberator"
 claims: []
 ---
 
@@ -18,7 +18,6 @@ _(none)_
 ## TODO
 
 - Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct).
-- When 9c418e2 (the brew-first install docs) comes back after the tap is published, fix ac's held findings in it first: intent/ref/2026-10-24-doc-review-findings.md, every item marked held (eg B3, B17, B18, A23 and A24 in getting-started and the runbook). C16 (gyges-infra vs gyges-sysadm in sleeve-agents.md :24) waits on the live session name.
 
 ## Holds
 
