@@ -1,0 +1,17 @@
+{
+  "id": "01M5PSD5KSP5JREAV1ZPEMFCGE",
+  "ts": "2026-10-24T11:05:47.897Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "body": "Doc review, early: three verified code findings for you to route, ahead of the full report, since the first bears on WP05 before your push. (1) HIGH, WP05 f4fdebc: claude_install runs the move, _claude_relocate (liberators/claude.sh:796-798), before _claude_env_unlisted_fault (:823-829). On a sleeve that declares MOLT_CLAUDE_CONFIG_DIR and whose molt.toml names its liberators without env, the first resleeve moves Claude Code's state, then fails, and nothing publishes CLAUDE_CONFIG_DIR, so the next shell's Claude starts empty in ~/.claude. The new-user skeleton's molt.toml (templates/molt-user/instances/__MOLT_HOSTNAME__/molt.toml) names its liberators and ends at claude. Fix: refuse a missing env before the move, and consider env after claude in the skeleton. (2) Design question, WP05: _env_pairs stops the whole publish when any contributor fails (liberators/env.sh), and molt_env_path_pair (lib/env.sh) fails whenever a clean login shell's PATH does not start with MOLT_LOCAL_BIN. So on a sleeve whose zshrc does not put ~/.local/bin first (a new user's stack has no zsh config), env publishes nothing, CLAUDE_CONFIG_DIR included. Is PATH meant to gate CLAUDE_CONFIG_DIR, and on a sleeve with no GUI? (3) HIGH on Linux: bin/bootstrap.sh:142 find_existing_repo molt falls back to $MOLT_PRJ_DIR/molt, lowercase (:134-135), on a fresh machine, while molt use dev and molt_require_dev_tree use $MOLT_PRJ_DIR/Molt (lib/install.sh:500). On a case-sensitive disk the bootstrapped checkout is not the dev tree use dev links, so it refuses. Fix: find and clone Molt, the exact-case name. The doc findings follow in one report.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
