@@ -1,5 +1,5 @@
 ---
-verblock: "24 Oct 2026:v0.48: Matthew Sinclair - ST0008 Molt from brew in flight"
+verblock: "24 Oct 2026:v0.49: Matthew Sinclair - ST0008 closed; Molt 1.0.1 from brew on rhadamanth and kovacs"
 ---
 
 # Work In Progress
@@ -10,13 +10,15 @@ verblock: "24 Oct 2026:v0.48: Matthew Sinclair - ST0008 Molt from brew in flight
 
 ## DOING
 
-- **ST0008, Molt from brew: dev, opt and brew trees** (hv, 24 Oct). The spec is `intent/st/ST0008/design.md`. cc builds WP01-04; vc validates, pushes, creates the public tap `matthewsinclair/homebrew-molt` (hv approved) once cc's scratch-tap run passes (hv: go on rhadamanth); WP05 moves the sleeves: rhadamanth to opt then brew, kovacs brew only through kovacs-sysadm, gyges later.
+- Nothing in flight for Molt. vc runs the estate slot desk for rhadamanth and kovacs (hv, 24 Oct); its queue lives on vc's board.
 
 ## TODO
 
+- **gyges to Molt from brew** (ST0008 D7, outside its acceptance), through gyges-sysadm when hv says: `brew install matthewsinclair/molt/molt`, `molt use brew`, a resleeve from a plain terminal, doctor; then remove the old clone and `~/bin/molt`, as on kovacs.
+- **rhadamanth, for hv**: `molt upgrade` (to 1.0.1; its resleeve clears the renders that adding `MOLT_INSTALL_PREFIX` to `vars.sh` made stale), then log out and in so `com.molt.env.plist` loads.
 - **rhadamanth's backup, when hv is home** (no copy over Tailscale; acceptable meanwhile, since gyges backs up the same Dropbox content): SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
-- **Every other sleeve's Molt clone, at its next resync** (kovacs, farcaster, pihole): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.
+- **Every other sleeve's Molt clone, at its next resync** (farcaster, pihole; kovacs runs Molt from brew and has no clone): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.
 - **How a sleeve moves its config repos** (for Flynn's jormungandr, parked by hv): pull Molt and Molt-matts; mv and resleeve as ONE command with `MOLT_PRJ_DIR` set and molt by absolute path, since `~/.zshenv` dangles after the mv; repoint `~/.config/gtools/config.yaml`, `intent discover ~/Devel/cfg --depth 1`, drop the old roots from `~/.config/intent/projects.json`; `molt doctor`'s manifest check names `~/Devel/cfg/Molt-matts`.
 - **Small, carried, below the gate**: claude.bats' `molt_instance_var` test flaked once for cc (it printed its value and returned non-zero; not reproduced since). By design, 0038 does not rewrite `~/.claude` with no slash or `"$HOME"/.claude/...`. After a move that half failed, only doctor names stale values. A jq without regex support reads as "not a JSON object". A real Claude Code run of `test/manual/sandbox-creds.sh` (hv, by hand). The sandbox profile's kept `.molt-orig` wants refreshing after an apparmor package update. The `desktop` check and verify pass silently when a gsettings file is declared but gsettings is absent. The `instances/<host>/...` path build is repeated across several files (a `molt_instance_file` helper, a later thread). A repo with no upstream gets two warnings on `molt upgrade` (accepted with issue 0037). `bin/bootstrap.sh`'s SC2088 notes.
 - **Not this project's**: Intent 0614 (worktree hooks sync an older store) and 0627 (no verb retires a handled message) are in Intent's lane; Molt's workaround stands: never run intent in a Molt worktree. The Gtools side of the estate-agent rename is with sinclair-estate, geodica-estate and gtools-vc on hv's go; The Gtools Sinclair estate deploy on gyges (gtools-vc). Gtools `README.md:15` (gtools-vc); devbin's README snippet, its `dvb` body copies and the test counts in `bin/.devbin`'s comments (devbin-vc).

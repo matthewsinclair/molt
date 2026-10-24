@@ -1,0 +1,16 @@
+{
+  "id": "01M5QJHWWKZGZVWVG7Q0ZPADH4",
+  "ts": "2026-10-24T18:25:17.203Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 22,
+    "text": "**farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct)."
+  }
+}

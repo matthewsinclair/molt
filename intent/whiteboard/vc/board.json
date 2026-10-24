@@ -537,10 +537,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 22,
-      "text": "**kovacs (through kovacs-sysadm), farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14, pushed 23 Oct) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` to write the .intent carriers, then `intent doctor`. Its old `.git/hooks` stop running, so the formatter-stanza cut in the todos above is moot once this is done. gyges did this on 23 Oct (rhadamanth-sysadm).",
+      "text": "**farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct).",
       "state": "live",
       "recorded_at": "2026-10-23T14:43:00.240Z",
-      "edited_at": "2026-10-23T17:16:23.271Z"
+      "edited_at": "2026-10-24T18:25:17.203Z"
     },
     {
       "node": "vc",
@@ -576,7 +576,8 @@
       "kind": "doing",
       "seq": 5,
       "text": "ST0008, Molt from brew. v1.0.0 CUT by vc on hv's word ('You do it'): release 3842239, annotated tag v1.0.0, pushed; CI green on the tag (Ubuntu + macOS). matthewsinclair/homebrew-molt created (public), formula published (cca72154, tag v1.0.0, revision 38422394). NEXT: cc reapplies 9c418e2 with ac's held findings fixed, vc pushes; rhadamanth: hv's molt resleeve (publishes UTILZ_INSTALL_PREFIX, clears doctor's env drift), then use opt, then brew; kovacs brew via kovacs-sysadm; then satisfy AC007-010 and close ST0008 (hv: close after release).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-24T18:25:16.965Z",
       "recorded_at": "2026-10-24T06:31:23.257Z",
       "edited_at": "2026-10-24T14:14:22.521Z"
     },
@@ -619,7 +620,8 @@
       "kind": "todo",
       "seq": 25,
       "text": "**For hv:** the kovacs keyfile delete (and old ~/bin/molt there), still open. (launchd PATH ruled 09:57Z and built in WP05; use brew removing the link accepted.)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-24T18:25:17.020Z",
       "recorded_at": "2026-10-24T06:57:34.003Z",
       "edited_at": "2026-10-24T13:20:18.073Z"
     },
@@ -644,10 +646,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 6,
-      "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md (QUEUE AT FOLD line is the full order). hv's estate-wide localfold+compact drill called 14:58Z: desk CLOSED, nothing in flight. Reopen after compact with a census, then GO in order. HEAVY: intent-cc ST0086 rerun; laksa (2) dc retirement+verify; intent-dc 0632 step 1; intent build all (intent-vc announces the intentd restart first); intent-vc sweep; laksa (3) dc 0018+verify; laksa (4) dc 0006 (C)+verify; devbin-vc heavy PAIR after devbin-dc's light; laksa-cc security takes the next Laksa place when READY; utilz-dc kovacs twins on START. LIGHT first: devbin-dc W1-W3 workroom + T (0219 scans). Rules: one heavy; one light beside at load<60; one cargo at a time machine-wide, except a jobs-1 kovacs preflight beside one Mac cargo; no .app light beside a Utilz LS run; START/END by name; brew upgrades book too. kovacs-sysadm is reachable by name (new session 01J3MS38, 24 Oct). prodinfra-cc, geodica-estate and sinclair-estate are not reachable.",
+      "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth and kovacs. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md (the last QUEUE AT FOLD line is the full order). Rules: one heavy plus one light while the 1-min load is under 60; one cargo run machine-wide, kovacs included; no .app light beside a Launch Services run; START/END by name; brew upgrades book; hv's cut work first and hv may order directly; moving another project's place needs its VC's consent. At the 18:24Z fold drill: 328 (Utilz mac2) running; 329 is hv's devbin 0.1.14 cut gates, GO to devbin-vc at 328 END. Molt: ST0008 closed; v1.0.1 released (fb0d8ff, tap published, kovacs verified 0056); no open issues. For hv on rhadamanth: molt upgrade (1.0.1 plus a resleeve clears the stale renders from MOLT_INSTALL_PREFIX), then log out and in for launchd env.",
       "state": "live",
       "recorded_at": "2026-10-24T09:49:29.437Z",
-      "edited_at": "2026-10-24T14:59:25.902Z"
+      "edited_at": "2026-10-24T18:25:17.503Z"
     },
     {
       "node": "vc",

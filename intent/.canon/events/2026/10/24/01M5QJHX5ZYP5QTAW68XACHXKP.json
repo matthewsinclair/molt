@@ -1,0 +1,16 @@
+{
+  "id": "01M5QJHX5ZYP5QTAW68XACHXKP",
+  "ts": "2026-10-24T18:25:17.503Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 6,
+    "text": "**Slot desk** (hv, 06:50Z): molt-vc runs heavy/light contention for rhadamanth and kovacs. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md (the last QUEUE AT FOLD line is the full order). Rules: one heavy plus one light while the 1-min load is under 60; one cargo run machine-wide, kovacs included; no .app light beside a Launch Services run; START/END by name; brew upgrades book; hv's cut work first and hv may order directly; moving another project's place needs its VC's consent. At the 18:24Z fold drill: 328 (Utilz mac2) running; 329 is hv's devbin 0.1.14 cut gates, GO to devbin-vc at 328 END. Molt: ST0008 closed; v1.0.1 released (fb0d8ff, tap published, kovacs verified 0056); no open issues. For hv on rhadamanth: molt upgrade (1.0.1 plus a resleeve clears the stale renders from MOLT_INSTALL_PREFIX), then log out and in for launchd env."
+  }
+}
