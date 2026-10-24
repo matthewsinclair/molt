@@ -26,23 +26,25 @@ class Molt < Formula
     # that is not clean, copies what git names under bin/molt, lib/,
     # liberators/, templates/ and VERSION, and writes the manifest recording
     # that Homebrew owns this tree, so molt install refuses to write into it.
+    #
+    # Nothing is linked into bin/. Homebrew's bin/ comes ahead of ~/bin on
+    # PATH, so a molt there would shadow ~/bin/molt, the one switch molt use
+    # sets, and molt use dev would change nothing.
     system "bin/molt", "install", "--prefix", libexec, "--managed-by", "brew"
-    # bin/molt finds its tree from its own resolved path, so bin/ needs only a
-    # link.
-    bin.install_symlink libexec/"bin/molt"
   end
 
   def caveats
     <<~EOS
-      Point ~/bin/molt at this install, and see which tree it serves, with:
-        molt use brew
-        molt use
-      molt upgrade upgrades this install with brew upgrade; molt install
-      refuses to write into it.
+      Nothing is linked into #{HOMEBREW_PREFIX}/bin. To run this install as
+      molt, point ~/bin/molt at it, once:
+        #{opt_libexec}/bin/molt use brew
+      molt use then shows, and switches, the tree ~/bin/molt serves. molt
+      upgrade upgrades this install with brew upgrade; molt install refuses
+      to write into it.
     EOS
   end
 
   test do
-    assert_match "(brew, ", shell_output("#{bin}/molt version")
+    assert_match "(brew, ", shell_output("#{libexec}/bin/molt version")
   end
 end

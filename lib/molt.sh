@@ -1622,6 +1622,17 @@ cmd_doctor() {
       not_passed=$((not_passed + 1)) ;;
   esac
 
+  # ~/bin/molt is the switch molt use sets, so it must be what PATH runs.
+  checks=$((checks + 1))
+  local shadow
+  shadow="$(molt_path_shadow)"
+  if [[ -z "$shadow" ]]; then
+    echo "Checking molt on PATH... ✓ $(molt_tilde "$MOLT_LOCAL_BIN/molt")"
+  else
+    echo "Checking molt on PATH... ⚠ $shadow"
+    not_passed=$((not_passed + 1))
+  fi
+
   # User stack repo
   checks=$((checks + 1))
   local user_repo

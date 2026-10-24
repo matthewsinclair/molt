@@ -416,7 +416,8 @@ cmd_use() {
         return 1
       fi
       echo "$(molt_tilde "$MOLT_LOCAL_BIN/molt") serves $(molt_version_line "$root")"
-      return 0 ;;
+      _molt_use_shadow_fault
+      return ;;
     dev|opt|brew) ;;
     *) molt_error "molt use takes dev, opt or brew, not $want"; return 1 ;;
   esac
@@ -436,6 +437,15 @@ cmd_use() {
   fi
   molt_link "$root/bin/molt" "$MOLT_LOCAL_BIN/molt" || return 1
   molt_version_line "$root"
+  _molt_use_shadow_fault
+}
+
+# Fails, saying what shadows it, when the switch molt use reports or has just
+# set is not what PATH runs for molt.
+_molt_use_shadow_fault() {
+  local shadow
+  shadow="$(molt_path_shadow)"
+  [[ -z "$shadow" ]] || { molt_error "molt use: $shadow"; return 1; }
 }
 
 # Refuses, naming the dev tree to run it in, the verb $1 anywhere but a dev
@@ -450,4 +460,19 @@ molt_require_dev_tree() {
     molt_error "$1 runs in a dev tree, and this is the $tree tree at $(molt_tilde "$MOLT_ROOT"); $dev"
   fi
   return 1
+}
+
+# Names what runs for molt instead of the molt use switch, $MOLT_LOCAL_BIN/molt,
+# and prints nothing when that is the first molt on PATH. Any other molt ahead
+# of it, a stray link to the same tree included, takes molt use's choice away
+# from it: on rhadamanth a ~/.local/bin/molt from March ran instead. molt use
+# and the doctor ask this.
+molt_path_shadow() {
+  local first
+  first="$(type -ap molt 2>/dev/null | head -n 1)" || first=""
+  if [[ -z "$first" ]]; then
+    echo "no molt is on PATH, so $(molt_tilde "$MOLT_LOCAL_BIN/molt") does not run; put $(molt_tilde "$MOLT_LOCAL_BIN") on PATH"
+  elif ! molt_same_file "$(dirname "$first")" "$MOLT_LOCAL_BIN"; then
+    echo "PATH runs $(molt_tilde "$first") ahead of $(molt_tilde "$MOLT_LOCAL_BIN/molt"), so molt use does not change what runs"
+  fi
 }

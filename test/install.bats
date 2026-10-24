@@ -58,6 +58,9 @@ setup() {
     export ORIGINAL_PWD="$(pwd)"
     cd "$BATS_TEST_TMPDIR"
     no_user_repo
+    # ~/bin first, as a sleeve's PATH has it, ahead of the checkout's bin/
+    # that test_helper puts there, so the switch molt use sets is what runs.
+    export PATH="$HOME/bin:$PATH"
     make_dev_tree
     OPT="$BATS_TEST_TMPDIR/opt/molt"
 }
@@ -505,4 +508,43 @@ FAKE
     assert_output_contains "WOULD BREW UPGRADE matthewsinclair/molt/molt"
     run grep -c "brew upgrade" "$BATS_TEST_TMPDIR/brew.log"
     [[ "$output" == 0 ]]
+}
+
+# --- What PATH runs for molt ---
+
+@test "use fails, naming it, when another molt is ahead of ~/bin/molt on PATH" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    mkdir -p "$BATS_TEST_TMPDIR/stray"
+    ln -s "$DEV/bin/molt" "$BATS_TEST_TMPDIR/stray/molt"
+    PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" use dev
+    assert_failure
+    assert_output_contains "(dev, "
+    assert_output_contains "PATH runs $BATS_TEST_TMPDIR/stray/molt ahead of"
+    [[ "$(readlink "$HOME/bin/molt")" == "$DEV/bin/molt" ]]
+    PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" use
+    assert_failure
+    assert_output_contains "serves molt"
+    assert_output_contains "so molt use does not change what runs"
+    run "$DEV/bin/molt" use
+    assert_success
+}
+
+@test "doctor passes ~/bin/molt as what PATH runs, and names what shadows it" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    "$DEV/bin/molt" use dev
+    run "$DEV/bin/molt" doctor
+    assert_output_contains "Checking molt on PATH... ✓"
+    mkdir -p "$BATS_TEST_TMPDIR/stray"
+    ln -s "$DEV/bin/molt" "$BATS_TEST_TMPDIR/stray/molt"
+    PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" doctor
+    assert_output_contains "Checking molt on PATH... ⚠ PATH runs $BATS_TEST_TMPDIR/stray/molt ahead of"
+}
+
+@test "a PATH entry that is ~/bin by another name runs ~/bin/molt, and is no shadow" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    "$DEV/bin/molt" use dev
+    ln -s "$HOME/bin" "$BATS_TEST_TMPDIR/bin-by-another-name"
+    PATH="$BATS_TEST_TMPDIR/bin-by-another-name:$PATH" run "$DEV/bin/molt" use
+    assert_success
+    refute_output_contains "ahead of"
 }
