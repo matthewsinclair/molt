@@ -54,6 +54,11 @@ jobs:
         echo "PATH=/usr/local/bin:$PATH" >> "$GITHUB_ENV"
         bats --version
 
+    # tools/ is zsh (no Python ships), and test/formula.bats runs it. macOS
+    # carries zsh; the Ubuntu image does not.
+    - name: Install zsh
+      run: sudo apt-get install -y zsh
+
     - name: Configure git identity for tests
       run: |
         git config --global user.email "ci@test.local"
