@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: 88cdd7cd-d7d9-4418-a8c4-f1e891584c7f
-heartbeat_at: 2026-10-24 13:20Z
+heartbeat_at: 2026-10-24 14:07Z
 status: active
-focus: "24 Oct: doc review done and routed (intent/ref/2026-10-24-doc-review-findings.md); bl0001 current and pushed in ec5fe42; hold 2 waits for hv's bl0001 answers"
+focus: "24 Oct: the doc review and bl0001 are closed on hv's word (bl0001 at a8ab0db); a hold reads bl0001's check: bullets against Claude Code's docs again before print"
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- bl0001's open wording waits for hv's answers to the three questions put in the 24 Oct session: (a) whether the slogan 'name it, home it, bound it' takes 'contract it', beside section 4's Contract it bullet and the closing line's 'a name, a home and a contract'; (b) whether section 8's 'Three points on a line' stays; (c) whether the check: bullets are re-read against Claude Code's docs now or before publication. Released when hv answers each; then edit bl0001 and commit it by pathspec.
+- Read every Claude Code check: bullet in bl0001 against code.claude.com/docs again just before it goes to print, and move the notation line's date to that read (hv, 24 Oct: before publication, not now). Released when hv says bl0001 is going to print.
 
 ## Watch-outs
 

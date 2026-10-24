@@ -1,0 +1,15 @@
+{
+  "id": "01M5Q3RRZ0W38V3CTA6D9AB1AN",
+  "ts": "2026-10-24T14:06:53.920Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Read every Claude Code check: bullet in bl0001 against code.claude.com/docs again just before it goes to print, and move the notation line's date to that read (hv, 24 Oct: before publication, not now). Released when hv says bl0001 is going to print."
+  }
+}
