@@ -1,6 +1,6 @@
 # Creating a New User Config Repo
 
-MOLT uses a [two-repo model](../../README.md#two-repo-model): the framework (`molt`) and your personal config (`molt-{user}`). This guide covers creating that personal repo from scratch with `molt new-user`.
+MOLT keeps the [framework and your config apart](../../README.md#framework-and-config-repo): the framework (`Molt`) and your personal config (`Molt-{user}`). This guide covers creating that personal repo from scratch with `molt new-user`.
 
 You only do this once per person. After the repo exists, day-to-day setup is covered by [Getting Started](getting-started.md).
 
@@ -15,7 +15,7 @@ molt new-user <user> [--name "Full Name"] [--email you@example.com] \
                      [--github <handle>] [--hostname <host>] [--dest <dir>]
 ```
 
-Anything you don't pass as a flag is prompted for. Sensible defaults:
+Each of `<user>`, `--name`, `--email`, `--github` and `--hostname` you don't pass is prompted for; `--dest` is never prompted for. Sensible defaults:
 
 - `--github` defaults to `<user>`
 - `--name` defaults to `<user>`
@@ -46,7 +46,7 @@ These are the only values that vary per user. Everything else in the skeleton is
 ## What it generates
 
 ```
-molt-flynn/
+Molt-flynn/
   README.md
   .gitignore
   config/
@@ -63,11 +63,11 @@ molt-flynn/
       vars.sh
 ```
 
-Only the liberators that need no config beyond what the skeleton ships are enabled out of the box: `system`, `local-bin`, `git` and `ssh`, and `npm` and `claude`, which need no `config/` directory at all. The instance `molt.toml` is the list. Enable the rest in the instance manifest as you add the matching `config/<name>/` directories.
+The instance `molt.toml` is the list of what is enabled out of the box. Enable the rest in the instance manifest as each one's tool is installed and its `config/<name>/` directory, where it needs one, is in place.
 
-## Two kinds of placeholder
+## Scaffold-time and resleeve-time placeholders
 
-The skeleton deliberately uses **two distinct delimiter styles**, and the distinction matters:
+The skeleton deliberately uses **distinct delimiter styles** for each, and the distinction matters:
 
 - `__MOLT_USER__`, `__MOLT_GITHUB__`, … — **scaffold-time** tokens. `molt new-user` substitutes these once, when the repo is created.
 - `${MOLT_SSH_KEY}`, `${MOLT_FONT_FAMILY}`, … — **resleeve-time** template vars, rendered later by `molt_render` via `envsubst` using the instance's `vars.sh`.
