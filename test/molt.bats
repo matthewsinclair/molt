@@ -68,13 +68,28 @@ assert_doctor_closed() {
         want="$failed of $ran checks did not pass. Review above for details."
     fi
     [ "${lines[${#lines[@]}-1]}" = "$want" ] || fail "Expected doctor to close with: '$want'\nActual output:\n$output"
+    # The exit follows the run: 0 only when every check passed (issue 0055).
+    if [ "$failed" -eq 0 ]; then
+        [ "$status" -eq 0 ] || fail "doctor passed every check but exited $status"
+    else
+        [ "$status" -eq 1 ] || fail "doctor failed $failed check(s) but exited $status"
+    fi
 }
 
-@test "molt doctor runs without crashing" {
+@test "molt doctor runs without crashing, and exits as its checks went" {
     run_molt doctor
-    assert_success
     assert_output_contains "Checking"
     assert_doctor_closed
+}
+
+@test "doctor's verdict passes only when no check failed, and names how many of how many did" {
+    load_molt_libs
+    run molt_doctor_verdict 0 3
+    assert_success
+    [ "$output" = "All checks passed." ]
+    run molt_doctor_verdict 2 3
+    [ "$status" -eq 1 ]
+    [ "$output" = "2 of 3 checks did not pass. Review above for details." ]
 }
 
 @test "molt doctor prints a failing liberator's check lines as the check printed them (issue 0026)" {
@@ -90,6 +105,7 @@ TOML
     # git's check fails: nothing in this HOME is linked to the repo's gitconfig.
     HOME="$BATS_TEST_TMPDIR/home" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
     assert_output_matches 'Checking enabled liberators\.\.\. ⚠ [0-9]+ of [0-9]+ not installed: git'
+    assert_failure
     assert_output_matches $'(^|\n)         Zen: git: '
     refute_output_contains "git: Zen:"
 }

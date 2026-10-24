@@ -2154,11 +2154,18 @@ cmd_doctor() {
   fi
 
   echo ""
-  if [[ "$not_passed" -eq 0 ]]; then
+  molt_doctor_verdict "$not_passed" "$checks"
+}
+
+# Prints doctor's closing line for $1 checks not passed of the $2 that ran, and
+# fails when any did not pass, so a caller can tell from the exit (issue 0055).
+molt_doctor_verdict() {
+  if [[ "$1" -eq 0 ]]; then
     echo "All checks passed."
-  else
-    echo "$not_passed of $checks checks did not pass. Review above for details."
+    return 0
   fi
+  echo "$1 of $2 checks did not pass. Review above for details."
+  return 1
 }
 
 cmd_test() {
