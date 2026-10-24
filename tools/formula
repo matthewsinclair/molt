@@ -1,0 +1,108 @@
+#!/usr/bin/env zsh
+# formula — render Molt's Homebrew formula for a release tag, and publish it to
+# the tap (ST0008 D6).
+#
+#   tools/formula render <tag> <out>   write the formula for <tag> to <out>
+#   tools/formula publish              render the newest release into
+#                                      matthewsinclair/homebrew-molt and push it
+#
+# NOBODY TYPES A TAG OR A COMMIT. render reads the tag's commit from git
+# (`git rev-parse <tag>^{commit}`) and fills the template's one @@TAG@@ and one
+# @@REVISION@@; publish takes the newest release tag by version order. A
+# lightweight tag is refused, since every release tag is annotated, and so is a
+# template that does not hold exactly one of each placeholder. publish refuses
+# a template with changes no commit holds, and a tag GitHub does not have yet:
+# a formula naming a commit brew cannot fetch fails every install. Publishing
+# the same release again changes nothing and pushes nothing.
+#
+# It lives in tools/, outside the runtime set, because nothing on a sleeve
+# runs it.
+
+emulate -L zsh
+setopt err_exit no_unset pipe_fail extended_glob
+
+root="${0:A:h:h}"
+template="$root/packaging/homebrew/molt.rb"
+# The tap publish clones and pushes. MOLT_TAP_URL names a scratch tap instead,
+# for a run end to end before the real one.
+tap_url="${MOLT_TAP_URL:-git@github.com:matthewsinclair/homebrew-molt.git}"
+
+die() { print -u2 -r -- "formula: $*"; exit 1; }
+
+usage() {
+  print -u2 "usage: tools/formula render <tag> <out>"
+  print -u2 "       tools/formula publish"
+  exit 2
+}
+
+# The commit the annotated tag $1 names, or die saying why there is none.
+tag_commit() {
+  local tag="$1"
+  git -C "$root" rev-parse -q --verify "refs/tags/$tag" >/dev/null \
+    || die "no tag '$tag' in $root"
+  [[ "$(git -C "$root" cat-file -t "refs/tags/$tag")" == tag ]] \
+    || die "'$tag' is a lightweight tag; every release tag is annotated"
+  git -C "$root" rev-parse "$tag^{commit}"
+}
+
+# Writes the formula for the tag $1 to the file $2.
+render() {
+  local tag="$1" out="$2" commit tags revs
+  [[ "$tag" == [A-Za-z0-9._-]## ]] || die "'$tag' is not a release tag name"
+  [[ -f "$template" ]] || die "no template at $template"
+  commit="$(tag_commit "$tag")"
+  tags="$(grep -c '@@TAG@@' "$template" || true)"
+  revs="$(grep -c '@@REVISION@@' "$template" || true)"
+  [[ "$tags" -eq 1 && "$revs" -eq 1 ]] \
+    || die "$template has $tags @@TAG@@ and $revs @@REVISION@@ lines; render fills exactly one of each"
+  mkdir -p "${out:h}"
+  # The tag holds only [A-Za-z0-9._-], checked above, and the commit only hex,
+  # so neither can carry a sed metacharacter.
+  sed -e "s/@@TAG@@/$tag/" -e "s/@@REVISION@@/$commit/" "$template" > "$out"
+  print -r -- "formula: rendered $tag at $commit to $out"
+}
+
+# The newest release tag, vX.Y.Z by version order.
+newest_tag() {
+  local tag
+  tag="$(git -C "$root" tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
+  [[ -n "$tag" ]] || die "no release tag in $root"
+  print -r -- "$tag"
+}
+
+publish() {
+  local tag commit scratch tap repo_url
+  [[ -z "$(git -C "$root" status --porcelain -- packaging/homebrew/molt.rb)" ]] \
+    || die "packaging/homebrew/molt.rb has changes no commit holds; commit them first"
+  tag="$(newest_tag)"
+  commit="$(tag_commit "$tag")"
+  # Asked of the url brew fetches from, read off the template, so the check and
+  # the install can never name two repositories.
+  repo_url="$(sed -n 's/^[[:space:]]*url "\([^"]*\)",[[:space:]]*$/\1/p' "$template")"
+  [[ -n "$repo_url" ]] || die "$template has no url line to read the repository from"
+  [[ -n "$(git ls-remote "$repo_url" "refs/tags/$tag")" ]] \
+    || die "$repo_url has no tag $tag yet; push the tag before publishing its formula"
+
+  scratch="$(mktemp -d "${${TMPDIR:-/tmp}%/}/molt-formula.XXXXXX")"
+  trap "rm -rf ${(q)scratch}" EXIT
+  tap="$scratch/tap"
+  git clone -q "$tap_url" "$tap" || die "could not clone the tap from $tap_url"
+  render "$tag" "$tap/Formula/molt.rb"
+  if [[ -z "$(git -C "$tap" status --porcelain)" ]]; then
+    print -r -- "formula: the tap already carries $tag at $commit; nothing to publish"
+    return 0
+  fi
+  git -C "$tap" add Formula/molt.rb
+  git -C "$tap" commit -q -m "molt ${tag#v}
+
+(C) hello@matthewsinclair.com"
+  git -C "$tap" push -q origin HEAD || die "the push to $tap_url failed; nothing was published"
+  print -r -- "formula: published $tag at $commit to $tap_url"
+}
+
+(( $# >= 1 )) || usage
+case "$1" in
+  render) (( $# == 3 )) || usage; render "$2" "$3" ;;
+  publish) (( $# == 1 )) || usage; publish ;;
+  *) usage ;;
+esac
