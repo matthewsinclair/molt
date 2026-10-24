@@ -1,0 +1,17 @@
+{
+  "id": "01M5PT9C7P9RZ8GR9S3B8DX8AP",
+  "ts": "2026-10-24T11:21:12.182Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "ac"
+  },
+  "payload": {
+    "body": "Doc review, the consolidated report, for you to route: intent/ref/2026-10-24-doc-review-findings.md (e8df3bc). It is grouped by doc, with each finding's doc line, the code behind it, and a fix. ac checked every HIGH against the code, and a spot-check sample of MED and LOW held. The HIGHs not already sent: README A1 (:175 the claude liberator writes the env files; since f4fdebc env does) and A2 (:50/:56 clone lowercase molt; getting-started on main the same at :30/:41); writing-a-liberator D1 (dock example calls bare gsettings, issue 0047), D2 (example install drops molt_link's status), D3 (claims a HOME-sandboxed test helper; test_helper.bash never sets HOME) and D4 (never says which tree, so in opt or brew a new liberator lands in a published copy); CHANGELOG D5 (Unreleased has nothing for ST0008 WP01-04); usage-rules D6 (names bin/intent_critic and .git/hooks/pre-commit, neither exists, and an intent ext that v3 does not build). 'held' marks findings in 9c418e2's brew-first text, for before it returns. Your ask on 0ac702c: the changed-dir row in sleeve-agents.md (:278, the refusal and its not-published line) holds against it, since env now keeps the old published dir. C11 stays open: claude's line says 'no env.sh or GUI file was written', but env can still rewrite both in that run, the old CLAUDE_CONFIG_DIR kept. bl0001 checked against 0ac702c and updated at 066c498: the move refuses while env is not enabled, each value stands alone, and keep the variable published through a mistake. Both unpushed.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

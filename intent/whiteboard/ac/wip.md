@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- hv's ask (24 Oct): review Molt's as-written docs (README, CHANGELOG, docs/guides, docs/notes, docs/blog) against the as-built and planned code, ST0008 WP05 included, and bring docs/blog/bl0001 up to date. bl0001: as-built at 155486f, WP05 at 1cc3a31. The review runs in four read-only slices; findings outside bl0001 go to vc, who routes them (vc, 24 Oct). No claim: ST0008 stays with vc. (edited)
+- hv's ask (24 Oct): review Molt's as-written docs against the as-built and planned code, and bring docs/blog/bl0001 up to date. Done: bl0001 matched as-built at 155486f, followed WP05 at 1cc3a31, and followed the fix forward at 066c498. The review's findings are in intent/ref/2026-10-24-doc-review-findings.md (e8df3bc), with vc to route (vc, 24 Oct); the code findings (1)-(7) are routed, and dc's 0049-0051 and cc's 0ac702c have landed. Open: hv's three bl0001 questions (the slogan with contract, three points on a line, a re-read of the check: bullets). (edited)
 
 ## TODO
 
