@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 54,
+  "slug": "a-manifest-that-enables-nothing-for-the-platform",
+  "title": "a manifest that enables nothing for the platform runs every liberator",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-24",
+  "reporter": "Matthew Sinclair",
+  "body": "When the manifest enables no liberator for this platform, molt_enabled_liberators prints nothing. resleeve (lib/molt.sh, \"No manifest found, using all available liberators\") then falls back to liberator_list and runs every liberator Molt ships. upgrade and maintain do the same. That includes keys' sudo build of keyd on Linux, and agents.\n\nThe same fallback serves a sleeve with no manifest at all. A manifest that exists but enables nothing for the platform may mean \"run nothing\", not \"run everything\".\n\nQuestion for hv: should a manifest that is found but enables nothing for this platform be refused by name, or run nothing, instead of running every liberator? templates/molt.toml.example documents the current behaviour (70f1d98). Nothing is built until hv rules.\n\nFound by ac's 24 Oct doc review (B5 and the code notes).\n"
+}
