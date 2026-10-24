@@ -583,9 +583,19 @@
       "node": "vc",
       "kind": "todo",
       "seq": 24,
-      "text": "On 24 Oct, with hv's ok, vc removed a stray ~/.local/bin/molt (a March symlink to the checkout, first on PATH). Minutes later the real ~/bin/molt was missing (not vc's doing); vc restored it, and both links were then present again, ~/.local/bin/molt recreated by something unknown. cc is checking its ST0008 tests for a HOME leak. Open: what recreates ~/.local/bin/molt (Utilz relinks ~/.local/bin; check whether anything there links molt), and whether MOLT_LOCAL_BIN should be ~/.local/bin, where Utilz and Intent link.",
+      "text": "Resolved 24 Oct: no leak and no stray. ~/bin is a symlink to .local/bin (since Dec 2024), so ~/.local/bin/molt and ~/bin/molt are one link; vc's rm of the 'stray' removed hv's only molt link, and vc's restore made it again (one inode). Lesson in watchout 21.",
+      "state": "archived",
+      "archived_at": "2026-10-24T06:32:19.509Z",
+      "recorded_at": "2026-10-24T06:31:23.293Z",
+      "edited_at": "2026-10-24T06:32:19.397Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 21,
+      "text": "**Resolve a path before calling it a duplicate.** On rhadamanth ~/bin is a symlink to .local/bin, so two PATH entries named one directory, and the 'stray' ~/.local/bin/molt was hv's only molt link; vc removed it on 24 Oct and briefly left hv with no molt. Compare inodes (stat -f %i) or resolved dirs before removing, and treat a doctor shadow check the same way: compare resolved directories, never path strings.",
       "state": "live",
-      "recorded_at": "2026-10-24T06:31:23.293Z"
+      "recorded_at": "2026-10-24T06:32:19.548Z"
     }
   ],
   "sent": [

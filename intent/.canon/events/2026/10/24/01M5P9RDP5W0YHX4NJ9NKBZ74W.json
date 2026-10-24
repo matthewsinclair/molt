@@ -1,0 +1,16 @@
+{
+  "id": "01M5P9RDP5W0YHX4NJ9NKBZ74W",
+  "ts": "2026-10-24T06:32:19.397Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 24,
+    "text": "Resolved 24 Oct: no leak and no stray. ~/bin is a symlink to .local/bin (since Dec 2024), so ~/.local/bin/molt and ~/bin/molt are one link; vc's rm of the 'stray' removed hv's only molt link, and vc's restore made it again (one inode). Lesson in watchout 21."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M5P9RDTWE8YTSXC1HNTA4QST",
+  "ts": "2026-10-24T06:32:19.548Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "**Resolve a path before calling it a duplicate.** On rhadamanth ~/bin is a symlink to .local/bin, so two PATH entries named one directory, and the 'stray' ~/.local/bin/molt was hv's only molt link; vc removed it on 24 Oct and briefly left hv with no molt. Compare inodes (stat -f %i) or resolved dirs before removing, and treat a doctor shadow check the same way: compare resolved directories, never path strings."
+  }
+}
