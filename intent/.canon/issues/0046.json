@@ -3,9 +3,10 @@
   "number": 46,
   "slug": "bin-bootstrap-sh-sc2088-notes",
   "title": "bin/bootstrap.sh SC2088 notes",
-  "status": "open",
+  "status": "closed",
   "severity": "low",
   "created": "2026-10-24",
+  "closed": "2026-10-24",
   "reporter": "Matthew Sinclair",
   "body": "shellcheck bin/bootstrap.sh reports SC2088 (tilde does not expand in quotes) at line 159 and one more site. Decide per site: where the string is shown to a person, use molt_tilde or a targeted disable with a reason; where it is a path, use $HOME. shellcheck runs clean on the file afterwards."
 }

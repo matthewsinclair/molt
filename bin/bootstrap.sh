@@ -154,8 +154,10 @@ info "Linking molt into ~/bin"
 mkdir -p "$HOME/bin"
 
 if [[ -L "$HOME/bin/molt" ]]; then
+  # shellcheck disable=SC2088 # a message naming the path as a person writes it
   ok "~/bin/molt already linked"
 elif [[ -e "$HOME/bin/molt" ]]; then
+  # shellcheck disable=SC2088 # a message naming the path as a person writes it
   error "~/bin/molt exists but is not a symlink — skipping"
 else
   ln -s "$molt_dir/bin/molt" "$HOME/bin/molt"
