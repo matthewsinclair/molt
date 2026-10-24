@@ -3,9 +3,9 @@ node: ac
 name: Authoring Claude
 role: authoring
 session_id: 88cdd7cd-d7d9-4418-a8c4-f1e891584c7f
-heartbeat_at: 2026-10-24 11:22Z
+heartbeat_at: 2026-10-24 13:20Z
 status: active
-focus: "24 Oct: doc review done, routed by vc (intent/ref/2026-10-24-doc-review-findings.md); bl0001 current at 066c498; hold 2 waits for hv's bl0001 answers"
+focus: "24 Oct: doc review done and routed (intent/ref/2026-10-24-doc-review-findings.md); bl0001 current and pushed in ec5fe42; hold 2 waits for hv's bl0001 answers"
 claims: []
 ---
 
