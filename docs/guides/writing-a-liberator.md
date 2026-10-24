@@ -4,7 +4,7 @@ A liberator is a config module that frees you from one default. Each one handles
 
 ## The contract
 
-Every liberator is a bash script in `liberators/` that implements `_check` and `_install`, and may add `_verify`:
+Every liberator is a bash script in `liberators/` that implements `_check` and `_install`, and may add `_verify`. Write it in the dev tree, the checkout at `$MOLT_PRJ_DIR/Molt` (see [Which tree](#which-tree)):
 
 ```bash
 # {name}_check — Is this already configured?
@@ -27,6 +27,15 @@ myapp_verify() {
 ```
 
 The framework discovers scripts in `liberators/` and loads them on demand by sourcing the file. `molt resleeve` calls `_check`, and `_install` only when the check fails; `molt doctor` reports each enabled liberator's `_check`.
+
+### Which tree
+
+Molt runs from a tree: dev, the checkout; opt, a published copy that `molt install` makes; or brew, the formula. Only the dev tree's `liberators/` is yours to write:
+
+- In opt and brew, `liberators/` is a published copy with a manifest. A file you add there is reported as not in the manifest, and the next `molt install --force` or `brew upgrade` replaces the directory.
+- `molt test` runs in the dev tree only.
+
+So write and test a new liberator in the dev tree, commit it, and then publish it: `molt install --force` for an opt tree, or a new release for brew.
 
 ### Optional callbacks
 
@@ -100,7 +109,7 @@ myapp_install() {
   user_repo="$(molt_find_user_repo)" || return 1
 
   if [[ -f "$user_repo/config/myapp/config.toml" ]]; then
-    molt_link "$user_repo/config/myapp/config.toml" "$HOME/.config/myapp/config.toml"
+    molt_link "$user_repo/config/myapp/config.toml" "$HOME/.config/myapp/config.toml" || return 1
   fi
 
   molt_info "Liberator complete: myapp"
@@ -125,6 +134,8 @@ myapp_verify() {
   return $errors
 }
 ```
+
+Every call that can fail in `_install` ends in `|| return 1`, `molt_link` included. resleeve calls `_install` inside an `if`, where `set -e` does not apply, so a failure the function does not return is reported as installed.
 
 ## Framework functions available to liberators
 
@@ -155,7 +166,7 @@ myapp_verify() {
 
 ## Adding to the manifest
 
-After creating your liberator script, add it to your `molt.toml`:
+After creating your liberator script in the dev tree, add it to your `molt.toml`:
 
 ```toml
 [[liberator]]
@@ -174,7 +185,7 @@ Use `molt_platform` to branch:
 myapp_install() {
   case "$(molt_platform)" in
     linux)
-      # Linux-specific setup (gsettings, dconf, etc.)
+      # Linux-specific setup (molt_gsettings, dconf, etc.)
       ;;
     macos)
       # macOS-specific setup (defaults write, etc.)
@@ -190,17 +201,20 @@ Set `os` in the manifest to restrict which platforms a liberator runs on. If a l
 For Linux apps that should appear in the GNOME dock:
 
 ```bash
-if [[ "$(molt_platform)" == "linux" ]] && command -v gsettings &>/dev/null; then
+if [[ "$(molt_platform)" == "linux" ]]; then
+  molt_gsettings_unreachable molt_error "" myapp || return 1
   local favorites
-  favorites="$(gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
+  favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
   if [[ -n "$favorites" ]] && [[ "$favorites" != *"myapp.desktop"* ]]; then
     local new_favorites
     new_favorites="$(echo "$favorites" | sed "s/]/, 'myapp.desktop']/")"
-    gsettings set org.gnome.shell favorite-apps "$new_favorites"
+    molt_gsettings set org.gnome.shell favorite-apps "$new_favorites" || return 1
   fi
 fi
 ```
 
+Never call bare `gsettings`. `molt_gsettings_unreachable` fails, naming why, when gsettings is on PATH but none reaches dconf, and passes when there is no gsettings at all, which is no GNOME; `molt_gsettings` runs the one that reaches dconf, and with no gsettings it fails, so `favorites` is empty and nothing is set. The `vscode` liberator is a worked example.
+
 ## Testing
 
-See `test/liberators/zsh.bats` for an example of how to test a liberator using the HOME-sandboxed bats test infrastructure.
+Tests run in the dev tree, with `molt test <name>` or `bats test/liberators/<name>.bats`. `test/test_helper.bash` does not sandbox HOME: a test that runs a liberator's `_install` must export HOME into `$BATS_TEST_TMPDIR` itself, or it writes into your real home. `test/liberators/zsh.bats` does this in its `_zsh_env` fixture, which each test calls first.
