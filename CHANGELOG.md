@@ -31,11 +31,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The iTerm2 ssh wrapper matches each host by its bare name and under each domain in the user repo's `config/network/local-domains`, one a line, in file order, in place of the `.lan` and `.local` written into Molt; without the file it matches bare names only (issue 0042)
 - The commit gate runs from a tracked `.githooks` (`core.hooksPath`), written by `intent claude upgrade --apply`, so a fresh clone gets it after one `git config core.hooksPath .githooks` and an upgrade; the installer's `.intent` carriers are ignored
 - `molt resleeve`'s failure line says how many liberators failed out of how many ran, and names them, eg `2 of 5 liberators failed: backup, agents`
+- The brew liberator's maintain fails, naming each step that failed, when `brew update`, `brew upgrade`, `brew upgrade --cask` or `brew cleanup` fails, where it had reported maintenance complete; the other steps still run (issue 0052)
 
 ### Removed
 
 - `liberator_verify` and `liberator_run_all` from `lib/liberator.sh`: nothing called either. `molt resleeve` and `molt doctor` run a liberator's `_check`; its own `_verify` stays, for its own use, and molt does not run it
 - `molt_claude_env_file`, now `molt_env_file` in `lib/env.sh` (ST0008 WP05), and `molt_instance_vars_file`, whose callers ask `molt_instance_file vars.sh` (issue 0044)
+- `liberator_has_repo` and `liberator_repo` from `lib/liberator.sh`: nothing called either (issue 0053)
 
 ## [0.3.0] - 2026-10-23
 
