@@ -1,0 +1,15 @@
+{
+  "id": "01M5Q132CAK490GAAG4MGK1PRF",
+  "ts": "2026-10-24T13:20:05.514Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "0054 (84dc161, untested, not pushed): on vc's GO, light run of run-liberators.bats, molt.bats and git.bats under both bashes plus run-liberators.bats against the old code; on green, close 0054 in its own commit and send vc the sha"
+  }
+}
