@@ -429,6 +429,14 @@
       "text": "Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct).",
       "state": "live",
       "recorded_at": "2026-10-24T10:35:40.221Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 13,
+      "text": "When 9c418e2 (the brew-first install docs) comes back after the tap is published, fix ac's held findings in it first: intent/ref/2026-10-24-doc-review-findings.md, every item marked held (eg B3, B17, B18, A23 and A24 in getting-started and the runbook). C16 (gyges-infra vs gyges-sysadm in sleeve-agents.md :24) waits on the live session name.",
+      "state": "live",
+      "recorded_at": "2026-10-24T11:32:48.764Z"
     }
   ],
   "sent": [

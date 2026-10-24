@@ -1,0 +1,15 @@
+{
+  "id": "01M5PTYMFW47J3M6GD96A86KR7",
+  "ts": "2026-10-24T11:32:48.764Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "When 9c418e2 (the brew-first install docs) comes back after the tap is published, fix ac's held findings in it first: intent/ref/2026-10-24-doc-review-findings.md, every item marked held (eg B3, B17, B18, A23 and A24 in getting-started and the runbook). C16 (gyges-infra vs gyges-sysadm in sleeve-agents.md :24) waits on the live session name."
+  }
+}
