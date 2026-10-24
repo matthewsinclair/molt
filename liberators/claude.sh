@@ -481,19 +481,25 @@ _claude_published() {
 
 # CLAUDE_CONFIG_DIR as the env liberator publishes it, one
 # "NAME<TAB>scope<TAB>value" line: the declared config dir once Claude Code's
-# state is in it, and until then whatever env.sh already publishes, so a
-# variable never goes out ahead of the move, nor is dropped while one is
-# pending. Nothing on a sleeve that declares no config dir. Fails, printing
-# why, when the declared dir cannot be used.
+# state is in it and _claude_relocate would let it stand, and until then
+# whatever env.sh already publishes, so a variable never goes out ahead of the
+# move, nor is dropped while one is pending. A dir that holds nothing while the
+# variable names another that exists is the relocate's refusal, and is not
+# handed over behind it (ac, 24 Oct). Nothing on a sleeve that declares no
+# config dir. A declared dir that cannot be used is refused, a "!<TAB>why"
+# line, and what env.sh publishes is kept: dropped, Claude Code would start
+# afresh in ~/.claude.
 claude_env_pairs() {
-  local dir state why value
+  local dir state="" why value
   if ! dir="$(_claude_declared_dir)"; then
-    echo "$dir"
-    return 1
+    printf '!\t%s\n' "CLAUDE_CONFIG_DIR: $dir"
+    dir=""
+  elif [[ -z "$dir" ]]; then
+    return 0
+  else
+    IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
   fi
-  [[ -n "$dir" ]] || return 0
-  IFS=$'\t' read -r state why <<< "$(_claude_state "$dir")"
-  if [[ "$state" == moved ]]; then
+  if [[ "$state" == moved && -z "$(_claude_other_dir_fault "$dir")" ]]; then
     value="$dir"
   else
     value="$(molt_env_published CLAUDE_CONFIG_DIR)"
@@ -789,6 +795,16 @@ claude_install() {
     molt_error "claude: $dir"
     return 1
   fi
+  # Before the move: moved, the state would wait in the declared dir for a
+  # variable nothing on this sleeve publishes (ac, 24 Oct).
+  if [[ -n "$dir" ]]; then
+    local fault
+    fault="$(_claude_env_unlisted_fault)"
+    if [[ -n "$fault" ]]; then
+      molt_error "claude: $fault; Claude Code's state was not moved"
+      return 1
+    fi
+  fi
   # On a refusal nothing below runs either: the links, settings and hook would
   # land in a ~/.claude that is about to move, or in the config dir the move
   # must find empty. Nor after a move whose paths could not be rewritten: the
@@ -820,15 +836,6 @@ claude_install() {
   if [[ -n "$dir" ]]; then
     _claude_settings_merge "home-launch hook" "$(molt_claude_hook_entry)" "$MOLT_CLAUDE_HOOK_GET" "$MOLT_CLAUDE_HOOK_SET" || return 1
   fi
-  if [[ -n "$dir" ]]; then
-    local fault
-    fault="$(_claude_env_unlisted_fault)"
-    if [[ -n "$fault" ]]; then
-      molt_error "claude: $fault"
-      return 1
-    fi
-  fi
-
   molt_info "Liberator complete: claude"
 }
 

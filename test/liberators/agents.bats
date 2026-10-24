@@ -752,7 +752,9 @@ EOF
     unset CLAUDE_CONFIG_DIR
     run cmd_agent start sysadm
     assert_failure
-    assert_output_contains "this shell's CLAUDE_CONFIG_DIR is unset, and this sleeve's is ~/.config/claude"
+    assert_output_contains "this shell's CLAUDE_CONFIG_DIR is unset, and this sleeve's is ~/.config/claude: start agents from a shell opened after the move, which sources ~/.config/molt/env.sh"
+    # The whole line, so a helper that has gone (command not found) shows.
+    refute_output_contains "command not found"
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/claude-config"
     run cmd_agent start sysadm
     assert_failure

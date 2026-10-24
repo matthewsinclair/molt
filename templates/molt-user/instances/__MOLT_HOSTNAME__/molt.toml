@@ -85,3 +85,14 @@ os = ["macos"]
 name = "claude"
 enabled = true
 os = ["linux", "macos"]
+
+# The published environment: CLAUDE_CONFIG_DIR, each <TOOL>_INSTALL_PREFIX
+# vars.sh exports, and a login shell's PATH for GUI apps. After claude, which
+# hands over CLAUDE_CONFIG_DIR only once its state has moved. Off until vars.sh
+# declares MOLT_CLAUDE_CONFIG_DIR or a prefix, and zshrc puts ~/.local/bin
+# first on PATH; the claude check names this entry when a config dir is
+# declared and it is still off.
+[[liberator]]
+name = "env"
+enabled = false
+os = ["linux", "macos"]

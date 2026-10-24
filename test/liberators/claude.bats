@@ -1285,3 +1285,16 @@ JSON
     run claude_check
     assert_success
 }
+
+# ac, 24 Oct (finding 1): the refusal comes before the move, or the state would
+# wait in the declared dir for a variable nothing publishes.
+@test "with env not enabled, install refuses before the move, and Claude Code's state stays in \$HOME" {
+    setup_declared
+    printf '[[liberator]]\nname = "claude"\n' > "$TEST_USER_REPO/instances/$(test_hostname)/molt.toml"
+    run claude_install
+    assert_failure
+    assert_output_contains "does not enable: add a [[liberator]] named env after claude; Claude Code's state was not moved"
+    [ "$(cat "$HOME/.claude/projects/session.jsonl")" = "transcript" ]
+    [ -f "$HOME/.claude.json" ]
+    [ ! -e "$CONFIG" ]
+}

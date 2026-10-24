@@ -101,18 +101,18 @@ PATH=$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin" ]
 $HOME/.config/environment.d/molt.conf:0" ]
 }
 
-@test "a value a file would read as syntax is refused by name, and nothing is published" {
+@test "a value a file would read as syntax is refused by name, and left out" {
     setup_env
     on_linux
     echo "export UTILZ_INSTALL_PREFIX='/opt/ut\"ilz'" >> "$VARS"
     run env_install
     assert_failure
     assert_output_contains "UTILZ_INSTALL_PREFIX holds a character env.sh, a plist or environment.d would read as syntax"
-    assert_output_contains "nothing was published"
-    [ ! -e "$HOME/.config/molt/env.sh" ]
+    run grep -c UTILZ "$HOME/.config/molt/env.sh"
+    [ "$output" = 0 ]
 }
 
-@test "a login PATH that does not start with ~/.local/bin, a failed shell or no PATH printed is refused, and nothing is published" {
+@test "a login PATH that does not start with ~/.local/bin, a failed shell or no PATH printed is refused, and PATH is left out of the plist" {
     setup_env
     on_macos
     login_path "/opt/homebrew/bin:$HOME/.local/bin:/usr/bin"
@@ -127,8 +127,8 @@ $HOME/.config/environment.d/molt.conf:0" ]
     run env_install
     assert_failure
     assert_output_contains "printed no PATH"
-    [ ! -e "$HOME/.config/molt/env.sh" ]
-    [ ! -e "$HOME/Library/LaunchAgents/com.molt.env.plist" ]
+    run grep -c '<string>PATH</string>' "$HOME/Library/LaunchAgents/com.molt.env.plist"
+    [ "$output" = 0 ]
 }
 
 @test "the login shell starts with nothing of molt's environment" {
@@ -253,4 +253,69 @@ EOF
     assert_success
     [ ! -e "$old" ]
     grep -qxF "CLAUDE_CONFIG_DIR=$HOME/.config/claude" "$HOME/.config/environment.d/molt.conf"
+}
+
+# ac, 24 Oct (finding 7): moved to A, then B declared, existing and empty. The
+# claude liberator refuses the switch, and env must not publish B behind it.
+@test "a newly declared, empty config dir is not handed over while env.sh publishes another that exists" {
+    setup_env
+    on_linux
+    declare_moved
+    run env_install
+    assert_success
+    local old="$CONFIG"
+    mkdir -p "$HOME/.local/claude"
+    printf 'export MOLT_CLAUDE_CONFIG_DIR=%q\n' "$HOME/.local/claude" > "$VARS"
+    run env_install
+    assert_success
+    grep -qxF "export CLAUDE_CONFIG_DIR=\"$old\"" "$HOME/.config/molt/env.sh"
+    grep -qxF "CLAUDE_CONFIG_DIR=$old" "$HOME/.config/environment.d/molt.conf"
+}
+
+# vc, 24 Oct: each pair stands alone, so a refused PATH leaves the rest
+# published and the run still fails, naming it.
+@test "a refused PATH is left out, every other pair is published, and the run fails naming it" {
+    setup_env
+    on_macos
+    declare_moved
+    echo 'export UTILZ_INSTALL_PREFIX="/opt/utilz"' >> "$VARS"
+    login_path "/opt/homebrew/bin:/usr/bin"
+    run env_install
+    assert_failure
+    assert_output_contains "env: a login shell's PATH starts with /opt/homebrew/bin, not ~/.local/bin"
+    grep -qxF "export CLAUDE_CONFIG_DIR=\"$CONFIG\"" "$HOME/.config/molt/env.sh"
+    grep -qxF 'export UTILZ_INSTALL_PREFIX="/opt/utilz"' "$HOME/.config/molt/env.sh"
+    local plist="$HOME/Library/LaunchAgents/com.molt.env.plist"
+    grep -qxF "    <string>$CONFIG</string>" "$plist"
+    run grep -c '<string>PATH</string>' "$plist"
+    [ "$output" = 0 ]
+    run env_check
+    assert_failure
+    assert_output_contains "env: a login shell's PATH starts with /opt/homebrew/bin"
+    refute_output_contains "is not what molt would publish"
+    run grep -c '^export PATH' "$HOME/.config/molt/env.sh"
+    [ "$output" = 0 ]
+}
+
+@test "a refused prefix is left out alone, and with nothing for the GUI file the plist runs true" {
+    setup_env
+    on_macos
+    echo "export UTILZ_INSTALL_PREFIX='relative/utilz'" >> "$VARS"
+    echo 'export INTENT_INSTALL_PREFIX="/opt/intent"' >> "$VARS"
+    printf '#!/bin/sh\nexit 1\n' > "$MOLT_LOGIN_SHELL"
+    run env_install
+    assert_failure
+    assert_output_contains "env: UTILZ_INSTALL_PREFIX is not an absolute path: relative/utilz"
+    assert_output_contains "env: PATH was not published"
+    grep -qxF 'export INTENT_INSTALL_PREFIX="/opt/intent"' "$HOME/.config/molt/env.sh"
+    run grep -c UTILZ "$HOME/.config/molt/env.sh"
+    [ "$output" = 0 ]
+    sed -i.bak '/INTENT_INSTALL_PREFIX/d' "$VARS" && rm "$VARS.bak"
+    sed -i.bak '/UTILZ_INSTALL_PREFIX/d' "$VARS" && rm "$VARS.bak"
+    run env_install
+    assert_failure
+    grep -qxF '    <string>/usr/bin/true</string>' "$HOME/Library/LaunchAgents/com.molt.env.plist"
+    if command -v plutil >/dev/null; then
+        plutil -lint "$HOME/Library/LaunchAgents/com.molt.env.plist"
+    fi
 }

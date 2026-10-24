@@ -91,31 +91,46 @@ molt_env_published() {
 }
 
 # --- Contributors ---
+#
+# Each contributor prints a "NAME<TAB>scope<TAB>value" line for each pair it
+# gives, and a "!<TAB>why" line for each it refuses. A refusal stands alone: the
+# other pairs are published all the same, and the run fails naming it, so one
+# bad PATH never takes CLAUDE_CONFIG_DIR out of env.sh (vc, 24 Oct).
+
+# Prints why for each refused pair in the contributor lines on stdin.
+molt_env_refusals() {
+  sed -n 's/^!	//p'
+}
+
+# The pairs in the contributor lines on stdin, refusals left out.
+molt_env_given() {
+  grep -v '^!	' | grep . || true
+}
 
 # Each <TOOL>_INSTALL_PREFIX this sleeve's vars.sh exports, MOLT_ ones aside,
 # as an "all" pair, in name order. The names are the file's export lines and
 # the values molt_instance_var's, which starts each name unset, so a prefix
 # this shell inherited, as from an env.sh already published, is not declared.
-# A brew-only sleeve declares none and gets none. Fails, printing why, when
-# the file cannot be read or a value cannot be published.
+# A brew-only sleeve declares none and gets none. A prefix that cannot be read
+# or published is refused alone, and every prefix when vars.sh cannot be found.
 molt_env_prefix_pairs() {
   local vars_file name value fault
   if ! vars_file="$(molt_instance_file vars.sh)"; then
-    echo "$vars_file"
-    return 1
+    printf '!\t%s\n' "no prefix was published: $vars_file"
+    return 0
   fi
   [[ -f "$vars_file" ]] || return 0
   while IFS= read -r name; do
     [[ -n "$name" ]] || continue
     if ! value="$(molt_instance_var "$name")"; then
-      echo "$name could not be read: $value"
-      return 1
+      printf '!\t%s\n' "$name could not be read: $value"
+      continue
     fi
     [[ -n "$value" ]] || continue
     fault="$(molt_env_value_fault "$name" "$value" path)"
     if [[ -n "$fault" ]]; then
-      echo "$fault"
-      return 1
+      printf '!\t%s\n' "$fault"
+      continue
     fi
     printf '%s\tall\t%s\n' "$name" "$value"
   done <<< "$(sed -n 's/^[[:space:]]*export[[:space:]]\{1,\}\([A-Z][A-Z0-9_]*_INSTALL_PREFIX\)=.*/\1/p' "$vars_file" | grep -v '^MOLT_' | LC_ALL=C sort -u)"
@@ -149,22 +164,22 @@ molt_env_login_path() {
 
 # PATH for GUI apps, as a "gui" pair: the login shell's, which must put
 # MOLT_LOCAL_BIN first, ahead of every Homebrew bin, so an app finds each
-# tool's use dev|opt link as a shell does (hv, 24 Oct). Fails, printing why,
-# when it cannot be read, or does not start there.
+# tool's use dev|opt link as a shell does (hv, 24 Oct). Refused when it cannot
+# be read, or does not start there. Never in env.sh: a shell builds its own.
 molt_env_path_pair() {
   local path fault
   if ! path="$(molt_env_login_path)"; then
-    echo "PATH was not published: $path"
-    return 1
+    printf '!\t%s\n' "PATH was not published: $path"
+    return 0
   fi
   fault="$(molt_env_value_fault PATH "$path" pathlist)"
   if [[ -n "$fault" ]]; then
-    echo "$fault"
-    return 1
+    printf '!\t%s\n' "$fault"
+    return 0
   fi
   if [[ "${path%%:*}" != "$MOLT_LOCAL_BIN" ]]; then
-    echo "a login shell's PATH starts with ${path%%:*}, not $(molt_tilde "$MOLT_LOCAL_BIN"), so it was not published: put $(molt_tilde "$MOLT_LOCAL_BIN") first on PATH in zshrc"
-    return 1
+    printf '!\t%s\n' "a login shell's PATH starts with ${path%%:*}, not $(molt_tilde "$MOLT_LOCAL_BIN"), so it was not published: put $(molt_tilde "$MOLT_LOCAL_BIN") first on PATH in zshrc"
+    return 0
   fi
   printf 'PATH\tgui\t%s\n' "$path"
 }
@@ -186,9 +201,11 @@ EOF
 }
 
 # The LaunchAgent for the pairs on stdin: one launchctl setenv, which takes
-# every pair, at each login.
+# every pair, at each login, or true when there is none, since launchctl
+# setenv with no pair fails.
 _molt_env_plist_text() {
-  local name scope value
+  local name scope value pairs
+  pairs="$(cat)"
   cat <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -201,13 +218,16 @@ _molt_env_plist_text() {
   <string>com.molt.env</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/launchctl</string>
-    <string>setenv</string>
 EOF
+  if [[ -z "$pairs" ]]; then
+    printf '    <string>/usr/bin/true</string>\n'
+  else
+    printf '    <string>/bin/launchctl</string>\n    <string>setenv</string>\n'
+  fi
   while IFS=$'\t' read -r name scope value; do
     [[ -n "$name" ]] || continue
     printf '    <string>%s</string>\n    <string>%s</string>\n' "$name" "$value"
-  done
+  done <<< "$pairs"
   cat <<'EOF'
   </array>
   <key>RunAtLoad</key>
