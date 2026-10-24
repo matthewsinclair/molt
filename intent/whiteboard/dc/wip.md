@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-24 15:00Z
+heartbeat_at: 2026-10-24 18:25Z
 status: active
-focus: "24 Oct: idle after the 0054 close (3d56a48, pushed); folded for hv's compact drill, nothing in flight"
+focus: "24 Oct: idle after 0056 (ba75195, shipped in v1.0.1, verified on kovacs); folded for hv's 18:24Z compact, nothing in flight"
 claims: []
 ---
 
