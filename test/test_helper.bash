@@ -37,6 +37,20 @@ unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 # for the files whose setup replaces it.
 export MOLT_AGT_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-agt"
 
+# Nor reaching the real launchd: the env liberator's check asks it with
+# launchctl getenv, and molt doctor, status and list all run that check
+# (issue 0059). This launchctl, first on PATH, does nothing and holds nothing.
+# It is set here rather than in setup, which some files replace; a file that
+# fakes launchd puts its own in front.
+_molt_test_stub_dir="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-launchctl"
+if [[ ! -x "$_molt_test_stub_dir/launchctl" ]]; then
+    mkdir -p "$_molt_test_stub_dir"
+    printf '#!/bin/sh\nexit 0\n' > "$_molt_test_stub_dir/launchctl"
+    chmod +x "$_molt_test_stub_dir/launchctl"
+fi
+export PATH="$_molt_test_stub_dir:$PATH"
+unset _molt_test_stub_dir
+
 # ============================================================================
 # SETUP AND TEARDOWN
 # ============================================================================
