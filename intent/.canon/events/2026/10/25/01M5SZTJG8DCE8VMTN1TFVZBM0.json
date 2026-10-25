@@ -1,0 +1,16 @@
+{
+  "id": "01M5SZTJG8DCE8VMTN1TFVZBM0",
+  "ts": "2026-10-25T16:55:41.832Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 6,
+    "text": "**Slot desk** (hv, 24 Oct 06:50Z; hv 25 Oct: the ONE host queue for every estate on rhadamanth and kovacs): molt-vc runs heavy/light contention across Molt, Intent, Laksa, Utilz, devbin, Conflab and Gtools. Rules: one heavy, plus one light while the 1-min load is under 60; one cargo run machine-wide, kovacs included; no .app/LS light beside an LS run; START/END by name; first READY first (security wins a tie); a fresh booking after a refused landing or a failed run takes its READY-time place; a node that hands back keeps its original place; every judge runs the critic per changed file and reads its coverage line (not asked, unanswerable or ARMED but NOT RUN covers nothing, never clean; no known-positive samples, hv decision 68 via devbin-vc; Swift's critic arms nothing until Intent 0648); a Swift green needs an executed count above zero; every bats run, single arms included, goes through the desk; a worktree cargo run gets its own CARGO_TARGET_DIR; worktrees in $TMPDIR (hv); message stamps only from a date -u read in an earlier call. The ledger is in the scratchpad, and its last 'QUEUE AT' line holds the order (resumed 16:54Z on hv's 'Resume all' after fold 3)."
+  }
+}
