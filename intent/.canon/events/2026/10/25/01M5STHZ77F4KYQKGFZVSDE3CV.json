@@ -1,0 +1,15 @@
+{
+  "id": "01M5STHZ77F4KYQKGFZVSDE3CV",
+  "ts": "2026-10-25T15:23:37.063Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0061"
+  },
+  "payload": {
+    "severity": "high",
+    "title": "agents tests install the AppArmor profile into the host's real /etc/apparmor.d through sudo"
+  }
+}

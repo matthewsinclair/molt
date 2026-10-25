@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 62,
+  "slug": "git-bats-commits-with-the-runner-s-git-identity",
+  "title": "git.bats commits with the runner's git identity, and fails without one",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-25",
+  "reporter": "Matthew Sinclair",
+  "body": "## What happened (kovacs, 25 Oct 2026; Molt release-candidate Linux check at d15b82d)\n\nEvery one of git.bats' 16 failures on kovacs (molt_all_repos, cmd_git, _git_detect_remote) comes from `create_git_repo` (test/git.bats:15, through setup_isolated_molt). Its `git commit` exits 128 with \"Author identity unknown ... unable to auto-detect email address (got 'matts@kovacs.(none)')\". The run used a throwaway HOME with no ~/.gitconfig. The tests depend on the identity of whoever runs them, which a test must never do.\n\n## Spec (vc, 25 Oct 2026)\n\n- Each helper that commits sets its own identity for that repo or that command (eg `git -c user.name=molt-test -c user.email=molt-test@example.invalid commit`), and never reads the runner's.\n- test_helper also exports GIT_CONFIG_NOSYSTEM=1, and points GIT_CONFIG_GLOBAL at an empty file in the run's temp dir, so no test sees the host's git config.\n- A check that fails with the change reverted: under a HOME with no git config, git.bats goes red; with the change, it passes.\n- The full suite runs under Homebrew bash and /bin/bash, and on kovacs through kovacs-sysadm.\n"
+}
