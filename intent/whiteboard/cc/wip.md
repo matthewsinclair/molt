@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-25 06:29Z
+heartbeat_at: 2026-10-25 10:50Z
 status: active
-focus: "Holding the deletion of templates/env/retired/ until gyges resleeves; rhadamanth and kovacs have. rhadamanth's GUI env waits for hv's next login"
+focus: "25 Oct: 0059 RED at e185b1c on issue-0059, not merged; fixes owed: claude.bats:630-631 plist asserts, and a no-op launchctl stub in test_helper (molt.bats doctor/status/list reach getenv); then re-light on vc's GO. Holds 16 (deferred by hv) and 17 stand. Folded for hv's compact, not released"
 claims: []
 ---
 
