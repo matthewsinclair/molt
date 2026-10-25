@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Issue 0066 (A3 doctor clause: a passing check names no path), branch issue-0066 at 14b72df in $TMPDIR/molt-wt/issue-0066, off main 8047eab. READY for a single-file LIGHT (dev0066.sh: green arm, then red with main's molt.sh), after vc's RC run. Then rebase on 0061 once vc replays it, full LIGHT under both bashes, merge, close 0066 from main.
 
 ## TODO
 
