@@ -449,7 +449,7 @@ setup() {
     mkdir -p "$HOME/.local/bin" && ln -s "$OPT/bin/molt" "$HOME/.local/bin/molt"
     run "$DEV/bin/molt" use
     assert_success
-    grep -qxF -- "~/.local/bin/molt serves molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD))" <<< "$output"
+    [[ "$output"$'\n' == *"/.local/bin/molt serves molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD))"$'\n'* ]]
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
 }
 
