@@ -1,0 +1,16 @@
+{
+  "id": "01M5SAGJ5YCZVGREFM0KPPGD0E",
+  "ts": "2026-10-25T10:43:13.726Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 6,
+    "text": "**Slot desk** (hv, 24 Oct 06:50Z; hv 25 Oct: the ONE host queue for every estate on rhadamanth and kovacs): molt-vc runs heavy/light contention across Molt, Intent, Laksa, Utilz, devbin, Conflab and Gtools. Rules: one heavy, plus one light while the 1-min load is under 60; one cargo run machine-wide, kovacs included; no .app/LS light beside an LS run; START/END by name; first READY first (security wins a tie); a fresh booking after a refused landing or a failed run takes its READY-time place; a node that hands back keeps its original place; GOs go direct to Conflab nodes, copying conflab-vc; every judge runs the critic per changed file (Intent decision 79); a Swift green needs an executed count above zero; message stamps only from a date -u read in an earlier call. The ledger is in the scratchpad, and its last 'QUEUE AT FOLD' line holds the order. At fold 2 (25 Oct 10:43Z): devbin 0227 heavy and molt-cc 0059 suite light were running; next heavies: gtools-cc WP-08 slot 2, intent-cc ST0087 re-judge 56d98e716, Laksa 0018fu2, utilz 2.14.4 Mac twins, then kovacs twins, gtools-cc WP-03, intent-dc 0644, conflab-ic commit, conflab-cc provider listing, devbin land220 (0220-0228) last. hv rulings today: one release per project (decision 17), brew by default (decision 18), Molt hold 16 deferred, utilz on brew (hv runs utilz use brew)."
+  }
+}
