@@ -76,7 +76,7 @@ Commands:
   git <cmd>    Run a git command across all managed repos
   doctor      System diagnostics and health checks
   test        Run bats test suite (molt test [liberator])
-  version     Show the version, the tree (dev, opt or brew), its commit and root
+  version     Show the version, the tree (dev, opt or brew) and its commit
   help        Show this help message
 
 EOF

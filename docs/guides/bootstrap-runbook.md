@@ -32,7 +32,7 @@ molt resleeve --dry-run
 molt resleeve
 ```
 
-`molt version` names the install, as `molt <version> (brew, <commit>) at /home/linuxbrew/.linuxbrew/opt/molt/libexec`, and `molt upgrade` moves it to the next release with `brew upgrade`.
+`molt version` names the install, as `molt <version> (brew, <commit>)`, and `molt upgrade` moves it to the next release with `brew upgrade`.
 
 ### For the maintainer of a dev checkout
 

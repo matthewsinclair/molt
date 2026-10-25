@@ -74,7 +74,7 @@ setup() {
 @test "install publishes the runtime set git names and a manifest that checks" {
     run "$DEV/bin/molt" install --prefix "$OPT"
     assert_success
-    assert_output_contains "Installed: molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD)) at"
+    [[ "${lines[${#lines[@]}-1]}" == "Zen: Installed: molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD))" ]]
 
     (cd "$DEV" && git ls-files -- bin/molt lib liberators templates VERSION | sort) > "$BATS_TEST_TMPDIR/want"
     (cd "$OPT" && find . -type f ! -name .molt-install | sed 's,^\./,,' | sort) > "$BATS_TEST_TMPDIR/got"
@@ -226,33 +226,50 @@ setup() {
 }
 
 # ST0008 AT002
-@test "the version line names the tree, its commit and its root, +dirty for a changed dev tree" {
+@test "the version line names the tree and its commit, +dirty for a changed dev tree" {
     "$DEV/bin/molt" install --prefix "$OPT"
     load_molt_libs
     source "$MOLT_LIB_DIR/install.sh"
     local short version
     short="$(git -C "$DEV" rev-parse --short=12 HEAD)"
     version="$(cat "$DEV/VERSION")"
-    [[ "$(molt_version_line "$OPT")" == "molt $version (opt, $short) at $OPT" ]]
-    [[ "$(molt_version_line "$DEV")" == "molt $version (dev, $short) at $DEV" ]]
+    [[ "$(molt_version_line "$OPT")" == "molt $version (opt, $short)" ]]
+    [[ "$(molt_version_line "$DEV")" == "molt $version (dev, $short)" ]]
     touch "$DEV/lib/stray.sh"
-    [[ "$(molt_version_line "$DEV")" == "molt $version (dev, ${short}+dirty) at $DEV" ]]
+    [[ "$(molt_version_line "$DEV")" == "molt $version (dev, ${short}+dirty)" ]]
+}
+
+# Issue 0063 (contract A3): the line names no path, and Molt, a script tool,
+# appends no provenance word, so every place that prints it ends there.
+@test "the version line ends at its closing parenthesis wherever molt prints it" {
+    install_fake_brew
+    install_brew_keg 0.3.0
+    "$DEV/bin/molt" install --prefix "$OPT"
+    local root out
+    for root in "$DEV" "$OPT" "$KEG"; do
+        out="$("$root/bin/molt" version)"
+        [[ "$out" == "molt "*")" && "$out" != *") "* ]] || fail "$root: $out"
+        out="$("$root/bin/molt" --version)"
+        [[ "$out" == "molt "*")" && "$out" != *") "* ]] || fail "$root --version: $out"
+        out="$("$root/bin/molt" doctor 2>&1 | sed -n 2p)" || true
+        [[ "$out" == "molt "*")" ]] || fail "$root doctor: $out"
+    done
 }
 
 @test "a dev tree git cannot read shows unknown for its commit, and doctor fails saying why" {
     echo junk > "$DEV/.git/index"
     run "$DEV/bin/molt" version
-    [[ "$output" == "molt $(cat "$DEV/VERSION") (dev, unknown) at $DEV" ]]
+    [[ "$output" == "molt $(cat "$DEV/VERSION") (dev, unknown)" ]]
     run "$DEV/bin/molt" doctor
     assert_output_contains "Checking tree... ✗ dev, its commit cannot be read: git status failed in $DEV"
 }
 
-@test "a brew tree is named by the formula's opt link, never its Cellar keg" {
+@test "a brew tree's line names brew and its commit, and neither its opt link nor its keg" {
     install_fake_brew
     install_brew_keg 0.3.0
     run "$KEG/bin/molt" version
     assert_success
-    [[ "$output" == "molt $(cat "$DEV/VERSION") (brew, $(git -C "$DEV" rev-parse --short=12 HEAD)) at $(cd "$BATS_TEST_TMPDIR/brew" && pwd -P)/opt/molt/libexec" ]]
+    [[ "$output" == "molt $(cat "$DEV/VERSION") (brew, $(git -C "$DEV" rev-parse --short=12 HEAD))" ]]
 }
 
 @test "an old-form opt manifest is unknown, fails doctor naming install --force, which replaces it" {
@@ -276,7 +293,7 @@ setup() {
     install_brew_keg 0.3.0
     sed -e '/^# tool:/d' -e 's/^# //' "$KEG/.molt-install" > "$BATS_TEST_TMPDIR/old" && mv "$BATS_TEST_TMPDIR/old" "$KEG/.molt-install"
     run "$KEG/bin/molt" version
-    [[ "$output" == "molt $(cat "$DEV/VERSION") (brew, unknown) at $(cd "$BATS_TEST_TMPDIR/brew" && pwd -P)/opt/molt/libexec" ]]
+    [[ "$output" == "molt $(cat "$DEV/VERSION") (brew, unknown)" ]]
     run "$KEG/bin/molt" doctor
     assert_output_contains "Checking tree... ✓ brew; note: "
     assert_output_contains "is an old manifest, from before the dev/opt/brew contract; brew upgrade matthewsinclair/molt/molt writes a current one"
@@ -378,7 +395,7 @@ setup() {
     [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
     run "$DEV/bin/molt" use
     assert_success
-    assert_output_contains "There is no ~/.local/bin/molt, so brew serves molt $(cat "$DEV/VERSION") (brew, "
+    grep -qxF -- "There is no ~/.local/bin/molt, so brew serves molt $(cat "$DEV/VERSION") (brew, $(git -C "$DEV" rev-parse --short=12 HEAD))" <<< "$output"
     run "$DEV/bin/molt" use brew
     assert_success
 }
@@ -432,7 +449,7 @@ setup() {
     mkdir -p "$HOME/.local/bin" && ln -s "$OPT/bin/molt" "$HOME/.local/bin/molt"
     run "$DEV/bin/molt" use
     assert_success
-    assert_output_contains "serves molt $(cat "$DEV/VERSION") (opt, "
+    [[ "$output"$'\n' == *"/.local/bin/molt serves molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD))"$'\n'* ]]
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$OPT/bin/molt" ]]
 }
 
@@ -534,10 +551,10 @@ setup() {
 
 # --- molt version, doctor and test by tree ---
 
-@test "molt version and --version name the opt tree, its commit and its root" {
+@test "molt version and --version name the opt tree and its commit" {
     "$DEV/bin/molt" install --prefix "$OPT"
     local want
-    want="molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD)) at $OPT"
+    want="molt $(cat "$DEV/VERSION") (opt, $(git -C "$DEV" rev-parse --short=12 HEAD))"
     run "$OPT/bin/molt" version
     assert_success
     [[ "$output" == "$want" ]]

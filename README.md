@@ -137,7 +137,7 @@ molt agent config <role>   # An agent's home, its files' state, and its permissi
 molt git <cmd>             # Run a git command across all managed repos
 molt doctor                # System diagnostics and health checks
 molt test [liberator]      # Run bats test suite (all or one liberator), in the dev tree only
-molt version               # Show the version, the tree (dev, opt or brew), its commit and root
+molt version               # Show the version, the tree (dev, opt or brew) and its commit
 molt help                  # Show help
 ```
 
