@@ -1,0 +1,16 @@
+{
+  "id": "01M5T3HXW74TYWPGMWN1N05R27",
+  "ts": "2026-10-25T18:00:52.871Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 15,
+    "text": "Issue 0061 (no test reaches the host's AppArmor dir, managed-settings dir, sudo or apparmor_parser): branch issue-0061 at f24c2f1, TMPDIR worktree molt-wt/issue-0061. LIGHT GREEN 25 Oct 17:39-17:59Z: both bashes, tripwire empty, shellcheck clean, critic clean on lib/molt.sh and test_helper (agents.bats asked nothing; vc: not blocking), real HOME byte-identical before and after. vc merged it with 0063+0064 in a scratch worktree (bb7d32f); the Molt RC suite judges that merge. Close 0061 and remove the worktree and branch only once that merge is green and replayed on main."
+  }
+}
