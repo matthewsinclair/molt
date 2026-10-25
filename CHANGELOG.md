@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `gtools` liberator: Gtools from Homebrew (`brew install matthewsinclair/gtools/gtools`), per hv's ruling that Gtools joins devbin's dev/opt/brew contract. Its tap is private, so install first taps it over ssh (`git@github.com:matthewsinclair/homebrew-gtools.git`) when it is missing, and check and verify name a missing tap with the tap command, and the gtools that PATH runs. `molt_brew_install` and `molt_brew_faults` take the private tap's URL as an optional argument, and a failed tap fails install with brew's reason shown; intent and utilz pass none and are unchanged. Enabled on no sleeve until Gtools is cut (issue 0057)
 
+### Fixed
+
+- On a sleeve whose utilz comes from Homebrew, the utilz liberator asks Homebrew's `utilz use`, by path, which tree Utilz's own switch points at before it checks what PATH runs. A dev or opt link set in `~/.local/bin` fails check, verify and install, naming that tree and the remedy, `utilz use brew`; it used to read as PATH running the wrong utilz, with no remedy named. When `use` fails or reports shadowing, its own words are shown. Molt never moves the switch: it runs `use` only with no word, which reports and changes nothing (issue 0058)
+
 ## [1.0.1] - 2026-10-24
 
 ### Fixed
