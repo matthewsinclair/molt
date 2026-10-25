@@ -70,17 +70,21 @@ teardown_file() {
 
 # Per-test setup — runs before each test
 setup() {
-    export BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
+    BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
+    export BATS_TEST_TMPDIR
     mkdir -p "$BATS_TEST_TMPDIR"
     # A root no other test, run or worktree shares (critic-shell, 21 Oct).
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
-    export ORIGINAL_PWD="$(pwd)"
-    cd "$BATS_TEST_TMPDIR"
+    ORIGINAL_PWD="$(pwd)"
+    export ORIGINAL_PWD
+    cd "$BATS_TEST_TMPDIR" || return
 }
 
 # Per-test teardown — runs after each test
 teardown() {
     if [[ -n "$ORIGINAL_PWD" && -d "$ORIGINAL_PWD" ]]; then
+        # shellcheck disable=SC2164 # bats runs teardown with errexit off, and the
+        # cleanup below must still run when this cd fails, as it always has
         cd "$ORIGINAL_PWD"
     fi
     if [[ -n "$BATS_TEST_TMPDIR" && -d "$BATS_TEST_TMPDIR" ]]; then
@@ -116,6 +120,7 @@ load_molt_libs() {
 # every test here.
 no_gsettings() {
     _MOLT_GSETTINGS_STATUS=1
+    # shellcheck disable=SC2034 # read by lib/molt.sh, which the test has sourced
     MOLT_GSETTINGS_FAULT="gsettings is not on PATH"
 }
 
@@ -133,6 +138,7 @@ load_liberator() {
     if ! declare -f molt_info &>/dev/null; then
         load_molt_libs
     fi
+    # shellcheck source=/dev/null # the liberator is named by the caller
     source "$MOLT_ROOT/liberators/${name}.sh"
 }
 
@@ -408,6 +414,7 @@ EOF
 
 # Assert command succeeded (exit code 0)
 assert_success() {
+    # shellcheck disable=SC2154 # status and output are set by bats's run
     if [[ "$status" -ne 0 ]]; then
         fail "Expected success (exit 0) but got exit code: $status\nOutput: $output"
     fi
