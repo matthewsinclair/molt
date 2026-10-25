@@ -51,6 +51,13 @@ fi
 export PATH="$_molt_test_stub_dir:$PATH"
 unset _molt_test_stub_dir
 
+# Nor with the runner's git config, or the machine's: an identity, a signing
+# key or a url rewrite there would decide what a test's git does (issue 0062).
+# A helper that commits names its own identity.
+export GIT_CONFIG_NOSYSTEM=1
+export GIT_CONFIG_GLOBAL="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-gitconfig"
+: > "$GIT_CONFIG_GLOBAL"
+
 # ============================================================================
 # SETUP AND TEARDOWN
 # ============================================================================

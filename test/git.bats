@@ -12,7 +12,7 @@ create_git_repo() {
     local path="$1"
     mkdir -p "$path"
     git -C "$path" init -q
-    git -C "$path" commit --allow-empty -m "initial" -q
+    git -c user.name=test -c user.email=test@example.com -C "$path" commit --allow-empty -m "initial" -q
 }
 
 # Create a mock liberator script with repo convention functions
