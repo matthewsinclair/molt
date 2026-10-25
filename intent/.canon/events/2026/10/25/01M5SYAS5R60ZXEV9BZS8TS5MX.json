@@ -1,0 +1,16 @@
+{
+  "id": "01M5SYAS5R60ZXEV9BZS8TS5MX",
+  "ts": "2026-10-25T16:29:35.801Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 15,
+    "text": "Issue 0061 (no test reaches the host's AppArmor dir, managed-settings dir, sudo or apparmor_parser): built on branch issue-0061 at f24c2f1, rebased onto 83ab33a, in the TMPDIR worktree molt-wt/issue-0061. READY, booked fourth in the light lane after devbin-cc 0230, devbin-dc 0231 and molt-dc 0063; vc GOes by name. The light script is scratchpad light61.sh, sha256 d49fccd2...0653; the critic leg carries no known positive (hv's ruling) and is judged on its coverage line. On green: vc merges, cc closes 0061 from main and removes the worktree; then the kovacs RC re-run"
+  }
+}

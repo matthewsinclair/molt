@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Issue 0061 (no test reaches the host's /etc/apparmor.d, /etc/claude-code, sudo or apparmor_parser): built on branch issue-0061 at f24c2f1, rebased onto 83ab33a, in ${TMPDIR%/}/molt-wt/issue-0061. READY, booked fourth in the light lane after devbin-cc 0230, devbin-dc 0231 and molt-dc 0063; vc GOes by name. The light script is scratchpad light61.sh, and the critic leg starts with the known positive. On green: vc merges, cc closes 0061 from main and removes the worktree; then the kovacs RC re-run
+- Issue 0061 (no test reaches the host's AppArmor dir, managed-settings dir, sudo or apparmor_parser): built on branch issue-0061 at f24c2f1, rebased onto 83ab33a, in the TMPDIR worktree molt-wt/issue-0061. READY, booked fourth in the light lane after devbin-cc 0230, devbin-dc 0231 and molt-dc 0063; vc GOes by name. The light script is scratchpad light61.sh, sha256 d49fccd2...0653; the critic leg carries no known positive (hv's ruling) and is judged on its coverage line. On green: vc merges, cc closes 0061 from main and removes the worktree; then the kovacs RC re-run (edited)
 
 ## TODO
 
