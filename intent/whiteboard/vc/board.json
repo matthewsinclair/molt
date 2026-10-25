@@ -682,6 +682,14 @@
       "text": "**hv ruling, 25 Oct 06:48Z: ONE release per project, not many small ones.** hv: \"I DO NOT WANT TO KEEP MAKING MULTIPLE SMALL RELEASES for each project. It takes HOURS to go thru the full release process.\" The next release of each project carries everything outstanding that is being worked on and has not been deferred. There are no interim or patch releases, and there is no user base besides hv. The order is fixed: all done, then all tested at the desk, then the Linux artefacts checked on kovacs through kovacs-sysadm (booked as a heavy), and only then the cut. Cuts and tags are hv's. Anything left out is deferred on the record with hv's say. Relayed to every VC (intent, laksa, utilz, devbin, conflab, gtools) and to kovacs-sysadm.",
       "state": "live",
       "recorded_at": "2026-10-25T06:49:07.054Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 18,
+      "text": "**hv ruling, 25 Oct ~10:03Z: brew by default.** hv: \"As a general rule, I want to use the brew versions of things UNLESS I am working on a project. If I am working, then I'll use dev/opt as needed, and put brew back once done and the patch is released. I want to be sure to use the brew release versions of these tools wherever I can.\" Each tool's use switch sits at brew unless that project is being worked on. Every release's checklist ends with switching back to brew and checking that the brew install answers. Liberators and doctors name a stray dev or opt switch and the remedy, and never flip it themselves. Relayed to every VC.",
+      "state": "live",
+      "recorded_at": "2026-10-25T10:03:48.536Z"
     }
   ],
   "sent": [
