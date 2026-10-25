@@ -127,5 +127,5 @@ _gsettings_env() {
     gsettings_from_path
     PATH="$KEYFILE:$DCONF" molt_gsettings_find
     run cmd_doctor
-    assert_output_contains "Checking gsettings... ✓ $DCONF/gsettings reaches dconf"
+    grep -qxF -- "Checking gsettings... ✓ found, and it reaches dconf" <<< "$output"
 }

@@ -1712,6 +1712,9 @@ molt_foreign_home_paths() {
   done < <(grep -rIlE '(Users|home)' "$dir" 2>/dev/null)
 }
 
+# A check that passes says what passed in words and names no path; only a check
+# that fails about a path names it (contract A3, issue 0066). `command -v molt`
+# says where the running copy lives.
 cmd_doctor() {
   echo "${MOLT_NAME} v${MOLT_VERSION} — Doctor"
   molt_version_line
@@ -1726,7 +1729,7 @@ cmd_doctor() {
   # MOLT_ROOT is valid
   checks=$((checks + 1))
   if [[ -x "${MOLT_ROOT:-}/bin/molt" && -d "${MOLT_ROOT:-}/lib" ]]; then
-    echo "Checking MOLT_ROOT... ✓ $MOLT_ROOT"
+    echo "Checking MOLT_ROOT... ✓ found"
   else
     echo "Checking MOLT_ROOT... ✗ invalid or not found"
     not_passed=$((not_passed + 1))
@@ -1753,7 +1756,7 @@ cmd_doctor() {
         echo "Checking tree... ✗ dev, its commit cannot be read: $commit_fault"
         not_passed=$((not_passed + 1))
       elif [[ "$dirs_ok" -eq 1 ]]; then
-        echo "Checking tree... ✓ dev: lib/ liberators/ test/"
+        echo "Checking tree... ✓ dev"
       else
         echo "Checking tree... ⚠ dev, missing directories"
         not_passed=$((not_passed + 1))
@@ -1798,9 +1801,9 @@ cmd_doctor() {
     echo "Checking molt on PATH... ⚠ $shadow"
     not_passed=$((not_passed + 1))
   elif [[ -e "$(molt_switch_link)" || -L "$(molt_switch_link)" ]]; then
-    echo "Checking molt on PATH... ✓ $(molt_tilde "$(molt_switch_link)")"
+    echo "Checking molt on PATH... ✓ molt use's link"
   else
-    echo "Checking molt on PATH... ✓ brew's, with no $(molt_tilde "$(molt_switch_link)")"
+    echo "Checking molt on PATH... ✓ brew's; no link of molt's"
   fi
 
   # User stack repo
@@ -1839,7 +1842,7 @@ cmd_doctor() {
       echo "         'molt resleeve' so the dotfile symlinks are regenerated too."
       not_passed=$((not_passed + 1))
     else
-      echo "Checking user stack repo... ✓ $user_repo"
+      echo "Checking user stack repo... ✓ found"
     fi
   else
     echo "Checking user stack repo... ✗ not found"
@@ -1876,7 +1879,7 @@ cmd_doctor() {
       echo "         something starts trusting it."
       not_passed=$((not_passed + 1))
     else
-      echo "Checking manifest... ✓ $manifest"
+      echo "Checking manifest... ✓ found"
     fi
   else
     echo "Checking manifest... ⚠ no molt.toml found"
@@ -1915,7 +1918,7 @@ cmd_doctor() {
     local gs_status=0
     molt_gsettings_find || gs_status=$?
     case $gs_status in
-      0) echo "Checking gsettings... ✓ $(molt_tilde "$_MOLT_GSETTINGS") reaches dconf" ;;
+      0) echo "Checking gsettings... ✓ found, and it reaches dconf" ;;
       1) echo "Checking gsettings... ✓ none on PATH, so no GNOME keys to set" ;;
       *)
         echo "Checking gsettings... ⚠ $MOLT_GSETTINGS_FAULT"
@@ -2009,7 +2012,7 @@ cmd_doctor() {
     fi
   fi
   if [[ -n "$ssh_key_found" ]]; then
-    echo "Checking SSH key... ✓ ~/.ssh/$ssh_key_found"
+    echo "Checking SSH key... ✓ found"
   else
     echo "Checking SSH key... ⚠ no SSH key found"
     not_passed=$((not_passed + 1))
@@ -2176,8 +2179,8 @@ cmd_doctor() {
   fi
   if [[ -z "$floor_faults" ]]; then
     case "$floor_state" in
-      current) floor_fault="in place: $(molt_tilde "$(molt_agent_floor_target)")" ;;
-      unowned) floor_fault="none needed; $(molt_tilde "$(molt_agent_floor_target)") is not molt's, and is left" ;;
+      current) floor_fault="in place" ;;
+      unowned) floor_fault="none needed; not molt's, left as is" ;;
       *)       floor_fault="none needed, and none of molt's here" ;;
     esac
     echo "Checking managed floor... ✓ $floor_fault"
@@ -2201,8 +2204,8 @@ cmd_doctor() {
   fi
   if [[ -z "$sandbox_faults" ]]; then
     case "$sandbox_state" in
-      current) sandbox_fault="in place: $(molt_tilde "$(molt_agent_sandbox_target)")" ;;
-      unowned) sandbox_fault="none needed; $(molt_tilde "$(molt_agent_sandbox_target)") is not molt's, and is left" ;;
+      current) sandbox_fault="in place" ;;
+      unowned) sandbox_fault="none needed; not molt's, left as is" ;;
       *)       sandbox_fault="none needed, and none of molt's here" ;;
     esac
     echo "Checking sandbox profile... ✓ $sandbox_fault"
