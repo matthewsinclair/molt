@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450",
-    "heartbeat_at": "2026-10-25T17:41:02.818Z",
+    "heartbeat_at": "2026-10-25T19:46:55.915Z",
     "status": "active",
-    "focus": "25 Oct: 0063 and 0064 merged (2026975) and closed (b37fc01); 0065 filed (357d019), waits on hv's call on deferral via vc; no work in hand",
+    "focus": "25 Oct: 0066 merged (d3363c0) and closed (475f12b); 0065 deferred past the release; no work in hand, kovacs re-run is vc's via kovacs-sysadm",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -349,7 +349,8 @@
       "kind": "doing",
       "seq": 21,
       "text": "Issue 0066 (A3 doctor clause: a passing check names no path), branch issue-0066 at 14b72df in $TMPDIR/molt-wt/issue-0066, off main 8047eab. READY for a single-file LIGHT (dev0066.sh: green arm, then red with main's molt.sh), after vc's RC run. Then rebase on 0061 once vc replays it, full LIGHT under both bashes, merge, close 0066 from main.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-25T19:46:55.874Z",
       "recorded_at": "2026-10-25T18:32:44.895Z"
     }
   ],
