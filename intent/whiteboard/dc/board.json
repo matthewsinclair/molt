@@ -5,7 +5,7 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450",
-    "heartbeat_at": "2026-10-24T18:26:28.281Z",
+    "heartbeat_at": "2026-10-25T03:27:23.413Z",
     "status": "active",
     "focus": "24 Oct: idle after 0056 (ba75195, shipped in v1.0.1, verified on kovacs); folded for hv's 18:24Z compact, nothing in flight",
     "claims": [],
