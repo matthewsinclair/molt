@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-25 18:52Z
-status: active
-focus: "25 Oct: 0061 closed (dde5e16, merged f20383b); idle, no LIGHT booked; holds 16 and 17 stand"
+heartbeat_at: 2026-10-25 19:59Z
+status: paused
+focus: "25 Oct EOD: idle; 0061 closed (dde5e16); holds 16 and 17 stand; released for the night on hv's word"
 claims: []
 ---
 
