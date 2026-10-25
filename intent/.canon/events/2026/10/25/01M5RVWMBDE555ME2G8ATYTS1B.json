@@ -1,0 +1,15 @@
+{
+  "id": "01M5RVWMBDE555ME2G8ATYTS1B",
+  "ts": "2026-10-25T06:27:40.526Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Holding the deletion of templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh; vc's Q4 ruling, 24 Oct) until gyges has resleeved onto the env liberator. rhadamanth (v1.0.0) and kovacs (1.0.1 from brew) already have. Released when vc confirms gyges's resleeve."
+  }
+}

@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-25 03:27Z
+heartbeat_at: 2026-10-25 06:27Z
 status: active
-focus: "Holding for todo 12. rhadamanth resleeved at v1.0.0 and kovacs is on Molt 1.0.1 from brew with its clone removed (vc relaying kovacs-sysadm, 24 Oct); rhadamanth's GUI env waits for hv's next login. Only gyges still has to resleeve"
+focus: "Holding the deletion of templates/env/retired/ until gyges resleeves; rhadamanth and kovacs have. rhadamanth's GUI env waits for hv's next login"
 claims: []
 ---
 
@@ -17,11 +17,11 @@ _(none)_
 
 ## TODO
 
-- Delete templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh) once rhadamanth, kovacs and gyges have resleeved onto the env liberator (vc's Q4 ruling, 24 Oct).
+_(none)_
 
 ## Holds
 
-_(none)_
+- Holding the deletion of templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh; vc's Q4 ruling, 24 Oct) until gyges has resleeved onto the env liberator. rhadamanth (v1.0.0) and kovacs (1.0.1 from brew) already have. Released when vc confirms gyges's resleeve.
 
 ## Watch-outs
 
