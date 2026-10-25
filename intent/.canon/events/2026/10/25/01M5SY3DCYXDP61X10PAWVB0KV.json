@@ -1,0 +1,15 @@
+{
+  "id": "01M5SY3DCYXDP61X10PAWVB0KV",
+  "ts": "2026-10-25T16:25:34.366Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issues 0063 and 0064 stacked on branch issue-0063-0064 at fcd3ca6 (0063 as 6f4bc19 and dbfeaf2, 0064 as fcd3ca6), rebased on main 0d64330, worktree $TMPDIR/molt-wt/issue-0063-0064. READY, third LIGHT in vc's lane; on GO run light.sh: full suite under Homebrew bash with the real HOME and /bin/bash with an empty HOME, tripwire launchctl behind the stub, critic leg opening on the known positive, then send END. After vc merges: close 0063 and 0064 from main with as-built notes, then remove the worktrees issue-0063, issue-0064 and issue-0063-0064 and their branches."
+  }
+}

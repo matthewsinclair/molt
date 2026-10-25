@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-25 14:14Z
+heartbeat_at: 2026-10-25 16:25Z
 status: active
-focus: "25 Oct: hold 11 done, sleeve-agents.md env-plist cell at 8150c39 for vc to push; idle, awaiting vc"
+focus: "25 Oct: 0062 closed (0d64330); 0063+0064 stacked at fcd3ca6, READY, third LIGHT; folded for hv's compact, not released"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Issues 0063 and 0064 stacked on branch issue-0063-0064 at fcd3ca6 (0063 as 6f4bc19 and dbfeaf2, 0064 as fcd3ca6), rebased on main 0d64330, worktree $TMPDIR/molt-wt/issue-0063-0064. READY, third LIGHT in vc's lane; on GO run light.sh: full suite under Homebrew bash with the real HOME and /bin/bash with an empty HOME, tripwire launchctl behind the stub, critic leg opening on the known positive, then send END. After vc merges: close 0063 and 0064 from main with as-built notes, then remove the worktrees issue-0063, issue-0064 and issue-0063-0064 and their branches.
 
 ## TODO
 
