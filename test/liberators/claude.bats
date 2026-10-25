@@ -627,8 +627,8 @@ JSON
     assert_success
     local plist="$HOME/Library/LaunchAgents/com.molt.env.plist"
     grep -qF "<string>com.molt.env</string>" "$plist"
-    grep -qF "<string>setenv</string>" "$plist"
-    grep -qF "<string>$CONFIG</string>" "$plist"
+    grep -qF "<string>/bin/sh</string>" "$plist"
+    grep -qF "launchctl setenv 'CLAUDE_CONFIG_DIR' '$CONFIG'" "$plist"
     if command -v plutil >/dev/null; then
         plutil -lint "$plist"
     fi

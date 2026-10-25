@@ -64,6 +64,7 @@ env_check() {
   pairs="$(molt_env_given <<< "$lines")"
   _env_report_refusals molt_info "env: " "$lines" || ok=1
   molt_env_report_faults molt_info "env: " "$pairs" || ok=1
+  molt_env_report_launchd molt_info "env: " "$pairs" || ok=1
   return $ok
 }
 

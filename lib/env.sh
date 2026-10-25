@@ -10,8 +10,10 @@
 # PATH is built, never sets it. The env liberator gathers the pairs and calls
 # the writer; the files are rebuilt whole from them every time, so a value a
 # contributor stops giving is gone from both at once, and env.sh and the GUI
-# file cannot drift apart. Nothing here runs launchctl or systemctl, nor sudo:
-# the GUI file takes effect for apps launched after the next login.
+# file cannot drift apart. Nothing here sets anything through launchctl or
+# systemctl, nor runs sudo: the GUI file takes effect for apps launched after
+# the next login, and the check only reads what launchd holds, with launchctl
+# getenv.
 
 # The env file ~/.zshenv sources.
 molt_env_file() {
@@ -221,12 +223,29 @@ EOF
   done
 }
 
-# The LaunchAgent for the pairs on stdin: one launchctl setenv, which takes
-# every pair, at each login, or true when there is none, since launchctl
-# setenv with no pair fails.
+# The word $1 single-quoted for sh, so it reaches the command byte for byte.
+_molt_env_sh_quote() {
+  printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
+}
+
+# The text $1 escaped for a plist <string>.
+_molt_env_xml_text() {
+  printf '%s' "$1" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
+}
+
+# The LaunchAgent for the pairs on stdin: at each login, sh runs one launchctl
+# setenv per pair, since setenv takes one name and one value and launchd keeps
+# only the first pair of a longer list (issue 0059). Each word is quoted, and
+# one failed setenv does not stop the rest. With no pair it runs true.
+# launchctl is named bare: a launchd job's PATH finds /bin/launchctl, and a
+# test's stub comes first on its own.
 _molt_env_plist_text() {
-  local name scope value pairs
+  local name scope value pairs script=""
   pairs="$(cat)"
+  while IFS=$'\t' read -r name scope value; do
+    [[ -n "$name" ]] || continue
+    script="${script:+$script; }launchctl setenv $(_molt_env_sh_quote "$name") $(_molt_env_sh_quote "$value")"
+  done <<< "$pairs"
   cat <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -240,15 +259,11 @@ _molt_env_plist_text() {
   <key>ProgramArguments</key>
   <array>
 EOF
-  if [[ -z "$pairs" ]]; then
+  if [[ -z "$script" ]]; then
     printf '    <string>/usr/bin/true</string>\n'
   else
-    printf '    <string>/bin/launchctl</string>\n    <string>setenv</string>\n'
+    printf '    <string>/bin/sh</string>\n    <string>-c</string>\n    <string>%s</string>\n' "$(_molt_env_xml_text "$script")"
   fi
-  while IFS=$'\t' read -r name scope value; do
-    [[ -n "$name" ]] || continue
-    printf '    <string>%s</string>\n    <string>%s</string>\n' "$name" "$value"
-  done <<< "$pairs"
   cat <<'EOF'
   </array>
   <key>RunAtLoad</key>
@@ -332,6 +347,37 @@ molt_env_report_faults() {
       differs) "$log" "${prefix}$(molt_tilde "$target") is not what molt would publish: $(_molt_env_names "$pairs")" ; ok=1 ;;
     esac
   done <<< "$(_molt_env_targets)"
+  return $ok
+}
+
+# Reports, through $1 after the prefix $2, each pair in $3 that launchd does
+# not hold as published, on macOS, where GUI apps get the plist's pairs only
+# once it has run: a file molt would write says nothing of what launchd holds
+# (issue 0059). Reads with launchctl getenv, and never sets anything. Returns
+# non-zero when it reported any.
+molt_env_report_launchd() {
+  local log="$1" prefix="$2" pairs="$3" name scope value held uid plist ok=0
+  [[ "$(molt_platform)" == macos ]] || return 0
+  uid="$(id -u)"
+  plist="$(molt_tilde "$(molt_env_gui_file)")"
+  while IFS=$'\t' read -r name scope value; do
+    [[ -n "$name" ]] || continue
+    if ! held="$(launchctl getenv "$name" 2>&1)"; then
+      "$log" "${prefix}launchctl getenv $name failed, so whether GUI apps get it is unknown: $held"
+      ok=1
+      continue
+    fi
+    [[ "$held" != "$value" ]] || continue
+    if [[ -z "$held" ]]; then
+      "$log" "${prefix}launchd does not hold $name, so GUI apps do not get it"
+    else
+      "$log" "${prefix}launchd holds another $name, so GUI apps get $held"
+    fi
+    ok=1
+  done <<< "$pairs"
+  if [[ $ok -ne 0 ]]; then
+    "$log" "${prefix}$plist takes effect at the next login, or now with: launchctl bootout gui/$uid/com.molt.env; launchctl bootstrap gui/$uid $plist"
+  fi
   return $ok
 }
 

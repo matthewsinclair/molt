@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - On a sleeve whose utilz comes from Homebrew, the utilz liberator asks Homebrew's `utilz use`, by path, which tree Utilz's own switch points at before it checks what PATH runs. A dev or opt link set in `~/.local/bin` fails check, verify and install, naming that tree and the remedy, `utilz use brew`; it used to read as PATH running the wrong utilz, with no remedy named. When `use` fails or reports shadowing, its own words are shown. Molt never moves the switch: it runs `use` only with no word, which reports and changes nothing (issue 0058)
+- On macOS the env LaunchAgent ran one `launchctl setenv` with every pair, and launchd kept only the first, so in a GUI session only `CLAUDE_CONFIG_DIR` was set and every app launchd started got a bare PATH and none of the install prefixes. The plist now runs `/bin/sh -c` with one `launchctl setenv` per pair, each word quoted so a value reaches launchd byte for byte. The env check, which `molt doctor` runs, also asks `launchctl getenv` for each published pair and names each one launchd does not hold, with how to load it before the next login; it only reads. It used to compare the plist with what molt would write, and so passed (issue 0059)
 
 ## [1.0.1] - 2026-10-24
 
