@@ -1,0 +1,15 @@
+{
+  "id": "01M5SVCEEA03XDHSH9YCM7GTET",
+  "ts": "2026-10-25T15:38:04.618Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0063"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "Version line drops ' at <root>' (contract A3, hv's ruling)"
+  }
+}
