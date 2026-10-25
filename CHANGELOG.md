@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `gtools` liberator: Gtools from Homebrew (`brew install matthewsinclair/gtools/gtools`), per hv's ruling that Gtools joins devbin's dev/opt/brew contract. Its tap is private, so install first taps it over ssh (`git@github.com:matthewsinclair/homebrew-gtools.git`) when it is missing, and check and verify name a missing tap with the tap command, and the gtools that PATH runs. `molt_brew_install` and `molt_brew_faults` take the private tap's URL as an optional argument, and a failed tap fails install with brew's reason shown; intent and utilz pass none and are unchanged. Enabled on no sleeve until Gtools is cut (issue 0057)
 
+### Fixed
+
+- On macOS the env LaunchAgent ran one `launchctl setenv` with every pair, and launchd kept only the first, so in a GUI session only `CLAUDE_CONFIG_DIR` was set and every app launchd started got a bare PATH and none of the install prefixes. The plist now runs `/bin/sh -c` with one `launchctl setenv` per pair, each word quoted so a value reaches launchd byte for byte. The env check, which `molt doctor` runs, also asks `launchctl getenv` for each published pair and names each one launchd does not hold, with how to load it before the next login; it only reads. It used to compare the plist with what molt would write, and so passed (issue 0059)
+
 ## [1.0.1] - 2026-10-24
 
 ### Fixed

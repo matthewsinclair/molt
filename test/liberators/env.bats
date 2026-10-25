@@ -29,6 +29,37 @@ setup_env() {
 
     # No /etc/environment unless a test writes one.
     export MOLT_ETC_ENVIRONMENT="$BATS_TEST_TMPDIR/etc-environment"
+
+    # launchctl, faked first on PATH, so no test reaches the real launchd: it
+    # logs each call's argv as one line of <word>s, and setenv and getenv keep
+    # a value per name in LAUNCHD, which starts empty, as a login has not yet
+    # run the plist.
+    export LAUNCHD="$BATS_TEST_TMPDIR/launchd" LAUNCHCTL_LOG="$BATS_TEST_TMPDIR/launchctl.log"
+    mkdir -p "$LAUNCHD" "$BATS_TEST_TMPDIR/launchctl-stub"
+    cat > "$BATS_TEST_TMPDIR/launchctl-stub/launchctl" <<'EOF'
+#!/bin/sh
+printf '<%s>' "$@" >> "$LAUNCHCTL_LOG"
+echo >> "$LAUNCHCTL_LOG"
+case "$1" in
+  setenv) printf '%s' "$3" > "$LAUNCHD/$2" ;;
+  getenv) if [ -f "$LAUNCHD/$2" ]; then cat "$LAUNCHD/$2"; echo; fi ;;
+  *)      exit 1 ;;
+esac
+EOF
+    chmod +x "$BATS_TEST_TMPDIR/launchctl-stub/launchctl"
+    export PATH="$BATS_TEST_TMPDIR/launchctl-stub:$PATH"
+}
+
+# The sh script the plist $1 runs at login, read from its ProgramArguments by
+# hand: the string after -c, its XML escapes undone.
+plist_script() {
+    sed -n '/<string>-c<\/string>/{n;p;}' "$1" \
+        | sed -e 's/^    <string>//' -e 's/<\/string>$//' -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's/&amp;/\&/g'
+}
+
+# A login, faked: runs the plist's script with the stub launchctl.
+log_in() {
+    sh -c "$(plist_script "$HOME/Library/LaunchAgents/com.molt.env.plist")"
 }
 
 # The fake login shell prints $1 as its PATH.
@@ -62,17 +93,16 @@ export CLAUDE_CONFIG_DIR=\"$HOME/.config/claude\"
 export UTILZ_INSTALL_PREFIX=\"$HOME/Devel/opt/utilz\"" ]
     local plist="$HOME/Library/LaunchAgents/com.molt.env.plist"
     grep -qF "<string>com.molt.env</string>" "$plist"
-    [ "$(sed -n '/<string>setenv<\/string>/,/<\/array>/p' "$plist")" = "    <string>setenv</string>
-    <string>CLAUDE_CONFIG_DIR</string>
-    <string>$HOME/.config/claude</string>
-    <string>UTILZ_INSTALL_PREFIX</string>
-    <string>$HOME/Devel/opt/utilz</string>
-    <string>PATH</string>
-    <string>$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    [ "$(sed -n '/<key>ProgramArguments<\/key>/,/<\/array>/p' "$plist")" = "  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>launchctl setenv 'CLAUDE_CONFIG_DIR' '$HOME/.config/claude'; launchctl setenv 'UTILZ_INSTALL_PREFIX' '$HOME/Devel/opt/utilz'; launchctl setenv 'PATH' '$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin'</string>
   </array>" ]
     if command -v plutil >/dev/null; then
         plutil -lint "$plist"
     fi
+    log_in
     run env_check
     assert_success
     run env_verify
@@ -130,7 +160,7 @@ $HOME/.config/environment.d/molt.conf:0" ]
     run env_install
     assert_failure
     assert_output_contains "printed no PATH"
-    run grep -c '<string>PATH</string>' "$HOME/Library/LaunchAgents/com.molt.env.plist"
+    run grep -c "setenv 'PATH'" "$HOME/Library/LaunchAgents/com.molt.env.plist"
     [ "$output" = 0 ]
 }
 
@@ -237,6 +267,7 @@ LANG=en_GB.UTF-8
     login_path "$HOME/.local/bin:/usr/bin"
     run env_install
     assert_success
+    log_in
     run env_check
     assert_success
     rm "$HOME/.config/molt/env.sh"
@@ -246,6 +277,7 @@ LANG=en_GB.UTF-8
     echo 'export UTILZ_INSTALL_PREFIX="/opt/utilz"' >> "$VARS"
     run env_install
     assert_success
+    log_in
     run env_check
     assert_success
 }
@@ -297,6 +329,7 @@ EOF
     assert_success
     [ ! -e "$old" ]
     [ -e "$HOME/Library/LaunchAgents/com.molt.env.plist" ]
+    log_in
     run env_check
     assert_success
 }
@@ -348,8 +381,8 @@ EOF
     grep -qxF "export CLAUDE_CONFIG_DIR=\"$CONFIG\"" "$HOME/.config/molt/env.sh"
     grep -qxF 'export UTILZ_INSTALL_PREFIX="/opt/utilz"' "$HOME/.config/molt/env.sh"
     local plist="$HOME/Library/LaunchAgents/com.molt.env.plist"
-    grep -qxF "    <string>$CONFIG</string>" "$plist"
-    run grep -c '<string>PATH</string>' "$plist"
+    grep -qF "launchctl setenv 'CLAUDE_CONFIG_DIR' '$CONFIG'" "$plist"
+    run grep -c "setenv 'PATH'" "$plist"
     [ "$output" = 0 ]
     run env_check
     assert_failure
@@ -380,4 +413,49 @@ EOF
     if command -v plutil >/dev/null; then
         plutil -lint "$HOME/Library/LaunchAgents/com.molt.env.plist"
     fi
+}
+
+@test "the plist's script runs one launchctl setenv per pair, each value byte for byte, spaces, quotes and \$ included (issue 0059)" {
+    # rhadamanth, 25 Oct 2026: the plist ran ONE launchctl setenv with every
+    # pair, and launchd held only CLAUDE_CONFIG_DIR.
+    setup_env
+    local plist="$BATS_TEST_TMPDIR/env.plist" q="'" dq='"'
+    printf '%s\t%s\t%s\n' \
+        CLAUDE_CONFIG_DIR all "/Users/a b/.config/claude" \
+        ODD all "it${q}s \$HOME ${dq}quoted${dq} & <b>" \
+        PATH gui "/x/bin:/usr/bin" | _molt_env_plist_text > "$plist"
+    if command -v plutil >/dev/null; then
+        plutil -lint "$plist"
+    fi
+    sh -c "$(plist_script "$plist")"
+    [ "$(cat "$LAUNCHCTL_LOG")" = "<setenv><CLAUDE_CONFIG_DIR></Users/a b/.config/claude>
+<setenv><ODD><it${q}s \$HOME ${dq}quoted${dq} & <b>>
+<setenv><PATH></x/bin:/usr/bin>" ]
+}
+
+@test "on macOS check names each pair launchd does not hold as published, and passes once a login has run the plist; it only reads (issue 0059)" {
+    setup_env
+    on_macos
+    declare_moved
+    echo 'export UTILZ_INSTALL_PREFIX="/opt/utilz"' >> "$VARS"
+    env_install >/dev/null
+    printf '%s' "$CONFIG" > "$LAUNCHD/CLAUDE_CONFIG_DIR"
+    printf '%s' "/old/utilz" > "$LAUNCHD/UTILZ_INSTALL_PREFIX"
+    run env_check
+    assert_failure
+    assert_output_contains "env: launchd holds another UTILZ_INSTALL_PREFIX, so GUI apps get /old/utilz"
+    assert_output_contains "env: launchd does not hold PATH, so GUI apps do not get it"
+    refute_output_contains "launchd does not hold CLAUDE_CONFIG_DIR"
+    assert_output_contains "takes effect at the next login, or now with: launchctl bootout gui/$(id -u)/com.molt.env; launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.molt.env.plist"
+    run grep -c '^<setenv>' "$LAUNCHCTL_LOG"
+    [ "$output" = 0 ]
+    log_in
+    run env_check
+    assert_success
+    on_linux
+    env_install >/dev/null
+    : > "$LAUNCHCTL_LOG"
+    run env_check
+    assert_success
+    [ ! -s "$LAUNCHCTL_LOG" ]
 }
