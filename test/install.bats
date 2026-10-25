@@ -427,7 +427,7 @@ setup() {
     PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" doctor
     assert_output_contains "Checking molt on PATH... ⚠ there is no ~/.local/bin/molt, so brew should serve molt"
     run "$DEV/bin/molt" doctor
-    assert_output_contains "Checking molt on PATH... ✓ brew's, with no ~/.local/bin/molt"
+    grep -qxF -- "Checking molt on PATH... ✓ brew's; no link of molt's" <<< "$output"
 }
 
 # ST0008 AT004
@@ -584,9 +584,9 @@ setup() {
     assert_output_contains "lib/molt.sh has changed"
 }
 
-@test "doctor in a dev tree checks for test/" {
+@test "doctor in a dev tree passes, naming no path" {
     run "$DEV/bin/molt" doctor
-    assert_output_contains "Checking tree... ✓ dev: lib/ liberators/ test/"
+    grep -qxF -- "Checking tree... ✓ dev" <<< "$output"
 }
 
 # --- molt upgrade by tree ---
@@ -787,11 +787,11 @@ FAKE
     assert_success
 }
 
-@test "doctor passes ~/.local/bin/molt as what PATH runs, and names what shadows it" {
+@test "doctor passes molt use's link as what PATH runs, and names what shadows it" {
     export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
     "$DEV/bin/molt" use dev
     run "$DEV/bin/molt" doctor
-    assert_output_contains "Checking molt on PATH... ✓"
+    grep -qxF -- "Checking molt on PATH... ✓ molt use's link" <<< "$output"
     mkdir -p "$BATS_TEST_TMPDIR/stray"
     ln -s "$DEV/bin/molt" "$BATS_TEST_TMPDIR/stray/molt"
     PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" doctor

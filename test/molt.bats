@@ -133,7 +133,7 @@ TOML
     create_test_repo "$repo"
     printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
     MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" run_molt doctor
-    assert_output_contains "Checking manifest... ✓ $repo/molt.toml"
+    grep -qxF -- "Checking manifest... ✓ found" <<< "$output"
     assert_doctor_closed
 }
 
@@ -980,7 +980,7 @@ _floor_sleeve() {
     assert_output_contains "         $FLOOR is missing"
     _agents_floor >/dev/null
     run cmd_doctor
-    assert_output_contains "Checking managed floor... ✓ in place: $FLOOR"
+    grep -qxF -- "Checking managed floor... ✓ in place" <<< "$output"
     echo '{"permissions": {"deny": []}}' > "$FLOOR"
     run cmd_doctor
     assert_output_contains "         $FLOOR is not $REPO/config/agents/roles/sysadm/floor.json"
@@ -1001,7 +1001,7 @@ _floor_sleeve() {
     assert_output_contains "         $FLOOR is molt's, and this sleeve carries no floor: it has no enabled sysadm agent, or declares no MOLT_CLAUDE_CONFIG_DIR"
     rm -f "$FLOOR.molt-rendered"
     run cmd_doctor
-    assert_output_contains "Checking managed floor... ✓ none needed; $FLOOR is not molt's, and is left"
+    grep -qxF -- "Checking managed floor... ✓ none needed; not molt's, left as is" <<< "$output"
     rm -f "$FLOOR"
     run cmd_doctor
     assert_output_contains "Checking managed floor... ✓ none needed, and none of molt's here"
@@ -1019,7 +1019,7 @@ _floor_sleeve() {
     assert_output_contains "         $profile is not molt's, so bwrap's children are denied the sys_admin Claude Code's sandbox needs"
     _agents_sandbox >/dev/null
     run cmd_doctor
-    assert_output_contains "Checking sandbox profile... ✓ in place: $profile"
+    grep -qxF -- "Checking sandbox profile... ✓ in place" <<< "$output"
     FAKE_BWRAP_STATUS=1 run cmd_doctor
     assert_output_contains "Checking sandbox profile... ⚠"
     assert_output_contains "         $profile is molt's, but bwrap's children still cannot make the sandbox's user namespace"
@@ -1030,10 +1030,48 @@ _floor_sleeve() {
     assert_output_contains "         $profile is molt's, and this sleeve takes no sandbox profile: it enables no ops or docs agent, or is not Linux"
     _agents_sandbox >/dev/null
     run cmd_doctor
-    assert_output_contains "Checking sandbox profile... ✓ none needed; $profile is not molt's, and is left"
+    grep -qxF -- "Checking sandbox profile... ✓ none needed; not molt's, left as is" <<< "$output"
     rm -f "$profile"
     run cmd_doctor
     assert_output_contains "Checking sandbox profile... ✓ none needed, and none of molt's here"
+}
+
+# Fails naming each ✓ line in $output that names a path, tilde or absolute.
+refute_path_on_pass() {
+    local line found=""
+    for line in "${lines[@]}"; do
+        [[ "$line" == *"... ✓"* ]] || continue
+        [[ "$line" == *"/"* || "$line" == *"~"* ]] && found="${found}${line}"$'\n'
+    done
+    [ -z "$found" ] || fail "a check that passed names a path (contract A3):\n$found"
+}
+
+@test "a check that passes names no path, wherever doctor finds one (contract A3, issue 0066)" {
+    _floor_sleeve
+    local repo
+    repo="$BATS_TEST_TMPDIR/Molt-$(whoami)"
+    mv "$REPO" "$repo"
+    REPO="$repo" INSTANCE="$repo/instances/$(test_hostname)"
+    eval "molt_find_user_repo() { echo \"$REPO\"; }"
+    mkdir -p "$HOME/.ssh" "$REPO/config/agents/roles/ops"
+    touch "$HOME/.ssh/id_ed25519"
+    _agents_floor >/dev/null
+    run cmd_doctor
+    refute_path_on_pass
+    grep -qxF -- "Checking MOLT_ROOT... ✓ found" <<< "$output"
+    grep -qxF -- "Checking tree... ✓ dev" <<< "$output"
+    grep -qxF -- "Checking user stack repo... ✓ found" <<< "$output"
+    grep -qxF -- "Checking manifest... ✓ found" <<< "$output"
+    grep -qxF -- "Checking SSH key... ✓ found" <<< "$output"
+    grep -qxF -- "Checking managed floor... ✓ in place" <<< "$output"
+
+    printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "ops"\n' > "$INSTANCE/molt.toml"
+    eval 'molt_platform() { echo linux; }'
+    echo "the distro's profile" > "$BATS_TEST_TMPDIR/apparmor.d/bwrap-userns-restrict"
+    _agents_sandbox >/dev/null
+    run cmd_doctor
+    refute_path_on_pass
+    grep -qxF -- "Checking sandbox profile... ✓ in place" <<< "$output"
 }
 
 @test "doctor closes with how many checks did not pass out of how many ran, a check that could not run among them" {
