@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-25 15:03Z
+heartbeat_at: 2026-10-25 16:25Z
 status: active
-focus: "25 Oct: 0060 landed by vc at d15b82d (the new RC code), closed cab3fb2, worktree and branch removed. Worktree commits are refused until intent-vc fixes doctor's inherited GIT_DIR. Holds 16 (deferred by hv) and 17 stand; idle for vc's next"
+focus: "25 Oct: 0061 READY at f24c2f1, fourth in the light lane, awaiting vc's GO; holds 16 (deferred by hv) and 17 stand; folded for hv's compact, not released"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Issue 0061 (no test reaches the host's /etc/apparmor.d, /etc/claude-code, sudo or apparmor_parser): built on branch issue-0061 at f24c2f1, rebased onto 83ab33a, in ${TMPDIR%/}/molt-wt/issue-0061. READY, booked fourth in the light lane after devbin-cc 0230, devbin-dc 0231 and molt-dc 0063; vc GOes by name. The light script is scratchpad light61.sh, and the critic leg starts with the known positive. On green: vc merges, cc closes 0061 from main and removes the worktree; then the kovacs RC re-run
 
 ## TODO
 
