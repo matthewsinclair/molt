@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Holding the deletion of templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh; vc's Q4 ruling, 24 Oct) until gyges has resleeved onto the env liberator. rhadamanth (v1.0.0) and kovacs (1.0.1 from brew) already have. Released when vc confirms gyges's resleeve.
+- Holding the deletion of templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh; vc's Q4 ruling, 24 Oct) until gyges has resleeved onto the env liberator. rhadamanth (v1.0.0) and kovacs (1.0.1 from brew) already have. hv, 25 Oct: gyges's resleeve is P3 or P4 and not today, as it needs the network reconfigured. Deleting early would leave gyges's old files unrecognised at its resleeve, so this does not go into the next release unless gyges resleeves first. Released when vc confirms gyges's resleeve. (edited)
 - Holding the brew-leg proof of the gtools liberator (issue 0057, closed at its as-built) until Gtools is cut and its private tap exists, and hv has enabled gtools on a sleeve. Then molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs; on kovacs too, through kovacs-sysadm, if Gtools ships a Linux formula. Released when that proof is in.
 
 ## Watch-outs
