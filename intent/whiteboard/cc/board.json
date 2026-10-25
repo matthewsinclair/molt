@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-25T14:15:01.796Z",
+    "heartbeat_at": "2026-10-25T15:03:44.889Z",
     "status": "active",
-    "focus": "25 Oct: 0059 merged by vc at 9da1abd, closed at its as-built b1c17de; worktree and branch removed, Molt-wt gone; new worktrees go in $TMPDIR/molt-wt. Holds 16 (deferred by hv) and 17 stand; idle for vc's next",
+    "focus": "25 Oct: 0060 landed by vc at d15b82d (the new RC code), closed cab3fb2, worktree and branch removed. Worktree commits are refused until intent-vc fixes doctor's inherited GIT_DIR. Holds 16 (deferred by hv) and 17 stand; idle for vc's next",
     "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
