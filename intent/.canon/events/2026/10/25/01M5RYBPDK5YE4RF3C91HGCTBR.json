@@ -1,0 +1,15 @@
+{
+  "id": "01M5RYBPDK5YE4RF3C91HGCTBR",
+  "ts": "2026-10-25T07:10:51.316Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0057"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "gtools liberator: brew-only, private ssh tap, per hv's dev/opt/brew ruling for Gtools"
+  }
+}
