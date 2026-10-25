@@ -674,6 +674,14 @@
       "text": "**An agent session keeps the PATH it started with.** On 24 Oct devbin-cc's T10 switch looked shadowed because its Bash tool still had /opt/homebrew/bin ahead of ~/.local/bin, while a fresh login shell (env -i ... zsh -lic) had ~/.local/bin first per Molt-matts a258ad0. A PATH or zshrc change reaches only sessions started after it; judge any use dev|opt|brew proof in a fresh login shell.",
       "state": "live",
       "recorded_at": "2026-10-24T11:44:24.796Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 17,
+      "text": "**hv ruling, 25 Oct 06:48Z: ONE release per project, not many small ones.** hv: \"I DO NOT WANT TO KEEP MAKING MULTIPLE SMALL RELEASES for each project. It takes HOURS to go thru the full release process.\" The next release of each project carries everything outstanding that is being worked on and has not been deferred. There are no interim or patch releases, and there is no user base besides hv. The order is fixed: all done, then all tested at the desk, then the Linux artefacts checked on kovacs through kovacs-sysadm (booked as a heavy), and only then the cut. Cuts and tags are hv's. Anything left out is deferred on the record with hv's say. Relayed to every VC (intent, laksa, utilz, devbin, conflab, gtools) and to kovacs-sysadm.",
+      "state": "live",
+      "recorded_at": "2026-10-25T06:49:07.054Z"
     }
   ],
   "sent": [

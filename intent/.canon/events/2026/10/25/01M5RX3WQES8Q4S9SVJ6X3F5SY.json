@@ -1,0 +1,15 @@
+{
+  "id": "01M5RX3WQES8Q4S9SVJ6X3F5SY",
+  "ts": "2026-10-25T06:49:07.055Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv ruling, 25 Oct 06:48Z: ONE release per project, not many small ones.** hv: \"I DO NOT WANT TO KEEP MAKING MULTIPLE SMALL RELEASES for each project. It takes HOURS to go thru the full release process.\" The next release of each project carries everything outstanding that is being worked on and has not been deferred. There are no interim or patch releases, and there is no user base besides hv. The order is fixed: all done, then all tested at the desk, then the Linux artefacts checked on kovacs through kovacs-sysadm (booked as a heavy), and only then the cut. Cuts and tags are hv's. Anything left out is deferred on the record with hv's say. Relayed to every VC (intent, laksa, utilz, devbin, conflab, gtools) and to kovacs-sysadm."
+  }
+}
