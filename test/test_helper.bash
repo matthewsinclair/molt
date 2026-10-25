@@ -37,10 +37,12 @@ unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 # for the files whose setup replaces it.
 export MOLT_AGT_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-agt"
 
-# Nor with the host's AppArmor profiles, which molt writes through sudo: the
-# same, for MOLT_APPARMOR_DIR (issue 0061). setup gives each test one of its
-# own, made only by a test that wants one.
+# Nor with the host's AppArmor profiles or Claude Code's managed settings,
+# which molt writes through sudo: the same, for MOLT_APPARMOR_DIR and
+# MOLT_CLAUDE_MANAGED_DIR (issue 0061). setup gives each test its own, made
+# only by a test that wants them.
 export MOLT_APPARMOR_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-apparmor.d"
+export MOLT_CLAUDE_MANAGED_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-managed"
 
 # Nor reaching the host's root-owned state: molt doctor, status and list ask
 # launchd with launchctl getenv (issue 0059), and the agents liberator's sandbox
@@ -92,6 +94,7 @@ setup() {
     # A root no other test, run or worktree shares (critic-shell, 21 Oct).
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
     export MOLT_APPARMOR_DIR="$BATS_TEST_TMPDIR/apparmor.d"
+    export MOLT_CLAUDE_MANAGED_DIR="$BATS_TEST_TMPDIR/managed"
     ORIGINAL_PWD="$(pwd)"
     export ORIGINAL_PWD
     cd "$BATS_TEST_TMPDIR" || return

@@ -1420,8 +1420,14 @@ molt_claude_processes() {
 # Where Claude Code reads its managed settings, which nothing a user or an agent
 # writes can override: managed-settings.json, and the drop-ins beside it in
 # managed-settings.d/. Root-owned; molt writes molt-sysadm.json there through
-# sudo, and its sidecar, and nothing else (ST0006 WP06).
+# sudo, and its sidecar, and nothing else (ST0006 WP06). MOLT_CLAUDE_MANAGED_DIR
+# stands in for it where set, which the tests do, so no test reaches the host's
+# (issue 0061).
 molt_claude_managed_dir() {
+  if [[ -n "${MOLT_CLAUDE_MANAGED_DIR:-}" ]]; then
+    echo "$MOLT_CLAUDE_MANAGED_DIR"
+    return 0
+  fi
   case "$(molt_platform)" in
     macos) echo "/Library/Application Support/ClaudeCode" ;;
     *)     echo "/etc/claude-code" ;;

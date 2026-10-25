@@ -18,9 +18,9 @@ setup_agents() {
     export INSTANCE="$TEST_USER_REPO/instances/$SLEEVE"
     mkdir -p "$ROLE" "$INSTANCE"
     eval "molt_find_user_repo() { echo \"$TEST_USER_REPO\"; }"
-    # The managed settings and the user's, in the test directory: neither the
-    # root-owned managed file nor any real config dir is read.
-    eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
+    # The managed settings (test_helper's MOLT_CLAUDE_MANAGED_DIR) and the
+    # user's, in the test directory: neither the root-owned managed file nor any
+    # real config dir is read.
     export CLAUDE_CONFIG_DIR="$BATS_TEST_TMPDIR/claude-config"
     install_fake_sudo
     export FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
@@ -1080,6 +1080,22 @@ _sandbox_sleeve() {
     run env -u MOLT_APPARMOR_DIR bash -c "$libs"
     assert_success
     [ "$output" = "/etc/apparmor.d" ]
+}
+
+@test "the managed floor is the test's: molt_claude_managed_dir answers MOLT_CLAUDE_MANAGED_DIR, in this shell and in a fresh one, and the platform's root-owned dir without it (issue 0061)" {
+    setup_agents
+    [ "$MOLT_CLAUDE_MANAGED_DIR" = "$BATS_TEST_TMPDIR/managed" ]
+    [ "$(molt_agent_floor_target)" = "$FLOOR" ]
+    local libs='source "$MOLT_LIB_DIR/constants.sh"; source "$MOLT_LIB_DIR/molt.sh"'
+    run bash -c "$libs; molt_claude_managed_dir"
+    assert_success
+    [ "$output" = "$BATS_TEST_TMPDIR/managed" ]
+    run env -u MOLT_CLAUDE_MANAGED_DIR bash -c "$libs; molt_platform() { echo linux; }; molt_claude_managed_dir"
+    assert_success
+    [ "$output" = "/etc/claude-code" ]
+    run env -u MOLT_CLAUDE_MANAGED_DIR bash -c "$libs; molt_platform() { echo macos; }; molt_claude_managed_dir"
+    assert_success
+    [ "$output" = "/Library/Application Support/ClaudeCode" ]
 }
 
 @test "no test reaches the host's sudo or apparmor_parser: the ones first on PATH are test_helper's, which record their argv and do nothing (issue 0061)" {
