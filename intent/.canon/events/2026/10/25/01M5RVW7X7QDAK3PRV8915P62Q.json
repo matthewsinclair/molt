@@ -1,0 +1,16 @@
+{
+  "id": "01M5RVW7X7QDAK3PRV8915P62Q",
+  "ts": "2026-10-25T06:27:27.783Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 6,
+    "text": "**Slot desk** (hv, 24 Oct 06:50Z): molt-vc runs heavy/light contention for rhadamanth and kovacs across the Molt, Intent, Laksa, Utilz, devbin, Conflab and Gtools estates. Ledger: /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/06e18903-885b-49b1-849a-a441be7fdbe1/scratchpad/slot-ledger.md (the last QUEUE AT FOLD line is the full order). Rules: one heavy plus one light while the 1-min load is under 60; one cargo run machine-wide, kovacs included (guards that run cargo count); no .app light beside a Launch Services run; START/END by name; confirm weight before a GO; brew upgrades book; hv's cut work first and hv may order directly; moving another project's place needs its VC's consent; kovacs only through kovacs-sysadm. At the 25 Oct 06:26Z fold: slot 359 (Laksa (3) security) running; next intent-cc 0640 re-check, Laksa 0018fu, intent-dc 0634, Laksa (D)/0042fu when READY, Conflab heavy on hv's go, devbin land220 last. For hv: rhadamanth house DNS (Wi-Fi or Tailscale); molt upgrade then log out and in."
+  }
+}
