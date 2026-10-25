@@ -37,19 +37,28 @@ unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 # for the files whose setup replaces it.
 export MOLT_AGT_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-agt"
 
-# Nor reaching the real launchd: the env liberator's check asks it with
-# launchctl getenv, and molt doctor, status and list all run that check
-# (issue 0059). This launchctl, first on PATH, does nothing and holds nothing.
-# It is set here rather than in setup, which some files replace; a file that
-# fakes launchd puts its own in front.
-_molt_test_stub_dir="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-launchctl"
-if [[ ! -x "$_molt_test_stub_dir/launchctl" ]]; then
-    mkdir -p "$_molt_test_stub_dir"
-    printf '#!/bin/sh\nexit 0\n' > "$_molt_test_stub_dir/launchctl"
-    chmod +x "$_molt_test_stub_dir/launchctl"
-fi
+# Nor with the host's AppArmor profiles, which molt writes through sudo: the
+# same, for MOLT_APPARMOR_DIR (issue 0061). setup gives each test one of its
+# own, made only by a test that wants one.
+export MOLT_APPARMOR_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-apparmor.d"
+
+# Nor reaching the host's root-owned state: molt doctor, status and list ask
+# launchd with launchctl getenv (issue 0059), and the agents liberator's sandbox
+# profile goes through sudo and apparmor_parser (issue 0061). These, first on
+# PATH, record their argv in calls.log beside them and do nothing. They are set
+# here rather than in setup, which some files replace; a test that fakes one
+# puts its own in front.
+_molt_test_stub_dir="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-stubs"
+for _molt_test_stub in launchctl sudo apparmor_parser; do
+    if [[ ! -x "$_molt_test_stub_dir/$_molt_test_stub" ]]; then
+        mkdir -p "$_molt_test_stub_dir"
+        printf '#!/bin/sh\necho "%s $*" >> "%s/calls.log"\n' "$_molt_test_stub" "$_molt_test_stub_dir" \
+            > "$_molt_test_stub_dir/$_molt_test_stub"
+        chmod +x "$_molt_test_stub_dir/$_molt_test_stub"
+    fi
+done
 export PATH="$_molt_test_stub_dir:$PATH"
-unset _molt_test_stub_dir
+unset _molt_test_stub_dir _molt_test_stub
 
 # Nor with the runner's git config, or the machine's: an identity, a signing
 # key or a url rewrite there would decide what a test's git does (issue 0062).
@@ -82,6 +91,7 @@ setup() {
     mkdir -p "$BATS_TEST_TMPDIR"
     # A root no other test, run or worktree shares (critic-shell, 21 Oct).
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
+    export MOLT_APPARMOR_DIR="$BATS_TEST_TMPDIR/apparmor.d"
     ORIGINAL_PWD="$(pwd)"
     export ORIGINAL_PWD
     cd "$BATS_TEST_TMPDIR" || return
@@ -287,17 +297,16 @@ FAKE
     esac
 }
 
-# AppArmor in the test directory: molt_apparmor_dir answers
-# $BATS_TEST_TMPDIR/apparmor.d, and a fake apparmor_parser, bwrap and unshare go
-# first on PATH, with the fake sudo. The parser logs each call to
+# AppArmor in the test directory: $MOLT_APPARMOR_DIR, which setup points at
+# $BATS_TEST_TMPDIR/apparmor.d, made here, and a fake apparmor_parser, bwrap and
+# unshare go first on PATH, with the fake sudo. The parser logs each call to
 # $BATS_TEST_TMPDIR/apparmor.log and exits FAKE_PARSER_STATUS, or
 # FAKE_PARSER_CHECK_STATUS for a -Q parse that loads nothing; bwrap exits
 # FAKE_BWRAP_STATUS, saying why on stderr as unshare does. Neither the real
 # /etc/apparmor.d nor the kernel's policy is reached.
 install_fake_apparmor() {
     install_fake_sudo
-    mkdir -p "$BATS_TEST_TMPDIR/apparmor.d"
-    eval "molt_apparmor_dir() { echo \"$BATS_TEST_TMPDIR/apparmor.d\"; }"
+    mkdir -p "$MOLT_APPARMOR_DIR"
     cat > "$BATS_TEST_TMPDIR/bin/apparmor_parser" <<'FAKE'
 #!/usr/bin/env bash
 echo "apparmor_parser $*" >> "$BATS_TEST_TMPDIR/apparmor.log"

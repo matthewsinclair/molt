@@ -1430,9 +1430,11 @@ molt_claude_managed_dir() {
 
 # Where AppArmor reads its profiles on a Linux sleeve. Root-owned; molt writes
 # bwrap-userns-restrict there through sudo, with its sidecar and the distro's
-# copy beside it, and nothing else (issue 0032).
+# copy beside it, and nothing else (issue 0032). MOLT_APPARMOR_DIR stands in
+# for it where set, which the tests do, so no test reaches the host's
+# (issue 0061).
 molt_apparmor_dir() {
-  echo "/etc/apparmor.d"
+  echo "${MOLT_APPARMOR_DIR:-/etc/apparmor.d}"
 }
 
 # True when this sleeve's AppArmor parses the profile file $1, read with the

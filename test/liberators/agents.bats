@@ -1066,6 +1066,36 @@ _sandbox_sleeve() {
     echo "the distro's profile" > "$PROFILE"
 }
 
+# kovacs, 25 Oct 2026: a test on a sleeve that holds molt's profile found it in
+# the host's /etc/apparmor.d and set about putting the distro's back, through
+# sudo (issue 0061).
+@test "the sandbox profile is the test's: molt_apparmor_dir answers MOLT_APPARMOR_DIR, in this shell and in a fresh one, and /etc/apparmor.d without it (issue 0061)" {
+    setup_agents
+    [ "$MOLT_APPARMOR_DIR" = "$BATS_TEST_TMPDIR/apparmor.d" ]
+    [ "$(molt_agent_sandbox_target)" = "$BATS_TEST_TMPDIR/apparmor.d/bwrap-userns-restrict" ]
+    local libs='source "$MOLT_LIB_DIR/constants.sh"; source "$MOLT_LIB_DIR/molt.sh"; molt_apparmor_dir'
+    run bash -c "$libs"
+    assert_success
+    [ "$output" = "$BATS_TEST_TMPDIR/apparmor.d" ]
+    run env -u MOLT_APPARMOR_DIR bash -c "$libs"
+    assert_success
+    [ "$output" = "/etc/apparmor.d" ]
+}
+
+@test "no test reaches the host's sudo or apparmor_parser: the ones first on PATH are test_helper's, which record their argv and do nothing (issue 0061)" {
+    local stubs="${BATS_RUN_TMPDIR}/molt-test-stubs"
+    # Asked first, so a run without them stops here, before anything is called.
+    [ "$(command -v sudo)" = "$stubs/sudo" ]
+    [ "$(command -v apparmor_parser)" = "$stubs/apparmor_parser" ]
+    run sudo install -m 644 /dev/null "$BATS_TEST_TMPDIR/installed"
+    assert_success
+    [ ! -e "$BATS_TEST_TMPDIR/installed" ]
+    grep -qxF "sudo install -m 644 /dev/null $BATS_TEST_TMPDIR/installed" "$stubs/calls.log"
+    run apparmor_parser -r "$BATS_TEST_TMPDIR/profile"
+    assert_success
+    grep -qxF "apparmor_parser -r $BATS_TEST_TMPDIR/profile" "$stubs/calls.log"
+}
+
 @test "the sandbox profile's template is the distro's unpriv_bwrap less sys_admin: every other capability denied by name" {
     local src="$MOLT_ROOT/templates/apparmor/bwrap-userns-restrict.tmpl" denied
     grep -q '^  allow capability sys_admin,$' "$src"
