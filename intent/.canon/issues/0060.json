@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 60,
+  "slug": "test-helper-bash-clear-the-shellcheck-warnings-i",
+  "title": "test_helper.bash: clear the shellcheck warnings it has carried since v1.0.1",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-25",
+  "reporter": "Matthew Sinclair",
+  "body": "## What\n\n`shellcheck -s bash -S warning test/test_helper.bash` reports warnings in the shared test helper. Every one of them was already in v1.0.1's copy. Found by cc in the release-candidate run at ed021b8 (25 Oct 2026). vc ruled them not a release blocker. Line numbers are at ed021b8:\n\n- 73, SC2155: `export BATS_TEST_TMPDIR=\"...$(date +%s)...\"` declares and assigns together, so the substitution's exit status is masked.\n- 77, SC2155: `export ORIGINAL_PWD=\"$(pwd)\"`, the same.\n- 78, SC2164: `cd \"$BATS_TEST_TMPDIR\"` in setup has no `|| return`.\n- 84, SC2164: `cd \"$ORIGINAL_PWD\"` in teardown has no `|| return`.\n- 119, SC2034: `MOLT_GSETTINGS_FAULT` looks unused to shellcheck. It is read by the code under test, so it wants an export or a directive, not a deletion.\n- 136, SC1090: `source \"$MOLT_ROOT/liberators/${name}.sh\"` is a non-constant source, which wants a `# shellcheck source=/dev/null` directive.\n- 411 and 412, SC2154: `status` and `output` are bats's own, set by `run`. They want a directive, not a change.\n\n## Fix\n\nSplit the declare and the assign, add `|| return` to both cd's, and give shellcheck directives where the warning names something bats or the code under test supplies. No behaviour changes. The test helper is test code and ships to no sleeve.\n\n## Proof\n\n`shellcheck -s bash -S warning test/test_helper.bash` is clean, and the full suite passes under Homebrew bash and /bin/bash 3.2.\n\n## Scope\n\nNot in this release unless hv pulls it in (vc, 25 Oct 2026). The warnings in `bin/.devbin/lib/resolve` from the same run are devbin's vendored runtime, not Molt's, and are not part of this issue.\n"
+}
