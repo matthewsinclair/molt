@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 65,
+  "slug": "five-test-files-run-against-the-real-home-test-h",
+  "title": "Five test files run against the real HOME: test_helper's setup should give every test a fake one",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-25",
+  "reporter": "Matthew Sinclair",
+  "body": "## Problem\n\nFive test files never set HOME, so they run against the HOME of whoever runs bats: `test/constants.bats`, `test/formula.bats`, `test/liberator-names.bats`, `test/liberator.bats` and `test/newuser.bats`. `test/test_helper.bash` unsets CLAUDE_CONFIG_DIR and XDG_CONFIG_HOME and gives git an empty global config (issue 0062), but it leaves HOME alone; every other file sets HOME in its own setup.\n\nFound in the 25 Oct LIGHT for 0063+0064. The leg with hv's real HOME could not show afterwards that the suite left that HOME untouched: `~/.config/claude/settings.json` changed mid-run, at 17:22:53Z, and with no isolation in these files a test could not be ruled out, though nothing in the file points to one.\n\n## What they do with HOME today\n\nA read of the five files finds no write under HOME; their writes go to BATS_TEST_TMPDIR. They read it, though:\n\n- `liberator.bats` runs `liberator_check \"zsh\"`, which checks the runner's real zsh setup, so its answer depends on the machine (the test accepts 0 or 1 for that reason).\n- `constants.bats` asserts MOLT_LOCAL_BIN and the user-repo search paths against the runner's `$HOME`.\n\nSo a test can pass or fail by what is on the machine, and a future test in any of these files that writes through a liberator would write into a real home.\n\n## Fix\n\nSet HOME in test_helper's setup to a directory under BATS_TEST_TMPDIR, so every test starts in a fake home whether or not its file sets one; the files that set HOME themselves keep doing so. Then:\n\n- Prove it with a run whose HOME is a tripwire, eg a read-only directory or one whose listing is compared before and after, under both bashes.\n- The LIGHT procedure hashes the liberator targets in the real HOME before and after the run (molt-cc's 0061 LIGHT does this first).\n"
+}
