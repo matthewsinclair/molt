@@ -964,7 +964,6 @@ _floor_sleeve() {
     INSTANCE="$REPO/instances/$(test_hostname)"
     mkdir -p "$HOME" "$REPO/config/agents/roles/sysadm" "$INSTANCE"
     eval "molt_find_user_repo() { echo \"$REPO\"; }"
-    eval "molt_claude_managed_dir() { echo \"$BATS_TEST_TMPDIR/managed\"; }"
     FLOOR="$BATS_TEST_TMPDIR/managed/managed-settings.d/molt-sysadm.json"
     printf '{"permissions": {"deny": ["Read(~/.ssh/id_*)", "Read(~/.aws/credentials)"]}}\n' \
         > "$REPO/config/agents/roles/sysadm/floor.json"

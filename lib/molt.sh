@@ -1428,8 +1428,14 @@ molt_claude_processes() {
 # Where Claude Code reads its managed settings, which nothing a user or an agent
 # writes can override: managed-settings.json, and the drop-ins beside it in
 # managed-settings.d/. Root-owned; molt writes molt-sysadm.json there through
-# sudo, and its sidecar, and nothing else (ST0006 WP06).
+# sudo, and its sidecar, and nothing else (ST0006 WP06). MOLT_CLAUDE_MANAGED_DIR
+# stands in for it where set, which the tests do, so no test reaches the host's
+# (issue 0061).
 molt_claude_managed_dir() {
+  if [[ -n "${MOLT_CLAUDE_MANAGED_DIR:-}" ]]; then
+    echo "$MOLT_CLAUDE_MANAGED_DIR"
+    return 0
+  fi
   case "$(molt_platform)" in
     macos) echo "/Library/Application Support/ClaudeCode" ;;
     *)     echo "/etc/claude-code" ;;
@@ -1438,9 +1444,11 @@ molt_claude_managed_dir() {
 
 # Where AppArmor reads its profiles on a Linux sleeve. Root-owned; molt writes
 # bwrap-userns-restrict there through sudo, with its sidecar and the distro's
-# copy beside it, and nothing else (issue 0032).
+# copy beside it, and nothing else (issue 0032). MOLT_APPARMOR_DIR stands in
+# for it where set, which the tests do, so no test reaches the host's
+# (issue 0061).
 molt_apparmor_dir() {
-  echo "/etc/apparmor.d"
+  echo "${MOLT_APPARMOR_DIR:-/etc/apparmor.d}"
 }
 
 # True when this sleeve's AppArmor parses the profile file $1, read with the
