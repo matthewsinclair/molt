@@ -1,0 +1,15 @@
+{
+  "id": "01M5SY3V94MA2HH2HZK7QK6QW5",
+  "ts": "2026-10-25T16:25:48.580Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Molt release (decision 17):** 0057-0060 and 0062 landed; 0061 (molt-cc, f24c2f1), 0063+0064 (molt-dc stack fcd3ca6) to land; then the RC suite on the Mac and the kovacs re-run via kovacs-sysadm (script molt-rc-check.sh, temp HOME; new sha owed), then hv cuts. After Intent's ST0088 WP-04 skills sync: run intent claude upgrade --apply --skip-settings in Molt so CLAUDE.md/AGENTS.md stop naming in-standards."
+  }
+}

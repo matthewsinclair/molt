@@ -1,0 +1,15 @@
+{
+  "id": "01M5SY3VDD3ZB86W9WG57H1T17",
+  "ts": "2026-10-25T16:25:48.717Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Molt views tidy:** the post-merge intent sync wants to dehydrate 29 tracked views of closed items (issues 0040-0060, ST0008) per .intentfiles; vc restored them on 25 Oct rather than commit a bulk delete mid-desk. Decide and commit the dehydration in a quiet moment."
+  }
+}
