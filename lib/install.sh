@@ -88,22 +88,6 @@ _molt_in_keg() {
   [[ "$(_molt_realpath "$1")" == */Cellar/molt/*/libexec ]]
 }
 
-# The tree $1 as a path is shown: a brew tree by the formula's opt link,
-# <brew prefix>/opt/molt/libexec, which brew upgrade keeps, never by its
-# Cellar/molt/<ver> keg, which it deletes (T1); any other root as it is.
-molt_tree_root_name() {
-  local real opt
-  real="$(_molt_realpath "$1")"
-  if [[ "$real" == */Cellar/molt/*/libexec ]]; then
-    opt="${real%/Cellar/molt/*/libexec}/opt/molt/libexec"
-    if molt_same_file "$opt" "$real"; then
-      echo "$opt"
-      return 0
-    fi
-  fi
-  echo "$1"
-}
-
 # Names what an old-form or missing manifest means in the tree $1, and its
 # remedy, or prints nothing when its manifest is current or it is a dev tree.
 # In brew it is a note, in opt a fault (T3, decision 58); the doctor says which.
@@ -207,14 +191,16 @@ molt_tree_commit_fault() {
   [[ $? -eq 1 ]] || echo "$out"
 }
 
-# The version line for the tree $1 (MOLT_ROOT by default), in T4's one shape,
-# eg `molt 0.3.0 (opt, 905305c1a2b3) at /Users/matts/Devel/opt/molt`. The root
-# is absolute, so it can be pasted, and a brew root is its opt link. molt
+# The version line for the tree $1 (MOLT_ROOT by default), in T4's one shape
+# as A3 amends it, eg `molt 0.3.0 (opt, 905305c1a2b3)`, or `molt 0.3.0 (dev,
+# unknown)`. It names no path: `command -v molt` says where the running copy
+# lives, and a check that fails about a path names that path itself. Molt is
+# a script tool, so nothing follows the parenthesis (issue 0063). molt
 # version, molt --version, the doctor and molt use print it.
 molt_version_line() {
   local root="${1:-$MOLT_ROOT}" version
   version="$(cat "$root/VERSION" 2>/dev/null)" || version="unknown version"
-  echo "molt ${version} ($(molt_tree "$root"), $(molt_tree_commit "$root")) at $(molt_tree_root_name "$root")"
+  echo "molt ${version} ($(molt_tree "$root"), $(molt_tree_commit "$root"))"
 }
 
 # Names each file in the opt or brew tree $1 that differs from its manifest:

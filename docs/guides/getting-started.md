@@ -21,7 +21,7 @@ This guide walks you through setting up MOLT on a new machine.
 brew install matthewsinclair/molt/molt
 ```
 
-The formula installs Molt into its keg and links `molt` into Homebrew's `bin`, so the `molt` on your PATH is it. `molt version` names the install, as `molt <version> (brew, <commit>) at /opt/homebrew/opt/molt/libexec`. It needs two things more before it can resleeve: `MOLT_PRJ_DIR` and your config repo, the next two steps.
+The formula installs Molt into its keg and links `molt` into Homebrew's `bin`, so the `molt` on your PATH is it. `molt version` names the install, as `molt <version> (brew, <commit>)`. It needs two things more before it can resleeve: `MOLT_PRJ_DIR` and your config repo, the next two steps.
 
 ## Set MOLT_PRJ_DIR
 

@@ -30,13 +30,31 @@ load "test_helper.bash"
 
 # --- Version ---
 
-@test "molt version names the version, the dev tree and its root" {
+@test "molt version names the version, the dev tree and its commit" {
     run_molt version
     assert_success
     assert_output_contains "molt $(cat "$MOLT_ROOT/VERSION") (dev, "
     run_molt --version
     assert_success
     assert_output_contains "molt $(cat "$MOLT_ROOT/VERSION") (dev, "
+}
+
+# Issue 0063 (contract A3): a reader takes another tool's line up to its
+# closing parenthesis, so both the old ` at <root>` shape and a provenance
+# word read the same while the tools change.
+@test "molt_cmd_version reads another tool's first line up to its closing parenthesis" {
+    load_molt_libs
+    local tool="$BATS_TEST_TMPDIR/tool"
+    printf '#!/bin/sh\nprintf "%%s\\n" "$LINE" second\n' > "$tool"
+    chmod +x "$tool"
+    LINE="tool 2.1.0 (brew, 0123456789ab) at /opt/homebrew/opt/tool/libexec" run molt_cmd_version "$tool"
+    [ "$output" = "tool 2.1.0 (brew, 0123456789ab)" ]
+    LINE="tool 2.1.0 (dev, 0123456789ab+dirty) ruby" run molt_cmd_version "$tool"
+    [ "$output" = "tool 2.1.0 (dev, 0123456789ab+dirty)" ]
+    LINE="tool 2.1.0 (dev, unknown)" run molt_cmd_version "$tool"
+    [ "$output" = "tool 2.1.0 (dev, unknown)" ]
+    LINE="tool 2.1.0" run molt_cmd_version "$tool"
+    [ "$output" = "tool 2.1.0" ]
 }
 
 # --- List ---

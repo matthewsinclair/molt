@@ -1062,11 +1062,19 @@ molt_liberator_field() {
 # liberator reads the same state the same way. intent had its own copy until
 # ST0005, when utilz needed the same answers.
 
-# First line of a command's --version, captured then trimmed (no pipe to head).
+# First line of a command's --version, captured then trimmed (no pipe to head),
+# read up to the parenthesis that closes `<tool> <version> (<tree>, <sha12>)`:
+# A3 says a reader ignores what follows, such as the ` at <root>` older
+# releases print or a provenance word (issue 0063).
 molt_cmd_version() {
-  local v
+  local v rest
   v="$("$1" --version 2>/dev/null)" || v="version unknown"
-  echo "${v%%$'\n'*}"
+  v="${v%%$'\n'*}"
+  if [[ "$v" == *"("*")"* ]]; then
+    rest="${v#*(}"
+    v="${v%%(*}(${rest%%)*})"
+  fi
+  echo "$v"
 }
 
 # Names what PATH runs for the command $1 when it is not $2, which $3 describes
