@@ -1,0 +1,15 @@
+{
+  "id": "01M5S00TR26D0H7H9JQN1Z638V",
+  "ts": "2026-10-25T07:39:52.450Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Holding the brew-leg proof of the gtools liberator (issue 0057, closed at its as-built) until Gtools is cut and its private tap exists, and hv has enabled gtools on a sleeve. Then molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs; on kovacs too, through kovacs-sysadm, if Gtools ships a Linux formula. Released when that proof is in."
+  }
+}
