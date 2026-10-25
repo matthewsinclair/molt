@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "a38ae972-7f58-42d3-b96a-8ad70d1630c6",
-    "heartbeat_at": "2026-10-25T17:15:33.481Z",
+    "heartbeat_at": "2026-10-25T18:52:40.588Z",
     "status": "active",
-    "focus": "25 Oct: 0061 READY at f24c2f1, fourth in the light lane, awaiting vc's GO; holds 16 (deferred by hv) and 17 stand; folded for hv's compact, not released",
+    "focus": "25 Oct: 0061 closed (dde5e16, merged f20383b); idle, no LIGHT booked; holds 16 and 17 stand",
     "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -459,7 +459,8 @@
       "kind": "doing",
       "seq": 15,
       "text": "Issue 0061 (no test reaches the host's AppArmor dir, managed-settings dir, sudo or apparmor_parser): branch issue-0061 at f24c2f1, TMPDIR worktree molt-wt/issue-0061. LIGHT GREEN 25 Oct 17:39-17:59Z: both bashes, tripwire empty, shellcheck clean, critic clean on lib/molt.sh and test_helper (agents.bats asked nothing; vc: not blocking), real HOME byte-identical before and after. vc merged it with 0063+0064 in a scratch worktree (bb7d32f); the Molt RC suite judges that merge. Close 0061 and remove the worktree and branch only once that merge is green and replayed on main.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-25T18:52:40.544Z",
       "recorded_at": "2026-10-25T16:25:48.829Z",
       "edited_at": "2026-10-25T18:00:52.871Z"
     }
