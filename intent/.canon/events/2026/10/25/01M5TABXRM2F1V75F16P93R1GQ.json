@@ -1,0 +1,15 @@
+{
+  "id": "01M5TABXRM2F1V75F16P93R1GQ",
+  "ts": "2026-10-25T19:59:56.180Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Slot desk resumes from the EOD queue** (closed 25 Oct 19:58Z on hv's word): the order is the 'QUEUE AT EOD' line in vc's scratch ledger; heavy next utilz-cc 0109 v2 (after land220's END), gtools-ic run L, conflab-cc window B (lifts hv's Conflab swap warning), intent-cc 0648 v5, intent-ic Intent.app build (hv quits, ic installs), Intent kovacs preflight, gtools-cc WP-03 rework, intent-ic ST0086 arms, laksa-ic 0042fu, intent-dc ST0087 WP-04 v2, conflab-dc todo 18 (podman on rhad), gtools-dc WP-04 cp4, laksa-dc CI hotfix, Molt kovacs re-run, intent-cc ST0086 WP-04 Part A; light gtools-cc cp5 (quiet host). Every booking re-confirms its bytes and sends READY again."
+  }
+}

@@ -1,5 +1,5 @@
 ---
-verblock: "24 Oct 2026:v0.49: Matthew Sinclair - ST0008 closed; Molt 1.0.1 from brew on rhadamanth and kovacs"
+verblock: "25 Oct 2026:v0.50: Matthew Sinclair - Molt release: Mac RC green at d3363c0; kovacs re-run then hv cuts"
 ---
 
 # Work In Progress
@@ -10,7 +10,8 @@ verblock: "24 Oct 2026:v0.49: Matthew Sinclair - ST0008 closed; Molt 1.0.1 from 
 
 ## DOING
 
-- Nothing in flight for Molt. vc runs the estate slot desk for rhadamanth and kovacs (hv, 24 Oct); its queue lives on vc's board.
+- **Molt release (decision 17), one step from the cut.** Issues 0057 to 0064 and 0066 are merged and closed; the Mac RC ran green under both bashes on 0061's merge and on 0066's tree (main d3363c0). Left: the kovacs re-run at d3363c0d through kovacs-sysadm (`molt-rc-check.sh`, sha256 fbbaea6dc864, booked as a heavy at the slot desk; hv runs it from kovacs-sysadm's session on the desk's GO), then hv cuts. 0065 (five test files read the real HOME) is deferred past the release on hv's word.
+- vc runs the estate slot desk for rhadamanth and kovacs (hv, 24 Oct). It closed for the night on 25 Oct; the order to resume from is the "QUEUE AT EOD" line in vc's ledger, restated on vc's board.
 
 ## TODO
 

@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-25 16:34Z
-status: active
-focus: "25 Oct: slot desk for every estate (hv); Molt 0057-0059 landed, RC suite at ed021b8 then kovacs Linux check, then hv cuts (decision 17)"
+heartbeat_at: 2026-10-25 19:59Z
+status: paused
+focus: "25 Oct EOD: desk closed on hv's word; Molt release waits only on the kovacs re-run at d3363c0d, then hv cuts"
 claims: [ST0006, ST0008]
 ---
 
@@ -19,8 +19,9 @@ claims: [ST0006, ST0008]
 
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct). (edited)
-- **Molt release (decision 17):** 0057-0060 and 0062 landed; 0061 (molt-cc, f24c2f1), 0063+0064 (molt-dc stack fcd3ca6) to land; then the RC suite on the Mac and the kovacs re-run via kovacs-sysadm (script molt-rc-check.sh, temp HOME; new sha owed), then hv cuts. After Intent's ST0088 WP-04 skills sync: run intent claude upgrade --apply --skip-settings in Molt so CLAUDE.md/AGENTS.md stop naming in-standards.
+- **Molt release (decision 17):** 0057-0064 and 0066 merged and closed (main d3363c0); Mac RC green under both bashes on 0061's merge (bb7d32f) and 0066's tree (0b68cae). Left: the kovacs re-run at d3363c0d via kovacs-sysadm (molt-rc-check.sh fbbaea6dc864; hv runs it from kovacs-sysadm's session on the desk's GO; old log kept at ~/Devel/agt/kovacs-sysadm/work/molt-rc-d15b82d.out), then hv cuts. 0065 deferred past the release (hv). intent claude upgrade --skip-settings done (8cfda6a). (edited)
 - **Molt views tidy:** the post-merge intent sync wants to dehydrate 29 tracked views of closed items (issues 0040-0060, ST0008) per .intentfiles; vc restored them on 25 Oct rather than commit a bulk delete mid-desk. Decide and commit the dehydration in a quiet moment.
+- **Slot desk resumes from the EOD queue** (closed 25 Oct 19:58Z on hv's word): the order is the 'QUEUE AT EOD' line in vc's scratch ledger; heavy next utilz-cc 0109 v2 (after land220's END), gtools-ic run L, conflab-cc window B (lifts hv's Conflab swap warning), intent-cc 0648 v5, intent-ic Intent.app build (hv quits, ic installs), Intent kovacs preflight, gtools-cc WP-03 rework, intent-ic ST0086 arms, laksa-ic 0042fu, intent-dc ST0087 WP-04 v2, conflab-dc todo 18 (podman on rhad), gtools-dc WP-04 cp4, laksa-dc CI hotfix, Molt kovacs re-run, intent-cc ST0086 WP-04 Part A; light gtools-cc cp5 (quiet host). Every booking re-confirms its bytes and sends READY again.
 
 ## Holds
 
