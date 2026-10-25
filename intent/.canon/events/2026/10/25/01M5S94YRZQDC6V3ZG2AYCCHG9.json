@@ -1,0 +1,15 @@
+{
+  "id": "01M5S94YRZQDC6V3ZG2AYCCHG9",
+  "ts": "2026-10-25T10:19:24.832Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0059"
+  },
+  "payload": {
+    "severity": "high",
+    "title": "env LaunchAgent runs one launchctl setenv with every pair; launchd keeps only the first, so GUI apps get no PATH or install prefixes"
+  }
+}
