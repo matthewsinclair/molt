@@ -2127,8 +2127,11 @@ cmd_doctor() {
     echo "Checking declared font... ⚠ this instance declares no MOLT_FONT_FAMILY"
     not_passed=$((not_passed + 1))
   else
-    molt_font_available "$font_family"
-    case $? in
+    # Captured through ||, so errexit cannot end doctor on the very answers
+    # this check exists to report (issue 0064).
+    local font_rc=0
+    molt_font_available "$font_family" || font_rc=$?
+    case $font_rc in
       0)
         echo "Checking declared font... ✓ ${font_family}" ;;
       1)

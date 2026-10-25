@@ -150,6 +150,54 @@ TOML
     assert_doctor_closed
 }
 
+# A sleeve declaring the font "Test Font", for doctor run as molt runs, under
+# errexit: run in this shell, cmd_doctor would not show what bin/molt does.
+_font_sleeve() {
+    local repo
+    repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    create_test_repo "$repo"
+    printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
+    mkdir -p "$repo/instances/$(test_hostname)"
+    printf 'export MOLT_FONT_FAMILY="Test Font"\n' > "$repo/instances/$(test_hostname)/vars.sh"
+    export MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+}
+
+@test "molt doctor reports a declared font that is not installed, and carries on to its verdict (issue 0064)" {
+    _font_sleeve
+    local bin="$BATS_TEST_TMPDIR/fcbin"
+    mkdir -p "$bin"
+    printf '#!/bin/sh\nprintf "Other Font\\nAnother Font,Its Alias\\n"\n' > "$bin/fc-list"
+    chmod +x "$bin/fc-list"
+    PATH="$bin:$PATH" run_molt doctor
+    assert_output_contains "Checking declared font... ⚠ Test Font is NOT installed"
+    assert_doctor_closed
+}
+
+@test "molt doctor says it cannot verify the font without fontconfig, and carries on to its verdict (issue 0064)" {
+    _font_sleeve
+    # PATH as it is, but each directory holding fc-list stands in as a copy
+    # of links to everything there except fc-list.
+    local dir path="" shadow n=0 entry
+    local IFS=:
+    for dir in $PATH; do
+        if [[ -e "$dir/fc-list" ]]; then
+            n=$((n + 1))
+            shadow="$BATS_TEST_TMPDIR/nofc$n"
+            mkdir -p "$shadow"
+            for entry in "$dir"/*; do
+                [[ "${entry##*/}" == fc-list ]] || ln -s "$entry" "$shadow/${entry##*/}"
+            done
+            dir="$shadow"
+        fi
+        path="${path:+$path:}$dir"
+    done
+    unset IFS
+    PATH="$path" command -v fc-list && fail "fc-list is still on PATH"
+    PATH="$path" run_molt doctor
+    assert_output_contains "Checking declared font... ? cannot verify Test Font"
+    assert_doctor_closed
+}
+
 # --- Unknown command ---
 
 @test "unknown command returns error" {
