@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9c2bbf5f-3dd8-4763-9fb0-dddd56fdd450
-heartbeat_at: 2026-10-25 10:49Z
+heartbeat_at: 2026-10-25 14:14Z
 status: active
-focus: "25 Oct: 0058 built, merged at 60b854f, closed a070c45, CHANGELOG 1314a37; hold 11 waits on 0059 landing for the sleeve-agents.md table cell; folded for hv's compact, not released"
+focus: "25 Oct: hold 11 done, sleeve-agents.md env-plist cell at 8150c39 for vc to push; idle, awaiting vc"
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- sleeve-agents.md:323 env-plist table cell (vc's ask, 25 Oct): correct it to one launchctl setenv per variable through /bin/sh, with Molt's check asking launchd for each value, realign the table, commit by pathspec unpushed. Released when vc says issue 0059 has landed on main.
+_(none)_
 
 ## Watch-outs
 
