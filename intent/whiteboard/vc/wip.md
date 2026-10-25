@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-25 11:17Z
+heartbeat_at: 2026-10-25 14:34Z
 status: active
-focus: "24 Oct: ST0008 Molt from brew; cc builds, vc validates and pushes; issues 0043-0046 done"
+focus: "25 Oct: slot desk for every estate (hv); Molt 0057-0059 landed, RC suite at ed021b8 then kovacs Linux check, then hv cuts (decision 17)"
 claims: [ST0006, ST0008]
 ---
 
