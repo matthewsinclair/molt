@@ -35,6 +35,7 @@
 | ssh            | `liberators/ssh.sh`            | SSH key generation, config linking                      |
 | local-bin      | `liberators/local-bin.sh`      | ~/bin directory, molt CLI symlink                       |
 | intent         | `liberators/intent.sh`         | Intent project management framework, ~/bin symlinks     |
+| gtools         | `liberators/gtools.sh`         | Gtools from Homebrew, private tap over ssh (issue 0057) |
 | pplr           | `liberators/pplr.sh`           | Pplr people/contacts manager, ~/bin symlinks            |
 | utilz          | `liberators/utilz.sh`          | Utilz framework, bats-core, ~/bin symlinks              |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, ~/bin symlink                     |

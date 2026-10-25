@@ -60,7 +60,7 @@ myapp_maintain() {
 
 ## Rules
 
-1. **Never install packages, except a liberator's own subject from a Homebrew tap, and keyd.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. One exception is a tool that is the liberator's subject and comes from a Homebrew tap, as Intent does and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves. The other is the `keys` liberator, which builds keyd from source and installs it with `sudo make install`.
+1. **Never install packages, except a liberator's own subject from a Homebrew tap, and keyd.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. One exception is a tool that is the liberator's subject and comes from a Homebrew tap, as Intent and Gtools do and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, passing the tap's ssh URL when the tap is private, as Gtools' is, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves. The other is the `keys` liberator, which builds keyd from source and installs it with `sudo make install`.
 
 2. **Use `molt_link` for static config.** It handles backup, mkdir, and idempotency.
 

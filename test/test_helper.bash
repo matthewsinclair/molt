@@ -336,6 +336,8 @@ fake_processes() {
 # answers only for this formula, by its name or tap/name. The stub has no trust
 # gate until `touch "$FAKE_PREFIX/.gate"`; trust.json is its trust store and
 # starts empty, and `touch "$FAKE_PREFIX/.store-unreadable"` makes reading it fail.
+# taps lists the tapped taps, one per line, and starts empty; a bare tap prints
+# it, and `touch "$FAKE_PREFIX/.tap-fails"` makes tapping fail as ssh does.
 fake_brew_formula() {
     local name="$1" version="$2" cmd="$3" util
     shift 3
@@ -353,6 +355,7 @@ fake_brew_formula() {
         ln -s "../Cellar/$name/$version/libexec/bin/$util" "$FAKE_PREFIX/bin/$util"
     done
     touch "$FAKE_PREFIX/.installed"
+    : > "$FAKE_PREFIX/taps"
     echo '{"taps":[],"formulae":[]}' > "$FAKE_PREFIX/trust.json"
     cat > "$BATS_TEST_TMPDIR/stub/brew" <<'EOF'
 #!/bin/bash
@@ -361,7 +364,14 @@ case "$1" in
   list)     [[ -e "$FAKE_PREFIX/.installed" ]] || exit 1
             case "$3" in "$FAKE_NAME" | */"$FAKE_NAME") ;; *) exit 1 ;; esac ;;
   install)  echo "brew $*" >> "$FAKE_LOG"; touch "$FAKE_PREFIX/.installed" ;;
-  upgrade | reinstall | uninstall | link | unlink | tap | untap | pin | unpin)
+  tap)      [[ $# -eq 1 ]] && { cat "$FAKE_PREFIX/taps"; exit 0; }
+            echo "brew $*" >> "$FAKE_LOG"
+            if [[ -e "$FAKE_PREFIX/.tap-fails" ]]; then
+              echo "git@github.com: Permission denied (publickey)." >&2
+              exit 1
+            fi
+            echo "$2" >> "$FAKE_PREFIX/taps" ;;
+  upgrade | reinstall | uninstall | link | unlink | untap | pin | unpin)
             echo "brew $*" >> "$FAKE_LOG" ;;
   trust)
     case "$2" in

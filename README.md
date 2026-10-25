@@ -193,7 +193,7 @@ A liberator is a config module that frees you from one default. Each liberator i
 - `{name}_maintain` — _(optional)_ System maintenance hook. Slow, runs during `molt maintain`.
 - `{name}_verify` — _(optional)_ A fuller check, for a liberator's own use. Molt does not run it: resleeve and doctor use `_check`.
 
-Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, and Utilz on a `source = "brew"` sleeve), the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
+Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, Gtools, and Utilz on a `source = "brew"` sleeve), the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
 
 The framework discovers liberator scripts in `liberators/`, loads them on demand, and runs them through the lifecycle automatically.
 
@@ -220,6 +220,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | utilz          | Utilz, from a checkout or Homebrew, per sleeve  | linux, macos |
 | brew           | Homebrew maintenance and upgrade                | macos        |
 | intent         | Intent from Homebrew, what PATH and gate run    | linux, macos |
+| gtools         | Gtools from Homebrew, from its private tap      | linux, macos |
 | pplr           | Pplr framework config and linking               | linux, macos |
 | web            | Web browser config and linking                  | linux, macos |
 | claude         | Claude Code config, and its state out of $HOME  | linux, macos |

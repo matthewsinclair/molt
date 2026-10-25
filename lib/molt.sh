@@ -1110,17 +1110,31 @@ molt_brew_trusted() {
   [[ "$store" == *"\"$formula\""* || "$store" == *"\"${formula%/*}\""* ]]
 }
 
+# True when the tap of the formula $1 (tap/name) is tapped. Fails when it is
+# not, and when brew tap cannot list the taps.
+molt_brew_tapped() {
+  local tap="${1%/*}" taps
+  taps="$(brew tap 2>/dev/null)" || return 1
+  [[ $'\n'"$taps"$'\n' == *$'\n'"$tap"$'\n'* ]]
+}
+
 # Everything standing between this machine and "Homebrew's $2 is what PATH
 # runs", for the formula $1 (tap/name), one fault per line. Fails, having named
 # the fault, when nothing past it can be checked: no Homebrew, the formula not
-# installed, or its command not linked.
+# installed, or its command not linked. $3 is the URL of a private tap, which
+# brew install cannot tap itself; when its tap is missing, the fault names the
+# tap command.
 molt_brew_faults() {
-  local formula="$1" cmd="$2" prefix
+  local formula="$1" cmd="$2" tap_url="${3:-}" prefix
   if ! prefix="$(brew --prefix 2>/dev/null)"; then
     echo "Homebrew not found; $cmd installs with: brew install $formula"
     return 1
   fi
   if ! brew list --versions "$formula" &>/dev/null; then
+    if [[ -n "$tap_url" ]] && ! molt_brew_tapped "$formula"; then
+      echo "not installed, and its tap is missing; run: brew tap ${formula%/*} $tap_url, then brew install $formula"
+      return 1
+    fi
     echo "not installed; run: brew install $formula"
     return 1
   fi
@@ -1140,14 +1154,23 @@ molt_brew_faults() {
 
 # Installs the formula $1 (tap/name) by its full name, which Homebrew 7.0.10
 # takes as trusting it, and trusts exactly that formula when it is installed but
-# not trusted, as one installed before the trust gate arrived is.
+# not trusted, as one installed before the trust gate arrived is. $2 is the URL
+# of a private tap: brew install taps over https, which a private repo refuses,
+# so a missing tap is tapped from it first.
 molt_brew_install() {
-  local formula="$1"
+  local formula="$1" tap_url="${2:-}"
   if ! brew --prefix &>/dev/null; then
     molt_error "${formula##*/} installs from Homebrew, and brew is not on PATH"
     return 1
   fi
   if ! brew list --versions "$formula" &>/dev/null; then
+    if [[ -n "$tap_url" ]] && ! molt_brew_tapped "$formula"; then
+      molt_info "Tapping ${formula%/*}: brew tap ${formula%/*} $tap_url"
+      if ! brew tap "${formula%/*}" "$tap_url"; then
+        molt_error "brew tap ${formula%/*} $tap_url failed"
+        return 1
+      fi
+    fi
     molt_info "Installing ${formula##*/}: brew install $formula"
     if ! brew install "$formula"; then
       molt_error "brew install $formula failed"
