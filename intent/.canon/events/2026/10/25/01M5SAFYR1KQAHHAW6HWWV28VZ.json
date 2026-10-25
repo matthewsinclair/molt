@@ -1,0 +1,15 @@
+{
+  "id": "01M5SAFYR1KQAHHAW6HWWV28VZ",
+  "ts": "2026-10-25T10:42:53.825Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "sleeve-agents.md:323 env-plist table cell (vc's ask, 25 Oct): correct it to one launchctl setenv per variable through /bin/sh, with Molt's check asking launchd for each value, realign the table, commit by pathspec unpushed. Released when vc says issue 0059 has landed on main."
+  }
+}
