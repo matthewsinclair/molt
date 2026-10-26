@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "46011de3-2e37-4de4-bfd7-90d8ff2bbf74",
-    "heartbeat_at": "2026-10-26T08:52:10.649Z",
+    "heartbeat_at": "2026-10-26T08:57:49.842Z",
     "status": "active",
-    "focus": "26 Oct 08:52Z localfold for hv's compact: Intent judge running (re-running 3 red legs); Devbin K115 held for Intent's END; Utilz 0109 landed, 0111+0110 next; TUI-click switch pending docs agent; resume from scratchpad estate-26oct.md",
+    "focus": "26 Oct 08:57Z: Devbin K115 running on kovacs (GO 08:52Z, END via kovacs-sysadm); Utilz 0111+0110 and Intent's re-run wait for READY; TUI clicks off (Molt-matts 2e338e2); resume from scratchpad estate-26oct.md",
     "claims": [
       "ST0006",
       "ST0008"
