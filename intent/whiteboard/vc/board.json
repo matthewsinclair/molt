@@ -753,6 +753,14 @@
       "text": "**Estate coordination (hv, 26 Oct, decision 20):** the VCs are up, and hv starts builders only when their project is called. One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. While two projects overlap, their VCs send molt-vc START and END. Order: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa. kovacs-sysadm is reached by name over Remote Control.",
       "state": "live",
       "recorded_at": "2026-10-26T06:58:48.312Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 30,
+      "text": "**gyges: exclude ~/Devel from Spotlight**, as on rhadamanth (hv, 26 Oct: \"There is no need _at_all_ for Spotlight to index _anything_ under ~/Devel\"). It's done by hand in System Settings › Spotlight › Search Privacy; no supported CLI does it without root, and `.metadata_never_index` markers are not honoured on this macOS. Do it when hv is next at gyges. Check with `mdfind -onlyin ~/Devel -count 'kMDItemContentTypeTree == \"public.item\"'`, which should read 0.",
+      "state": "live",
+      "recorded_at": "2026-10-26T10:02:16.271Z"
     }
   ],
   "sent": [

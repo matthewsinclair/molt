@@ -19,6 +19,7 @@ claims: [ST0006, ST0008]
 
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct). (edited)
+- **gyges: exclude ~/Devel from Spotlight**, as on rhadamanth (hv, 26 Oct: "There is no need _at_all_ for Spotlight to index _anything_ under ~/Devel"). It's done by hand in System Settings › Spotlight › Search Privacy; no supported CLI does it without root, and `.metadata_never_index` markers are not honoured on this macOS. Do it when hv is next at gyges. Check with `mdfind -onlyin ~/Devel -count 'kMDItemContentTypeTree == "public.item"'`, which should read 0.
 
 ## Holds
 

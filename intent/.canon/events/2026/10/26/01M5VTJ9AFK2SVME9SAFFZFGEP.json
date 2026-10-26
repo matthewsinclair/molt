@@ -1,0 +1,15 @@
+{
+  "id": "01M5VTJ9AFK2SVME9SAFFZFGEP",
+  "ts": "2026-10-26T10:02:16.271Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**gyges: exclude ~/Devel from Spotlight**, as on rhadamanth (hv, 26 Oct: \"There is no need _at_all_ for Spotlight to index _anything_ under ~/Devel\"). It's done by hand in System Settings › Spotlight › Search Privacy; no supported CLI does it without root, and `.metadata_never_index` markers are not honoured on this macOS. Do it when hv is next at gyges. Check with `mdfind -onlyin ~/Devel -count 'kMDItemContentTypeTree == \"public.item\"'`, which should read 0."
+  }
+}
