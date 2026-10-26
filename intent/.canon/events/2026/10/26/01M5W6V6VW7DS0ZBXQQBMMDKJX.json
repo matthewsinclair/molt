@@ -1,0 +1,16 @@
+{
+  "id": "01M5W6V6VW7DS0ZBXQQBMMDKJX",
+  "ts": "2026-10-26T13:36:51.580Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "**Estate coordination (hv, 26 Oct, decision 20):** the VCs are up, and hv starts builders only when their project is called. One heavy runs at a time on rhadamanth, and a kovacs leg counts as heavy; lights run beside it. Order: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa. kovacs-sysadm is reached by name over Remote Control. **Since 13:19:49Z the desk runs on Intent's slots, with molt-vc as controller** (hv, relayed verbatim by intent-vc: \"yes, have molt-vc take control after the preflight END\"; Intent decision 88): READY is `intent estate slots ask` in the asking session, GO is `slots grant <id> --lane <every lane held>`, START and END are `slots start` and `release` (kovacs ones `--relayed`), still mirrored by message until Part B lands."
+  }
+}
