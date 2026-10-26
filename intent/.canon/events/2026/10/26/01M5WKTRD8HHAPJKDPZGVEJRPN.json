@@ -1,0 +1,15 @@
+{
+  "id": "01M5WKTRD8HHAPJKDPZGVEJRPN",
+  "ts": "2026-10-26T17:23:48.264Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0069"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "molt doctor reports GitHub not authenticated when the ssh handshake is slower than its 5 s timeout"
+  }
+}
