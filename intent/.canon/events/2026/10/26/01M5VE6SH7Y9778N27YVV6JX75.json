@@ -1,0 +1,15 @@
+{
+  "id": "01M5VE6SH7Y9778N27YVV6JX75",
+  "ts": "2026-10-26T06:26:16.743Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 26 Oct: molt-vc cuts Molt 1.1.0 once the kovacs re-run at d3363c0d is green.** That covers the release commit, the annotated tag, the push, CI green, then tools/formula publish. The brew close-out on each sleeve follows. **The verblock rule is going-forward only** (hv): closed threads' store-only attachments, frozen .history copies and example fixtures stay as they are."
+  }
+}

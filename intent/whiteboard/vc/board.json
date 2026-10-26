@@ -731,6 +731,14 @@
       "text": "**hv, 26 Oct: VCs up now, builders only when their project is called.** One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. molt-vc coordinates; while two projects overlap, their VCs send molt-vc START and END. The order molt-vc proposed: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.",
       "state": "live",
       "recorded_at": "2026-10-26T06:15:47.585Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 21,
+      "text": "**hv, 26 Oct: molt-vc cuts Molt 1.1.0 once the kovacs re-run at d3363c0d is green.** That covers the release commit, the annotated tag, the push, CI green, then tools/formula publish. The brew close-out on each sleeve follows. **The verblock rule is going-forward only** (hv): closed threads' store-only attachments, frozen .history copies and example fixtures stay as they are.",
+      "state": "live",
+      "recorded_at": "2026-10-26T06:26:16.743Z"
     }
   ],
   "sent": [
