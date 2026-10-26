@@ -697,7 +697,8 @@
       "kind": "todo",
       "seq": 27,
       "text": "**Molt 1.1.0 (decision 17):** released at b9d59e2 (tag v1.1.0, CI green on main and the tag, formula in the tap at that revision). Left: the brew close-out once Devbin's landing pair ENDs. On rhadamanth: molt upgrade, molt version from a fresh login shell, and doctor's env pairs (0059). On kovacs, the same through kovacs-sysadm.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-26T07:10:28.060Z",
       "recorded_at": "2026-10-25T16:25:48.580Z",
       "edited_at": "2026-10-26T06:58:48.655Z"
     },

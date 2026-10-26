@@ -19,7 +19,6 @@ claims: [ST0006, ST0008]
 
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct). (edited)
-- **Molt 1.1.0 (decision 17):** released at b9d59e2 (tag v1.1.0, CI green on main and the tag, formula in the tap at that revision). Left: the brew close-out once Devbin's landing pair ENDs. On rhadamanth: molt upgrade, molt version from a fresh login shell, and doctor's env pairs (0059). On kovacs, the same through kovacs-sysadm. (edited)
 
 ## Holds
 
