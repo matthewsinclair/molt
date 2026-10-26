@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "46011de3-2e37-4de4-bfd7-90d8ff2bbf74",
-    "heartbeat_at": "2026-10-26T05:58:24.385Z",
+    "heartbeat_at": "2026-10-26T08:17:12.061Z",
     "status": "active",
-    "focus": "25 Oct EOD: desk closed on hv's word; Molt release waits only on the kovacs re-run at d3363c0d, then hv cuts",
+    "focus": "26 Oct 08:17Z localfold for hv's compact: Molt 1.1.0 done; Devbin land232 light running, then push, K115, cut; Utilz 0109 v4 green, v5 light next, then 0111+0110 heavy; Intent READY, judge after its compact; resume from scratchpad estate-26oct.md",
     "claims": [
       "ST0006",
       "ST0008"
@@ -657,7 +657,8 @@
       "kind": "decision",
       "seq": 15,
       "text": "**hv's rulings, 24 Oct 09:57Z by TUI.** (1) The 27 Aug block on a devbin `use` builtin is lifted for the contract; devbin 0213 lands on green. (2) launchd PATH follows login shells: Molt's one env writer publishes ~/.local/bin-first PATH to launchd, built with WP05's UTILZ_INSTALL_PREFIX (todo 26), which closes todo 25 item 1. (3) Issue 0048: vscode links through MOLT_LOCAL_BIN; dc builds it.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-26T08:17:11.977Z",
       "recorded_at": "2026-10-24T09:58:03.761Z"
     },
     {
@@ -665,7 +666,8 @@
       "kind": "decision",
       "seq": 16,
       "text": "**The Molt release waits for WP05** (hv, 24 Oct 10:33Z by TUI). The scratch-tap brew install passed end to end (slot 287, 10:29-10:31Z; teardown verified by vc). The first brew Molt carries the env writer, so the tap repo, formula publish and 9c418e2 all wait for a release cut after WP05 lands. Order: cc's WP05 Molt commits, then the Molt-matts commit (env in all five armed molt.toml files, UTILZ_INSTALL_PREFIX on rhadamanth), then vc validates with dc's 0048 and pushes, then hv cuts.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-26T08:17:12.024Z",
       "recorded_at": "2026-10-24T10:35:23.852Z"
     },
     {
