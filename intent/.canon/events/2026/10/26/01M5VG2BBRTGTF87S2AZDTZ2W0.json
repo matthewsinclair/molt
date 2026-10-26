@@ -1,0 +1,15 @@
+{
+  "id": "01M5VG2BBRTGTF87S2AZDTZ2W0",
+  "ts": "2026-10-26T06:58:48.312Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "**Estate coordination (hv, 26 Oct, decision 20):** the VCs are up, and hv starts builders only when their project is called. One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. While two projects overlap, their VCs send molt-vc START and END. Order: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa. kovacs-sysadm is reached by name over Remote Control."
+  }
+}

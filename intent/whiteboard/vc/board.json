@@ -647,7 +647,8 @@
       "kind": "doing",
       "seq": 6,
       "text": "**Slot desk** (hv, 24 Oct 06:50Z; hv 25 Oct: the ONE host queue for every estate on rhadamanth and kovacs): molt-vc runs heavy/light contention across Molt, Intent, Laksa, Utilz, devbin, Conflab and Gtools. Rules: one heavy, plus one light while the 1-min load is under 60; one cargo run machine-wide, kovacs included; no .app/LS light beside an LS run; START/END by name; first READY first (security wins a tie); a fresh booking after a refused landing or a failed run takes its READY-time place; a node that hands back keeps its original place; every judge runs the critic per changed file and reads its coverage line (not asked, unanswerable or ARMED but NOT RUN covers nothing, never clean; no known-positive samples, hv decision 68 via devbin-vc; Swift's critic arms nothing until Intent 0648); a Swift green needs an executed count above zero; every bats run, single arms included, goes through the desk; a worktree cargo run gets its own CARGO_TARGET_DIR; worktrees in $TMPDIR (hv); message stamps only from a date -u read in an earlier call. The ledger is in the scratchpad, and its last 'QUEUE AT' line holds the order (resumed 16:54Z on hv's 'Resume all' after fold 3).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-26T06:58:48.249Z",
       "recorded_at": "2026-10-24T09:49:29.437Z",
       "edited_at": "2026-10-25T16:55:41.832Z"
     },
@@ -695,17 +696,18 @@
       "node": "vc",
       "kind": "todo",
       "seq": 27,
-      "text": "**Molt release (decision 17):** 0057-0064 and 0066 merged and closed (main d3363c0); Mac RC green under both bashes on 0061's merge (bb7d32f) and 0066's tree (0b68cae). Left: the kovacs re-run at d3363c0d via kovacs-sysadm (molt-rc-check.sh fbbaea6dc864; hv runs it from kovacs-sysadm's session on the desk's GO; old log kept at ~/Devel/agt/kovacs-sysadm/work/molt-rc-d15b82d.out), then hv cuts. 0065 deferred past the release (hv). intent claude upgrade --skip-settings done (8cfda6a).",
+      "text": "**Molt 1.1.0 (decision 17):** released at b9d59e2 (tag v1.1.0, CI green on main and the tag, formula in the tap at that revision). Left: the brew close-out once Devbin's landing pair ENDs. On rhadamanth: molt upgrade, molt version from a fresh login shell, and doctor's env pairs (0059). On kovacs, the same through kovacs-sysadm.",
       "state": "live",
       "recorded_at": "2026-10-25T16:25:48.580Z",
-      "edited_at": "2026-10-25T19:59:55.696Z"
+      "edited_at": "2026-10-26T06:58:48.655Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 28,
       "text": "**Molt views tidy:** the post-merge intent sync wants to dehydrate 29 tracked views of closed items (issues 0040-0060, ST0008) per .intentfiles; vc restored them on 25 Oct rather than commit a bulk delete mid-desk. Decide and commit the dehydration in a quiet moment.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-26T06:58:48.119Z",
       "recorded_at": "2026-10-25T16:25:48.717Z"
     },
     {
@@ -713,7 +715,8 @@
       "kind": "todo",
       "seq": 29,
       "text": "**Slot desk resumes from the EOD queue** (closed 25 Oct 19:58Z on hv's word): the order is the 'QUEUE AT EOD' line in vc's scratch ledger; heavy next utilz-cc 0109 v2 (after land220's END), gtools-ic run L, conflab-cc window B (lifts hv's Conflab swap warning), intent-cc 0648 v5, intent-ic Intent.app build (hv quits, ic installs), Intent kovacs preflight, gtools-cc WP-03 rework, intent-ic ST0086 arms, laksa-ic 0042fu, intent-dc ST0087 WP-04 v2, conflab-dc todo 18 (podman on rhad), gtools-dc WP-04 cp4, laksa-dc CI hotfix, Molt kovacs re-run, intent-cc ST0086 WP-04 Part A; light gtools-cc cp5 (quiet host). Every booking re-confirms its bytes and sends READY again.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-26T06:58:48.187Z",
       "recorded_at": "2026-10-25T19:59:56.180Z"
     },
     {
@@ -739,6 +742,14 @@
       "text": "**hv, 26 Oct: molt-vc cuts Molt 1.1.0 once the kovacs re-run at d3363c0d is green.** That covers the release commit, the annotated tag, the push, CI green, then tools/formula publish. The brew close-out on each sleeve follows. **The verblock rule is going-forward only** (hv): closed threads' store-only attachments, frozen .history copies and example fixtures stay as they are.",
       "state": "live",
       "recorded_at": "2026-10-26T06:26:16.743Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 7,
+      "text": "**Estate coordination (hv, 26 Oct, decision 20):** the VCs are up, and hv starts builders only when their project is called. One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. While two projects overlap, their VCs send molt-vc START and END. Order: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa. kovacs-sysadm is reached by name over Remote Control.",
+      "state": "live",
+      "recorded_at": "2026-10-26T06:58:48.312Z"
     }
   ],
   "sent": [
