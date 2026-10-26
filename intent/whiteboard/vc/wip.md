@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 46011de3-2e37-4de4-bfd7-90d8ff2bbf74
-heartbeat_at: 2026-10-26 18:58Z
+heartbeat_at: 2026-10-26 19:47Z
 status: active
-focus: "26 Oct 18:58Z hv's round done: every dev Claude leaned, doc-parsed and folded; hv ruled all HV ITEMS in the TUI and each VC has its rulings. Desk: Utilz has the turn, dry run 01M5WS55 granted 18:57Z (Intent's exit-0 revert ddb749ca7 is installed); then hv pushes and cuts 2.14.4. Next: Intent (Part B's train), then Gtools, Conflab, Laksa, one project at a time to its end-point. With hv: the ~/Devel Spotlight exclusion (mdfind read 1,422,994 at 18:30Z). Estates are out of dev rounds (hv). Resume from scratchpad estate-26oct.md and hv-items.md"
+focus: "26 Oct 19:47Z EOD (hv): desk hold 01M5WVZS7YKGJ4PPQ33W3HJVPT since 19:46:21Z; every dev Claude told to fold, close and hold; last run is Intent's kovacs preflight 01M5WS7F at ddb749ca7 (on green, devbin-vc pushes it upstream). Tomorrow: Utilz push (hv), CI, then the 2.14.4 cut; then Intent's Part B train, Gtools, Conflab, Laksa, one project at a time; Spotlight with hv; apt ruby stays on kovacs (no brew ruby). Resume from scratchpad estate-26oct.md"
 claims: []
 ---
 
