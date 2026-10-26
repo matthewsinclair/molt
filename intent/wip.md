@@ -1,22 +1,20 @@
 ---
-verblock: "25 Oct 2026:v0.50: Matthew Sinclair - Molt release: kovacs re-run, then the cut"
+verblock: "26 Oct 2026:v0.51: Matthew Sinclair - Molt 1.1.0 released"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**ST0006, sleeve agents, and ST0007, `molt agent start`, are done.** rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
+**Molt 1.1.0 is released (b9d59e2, 26 Oct) and runs from brew on rhadamanth and kovacs.** ST0006, sleeve agents, and ST0007, `molt agent start`, are done. rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
 
 ## DOING
 
-- **Molt release (decision 17), one step from the cut.** Issues 0057 to 0064 and 0066 are merged and closed; the Mac RC ran green under both bashes on 0061's merge and on 0066's tree (main d3363c0). Left: the kovacs re-run at d3363c0d through kovacs-sysadm (`molt-rc-check.sh`, sha256 fbbaea6dc864, booked as a heavy at the slot desk; hv runs it from kovacs-sysadm's session on the desk's GO), then hv cuts. 0065 (five test files read the real HOME) is deferred past the release on hv's word.
-- vc runs the estate slot desk for rhadamanth and kovacs (hv, 24 Oct). It closed for the night on 25 Oct; the order to resume from is the "QUEUE AT EOD" line in vc's ledger, restated on vc's board.
+- Nothing of Molt's is in flight. vc coordinates the estate today (hv, 26 Oct; decision 20 on vc's board): one project at a time, in the order Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.
 
 ## TODO
 
 - **gyges to Molt from brew** (ST0008 D7, outside its acceptance), through gyges-sysadm when hv says: `brew install matthewsinclair/molt/molt`, `molt use brew`, a resleeve from a plain terminal, doctor; then remove the old clone and `~/bin/molt`, as on kovacs.
-- **rhadamanth, for hv**: `molt upgrade` (to 1.0.1; its resleeve clears the renders that adding `MOLT_INSTALL_PREFIX` to `vars.sh` made stale), then log out and in so `com.molt.env.plist` loads.
 - **rhadamanth's backup, when hv is home** (no copy over Tailscale; acceptable meanwhile, since gyges backs up the same Dropbox content): SuperDuper's last successful copy is weeks old and its job is not scheduled (a schedule block without `scheduleOn` is inert), so `molt resleeve` reports backup as needing install; vc ran only the agents liberator on 23 Oct and left backup for hv.
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
 - **Every other sleeve's Molt clone, at its next resync** (farcaster, pihole; kovacs runs Molt from brew and has no clone): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.

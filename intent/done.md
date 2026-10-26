@@ -1,5 +1,20 @@
 # Done
 
+## 030: ST0008, Molt from brew; 1.0.0, 1.0.1 and the one release, 1.1.0 (DONE)
+
+- **ST0008 done (24 Oct): Molt runs from a dev, opt or brew tree.** `molt install`, `molt use dev|opt|brew` through one link (`~/.local/bin/molt`), a version line that names the tree, the Homebrew formula with `tools/formula`, and the env writer (`lib/env.sh` and the env liberator), which publishes `CLAUDE_CONFIG_DIR`, the install prefixes and, for GUI apps, a login shell's PATH. Released as 1.0.0 (3842239), which also carried issues 0040 to 0055, and 1.0.1 (fb0d8ff, issue 0056: the Linux GUI PATH starts from `/etc/environment`).
+- **Molt 1.1.0 (b9d59e2, tag `v1.1.0`, 26 Oct), the one release of decision 17.** It carries issues 0057 to 0064 and 0066:
+  - the gtools liberator (0057)
+  - utilz's use switch (0058)
+  - one `launchctl setenv` per pair in the env LaunchAgent (0059)
+  - the agents tests kept out of the host's `/etc` (0061)
+  - contract A3's version line and doctor (0063, 0066)
+  - doctor's font check under errexit (0064)
+  - test fixes (0060, 0062)
+- **How it was checked.** The Mac release run was green under both bashes. kovacs's run at d3363c0d passed its suite and every issue check. Its one red, the candidate doctor's local-bin check run from a dev clone on a sleeve brew serves, was ruled an artefact by hv and filed as 0067 (low, deferred). CI was green on main and the tag, the formula was published to the tap at b9d59e2, and rhadamanth and kovacs took it by `molt upgrade` with doctor clean. On rhadamanth the fixed env LaunchAgent was loaded by `launchctl bootstrap`. 0065 is deferred past the release (hv).
+- **Verblocks (hv, 26 Oct): the doc's version and one short line, never history or prose.** hv's rule of 12 Oct had reached only the projects where it was said. Every estate VC cut its own project's verblocks, Molt's in 2fcdb1a. The rule goes into Intent as a library rule with a commit guard (Intent 0653, in 3.2.7).
+- **Housekeeping:** the closed items' views that `.intentfiles` does not declare were dehydrated (0777fb6).
+
 ## 029: v0.3.0 cut; as written matched to as built; gyges moved; the attribution object and the ssh wrapper come from the stack (DONE)
 
 - **Molt v0.3.0 (db76a2c, 23 Oct), on hv's "release now, guards after".** Before the cut every local board was leaned and each Claude said it had nothing more to add. Estate agents stay out of Molt (hv; fb409ac): `molt agent start` starts sleeve agents only.
