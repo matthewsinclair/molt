@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 46011de3-2e37-4de4-bfd7-90d8ff2bbf74
-heartbeat_at: 2026-10-26 12:02Z
+heartbeat_at: 2026-10-26 12:10Z
 status: active
-focus: "26 Oct 12:02Z after compact: heavy slot FREE (hv stopped the Devbin 0.1.15 cut at about 12:01Z; local release commit 7b10dd37 unpushed; the restart waits on hv's T5 answer, A recommended, and on every node compacted); first READY goes: Utilz final-head checks, Intent's kovacs preflight or hv's cut restart; Intent's fold text (light) any time; Spotlight ~/Devel exclusion pending hv, then Intent's stale worktrees removed; resume from scratchpad estate-26oct.md"
+focus: "26 Oct 12:10Z: heavy slot FREE; hv ruled Devbin T5 into 0.1.15 (B; hv holds the cut), Utilz A4 into 2.14.4 (a) and Intent A4 into 3.2.7; each fix's test run and each project's final checks book with vc as heavies, first READY first; Intent's fold text (light) is landing; Molt's A4 conformance is issue 0068, for its next release; Spotlight ~/Devel exclusion pending hv, then Intent's stale worktrees removed; resume from scratchpad estate-26oct.md"
 claims: [ST0006, ST0008]
 ---
 
