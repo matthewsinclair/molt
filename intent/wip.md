@@ -1,5 +1,5 @@
 ---
-verblock: "25 Oct 2026:v0.50: Matthew Sinclair - Molt release: Mac RC green at d3363c0; kovacs re-run then hv cuts"
+verblock: "25 Oct 2026:v0.50: Matthew Sinclair - Molt release: kovacs re-run, then the cut"
 ---
 
 # Work In Progress
