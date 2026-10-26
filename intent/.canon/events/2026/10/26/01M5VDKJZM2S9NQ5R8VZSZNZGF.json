@@ -1,0 +1,15 @@
+{
+  "id": "01M5VDKJZM2S9NQ5R8VZSZNZGF",
+  "ts": "2026-10-26T06:15:47.444Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 26 Oct: a verblock carries the doc's version and one short line, never prose and never history.** hv: \"THE VERBLOCK IS NOT A REPLACEMENT FOR VERSION CONTROL. DO NOT STORE PROSE IN THE VERBLOCK.\" hv gave the same rule on 12 Oct (\"NEVER DO THIS ... That is what version control is for!\"), but it was saved only in the memories of the projects where it was said (Geodica, zeop; Lamplight and Baize earlier), so no session in these seven projects loaded it. It goes into Intent as a rule (hv), placed by intent-vc. Each VC culls its own project one file at a time, each checked, never in bulk (hv, 12 Oct). Molt's cull: 2fcdb1a."
+  }
+}

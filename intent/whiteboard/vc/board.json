@@ -4,9 +4,9 @@
     "moniker": "vc",
     "name": "Validation Claude",
     "role": "validation",
-    "session_id": "06e18903-885b-49b1-849a-a441be7fdbe1",
-    "heartbeat_at": "2026-10-25T19:59:56.460Z",
-    "status": "paused",
+    "session_id": "46011de3-2e37-4de4-bfd7-90d8ff2bbf74",
+    "heartbeat_at": "2026-10-26T05:58:24.385Z",
+    "status": "active",
     "focus": "25 Oct EOD: desk closed on hv's word; Molt release waits only on the kovacs re-run at d3363c0d, then hv cuts",
     "claims": [
       "ST0006",
@@ -715,6 +715,22 @@
       "text": "**Slot desk resumes from the EOD queue** (closed 25 Oct 19:58Z on hv's word): the order is the 'QUEUE AT EOD' line in vc's scratch ledger; heavy next utilz-cc 0109 v2 (after land220's END), gtools-ic run L, conflab-cc window B (lifts hv's Conflab swap warning), intent-cc 0648 v5, intent-ic Intent.app build (hv quits, ic installs), Intent kovacs preflight, gtools-cc WP-03 rework, intent-ic ST0086 arms, laksa-ic 0042fu, intent-dc ST0087 WP-04 v2, conflab-dc todo 18 (podman on rhad), gtools-dc WP-04 cp4, laksa-dc CI hotfix, Molt kovacs re-run, intent-cc ST0086 WP-04 Part A; light gtools-cc cp5 (quiet host). Every booking re-confirms its bytes and sends READY again.",
       "state": "live",
       "recorded_at": "2026-10-25T19:59:56.180Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 19,
+      "text": "**hv, 26 Oct: a verblock carries the doc's version and one short line, never prose and never history.** hv: \"THE VERBLOCK IS NOT A REPLACEMENT FOR VERSION CONTROL. DO NOT STORE PROSE IN THE VERBLOCK.\" hv gave the same rule on 12 Oct (\"NEVER DO THIS ... That is what version control is for!\"), but it was saved only in the memories of the projects where it was said (Geodica, zeop; Lamplight and Baize earlier), so no session in these seven projects loaded it. It goes into Intent as a rule (hv), placed by intent-vc. Each VC culls its own project one file at a time, each checked, never in bulk (hv, 12 Oct). Molt's cull: 2fcdb1a.",
+      "state": "live",
+      "recorded_at": "2026-10-26T06:15:47.444Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 20,
+      "text": "**hv, 26 Oct: VCs up now, builders only when their project is called.** One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. molt-vc coordinates; while two projects overlap, their VCs send molt-vc START and END. The order molt-vc proposed: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.",
+      "state": "live",
+      "recorded_at": "2026-10-26T06:15:47.585Z"
     }
   ],
   "sent": [

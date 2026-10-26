@@ -2,9 +2,9 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 06e18903-885b-49b1-849a-a441be7fdbe1
-heartbeat_at: 2026-10-25 19:59Z
-status: paused
+session_id: 46011de3-2e37-4de4-bfd7-90d8ff2bbf74
+heartbeat_at: 2026-10-26 05:58Z
+status: active
 focus: "25 Oct EOD: desk closed on hv's word; Molt release waits only on the kovacs re-run at d3363c0d, then hv cuts"
 claims: [ST0006, ST0008]
 ---
@@ -66,6 +66,8 @@ _(none)_
 - **The Molt release waits for WP05** (hv, 24 Oct 10:33Z by TUI). The scratch-tap brew install passed end to end (slot 287, 10:29-10:31Z; teardown verified by vc). The first brew Molt carries the env writer, so the tap repo, formula publish and 9c418e2 all wait for a release cut after WP05 lands. Order: cc's WP05 Molt commits, then the Molt-matts commit (env in all five armed molt.toml files, UTILZ_INSTALL_PREFIX on rhadamanth), then vc validates with dc's 0048 and pushes, then hv cuts.
 - **hv ruling, 25 Oct 06:48Z: ONE release per project, not many small ones.** hv: "I DO NOT WANT TO KEEP MAKING MULTIPLE SMALL RELEASES for each project. It takes HOURS to go thru the full release process." The next release of each project carries everything outstanding that is being worked on and has not been deferred. There are no interim or patch releases, and there is no user base besides hv. The order is fixed: all done, then all tested at the desk, then the Linux artefacts checked on kovacs through kovacs-sysadm (booked as a heavy), and only then the cut. Cuts and tags are hv's. Anything left out is deferred on the record with hv's say. Relayed to every VC (intent, laksa, utilz, devbin, conflab, gtools) and to kovacs-sysadm.
 - **hv ruling, 25 Oct ~10:03Z: brew by default.** hv: "As a general rule, I want to use the brew versions of things UNLESS I am working on a project. If I am working, then I'll use dev/opt as needed, and put brew back once done and the patch is released. I want to be sure to use the brew release versions of these tools wherever I can." Each tool's use switch sits at brew unless that project is being worked on. Every release's checklist ends with switching back to brew and checking that the brew install answers. Liberators and doctors name a stray dev or opt switch and the remedy, and never flip it themselves. Relayed to every VC.
+- **hv, 26 Oct: a verblock carries the doc's version and one short line, never prose and never history.** hv: "THE VERBLOCK IS NOT A REPLACEMENT FOR VERSION CONTROL. DO NOT STORE PROSE IN THE VERBLOCK." hv gave the same rule on 12 Oct ("NEVER DO THIS ... That is what version control is for!"), but it was saved only in the memories of the projects where it was said (Geodica, zeop; Lamplight and Baize earlier), so no session in these seven projects loaded it. It goes into Intent as a rule (hv), placed by intent-vc. Each VC culls its own project one file at a time, each checked, never in bulk (hv, 12 Oct). Molt's cull: 2fcdb1a.
+- **hv, 26 Oct: VCs up now, builders only when their project is called.** One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. molt-vc coordinates; while two projects overlap, their VCs send molt-vc START and END. The order molt-vc proposed: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.
 
 ---
 

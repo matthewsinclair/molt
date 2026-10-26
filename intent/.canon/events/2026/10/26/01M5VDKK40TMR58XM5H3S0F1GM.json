@@ -1,0 +1,15 @@
+{
+  "id": "01M5VDKK40TMR58XM5H3S0F1GM",
+  "ts": "2026-10-26T06:15:47.585Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 26 Oct: VCs up now, builders only when their project is called.** One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. molt-vc coordinates; while two projects overlap, their VCs send molt-vc START and END. The order molt-vc proposed: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa."
+  }
+}
