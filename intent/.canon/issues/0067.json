@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 67,
+  "slug": "doctor-run-from-a-dev-tree-on-a-sleeve-brew-serv",
+  "title": "doctor run from a dev tree on a sleeve brew serves reads local-bin as not installed, and its advice, molt resleeve, would link the sleeve to that tree",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-10-26",
+  "reporter": "Matthew Sinclair",
+  "body": "## What happens (kovacs, 26 Oct 2026; Molt's release check at d3363c0d, run by kovacs-sysadm)\n\nThe release check ran the candidate's `molt doctor` from a dev clone on kovacs, where brew serves molt and there is no `~/.local/bin/molt`. Doctor's enabled-liberators check read `local-bin` as not installed (\"~/.local/bin/molt is missing\"), and its advice was to run `molt resleeve`. In the same run, the \"molt on PATH\" check passed with \"brew's; no link of molt's\".\n\n`_local-bin_fault` (liberators/local-bin.sh) stands down only when the running tree is brew. Run from a dev tree with no link, it reports the missing link, and local-bin's install would then link `~/.local/bin/molt` to the running tree. From a temporary clone, as the release check runs, a resleeve would point the sleeve at that clone. kovacs-sysadm did not run it.\n\nThe code is unchanged since 1.0.1, and molt from brew passes the check: kovacs's 1.0.1 doctor passed in the same run, and 1.1.0 from brew passes on rhadamanth and kovacs.\n\n## What it wants\n\nA dev or opt tree that is not what serves molt says so in words that lead to the right remedy, eg that brew serves molt and `molt use dev` would link this tree, and doctor does not advise a resleeve that would switch the sleeve's tree. Not a release blocker.\n\nDeferred past 1.1.0 (hv, 26 Oct 2026, by TUI in molt-vc's session).\n"
+}
