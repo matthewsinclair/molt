@@ -8,10 +8,7 @@
     "heartbeat_at": "2026-10-26T14:52:26.206Z",
     "status": "active",
     "focus": "26 Oct 14:52Z back after hv's move: desk hold lifted 14:51:57Z, every VC told to continue as planned; Devbin lands the installhints fix (light) then CI then hv's 0.1.15 cut; Intent reads CI on 8fb1351d0 then Part B's train; Utilz A4 to Design v3 (sized M) before its heavy; Gtools, Conflab, Laksa wait for their call; Spotlight scope question with hv; resume from scratchpad estate-26oct.md",
-    "claims": [
-      "ST0006",
-      "ST0008"
-    ],
+    "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
     "migrated_at": "2026-09-21T15:40:58.246Z"

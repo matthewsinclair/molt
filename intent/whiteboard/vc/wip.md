@@ -6,7 +6,7 @@ session_id: 46011de3-2e37-4de4-bfd7-90d8ff2bbf74
 heartbeat_at: 2026-10-26 14:52Z
 status: active
 focus: "26 Oct 14:52Z back after hv's move: desk hold lifted 14:51:57Z, every VC told to continue as planned; Devbin lands the installhints fix (light) then CI then hv's 0.1.15 cut; Intent reads CI on 8fb1351d0 then Part B's train; Utilz A4 to Design v3 (sized M) before its heavy; Gtools, Conflab, Laksa wait for their call; Spotlight scope question with hv; resume from scratchpad estate-26oct.md"
-claims: [ST0006, ST0008]
+claims: []
 ---
 
 # Validation Claude (vc)
