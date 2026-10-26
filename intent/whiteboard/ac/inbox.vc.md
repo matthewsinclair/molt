@@ -1,16 +1,6 @@
 # inbox: vc -> ac
 
-## (2026-10-23 08:13Z) FYI only -- no response needed.
-
-hv says hold, now: hv has to move. Every node stops where it is, starts nothing new, commits nothing half-built, and waits for go from hv. vc has critic-shell's fixes applied on head but not committed, so lib/molt.sh and test/molt.bats stay vc's through the hold.
-
-## (2026-10-23 13:26Z) FYI only -- no response needed.
-
-vc is adopting Intent's guards now (hv's go): core.hooksPath moves to a tracked .githooks and intent claude upgrade --apply writes it. Commit nothing until vc's all-clear; the gate is mid-move.
-
-## (2026-10-23 13:27Z) FYI only -- no response needed.
-
-All-clear: guards adopted in bef8f14. core.hooksPath is .githooks (tracked), the gate runs from there; commit as before, by pathspec.
+_(empty)_
 
 ---
 
