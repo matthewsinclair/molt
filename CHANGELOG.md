@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-26
+
 ### Added
 
 - `gtools` liberator: Gtools from Homebrew (`brew install matthewsinclair/gtools/gtools`), per hv's ruling that Gtools joins devbin's dev/opt/brew contract. Its tap is private, so install first taps it over ssh (`git@github.com:matthewsinclair/homebrew-gtools.git`) when it is missing, and check and verify name a missing tap with the tap command, and the gtools that PATH runs. `molt_brew_install` and `molt_brew_faults` take the private tap's URL as an optional argument, and a failed tap fails install with brew's reason shown; intent and utilz pass none and are unchanged. Enabled on no sleeve until Gtools is cut (issue 0057)
@@ -265,7 +267,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/matthewsinclair/molt/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/matthewsinclair/molt/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/matthewsinclair/molt/compare/v0.3.0...v1.0.0
 [0.3.0]: https://github.com/matthewsinclair/molt/compare/v0.2.0...v0.3.0
