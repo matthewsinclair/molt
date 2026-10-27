@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# The built-in `version`. D18 tiers it 1 -- every corpus project has the
-# same three sub-commands over the same semver logic -- and it is the family
+# The built-in `version`. Tier 1 -- every corpus project has the
+# same sub-commands over the same semver logic -- and it is the family
 # with the most real code and the most risk in it.
 #
 # THE SUB-COMMANDS ARE NOT CATALOGUE OPTIONS, deliberately. An option set gets a
-# synthesised `all` (D8), and `version all` -- show, then set, then bump, then
+# synthesised `all`, and `version all` -- show, then set, then bump, then
 # sync -- is nonsense at best. These are sub-commands of a tier-1 handler.
 #
 #   (bare)     print "<name> <version>"
@@ -15,22 +15,22 @@
 #   sync       re-apply the CURRENT version everywhere, healing drift
 #   check      report drift, write nothing, exit non-zero if any
 #
-# TWO INVARIANTS, both learned the hard way in the corpus and both load-bearing.
+# THE INVARIANTS, each learned the hard way in the corpus and each load-bearing.
 #
-# 1. DERIVED FILES FIRST, THE VERSION FILE LAST. One project states the rule: a
-#    partial failure then leaves the version file un-advanced, so re-running
-#    `bump patch` recomputes the SAME target and retries cleanly. Write the
-#    version file first and a failure halfway leaves it advanced, so the rerun
-#    bumps again -- a double-bump on top of a half-synced tree. Another writes
-#    it first and has `sync`/`check` to heal the drift that causes, which is
-#    treating the symptom. Raised against that project, not fixed from here.
+# DERIVED FILES FIRST, THE VERSION FILE LAST. One project states the rule: a
+# partial failure then leaves the version file un-advanced, so re-running
+# `bump patch` recomputes the SAME target and retries cleanly. Write the
+# version file first and a failure halfway leaves it advanced, so the rerun
+# bumps again -- a double-bump on top of a half-synced tree. Another writes it
+# first and has `sync`/`check` to heal the drift that causes, which is treating
+# the symptom. Raised against that project, not fixed from here.
 #
-# 2. THE SYNC IS UNCONDITIONAL. A corpus comment records the shipped defect:
-#    an earlier "only if the current version differs" gate skipped sidecar
-#    healing whenever the version file already held the target, so a tree with
-#    the version bumped in one commit and a plist lagging shipped a wrong
-#    CFBundleShortVersionString at v0.3.2. Always write; let git decide what
-#    actually changed.
+# THE SYNC IS UNCONDITIONAL. A corpus comment records the shipped defect: an
+# earlier "only if the current version differs" gate skipped sidecar healing
+# whenever the version file already held the target, so a tree with the version
+# bumped in one commit and a plist lagging shipped a wrong
+# CFBundleShortVersionString at v0.3.2. Always write; let git decide what
+# actually changed.
 #
 set -euo pipefail
 
@@ -70,12 +70,12 @@ sidecars() {
 # the file. That project's own `sync_cargo_lock` hardcodes `demo` and `demod`;
 # devbin has no equivalent to hardcode.
 #
-# The two derivations that look available both fail. Bumping every entry whose
+# Each derivation that looks available fails. Bumping every entry whose
 # version matches the project's would corrupt any third-party dependency that
 # happens to share the number. Taking the package names from the project's
 # declared `Cargo.toml` sidecars does work -- but it would have to work for the
 # READER too, and `read_version` lives in `lib/helpers`, which has no
-# dependencies by rule (D15) and so cannot consult config. A recipe present in
+# dependencies by rule and so cannot consult config. A recipe present in
 # the writer and absent from the reader is precisely the asymmetry the comment
 # above ("READING IS read_version's JOB") exists to prevent.
 #
@@ -106,8 +106,7 @@ sidecars() {
 # guard treats an empty sidecar as legal -- freshly created, nothing to destroy
 # -- so the drift reporter must classify the same file as DRIFTED, healable by
 # the `sync` that will legally fill it, and never as unreadable: unreadable's
-# advice is to un-declare the sidecar, which deletes config that works (delta
-# review, finding 4).
+# advice is to un-declare the sidecar, which deletes config that works.
 holds_nothing() {
   [ -z "$(tr -d '[:space:]' <"$1" 2>/dev/null)" ]
 }
@@ -138,7 +137,7 @@ assert_bare_version_sidecar() {
 # pass: with sidecars [Cargo.toml, Cargo.lock] the .toml was already rewritten
 # when the .lock was refused, while the refusal said "Nothing has been written"
 # -- the command that reported writing nothing had introduced exactly the drift
-# it polices, and `version check` then flagged it (delta review, finding 3).
+# it polices, and `version check` then flagged it.
 # Refusing every file before touching any is what makes the message true.
 write_version_into() {
   local file="$1" version="$2" role="${3:-sidecar}" phase="${4:-write}"
@@ -164,9 +163,9 @@ write_version_into() {
       ;;
     *.plist)
       # PlistBuddy is macOS-only. DIE rather than skip: a skipped plist is
-      # precisely the silent drift invariant 2 exists to prevent, and because
-      # every file is preflighted before any is written, dying here leaves a
-      # re-runnable tree.
+      # precisely the silent drift the unconditional sync exists to prevent, and
+      # because every file is preflighted before any is written, dying here
+      # leaves a re-runnable tree.
       [ -x /usr/libexec/PlistBuddy ] ||
         die "cannot write $file -- PlistBuddy is macOS-only, and skipping it would leave the tree drifted
        Run 'version set' or 'version bump' on macOS. Nothing has been advanced."
@@ -206,9 +205,10 @@ EOF
   done <<EOF
 $(sidecars)
 EOF
-  # LAST, and only once every sidecar has succeeded. See invariant 1. The role
-  # is what tells write_version_into that the bare-version default is a fact
-  # here rather than a guess: this file is the one `version_from` names.
+  # LAST, and only once every sidecar has succeeded. See DERIVED FILES FIRST
+  # above. The role is what tells write_version_into that the bare-version
+  # default is a fact here rather than a guess: this file is the one
+  # `version_from` names.
   write_version_into "$version_file" "$version" version-file
   return 0
 }
@@ -302,7 +302,7 @@ case "${1:-}" in
     printf '%s\n' "$(read_version)"
     ;;
   sync)
-    # Unconditional, by design. See invariant 2.
+    # Unconditional, by design. See THE SYNC IS UNCONDITIONAL above.
     apply_version "$(read_version)"
     printf '%s\n' "$(read_version)"
     ;;
@@ -310,7 +310,7 @@ case "${1:-}" in
     if report_drift; then
       # ZERO IS A DIFFERENT VERDICT, NOT A QUIETER PASS. It stays exit 0 because
       # zero is the ORDINARY configuration rather than a misconfiguration --
-      # measured as the common case across estates, devbin's own included --
+      # measured as the common case across projects, devbin's own included --
       # so failing it would break `version check` in most of them, for projects
       # that are correctly set up with a single version file. That is the line
       # `infra check` already draws: a gate that COULD NOT examine fails, a gate

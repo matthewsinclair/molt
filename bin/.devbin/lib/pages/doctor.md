@@ -45,13 +45,30 @@ In this order:
                     project.alias shortcut chained through that link is
                     noted with the command that repoints it
     source          whether the devbin this project was vendored from has
-                    moved: level, behind, ahead, differs or unknown, each
-                    said apart; only behind suggests an upgrade. unknown
-                    names what this machine is missing to place the source
-                    the manifest records (see bin/devbin help upgrade). A
-                    project vendored from an install also gets the install
-                    it resolves to, and what named it: DEVBIN_INSTALL_PREFIX,
-                    the machine pointer, or HOMEBREW_PREFIX's opt/devbin
+                    moved: level, behind, moved, ahead, differs or
+                    unknown, each said apart; only behind suggests an
+                    upgrade. moved is a source whose commit moved on
+                    while no vendored file changed: it passes, naming
+                    both commits, and is not offered as an update. unknown
+                    names what this machine is missing, so that no switch
+                    names a source (see bin/devbin help upgrade). A
+                    project also gets the tree its next upgrade reads, by
+                    its tree line, and what named it: DEVBIN_INSTALL_PREFIX,
+                    the link ~/.local/bin/devbin, or HOMEBREW_PREFIX's
+                    opt/devbin
+    tree            in devbin's own checkout only: its tree line, as
+                    --version prints it. It fails when git cannot read the
+                    checkout, so the line names no commit
+    switch          the machine's choice among dev, opt and brew (bin/devbin
+                    help use). It fails when the link is not the first
+                    devbin on PATH, compared as resolved directories, when
+                    the link leads to no devbin tree, and when the opt
+                    install the switch names has the manifest form written
+                    before the tree line, naming install --force. A keg in
+                    that form is a note naming brew upgrade devbin, since
+                    only a later release fixes it. A machine pointer left
+                    from before the link is a note: nothing reads it, and it
+                    is removed by hand
     bash            which bash is running, against the >= 5 floor
     location        under WSL only: where the project sits. One on a
                     Windows drive (/mnt/<letter>) is a note naming the
@@ -94,7 +111,7 @@ A file there that is not executable, or a directory, is a note and is not run. A
 
 ## The upgrade offer
 
-At a terminal, `bin/devbin doctor` and bare `bin/devbin` first ask whether to upgrade, and only when the devbin this project was vendored from has moved forward past it -- the `behind` state above. A source that is behind the project, or differs in no known direction, is never offered: nothing says it is newer, and an upgrade from an older source can take the project backwards. Only `y` or `yes`, in any case, runs `bin/devbin upgrade`; any other answer, or none, leaves the project as it is. `DEVBIN_NO_UPDATE_NOTICE=1` turns the offer off, along with devbin's once-a-day update notice.
+At a terminal, `bin/devbin doctor` and bare `bin/devbin` first ask whether to upgrade, and only when the devbin this project was vendored from has moved forward past it and changed a vendored file -- the `behind` state above. A source whose commit moved on with no vendored file changed is not offered. A source that is behind the project, or differs in no known direction, is never offered: nothing says it is newer, and an upgrade from an older source can take the project backwards. Only `y` or `yes`, in any case, runs `bin/devbin upgrade`; any other answer, or none, leaves the project as it is. `DEVBIN_NO_UPDATE_NOTICE=1` turns the offer off, along with devbin's once-a-day update notice.
 
 ## A checkout on a Windows drive
 
