@@ -1,0 +1,15 @@
+{
+  "id": "01M5Y0TAPD9SV2A7ZNV6H8NWC0",
+  "ts": "2026-10-27T06:30:00.141Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 27 Oct: layer order L1, then L2, then L3, done today; it replaces decision 20's project order.** hv: \"There is an obvious and natural hiearchy here: L1: Utilities and devx: devbin, molt, utilz, gtools. L2: Process and agentic engineering: intent. L3: Applications: laksa, conflab. And we should be executing in that order. There is _no_way_ that we should be doinfg anything with laksa and conflab until the utilz/devx layer is sorted out, published, running on CI/CD, brewed, and then reinstalled locally and usable via brew.\" and \"I want this done expeditiously _today_.\" A project is done when its release is cut and tagged, CI is green on the tag, its formula is published, it is installed from brew on rhadamanth and kovacs, and `<tool> use brew` answers from brew in a fresh login shell. vc's reading, not hv's words: Intent's installed build stays as it is until L1 is done, since devbin's release gates run intent (0648's critic exit 4 broke Utilz's dry run on 26 Oct)."
+  }
+}

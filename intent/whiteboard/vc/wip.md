@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 46011de3-2e37-4de4-bfd7-90d8ff2bbf74
-heartbeat_at: 2026-10-26 20:00Z
-status: paused
-focus: "26 Oct 19:47Z EOD (hv): desk hold 01M5WVZS7YKGJ4PPQ33W3HJVPT since 19:46:21Z; every dev Claude told to fold, close and hold; last run is Intent's kovacs preflight 01M5WS7F at ddb749ca7 (on green, devbin-vc pushes it upstream). Tomorrow: Utilz push (hv), CI, then the 2.14.4 cut; then Intent's Part B train, Gtools, Conflab, Laksa, one project at a time; Spotlight with hv; apt ruby stays on kovacs (no brew ruby). Resume from scratchpad estate-26oct.md"
+session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
+heartbeat_at: 2026-10-27 06:30Z
+status: active
+focus: "27 Oct (hv, decision 22): layer order today. L1 devbin, molt, utilz, gtools to cut, CI green, brewed and usable from brew on rhadamanth and kovacs; then L2 intent; then L3 laksa, conflab. Desk open since 06:29Z, molt-vc in control; Intent's installed build stays put until L1 is done"
 claims: []
 ---
 
@@ -65,6 +65,7 @@ _(none)_
 - **hv, 26 Oct: a verblock carries the doc's version and one short line, never prose and never history.** hv: "THE VERBLOCK IS NOT A REPLACEMENT FOR VERSION CONTROL. DO NOT STORE PROSE IN THE VERBLOCK." hv gave the same rule on 12 Oct ("NEVER DO THIS ... That is what version control is for!"), but it was saved only in the memories of the projects where it was said (Geodica, zeop; Lamplight and Baize earlier), so no session in these seven projects loaded it. It goes into Intent as a rule (hv), placed by intent-vc. Each VC culls its own project one file at a time, each checked, never in bulk (hv, 12 Oct). Molt's cull: 2fcdb1a.
 - **hv, 26 Oct: VCs up now, builders only when their project is called.** One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. molt-vc coordinates; while two projects overlap, their VCs send molt-vc START and END. The order molt-vc proposed: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.
 - **hv, 26 Oct: molt-vc cuts Molt 1.1.0 once the kovacs re-run at d3363c0d is green.** That covers the release commit, the annotated tag, the push, CI green, then tools/formula publish. The brew close-out on each sleeve follows. **The verblock rule is going-forward only** (hv): closed threads' store-only attachments, frozen .history copies and example fixtures stay as they are.
+- **hv, 27 Oct: layer order L1, then L2, then L3, done today; it replaces decision 20's project order.** hv: "There is an obvious and natural hiearchy here: L1: Utilities and devx: devbin, molt, utilz, gtools. L2: Process and agentic engineering: intent. L3: Applications: laksa, conflab. And we should be executing in that order. There is _no_way_ that we should be doinfg anything with laksa and conflab until the utilz/devx layer is sorted out, published, running on CI/CD, brewed, and then reinstalled locally and usable via brew." and "I want this done expeditiously _today_." A project is done when its release is cut and tagged, CI is green on the tag, its formula is published, it is installed from brew on rhadamanth and kovacs, and `<tool> use brew` answers from brew in a fresh login shell. vc's reading, not hv's words: Intent's installed build stays as it is until L1 is done, since devbin's release gates run intent (0648's critic exit 4 broke Utilz's dry run on 26 Oct).
 
 ---
 
