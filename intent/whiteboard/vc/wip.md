@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-27 06:30Z
+heartbeat_at: 2026-10-27 07:47Z
 status: active
-focus: "27 Oct (hv, decision 22): layer order today. L1 devbin, molt, utilz, gtools to cut, CI green, brewed and usable from brew on rhadamanth and kovacs; then L2 intent; then L3 laksa, conflab. Desk open since 06:29Z, molt-vc in control; Intent's installed build stays put until L1 is done"
+focus: "27 Oct (decision 22, layers). L1: molt, devbin 0.1.15 and utilz 2.14.4 DONE (cut, CI green on the tag, formula in the tap, brewed and answering on rhadamanth and kovacs; Menuz from the release asset). gtools in progress: WP-03's rework heavy granted at 07:47Z, WP-08's landing next; hv's rulings on (a), (b) and D9 and the tap repo pending. Then L2 intent (first ask ready), then L3 laksa and conflab (holding)"
 claims: []
 ---
 
