@@ -791,6 +791,14 @@
       "text": "**hv, 27 Oct, on molt-vc's question 4: \"Yes, lights can go beside a heavy\".** A light run from any project may go beside the one heavy on the desk, while its own lanes are free and the load stays low; until now only the same project's lights did (one-project rule, 26 Oct). One heavy at a time still holds, and heavies still go in the layer order (decision 22) unless hv says otherwise, as with Intent's judge run on hv's \"ok, go\" at 10:01Z. A run so small it holds no lane (`--lane none`) goes at once.",
       "state": "live",
       "recorded_at": "2026-10-27T10:07:50.059Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 24,
+      "text": "**hv, 27 Oct, in intent-ic's session (relayed verbatim by intent-ic, 11:26Z): Intent's build all and intentd restart go ahead once judge run 3 is green and lands, ahead of L1's close.** intent-ic asked: \"Your call: when run 3 is green and lands, should vc run `build all` and restart the daemon at once, ahead of molt-vc's L1 word?\" hv: \"Unequivocally Yes.\" This lifts, for this one install, decision 22's freeze on Intent's installed build, which was molt-vc's reading and not hv's words. On the desk the build is one heavy (heavy, cargo), granted when no run whose gate calls intent is in flight. Gtools' next landing first runs its own `land.sh --check` against the new install.",
+      "state": "live",
+      "recorded_at": "2026-10-27T11:27:09.418Z"
     }
   ],
   "sent": [
