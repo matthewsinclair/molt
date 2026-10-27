@@ -1,0 +1,15 @@
+{
+  "id": "01M5YZHTDHQCEM14GQKDF010EH",
+  "ts": "2026-10-27T15:27:07.185Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**Pen rulings, 27 Oct, while hv is AFK** (hv, in molt-vc's session: \"molt-vc has the pen. VCs coorindate their own project-specific Claudes. Push on.\"; then \"Tell them all that the compact IS STILL NEEDED.\" and \"I didn't say no compact. I just said push on.\"). Each ruling takes the asking VC's recommendation, and hv can overrule any of them on return. Gtools (b): D9 in; G8, WP-06 and AC-04.12 deferred to one follow-up thread, with every deferred AC descoped (AC-05.2 included). Intent: ST0085 is out of 3.2.7; the kovacs preflight and devbin-vc's push of Intent's main go now, since neither touches rhadamanth's installed Intent; Molt's env liberator publishes INTENT_INSTALL_PREFIX now, because only `intent install` and `intent use opt` read it. Utilz: 0114 doesn't hold 2.14.5 (option a). devbin: the target is 0.1.16 ready to cut, with ST0010's chain first; publication and S1 to S3 stay hv's. L3: Laksa and Conflab may do non-heavy work now, and every heavy goes on molt-vc's GO by name. Laksa is called for its tests, which failed in hv's hand run alongside Intent's and Gtools'. Cuts, pushes of releases and deploys stay hv's."
+  }
+}
