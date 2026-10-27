@@ -37,7 +37,8 @@
       "kind": "watchout",
       "seq": 1,
       "text": "**Molt CI's macOS runner has only bash 3.2**, and this Mac's `env bash` is Homebrew bash 5.3. A green run under 5.3 is not a pass: run the suite with `/bin` first on PATH as well, and check the CI run before calling work done. `${VAR:-{...\\}}` is where the two diverged (issue 0004).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.826Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -45,7 +46,8 @@
       "kind": "watchout",
       "seq": 2,
       "text": "**`backup_verify` exit 2 is normal, not a failure.** It means nothing failed but the share-side checks (SMB dialect, attach budget) could not run, which is the usual state because SuperDuper mounts the share only while copying. 0 means every check ran and passed; 1 means a check failed.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.907Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -53,7 +55,8 @@
       "kind": "watchout",
       "seq": 3,
       "text": "**SuperDuper `recentRuns` records finished runs only.** A copy in flight is invisible there, and cancelled or failed runs are often hv's own interruptions, eg for an OS install. Check for a running copy and ask before calling the backup failing.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.991Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -61,7 +64,8 @@
       "kind": "watchout",
       "seq": 4,
       "text": "**iTerm2 3.7.1's Claude Code onboarding offers \"Mark Rewritable & Install\" for dynamic profiles.** Taking it adds `\"Rewritable\": true`. The Molt profile is symlinked into Molt-matts, so iTerm2 then writes into git. Restored without the flag in Molt-matts `b58e0d4`; hv ruled iTerm2 does not write into terminal config unannounced.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.065Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -77,7 +81,8 @@
       "kind": "watchout",
       "seq": 6,
       "text": "**`pgrep -x iTerm2` matches nothing while iTerm2 is running.** Use `pgrep -fl 'iTerm.app'`. An empty probe that contradicts something obvious is a probe defect, not a finding.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.139Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -101,7 +106,8 @@
       "kind": "watchout",
       "seq": 9,
       "text": "**An autoload file contains the BODY ONLY.** Wrapping it as `name() { ... }` makes the first call merely define the function and do nothing else -- it silently no-ops once, then works. `jump`, `git_current_branch` and `e` are the convention in `Molt-matts/config/zsh/functions/`. devbin's `README.md:60` shows the WRAPPED form, so anyone copying from there walks into it.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.206Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -109,7 +115,8 @@
       "kind": "watchout",
       "seq": 10,
       "text": "`fpath` and `autoload` are read at shell startup. A change under `config/zsh/functions/` needs a fresh shell; `source ~/.zshrc` is not enough, and testing in the current shell shows the old behaviour.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.277Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -144,7 +151,8 @@
       "kind": "watchout",
       "seq": 14,
       "text": "**After a config repo moves, every new shell starts with no zsh config until `molt resleeve` runs**, because `~/.zshenv` dangles. That includes an agent's next Bash call, which then has no `MOLT_PRJ_DIR` and so no `MOLT_CFG_DIR`. Run the mv and the resleeve in one command, with `MOLT_PRJ_DIR` set explicitly and molt called by absolute path.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.339Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -169,7 +177,8 @@
       "kind": "decision",
       "seq": 1,
       "text": "(2026-09-08) **Verify a peer's findings before acting on them, and verify a carried decision before ruling on it.** intent-vc's six claims about the `intent` liberator all held when checked against source. hv's six carried decisions did not: three were already resolved and the list did not know it. A carried-decision list is not self-cleaning.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:10.717Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -177,7 +186,8 @@
       "kind": "decision",
       "seq": 2,
       "text": "(2026-09-08) **Check the artefact before believing a status field.** Both \"Not Started\" packages on a six-month-old ST0001 turned out to be mostly delivered -- WP-07 half built, WP-04's runbook written in June and three months stale. The status records what someone last typed.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:10.787Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -185,7 +195,8 @@
       "kind": "decision",
       "seq": 3,
       "text": "(2026-09-08) **A half-met work package closed whole is a lie that compounds**, because the next reader cannot see which half they inherited. WP-07 was split: the delivered half took evidence-backed ACs, the unbuilt half became ST0003.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:10.872Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -202,7 +213,8 @@
       "kind": "decision",
       "seq": 5,
       "text": "(2026-09-15) **A verdict must say what it checked.** A skipped check reported as a pass is the defect; `backup_verify` now has a distinct exit for \"passed what it could reach\".",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:10.955Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -247,7 +259,8 @@
       "kind": "watchout",
       "seq": 16,
       "text": "**Intent: rhadamanth is off limits; gyges runs it from Homebrew only** (hv, 23 Sep). Never relink, pull, bootstrap or brew-link Intent on rhadamanth; its manifest disables Molt's intent liberator (Molt-matts 857d49c). The one sanctioned write there is `intent issues add|edit` in ~/Devel/prj/Intent. gyges is the everyday-user test bed with no local dev tree; Intent-from-brew problems go to intent-vc, not into Molt workarounds. Changes on gyges or kovacs go through their sleeve agents (gyges-sysadm, kovacs-sysadm), reached through rhadamanth-sysadm or hv.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.401Z",
       "recorded_at": "2026-09-23T10:36:54.076Z",
       "edited_at": "2026-10-23T21:07:53.211Z"
     },
@@ -266,7 +279,8 @@
       "kind": "watchout",
       "seq": 17,
       "text": "**Doom's `-!`/`--force` suppresses the rebuild along with the prompt** (`bin/doom-sync`, Doom 59cdaa32): after an Emacs version change it neither asks nor rebuilds, and leaves `$DOOMLOCALDIR/etc/sync` naming the old Emacs. Never answer a doom prompt with --force. Molt compares Doom's recorded version with the running Emacs and passes `--rebuild` itself (`_editors_doom_sync`, issue 0013).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.462Z",
       "recorded_at": "2026-10-16T13:39:21.532Z"
     },
     {
@@ -303,7 +317,8 @@
       "kind": "decision",
       "seq": 8,
       "text": "**AI attribution in a commit is purged on sight, not carried as a decision for hv** (hv, 20 Oct: \"STRICTLY FORBIDDEN. Purge that from the git record immediately\"). The purge recipe is in done 023 and vc's memory. Since issue 0040 the claude liberator writes the `attribution` object from Molt-matts `config/claude/attribution.json`, so a sleeve gets it at its next resleeve; the Git Commits rule is in the user-scope CLAUDE.md Molt links.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.058Z",
       "recorded_at": "2026-10-20T19:19:40.338Z",
       "edited_at": "2026-10-23T21:07:53.425Z"
     },
@@ -321,7 +336,8 @@
       "kind": "decision",
       "seq": 9,
       "text": "(2026-10-21) **MOLT_CLAUDE_CONFIG_DIR is the switch.** Everything ST0006 WP01 adds runs only on a sleeve whose vars.sh declares it, so merging changes no sleeve and hv arms the move one sleeve at a time (molt-cc's reading; on rhadamanth Chrome's native host keeps a claude process alive). The variable is published only once the state is where it points (AC011).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.151Z",
       "recorded_at": "2026-10-21T05:09:43.960Z"
     },
     {
@@ -426,7 +442,8 @@
       "kind": "decision",
       "seq": 11,
       "text": "(2026-10-22) **Three agent kinds, three naming schemes** (hv): sleeve agents <hostname>-<role>, project agents <project>-<suffix>, estate agents <estate>-estate (sinclair-estate, geodica-estate; the -vc suffix on those two was wrong). Estate agents are Gtools-provisioned and start in the estate's content root (GTOOLS_ESTATE), where the deployed .claude/ is; a launch above that root loads no contract, because Claude Code reads CLAUDE.md and settings from the launch dir and its parents, never a child.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.239Z",
       "recorded_at": "2026-10-22T06:11:35.967Z"
     },
     {
@@ -443,7 +460,8 @@
       "kind": "watchout",
       "seq": 18,
       "text": "**A whiteboard message lives in its SENDER's board.json (board@4.0, Intent 0612, live 22 Oct 19:08Z, Molt 2805f6a); the recipient's board.json carries only handled marks; inbox views render from the sender's canon and show no (handled).** Commit exactly what your verb prints on its `wrote:` lines, at once; a `re-rendered:` line names another node's file, leave it. The lesson that outlives the old shape: a view committed without the canon that renders it fails every peer's fresh-worktree gate with view skew (seen 22 Oct 18:00Z local on vc/inbox.cc.md under board@3.0, where the message landed in the RECIPIENT's board.json). A fresh detached worktree and a read-only intent doctor reproduce the gate's view.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.522Z",
       "recorded_at": "2026-10-22T13:57:39.412Z",
       "edited_at": "2026-10-22T19:11:49.720Z"
     },
@@ -593,7 +611,8 @@
       "kind": "watchout",
       "seq": 21,
       "text": "**Resolve a path before calling it a duplicate.** On rhadamanth ~/bin is a symlink to .local/bin, so two PATH entries named one directory, and the 'stray' ~/.local/bin/molt was hv's only molt link; vc removed it on 24 Oct and briefly left hv with no molt. Compare inodes (stat -f %i) or resolved dirs before removing, and treat a doctor shadow check the same way: compare resolved directories, never path strings.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:12.578Z",
       "recorded_at": "2026-10-24T06:32:19.548Z"
     },
     {
@@ -601,7 +620,8 @@
       "kind": "decision",
       "seq": 13,
       "text": "**One dev/opt/brew contract for Molt, Utilz, Intent and devbin** (hv, 24 Oct, by TUI). (B) your links first: formulas link into brew's bin as normal; Molt-matts puts ~/.local/bin ahead of brew's bin on every sleeve; <tool> use dev|opt|brew switches the per-user link set in ~/.local/bin (no link means brew); doctor names a shadow, comparing resolved dirs. The one contract text lives in Devbin's docs, drafted by devbin-vc, agreed SAME by molt-vc, utilz-vc and intent-vc before anything lands. Molt consequences: revert D6's links-nothing, MOLT_LOCAL_BIN moves to ~/.local/bin (kovacs has them as different dirs), and the zshrc PATH order change.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.327Z",
       "recorded_at": "2026-10-24T06:49:43.813Z"
     },
     {
@@ -609,7 +629,8 @@
       "kind": "decision",
       "seq": 14,
       "text": "**molt-vc runs resource contention on rhadamanth** (hv, 24 Oct 06:50Z, going AFK). Heavy runs (bats suites, cargo builds, brew installs or upgrades) from every project book with molt-vc, start on its GO, and report START and END; intent-vc handed the slot desk over. Each project's VC still directs its own Claudes.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.411Z",
       "recorded_at": "2026-10-24T06:50:26.859Z"
     },
     {
@@ -724,7 +745,8 @@
       "kind": "decision",
       "seq": 19,
       "text": "**hv, 26 Oct: a verblock carries the doc's version and one short line, never prose and never history.** hv: \"THE VERBLOCK IS NOT A REPLACEMENT FOR VERSION CONTROL. DO NOT STORE PROSE IN THE VERBLOCK.\" hv gave the same rule on 12 Oct (\"NEVER DO THIS ... That is what version control is for!\"), but it was saved only in the memories of the projects where it was said (Geodica, zeop; Lamplight and Baize earlier), so no session in these seven projects loaded it. It goes into Intent as a rule (hv), placed by intent-vc. Each VC culls its own project one file at a time, each checked, never in bulk (hv, 12 Oct). Molt's cull: 2fcdb1a.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.492Z",
       "recorded_at": "2026-10-26T06:15:47.444Z"
     },
     {
@@ -732,7 +754,8 @@
       "kind": "decision",
       "seq": 20,
       "text": "**hv, 26 Oct: VCs up now, builders only when their project is called.** One project at a time runs its heavy work directly, with no slot desk, and a kovacs leg counts as heavy. molt-vc coordinates; while two projects overlap, their VCs send molt-vc START and END. The order molt-vc proposed: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.574Z",
       "recorded_at": "2026-10-26T06:15:47.585Z"
     },
     {
@@ -740,7 +763,8 @@
       "kind": "decision",
       "seq": 21,
       "text": "**hv, 26 Oct: molt-vc cuts Molt 1.1.0 once the kovacs re-run at d3363c0d is green.** That covers the release commit, the annotated tag, the push, CI green, then tools/formula publish. The brew close-out on each sleeve follows. **The verblock rule is going-forward only** (hv): closed threads' store-only attachments, frozen .history copies and example fixtures stay as they are.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.658Z",
       "recorded_at": "2026-10-26T06:26:16.743Z"
     },
     {
@@ -797,8 +821,17 @@
       "kind": "decision",
       "seq": 24,
       "text": "**hv, 27 Oct, in intent-ic's session (relayed verbatim by intent-ic, 11:26Z): Intent's build all and intentd restart go ahead once judge run 3 is green and lands, ahead of L1's close.** intent-ic asked: \"Your call: when run 3 is green and lands, should vc run `build all` and restart the daemon at once, ahead of molt-vc's L1 word?\" hv: \"Unequivocally Yes.\" This lifts, for this one install, decision 22's freeze on Intent's installed build, which was molt-vc's reading and not hv's words. On the desk the build is one heavy (heavy, cargo), granted when no run whose gate calls intent is in flight. Gtools' next landing first runs its own `land.sh --check` against the new install.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-27T12:52:11.742Z",
       "recorded_at": "2026-10-27T11:27:09.418Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 25,
+      "text": "**hv, 27 Oct (first-hand in Intent's vc session, relayed by intent-vc, before 12:48:23Z by its date -u): every localfold and every EOD fold clears out what is spent, so a pickup prints only live state.** hv: \"And this shouldn't be happening! Localfolds and EODs should clear this out.\" At each fold: archive each board item and ruling that has been carried out, checked first against its artefact (the commit, the closed issue, the Done WP); a ruling with any part still to do stays live, and a directive stays until hv says it is spent. Clear handled inbox messages, and run `intent wb archive message --handled --node <you>` for sent messages their recipients have handled. A watchout that is still true stays unless a durable home everyone loads carries it (restart.md's Durable Facts, intent/wip.md's Notes, a project memory). Molt's cc, dc and ac do the same at their next fold.",
+      "state": "live",
+      "recorded_at": "2026-10-27T12:52:04.756Z"
     }
   ],
   "sent": [

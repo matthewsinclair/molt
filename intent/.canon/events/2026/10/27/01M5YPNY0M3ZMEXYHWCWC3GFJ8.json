@@ -1,0 +1,15 @@
+{
+  "id": "01M5YPNY0M3ZMEXYHWCWC3GFJ8",
+  "ts": "2026-10-27T12:52:04.756Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 27 Oct (first-hand in Intent's vc session, relayed by intent-vc, before 12:48:23Z by its date -u): every localfold and every EOD fold clears out what is spent, so a pickup prints only live state.** hv: \"And this shouldn't be happening! Localfolds and EODs should clear this out.\" At each fold: archive each board item and ruling that has been carried out, checked first against its artefact (the commit, the closed issue, the Done WP); a ruling with any part still to do stays live, and a directive stays until hv says it is spent. Clear handled inbox messages, and run `intent wb archive message --handled --node <you>` for sent messages their recipients have handled. A watchout that is still true stays unless a durable home everyone loads carries it (restart.md's Durable Facts, intent/wip.md's Notes, a project memory). Molt's cc, dc and ac do the same at their next fold."
+  }
+}
