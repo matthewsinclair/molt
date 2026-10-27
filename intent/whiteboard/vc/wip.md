@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-27 12:21Z
+heartbeat_at: 2026-10-27 12:33Z
 status: active
-focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress: WP-08 (984e07a6), WP-03 (ac60ef0e) and V5 (628a53dd) landed. WP-04: run 3 passed all but three load timeouts; its quiet rerun 01M5YMDZKVQ6D9MT85BRCA7TN5 is in flight (START 12:18:45Z, nothing beside it); on green, WP-04 lands. At its END, the word to devbin-dc for 0257 (granted, start held). Then the token move, WP-05, WP-01, the release check, hv's dev/opt proof, kovacs, hv's cut, CI, the formula and brew. Intent is installed at f06241f83b56 (decision 24; stacking page live). gtools-vc has been asked for an honest remaining list for hv. With hv: Gtools (a), plus D9, G8 and WP-06; the WP-05 spike is held for (a). Resume from scratchpad estate-27oct.md, todos 31 and 32"
+focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress: WP-08, WP-03 and V5 landed; WP-04's quiet rerun green at 12:22Z, and its landing (a heavy build of gtools-rs and the CMS in Gtools' main) asks once gtools-vc has re-read dc's land.sh. Then the token move, WP-05, D9, WP-01, the release check, hv's dev/opt proof, kovacs, hv's cut, CI, the formula and brew (gtools-vc's list relayed to hv at 12:31Z). Bats lane: devbin 0257 running, then 0259, 0239, 0251, 0258. Utilz 0117 waits behind Gtools. With hv in gtools-vc's window: (a) (the WP-05 spike is held for it), D9, G8, WP-06. Intent at f06241f83b56. Resume from scratchpad estate-27oct.md; todos 31 and 32"
 claims: []
 ---
 
