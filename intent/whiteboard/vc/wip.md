@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-27 10:10Z
+heartbeat_at: 2026-10-27 12:04Z
 status: active
-focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress: WP-08 (984e07a6) and WP-03 (ac60ef0e) landed. Queue: V5's run P (light) beside Intent's heavy on READY; after Intent's END, WP-04's landing (dc), the token move (cc), V5's landing (ic); the WP-05 spike is held for hv's (a). Intent's one judge run went ahead of L1's close on hv's "ok, go" (granted 10:03:32Z, START 10:03:59Z, 15 to 25 min). Decision 23: lights from any project go beside the one heavy. Second localfold round sent at 10:09Z. With hv: Gtools (a), plus D9, G8 and WP-06, in gtools-vc's window; the Spotlight re-add. Resume from scratchpad estate-27oct.md, todos 31 and 32"
+focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress: WP-08 (984e07a6), WP-03 (ac60ef0e) and V5 (628a53dd) landed; WP-04's third landing run in flight (START 11:53:44Z); then Intent's second build all and restart (stacking page; queued heavy), then the token move with its gate re-check; the WP-05 spike is held for hv's (a). Intent's train is landed and installed (7efc01183c27) on hv's "Unequivocally Yes" (decision 24). Decision 23: lights from any project go beside the one heavy, load-gated under 20. Count rule narrowed (Molt-matts da71308). Spotlight now excludes ~/Devel (verified 11:24Z). Third localfold round sent at 12:02Z. With hv: Gtools (a), plus D9, G8 and WP-06, in gtools-vc's window. Resume from scratchpad estate-27oct.md, todos 31 and 32"
 claims: []
 ---
 
