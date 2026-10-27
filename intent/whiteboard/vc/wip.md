@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-27 07:47Z
+heartbeat_at: 2026-10-27 08:00Z
 status: active
-focus: "27 Oct (decision 22, layers). L1: molt, devbin 0.1.15 and utilz 2.14.4 DONE (cut, CI green on the tag, formula in the tap, brewed and answering on rhadamanth and kovacs; Menuz from the release asset). gtools in progress: WP-03's rework heavy granted at 07:47Z, WP-08's landing next; hv's rulings on (a), (b) and D9 and the tap repo pending. Then L2 intent (first ask ready), then L3 laksa and conflab (holding)"
+focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress (WP-03 rework green 07:56Z; WP-08 checkpoint 7 light run, then its landing build, then dc's WP-04). With hv: Gtools (a), (b) and D9, and the tap repo. Localfold round on hv's word sent to every dev Claude between 07:56Z and 08:00Z by date -u; each folds, hv compacts, and all resume. Spotlight: background mdfind poll; on empty, the word to intent-vc releases the stale-worktree removals. Resume from scratchpad estate-27oct.md, todos 31 and 32"
 claims: []
 ---
 
@@ -13,13 +13,15 @@ claims: []
 
 ## DOING
 
-- **Estate coordination (hv, 26 Oct, decision 20):** the VCs are up, and hv starts builders only when their project is called. One heavy runs at a time on rhadamanth, and a kovacs leg counts as heavy; lights run beside it. Order: Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa. kovacs-sysadm is reached by name over Remote Control. **Since 13:19:49Z the desk runs on Intent's slots, with molt-vc as controller** (hv, relayed verbatim by intent-vc: "yes, have molt-vc take control after the preflight END"; Intent decision 88): READY is `intent estate slots ask` in the asking session, GO is `slots grant <id> --lane <every lane held>`, START and END are `slots start` and `release` (kovacs ones `--relayed`), still mirrored by message until Part B lands. (edited)
+- **Estate coordination by layer (hv, 27 Oct, decision 22):** L1 devbin, molt, utilz, gtools, then L2 intent, then L3 laksa and conflab, which do nothing until called. One heavy at a time on rhadamanth, and a kovacs leg counts as heavy. The desk runs on Intent's slots with molt-vc as controller, re-taken at each new session with `intent estate control take --node vc`. READY is `slots ask`, GO is `slots grant <id> --lane <every lane held>`, and START and END are `slots start` and `release`, with kovacs ones `--relayed`. molt-vc books its own short runs, and sends kovacs-sysadm one combined message per batch, since hv approves each one there. (edited)
 
 ## TODO
 
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct). (edited)
 - **gyges: exclude ~/Devel from Spotlight**, as on rhadamanth (hv, 26 Oct: "There is no need _at_all_ for Spotlight to index _anything_ under ~/Devel"). It's done by hand in System Settings › Spotlight › Search Privacy; no supported CLI does it without root, and `.metadata_never_index` markers are not honoured on this macOS. Do it when hv is next at gyges. Check with `mdfind -onlyin ~/Devel -count 'kMDItemContentTypeTree == "public.item"'`, which should read 0.
+- **Before L2 opens:** run Molt's env liberator on rhadamanth so `~/.config/molt/env.sh` publishes INTENT_INSTALL_PREFIX (Molt-matts 1bd41f2) for Intent's ST0087 WP-05, then tell intent-vc. Read the parser first: `molt resleeve` takes no `--help` and runs on any argument (issue 0070).
+- **With the next kovacs-sysadm message (Gtools' kovacs check):** utilz-vc's /var/tmp check. `find /var/tmp -maxdepth 1 -name 'dc-*' | sort` should list only dc-2141-lua.UHvvGX and dc-2141-sc090.vbubq3, which stay. If any dc-2144-* is listed, run `rm -f /var/tmp/dc-2144-*`, then the find again; dc-2144-request.md may be there. Send the answer to utilz-vc. Never ask for `utilz use` on kovacs (hv's rule).
 
 ## Holds
 

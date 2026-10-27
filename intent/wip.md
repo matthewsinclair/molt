@@ -1,5 +1,5 @@
 ---
-verblock: "26 Oct 2026:v0.51: Matthew Sinclair - Molt 1.1.0 released"
+verblock: "27 Oct 2026:v0.52: Matthew Sinclair - estate by layer"
 ---
 
 # Work In Progress
@@ -10,7 +10,7 @@ verblock: "26 Oct 2026:v0.51: Matthew Sinclair - Molt 1.1.0 released"
 
 ## DOING
 
-- Nothing of Molt's is in flight. vc coordinates the estate today (hv, 26 Oct; decision 20 on vc's board): one project at a time, in the order Molt, Devbin, Utilz, Intent, Gtools, Conflab, Laksa.
+- Nothing of Molt's is in flight. vc coordinates the estate by layer (hv, 27 Oct; decision 22 on vc's board): L1 (devbin, molt, utilz, gtools) goes first, each to a cut, CI green on its tag, and brewed and usable from brew on rhadamanth and kovacs; then L2 (intent); then L3 (laksa, conflab), which does nothing until called. Gtools is the L1 work in progress.
 
 ## TODO
 
@@ -19,6 +19,7 @@ verblock: "26 Oct 2026:v0.51: Matthew Sinclair - Molt 1.1.0 released"
 - **farcaster and pihole, when next reachable**: resync onto the purged histories; `molt upgrade` to the current release (the npm liberator configures nothing where npm is absent).
 - **Every other sleeve's Molt clone, at its next resync** (farcaster, pihole; kovacs runs Molt from brew and has no clone): opt into the tracked commit gate with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply` and `intent doctor`. Until then its old `.git/hooks` keep running.
 - **How a sleeve moves its config repos** (for Flynn's jormungandr, parked by hv): pull Molt and Molt-matts; mv and resleeve as ONE command with `MOLT_PRJ_DIR` set and molt by absolute path, since `~/.zshenv` dangles after the mv; repoint `~/.config/gtools/config.yaml`, `intent discover ~/Devel/cfg --depth 1`, drop the old roots from `~/.config/intent/projects.json`; `molt doctor`'s manifest check names `~/Devel/cfg/Molt-matts`.
+- **Molt's next release**: issues 0065, 0067, 0068, 0069 and 0070 (`molt resleeve` runs on an unknown argument such as `--help`). Molt's builders start only when hv calls Molt.
 - **Small, carried, below the gate**: claude.bats' `molt_instance_var` test flaked once for cc (it printed its value and returned non-zero; not reproduced since). By design, 0038 does not rewrite `~/.claude` with no slash or `"$HOME"/.claude/...`. After a move that half failed, only doctor names stale values. A jq without regex support reads as "not a JSON object". A real Claude Code run of `test/manual/sandbox-creds.sh` (hv, by hand). The sandbox profile's kept `.molt-orig` wants refreshing after an apparmor package update. The `desktop` check and verify pass silently when a gsettings file is declared but gsettings is absent. The `instances/<host>/...` path build is repeated across several files (a `molt_instance_file` helper, a later thread). A repo with no upstream gets two warnings on `molt upgrade` (accepted with issue 0037). `bin/bootstrap.sh`'s SC2088 notes.
 - **Not this project's**: Intent 0614 (worktree hooks sync an older store) and 0627 (no verb retires a handled message) are in Intent's lane; Molt's workaround stands: never run intent in a Molt worktree. The Gtools side of the estate-agent rename is with sinclair-estate, geodica-estate and gtools-vc on hv's go; The Gtools Sinclair estate deploy on gyges (gtools-vc). Gtools `README.md:15` (gtools-vc); devbin's README snippet, its `dvb` body copies and the test counts in `bin/.devbin`'s comments (devbin-vc).
 

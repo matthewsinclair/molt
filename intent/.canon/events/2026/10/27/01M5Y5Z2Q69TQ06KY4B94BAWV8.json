@@ -1,0 +1,15 @@
+{
+  "id": "01M5Y5Z2Q69TQ06KY4B94BAWV8",
+  "ts": "2026-10-27T07:59:58.694Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**Before L2 opens:** run Molt's env liberator on rhadamanth so `~/.config/molt/env.sh` publishes INTENT_INSTALL_PREFIX (Molt-matts 1bd41f2) for Intent's ST0087 WP-05, then tell intent-vc. Read the parser first: `molt resleeve` takes no `--help` and runs on any argument (issue 0070)."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M5Y5Z2RF2ZW3QTWEYCKN26Q3",
+  "ts": "2026-10-27T07:59:58.735Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**With the next kovacs-sysadm message (Gtools' kovacs check):** utilz-vc's /var/tmp check. `find /var/tmp -maxdepth 1 -name 'dc-*' | sort` should list only dc-2141-lua.UHvvGX and dc-2141-sc090.vbubq3, which stay. If any dc-2144-* is listed, run `rm -f /var/tmp/dc-2144-*`, then the find again; dc-2144-request.md may be there. Send the answer to utilz-vc. Never ask for `utilz use` on kovacs (hv's rule)."
+  }
+}

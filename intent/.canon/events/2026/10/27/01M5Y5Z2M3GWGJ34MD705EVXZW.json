@@ -1,0 +1,16 @@
+{
+  "id": "01M5Y5Z2M3GWGJ34MD705EVXZW",
+  "ts": "2026-10-27T07:59:58.595Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "**Estate coordination by layer (hv, 27 Oct, decision 22):** L1 devbin, molt, utilz, gtools, then L2 intent, then L3 laksa and conflab, which do nothing until called. One heavy at a time on rhadamanth, and a kovacs leg counts as heavy. The desk runs on Intent's slots with molt-vc as controller, re-taken at each new session with `intent estate control take --node vc`. READY is `slots ask`, GO is `slots grant <id> --lane <every lane held>`, and START and END are `slots start` and `release`, with kovacs ones `--relayed`. molt-vc books its own short runs, and sends kovacs-sysadm one combined message per batch, since hv approves each one there."
+  }
+}
