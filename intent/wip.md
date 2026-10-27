@@ -1,12 +1,12 @@
 ---
-verblock: "27 Oct 2026:v0.54: Matthew Sinclair - estate by layer"
+verblock: "27 Oct 2026:v0.55: Matthew Sinclair - estate by layer"
 ---
 
 # Work In Progress
 
 ## Current Focus
 
-**Molt 1.1.0 is released (b9d59e2, 26 Oct) and runs from brew on rhadamanth and kovacs.** ST0006, sleeve agents, and ST0007, `molt agent start`, are done. rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules, set on 23 Oct, hold for every repo: ship no Python, and never store a count (user-scope `AGENTS.md` in Molt-matts).
+**Molt 1.1.0 is released (b9d59e2, 26 Oct) and runs from brew on rhadamanth and kovacs.** ST0006, sleeve agents, and ST0007, `molt agent start`, are done. rhadamanth, kovacs and gyges run with Claude Code's state in `~/.config/claude` (gyges moved 23 Oct). A sleeve agent is a local agent (Claude Code) doing machine-oriented work on one host as the user, named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs`, living in a home at `$MOLT_AGT_DIR/<name>/` rendered from a role in Molt-matts, and started with `molt agent start <role>`. The guide is `docs/guides/sleeve-agents.md`. The project's nodes share this checkout: vc specifies, validates, merges and pushes; cc builds code; dc builds the developer experience and fixes issues; ac authors. The roster is in `intent/whiteboard/README.md`. Two of hv's rules hold for every repo: ship no Python (23 Oct), and no magic numbers in tests or guards (narrowed on 27 Oct from the 23 Oct count rule; user-scope `AGENTS.md` in Molt-matts).
 
 ## DOING
 
