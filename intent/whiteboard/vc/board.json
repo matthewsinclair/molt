@@ -783,6 +783,14 @@
       "text": "**With the next kovacs-sysadm message (Gtools' kovacs check):** utilz-vc's /var/tmp check. `find /var/tmp -maxdepth 1 -name 'dc-*' | sort` should list only dc-2141-lua.UHvvGX and dc-2141-sc090.vbubq3, which stay. If any dc-2144-* is listed, run `rm -f /var/tmp/dc-2144-*`, then the find again; dc-2144-request.md may be there. Send the answer to utilz-vc. Never ask for `utilz use` on kovacs (hv's rule).",
       "state": "live",
       "recorded_at": "2026-10-27T07:59:58.735Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 23,
+      "text": "**hv, 27 Oct, on molt-vc's question 4: \"Yes, lights can go beside a heavy\".** A light run from any project may go beside the one heavy on the desk, while its own lanes are free and the load stays low; until now only the same project's lights did (one-project rule, 26 Oct). One heavy at a time still holds, and heavies still go in the layer order (decision 22) unless hv says otherwise, as with Intent's judge run on hv's \"ok, go\" at 10:01Z. A run so small it holds no lane (`--lane none`) goes at once.",
+      "state": "live",
+      "recorded_at": "2026-10-27T10:07:50.059Z"
     }
   ],
   "sent": [

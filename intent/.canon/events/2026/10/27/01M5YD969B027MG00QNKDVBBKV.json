@@ -1,0 +1,15 @@
+{
+  "id": "01M5YD969B027MG00QNKDVBBKV",
+  "ts": "2026-10-27T10:07:50.059Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 27 Oct, on molt-vc's question 4: \"Yes, lights can go beside a heavy\".** A light run from any project may go beside the one heavy on the desk, while its own lanes are free and the load stays low; until now only the same project's lights did (one-project rule, 26 Oct). One heavy at a time still holds, and heavies still go in the layer order (decision 22) unless hv says otherwise, as with Intent's judge run on hv's \"ok, go\" at 10:01Z. A run so small it holds no lane (`--lane none`) goes at once."
+  }
+}
