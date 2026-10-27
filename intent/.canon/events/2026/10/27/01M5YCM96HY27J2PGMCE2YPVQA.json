@@ -1,0 +1,15 @@
+{
+  "id": "01M5YCM96HY27J2PGMCE2YPVQA",
+  "ts": "2026-10-27T09:56:24.914Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0071"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "Molt links tools into dev checkouts against hv's 27 Oct rule: pplr always, utilz by default when a sleeve names no source"
+  }
+}
