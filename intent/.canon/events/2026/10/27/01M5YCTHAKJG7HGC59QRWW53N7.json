@@ -1,0 +1,16 @@
+{
+  "id": "01M5YCTHAKJG7HGC59QRWW53N7",
+  "ts": "2026-10-27T09:59:49.843Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.edit",
+  "subject": {
+    "type": "issue",
+    "id": "0071"
+  },
+  "payload": {
+    "bytes": 1724,
+    "severity": "low",
+    "title": "pplr liberator can only link the dev checkout: give it a source choice (brew or checkout), as utilz has, for pplr's move to brew"
+  }
+}
