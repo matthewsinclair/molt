@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-27 08:00Z
+heartbeat_at: 2026-10-27 08:15Z
 status: active
-focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress (WP-03 rework green 07:56Z; WP-08 checkpoint 7 light run, then its landing build, then dc's WP-04). With hv: Gtools (a), (b) and D9, and the tap repo. Localfold round on hv's word sent to every dev Claude between 07:56Z and 08:00Z by date -u; each folds, hv compacts, and all resume. Spotlight: background mdfind poll; on empty, the word to intent-vc releases the stale-worktree removals. Resume from scratchpad estate-27oct.md, todos 31 and 32"
+focus: "27 Oct, decision 22 (layers). L1: molt, devbin and utilz done on both sleeves; gtools in progress. Every dev project folded by 08:10Z for hv's compact; Gtools' queue resumes as its READYs come: cc's checkpoint 7 light run, WP-08's landing build, WP-03's landing, dc's WP-04 checkpoint 4. With hv: Gtools (a), (b) and D9, the tap repo, question 4. Spotlight: background mdfind poll; on empty, the word to intent-vc and gtools-vc. Resume from scratchpad estate-27oct.md, todos 31 and 32"
 claims: []
 ---
 
