@@ -1,0 +1,15 @@
+{
+  "id": "01M61JR1S12T6BJGNEM80NDR7C",
+  "ts": "2026-10-28T15:41:03.138Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "**For conflab-vc at hv's go (hv via gyges-sysadm, 28 Oct):** (1) geodica/homebrew-conflab Casks/conflab.rb:10 `depends_on macos: \">= :sonoma\"` warns on every brew run under Homebrew 7.0.11 (deprecated string comparison); fix is one line, `depends_on macos: :sonoma` (means Sonoma or later). The formula does not warn. (2) The formula and the cask both ship conflab and conflabd: on gyges the cask's pkg put 0.6.2 in /usr/local/bin and its space.conflab.daemon fought brew services' conflabd (exit 75 every 10s) until brew services was stopped. One home for the CLI and daemon per Highlander."
+  }
+}
