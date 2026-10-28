@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "44f20fc0-0ed6-4523-aa2f-1c34cc319b42",
-    "heartbeat_at": "2026-10-28T15:47:01.881Z",
+    "heartbeat_at": "2026-10-28T19:53:06.829Z",
     "status": "active",
-    "focus": "28 Oct 15:44Z: localfold before hv's compact. Estate dev work HELD until hv says go (desk grants nothing). All 7 projects folded at 13:44Z for hv's move (laksa cc+ic committing under hv's (a)). gyges done (decision 29). On go, order (decision 28): devbin first -- dc amends 0265 (version.bats 'unreadable' vs 'not compared') and re-asks run23; then C cc 5-6 01M60MCTKF89GPXWSAPEW4S4F3 on devbin-vc's word for its base; D run7 01M60MCT037STEFMMXRB421TDS; E cc 8; landings, CI, 0.1.16. Then Molt (issue 0072), Gtools (D9 01M60EWFZJ4WM8E8QN9TK8N85P, token move 01M5YZVHKWP0W14J8T98K3EYHZ), Intent, Laksa, Conflab (todo 33 to conflab-vc). First check at go: laksa cc+ic fold commits landed. Fold relays: per-peer --to, never --to hv. Utilz 2.14.5 cut; still hv's: Menuz.app publish, kovacs brew upgrade. FOR hv: Laksa /subscribe/success (rec delete); site author trust question; Laksa push + secret revocations; review decisions 26-29; duplicate conflab CLI on gyges. Resume: scratchpad estate-27oct.md",
+    "focus": "28 Oct 19:53Z: hv's close/defer/bank/fold round DONE; all six projects FOLDED+HELD (utilz, devbin, gtools, intent, laksa, conflab); estate held, desk grants nothing until hv's go. Molt cull: 0069, 0071 deferred (b541b55); Molt release = 0072, 0070, 0068. hv rule 28 Oct: every security finding filed as an issue, fixed now only if a showstopper P0 (filed: utilz 0126, conflab 0015 0016, laksa 0057, gtools 0126 0127 0128). devbin: 0263 follow-up a6a875b3 CI green, 12 closes 20e44edb; C stopped by hv, RED (own tree-scan breaches + 0243 macos t9), rebuild after hold, then D run7, then the 0.1.16 cut gates. On go, order (decision 28): devbin, Utilz (0125 heavy, 2.14.6 cut), Molt, Gtools (D9), Intent, Laksa (VDMPN9), Conflab. Fold relays: per-peer --to, never --to hv. Resume: scratchpad estate-27oct.md",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -875,6 +875,14 @@
       "text": "**gyges caught up to brew, 28 Oct, marked complete by hv** (\"Ok, the gyges work is all done. Please mark it all as complete.\"). gyges runs molt 1.1.0, utilz 2.14.5, intent 3.2.6, devbin 0.1.15 (hv tapped the private tap over ssh), conflab 0.6.2 (cask app + its daemon; old 0.5.0 pkg removed by hv with sudo) and ccusage 0.1.3 from brew; gtools (b1904abc) and pplr stay dev-linked until each has a formula. ~/Devel/prj/Molt on gyges removed on hv's word (stash saved on gyges at ~/Devel/agt/gyges-sysadm/work/2026-10-28-molt-checkout-stash.patch). Geodica estate on gyges closed out by geodica-estate. Follow-ups: Molt issue 0072 (doctor's env check); todo 33 for conflab-vc; the duplicate conflab CLI (formula beside cask) is hv's to drop.",
       "state": "live",
       "recorded_at": "2026-10-28T15:43:26.322Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 30,
+      "text": "**hv, 28 Oct: every security finding is filed as an issue.** hv: \"Any security issues need to be properly filed. We're just not fixing them now unless they're showstopper P0s.\" A finding parked in a note, a board line or a review remark is filed in its own project, deferred in its body unless it is a showstopper P0, and a P0 is named to hv. Relayed to every VC 28 Oct; filed in that round: Utilz 0126, Conflab 0015 and 0016, Laksa 0057, Gtools 0126, 0127 and 0128.",
+      "state": "live",
+      "recorded_at": "2026-10-28T19:53:11.636Z"
     }
   ],
   "sent": [

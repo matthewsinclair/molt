@@ -1,0 +1,15 @@
+{
+  "id": "01M6215QPMD58JVV4HK676G8PW",
+  "ts": "2026-10-28T19:53:11.636Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 28 Oct: every security finding is filed as an issue.** hv: \"Any security issues need to be properly filed. We're just not fixing them now unless they're showstopper P0s.\" A finding parked in a note, a board line or a review remark is filed in its own project, deferred in its body unless it is a showstopper P0, and a P0 is named to hv. Relayed to every VC 28 Oct; filed in that round: Utilz 0126, Conflab 0015 and 0016, Laksa 0057, Gtools 0126, 0127 and 0128."
+  }
+}
