@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 72,
+  "slug": "doctor-s-env-check-reads-launchctl-getenv-which",
+  "title": "doctor's env check reads launchctl getenv, which misses what com.molt.env set in gui/$UID; and PATH may not reach GUI apps on macOS 27",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-28",
+  "reporter": "Matthew Sinclair",
+  "body": "Found on gyges, 28 Oct 2026 (macOS 27.0.1, molt 1.1.0 brew b9d59e2), by gyges-sysadm, and confirmed by hv running `molt doctor` in his own iTerm window at 15:40.\n\n**What happens.** `molt doctor` fails its env-liberator check with \"launchd does not hold CLAUDE_CONFIG_DIR / PATH\", even with com.molt.env.plist loaded (`launchctl bootstrap gui/501 ~/Library/LaunchAgents/com.molt.env.plist`, exit 0):\n\n- `launchctl print gui/501` holds both PATH and CLAUDE_CONFIG_DIR, as the agent published them.\n- `launchctl print user/501` holds neither.\n- `launchctl getenv <name>` comes back empty, both from a Background-domain session and from hv's terminal.\n\n`molt_env_report_launchd` (lib/env.sh, around line 356) reads with `launchctl getenv`, so on gyges it can't see what the agent set.\n\n**rhadamanth differs.** On the same macOS 27.0.1, `launchctl getenv CLAUDE_CONFIG_DIR` answers there, and `launchctl print gui/$UID` holds both. So getenv's answer depends on the session or on how the values got set: at login, or by a bootstrap after login. It isn't a plain macOS 27 break. The check has to read the domain the agent writes to.\n\n**A second, separate question.** Conflab.app, started on gyges at 15:37 after the bootstrap, got CLAUDE_CONFIG_DIR, but its PATH was launchd's default (/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec). So `launchctl setenv PATH` may not reach GUI apps on macOS 27 at all, even with the agent loaded.\n\n**Asks.**\n1. The doctor check reads `launchctl print gui/$UID`, not getenv, so it reports what launchd's GUI domain actually holds.\n2. Verify whether PATH set by the env agent reaches a GUI app launched afterwards on macOS 27. If it doesn't, doctor says so plainly instead of offering the bootout/bootstrap remedy.\n\nA test must not compute its expected value with the code under test (see Molt's test rules).\n"
+}
