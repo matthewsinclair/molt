@@ -1,0 +1,15 @@
+{
+  "id": "01M61JWDKJ3X3FE4R0MJAK870E",
+  "ts": "2026-10-28T15:43:26.322Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**gyges caught up to brew, 28 Oct, marked complete by hv** (\"Ok, the gyges work is all done. Please mark it all as complete.\"). gyges runs molt 1.1.0, utilz 2.14.5, intent 3.2.6, devbin 0.1.15 (hv tapped the private tap over ssh), conflab 0.6.2 (cask app + its daemon; old 0.5.0 pkg removed by hv with sudo) and ccusage 0.1.3 from brew; gtools (b1904abc) and pplr stay dev-linked until each has a formula. ~/Devel/prj/Molt on gyges removed on hv's word (stash saved on gyges at ~/Devel/agt/gyges-sysadm/work/2026-10-28-molt-checkout-stash.patch). Geodica estate on gyges closed out by geodica-estate. Follow-ups: Molt issue 0072 (doctor's env check); todo 33 for conflab-vc; the duplicate conflab CLI (formula beside cask) is hv's to drop."
+  }
+}
