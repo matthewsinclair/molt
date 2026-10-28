@@ -1,0 +1,15 @@
+{
+  "id": "01M60N385A47CAB124VQP5V1EW",
+  "ts": "2026-10-28T07:02:52.842Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "**hv, 28 Oct: one project at a time, done today.** hv at 05:50Z: \"Ok, let's do this, but I want to go one project at a time.\" and \"I am _very_ much expecting to get this done and dusted asap.\" The desk serves one project until it is READY TO CUT, and then the next: Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab (vc's order within decision 22's layers, Utilz first as the nearest to its end-point). This replaces decision 23's lights from any project beside the heavy: today only the current project's runs go, side by side as lanes allow. At 06:55Z hv held every Claude (\"Jobs that are running (tests, etc) can keep running, but do not start anything new\"), and at 07:02Z called an estate localfold+compact, then hold. The hold stands until hv lifts it."
+  }
+}

@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-28 05:39Z
+heartbeat_at: 2026-10-28 07:02Z
 status: active
-focus: "28 Oct, estate localfold+compact on hv's word (round sent after Laksa's suite END). Desk: molt-vc controls (44f20fc0). In flight: Laksa's booking (4 fixes landed, suite running), devbin S1 (bats). Next heavy: Gtools D9, then Conflab ic stamp half, cc stamp crate, dc todo 18, dc todo 28 clippy proof. Done overnight/this morning: Molt suite green both bashes; Intent rerun green, hermetic bank landed; INTENT_INSTALL_PREFIX published (env liberator only, 05:13Z). Open: Utilz common_lib.bats:154 red (on main since 0120); Intent ra-target product fix to land. FOR hv: kill 70500 (blocks Gtools token move); whether kovacs-sysadm needs per-message approval (it is not running now, so ssh is allowed); Laksa fly-user rotation and site_files prod read; review decisions 26-27. Resume from scratchpad estate-27oct.md"
+focus: "28 Oct 07:02Z, estate localfold+compact on hv's word, under hv's 06:55Z HOLD (running jobs may finish, nothing new). Desk: molt-vc controls (44f20fc0), grants nothing until hv lifts the hold. Order: one project at a time, Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab. Utilz 2.14.5 READY TO CUT (code af5e4d53; ~/Devel/scratch/utilz-vc/ready-to-cut-2145.md; cut is hv's: bin/devbin release --patch). devbin in turn: S1 landed f2254c45; run23 01M60MCSZ61HPJ50EEZ1MCG4QX running at the hold; local-tap proof passed (hv's kegs byte-identical); next C cc 5-6 01M60MCTKF89GPXWSAPEW4S4F3, D run7 01M60MCT037STEFMMXRB421TDS, E cc 8 (to ask). pid 70500 killed by hv 05:51Z, so the token move is unblocked for Gtools' turn. FOR hv: Laksa /subscribe/success delete or keep read-only (rec delete); Laksa push + secret revocations; review decisions 26-27. Resume from scratchpad estate-27oct.md"
 claims: []
 ---
 
@@ -52,6 +52,7 @@ _(none)_
   - Intent: cc's 0087-hermetic bank (test-only, three files) lands on intent-vc's static review and light legs, and the full rerun on main is its judge, with INTENT_INSTALL_PREFIX exported to an empty scratch dir. That dir reading empty is what Molt's env publish waits on. cc's separate judge slot was denied as superseded.
   - Laksa, laksa-vc's four items: (1) ic removes hellolaksa's public /debug page and its menu entry in this release, and the prod row comes off at hv's deploy or by hv's write; (4) the CV gate lands on the cover when one exists (the recipient's, else the CV's default), else on the CV; (3) cc designs site_files for the worst case until hv runs the SELECT-only prod read; (2) the fly-user password rotation stays hv's; (5) a CMS Add Subscriber of an already-confirmed address stays a site owner's act with no confirmation mail (laksa-vc's rec (b); Laksa's only site owner is hv), so nothing is built.
   - kovacs: while kovacs-sysadm runs, every project's kovacs legs go in ONE combined message on hv's return, since each message costs hv an approval there.
+- **hv, 28 Oct: one project at a time, done today.** hv at 05:50Z: "Ok, let's do this, but I want to go one project at a time." and "I am _very_ much expecting to get this done and dusted asap." The desk serves one project until it is READY TO CUT, and then the next: Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab (vc's order within decision 22's layers, Utilz first as the nearest to its end-point). This replaces decision 23's lights from any project beside the heavy: today only the current project's runs go, side by side as lanes allow. At 06:55Z hv held every Claude ("Jobs that are running (tests, etc) can keep running, but do not start anything new"), and at 07:02Z called an estate localfold+compact, then hold. The hold stands until hv lifts it.
 
 ---
 
