@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-28 15:44Z
+heartbeat_at: 2026-10-28 15:47Z
 status: active
 focus: "28 Oct 15:44Z: localfold before hv's compact. Estate dev work HELD until hv says go (desk grants nothing). All 7 projects folded at 13:44Z for hv's move (laksa cc+ic committing under hv's (a)). gyges done (decision 29). On go, order (decision 28): devbin first -- dc amends 0265 (version.bats 'unreadable' vs 'not compared') and re-asks run23; then C cc 5-6 01M60MCTKF89GPXWSAPEW4S4F3 on devbin-vc's word for its base; D run7 01M60MCT037STEFMMXRB421TDS; E cc 8; landings, CI, 0.1.16. Then Molt (issue 0072), Gtools (D9 01M60EWFZJ4WM8E8QN9TK8N85P, token move 01M5YZVHKWP0W14J8T98K3EYHZ), Intent, Laksa, Conflab (todo 33 to conflab-vc). First check at go: laksa cc+ic fold commits landed. Fold relays: per-peer --to, never --to hv. Utilz 2.14.5 cut; still hv's: Menuz.app publish, kovacs brew upgrade. FOR hv: Laksa /subscribe/success (rec delete); site author trust question; Laksa push + secret revocations; review decisions 26-29; duplicate conflab CLI on gyges. Resume: scratchpad estate-27oct.md"
 claims: []
