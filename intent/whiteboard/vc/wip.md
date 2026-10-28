@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-28 05:23Z
+heartbeat_at: 2026-10-28 05:39Z
 status: active
 focus: "28 Oct, estate localfold+compact on hv's word (round sent after Laksa's suite END). Desk: molt-vc controls (44f20fc0). In flight: Laksa's booking (4 fixes landed, suite running), devbin S1 (bats). Next heavy: Gtools D9, then Conflab ic stamp half, cc stamp crate, dc todo 18, dc todo 28 clippy proof. Done overnight/this morning: Molt suite green both bashes; Intent rerun green, hermetic bank landed; INTENT_INSTALL_PREFIX published (env liberator only, 05:13Z). Open: Utilz common_lib.bats:154 red (on main since 0120); Intent ra-target product fix to land. FOR hv: kill 70500 (blocks Gtools token move); whether kovacs-sysadm needs per-message approval (it is not running now, so ssh is allowed); Laksa fly-user rotation and site_files prod read; review decisions 26-27. Resume from scratchpad estate-27oct.md"
 claims: []
@@ -20,7 +20,6 @@ claims: []
 - **farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check. (edited)
 - **farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct). (edited)
 - **gyges: exclude ~/Devel from Spotlight**, as on rhadamanth (hv, 26 Oct: "There is no need _at_all_ for Spotlight to index _anything_ under ~/Devel"). It's done by hand in System Settings › Spotlight › Search Privacy; no supported CLI does it without root, and `.metadata_never_index` markers are not honoured on this macOS. Do it when hv is next at gyges. Check with `mdfind -onlyin ~/Devel -count 'kMDItemContentTypeTree == "public.item"'`, which should read 0.
-- **With the next kovacs-sysadm message (Gtools' kovacs check):** utilz-vc's /var/tmp check. `find /var/tmp -maxdepth 1 -name 'dc-*' | sort` should list only dc-2141-lua.UHvvGX and dc-2141-sc090.vbubq3, which stay. If any dc-2144-* is listed, run `rm -f /var/tmp/dc-2144-*`, then the find again; dc-2144-request.md may be there. Send the answer to utilz-vc. Never ask for `utilz use` on kovacs (hv's rule).
 
 ## Holds
 

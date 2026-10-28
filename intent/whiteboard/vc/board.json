@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "44f20fc0-0ed6-4523-aa2f-1c34cc319b42",
-    "heartbeat_at": "2026-10-28T05:23:12.413Z",
+    "heartbeat_at": "2026-10-28T05:39:15.228Z",
     "status": "active",
     "focus": "28 Oct, estate localfold+compact on hv's word (round sent after Laksa's suite END). Desk: molt-vc controls (44f20fc0). In flight: Laksa's booking (4 fixes landed, suite running), devbin S1 (bats). Next heavy: Gtools D9, then Conflab ic stamp half, cc stamp crate, dc todo 18, dc todo 28 clippy proof. Done overnight/this morning: Molt suite green both bashes; Intent rerun green, hermetic bank landed; INTENT_INSTALL_PREFIX published (env liberator only, 05:13Z). Open: Utilz common_lib.bats:154 red (on main since 0120); Intent ra-target product fix to land. FOR hv: kill 70500 (blocks Gtools token move); whether kovacs-sysadm needs per-message approval (it is not running now, so ssh is allowed); Laksa fly-user rotation and site_files prod read; review decisions 26-27. Resume from scratchpad estate-27oct.md",
     "claims": [],
@@ -806,7 +806,8 @@
       "kind": "todo",
       "seq": 32,
       "text": "**With the next kovacs-sysadm message (Gtools' kovacs check):** utilz-vc's /var/tmp check. `find /var/tmp -maxdepth 1 -name 'dc-*' | sort` should list only dc-2141-lua.UHvvGX and dc-2141-sc090.vbubq3, which stay. If any dc-2144-* is listed, run `rm -f /var/tmp/dc-2144-*`, then the find again; dc-2144-request.md may be there. Send the answer to utilz-vc. Never ask for `utilz use` on kovacs (hv's rule).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T06:49:09.728Z",
       "recorded_at": "2026-10-27T07:59:58.735Z"
     },
     {
