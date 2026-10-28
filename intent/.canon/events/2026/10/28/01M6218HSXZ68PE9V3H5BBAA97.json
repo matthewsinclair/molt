@@ -1,0 +1,16 @@
+{
+  "id": "01M6218HSXZ68PE9V3H5BBAA97",
+  "ts": "2026-10-28T19:54:43.902Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 33,
+    "text": "conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one)."
+  }
+}

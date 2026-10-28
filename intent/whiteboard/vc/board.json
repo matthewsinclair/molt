@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "44f20fc0-0ed6-4523-aa2f-1c34cc319b42",
-    "heartbeat_at": "2026-10-28T19:53:06.829Z",
+    "heartbeat_at": "2026-10-28T19:54:44.849Z",
     "status": "active",
-    "focus": "28 Oct 19:53Z: hv's close/defer/bank/fold round DONE; all six projects FOLDED+HELD (utilz, devbin, gtools, intent, laksa, conflab); estate held, desk grants nothing until hv's go. Molt cull: 0069, 0071 deferred (b541b55); Molt release = 0072, 0070, 0068. hv rule 28 Oct: every security finding filed as an issue, fixed now only if a showstopper P0 (filed: utilz 0126, conflab 0015 0016, laksa 0057, gtools 0126 0127 0128). devbin: 0263 follow-up a6a875b3 CI green, 12 closes 20e44edb; C stopped by hv, RED (own tree-scan breaches + 0243 macos t9), rebuild after hold, then D run7, then the 0.1.16 cut gates. On go, order (decision 28): devbin, Utilz (0125 heavy, 2.14.6 cut), Molt, Gtools (D9), Intent, Laksa (VDMPN9), Conflab. Fold relays: per-peer --to, never --to hv. Resume: scratchpad estate-27oct.md",
+    "focus": "Estate HELD after hv's close/defer round; all projects folded. On go: devbin (C rebuild, D, cut gates), then decision 28's order.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -73,7 +73,8 @@
       "kind": "watchout",
       "seq": 5,
       "text": "**`fc -AI <file>` appends nothing to a file other than the current `HISTFILE`**, and `fc -A`/`fc -W` append everything, seeded history included. Per-session history (Molt-matts `389ef6f`) therefore points `HISTFILE` at an empty scratch file and copies it out at exit, as `/etc/zshrc_Apple_Terminal` does.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.006Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -90,7 +91,8 @@
       "kind": "watchout",
       "seq": 7,
       "text": "**A `grep -qv` converted to a herestring changes its answer on an EMPTY capture.** The substitution yields the empty string, the herestring appends a newline, and `-v` matches that line -- so the predicate answers TRUE where the pipeline answered FALSE. Demonstrated: `grep -qv x <<<\"$(printf '')\"` returns 0. `molt_foreign_home_paths` (`tr | grep -oE | grep -qvE`) was exactly that shape; issue 0008 converted it with an explicit `[[ -n ]]` test, and a bats test pins the empty case. A herestring on the FIRST stage of a multi-stage pipeline fixes nothing.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.048Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -98,7 +100,8 @@
       "kind": "watchout",
       "seq": 8,
       "text": "**Sourcing `lib/molt.sh` turns on `set -euo pipefail` for the caller** (line 5). bats has pipefail OFF, so the suite only sees SIGPIPE defects because `load_molt_libs` sources the real lib. A harness that stubbed it would have the hazard and no way to see it. `backup.bats` runs its errexit arms in a fresh `bash` for the same reason.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.090Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -124,7 +127,8 @@
       "kind": "watchout",
       "seq": 11,
       "text": "A negative control with ONE candidate cannot see a preference-order or list-formatting bug. Depth-1 failure cases prove the exit code and nothing about the output.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.128Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -160,7 +164,8 @@
       "kind": "watchout",
       "seq": 15,
       "text": "**`git rev-list --left-right --count @{u}...HEAD` prints BEHIND then AHEAD.** `0 5` means 5 unpushed commits. vc misread it once on 15 Sep.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.165Z",
       "recorded_at": "2026-09-21T15:40:58.246Z"
     },
     {
@@ -307,10 +312,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 6,
-      "text": "**farcaster and pihole, when next reachable:** resync their Molt and Molt-matts clones onto the histories purged of AI attribution on 20 Oct (same steps as kovacs). utilz is disabled on both, so ST0005 needs nothing else there. If a clone's `.git/hooks/pre-commit` carries the hand-wired formatter stanza below Intent's chain block, cut it: Molt's config.json declares the formatter since 22 Oct and the shipped guard runs the check.",
+      "text": "farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable.",
       "state": "live",
       "recorded_at": "2026-10-20T18:54:19.155Z",
-      "edited_at": "2026-10-22T19:27:25.353Z"
+      "edited_at": "2026-10-28T19:54:44.126Z"
     },
     {
       "node": "vc",
@@ -498,16 +503,18 @@
       "node": "vc",
       "kind": "watchout",
       "seq": 19,
-      "text": "**A sleeve armed for the config-dir move (its vars.sh declares MOLT_CLAUDE_CONFIG_DIR) fails every `molt upgrade` and `molt resleeve` while any Claude process runs.** The claude liberator refuses the move and names each process, the run exits 1, and an `&&` chain stops there: hv's `molt upgrade --self && molt upgrade && molt maintain` on 23 Oct never reached maintain, which runs no liberators and can run alone. The agents liberator still installs the floor in the same run, so a refused move leaves the floor in and the state in ~/.claude (rhadamanth, 22 Oct 21:56Z). Arm and move in one sitting, with Chrome quit: its native host is a claude process.",
+      "text": "A sleeve armed for the config-dir move fails molt upgrade and resleeve while any claude process runs; arm and move in one sitting, Chrome quit.",
       "state": "live",
-      "recorded_at": "2026-10-23T05:46:40.592Z"
+      "recorded_at": "2026-10-23T05:46:40.592Z",
+      "edited_at": "2026-10-28T19:54:44.747Z"
     },
     {
       "node": "vc",
       "kind": "watchout",
       "seq": 20,
       "text": "**A hook whose script is missing blocks every call it guards.** The interpreter exits 2 when it cannot open its script (python3 does), and 2 is a PreToolUse hook's block code, so the hook fails closed whatever fail-open logic the script itself carries. On rhadamanth's move (23 Oct) a hand-installed hook named its script under `~/.claude/` by path; the script moved and the line did not, and every Bash call in every session was refused until the line was repointed. Before a move, check the user settings for paths under `~/.claude/` (issue 0038).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.201Z",
       "recorded_at": "2026-10-23T06:41:56.446Z"
     },
     {
@@ -552,10 +559,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 22,
-      "text": "**farcaster and pihole, at each one's next resync:** opt its Molt clone into the tracked gate (bef8f14) with `git config core.hooksPath .githooks`, then `intent claude upgrade --apply`. kovacs no longer needs it: it runs Molt from brew and its clone was removed (24 Oct).",
+      "text": "farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply.",
       "state": "live",
       "recorded_at": "2026-10-23T14:43:00.240Z",
-      "edited_at": "2026-10-24T18:25:17.203Z"
+      "edited_at": "2026-10-28T19:54:44.339Z"
     },
     {
       "node": "vc",
@@ -657,7 +664,8 @@
       "kind": "watchout",
       "seq": 22,
       "text": "**A suite run in the shared checkout tests every peer's uncommitted work too.** On 24 Oct cc's slot 267 suite ran in ~/Devel/prj/Molt while dc's half-built issue 0047 work (liberators, test_helper, a new bats file) sat uncommitted beside it, so the verdict covered a tree no commit holds. While a suite runs, peers keep work in progress out of the shared tree, and vc validates the committed head in a clean worktree before pushing.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.240Z",
       "recorded_at": "2026-10-24T07:05:58.751Z"
     },
     {
@@ -693,23 +701,26 @@
       "kind": "watchout",
       "seq": 23,
       "text": "**An agent session keeps the PATH it started with.** On 24 Oct devbin-cc's T10 switch looked shadowed because its Bash tool still had /opt/homebrew/bin ahead of ~/.local/bin, while a fresh login shell (env -i ... zsh -lic) had ~/.local/bin first per Molt-matts a258ad0. A PATH or zshrc change reaches only sessions started after it; judge any use dev|opt|brew proof in a fresh login shell.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.276Z",
       "recorded_at": "2026-10-24T11:44:24.796Z"
     },
     {
       "node": "vc",
       "kind": "decision",
       "seq": 17,
-      "text": "**hv ruling, 25 Oct 06:48Z: ONE release per project, not many small ones.** hv: \"I DO NOT WANT TO KEEP MAKING MULTIPLE SMALL RELEASES for each project. It takes HOURS to go thru the full release process.\" The next release of each project carries everything outstanding that is being worked on and has not been deferred. There are no interim or patch releases, and there is no user base besides hv. The order is fixed: all done, then all tested at the desk, then the Linux artefacts checked on kovacs through kovacs-sysadm (booked as a heavy), and only then the cut. Cuts and tags are hv's. Anything left out is deferred on the record with hv's say. Relayed to every VC (intent, laksa, utilz, devbin, conflab, gtools) and to kovacs-sysadm.",
+      "text": "hv 25 Oct: one release per project, carrying everything not deferred; all tested, kovacs checked, then hv cuts.",
       "state": "live",
-      "recorded_at": "2026-10-25T06:49:07.054Z"
+      "recorded_at": "2026-10-25T06:49:07.054Z",
+      "edited_at": "2026-10-28T19:54:43.031Z"
     },
     {
       "node": "vc",
       "kind": "decision",
       "seq": 18,
       "text": "**hv ruling, 25 Oct ~10:03Z: brew by default.** hv: \"As a general rule, I want to use the brew versions of things UNLESS I am working on a project. If I am working, then I'll use dev/opt as needed, and put brew back once done and the patch is released. I want to be sure to use the brew release versions of these tools wherever I can.\" Each tool's use switch sits at brew unless that project is being worked on. Every release's checklist ends with switching back to brew and checking that the brew install answers. Liberators and doctors name a stray dev or opt switch and the remedy, and never flip it themselves. Relayed to every VC.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.313Z",
       "recorded_at": "2026-10-25T10:03:48.536Z"
     },
     {
@@ -771,25 +782,27 @@
       "node": "vc",
       "kind": "doing",
       "seq": 7,
-      "text": "**Estate coordination by layer (hv, 27 Oct, decision 22):** L1 devbin, molt, utilz, gtools, then L2 intent, then L3 laksa and conflab, which do nothing until called. One heavy at a time on rhadamanth, and a kovacs leg counts as heavy. The desk runs on Intent's slots with molt-vc as controller, re-taken at each new session with `intent estate control take --node vc`. READY is `slots ask`, GO is `slots grant <id> --lane <every lane held>`, and START and END are `slots start` and `release`, with kovacs ones `--relayed`. molt-vc books its own short runs, and sends kovacs-sysadm one combined message per batch, since hv approves each one there.",
+      "text": "Desk controller on intent estate slots: one heavy at a time; kovacs legs in one combined message to kovacs-sysadm.",
       "state": "live",
       "recorded_at": "2026-10-26T06:58:48.312Z",
-      "edited_at": "2026-10-27T07:59:58.595Z"
+      "edited_at": "2026-10-28T19:54:43.667Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 30,
-      "text": "**gyges: exclude ~/Devel from Spotlight**, as on rhadamanth (hv, 26 Oct: \"There is no need _at_all_ for Spotlight to index _anything_ under ~/Devel\"). It's done by hand in System Settings › Spotlight › Search Privacy; no supported CLI does it without root, and `.metadata_never_index` markers are not honoured on this macOS. Do it when hv is next at gyges. Check with `mdfind -onlyin ~/Devel -count 'kMDItemContentTypeTree == \"public.item\"'`, which should read 0.",
+      "text": "gyges: exclude ~/Devel from Spotlight by hand when hv is next there.",
       "state": "live",
-      "recorded_at": "2026-10-26T10:02:16.271Z"
+      "recorded_at": "2026-10-26T10:02:16.271Z",
+      "edited_at": "2026-10-28T19:54:44.553Z"
     },
     {
       "node": "vc",
       "kind": "decision",
       "seq": 22,
       "text": "**hv, 27 Oct: layer order L1, then L2, then L3, done today; it replaces decision 20's project order.** hv: \"There is an obvious and natural hiearchy here: L1: Utilities and devx: devbin, molt, utilz, gtools. L2: Process and agentic engineering: intent. L3: Applications: laksa, conflab. And we should be executing in that order. There is _no_way_ that we should be doinfg anything with laksa and conflab until the utilz/devx layer is sorted out, published, running on CI/CD, brewed, and then reinstalled locally and usable via brew.\" and \"I want this done expeditiously _today_.\" A project is done when its release is cut and tagged, CI is green on the tag, its formula is published, it is installed from brew on rhadamanth and kovacs, and `<tool> use brew` answers from brew in a fresh login shell. vc's reading, not hv's words: Intent's installed build stays as it is until L1 is done, since devbin's release gates run intent (0648's critic exit 4 broke Utilz's dry run on 26 Oct).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.349Z",
       "recorded_at": "2026-10-27T06:30:00.141Z"
     },
     {
@@ -815,7 +828,8 @@
       "kind": "decision",
       "seq": 23,
       "text": "**hv, 27 Oct, on molt-vc's question 4: \"Yes, lights can go beside a heavy\".** A light run from any project may go beside the one heavy on the desk, while its own lanes are free and the load stays low; until now only the same project's lights did (one-project rule, 26 Oct). One heavy at a time still holds, and heavies still go in the layer order (decision 22) unless hv says otherwise, as with Intent's judge run on hv's \"ok, go\" at 10:01Z. A run so small it holds no lane (`--lane none`) goes at once.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.388Z",
       "recorded_at": "2026-10-27T10:07:50.059Z"
     },
     {
@@ -832,7 +846,8 @@
       "kind": "decision",
       "seq": 25,
       "text": "**hv, 27 Oct (first-hand in Intent's vc session, relayed by intent-vc, before 12:48:23Z by its date -u): every localfold and every EOD fold clears out what is spent, so a pickup prints only live state.** hv: \"And this shouldn't be happening! Localfolds and EODs should clear this out.\" At each fold: archive each board item and ruling that has been carried out, checked first against its artefact (the commit, the closed issue, the Done WP); a ruling with any part still to do stays live, and a directive stays until hv says it is spent. Clear handled inbox messages, and run `intent wb archive message --handled --node <you>` for sent messages their recipients have handled. A watchout that is still true stays unless a durable home everyone loads carries it (restart.md's Durable Facts, intent/wip.md's Notes, a project memory). Molt's cc, dc and ac do the same at their next fold.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.425Z",
       "recorded_at": "2026-10-27T12:52:04.756Z"
     },
     {
@@ -840,7 +855,8 @@
       "kind": "decision",
       "seq": 26,
       "text": "**Pen rulings, 27 Oct, while hv is AFK** (hv, in molt-vc's session: \"molt-vc has the pen. VCs coorindate their own project-specific Claudes. Push on.\"; then \"Tell them all that the compact IS STILL NEEDED.\" and \"I didn't say no compact. I just said push on.\"). Each ruling takes the asking VC's recommendation, and hv can overrule any of them on return. Gtools (b): D9 in; G8, WP-06 and AC-04.12 deferred to one follow-up thread, with every deferred AC descoped (AC-05.2 included). Intent: ST0085 is out of 3.2.7; the kovacs preflight and devbin-vc's push of Intent's main go now, since neither touches rhadamanth's installed Intent; Molt's env liberator publishes INTENT_INSTALL_PREFIX now, because only `intent install` and `intent use opt` read it. Utilz: 0114 doesn't hold 2.14.5 (option a). devbin: the target is 0.1.16 ready to cut, with ST0010's chain first; publication and S1 to S3 stay hv's. L3: Laksa and Conflab may do non-heavy work now, and every heavy goes on molt-vc's GO by name. Laksa is called for its tests, which failed in hv's hand run alongside Intent's and Gtools'. Cuts, pushes of releases and deploys stay hv's.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.461Z",
       "recorded_at": "2026-10-27T15:27:07.185Z"
     },
     {
@@ -848,7 +864,8 @@
       "kind": "decision",
       "seq": 27,
       "text": "**Pen rulings, 27 Oct, after hv's compact** (hv AFK; decision 26's pen). Each takes the asking VC's recommendation, and hv can overrule any of them on return.\n- Desk gate: lights go beside a heavy that isn't a Gtools suite-bearing run unless the 1-minute load spikes over 50; until 15:52Z the gate was under 20. The sessions' own load sits at 25 to 45 with about fifty sessions open, so the old gate held every light behind every heavy. A Gtools suite-bearing run still gets the desk to itself.\n- pid 70500, the stray test CMS on 127.0.0.1:47736, stays for hv. gtools-vc's `kill` was refused by its permission harness, so no session kills it or stops it by another door (gtools-dc proposed it; refused, and dc agreed). hv was sent one push.\n- Gtools: D9 runs ahead of the token move while the port block stands; the token move goes first if the ports free before D9 starts.\n- Intent: cc's 0087-hermetic bank (test-only, three files) lands on intent-vc's static review and light legs, and the full rerun on main is its judge, with INTENT_INSTALL_PREFIX exported to an empty scratch dir. That dir reading empty is what Molt's env publish waits on. cc's separate judge slot was denied as superseded.\n- Laksa, laksa-vc's four items: (1) ic removes hellolaksa's public /debug page and its menu entry in this release, and the prod row comes off at hv's deploy or by hv's write; (4) the CV gate lands on the cover when one exists (the recipient's, else the CV's default), else on the CV; (3) cc designs site_files for the worst case until hv runs the SELECT-only prod read; (2) the fly-user password rotation stays hv's; (5) a CMS Add Subscriber of an already-confirmed address stays a site owner's act with no confirmation mail (laksa-vc's rec (b); Laksa's only site owner is hv), so nothing is built.\n- kovacs: while kovacs-sysadm runs, every project's kovacs legs go in ONE combined message on hv's return, since each message costs hv an approval there.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.497Z",
       "recorded_at": "2026-10-27T15:54:25.745Z",
       "edited_at": "2026-10-27T15:56:56.791Z"
     },
@@ -856,33 +873,37 @@
       "node": "vc",
       "kind": "decision",
       "seq": 28,
-      "text": "**hv, 28 Oct: one project at a time, done today.** hv at 05:50Z: \"Ok, let's do this, but I want to go one project at a time.\" and \"I am _very_ much expecting to get this done and dusted asap.\" The desk serves one project until it is READY TO CUT, and then the next: Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab (vc's order within decision 22's layers, Utilz first as the nearest to its end-point). This replaces decision 23's lights from any project beside the heavy: today only the current project's runs go, side by side as lanes allow. At 06:55Z hv held every Claude (\"Jobs that are running (tests, etc) can keep running, but do not start anything new\"), and at 07:02Z called an estate localfold+compact, then hold. The hold stands until hv lifts it.",
+      "text": "hv 28 Oct: one project at a time to READY TO CUT, in order Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab.",
       "state": "live",
-      "recorded_at": "2026-10-28T07:02:52.842Z"
+      "recorded_at": "2026-10-28T07:02:52.842Z",
+      "edited_at": "2026-10-28T19:54:43.229Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 33,
-      "text": "**For conflab-vc at hv's go (hv via gyges-sysadm, 28 Oct):** (1) geodica/homebrew-conflab Casks/conflab.rb:10 `depends_on macos: \">= :sonoma\"` warns on every brew run under Homebrew 7.0.11 (deprecated string comparison); fix is one line, `depends_on macos: :sonoma` (means Sonoma or later). The formula does not warn. (2) The formula and the cask both ship conflab and conflabd: on gyges the cask's pkg put 0.6.2 in /usr/local/bin and its space.conflab.daemon fought brew services' conflabd (exit 75 every 10s) until brew services was stopped. One home for the CLI and daemon per Highlander.",
+      "text": "conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one).",
       "state": "live",
-      "recorded_at": "2026-10-28T15:41:03.138Z"
+      "recorded_at": "2026-10-28T15:41:03.138Z",
+      "edited_at": "2026-10-28T19:54:43.902Z"
     },
     {
       "node": "vc",
       "kind": "decision",
       "seq": 29,
       "text": "**gyges caught up to brew, 28 Oct, marked complete by hv** (\"Ok, the gyges work is all done. Please mark it all as complete.\"). gyges runs molt 1.1.0, utilz 2.14.5, intent 3.2.6, devbin 0.1.15 (hv tapped the private tap over ssh), conflab 0.6.2 (cask app + its daemon; old 0.5.0 pkg removed by hv with sudo) and ccusage 0.1.3 from brew; gtools (b1904abc) and pplr stay dev-linked until each has a formula. ~/Devel/prj/Molt on gyges removed on hv's word (stash saved on gyges at ~/Devel/agt/gyges-sysadm/work/2026-10-28-molt-checkout-stash.patch). Geodica estate on gyges closed out by geodica-estate. Follow-ups: Molt issue 0072 (doctor's env check); todo 33 for conflab-vc; the duplicate conflab CLI (formula beside cask) is hv's to drop.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T19:54:35.537Z",
       "recorded_at": "2026-10-28T15:43:26.322Z"
     },
     {
       "node": "vc",
       "kind": "decision",
       "seq": 30,
-      "text": "**hv, 28 Oct: every security finding is filed as an issue.** hv: \"Any security issues need to be properly filed. We're just not fixing them now unless they're showstopper P0s.\" A finding parked in a note, a board line or a review remark is filed in its own project, deferred in its body unless it is a showstopper P0, and a P0 is named to hv. Relayed to every VC 28 Oct; filed in that round: Utilz 0126, Conflab 0015 and 0016, Laksa 0057, Gtools 0126, 0127 and 0128.",
+      "text": "hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0.",
       "state": "live",
-      "recorded_at": "2026-10-28T19:53:11.636Z"
+      "recorded_at": "2026-10-28T19:53:11.636Z",
+      "edited_at": "2026-10-28T19:54:43.443Z"
     }
   ],
   "sent": [

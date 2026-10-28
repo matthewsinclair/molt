@@ -1,0 +1,16 @@
+{
+  "id": "01M6218GYQ0CG5BYEWBAAFDRW9",
+  "ts": "2026-10-28T19:54:43.031Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 17,
+    "text": "hv 25 Oct: one release per project, carrying everything not deferred; all tested, kovacs checked, then hv cuts."
+  }
+}

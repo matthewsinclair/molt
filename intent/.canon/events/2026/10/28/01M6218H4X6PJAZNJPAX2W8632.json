@@ -1,0 +1,16 @@
+{
+  "id": "01M6218H4X6PJAZNJPAX2W8632",
+  "ts": "2026-10-28T19:54:43.229Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 28,
+    "text": "hv 28 Oct: one project at a time to READY TO CUT, in order Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab."
+  }
+}

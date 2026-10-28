@@ -1,0 +1,16 @@
+{
+  "id": "01M6218JE99Z6V500FKEACTF5X",
+  "ts": "2026-10-28T19:54:44.554Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 30,
+    "text": "gyges: exclude ~/Devel from Spotlight by hand when hv is next there."
+  }
+}
