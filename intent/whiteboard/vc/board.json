@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "44f20fc0-0ed6-4523-aa2f-1c34cc319b42",
-    "heartbeat_at": "2026-10-27T15:39:01.100Z",
+    "heartbeat_at": "2026-10-28T05:23:12.413Z",
     "status": "active",
-    "focus": "27 Oct, hv AFK, MOLT-VC HAS THE PEN (decision 26); hv: push on, and the compact is still needed. Test verdicts from hv's hand runs: Gtools' failures were load (ten suites at once), Intent has one real failure (cc fixing), Laksa's are real and being fixed (vendor update was hv's hand). BLOCKER on hv's list: stray beam pid 70500 on 127.0.0.1:47736 blocks the Gtools token move; no session may kill it (gtools-vc's harness refused). Token move re-asked as 01M5YZVHKWP0W14J8T98K3EYHZ, granted first when the pid is gone. Desk serves Intent (L2), devbin 0.1.16 lights, Laksa and Conflab heavies in layer order. Env publish of INTENT_INSTALL_PREFIX held for intent-vc's word. Resume from scratchpad estate-27oct.md",
+    "focus": "28 Oct, estate localfold+compact on hv's word (round sent after Laksa's suite END). Desk: molt-vc controls (44f20fc0). In flight: Laksa's booking (4 fixes landed, suite running), devbin S1 (bats). Next heavy: Gtools D9, then Conflab ic stamp half, cc stamp crate, dc todo 18, dc todo 28 clippy proof. Done overnight/this morning: Molt suite green both bashes; Intent rerun green, hermetic bank landed; INTENT_INSTALL_PREFIX published (env liberator only, 05:13Z). Open: Utilz common_lib.bats:154 red (on main since 0120); Intent ra-target product fix to land. FOR hv: kill 70500 (blocks Gtools token move); whether kovacs-sysadm needs per-message approval (it is not running now, so ssh is allowed); Laksa fly-user rotation and site_files prod read; review decisions 26-27. Resume from scratchpad estate-27oct.md",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -797,7 +797,8 @@
       "kind": "todo",
       "seq": 31,
       "text": "**Before L2 opens:** run Molt's env liberator on rhadamanth so `~/.config/molt/env.sh` publishes INTENT_INSTALL_PREFIX (Molt-matts 1bd41f2) for Intent's ST0087 WP-05, then tell intent-vc. Read the parser first: `molt resleeve` takes no `--help` and runs on any argument (issue 0070).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-28T05:23:12.363Z",
       "recorded_at": "2026-10-27T07:59:58.694Z"
     },
     {
