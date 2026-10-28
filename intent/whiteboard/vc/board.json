@@ -859,6 +859,14 @@
       "text": "**hv, 28 Oct: one project at a time, done today.** hv at 05:50Z: \"Ok, let's do this, but I want to go one project at a time.\" and \"I am _very_ much expecting to get this done and dusted asap.\" The desk serves one project until it is READY TO CUT, and then the next: Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab (vc's order within decision 22's layers, Utilz first as the nearest to its end-point). This replaces decision 23's lights from any project beside the heavy: today only the current project's runs go, side by side as lanes allow. At 06:55Z hv held every Claude (\"Jobs that are running (tests, etc) can keep running, but do not start anything new\"), and at 07:02Z called an estate localfold+compact, then hold. The hold stands until hv lifts it.",
       "state": "live",
       "recorded_at": "2026-10-28T07:02:52.842Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 33,
+      "text": "**For conflab-vc at hv's go (hv via gyges-sysadm, 28 Oct):** (1) geodica/homebrew-conflab Casks/conflab.rb:10 `depends_on macos: \">= :sonoma\"` warns on every brew run under Homebrew 7.0.11 (deprecated string comparison); fix is one line, `depends_on macos: :sonoma` (means Sonoma or later). The formula does not warn. (2) The formula and the cask both ship conflab and conflabd: on gyges the cask's pkg put 0.6.2 in /usr/local/bin and its space.conflab.daemon fought brew services' conflabd (exit 75 every 10s) until brew services was stopped. One home for the CLI and daemon per Highlander.",
+      "state": "live",
+      "recorded_at": "2026-10-28T15:41:03.138Z"
     }
   ],
   "sent": [
