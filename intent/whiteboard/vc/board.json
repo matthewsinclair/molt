@@ -885,7 +885,8 @@
       "kind": "todo",
       "seq": 33,
       "text": "conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:45:05.664Z",
       "recorded_at": "2026-10-28T15:41:03.138Z",
       "edited_at": "2026-10-28T19:54:43.902Z"
     },

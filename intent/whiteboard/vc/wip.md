@@ -20,7 +20,6 @@ claims: []
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one). (edited)
 - gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only. (edited)
 
 ## Holds
