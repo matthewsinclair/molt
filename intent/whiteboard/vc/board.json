@@ -912,6 +912,14 @@
       "text": "hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings.",
       "state": "live",
       "recorded_at": "2026-10-29T05:59:03.452Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 34,
+      "text": "Molt-matts: enable the gtools liberator (issue 0057, brew over the ssh tap) now Gtools 0.8.0 is cut; hv said yes 29 Oct. kovacs runs brew gtools already; which sleeves is hv's (rhadamanth: after ISSUE 0129 is ruled).",
+      "state": "live",
+      "recorded_at": "2026-10-29T15:54:12.032Z"
     }
   ],
   "sent": [

@@ -1,5 +1,5 @@
 ---
-verblock: "29 Oct 2026:v0.57: Matthew Sinclair - marked to market at hv's cleanup fold"
+verblock: "29 Oct 2026:v0.58: Matthew Sinclair - gtools liberator queued"
 ---
 
 # Work In Progress
@@ -11,5 +11,6 @@ verblock: "29 Oct 2026:v0.57: Matthew Sinclair - marked to market at hv's cleanu
 ## TODO
 
 - **Molt's next release:** issues 0072, 0070, 0068. Deferred: 0065, 0067, 0069, 0071.
+- **gtools liberator:** enable it in Molt-matts now Gtools 0.8.0 is cut (issue 0057; hv, 29 Oct). Which sleeves is hv's; rhadamanth waits on Gtools issue 0129.
 - **farcaster, pihole, when next reachable:** resync the clones onto the purged histories, set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then `molt upgrade`.
 - **rhadamanth backup:** hv's, after 19 Dec.

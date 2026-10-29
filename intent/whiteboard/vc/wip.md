@@ -21,6 +21,7 @@ claims: []
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one). (edited)
+- Molt-matts: enable the gtools liberator (issue 0057, brew over the ssh tap) now Gtools 0.8.0 is cut; hv said yes 29 Oct. kovacs runs brew gtools already; which sleeves is hv's (rhadamanth: after ISSUE 0129 is ruled).
 
 ## Holds
 

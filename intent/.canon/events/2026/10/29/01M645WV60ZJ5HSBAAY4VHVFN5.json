@@ -1,0 +1,15 @@
+{
+  "id": "01M645WV60ZJ5HSBAAY4VHVFN5",
+  "ts": "2026-10-29T15:54:12.032Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt-matts: enable the gtools liberator (issue 0057, brew over the ssh tap) now Gtools 0.8.0 is cut; hv said yes 29 Oct. kovacs runs brew gtools already; which sleeves is hv's (rhadamanth: after ISSUE 0129 is ruled)."
+  }
+}
