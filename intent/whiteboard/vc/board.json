@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "44f20fc0-0ed6-4523-aa2f-1c34cc319b42",
-    "heartbeat_at": "2026-10-29T14:03:21.470Z",
+    "heartbeat_at": "2026-10-29T16:01:57.638Z",
     "status": "active",
-    "focus": "HELD for hv's travel (29 Oct): every project folded and holding; devbin 0.1.17 released by hv; pick up at home on hv's word.",
+    "focus": "Fix-everything night (hv, 29 Oct): devbin, Gtools, Utilz, Intent fix to READY FOR hv; Laksa, Conflab, Molt held.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -921,6 +921,14 @@
       "state": "live",
       "recorded_at": "2026-10-29T15:54:12.032Z",
       "edited_at": "2026-10-29T15:58:10.281Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 32,
+      "text": "hv 29 Oct 16:01Z: travel hold lifted for devbin, Gtools, Utilz and Intent: fix everything tonight, no new functionality, no yak shaving. Laksa, Conflab and Molt stay held. Decision 31's test and push rules stand until hv says otherwise.",
+      "state": "live",
+      "recorded_at": "2026-10-29T16:01:57.592Z"
     }
   ],
   "sent": [
