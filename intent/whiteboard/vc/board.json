@@ -934,9 +934,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 35,
-      "text": "Tell utilz-vc when devbin v0.1.17 is on brew: Utilz 0118 (with 0126) vendors it tonight, on hv's ruling.",
+      "text": "When devbin v0.1.17 is published and no suite runs: molt-vc runs brew update && brew upgrade devbin on rhadamanth, then sends utilz-vc the brew list --versions devbin line (Utilz 0118 vendoring waits on it).",
       "state": "live",
-      "recorded_at": "2026-10-29T16:09:47.921Z"
+      "recorded_at": "2026-10-29T16:09:47.921Z",
+      "edited_at": "2026-10-29T16:15:45.256Z"
     },
     {
       "node": "vc",

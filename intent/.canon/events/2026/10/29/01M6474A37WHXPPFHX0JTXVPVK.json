@@ -1,0 +1,16 @@
+{
+  "id": "01M6474A37WHXPPFHX0JTXVPVK",
+  "ts": "2026-10-29T16:15:45.256Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 35,
+    "text": "When devbin v0.1.17 is published and no suite runs: molt-vc runs brew update && brew upgrade devbin on rhadamanth, then sends utilz-vc the brew list --versions devbin line (Utilz 0118 vendoring waits on it)."
+  }
+}
