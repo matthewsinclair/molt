@@ -1,0 +1,15 @@
+{
+  "id": "01M646SD4HGQRAW917RHDN521R",
+  "ts": "2026-10-29T16:09:47.921Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Tell utilz-vc when devbin v0.1.17 is on brew: Utilz 0118 (with 0126) vendors it tonight, on hv's ruling."
+  }
+}

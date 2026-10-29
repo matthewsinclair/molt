@@ -22,6 +22,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one). (edited)
 - gtools liberator: kovacs and gyges enabled brew-only (Molt-matts 5eb59f5); rhadamanth needs source = switch, issue 0073, then enable after Gtools ISSUE 0129 is ruled. (edited)
+- Tell utilz-vc when devbin v0.1.17 is on brew: Utilz 0118 (with 0126) vendors it tonight, on hv's ruling.
 
 ## Holds
 

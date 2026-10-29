@@ -929,6 +929,14 @@
       "text": "hv 29 Oct 16:01Z: travel hold lifted for devbin, Gtools, Utilz and Intent: fix everything tonight, no new functionality, no yak shaving. Laksa, Conflab and Molt stay held. Decision 31's test and push rules stand until hv says otherwise.",
       "state": "live",
       "recorded_at": "2026-10-29T16:01:57.592Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 35,
+      "text": "Tell utilz-vc when devbin v0.1.17 is on brew: Utilz 0118 (with 0126) vendors it tonight, on hv's ruling.",
+      "state": "live",
+      "recorded_at": "2026-10-29T16:09:47.921Z"
     }
   ],
   "sent": [
