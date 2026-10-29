@@ -1,0 +1,15 @@
+{
+  "id": "01M6495ESXWZWMM94S57949P1B",
+  "ts": "2026-10-29T16:51:19.997Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "molt-vc with the pen, 29 Oct: devbin v0.1.17 candidate CI red on macOS (check critic needs intent/, absent from the public tree); 0.1.17 is not published; 0.1.18 (0292 plus the macOS workflow fix) is the first public release, as hv first asked."
+  }
+}

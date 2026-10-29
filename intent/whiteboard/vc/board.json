@@ -946,6 +946,14 @@
       "text": "hv 29 Oct: decision 31 lifted for proofs. A Claude may run a small targeted proof of its own fix (named test files, a planted red with its control, an AT red run), booked with molt-vc one at a time. Full suites, pushes, cuts, tags and deploys stay hv's.",
       "state": "live",
       "recorded_at": "2026-10-29T16:10:06.298Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 34,
+      "text": "molt-vc with the pen, 29 Oct: devbin v0.1.17 candidate CI red on macOS (check critic needs intent/, absent from the public tree); 0.1.17 is not published; 0.1.18 (0292 plus the macOS workflow fix) is the first public release, as hv first asked.",
+      "state": "live",
+      "recorded_at": "2026-10-29T16:51:19.997Z"
     }
   ],
   "sent": [
