@@ -904,6 +904,14 @@
       "state": "live",
       "recorded_at": "2026-10-28T19:53:11.636Z",
       "edited_at": "2026-10-28T19:54:43.443Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 31,
+      "text": "hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings.",
+      "state": "live",
+      "recorded_at": "2026-10-29T05:59:03.452Z"
     }
   ],
   "sent": [

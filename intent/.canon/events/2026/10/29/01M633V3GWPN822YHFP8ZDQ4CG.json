@@ -1,0 +1,15 @@
+{
+  "id": "01M633V3GWPN822YHFP8ZDQ4CG",
+  "ts": "2026-10-29T05:59:03.452Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings."
+  }
+}

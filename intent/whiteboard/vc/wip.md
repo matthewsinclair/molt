@@ -35,6 +35,7 @@ _(none)_
 - hv 25 Oct: one release per project, carrying everything not deferred; all tested, kovacs checked, then hv cuts. (edited)
 - hv 28 Oct: one project at a time to READY TO CUT, in order Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab. (edited)
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
+- hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings.
 
 ---
 
