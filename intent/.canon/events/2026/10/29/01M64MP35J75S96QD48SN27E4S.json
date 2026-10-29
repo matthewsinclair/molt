@@ -1,0 +1,16 @@
+{
+  "id": "01M64MP35J75S96QD48SN27E4S",
+  "ts": "2026-10-29T20:12:39.474Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "Desk closed for the night on hv's hard close (29 Oct); no slots open."
+  }
+}

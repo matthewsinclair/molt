@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-29 16:14Z
-status: active
-focus: "hv out for food (29 Oct): molt-vc has the pen; push devbin, Utilz, Gtools, Intent to READY FOR hv with cut and push commands staged."
+heartbeat_at: 2026-10-29 20:12Z
+status: paused
+focus: "HARD CLOSE (29 Oct night): devbin 0.1.18, Utilz 2.14.7, Gtools 0.8.1 and 0.8.2, Intent 3.2.7 cut; every project leaned and closed out; pick up on hv's word."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Estate slot desk: one heavy at a time, lights beside it; proofs booked under decision 35. (edited)
+- Desk closed for the night on hv's hard close (29 Oct); no slots open. (edited)
 
 ## TODO
 
@@ -21,6 +21,7 @@ claims: []
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only. (edited)
+- Next session: rhadamanth brew upgrade gtools (0.8.2) if hv hasn't; kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof first run re-booked (denied at the hard close).
 
 ## Holds
 

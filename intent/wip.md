@@ -6,7 +6,7 @@ verblock: "29 Oct 2026:v0.59: Matthew Sinclair - leaned at hv's tidy-house fold"
 
 ## DOING
 
-- Nothing of Molt's is in flight; Molt is held for code (vc decision 35). vc runs the estate slot desk.
+- Nothing in flight: the estate hard-closed for the night (29 Oct). Molt is held for code (vc decision 35).
 
 ## TODO
 

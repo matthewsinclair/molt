@@ -1,0 +1,15 @@
+{
+  "id": "01M64MP319SP9FRPK0529610KC",
+  "ts": "2026-10-29T20:12:39.337Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Next session: rhadamanth brew upgrade gtools (0.8.2) if hv hasn't; kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof first run re-booked (denied at the hard close)."
+  }
+}
