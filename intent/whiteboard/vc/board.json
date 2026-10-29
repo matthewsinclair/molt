@@ -937,6 +937,14 @@
       "text": "Tell utilz-vc when devbin v0.1.17 is on brew: Utilz 0118 (with 0126) vendors it tonight, on hv's ruling.",
       "state": "live",
       "recorded_at": "2026-10-29T16:09:47.921Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 33,
+      "text": "hv 29 Oct: decision 31 lifted for proofs. A Claude may run a small targeted proof of its own fix (named test files, a planted red with its control, an AT red run), booked with molt-vc one at a time. Full suites, pushes, cuts, tags and deploys stay hv's.",
+      "state": "live",
+      "recorded_at": "2026-10-29T16:10:06.298Z"
     }
   ],
   "sent": [

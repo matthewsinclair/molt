@@ -39,6 +39,7 @@ _(none)_
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
 - hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings.
 - hv 29 Oct 16:01Z: travel hold lifted for devbin, Gtools, Utilz and Intent: fix everything tonight, no new functionality, no yak shaving. Laksa, Conflab and Molt stay held. Decision 31's test and push rules stand until hv says otherwise.
+- hv 29 Oct: decision 31 lifted for proofs. A Claude may run a small targeted proof of its own fix (named test files, a planted red with its control, an AT red run), booked with molt-vc one at a time. Full suites, pushes, cuts, tags and deploys stay hv's.
 
 ---
 

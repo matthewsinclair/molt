@@ -1,0 +1,15 @@
+{
+  "id": "01M646SZ2TG9AE9D4Q1PT2KJWV",
+  "ts": "2026-10-29T16:10:06.298Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 29 Oct: decision 31 lifted for proofs. A Claude may run a small targeted proof of its own fix (named test files, a planted red with its control, an AT red run), booked with molt-vc one at a time. Full suites, pushes, cuts, tags and deploys stay hv's."
+  }
+}
