@@ -1,0 +1,16 @@
+{
+  "id": "01M64JA2S2J1TP0JPVHE3VD99N",
+  "ts": "2026-10-29T19:31:08.706Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "Estate slot desk: one heavy at a time, lights beside it; proofs booked under decision 35."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "01M64JA3DKGPVZBYV77TEZRTC3",
+  "ts": "2026-10-29T19:31:09.363Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 34,
+    "text": "gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only."
+  }
+}

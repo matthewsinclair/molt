@@ -710,7 +710,8 @@
       "kind": "decision",
       "seq": 17,
       "text": "hv 25 Oct: one release per project, carrying everything not deferred; all tested, kovacs checked, then hv cuts.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:31:07.709Z",
       "recorded_at": "2026-10-25T06:49:07.054Z",
       "edited_at": "2026-10-28T19:54:43.031Z"
     },
@@ -782,10 +783,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 7,
-      "text": "Desk held under decision 31: no slot bookings; vc relays hv's hand-test round and the kovacs legs.",
+      "text": "Estate slot desk: one heavy at a time, lights beside it; proofs booked under decision 35.",
       "state": "live",
       "recorded_at": "2026-10-26T06:58:48.312Z",
-      "edited_at": "2026-10-29T13:42:15.088Z"
+      "edited_at": "2026-10-29T19:31:08.706Z"
     },
     {
       "node": "vc",
@@ -874,7 +875,8 @@
       "kind": "decision",
       "seq": 28,
       "text": "hv 28 Oct: one project at a time to READY TO CUT, in order Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:31:07.778Z",
       "recorded_at": "2026-10-28T07:02:52.842Z",
       "edited_at": "2026-10-28T19:54:43.229Z"
     },
@@ -910,24 +912,26 @@
       "kind": "decision",
       "seq": 31,
       "text": "hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:31:07.868Z",
       "recorded_at": "2026-10-29T05:59:03.452Z"
     },
     {
       "node": "vc",
       "kind": "todo",
       "seq": 34,
-      "text": "gtools liberator: kovacs and gyges enabled brew-only (Molt-matts 5eb59f5); rhadamanth needs source = switch, issue 0073, then enable after Gtools ISSUE 0129 is ruled.",
+      "text": "gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only.",
       "state": "live",
       "recorded_at": "2026-10-29T15:54:12.032Z",
-      "edited_at": "2026-10-29T15:58:10.281Z"
+      "edited_at": "2026-10-29T19:31:09.363Z"
     },
     {
       "node": "vc",
       "kind": "decision",
       "seq": 32,
       "text": "hv 29 Oct 16:01Z: travel hold lifted for devbin, Gtools, Utilz and Intent: fix everything tonight, no new functionality, no yak shaving. Laksa, Conflab and Molt stay held. Decision 31's test and push rules stand until hv says otherwise.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:31:07.938Z",
       "recorded_at": "2026-10-29T16:01:57.592Z"
     },
     {
@@ -945,7 +949,8 @@
       "kind": "decision",
       "seq": 33,
       "text": "hv 29 Oct: decision 31 lifted for proofs. A Claude may run a small targeted proof of its own fix (named test files, a planted red with its control, an AT red run), booked with molt-vc one at a time. Full suites, pushes, cuts, tags and deploys stay hv's.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:31:08.093Z",
       "recorded_at": "2026-10-29T16:10:06.298Z"
     },
     {
@@ -953,8 +958,17 @@
       "kind": "decision",
       "seq": 34,
       "text": "molt-vc with the pen, 29 Oct: devbin v0.1.17 candidate CI red on macOS (check critic needs intent/, absent from the public tree); 0.1.17 is not published; 0.1.18 (0292 plus the macOS workflow fix) is the first public release, as hv first asked.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-29T19:31:08.210Z",
       "recorded_at": "2026-10-29T16:51:19.997Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 35,
+      "text": "hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.",
+      "state": "live",
+      "recorded_at": "2026-10-29T19:31:07.620Z"
     }
   ],
   "sent": [

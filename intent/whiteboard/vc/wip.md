@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Desk held under decision 31: no slot bookings; vc relays hv's hand-test round and the kovacs legs. (edited)
+- Estate slot desk: one heavy at a time, lights beside it; proofs booked under decision 35. (edited)
 
 ## TODO
 
@@ -21,7 +21,7 @@ claims: []
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - conflab-vc at go: cask's depends_on macos string warning (one line); formula and cask both ship conflab and conflabd (hv to drop one). (edited)
-- gtools liberator: kovacs and gyges enabled brew-only (Molt-matts 5eb59f5); rhadamanth needs source = switch, issue 0073, then enable after Gtools ISSUE 0129 is ruled. (edited)
+- gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only. (edited)
 
 ## Holds
 
@@ -33,13 +33,8 @@ _(none)_
 
 ## Decisions
 
-- hv 25 Oct: one release per project, carrying everything not deferred; all tested, kovacs checked, then hv cuts. (edited)
-- hv 28 Oct: one project at a time to READY TO CUT, in order Utilz, devbin, Molt, Gtools, Intent, Laksa, Conflab. (edited)
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
-- hv 29 Oct: everything merges to main in all repos and hv runs each suite by hand, one project at a time, then we fix forward. No Claude test runs, and no push, cut, tag or deploy until hv says. The slot desk denies all bookings.
-- hv 29 Oct 16:01Z: travel hold lifted for devbin, Gtools, Utilz and Intent: fix everything tonight, no new functionality, no yak shaving. Laksa, Conflab and Molt stay held. Decision 31's test and push rules stand until hv says otherwise.
-- hv 29 Oct: decision 31 lifted for proofs. A Claude may run a small targeted proof of its own fix (named test files, a planted red with its control, an AT red run), booked with molt-vc one at a time. Full suites, pushes, cuts, tags and deploys stay hv's.
-- molt-vc with the pen, 29 Oct: devbin v0.1.17 candidate CI red on macOS (check critic needs intent/, absent from the public tree); 0.1.17 is not published; 0.1.18 (0292 plus the macOS workflow fix) is the first public release, as hv first asked.
+- hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 
 ---
 

@@ -18,11 +18,11 @@ Start here, then read the files below. This file is an index, not a record -- it
 
 ## Coordination
 
-- [`whiteboard/README.md`](whiteboard/README.md) -- node roster, the project-Claude suffixes, and who is obliged to read whose inbox. The nodes: `hv` (human), `vc` (specifies, validates, merges), `cc` (builds code), `dc` (builds the developer experience), `ac` (authors briefs for hv). Since 21 Sep the boards are generated views of the store: `intent wb` is the only way to change them, and a hand edit is skew that `intent doctor` reports.
+- [`whiteboard/README.md`](whiteboard/README.md) -- node roster, the project-Claude suffixes, and who is obliged to read whose inbox. The nodes: `hv` (human), `vc` (specifies, validates, merges), `cc` (builds code), `dc` (builds the developer experience), `ac` (authors briefs for hv). The boards are generated views of the store: change them only with `intent wb`.
 
 ## Project files outside intent/
 
 - `VERSION` -- single source of truth for the version number.
 - `CHANGELOG.md` -- Keep a Changelog format.
 - `lib/`, `liberators/`, `bin/`, `test/` -- the framework itself.
-- `~/Devel/cfg/Molt-matts/` -- the user config repo this framework renders from, in `MOLT_CFG_DIR` since 15 Sep (it was `../Molt-matts/`). The GitHub repo name stays lowercase (`matthewsinclair/molt-matts`).
+- `~/Devel/cfg/Molt-matts/` (`MOLT_CFG_DIR`) -- the user config repo this framework renders from. Its GitHub name is lowercase: `matthewsinclair/molt-matts`.
