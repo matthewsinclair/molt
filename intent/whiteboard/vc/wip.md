@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-28 19:54Z
+heartbeat_at: 2026-10-29 12:04Z
 status: active
-focus: "Estate HELD after hv's close/defer round; all projects folded. On go: devbin (C rebuild, D, cut gates), then decision 28's order."
+focus: "hv's merge-and-hand-test round (decision 31): all repos merged and cleaned; devbin 0.1.16 cut (local only), folded and held for ST0010; hv testing Gtools next, then Utilz, Intent, Laksa, Conflab."
 claims: []
 ---
 
