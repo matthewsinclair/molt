@@ -4,8 +4,7 @@ Start here, then read the files below. This file is an index, not a record -- it
 
 ## Where things stand
 
-- [`wip.md`](wip.md) -- what is in flight and what is next. The only place current work is described.
-- [`done.md`](done.md) -- everything completed, newest first. Look here for why something is the way it is.
+- [`wip.md`](wip.md) -- what is in flight and what is next. The only place current work is described. Finished work is in git, `CHANGELOG.md` and the closed issues.
 - [`todo.md`](todo.md) -- generated view; the renderer owns it.
 - [`issues/`](issues) -- issues tracked without a steel thread. Use `intent issues list --kind all`; the files are generated.
 

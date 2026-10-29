@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Desk controller on intent estate slots: one heavy at a time; kovacs legs in one combined message to kovacs-sysadm. (edited)
+- Desk held under decision 31: no slot bookings; vc relays hv's hand-test round and the kovacs legs. (edited)
 
 ## TODO
 

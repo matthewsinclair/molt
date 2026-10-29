@@ -22,7 +22,7 @@ The roster is the one in [`intent/whiteboard/README.md`](../intent/whiteboard/RE
 - `molt upgrade` = config sync (fast). `molt maintain` = system maintenance (slow).
 - `doom upgrade` needs `--force` (Emacs `y-or-n-p` cannot read from shell stdin).
 - The Starship template has powerline Unicode characters -- do not rewrite it with the Write tool, which strips them.
-- `intent/wip.md`, `done.md` and a thread's attached `design`/`impl`/`tasks` are AUTHORED; `intent/st/**/info.md`, `acceptance.md`, `steel_threads.md` and `todo.md` are GENERATED and fenced in `.prettierignore`.
+- `intent/wip.md` and a thread's attached `design`/`impl`/`tasks` are AUTHORED; `intent/st/**/info.md`, `acceptance.md`, `steel_threads.md` and `todo.md` are GENERATED and fenced in `.prettierignore`.
 - Never use `intent st edit` -- it opens an interactive editor. Write a thread's prose with `intent set <ID> objective|context --from <file>`.
 
 ## Quick Verification

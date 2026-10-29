@@ -1,12 +1,12 @@
 ---
-verblock: "28 Oct 2026:v0.56: Matthew Sinclair - leaned out at the fold"
+verblock: "29 Oct 2026:v0.57: Matthew Sinclair - marked to market at hv's cleanup fold"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- Nothing of Molt's is in flight. vc runs the estate desk; the estate is held until hv's go.
+- Nothing of Molt's is in flight. vc relays hv's hand-test round across the estate (vc decision 31); the desk books nothing.
 
 ## TODO
 
