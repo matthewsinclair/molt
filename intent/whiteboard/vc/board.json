@@ -917,9 +917,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 34,
-      "text": "Molt-matts: enable the gtools liberator (issue 0057, brew over the ssh tap) now Gtools 0.8.0 is cut; hv said yes 29 Oct. kovacs runs brew gtools already; which sleeves is hv's (rhadamanth: after ISSUE 0129 is ruled).",
+      "text": "gtools liberator: kovacs and gyges enabled brew-only (Molt-matts 5eb59f5); rhadamanth needs source = switch, issue 0073, then enable after Gtools ISSUE 0129 is ruled.",
       "state": "live",
-      "recorded_at": "2026-10-29T15:54:12.032Z"
+      "recorded_at": "2026-10-29T15:54:12.032Z",
+      "edited_at": "2026-10-29T15:58:10.281Z"
     }
   ],
   "sent": [
