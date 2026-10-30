@@ -5,7 +5,7 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "2472cc07-be26-4598-9b44-35f0f4446163",
-    "heartbeat_at": "2026-10-30T10:47:45.797Z",
+    "heartbeat_at": "2026-10-30T10:56:10.850Z",
     "status": "active",
     "focus": "30 Oct: Molt 1.2.0 done for cc (vc accepted); 0067, 0068, 0073, 0074, 0075 closed with rollout proofs; only 0076's GNOME re-login (hv) stays open; holding for vc",
     "claims": [],
