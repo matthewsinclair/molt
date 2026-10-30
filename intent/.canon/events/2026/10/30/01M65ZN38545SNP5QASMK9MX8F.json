@@ -1,0 +1,15 @@
+{
+  "id": "01M65ZN38545SNP5QASMK9MX8F",
+  "ts": "2026-10-30T08:43:35.557Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "molt maintain never upgrades Linuxbrew: the brew liberator is macOS only (check, install and verify stop off macOS), and kovacs's molt.toml has no brew entry, so maintain there runs editors alone and kovacs-sysadm ran brew upgrade by hand (30 Oct). Separate from 0075. Molt code, on vc's word."
+  }
+}

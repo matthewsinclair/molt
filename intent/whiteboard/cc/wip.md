@@ -18,6 +18,8 @@ _(none)_
 ## TODO
 
 - gtools liberator brew-leg proof (issue 0057; was hold 17, released 30 Oct as its conditions are met: Gtools cut, its tap present, gtools enabled brew-only on gyges and kovacs at Molt-matts 5eb59f5). molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs, on kovacs through kovacs-sysadm and on gyges when reachable. rhadamanth-sysadm sends the gtools lines from kovacs's first molt upgrade.
+- molt doctor has no gtools check: on kovacs (30 Oct, kovacs-sysadm) molt upgrade said Homebrew's gtools 0.8.2 is what PATH runs, but doctor printed no gtools line. Part of todo 16's proof; add the check, as intent's and utilz's, on vc's word.
+- molt maintain never upgrades Linuxbrew: the brew liberator is macOS only (check, install and verify stop off macOS), and kovacs's molt.toml has no brew entry, so maintain there runs editors alone and kovacs-sysadm ran brew upgrade by hand (30 Oct). Separate from 0075. Molt code, on vc's word.
 
 ## Holds
 
