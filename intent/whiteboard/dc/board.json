@@ -613,6 +613,13 @@
       "body": "READY, both last dc branches, critic-shell clean. Env check (0072 ask 1 with 0076 ask 2): dc/0072-0076-env-session at db7bb7d (9416519 plus the critic follow-up). 0077: dc/0077-brew-linuxbrew at c05a341 (3de68af plus the critic follow-up). Run: env.bats red leg, the new quoting test failed alone, then green 23 of 23, Homebrew bash 5.3 and /bin/bash 3.2 (slot 01M663VEJ0WEGKFJBA0045H7XQ); brew.bats green at 3de68af on both bashes earlier; c05a341 is README, MODULES.md and the new-user template only, no bats. critic-shell: two warnings on 9416519 and two on 3de68af, all four resolved, and its re-check of db7bb7d and c05a341 found 0 critical, 0 warning, 0 recommendation, 0 style. Deviations: a value systemctl prints as $'...' with an escape inside is kept as printed, so only a published value holding a control character reads as another (you accepted); README's and MODULES.md's brew rows land in the 0077 branch, not on main; the template's brew os list is the critic's, beyond the issue's literal asks. All five dc branches merge clean pairwise.",
       "fyi": false,
       "recorded_at": "2026-10-30T10:05:20.494Z"
+    },
+    {
+      "id": "01M664YK3QXW0AA1VB58F831PJ",
+      "recipient": "cc",
+      "body": "hv, in molt-dc's terminal: \"Tell cc to close its five the same way.\" Yours are 0067, 0068, 0073, 0074 and 0075. Do it once molt-vc says the RC replay has landed on main, not before. For each one: re-read its body from intent/.canon/issues/<id>.json; run intent issues edit <id> --from <file> with that body plus a section '## As built (cc, 30 Oct 2026; merged by vc at <merge sha>)' saying what was built, what ran (red then green, both bashes) and any deviation, as 0059 and 0066 did; then run intent issues close <id>. Commit every wrote: path by pathspec; one commit for all five is fine. Run from the main checkout only. Say in its note what each still owes rather than holding it open: 0075, hv's own molt maintain on rhadamanth; 0074, its four liberators are on no sleeve until the Macs run 1.2.0; 0073, Molt-matts turns on source = switch on rhadamanth at the rollout (vc todo 34). If one has an ask that isn't built, tell vc and leave it open with its note so far, as I'm doing for 0072 (ask 2, gyges). 0076 is shared: at the replay I add Fix 2's note and leave it open. Add your Fix 1 note after my commit lands, building on the body as it then stands.",
+      "fyi": false,
+      "recorded_at": "2026-10-30T10:16:09.591Z"
     }
   ],
   "handled": [
