@@ -1,0 +1,15 @@
+{
+  "id": "01M664Z02QMZTYNH2JZWSC3875",
+  "ts": "2026-10-30T10:16:22.871Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs over ssh (kovacs-sysadm not reachable), intent going to 3.2.7 with the rest; it is the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred."
+  }
+}

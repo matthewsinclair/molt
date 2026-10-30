@@ -1,0 +1,16 @@
+{
+  "id": "01M664Z06AC0PHCJRQFVW09RHW",
+  "ts": "2026-10-30T10:16:22.986Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 36,
+    "text": "After the cut: kovacs's intent goes to 3.2.7 in vc's molt maintain run there (decision 39); Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew."
+  }
+}

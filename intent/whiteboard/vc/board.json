@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "4b74c7fe-9bb2-4455-b698-d49777270c17",
-    "heartbeat_at": "2026-10-30T09:50:36.552Z",
+    "heartbeat_at": "2026-10-30T09:58:16.418Z",
     "status": "active",
     "focus": "30 Oct, hv AFK, molt-vc has the pen (decisions 36-38): Molt 1.2.0, one cut today; the RC queue is todo 37; hv's own proofs on return: molt maintain on rhadamanth (0075), a GNOME re-login on kovacs (0076).",
     "claims": [],
@@ -975,10 +975,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 36,
-      "text": "After the cut: kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew.",
+      "text": "After the cut: kovacs's intent goes to 3.2.7 in vc's molt maintain run there (decision 39); Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew.",
       "state": "live",
       "recorded_at": "2026-10-29T20:12:39.337Z",
-      "edited_at": "2026-10-30T09:16:40.507Z"
+      "edited_at": "2026-10-30T10:16:22.986Z"
     },
     {
       "node": "vc",
@@ -1012,6 +1012,15 @@
       "text": "hv 30 Oct, going AFK: molt-vc has the pen to close out the issues and get 1.2.0 done; no new work for its own sake, no bald yaks. So the critic's shared liberator helper and the extra 0075 stdin test are dropped; only defects are fixed.",
       "state": "live",
       "recorded_at": "2026-10-30T09:22:05.947Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 39,
+      "text": "hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs over ssh (kovacs-sysadm not reachable), intent going to 3.2.7 with the rest; it is the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred.",
+      "state": "live",
+      "recorded_at": "2026-10-30T10:16:22.871Z",
+      "edited_at": "2026-10-30T10:17:03.536Z"
     }
   ],
   "sent": [

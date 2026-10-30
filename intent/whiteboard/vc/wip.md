@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 4b74c7fe-9bb2-4455-b698-d49777270c17
-heartbeat_at: 2026-10-30 09:50Z
+heartbeat_at: 2026-10-30 09:58Z
 status: active
 focus: "30 Oct, hv AFK, molt-vc has the pen (decisions 36-38): Molt 1.2.0, one cut today; the RC queue is todo 37; hv's own proofs on return: molt maintain on rhadamanth (0075), a GNOME re-login on kovacs (0076)."
 claims: []
@@ -21,7 +21,7 @@ claims: []
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout. (edited)
-- After the cut: kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
+- After the cut: kovacs's intent goes to 3.2.7 in vc's molt maintain run there (decision 39); Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
 - 1.2.0 RC queue, all reviewed READY: cc/0075-more-loops 2e2e9f9, cc/0068-use-brew-a4 4292121, cc/0067-doctor-other-tree 74a2258, cc/0074-follow-ups 272b329, cc/0073-gtools-switch 5df5e8c, dc/0070-resleeve-args 6d72af3, dc/0069-doctor-github d052e16, dc/0065-test-home b6422de; to come from dc: the env check (0072 with 0076) and 0077. Dry merge: one conflict, 0067 with 0069 in lib/molt.sh, keep both. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then the rollout to rhadamanth and kovacs (ssh). (edited)
 
 ## Holds
@@ -39,6 +39,7 @@ _(none)_
 - hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker.
 - hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit.
 - hv 30 Oct, going AFK: molt-vc has the pen to close out the issues and get 1.2.0 done; no new work for its own sake, no bald yaks. So the critic's shared liberator helper and the extra 0075 stdin test are dropped; only defects are fixed.
+- hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs over ssh (kovacs-sysadm not reachable), intent going to 3.2.7 with the rest; it is the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred. (edited)
 
 ---
 
