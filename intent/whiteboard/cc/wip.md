@@ -3,8 +3,8 @@ node: cc
 name: Control Claude
 role: control
 session_id: 2472cc07-be26-4598-9b44-35f0f4446163
-heartbeat_at: 2026-10-30 10:59Z
-status: active
+heartbeat_at: 2026-10-30 11:34Z
+status: paused
 focus: "30 Oct: Molt 1.2.0 done for cc (vc accepted); 0067, 0068, 0073, 0074, 0075 closed with rollout proofs; only 0076's GNOME re-login (hv) stays open; holding for vc"
 claims: []
 ---
