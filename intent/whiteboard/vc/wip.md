@@ -20,7 +20,7 @@ _(none)_
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- After hv's GNOME logout and login on kovacs, read doctor's env check there (0076's last proof, then close 0076); rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there. 0078 (low) waits for Molt's next release.
+- rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there (hv's). 0078 (low, dc) waits for Molt's next release. (edited)
 
 ## Holds
 

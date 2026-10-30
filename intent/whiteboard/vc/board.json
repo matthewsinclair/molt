@@ -1034,9 +1034,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 38,
-      "text": "After hv's GNOME logout and login on kovacs, read doctor's env check there (0076's last proof, then close 0076); rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there. 0078 (low) waits for Molt's next release.",
+      "text": "rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there (hv's). 0078 (low, dc) waits for Molt's next release.",
       "state": "live",
-      "recorded_at": "2026-10-30T10:49:23.201Z"
+      "recorded_at": "2026-10-30T10:49:23.201Z",
+      "edited_at": "2026-10-30T10:59:15.322Z"
     }
   ],
   "sent": [
