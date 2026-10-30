@@ -6,21 +6,21 @@ session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
 heartbeat_at: 2026-10-30 08:51Z
 status: active
 focus: "30 Oct: Molt 1.2.0 (vc decision 36): docs for 0074 and 0075 on main first, then 0070, 0069, 0065 and 0072 ask 1, each on its own branch for vc"
-claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076]
+claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0070 on branch dc/0070-resleeve-args: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do
+- 0069 on dc/0069-doctor-github: green on both bashes, critic-shell reviewing, then READY; 0065 next, then 0072 with 0076, then 0077
 
 ## TODO
 
-- 0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated
 - 0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes
 - 0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS, systemctl --user show-environment on Linux naming each published pair whose value differs from molt.conf; Linux remedy is log out and back in after molt upgrade, never systemctl set-environment; correct _molt_env_conf_text comment (GNOME session upload wins over environment.d); 0072 ask 2 stays for gyges (edited)
 - CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; when vc merges cc/0075-more-loops the 0075 Fixed line names doctor enabled-liberator check and molt_all_repos; when 0077 lands README brew row to linux, macos and its CHANGELOG line; then the release check (edited)
+- 0077 on branch: brew liberator wherever brew is on PATH, cask upgrade macOS only; then README brew row to linux, macos and its CHANGELOG line on main
 
 ## Holds
 

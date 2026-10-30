@@ -1,0 +1,15 @@
+{
+  "id": "01M661M51JZ6QGHEDN9KKNKX7X",
+  "ts": "2026-10-30T09:18:01.778Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0069 on dc/0069-doctor-github: green on both bashes, critic-shell reviewing, then READY; 0065 next, then 0072 with 0076, then 0077"
+  }
+}

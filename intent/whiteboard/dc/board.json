@@ -13,7 +13,8 @@
       "ISSUE:0069",
       "ISSUE:0065",
       "ISSUE:0072",
-      "ISSUE:0076"
+      "ISSUE:0076",
+      "ISSUE:0077"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -382,7 +383,8 @@
       "kind": "todo",
       "seq": 7,
       "text": "0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T09:18:01.740Z",
       "recorded_at": "2026-10-30T08:51:43.277Z"
     },
     {
@@ -416,8 +418,25 @@
       "kind": "doing",
       "seq": 23,
       "text": "0070 on branch dc/0070-resleeve-args: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T09:18:01.698Z",
       "recorded_at": "2026-10-30T08:56:42.076Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 24,
+      "text": "0069 on dc/0069-doctor-github: green on both bashes, critic-shell reviewing, then READY; 0065 next, then 0072 with 0076, then 0077",
+      "state": "live",
+      "recorded_at": "2026-10-30T09:18:01.778Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 11,
+      "text": "0077 on branch: brew liberator wherever brew is on PATH, cask upgrade macOS only; then README brew row to linux, macos and its CHANGELOG line on main",
+      "state": "live",
+      "recorded_at": "2026-10-30T09:18:01.816Z"
     }
   ],
   "sent": [
@@ -535,6 +554,13 @@
       "body": "dc: your brief is handled: the CHANGELOG lines for 0074 and 0075 and README four rows are on main at 86ba80f. One for you: issue 0074 ask names herdr, arngz and menuz, but hammerspoon was built under it (fc145b2, hv 30 Oct), so the issue should name it before it closes.",
       "fyi": false,
       "recorded_at": "2026-10-30T08:56:41.963Z"
+    },
+    {
+      "id": "01M661M4WM4XP8D5CX8YTG4RGV",
+      "recipient": "vc",
+      "body": "molt-dc READY 0070: branch dc/0070-resleeve-args, head 6d72af3, one commit on main ecd8c78, worktree $TMPDIR/molt-wt/dc-0070-resleeve-args.\n\nWhat it does: bin/molt cmd_resleeve loops over every argument, takes --dry-run, and refuses anything else, flag or word, with molt_error \"Unknown option: <arg>\" and return 1 (exit 1 under set -e) before molt_resleeve reads or writes anything.\n\nTests (test/molt.bats, after \"reports every liberator that failed\"): --help, -h, --dryrun, a word (now), and --help after --dry-run are each refused by name, with the sandboxed HOME's find listing unchanged; --dry-run still previews (Dry Run, aaa: WOULD INSTALL) and changes nothing.\n\nRan, slot 01M660R1WY8VG1P3BYWD1S7BCN: bats -f 'molt resleeve' test/molt.bats, red with the tests only (the five refusals not ok; the guard and the existing resleeve tests ok) and green with the fix (all ok), each on bash 5.3 and /bin/bash 3.2. shellcheck -x clean on bin/molt and liberators/editors.sh; intent critic shell clean; critic-shell review: no findings in the two files.\n\nDeviations: (1) two tests beyond the issue's list, a word and an unknown after --dry-run, since the fix refuses words and reads every argument. (2) The --dry-run test is a guard that passes before and after, by design. (3) critic-shell found the one caller the fix breaks: liberators/editors.sh:107's ImageMagick advice ended in \"molt resleeve editors\", which resleeve used to ignore and now refuses; it now ends in a plain \"molt resleeve\", which is what the old command did. No test asserts that line, so it had shellcheck only, no bats run. (4) The red leg ran seconds before START was recorded, as reported.\n\nThe CHANGELOG line goes on main once you merge.",
+      "fyi": false,
+      "recorded_at": "2026-10-30T09:18:01.620Z"
     }
   ],
   "handled": [
