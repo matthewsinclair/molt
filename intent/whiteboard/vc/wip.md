@@ -22,7 +22,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout. (edited)
 - After the cut: kovacs's rollout through kovacs-sysadm (bridge:session_01AJd3R7TSn2yVQRgLcQq78t): brew upgrade molt, molt upgrade with brew enabled, molt maintain as 0077's and 0075's proof, doctor's env lines; its intent is already 3.2.7. Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
-- 1.2.0 RC queue, all reviewed READY: cc/0075-more-loops 2e2e9f9, cc/0068-use-brew-a4 4292121, cc/0067-doctor-other-tree 74a2258, cc/0074-follow-ups 272b329, cc/0073-gtools-switch 5df5e8c, dc/0070-resleeve-args 6d72af3, dc/0069-doctor-github d052e16, dc/0065-test-home b6422de; to come from dc: the env check (0072 with 0076) and 0077. Dry merge: one conflict, 0067 with 0069 in lib/molt.sh, keep both. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then the rollout to rhadamanth and kovacs (ssh). (edited)
+- 1.2.0: RC green on 505ff4f (599 of 599 under bash 5.3 and 3.2, tripwire HOME untouched); replayed on main at 9f7e4eb (code equal to the RC) and pushed; CI on 9f7e4eb running (Ubuntu, ShellCheck; macOS by dispatch 41040872975). Next: dc's CHANGELOG and issue closes, cc's closes, then cut.sh (release commit, tag v1.2.0), push main and tag, tools/formula publish, then the rollouts. (edited)
 
 ## Holds
 

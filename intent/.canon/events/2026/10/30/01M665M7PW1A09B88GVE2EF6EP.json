@@ -1,0 +1,16 @@
+{
+  "id": "01M665M7PW1A09B88GVE2EF6EP",
+  "ts": "2026-10-30T10:27:58.812Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 37,
+    "text": "1.2.0: RC green on 505ff4f (599 of 599 under bash 5.3 and 3.2, tripwire HOME untouched); replayed on main at 9f7e4eb (code equal to the RC) and pushed; CI on 9f7e4eb running (Ubuntu, ShellCheck; macOS by dispatch 41040872975). Next: dc's CHANGELOG and issue closes, cc's closes, then cut.sh (release commit, tag v1.2.0), push main and tag, tools/formula publish, then the rollouts."
+  }
+}
