@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 10:29Z
+heartbeat_at: 2026-10-30 10:47Z
 status: active
-focus: "30 Oct: Molt 1.2.0's dc work is on main (CHANGELOG 008ad3d, issues 2845cbe: 0065, 0069, 0070, 0077 closed); worktrees removed; holds: 0077's kovacs proof note, 0072 ask 2 on gyges"
+focus: "30 Oct: Molt 1.2.0's dc work is done and proved (0077 on kovacs); one hold, 0072 ask 2 on gyges"
 claims: [ISSUE:0072]
 ---
 
@@ -21,7 +21,6 @@ _(none)_
 
 ## Holds
 
-- 0077's proof note: holding until molt-vc sends the output of its molt maintain on kovacs after the cut (vc decision 39), then add it to 0077's note
 - 0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges can be reached, by gyges-sysadm or ssh (vc decision 36: gyges later)
 
 ## Watch-outs
