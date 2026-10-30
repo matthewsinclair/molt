@@ -29,10 +29,7 @@ make_formula_repos() {
 }
 
 setup() {
-    export BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
-    mkdir -p "$BATS_TEST_TMPDIR"
-    export ORIGINAL_PWD="$(pwd)"
-    cd "$BATS_TEST_TMPDIR"
+    molt_test_setup
     # git reads none of the user's or the machine's config: a signing key, a
     # hook path or a url rewrite there would change what publish does here.
     export GIT_CONFIG_GLOBAL="$BATS_TEST_TMPDIR/gitconfig" GIT_CONFIG_NOSYSTEM=1
