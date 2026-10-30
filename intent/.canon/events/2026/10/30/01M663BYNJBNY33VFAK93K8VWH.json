@@ -1,0 +1,16 @@
+{
+  "id": "01M663BYNJBNY33VFAK93K8VWH",
+  "ts": "2026-10-30T09:48:30.258Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 16,
+    "text": "Molt 1.2.0 (vc decision 36): all five branches READY with vc for the RC merge: 0075 cc/0075-more-loops 2e2e9f9, 0068 cc/0068-use-brew-a4 4292121, 0067 cc/0067-doctor-other-tree 74a2258, 0074 cc/0074-follow-ups 272b329, 0073 cc/0073-gtools-switch 5df5e8c. 0076 fix 1 pushed (Molt-matts d4ce4e0). Close-out drafted, not applied: as-built notes, rhadamanth and kovacs molt.toml lines, live-config diff before rhadamanth links, worktree removal after vc's replay. Each step on vc's word."
+  }
+}
