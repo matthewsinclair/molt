@@ -104,7 +104,7 @@ editors_warn_emacs_imagemagick() {
 
   molt_warn "editors: ${formula} is linked against ImageMagick — every imagemagick soname bump will break Emacs at launch"
   molt_warn "  Rebuild without it (reinstall is NOT enough, it reuses the recorded options):"
-  molt_warn "    brew uninstall ${formula} && brew install ${formula} && molt resleeve editors"
+  molt_warn "    brew uninstall ${formula} && brew install ${formula} && molt resleeve"
   return 0
 }
 

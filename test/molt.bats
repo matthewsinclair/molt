@@ -513,6 +513,64 @@ _font_sleeve() {
     refute_output_contains "Sleeve ready"
 }
 
+# resleeve looked only at its first argument, and only for --dry-run, so any
+# other argument ran a real resleeve: molt-vc's `molt resleeve --help` did on
+# rhadamanth (issue 0070). An argument it does not take, flag or word, is now
+# refused by name before anything is read or written. aaa's install writes into
+# the sandboxed HOME, so a run that got as far as installing changes its listing.
+_resleeve_run() {
+    local libs="$BATS_TEST_TMPDIR/liberators"
+    RESLEEVE_HOME="$BATS_TEST_TMPDIR/home"
+    mkdir -p "$libs" "$RESLEEVE_HOME" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf '%s\n' 'aaa_check() { return 1; }' 'aaa_install() { touch "$HOME/aaa-installed"; }' > "$libs/aaa.sh"
+    RESLEEVE_BEFORE="$(cd "$RESLEEVE_HOME" && find . | LC_ALL=C sort)"
+    run env -u MOLT_PRJ_DIR HOME="$RESLEEVE_HOME" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$libs" molt resleeve "$@"
+}
+
+_assert_home_unchanged() {
+    [ "$(cd "$RESLEEVE_HOME" && find . | LC_ALL=C sort)" = "$RESLEEVE_BEFORE" ]
+}
+
+_assert_refused() {
+    assert_failure
+    assert_output_contains "Unknown option: $1"
+    _assert_home_unchanged
+}
+
+@test "molt resleeve refuses --help by name, and changes nothing" {
+    _resleeve_run --help
+    _assert_refused --help
+}
+
+@test "molt resleeve refuses -h by name, and changes nothing" {
+    _resleeve_run -h
+    _assert_refused -h
+}
+
+@test "molt resleeve refuses --dryrun, a typo for --dry-run, by name, and changes nothing" {
+    _resleeve_run --dryrun
+    _assert_refused --dryrun
+}
+
+@test "molt resleeve refuses a word it does not take, by name, and changes nothing" {
+    _resleeve_run now
+    _assert_refused now
+}
+
+@test "molt resleeve refuses an unknown argument after --dry-run, by name, and changes nothing" {
+    _resleeve_run --dry-run --help
+    _assert_refused --help
+}
+
+@test "molt resleeve --dry-run still previews, and changes nothing" {
+    _resleeve_run --dry-run
+    assert_success
+    assert_output_contains "Dry Run"
+    assert_output_contains "aaa: WOULD INSTALL"
+    _assert_home_unchanged
+}
+
 # kovacs, 16 Oct: doom sync failed inside the editors upgrade hook, and molt
 # upgrade warned, resleeved and said "Sleeve ready" (issue 0013).
 @test "molt upgrade names a failed upgrade hook, exits non-zero and does not say Sleeve ready" {
