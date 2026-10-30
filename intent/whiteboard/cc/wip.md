@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 2472cc07-be26-4598-9b44-35f0f4446163
-heartbeat_at: 2026-10-30 09:48Z
+heartbeat_at: 2026-10-30 10:47Z
 status: active
-focus: "30 Oct, Molt 1.2.0 on vc's orders: all five branches READY with vc (0075 2e2e9f9, 0068 4292121, 0067 74a2258, 0074 272b329, 0073 5df5e8c); 0076 fix 1 pushed in Molt-matts d4ce4e0; close-out drafted in scratchpad, waiting for vc's word"
+focus: "30 Oct: Molt 1.2.0 done for cc (vc accepted); 0067, 0068, 0073, 0074, 0075 closed with rollout proofs; only 0076's GNOME re-login (hv) stays open; holding for vc"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.2.0 (vc decision 36): 0067, 0068, 0073, 0074 and 0075 closed at aecbf8a after vc's replay (9f7e4eb); worktrees removed. Still mine, on vc's word: 0076 Fix 1 note after dc's Fix 2 lands; once 1.2.0 is published from brew, the rhadamanth and kovacs molt.toml lines (drafts in scratchpad closeout/) and the live-config diff before rhadamanth links. (edited)
+_(none)_
 
 ## TODO
 
