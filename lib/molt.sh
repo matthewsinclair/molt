@@ -2375,7 +2375,11 @@ molt_resleeve() {
   local failed=0 ran=0 failed_names=""
   echo ""
 
-  while IFS= read -r lib; do
+  # The list is read on fd 3, and each liberator keeps the caller's stdin.
+  # Fed on stdin, an install that read stdin, as an installer or a sudo prompt
+  # can, read the rest of the list, and the run ended there as though it were
+  # done (issue 0075). The upgrade and maintain loops read theirs the same way.
+  while IFS= read -r lib <&3; do
     [[ -z "$lib" ]] && continue
     if ! liberator_load "$lib" 2>/dev/null; then
       molt_warn "Skipping unknown liberator: $lib"
@@ -2398,7 +2402,7 @@ molt_resleeve() {
     else
       echo "  $lib: ✓ ok"
     fi
-  done <<< "$liberators"
+  done 3<<< "$liberators"
 
   echo ""
   if $dry_run; then
@@ -2857,7 +2861,8 @@ cmd_upgrade() {
   fi
 
   local upgrade_count=0 failed_hooks=""
-  while IFS= read -r lib; do
+  # On fd 3, so a hook keeps the caller's stdin (issue 0075; see molt_resleeve).
+  while IFS= read -r lib <&3; do
     [[ -z "$lib" ]] && continue
     if ! liberator_load "$lib"; then
       continue
@@ -2871,7 +2876,7 @@ cmd_upgrade() {
       fi
       upgrade_count=$((upgrade_count + 1))
     fi
-  done <<< "$liberators"
+  done 3<<< "$liberators"
 
   if [[ "$upgrade_count" -eq 0 ]]; then
     molt_info "No liberators have upgrade hooks."
@@ -2946,7 +2951,10 @@ cmd_maintain() {
   # non-zero: it used to warn, say maintenance was complete and exit 0, which
   # is how kovacs's failed doom sync passed (issue 0013).
   local maintain_count=0 failed_hooks=""
-  while IFS= read -r lib; do
+  # On fd 3, so a hook keeps the caller's stdin: brew's hook read the rest of
+  # the list once, and editors' doom upgrade never ran (issue 0075; see
+  # molt_resleeve).
+  while IFS= read -r lib <&3; do
     [[ -z "$lib" ]] && continue
     if ! liberator_load "$lib"; then
       continue
@@ -2960,7 +2968,7 @@ cmd_maintain() {
       fi
       maintain_count=$((maintain_count + 1))
     fi
-  done <<< "$liberators"
+  done 3<<< "$liberators"
 
   if [[ "$maintain_count" -eq 0 ]]; then
     molt_info "No liberators have maintain hooks."

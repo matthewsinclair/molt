@@ -810,6 +810,47 @@ _no_user_repo() {
     refute_output_contains "Maintenance incomplete"
 }
 
+# A hook that reads stdin, as brew upgrade --cask's installers or a sudo prompt
+# can, read the rest of the liberator list when the loop fed it on stdin, and
+# the run ended after that hook as though the list were done: on rhadamanth,
+# maintain ran brew's hook and never editors' doom upgrade (issue 0075). aaa
+# reads all of its stdin; bbb, after it, must still run.
+_stdin_hook_libs() {
+    STDIN_LIBS="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$STDIN_LIBS" "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/config"
+    printf '%s\n' "aaa_$1() { cat >/dev/null; echo \"aaa ran\"; }" > "$STDIN_LIBS/aaa.sh"
+    printf '%s\n' "bbb_$1() { echo \"bbb ran\"; }" > "$STDIN_LIBS/bbb.sh"
+    if [[ "$1" == install ]]; then
+        printf '%s\n' 'aaa_check() { return 1; }' >> "$STDIN_LIBS/aaa.sh"
+        printf '%s\n' 'bbb_check() { return 1; }' >> "$STDIN_LIBS/bbb.sh"
+    fi
+}
+
+@test "molt maintain runs every hook after one that reads stdin" {
+    _stdin_hook_libs maintain
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$STDIN_LIBS" molt maintain </dev/null
+    assert_success
+    assert_output_contains "aaa ran"
+    assert_output_contains "bbb ran"
+}
+
+@test "molt upgrade runs every hook after one that reads stdin" {
+    _stdin_hook_libs upgrade
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$STDIN_LIBS" molt upgrade --no-pull --no-resleeve </dev/null
+    assert_output_contains "aaa ran"
+    assert_output_contains "bbb ran"
+}
+
+@test "molt resleeve installs every liberator after one whose install reads stdin" {
+    _stdin_hook_libs install
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$STDIN_LIBS" molt resleeve </dev/null
+    assert_output_contains "aaa ran"
+    assert_output_contains "bbb ran"
+}
+
 # --- Digest covers every input the render depends on ---
 
 # molt_config_digest RESOLVES vars.sh THROUGH molt_find_user_repo and returns 1
