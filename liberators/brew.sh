@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 # brew.sh — Liberator: Homebrew lifecycle
-# Frees you from stale packages.
+# Frees you from stale packages, wherever brew is on PATH: Homebrew on macOS,
+# Linuxbrew on Linux. It was macOS only, so nothing upgraded kovacs's
+# Linuxbrew (issue 0077).
 
 brew_check() {
-  if [[ "$(molt_platform)" != "macos" ]]; then
-    molt_info "brew: not applicable (macOS only)"
-    return 1
-  fi
-
   if ! command -v brew &>/dev/null; then
     molt_info "brew: Homebrew not installed"
     return 1
@@ -17,11 +14,6 @@ brew_check() {
 }
 
 brew_install() {
-  if [[ "$(molt_platform)" != "macos" ]]; then
-    molt_error "brew liberator is macOS only"
-    return 1
-  fi
-
   if ! command -v brew &>/dev/null; then
     molt_error "Homebrew not found. Install it (https://brew.sh) then re-run."
     return 1
@@ -32,11 +24,6 @@ brew_install() {
 
 brew_verify() {
   local errors=0
-
-  if [[ "$(molt_platform)" != "macos" ]]; then
-    molt_error "VERIFY FAIL: brew is macOS only"
-    return 1
-  fi
 
   if ! command -v brew &>/dev/null; then
     molt_error "VERIFY FAIL: brew not installed"
@@ -64,8 +51,11 @@ brew_maintain() {
   molt_info "Upgrading Homebrew packages..."
   brew upgrade || failed+="${failed:+, }brew upgrade"
 
-  molt_info "Upgrading Homebrew casks..."
-  brew upgrade --cask || failed+="${failed:+, }brew upgrade --cask"
+  # Casks are macOS's alone (issue 0077).
+  if [[ "$(molt_platform)" == "macos" ]]; then
+    molt_info "Upgrading Homebrew casks..."
+    brew upgrade --cask || failed+="${failed:+, }brew upgrade --cask"
+  fi
 
   molt_info "Cleaning up old versions..."
   brew cleanup -s || failed+="${failed:+, }brew cleanup -s"

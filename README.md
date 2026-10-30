@@ -218,7 +218,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | dev-tools      | CLI tools (jq, tree, rg, fzf, curl) + mise      | linux, macos |
 | ssh            | SSH key detection, config rendering + fragments | linux, macos |
 | utilz          | Utilz, from a checkout or Homebrew, per sleeve  | linux, macos |
-| brew           | Homebrew maintenance and upgrade                | macos        |
+| brew           | Homebrew maintenance and upgrade                | linux, macos |
 | intent         | Intent from Homebrew, what PATH and gate run    | linux, macos |
 | gtools         | Gtools from Homebrew, from its private tap      | linux, macos |
 | pplr           | Pplr framework config and linking               | linux, macos |

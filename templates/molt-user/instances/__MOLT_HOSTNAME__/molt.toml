@@ -78,7 +78,7 @@ os = ["linux", "macos"]
 [[liberator]]
 name = "brew"
 enabled = false
-os = ["macos"]
+os = ["linux", "macos"]
 
 # Needs no config/ directory, so it is enabled; it stays here for its place
 # in the run order.
