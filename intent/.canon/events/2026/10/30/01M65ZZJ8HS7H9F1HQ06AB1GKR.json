@@ -1,0 +1,16 @@
+{
+  "id": "01M65ZZJ8HS7H9F1HQ06AB1GKR",
+  "ts": "2026-10-30T08:49:18.609Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "Molt 1.2.0: review 0074 and 0075, build the quick outstanding fixes with cc and dc, then one cut today (decision 36)."
+  }
+}

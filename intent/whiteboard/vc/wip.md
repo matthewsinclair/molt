@@ -2,9 +2,9 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 44f20fc0-0ed6-4523-aa2f-1c34cc319b42
-heartbeat_at: 2026-10-29 20:12Z
-status: paused
+session_id: 4b74c7fe-9bb2-4455-b698-d49777270c17
+heartbeat_at: 2026-10-30 08:32Z
+status: active
 focus: "HARD CLOSE (29 Oct night): devbin 0.1.18, Utilz 2.14.7, Gtools 0.8.1 and 0.8.2, Intent 3.2.7 cut; every project leaned and closed out; pick up on hv's word."
 claims: []
 ---
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Desk closed for the night on hv's hard close (29 Oct); no slots open. (edited)
+- Molt 1.2.0: review 0074 and 0075, build the quick outstanding fixes with cc and dc, then one cut today (decision 36). (edited)
 
 ## TODO
 
@@ -35,6 +35,7 @@ _(none)_
 
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
+- hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker.
 
 ---
 

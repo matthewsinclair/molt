@@ -1,0 +1,15 @@
+{
+  "id": "01M65ZZJ53G23J8NT66H69JH75",
+  "ts": "2026-10-30T08:49:18.499Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker."
+  }
+}

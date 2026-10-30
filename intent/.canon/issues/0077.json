@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 77,
+  "slug": "brew-liberator-linuxbrew-too-so-molt-maintain-up",
+  "title": "brew liberator: Linuxbrew too, so molt maintain upgrades kovacs's formulae",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-30",
+  "reporter": "Matthew Sinclair",
+  "body": "Found on kovacs, 30 Oct 2026 (kovacs-sysadm's run, relayed by rhadamanth-sysadm; cc todo 18): `molt maintain` there runs editors' hook alone. The brew liberator is macOS only, and kovacs's molt.toml has no brew entry, so nothing upgrades Linuxbrew. kovacs-sysadm upgraded the outdated formulae by hand. This is separate from issue 0075, the stdin bug.\n\n## Fix (hv, 30 Oct: \"fix everything in this release\")\n\n- The brew liberator works wherever `brew` is on PATH, on Linux as on macOS. check, install and verify lose the macOS gate and keep their \"Homebrew not installed\" faults.\n- `brew_maintain` runs `brew upgrade --cask` on macOS only, since casks are macOS's alone. Every other step runs on both.\n- The npm step stays as it is. Check what it does on kovacs: a global prefix the user cannot write must only warn, as it does today.\n- README's built-in liberator table says `linux, macos` for brew.\n\n## Tests\n\n- On Linux, maintain runs update, upgrade and cleanup, and does not run the cask upgrade; on macOS it runs all of them.\n- check and verify pass on Linux with brew on PATH, and fail naming the cause without it.\n- A test must not compute its expected value with the code under test.\n\n## Then\n\nMolt-matts enables brew on kovacs once kovacs runs the Molt release that carries this (1.2.0), as issue 0074's Order section requires for its liberators.\n"
+}
