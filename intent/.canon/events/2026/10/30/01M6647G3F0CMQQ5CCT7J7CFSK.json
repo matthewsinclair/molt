@@ -1,0 +1,16 @@
+{
+  "id": "01M6647G3F0CMQQ5CCT7J7CFSK",
+  "ts": "2026-10-30T10:03:32.848Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 10,
+    "text": "CHANGELOG line for each issue as vc merges it (0070, 0069, 0065, the env check, 0077, and cc 0068 and 0067), ahead of vc's cut; when cc/0075-more-loops merges, the 0075 Fixed line names doctor's enabled-liberator check and molt_all_repos; then the release check"
+  }
+}

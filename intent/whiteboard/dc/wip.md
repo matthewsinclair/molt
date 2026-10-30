@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 09:41Z
+heartbeat_at: 2026-10-30 10:03Z
 status: active
-focus: "30 Oct: 0070, 0069, 0065 accepted for the RC merge; env check (0072 with 0076) at 9416519, READY after critic-shell; 0077 in progress (tests written); then CHANGELOG lines as vc merges"
+focus: "30 Oct: 0070, 0069, 0065 accepted for the RC merge; env check (db7bb7d) and 0077 (c05a341) follow-ups committed, READY after critic-shell's re-check; then CHANGELOG lines as vc merges"
 claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 ---
 
@@ -13,11 +13,11 @@ claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 
 ## DOING
 
-- 0077 on dc/0077-brew-linuxbrew: tests written, slot asked; env check (9416519) and 0065 (b6422de) and 0069 (d052e16) handed over, env check READY after critic-shell
+- env check at db7bb7d (critic-shell follow-up: systemctl's $'...' values read back, comments) and 0077 at c05a341 (README, MODULES.md and template brew rows) with vc, READY after critic-shell's re-check (edited)
 
 ## TODO
 
-- CHANGELOG line for each issue as vc merges it (0070, 0069, 0065, the env check, 0077, and cc 0068 and 0067), ahead of vc cut; when cc/0075-more-loops merges the 0075 Fixed line names doctor enabled-liberator check and molt_all_repos; when 0077 lands README and MODULES.md brew rows to linux, macos; then the release check (edited)
+- CHANGELOG line for each issue as vc merges it (0070, 0069, 0065, the env check, 0077, and cc 0068 and 0067), ahead of vc's cut; when cc/0075-more-loops merges, the 0075 Fixed line names doctor's enabled-liberator check and molt_all_repos; then the release check (edited)
 
 ## Holds
 
