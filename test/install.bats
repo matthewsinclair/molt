@@ -415,6 +415,63 @@ setup() {
     [[ "$(readlink "$HOME/.local/bin/molt")" == /etc/hosts ]]
 }
 
+# devbin's T5, amendment A4: use brew removes nothing unless a Homebrew molt
+# would answer once the link is gone, and names the link, the tree it serves,
+# why and the remedy (issue 0068). Each test leaves the dev link in place.
+
+@test "use brew with the formula not installed names the link, its tree and brew install, and keeps the link" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    install_fake_brew
+    "$DEV/bin/molt" use dev
+    run "$DEV/bin/molt" use brew
+    assert_failure
+    # Named where it resolves: macOS's TMPDIR is under /var, a link to /private/var.
+    assert_output_contains "~/.local/bin/molt is left in place (it serves the dev tree at $(cd "$DEV" && /bin/pwd -P))"
+    assert_output_contains "the formula is not installed; install it with brew install matthewsinclair/molt/molt, or stay on dev or opt"
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
+}
+
+@test "use brew with the keg not linked names brew link, and keeps the link" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    "$DEV/bin/molt" use dev
+    rm "$BATS_TEST_TMPDIR/brew/bin/molt"
+    # Homebrew keeps the opt link for an unlinked keg; nothing else serves molt.
+    PATH="$BATS_TEST_TMPDIR/bin:$HOME/.local/bin:$BATS_TEST_TMPDIR/brew/bin:/usr/bin:/bin" run "$DEV/bin/molt" use brew
+    assert_failure
+    assert_output_contains "its keg is not linked, so no molt would be left on PATH; link it with brew link molt"
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
+}
+
+@test "use brew with another molt ahead of Homebrew's names it, and keeps the link" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    "$DEV/bin/molt" use dev
+    mkdir -p "$BATS_TEST_TMPDIR/other/bin"
+    printf '#!/bin/sh\n' > "$BATS_TEST_TMPDIR/other/bin/molt"
+    chmod +x "$BATS_TEST_TMPDIR/other/bin/molt"
+    PATH="$BATS_TEST_TMPDIR/bin:$HOME/.local/bin:$BATS_TEST_TMPDIR/other/bin:$BATS_TEST_TMPDIR/brew/bin:$PATH" run "$DEV/bin/molt" use brew
+    assert_failure
+    assert_output_contains "$BATS_TEST_TMPDIR/other/bin/molt comes first on PATH, and it is not Homebrew's; move it aside"
+    [[ "$(readlink "$HOME/.local/bin/molt")" == "$DEV/bin/molt" ]]
+}
+
+# rhadamanth's ~/bin is a link to ~/.local/bin: the link seen through it is
+# still the link, not another copy ahead of Homebrew's.
+@test "use brew skips the link's directory under another name, and removes the link" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    "$DEV/bin/molt" use dev
+    ln -s .local/bin "$HOME/bin"
+    PATH="$BATS_TEST_TMPDIR/bin:$HOME/bin:$HOME/.local/bin:$BATS_TEST_TMPDIR/brew/bin:$PATH" run "$DEV/bin/molt" use brew
+    assert_success
+    assert_output_contains "(brew, "
+    [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
+}
+
 # ST0008 AT004
 @test "with no link, use and doctor fail when PATH's first molt is not brew's" {
     install_fake_brew
