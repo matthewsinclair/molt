@@ -1038,6 +1038,14 @@
       "state": "live",
       "recorded_at": "2026-10-30T10:49:23.201Z",
       "edited_at": "2026-10-30T10:59:15.322Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 40,
+      "text": "hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).",
+      "state": "live",
+      "recorded_at": "2026-10-30T11:32:41.748Z"
     }
   ],
   "sent": [
