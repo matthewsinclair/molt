@@ -89,6 +89,14 @@ MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/.local/bin}"
 # desktop session starts from (issue 0056).
 MOLT_ETC_ENVIRONMENT="${MOLT_ETC_ENVIRONMENT:-/etc/environment}"
 
+# --- GitHub auth check ---
+# The bounds on molt doctor's `ssh -T git@github.com`, in seconds: ssh's own, on
+# its connect and handshake, and the bound on the whole exchange, which a slow
+# route's authenticated handshake must fit inside. kovacs's takes about 6 s, and
+# a 5 s bound read it as not authenticated (issue 0069).
+MOLT_GITHUB_CONNECT_TIMEOUT="${MOLT_GITHUB_CONNECT_TIMEOUT:-10}"
+MOLT_GITHUB_TIMEOUT="${MOLT_GITHUB_TIMEOUT:-20}"
+
 # --- Framework ---
 MOLT_VERSION="$(cat "${MOLT_ROOT}/VERSION" 2>/dev/null || echo "0.1.0")"
 MOLT_NAME="MOLT"

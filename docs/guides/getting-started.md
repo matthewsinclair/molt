@@ -11,7 +11,7 @@ This guide walks you through setting up MOLT on a new machine.
 - git
 - `gettext` — provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
 - `bats` — the test suite; `molt doctor` checks for it, with `envsubst`
-- `timeout`, from coreutils — `molt doctor`'s GitHub check and the bootstrap run `timeout 5 ssh -T`. Linux has it; on macOS run `brew install coreutils`, or doctor reports GitHub as not authenticated
+- `timeout`, from coreutils — the bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it; `molt doctor`'s GitHub check uses it where it is installed, to bound the whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`
 - A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
 - A terminal you're comfortable in
 

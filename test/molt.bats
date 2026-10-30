@@ -198,6 +198,67 @@ _font_sleeve() {
     assert_doctor_closed
 }
 
+# doctor killed `ssh -T git@github.com` after 5 s and read that as not
+# authenticated, so from kovacs, whose handshake takes about 6 s, it failed a
+# sleeve whose auth worked (issue 0069). ssh now bounds its own connect and
+# handshake, a longer bound covers the whole exchange, and a bound running out
+# reads as github.com not reached. The stub ssh runs the answer $1 gives, after
+# writing the arguments it was given to $SSH_ARGS, one a line.
+_github_ssh() {
+    SSH_BIN="$BATS_TEST_TMPDIR/sshbin"
+    SSH_ARGS="$BATS_TEST_TMPDIR/ssh-args"
+    mkdir -p "$SSH_BIN" "$BATS_TEST_TMPDIR/home"
+    cat > "$SSH_BIN/ssh" <<EOF
+#!/bin/sh
+printf '%s\n' "\$@" > "$SSH_ARGS"
+$1
+EOF
+    chmod +x "$SSH_BIN/ssh"
+}
+
+_github_authenticated='echo "Hi tester! You have successfully authenticated, but GitHub does not provide shell access." >&2; exit 1'
+
+@test "molt doctor passes GitHub auth that answers late, within its bound (issue 0069)" {
+    _github_ssh "sleep 1; $_github_authenticated"
+    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_TIMEOUT=3 run_molt doctor
+    assert_output_contains "Checking GitHub auth... ✓ authenticated as tester"
+    assert_doctor_closed
+}
+
+@test "molt doctor asks ssh for GitHub auth with -n, BatchMode and its connect bound (issue 0069)" {
+    _github_ssh "$_github_authenticated"
+    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_CONNECT_TIMEOUT=7 run_molt doctor
+    assert_output_contains "Checking GitHub auth... ✓ authenticated as tester"
+    grep -qx -e '-n' "$SSH_ARGS" || fail "ssh was not given -n: $(cat "$SSH_ARGS")"
+    grep -qx -e 'BatchMode=yes' "$SSH_ARGS" || fail "ssh was not given BatchMode=yes: $(cat "$SSH_ARGS")"
+    grep -qx -e 'ConnectTimeout=7' "$SSH_ARGS" || fail "ssh was not given ConnectTimeout=7: $(cat "$SSH_ARGS")"
+}
+
+@test "molt doctor reports GitHub not reached, not unauthenticated, when ssh never answers (issue 0069)" {
+    command -v timeout >/dev/null || skip "no timeout command, so nothing bounds a stub that never answers"
+    _github_ssh 'exec sleep 60'
+    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_TIMEOUT=2 run_molt doctor
+    assert_output_contains "Checking GitHub auth... ⚠ could not reach github.com within 2 s"
+    refute_output_contains "not authenticated"
+    assert_doctor_closed
+}
+
+@test "molt doctor reports GitHub not reached when ssh's own connect bound runs out (issue 0069)" {
+    _github_ssh 'echo "ssh: connect to host github.com port 22: Operation timed out" >&2; exit 255'
+    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_CONNECT_TIMEOUT=3 run_molt doctor
+    assert_output_contains "Checking GitHub auth... ⚠ could not reach github.com within 3 s"
+    refute_output_contains "not authenticated"
+    assert_doctor_closed
+}
+
+@test "molt doctor still reports GitHub auth that ssh refuses as not authenticated (issue 0069)" {
+    _github_ssh 'echo "git@github.com: Permission denied (publickey)." >&2; exit 255'
+    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking GitHub auth... ⚠ not authenticated"
+    refute_output_contains "could not reach"
+    assert_doctor_closed
+}
+
 # --- Unknown command ---
 
 @test "unknown command returns error" {
