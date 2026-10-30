@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 09:26Z
+heartbeat_at: 2026-10-30 09:31Z
 status: active
-focus: "30 Oct: 0070 (6d72af3) accepted; 0069 (9425cd5) and 0065 (2736e96) READY, critic-shell on 0069 in flight; next the env check, 0072 with 0076 (worktree from 2eee04d, nothing written), then 0077; docs for 0074 and 0075 on main (86ba80f)"
+focus: "30 Oct: 0070 (6d72af3) accepted; 0069 (d052e16, after critic-shell) and 0065 (2736e96, critic-shell on it) READY; bootstrap.sh:80 probe with vc for a ruling; next the env check, 0072 with 0076 (worktree from 2eee04d, nothing written), then 0077"
 claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 ---
 
