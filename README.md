@@ -228,6 +228,10 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | npm            | ~/.npmrc, with npm's cache under XDG            | linux, macos |
 | agents         | A home for each sleeve agent, from its role     | linux, macos |
 | backup         | Checks the SuperDuper NAS backup; observes only | macos        |
+| herdr          | Herdr's key bindings and hrdrcfg config linking | macos        |
+| arngz          | arngz window desks, config directory linking    | macos        |
+| menuz          | menuz menu bar config, directory linking        | macos        |
+| hammerspoon    | Hammerspoon init.lua linking                    | macos        |
 
 ### molt.toml
 

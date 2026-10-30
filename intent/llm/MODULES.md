@@ -12,6 +12,9 @@
 | molt (CLI)            | `bin/molt`         | Main entry point, arg parsing, command dispatch                                                |
 | molt (constants)      | `lib/constants.sh` | All configurable paths and defaults (single source of truth)                                   |
 | molt (core)           | `lib/molt.sh`      | Logging, platform detection, symlink management, dependency checks, cross-instance aggregation |
+| molt (agent)          | `lib/agent.sh`     | Sleeve agents: the [[agent]] entries, each agent's home, `molt agent` (ST0006, ST0007)         |
+| molt (env)            | `lib/env.sh`       | Molt's one env writer: the variables a sleeve's shells and GUI apps get (ST0008 WP05)          |
+| molt (install)        | `lib/install.sh`   | The trees Molt runs from (dev, opt, brew) and the publish that makes one (ST0008)              |
 | liberator (framework) | `lib/liberator.sh` | Liberator loading, execution, verification, discovery                                          |
 | newuser               | `lib/newuser.sh`   | Scaffold a new molt-{user} config repo from the template skeleton                              |
 
@@ -30,6 +33,8 @@
 | terminal-app   | `liberators/terminal-app.sh`   | Terminal.app profile import and default setting (macos) |
 | keys           | `liberators/keys.sh`           | keyd build from source, config from instance (Linux)    |
 | desktop        | `liberators/desktop.sh`        | GNOME settings, GTK config (Linux)                      |
+| tiling         | `liberators/tiling.sh`         | Tactile GNOME extension grid tiling (Linux)             |
+| vscode         | `liberators/vscode.sh`         | VS Code settings linking, CLI setup, dock pin           |
 | dev-tools      | `liberators/dev-tools.sh`      | CLI tools (bat, rg, fd, etc.) + mise                    |
 | npm            | `liberators/npm.sh`            | ~/.npmrc, npm's cache under XDG (issue 0031)            |
 | ssh            | `liberators/ssh.sh`            | SSH key generation, config linking                      |
@@ -40,6 +45,14 @@
 | utilz          | `liberators/utilz.sh`          | Utilz framework, bats-core, ~/bin symlinks              |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, ~/bin symlink                     |
 | brew           | `liberators/brew.sh`           | Homebrew lifecycle, package maintenance (macos)         |
+| claude         | `liberators/claude.sh`         | Claude Code config, its state out of $HOME (ST0006)     |
+| env            | `liberators/env.sh`            | Sleeve variables for shells and GUI apps (ST0008 WP05)  |
+| agents         | `liberators/agents.sh`         | A home for each sleeve agent, from its role (ST0006)    |
+| backup         | `liberators/backup.sh`         | Checks the SuperDuper NAS backup; observes only (macos) |
+| herdr          | `liberators/herdr.sh`          | Herdr keys.json and hrdrcfg directory linking (macos)   |
+| arngz          | `liberators/arngz.sh`          | arngz desks directory linking (macos)                   |
+| menuz          | `liberators/menuz.sh`          | menuz menu and bin/ directory linking (macos)           |
+| hammerspoon    | `liberators/hammerspoon.sh`    | Hammerspoon init.lua linking, arngz's hs CLI (macos)    |
 
 ## Testing
 

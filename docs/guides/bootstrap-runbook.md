@@ -16,7 +16,7 @@ Stating the gap rather than implying completeness is deliberate: a runbook that 
 
 Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`, `desktop`, `dev-tools`, `ssh`, `intent`, `claude`.
 
-**NOT documented here** — these arrived after the Phase 1 resleeve and their steps have never been captured: `agents`, `backup`, `brew`, `env`, `gnome-terminal`, `iterm2`, `local-bin`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
+**NOT documented here** — these arrived after the Phase 1 resleeve and their steps have never been captured: `agents`, `arngz`, `backup`, `brew`, `env`, `gnome-terminal`, `gtools`, `hammerspoon`, `herdr`, `iterm2`, `local-bin`, `menuz`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
 
 This is a record of what was done BY HAND on kovacs. It is not the install procedure — that is `molt resleeve`. The liberators automate the configuration recorded here. The packages they mostly do not install: `system`, `zsh`, `git`, `alacritty` and `dev-tools` check for theirs and name the install when one is missing. Where this record and a liberator disagree, the liberator is authoritative and this document is stale.
 

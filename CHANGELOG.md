@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `herdr` liberator (macOS): links Herdr's key bindings, `~/.config/herdr-app/keys.json`, as a file, and `~/.config/hrdrcfg`, hrdrcfg's defaults and spaces, as the whole directory, since `hrdrcfg discover` rewrites space files there and adds new ones. The rest of `~/.config/herdr-app`, the app's own state and its `settings.json`, stays the sleeve's. Each link is made only when the user repo has its source under `config/`. Check and verify name every link that is not in place, and a `keys.json` that is not valid JSON or cannot be parsed because jq is missing, since Herdr refuses bindings it cannot read. Enabled on no sleeve until the Macs run this release, since molt 1.1.0 has no such liberator (issue 0074)
+- `arngz` liberator (macOS): links `~/.config/arngz`, where Utilz's window arranger keeps its desks, as the whole directory, since `arngz discover --save` rewrites a desk there or adds one, and a link per desk would leave a new desk out of the user repo. Made only when the user repo has `config/arngz/`; enabled on no sleeve until the Macs run this release (issue 0074)
+- `menuz` liberator (macOS): links `~/.config/menuz`, the menu bar app's `menuz.yaml` and the `bin/` it puts first on PATH for what the menu runs, as the whole directory, since an editor's save through `menuz edit` may replace the file and leave a link to it behind a plain copy. Made only when the user repo has `config/menuz/`; enabled on no sleeve until the Macs run this release (issue 0074)
+- `hammerspoon` liberator (macOS): links `~/.hammerspoon/init.lua` as a file, whose `hs.ipc` block gives arngz its `hs` CLI. The third-party Spoons under `~/.hammerspoon/Spoons/` stay out of the user repo. Made only when the user repo has `config/hammerspoon/init.lua`; enabled on no sleeve until the Macs run this release (issue 0074)
+
+### Fixed
+
+- `molt resleeve`, `molt upgrade` and `molt maintain` read their liberator list on fd 3, so each liberator's install or hook keeps the caller's stdin, and a prompt reads from the terminal. Fed the list on stdin, a hook that read stdin, as an installer, a sudo prompt or npm can, read the rest of it, and the run ended there as though the list were done: on rhadamanth `molt maintain` ran brew's hook and no other, so editors' `doom upgrade` never ran, and maintain still exited 0 and said maintenance was complete (issue 0075)
+
 ## [1.1.0] - 2026-10-26
 
 ### Added
