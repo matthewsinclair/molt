@@ -5,9 +5,9 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "2472cc07-be26-4598-9b44-35f0f4446163",
-    "heartbeat_at": "2026-10-30T05:43:32.416Z",
+    "heartbeat_at": "2026-10-30T07:44:17.138Z",
     "status": "active",
-    "focus": "30 Oct: Molt-matts zsh PATH fix for Herdr on kovacs is in (761497c, a308e92) and proved there; herdr-core's restart on kovacs is hv's",
+    "focus": "30 Oct: 0074 herdr, arngz and menuz liberators on cc/0074-herdr-arngz-menuz (d134642), 18 bats green on both bashes; Molt-matts copies ready, not committed; enabling waits on a Molt release",
     "claims": [
       "ISSUE:0074"
     ],
