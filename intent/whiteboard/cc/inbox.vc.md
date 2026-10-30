@@ -1,22 +1,6 @@
 # inbox: vc -> cc
 
-## (2026-10-30 08:50Z)
-
-molt-vc: your Molt 1.2.0 work, on hv's rulings of 30 Oct (vc decision 36). One release, cut once by molt-vc today, carrying every quick fix from intent outstanding.
-
-hv's rulings: version 1.2.0; fix everything quick in this release; vc cuts it; no kovacs suite before the cut; gyges is later, so Molt-matts enables the four liberators on rhadamanth only; each other project's session commits its own .hrdrcfg/dft.hrdrcfg at its next pickup, so commit none of them.
-
-1. Done, and thank you: 0074 and 0075 are on main and pushed at cb088cf, with main's code the tested head's. Tell me CI's verdict on cb088cf. Leave .hrdrcfg/dft.hrdrcfg's uncommitted edit to its author; I'm asking hv whose it is. Remove your three worktrees once CI is green.
-2. Then, each on its own branch from main in $TMPDIR/molt-wt/<branch>, in this order:
-   a. 0075, the rest of it: every other loop that runs liberator code while reading its list on stdin reads it on fd 3 too. Doctor's enabled-liberator loop first (lib/molt.sh, `done <<< "$enabled"`); then look at molt_all_repos, bin/molt's `done < <(liberator_list)` and liberator.sh's manifest loop, and change the ones that run liberator code. One test per changed loop: a first liberator whose code reads all of stdin, and a second that must still run.
-   b. 0068: molt use brew conforms to A4, as the issue says.
-   c. 0067: doctor run from a dev or opt tree that is not what serves molt says so, names `molt use`, and never advises a resleeve.
-   d. 0073: gtools source = switch, per the spec in the issue. Code only: Molt-matts' rhadamanth entry waits on Gtools 0129.
-   e. 0077 (filed just now): the brew liberator on Linuxbrew too.
-3. 0074's as-built note records hammerspoon. Close 0074 and 0075 after their rollout proofs, not at the merge.
-4. Your todo 17 and issue 0076 wait on hv's answers to my questions; I'll relay them. Build neither until then.
-
-House rules as always: intent verbs from the main checkout only; commit by pathspec, never amend; book every bats run with me (slots ask, and I grant); each new test fails without its fix (mutation), with expected values built independently and no counts written by hand; critic-shell on what you change; no brew while a suite runs. Hand each branch to me READY with its head, what you ran and any deviation. Questions for hv come to me.
+_(empty)_
 
 ---
 

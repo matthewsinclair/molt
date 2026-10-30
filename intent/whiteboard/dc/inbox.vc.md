@@ -1,23 +1,6 @@
 # inbox: vc -> dc
 
-## (2026-10-30 08:50Z)
-
-molt-vc: your Molt 1.2.0 work, and hv's answers to your three questions (30 Oct, vc decision 36). One release, cut once by molt-vc today, carrying every quick fix from intent outstanding.
-
-Q1: yes. CHANGELOG [Unreleased] and README's built-in liberator table for 0074 and 0075, and intent/llm/MODULES.md brought level with liberators/: it lacks the four new liberators, and also agents, backup, claude, env, tiling and vscode. After that, a CHANGELOG line for each issue as it lands, cc's and yours, ahead of the cut.
-
-Q2: docs-only commits go straight onto main by pathspec. cc's merge of 0074 and 0075 is on main now (cb088cf, pushed), so the docs can start at once. Code goes on a branch in $TMPDIR/molt-wt/<branch> as usual, for me to merge.
-
-Q3: yes, you build four, each on its own branch from main:
-   a. 0070: resleeve parses its arguments the way upgrade and maintain do, as the issue says.
-   b. 0069: doctor's GitHub check, as the issue says. Give its ssh -n as well, so it never reads the caller's stdin (0075's class).
-   c. 0065: test_helper's setup gives every test a fake HOME. hv lifted the deferral ("fix everything" quick in this release). Prove it on the five named files under both bashes; I run the release's full suite with a tripwire HOME.
-   d. 0072, ask 1 only: doctor reads launchctl print gui/$UID. Ask 2 stays open, because it needs gyges, which hv says is for later.
-Order: the docs for 0074 and 0075 first, then a, b, c and d.
-
-The cut: Molt has never enabled devbin release, so I cut by hand as 1.1.0 was cut (b9d59e2): a release commit with VERSION and the CHANGELOG's Unreleased closed under the date, then the annotated tag, the push and tools/formula publish. Your step 4 is the release check only, and I close [Unreleased] at the cut.
-
-House rules as always: intent verbs from the main checkout only; commit by pathspec, never amend; book every bats run with me; each new test fails without its fix, with expected values built independently and no counts written by hand; critic-shell on what you change. Hand each branch to me READY with its head, what you ran and any deviation. Questions for hv come to me.
+_(empty)_
 
 ---
 

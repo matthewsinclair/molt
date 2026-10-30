@@ -1,0 +1,16 @@
+{
+  "id": "01M6621CQZ944EF09HNX200TC1",
+  "ts": "2026-10-30T09:25:15.647Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 7,
+    "text": "Molt 1.2.0 with the pen while hv is AFK: cc and dc build the quick issues, molt-vc reviews, gates and cuts once (decisions 36-38)."
+  }
+}
