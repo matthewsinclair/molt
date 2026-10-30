@@ -1126,15 +1126,14 @@ molt_brew_tapped() {
   [[ $'\n'"$taps"$'\n' == *$'\n'"$tap"$'\n'* ]]
 }
 
-# Everything standing between this machine and "Homebrew's $2 is what PATH
-# runs", for the formula $1 (tap/name), one fault per line. Fails, having named
-# the fault, when nothing past it can be checked: no Homebrew, the formula not
-# installed, or its command not linked. $3 is the URL of a private tap, which
-# brew install cannot tap itself; when its tap is missing, the fault names the
-# tap command.
-molt_brew_faults() {
-  local formula="$1" cmd="$2" tap_url="${3:-}" prefix
-  if ! prefix="$(brew --prefix 2>/dev/null)"; then
+# Why the formula $1 (tap/name), for the command $2, is not installed from
+# Homebrew, or nothing when it is; fails with a fault. $3 is the URL of a
+# private tap, which brew install cannot tap itself; when its tap is missing,
+# the fault names the tap command. molt_brew_faults asks this first, and a
+# liberator that holds the formula beside other trees asks only this.
+molt_brew_install_faults() {
+  local formula="$1" cmd="$2" tap_url="${3:-}"
+  if ! brew --prefix &>/dev/null; then
     echo "Homebrew not found; $cmd installs with: brew install $formula"
     return 1
   fi
@@ -1146,6 +1145,16 @@ molt_brew_faults() {
     echo "not installed; run: brew install $formula"
     return 1
   fi
+}
+
+# Everything standing between this machine and "Homebrew's $2 is what PATH
+# runs", for the formula $1 (tap/name), one fault per line. Fails, having named
+# the fault, when nothing past it can be checked: no Homebrew, the formula not
+# installed, or its command not linked. $3 is as for molt_brew_install_faults.
+molt_brew_faults() {
+  local formula="$1" cmd="$2" tap_url="${3:-}" prefix
+  molt_brew_install_faults "$formula" "$cmd" "$tap_url" || return 1
+  prefix="$(brew --prefix 2>/dev/null)"
   local trusted=0
   molt_brew_trusted "$formula" || trusted=$?
   case "$trusted" in
