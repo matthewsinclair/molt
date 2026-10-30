@@ -1,0 +1,15 @@
+{
+  "id": "01M666TK5MQ085T43FC5KKBPHB",
+  "ts": "2026-10-30T10:48:55.732Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "0078 (doctor advises molt resleeve where only a login clears the GUI session): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check"
+  }
+}

@@ -3,10 +3,10 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 10:47Z
+heartbeat_at: 2026-10-30 10:48Z
 status: active
-focus: "30 Oct: Molt 1.2.0's dc work is done and proved (0077 on kovacs); one hold, 0072 ask 2 on gyges"
-claims: [ISSUE:0072]
+focus: "30 Oct: Molt 1.2.0's dc work done and proved; holds: 0072 ask 2 on gyges, 0078 for the next release"
+claims: [ISSUE:0072, ISSUE:0078]
 ---
 
 # DevX Claude (dc)
@@ -22,6 +22,7 @@ _(none)_
 ## Holds
 
 - 0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges can be reached, by gyges-sysadm or ssh (vc decision 36: gyges later)
+- 0078 (doctor advises molt resleeve where only a login clears the GUI session): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check
 
 ## Watch-outs
 
