@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "4b74c7fe-9bb2-4455-b698-d49777270c17",
-    "heartbeat_at": "2026-10-30T09:58:16.418Z",
+    "heartbeat_at": "2026-10-30T10:49:23.238Z",
     "status": "active",
-    "focus": "30 Oct, hv AFK, molt-vc has the pen (decisions 36-38): Molt 1.2.0, one cut today; the RC queue is todo 37; hv's own proofs on return: molt maintain on rhadamanth (0075), a GNOME re-login on kovacs (0076).",
+    "focus": "30 Oct: Molt 1.2.0 cut (9836469, tag v1.2.0), published, and on rhadamanth and kovacs from brew; 9 of 12 issues closed with proofs; open: 0071 (deferred), 0072 (ask 2, gyges), 0076 (hv's GNOME re-login), 0078 (low, next release).",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -784,7 +784,8 @@
       "kind": "doing",
       "seq": 7,
       "text": "Molt 1.2.0 with the pen while hv is AFK: cc and dc build the quick issues, molt-vc reviews, gates and cuts once (decisions 36-38).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:57.801Z",
       "recorded_at": "2026-10-26T06:58:48.312Z",
       "edited_at": "2026-10-30T09:25:15.647Z"
     },
@@ -922,7 +923,8 @@
       "kind": "todo",
       "seq": 34,
       "text": "gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:57.840Z",
       "recorded_at": "2026-10-29T15:54:12.032Z",
       "edited_at": "2026-10-30T09:16:40.670Z"
     },
@@ -976,7 +978,8 @@
       "kind": "todo",
       "seq": 36,
       "text": "After the cut: kovacs's rollout through kovacs-sysadm (bridge:session_01AJd3R7TSn2yVQRgLcQq78t): brew upgrade molt, molt upgrade with brew enabled, molt maintain as 0077's and 0075's proof, doctor's env lines; its intent is already 3.2.7. Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:57.880Z",
       "recorded_at": "2026-10-29T20:12:39.337Z",
       "edited_at": "2026-10-30T10:19:58.038Z"
     },
@@ -985,7 +988,8 @@
       "kind": "decision",
       "seq": 36,
       "text": "hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:57.957Z",
       "recorded_at": "2026-10-30T08:49:18.499Z"
     },
     {
@@ -993,7 +997,8 @@
       "kind": "decision",
       "seq": 37,
       "text": "hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:57.994Z",
       "recorded_at": "2026-10-30T08:58:49.259Z"
     },
     {
@@ -1001,7 +1006,8 @@
       "kind": "todo",
       "seq": 37,
       "text": "1.2.0 cut: release commit 9836469, tag v1.2.0, pushed; the formula published; rhadamanth and kovacs run molt 1.2.0 from brew. CI on 9f7e4eb green (ShellCheck, Ubuntu, macOS); the tag's run is watched. Rollout: cc commits and pushes Molt-matts' rhadamanth and kovacs entries, molt upgrade and 0073 and 0074 proofs on rhadamanth; kovacs-sysadm pulls, then molt upgrade, molt maintain (0075, 0077 proofs) and doctor's env lines. rhadamanth's doctor: launchd lacks INTENT_INSTALL_PREFIX (plist newer than the last login), left for hv's next login.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:57.917Z",
       "recorded_at": "2026-10-30T09:16:40.388Z",
       "edited_at": "2026-10-30T10:42:42.678Z"
     },
@@ -1010,7 +1016,8 @@
       "kind": "decision",
       "seq": 38,
       "text": "hv 30 Oct, going AFK: molt-vc has the pen to close out the issues and get 1.2.0 done; no new work for its own sake, no bald yaks. So the critic's shared liberator helper and the extra 0075 stdin test are dropped; only defects are fixed.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:58.034Z",
       "recorded_at": "2026-10-30T09:22:05.947Z"
     },
     {
@@ -1018,9 +1025,18 @@
       "kind": "decision",
       "seq": 39,
       "text": "hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs (through kovacs-sysadm, which hv started; ssh otherwise) as the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof; kovacs's intent is already 3.2.7. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:48:58.070Z",
       "recorded_at": "2026-10-30T10:16:22.871Z",
       "edited_at": "2026-10-30T10:19:58.211Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 38,
+      "text": "After hv's GNOME logout and login on kovacs, read doctor's env check there (0076's last proof, then close 0076); rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there. 0078 (low) waits for Molt's next release.",
+      "state": "live",
+      "recorded_at": "2026-10-30T10:49:23.201Z"
     }
   ],
   "sent": [
@@ -1486,6 +1502,11 @@
       "id": "01M6622W7WREBJEPS9H4Y2JA3H",
       "sender": "dc",
       "handled_at": "2026-10-30T09:50:36.596Z"
+    },
+    {
+      "id": "01M664AS7EBY75CXPGRMXR8QSA",
+      "sender": "dc",
+      "handled_at": "2026-10-30T10:48:57.725Z"
     }
   ]
 }

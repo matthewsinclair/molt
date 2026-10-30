@@ -1,0 +1,15 @@
+{
+  "id": "01M666VE01P70YQ7D1WEF4B6Y1",
+  "ts": "2026-10-30T10:49:23.201Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "After hv's GNOME logout and login on kovacs, read doctor's env check there (0076's last proof, then close 0076); rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there. 0078 (low) waits for Molt's next release."
+  }
+}

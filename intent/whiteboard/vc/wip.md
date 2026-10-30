@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 4b74c7fe-9bb2-4455-b698-d49777270c17
-heartbeat_at: 2026-10-30 09:58Z
+heartbeat_at: 2026-10-30 10:49Z
 status: active
-focus: "30 Oct, hv AFK, molt-vc has the pen (decisions 36-38): Molt 1.2.0, one cut today; the RC queue is todo 37; hv's own proofs on return: molt maintain on rhadamanth (0075), a GNOME re-login on kovacs (0076)."
+focus: "30 Oct: Molt 1.2.0 cut (9836469, tag v1.2.0), published, and on rhadamanth and kovacs from brew; 9 of 12 issues closed with proofs; open: 0071 (deferred), 0072 (ask 2, gyges), 0076 (hv's GNOME re-login), 0078 (low, next release)."
 claims: []
 ---
 
@@ -13,16 +13,14 @@ claims: []
 
 ## DOING
 
-- Molt 1.2.0 with the pen while hv is AFK: cc and dc build the quick issues, molt-vc reviews, gates and cuts once (decisions 36-38). (edited)
+_(none)_
 
 ## TODO
 
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout. (edited)
-- After the cut: kovacs's rollout through kovacs-sysadm (bridge:session_01AJd3R7TSn2yVQRgLcQq78t): brew upgrade molt, molt upgrade with brew enabled, molt maintain as 0077's and 0075's proof, doctor's env lines; its intent is already 3.2.7. Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
-- 1.2.0 cut: release commit 9836469, tag v1.2.0, pushed; the formula published; rhadamanth and kovacs run molt 1.2.0 from brew. CI on 9f7e4eb green (ShellCheck, Ubuntu, macOS); the tag's run is watched. Rollout: cc commits and pushes Molt-matts' rhadamanth and kovacs entries, molt upgrade and 0073 and 0074 proofs on rhadamanth; kovacs-sysadm pulls, then molt upgrade, molt maintain (0075, 0077 proofs) and doctor's env lines. rhadamanth's doctor: launchd lacks INTENT_INSTALL_PREFIX (plist newer than the last login), left for hv's next login. (edited)
+- After hv's GNOME logout and login on kovacs, read doctor's env check there (0076's last proof, then close 0076); rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there. 0078 (low) waits for Molt's next release.
 
 ## Holds
 
@@ -36,10 +34,6 @@ _(none)_
 
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
-- hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker.
-- hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit.
-- hv 30 Oct, going AFK: molt-vc has the pen to close out the issues and get 1.2.0 done; no new work for its own sake, no bald yaks. So the critic's shared liberator helper and the extra 0075 stdin test are dropped; only defects are fixed.
-- hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs (through kovacs-sysadm, which hv started; ssh otherwise) as the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof; kovacs's intent is already 3.2.7. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred. (edited)
 
 ---
 
