@@ -2,10 +2,10 @@
 node: cc
 name: Control Claude
 role: control
-session_id: a38ae972-7f58-42d3-b96a-8ad70d1630c6
-heartbeat_at: 2026-10-25 19:59Z
-status: paused
-focus: "25 Oct EOD: idle; 0061 closed (dde5e16); holds 16 and 17 stand; released for the night on hv's word"
+session_id: 2472cc07-be26-4598-9b44-35f0f4446163
+heartbeat_at: 2026-10-30 05:42Z
+status: active
+focus: "30 Oct: Molt-matts zsh PATH fix for Herdr on kovacs (hv, through rhadamanth-sysadm): 761497c is in; the zshenv step is written and checked, with rhadamanth-sysadm to commit"
 claims: []
 ---
 
