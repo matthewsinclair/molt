@@ -9,11 +9,6 @@
     "status": "active",
     "focus": "30 Oct, Molt 1.2.0 on vc's orders: all five branches READY with vc (0075 2e2e9f9, 0068 4292121, 0067 74a2258, 0074 272b329, 0073 5df5e8c); 0076 fix 1 pushed in Molt-matts d4ce4e0; close-out drafted in scratchpad, waiting for vc's word",
     "claims": [
-      "ISSUE:0074",
-      "ISSUE:0075",
-      "ISSUE:0068",
-      "ISSUE:0067",
-      "ISSUE:0073",
       "ISSUE:0076"
     ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
@@ -521,10 +516,10 @@
       "node": "cc",
       "kind": "doing",
       "seq": 16,
-      "text": "Molt 1.2.0 (vc decision 36): all five branches READY with vc for the RC merge: 0075 cc/0075-more-loops 2e2e9f9, 0068 cc/0068-use-brew-a4 4292121, 0067 cc/0067-doctor-other-tree 74a2258, 0074 cc/0074-follow-ups 272b329, 0073 cc/0073-gtools-switch 5df5e8c. 0076 fix 1 pushed (Molt-matts d4ce4e0). Close-out drafted, not applied: as-built notes, rhadamanth and kovacs molt.toml lines, live-config diff before rhadamanth links, worktree removal after vc's replay. Each step on vc's word.",
+      "text": "Molt 1.2.0 (vc decision 36): 0067, 0068, 0073, 0074 and 0075 closed at aecbf8a after vc's replay (9f7e4eb); worktrees removed. Still mine, on vc's word: 0076 Fix 1 note after dc's Fix 2 lands; once 1.2.0 is published from brew, the rhadamanth and kovacs molt.toml lines (drafts in scratchpad closeout/) and the live-config diff before rhadamanth links.",
       "state": "live",
       "recorded_at": "2026-10-30T09:25:05.360Z",
-      "edited_at": "2026-10-30T09:48:30.258Z"
+      "edited_at": "2026-10-30T10:29:01.945Z"
     }
   ],
   "sent": [

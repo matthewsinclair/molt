@@ -1,0 +1,16 @@
+{
+  "id": "01M665P5BS8439R6VF4J9PQ238",
+  "ts": "2026-10-30T10:29:01.945Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 16,
+    "text": "Molt 1.2.0 (vc decision 36): 0067, 0068, 0073, 0074 and 0075 closed at aecbf8a after vc's replay (9f7e4eb); worktrees removed. Still mine, on vc's word: 0076 Fix 1 note after dc's Fix 2 lands; once 1.2.0 is published from brew, the rhadamanth and kovacs molt.toml lines (drafts in scratchpad closeout/) and the live-config diff before rhadamanth links."
+  }
+}
