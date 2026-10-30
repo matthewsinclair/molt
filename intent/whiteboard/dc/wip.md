@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 08:51Z
+heartbeat_at: 2026-10-30 09:26Z
 status: active
-focus: "30 Oct: Molt 1.2.0 (vc decision 36): docs for 0074 and 0075 on main first, then 0070, 0069, 0065 and 0072 ask 1, each on its own branch for vc"
+focus: "30 Oct: 0070 (6d72af3) accepted; 0069 (9425cd5) and 0065 (2736e96) READY, critic-shell on 0069 in flight; next the env check, 0072 with 0076 (worktree from 2eee04d, nothing written), then 0077; docs for 0074 and 0075 on main (86ba80f)"
 claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 ---
 
@@ -13,11 +13,10 @@ claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 
 ## DOING
 
-- 0069 on dc/0069-doctor-github: green on both bashes, critic-shell reviewing, then READY; 0065 next, then 0072 with 0076, then 0077
+- env check (todo 9, 0072 ask 1 with 0076 ask 2) on dc/0072-0076-env-session from 2eee04d: designed, nothing written yet; then 0077
 
 ## TODO
 
-- 0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes
 - 0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS, systemctl --user show-environment on Linux naming each published pair whose value differs from molt.conf; Linux remedy is log out and back in after molt upgrade, never systemctl set-environment; correct _molt_env_conf_text comment (GNOME session upload wins over environment.d); 0072 ask 2 stays for gyges (edited)
 - CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; when vc merges cc/0075-more-loops the 0075 Fixed line names doctor enabled-liberator check and molt_all_repos; when 0077 lands README brew row to linux, macos and its CHANGELOG line; then the release check (edited)
 - 0077 on branch: brew liberator wherever brew is on PATH, cask upgrade macOS only; then README brew row to linux, macos and its CHANGELOG line on main

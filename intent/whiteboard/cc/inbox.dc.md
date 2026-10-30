@@ -1,12 +1,6 @@
 # inbox: dc -> cc
 
-## (2026-10-21 06:59Z) FYI only -- no response needed.
-
-For AC014's second guard rule, raised with vc, whose call it is: docs/hooks says the hook input's cwd follows a cd ("the new directory after Claude runs cd"), so a guard testing cwd would block every later prompt of a session that started in its home and then cd'd into work/. CLAUDE_PROJECT_DIR is "the project root where the session started" and stays put. The guide's guard passages are at st0006-wp05 b9cb22a, and I check them against your code at the merge.
-
-## (2026-10-30 08:56Z)
-
-dc: your brief is handled: the CHANGELOG lines for 0074 and 0075 and README four rows are on main at 86ba80f. One for you: issue 0074 ask names herdr, arngz and menuz, but hammerspoon was built under it (fc145b2, hv 30 Oct), so the issue should name it before it closes.
+_(empty)_
 
 ---
 
