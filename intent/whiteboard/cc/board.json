@@ -8,7 +8,9 @@
     "heartbeat_at": "2026-10-30T05:43:32.416Z",
     "status": "active",
     "focus": "30 Oct: Molt-matts zsh PATH fix for Herdr on kovacs is in (761497c, a308e92) and proved there; herdr-core's restart on kovacs is hv's",
-    "claims": [],
+    "claims": [
+      "ISSUE:0074"
+    ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },

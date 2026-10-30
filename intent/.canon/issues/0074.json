@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 74,
+  "slug": "herdr-arngz-and-menuz-liberators-link-herdr-s-ke",
+  "title": "herdr, arngz and menuz liberators: link Herdr's keys and hrdrcfg, the arngz desks and the menuz config from Molt-matts on the Macs",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-30",
+  "reporter": "Matthew Sinclair",
+  "body": "hv, 30 Oct 2026 (through rhadamanth-sysadm; code hold lifted for this job only): bring Herdr's key bindings and hrdrcfg config, the arngz desks and the menuz config into Molt-matts, linked by Molt on rhadamanth and gyges.\n\n## Ask\n\n- **herdr** liberator: links `~/.config/herdr-app/keys.json` (the file only; the rest of that directory is Herdr's app state, and settings.json stays out) and the whole `~/.config/hrdrcfg` directory, since `hrdrcfg discover` rewrites and adds space files there.\n- **arngz** liberator: links the whole `~/.config/arngz` directory, since `arngz discover --save` writes desks there.\n- **menuz** liberator: links the whole `~/.config/menuz` directory (menuz.yaml and its bin/), since an editor's save through `menuz edit` may replace the file.\n- Each is macOS only, links only what Molt-matts' `config/<tool>` holds, and checks and verifies every link. Molt-matts carries today's files from rhadamanth and enables the three on rhadamanth and gyges.\n\n## Proof\n\nBats in a sandboxed HOME; then, once linked on rhadamanth, the files cmp equal to today's, `jq empty` passes on keys.json, `hrdrcfg ls` and `hrdrcfg discover --all --dry-run` show no change, `arngz current` and menuz's menu are as before.\n\n## Order\n\nMolt-matts' molt.toml enables them only once the Molt release carrying the liberators is what each sleeve runs: rhadamanth runs Molt 1.1.0 from brew, which has none of them.\n"
+}

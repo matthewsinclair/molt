@@ -6,7 +6,7 @@ session_id: 2472cc07-be26-4598-9b44-35f0f4446163
 heartbeat_at: 2026-10-30 05:43Z
 status: active
 focus: "30 Oct: Molt-matts zsh PATH fix for Herdr on kovacs is in (761497c, a308e92) and proved there; herdr-core's restart on kovacs is hv's"
-claims: []
+claims: [ISSUE:0074]
 ---
 
 # Control Claude (cc)
