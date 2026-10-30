@@ -44,8 +44,8 @@ export MOLT_AGT_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-agt"
 export MOLT_APPARMOR_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-apparmor.d"
 export MOLT_CLAUDE_MANAGED_DIR="${BATS_RUN_TMPDIR:-${BATS_TMPDIR:-/tmp}}/molt-test-managed"
 
-# Nor reaching the host's root-owned state: molt doctor, status and list ask
-# launchd with launchctl getenv (issue 0059), and the agents liberator's sandbox
+# Nor reaching the host's root-owned state: molt doctor, status and list read
+# launchd with launchctl print (issue 0072), and the agents liberator's sandbox
 # profile goes through sudo and apparmor_parser (issue 0061). These, first on
 # PATH, record their argv in calls.log beside them and do nothing. They are set
 # here rather than in setup, which some files replace; a test that fakes one

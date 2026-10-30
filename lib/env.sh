@@ -12,8 +12,8 @@
 # contributor stops giving is gone from both at once, and env.sh and the GUI
 # file cannot drift apart. Nothing here sets anything through launchctl or
 # systemctl, nor runs sudo: the GUI file takes effect for apps launched after
-# the next login, and the check only reads what launchd holds, with launchctl
-# getenv.
+# the next login, and the check only reads what the GUI session holds:
+# launchd's GUI domain on macOS, the systemd user manager on Linux.
 
 # The env file ~/.zshenv sources.
 molt_env_file() {
@@ -368,9 +368,22 @@ _molt_env_launchd_vars() {
 }
 
 # NAME<TAB>value for each NAME=value line of the `systemctl --user
-# show-environment` output on stdin.
+# show-environment` output on stdin. systemctl prints a value with whitespace
+# or a character a shell reads as syntax in it as NAME=$'value', escaping each
+# \, ' and control character in the value (systemctl(1)). A value molt
+# publishes holds no \ or ', so one printed with no escape inside is read back
+# as the value itself; one printed with an escape is kept as printed.
 _molt_env_systemd_vars() {
-  awk '{ i = index($0, "="); if (i > 1) printf "%s\t%s\n", substr($0, 1, i - 1), substr($0, i + 1) }'
+  awk -v q="'" '
+    {
+      i = index($0, "=")
+      if (i < 2) next
+      v = substr($0, i + 1)
+      if (length(v) > 2 && substr(v, 1, 2) == "$" q && substr(v, length(v)) == q && index(v, "\\") == 0)
+        v = substr(v, 3, length(v) - 3)
+      printf "%s\t%s\n", substr($0, 1, i - 1), v
+    }
+  '
 }
 
 # The value the NAME<TAB>value lines $1 hold for the name $2, and status 1

@@ -543,3 +543,21 @@ EOF
     assert_failure
     assert_output_contains "env: systemctl --user show-environment failed: Failed to connect to bus: No medium found, so what GUI apps get is unknown"
 }
+
+# systemctl prints a value with whitespace or a character a shell reads as
+# syntax in it as NAME=$'value' (systemctl(1)), so check reads the value back
+# from that, and a prefix with a space in it is not taken for another.
+@test "on Linux check reads back a value systemctl prints quoted, so a pair with a space in it passes (issue 0076)" {
+    setup_env
+    on_linux
+    declare_moved
+    echo 'export UTILZ_INSTALL_PREFIX="/opt/my tools (arm64)/utilz"' >> "$VARS"
+    env_install >/dev/null
+    grep -qxF "UTILZ_INSTALL_PREFIX=/opt/my tools (arm64)/utilz" "$HOME/.config/environment.d/molt.conf"
+    export SYSTEMD_ENV="$BATS_TEST_TMPDIR/quoted"
+    grep -v -e '^#' -e '^UTILZ_INSTALL_PREFIX=' "$HOME/.config/environment.d/molt.conf" > "$SYSTEMD_ENV"
+    echo "UTILZ_INSTALL_PREFIX=\$'/opt/my tools (arm64)/utilz'" >> "$SYSTEMD_ENV"
+    run env_check
+    assert_success
+    refute_output_contains "holds another"
+}
