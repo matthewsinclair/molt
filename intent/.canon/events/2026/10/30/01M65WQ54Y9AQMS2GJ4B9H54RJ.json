@@ -1,0 +1,15 @@
+{
+  "id": "01M65WQ54Y9AQMS2GJ4B9H54RJ",
+  "ts": "2026-10-30T07:52:17.310Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "molt maintain on rhadamanth (30 Oct, rhadamanth-sysadm) ran only brew's hook and skipped editors' doom upgrade, exit 0. Likely cause, unproven: cmd_maintain reads its liberator list with while read ... <<< \"$liberators\" (lib/molt.sh ~2949) and each hook inherits that stdin, so a brew or npm step that reads stdin empties the rest of the list. Fix: hooks run with </dev/null, and a test whose first hook reads stdin. Molt code, on hv's word."
+  }
+}

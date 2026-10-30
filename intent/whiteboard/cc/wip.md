@@ -18,6 +18,7 @@ _(none)_
 ## TODO
 
 - kovacs: the systemd user manager's PATH is not molt.conf's: no ~/.local/bin, and /snap/bin twice (rhadamanth-sysadm, 30 Oct). GUI apps there get it; Herdr does not, as its core takes ssh's environment. File a Molt issue on hv's word.
+- molt maintain on rhadamanth (30 Oct, rhadamanth-sysadm) ran only brew's hook and skipped editors' doom upgrade, exit 0. Likely cause, unproven: cmd_maintain reads its liberator list with while read ... <<< "$liberators" (lib/molt.sh ~2949) and each hook inherits that stdin, so a brew or npm step that reads stdin empties the rest of the list. Fix: hooks run with </dev/null, and a test whose first hook reads stdin. Molt code, on hv's word.
 
 ## Holds
 
