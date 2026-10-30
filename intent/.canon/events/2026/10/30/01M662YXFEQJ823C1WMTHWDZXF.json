@@ -1,0 +1,15 @@
+{
+  "id": "01M662YXFEQJ823C1WMTHWDZXF",
+  "ts": "2026-10-30T09:41:23.054Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0077 on dc/0077-brew-linuxbrew: tests written, slot asked; env check (9416519) and 0065 (b6422de) and 0069 (d052e16) handed over, env check READY after critic-shell"
+  }
+}
