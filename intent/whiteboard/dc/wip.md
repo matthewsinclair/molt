@@ -3,25 +3,26 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 10:19Z
+heartbeat_at: 2026-10-30 10:29Z
 status: active
-focus: "30 Oct: dc's five branches in vc's RC 505ff4f, gate running; at vc's replay word, the CHANGELOG commit then the issue notes and closes; then the release check"
-claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
+focus: "30 Oct: Molt 1.2.0's dc work is on main (CHANGELOG 008ad3d, issues 2845cbe: 0065, 0069, 0070, 0077 closed); worktrees removed; holds: 0077's kovacs proof note, 0072 ask 2 on gyges"
+claims: [ISSUE:0072]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- All five dc branches in vc's RC (505ff4f, gate running); at vc's word the CHANGELOG commit, then the six issue notes, closing 0065, 0069, 0070 and 0077; release check answer drafted (edited)
+_(none)_
 
 ## TODO
 
-- When vc says the RC replay landed: one CHANGELOG commit (all 1.2.0 lines, drafted), then as-built notes and closes for 0065, 0069, 0070 and 0077, with 0072 (ask 2, gyges) and 0076 (Fix 1, Molt-matts, and the re-login proof) noted but left open (hv 30 Oct: close issues as they land); then the release check (edited)
+_(none)_
 
 ## Holds
 
-_(none)_
+- 0077's proof note: holding until molt-vc sends the output of its molt maintain on kovacs after the cut (vc decision 39), then add it to 0077's note
+- 0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges can be reached, by gyges-sysadm or ssh (vc decision 36: gyges later)
 
 ## Watch-outs
 

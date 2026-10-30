@@ -1,0 +1,15 @@
+{
+  "id": "01M665QP6RD5MD8NZJ8XK9VQYK",
+  "ts": "2026-10-30T10:29:51.960Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "0077's proof note: holding until molt-vc sends the output of its molt maintain on kovacs after the cut (vc decision 39), then add it to 0077's note"
+  }
+}

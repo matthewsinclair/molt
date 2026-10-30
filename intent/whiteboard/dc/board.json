@@ -5,16 +5,11 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "19bd805c-8bd4-48c6-96cd-fa397bda01da",
-    "heartbeat_at": "2026-10-30T10:19:41.481Z",
+    "heartbeat_at": "2026-10-30T10:29:52.098Z",
     "status": "active",
-    "focus": "30 Oct: dc's five branches in vc's RC 505ff4f, gate running; at vc's replay word, the CHANGELOG commit then the issue notes and closes; then the release check",
+    "focus": "30 Oct: Molt 1.2.0's dc work is on main (CHANGELOG 008ad3d, issues 2845cbe: 0065, 0069, 0070, 0077 closed); worktrees removed; holds: 0077's kovacs proof note, 0072 ask 2 on gyges",
     "claims": [
-      "ISSUE:0070",
-      "ISSUE:0069",
-      "ISSUE:0065",
-      "ISSUE:0072",
-      "ISSUE:0076",
-      "ISSUE:0077"
+      "ISSUE:0072"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -411,7 +406,8 @@
       "kind": "todo",
       "seq": 10,
       "text": "When vc says the RC replay landed: one CHANGELOG commit (all 1.2.0 lines, drafted), then as-built notes and closes for 0065, 0069, 0070 and 0077, with 0072 (ask 2, gyges) and 0076 (Fix 1, Molt-matts, and the re-login proof) noted but left open (hv 30 Oct: close issues as they land); then the release check",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:29:51.923Z",
       "recorded_at": "2026-10-30T08:51:43.402Z",
       "edited_at": "2026-10-30T10:12:56.821Z"
     },
@@ -456,9 +452,26 @@
       "kind": "doing",
       "seq": 26,
       "text": "All five dc branches in vc's RC (505ff4f, gate running); at vc's word the CHANGELOG commit, then the six issue notes, closing 0065, 0069, 0070 and 0077; release check answer drafted",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T10:29:51.886Z",
       "recorded_at": "2026-10-30T09:41:23.054Z",
       "edited_at": "2026-10-30T10:19:41.401Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 12,
+      "text": "0077's proof note: holding until molt-vc sends the output of its molt maintain on kovacs after the cut (vc decision 39), then add it to 0077's note",
+      "state": "live",
+      "recorded_at": "2026-10-30T10:29:51.960Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 13,
+      "text": "0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges can be reached, by gyges-sysadm or ssh (vc decision 36: gyges later)",
+      "state": "live",
+      "recorded_at": "2026-10-30T10:29:51.998Z"
     }
   ],
   "sent": [
@@ -605,7 +618,8 @@
       "recipient": "vc",
       "body": "molt-dc READY 0069 and 0065, each one commit on its branch from main.\n\n0069: branch dc/0069-doctor-github, head 9425cd5 (base ecd8c78), worktree $TMPDIR/molt-wt/dc-0069-doctor-github. lib/constants.sh gains MOLT_GITHUB_CONNECT_TIMEOUT (10) and MOLT_GITHUB_TIMEOUT (20), which only tests set. lib/molt.sh: molt_github_auth_check runs ssh -n -o BatchMode=yes -o ConnectTimeout=<connect> -T git@github.com under timeout <outer> where a timeout command is installed (macOS has none in /usr/bin), else bare; molt_github_auth_verdict, pure, reads the answer: authenticated as <user> (parameter expansion, not the old grep pipeline), \"could not reach github.com within N s\" for timeout's 124 (outer N) or ssh's own \"timed out\" (connect N), else not authenticated. cmd_doctor calls it. Ran, slot 01M6614KQM4NQ2W4G25WSC80ST: bats -f 'GitHub' test/molt.bats, red (tests only): the -n/BatchMode/ConnectTimeout, never-answers and connect-bound tests not ok, the two guards ok; green (fix): all ok; both on bash 5.3 and /bin/bash 3.2. shellcheck -x clean on lib/molt.sh and lib/constants.sh; intent critic shell clean. critic-shell's review is in flight; a finding comes as a further commit. Deviations: the late-answer test answers after 1 s under a 3 s bound and is a guard, on your note; bin/bootstrap.sh:80 has its own copy of the check (timeout 5 ssh -n -T), which cannot source lib/, left as it is, outside 0069; the issue file still carries its 28 Oct deferral section.\n\n0065: branch dc/0065-test-home, head 2736e96 (base 93c4d2f), worktree $TMPDIR/molt-wt/dc-0065-test-home. test_helper's setup body is molt_test_setup, which also gives each test HOME=$BATS_TEST_TMPDIR/home; setup() runs it, and formula.bats's setup runs it in place of its copied tmpdir, ORIGINAL_PWD and cd lines. Ran, slot 01M661N0DX7FT7D551HYJKWQQZ: the five named files with HOME a read-only tripwire whose .zshenv writes a marker: red, zsh read the tripwire's .zshenv (formula.bats's tools/formula); green, never read; every test ok and the tripwire unchanged both times; bash 5.3 and /bin/bash 3.2. shellcheck: no new findings (formula.bats's drop from 3 to 0 is the removed copied lines). critic-shell runs after 0069's. No new test, by design: the tripwire run is the proof.\n\nNext: 0072 with 0076 on dc/0072-0076-env-session (worktree from 2eee04d, nothing written yet), then 0077. CHANGELOG lines for 0070, 0069 and 0065 go on main as you merge.",
       "fyi": false,
-      "recorded_at": "2026-10-30T09:26:04.284Z"
+      "recorded_at": "2026-10-30T09:26:04.284Z",
+      "archived_at": "2026-10-30T10:29:52.041Z"
     },
     {
       "id": "01M664AS7EBY75CXPGRMXR8QSA",

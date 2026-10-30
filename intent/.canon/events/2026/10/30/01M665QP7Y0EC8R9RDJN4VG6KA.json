@@ -1,0 +1,15 @@
+{
+  "id": "01M665QP7Y0EC8R9RDJN4VG6KA",
+  "ts": "2026-10-30T10:29:51.998Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges can be reached, by gyges-sysadm or ssh (vc decision 36: gyges later)"
+  }
+}
