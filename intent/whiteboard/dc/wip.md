@@ -17,7 +17,7 @@ claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076, ISSUE:0077]
 
 ## TODO
 
-- CHANGELOG line for each issue as vc merges it (0070, 0069, 0065, the env check, 0077, and cc 0068 and 0067), ahead of vc's cut; when cc/0075-more-loops merges, the 0075 Fixed line names doctor's enabled-liberator check and molt_all_repos; then the release check (edited)
+- When vc says the RC replay landed: one CHANGELOG commit (all 1.2.0 lines, drafted), then as-built notes and closes for 0065, 0069, 0070 and 0077, with 0072 (ask 2, gyges) and 0076 (Fix 1, Molt-matts, and the re-login proof) noted but left open (hv 30 Oct: close issues as they land); then the release check (edited)
 
 ## Holds
 

@@ -1,0 +1,16 @@
+{
+  "id": "01M664RPVNH7HD6GCX6GXHKBGF",
+  "ts": "2026-10-30T10:12:56.821Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 10,
+    "text": "When vc says the RC replay landed: one CHANGELOG commit (all 1.2.0 lines, drafted), then as-built notes and closes for 0065, 0069, 0070 and 0077, with 0072 (ask 2, gyges) and 0076 (Fix 1, Molt-matts, and the re-login proof) noted but left open (hv 30 Oct: close issues as they land); then the release check"
+  }
+}
