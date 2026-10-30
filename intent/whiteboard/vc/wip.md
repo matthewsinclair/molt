@@ -36,6 +36,7 @@ _(none)_
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker.
+- hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit.
 
 ---
 

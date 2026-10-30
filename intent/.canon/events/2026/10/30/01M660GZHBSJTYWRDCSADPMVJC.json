@@ -1,0 +1,15 @@
+{
+  "id": "01M660GZHBSJTYWRDCSADPMVJC",
+  "ts": "2026-10-30T08:58:49.259Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit."
+  }
+}

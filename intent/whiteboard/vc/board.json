@@ -986,6 +986,14 @@
       "text": "hv 30 Oct: Molt 1.2.0 is cut once, by molt-vc, today, carrying every quick fix from intent outstanding (0065, 0067, 0068, 0069, 0070, 0072 ask 1, 0073's code, 0074, 0075 with doctor's loop, 0077). 0071 stays out (no pplr formula); no kovacs suite before the cut; gyges later; each other project commits its own .hrdrcfg marker.",
       "state": "live",
       "recorded_at": "2026-10-30T08:49:18.499Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 37,
+      "text": "hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit.",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:58:49.259Z"
     }
   ],
   "sent": [

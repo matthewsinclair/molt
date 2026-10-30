@@ -1,2 +1,7 @@
 # hrdrcfg: this project's Herdr space (see hrdrcfg --help)
 space: devel/molt
+# Matt's roles for Molt, in place of the whiteboard's: no ac, and an ic.
+roles_cmd: printf '%s\n' vc dc ic cc
+tabs:
+  - name: outs
+    run: intent expl outs
