@@ -588,6 +588,20 @@ cmd_use() {
     molt_error "molt use $want: $root"
     return 1
   fi
+  # use brew removes nothing unless a Homebrew molt would answer once the link
+  # is gone, and the refusal names the link, the tree it serves, why and the
+  # remedy (A4). It used to remove the link first and only then find no molt.
+  if [[ "$want" == brew ]] && [[ -e "$link" || -L "$link" ]]; then
+    local fault served
+    fault="$(_molt_use_brew_fault "$root")"
+    if [[ -n "$fault" ]]; then
+      if served="$(molt_served_tree)"; then
+        served="it serves the $(molt_tree "$served") tree at $(molt_tilde "$served")"
+      fi
+      molt_error "molt use brew: $(molt_tilde "$link") is left in place ($served), as no Homebrew molt would answer once it is gone: $fault, or stay on dev or opt"
+      return 1
+    fi
+  fi
   if [[ ! -x "$root/bin/molt" ]]; then
     molt_error "molt use $want: there is no $want tree at $(molt_tilde "$root"); $(_molt_use_make_step "$want" "$root")"
     return 1
@@ -604,6 +618,33 @@ cmd_use() {
   fi
   molt_version_line "$root"
   _molt_use_shadow_fault
+}
+
+# Why no Homebrew molt would answer once the switch link is gone, or nothing
+# when one would (devbin's T5, amendment A4); $1 is the brew tree's root. What
+# PATH would run then is its first molt outside the link's directory, the
+# directories compared where they resolve, since rhadamanth's ~/bin is
+# ~/.local/bin; it must resolve into the brew tree, as molt_brew_on_path asks.
+_molt_use_brew_fault() {
+  local root="$1" candidate first="" target
+  if [[ ! -x "$root/bin/molt" ]]; then
+    echo "the formula is not installed; install it with brew install $MOLT_BREW_FORMULA"
+    return 0
+  fi
+  while IFS= read -r candidate; do
+    [[ -n "$candidate" ]] || continue
+    molt_same_file "$(dirname "$candidate")" "$MOLT_LOCAL_BIN" && continue
+    first="$candidate"
+    break
+  done <<< "$(type -ap molt 2>/dev/null)"
+  if [[ -z "$first" ]]; then
+    echo "its keg is not linked, so no molt would be left on PATH; link it with brew link ${MOLT_BREW_FORMULA##*/}"
+    return 0
+  fi
+  target="$(_molt_realpath "$first")"
+  if [[ "${target%/bin/molt}" == "$target" ]] || [[ "$(molt_tree "${target%/bin/molt}")" != brew ]]; then
+    echo "$(molt_tilde "$first") comes first on PATH, and it is not Homebrew's; move it aside"
+  fi
 }
 
 # Removes the switch link for molt use brew when it is a link into one of
