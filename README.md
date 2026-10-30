@@ -327,7 +327,7 @@ MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tool
 - **awk** (manifest parsing)
 - **bats** (test suite; `molt doctor` checks for it)
 - **envsubst**, from gettext (template rendering; `molt doctor` checks for it)
-- **timeout**, from coreutils (`molt doctor`'s GitHub check and the bootstrap run `timeout 5 ssh -T`). Linux has it; on macOS run `brew install coreutils`, or doctor reports GitHub as not authenticated.
+- **timeout**, from coreutils. The bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it. `molt doctor`'s GitHub check uses it where it is installed, to bound the whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`.
 
 Liberators verify their own prerequisites and fail with install hints if anything is missing.
 
