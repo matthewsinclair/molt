@@ -1,0 +1,16 @@
+{
+  "id": "01M661EQS2839T64FVDW3JEW68",
+  "ts": "2026-10-30T09:15:04.354Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS, systemctl --user show-environment on Linux naming each published pair whose value differs from molt.conf; Linux remedy is log out and back in after molt upgrade, never systemctl set-environment; correct _molt_env_conf_text comment (GNOME session upload wins over environment.d); 0072 ask 2 stays for gyges"
+  }
+}
