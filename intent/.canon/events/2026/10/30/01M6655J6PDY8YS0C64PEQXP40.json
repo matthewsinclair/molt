@@ -1,0 +1,16 @@
+{
+  "id": "01M6655J6PDY8YS0C64PEQXP40",
+  "ts": "2026-10-30T10:19:58.038Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 36,
+    "text": "After the cut: kovacs's rollout through kovacs-sysadm (bridge:session_01AJd3R7TSn2yVQRgLcQq78t): brew upgrade molt, molt upgrade with brew enabled, molt maintain as 0077's and 0075's proof, doctor's env lines; its intent is already 3.2.7. Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew."
+  }
+}

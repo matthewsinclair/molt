@@ -975,10 +975,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 36,
-      "text": "After the cut: kovacs's intent goes to 3.2.7 in vc's molt maintain run there (decision 39); Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew.",
+      "text": "After the cut: kovacs's rollout through kovacs-sysadm (bridge:session_01AJd3R7TSn2yVQRgLcQq78t): brew upgrade molt, molt upgrade with brew enabled, molt maintain as 0077's and 0075's proof, doctor's env lines; its intent is already 3.2.7. Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew.",
       "state": "live",
       "recorded_at": "2026-10-29T20:12:39.337Z",
-      "edited_at": "2026-10-30T10:16:22.986Z"
+      "edited_at": "2026-10-30T10:19:58.038Z"
     },
     {
       "node": "vc",
@@ -1017,10 +1017,10 @@
       "node": "vc",
       "kind": "decision",
       "seq": 39,
-      "text": "hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs over ssh (kovacs-sysadm not reachable), intent going to 3.2.7 with the rest; it is the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred.",
+      "text": "hv 30 Oct (TUI): after the cut, vc runs molt maintain on kovacs (through kovacs-sysadm, which hv started; ssh otherwise) as the live proof for 0077 (brew on Linuxbrew) and 0075 (the run carries on past brew's hook to editors), so rhadamanth's maintain is no longer 0075's proof; kovacs's intent is already 3.2.7. hv via dc: issues close at the replay on main, each note naming what is still owed (0059's pattern): dc closes 0065, 0069, 0070, 0077; cc closes 0067, 0068, 0073, 0074, 0075; 0072 (ask 2, gyges) and 0076 (hv's GNOME re-login) stay open; 0071 deferred.",
       "state": "live",
       "recorded_at": "2026-10-30T10:16:22.871Z",
-      "edited_at": "2026-10-30T10:17:03.536Z"
+      "edited_at": "2026-10-30T10:19:58.211Z"
     }
   ],
   "sent": [
