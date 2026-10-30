@@ -86,8 +86,9 @@ teardown_file() {
     fi
 }
 
-# Per-test setup — runs before each test
-setup() {
+# Per-test setup, the one every test gets: setup runs it, and a file that
+# replaces setup runs it first.
+molt_test_setup() {
     BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
     export BATS_TEST_TMPDIR
     mkdir -p "$BATS_TEST_TMPDIR"
@@ -95,9 +96,19 @@ setup() {
     export MOLT_AGT_DIR="$BATS_TEST_TMPDIR/agt"
     export MOLT_APPARMOR_DIR="$BATS_TEST_TMPDIR/apparmor.d"
     export MOLT_CLAUDE_MANAGED_DIR="$BATS_TEST_TMPDIR/managed"
+    # A HOME of its own, so no test reads or writes the HOME of whoever runs
+    # bats, nor a zsh it starts reads that HOME's .zshenv (issue 0065). A file
+    # that sets HOME in its own setup still does, after this.
+    export HOME="$BATS_TEST_TMPDIR/home"
+    mkdir -p "$HOME"
     ORIGINAL_PWD="$(pwd)"
     export ORIGINAL_PWD
     cd "$BATS_TEST_TMPDIR" || return
+}
+
+# Per-test setup — runs before each test
+setup() {
+    molt_test_setup
 }
 
 # Per-test teardown — runs after each test
