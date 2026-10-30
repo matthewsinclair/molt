@@ -108,11 +108,21 @@ cmd_status() {
   liberator_status_all "${libs[@]}"
 }
 
+# Every argument is read before anything else is, and one resleeve does not
+# take, flag or word, is refused. It used to look only at its first, and only
+# for --dry-run, so --help, -h and a --dryrun typo each ran a real resleeve
+# (issue 0070).
 cmd_resleeve() {
   local dry_run=false
-  if [[ "${1:-}" == "--dry-run" ]]; then
-    dry_run=true
-  fi
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dry-run) dry_run=true; shift ;;
+      *)
+        molt_error "Unknown option: $1"
+        return 1
+        ;;
+    esac
+  done
   molt_resleeve "$dry_run" true
 }
 
