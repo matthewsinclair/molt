@@ -3,8 +3,8 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 11:03Z
-status: active
+heartbeat_at: 2026-10-30 11:35Z
+status: paused
 focus: "30 Oct: Molt 1.2.0's dc work done and proved; holds: 0072 ask 2 on gyges, 0078 for the next release"
 claims: [ISSUE:0072, ISSUE:0078]
 ---
