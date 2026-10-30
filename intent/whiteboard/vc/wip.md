@@ -22,7 +22,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout. (edited)
 - After the cut: kovacs's rollout through kovacs-sysadm (bridge:session_01AJd3R7TSn2yVQRgLcQq78t): brew upgrade molt, molt upgrade with brew enabled, molt maintain as 0077's and 0075's proof, doctor's env lines; its intent is already 3.2.7. Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
-- 1.2.0: RC green on 505ff4f (599 of 599 under bash 5.3 and 3.2, tripwire HOME untouched); replayed on main at 9f7e4eb (code equal to the RC) and pushed; CI on 9f7e4eb running (Ubuntu, ShellCheck; macOS by dispatch 41040872975). Next: dc's CHANGELOG and issue closes, cc's closes, then cut.sh (release commit, tag v1.2.0), push main and tag, tools/formula publish, then the rollouts. (edited)
+- 1.2.0 cut: release commit 9836469, tag v1.2.0, pushed; the formula published; rhadamanth and kovacs run molt 1.2.0 from brew. CI on 9f7e4eb green (ShellCheck, Ubuntu, macOS); the tag's run is watched. Rollout: cc commits and pushes Molt-matts' rhadamanth and kovacs entries, molt upgrade and 0073 and 0074 proofs on rhadamanth; kovacs-sysadm pulls, then molt upgrade, molt maintain (0075, 0077 proofs) and doctor's env lines. rhadamanth's doctor: launchd lacks INTENT_INSTALL_PREFIX (plist newer than the last login), left for hv's next login. (edited)
 
 ## Holds
 

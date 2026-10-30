@@ -1,0 +1,16 @@
+{
+  "id": "01M666F6VPEJ4BHTT9RYJPWNFG",
+  "ts": "2026-10-30T10:42:42.678Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 37,
+    "text": "1.2.0 cut: release commit 9836469, tag v1.2.0, pushed; the formula published; rhadamanth and kovacs run molt 1.2.0 from brew. CI on 9f7e4eb green (ShellCheck, Ubuntu, macOS); the tag's run is watched. Rollout: cc commits and pushes Molt-matts' rhadamanth and kovacs entries, molt upgrade and 0073 and 0074 proofs on rhadamanth; kovacs-sysadm pulls, then molt upgrade, molt maintain (0075, 0077 proofs) and doctor's env lines. rhadamanth's doctor: launchd lacks INTENT_INSTALL_PREFIX (plist newer than the last login), left for hv's next login."
+  }
+}
