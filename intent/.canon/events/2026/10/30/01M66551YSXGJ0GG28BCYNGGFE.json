@@ -1,0 +1,16 @@
+{
+  "id": "01M66551YSXGJ0GG28BCYNGGFE",
+  "ts": "2026-10-30T10:19:41.401Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 26,
+    "text": "All five dc branches in vc's RC (505ff4f, gate running); at vc's word the CHANGELOG commit, then the six issue notes, closing 0065, 0069, 0070 and 0077; release check answer drafted"
+  }
+}
