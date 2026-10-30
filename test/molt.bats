@@ -851,6 +851,35 @@ _stdin_hook_libs() {
     assert_output_contains "bbb ran"
 }
 
+# Doctor names each enabled liberator whose check fails. Both checks below
+# fail, so both must be named, though aaa's reads all of its stdin.
+@test "molt doctor checks every enabled liberator after one whose check reads stdin" {
+    _stdin_hook_libs check
+    printf '%s\n' 'aaa_check() { cat >/dev/null; echo "aaa not ok"; return 1; }' > "$STDIN_LIBS/aaa.sh"
+    printf '%s\n' 'bbb_check() { echo "bbb not ok"; return 1; }' > "$STDIN_LIBS/bbb.sh"
+    printf '[[liberator]]\nname = "aaa"\nenabled = true\n\n[[liberator]]\nname = "bbb"\nenabled = true\n' \
+        > "$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)/molt.toml"
+    run env -u MOLT_PRJ_DIR HOME="$BATS_TEST_TMPDIR" MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg" \
+        MOLT_LIBERATORS_DIR="$STDIN_LIBS" molt doctor </dev/null
+    assert_output_contains "not installed: aaa, bbb"
+    assert_output_contains "bbb not ok"
+}
+
+# molt git's repo list: each enabled liberator's _repo, though aaa's reads all
+# of its stdin.
+@test "molt_all_repos lists every liberator's repo after one whose _repo reads stdin" {
+    _stdin_hook_libs repo
+    printf '%s\n' 'aaa_repo() { cat >/dev/null; echo "/repos/aaa"; }' > "$STDIN_LIBS/aaa.sh"
+    printf '%s\n' 'bbb_repo() { echo "/repos/bbb"; }' > "$STDIN_LIBS/bbb.sh"
+    load_molt_libs
+    MOLT_LIBERATORS_DIR="$STDIN_LIBS"
+    MOLT_USER_REPO_SEARCH_PATHS=("$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)")
+    run molt_all_repos </dev/null
+    assert_success
+    assert_output_contains "aaa:/repos/aaa"
+    assert_output_contains "bbb:/repos/bbb"
+}
+
 # --- Digest covers every input the render depends on ---
 
 # molt_config_digest RESOLVES vars.sh THROUGH molt_find_user_repo and returns 1
