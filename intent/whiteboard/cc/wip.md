@@ -17,7 +17,7 @@ _(none)_
 
 ## TODO
 
-- kovacs: the systemd user manager's PATH is not molt.conf's: no ~/.local/bin, and /snap/bin twice (rhadamanth-sysadm, 30 Oct). GUI apps there get it; Herdr does not, as its core takes ssh's environment. File a Molt issue on hv's word.
+_(none)_
 
 ## Holds
 
