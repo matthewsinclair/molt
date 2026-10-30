@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 75,
+  "slug": "molt-maintain-upgrade-and-resleeve-stop-after-a",
+  "title": "molt maintain, upgrade and resleeve stop after a liberator hook that reads stdin, since their loop feeds the liberator list on stdin",
+  "status": "open",
+  "severity": "medium",
+  "created": "2026-10-30",
+  "reporter": "Matthew Sinclair",
+  "body": "Found on rhadamanth, 30 Oct 2026 (rhadamanth-sysadm): `molt maintain` ran brew's maintain hook and no other, so editors' doom upgrade never ran, and maintain still exited 0 and said maintenance was complete.\n\nCause: the full maintain loop reads its liberators with `while IFS= read -r lib; do ... done <<< \"$liberators\"`, so every hook it calls has that here-string as its stdin. A hook that reads stdin (brew upgrade --cask's installers, a sudo prompt, npm) reads the rest of the list, and the loop ends after it as though the list were done. The same loop shape runs resleeve's installs and upgrade's hooks.\n\nFix (hv, 30 Oct: \"go ahead and fix the maintain bug\"): the three loops read their list on fd 3, so each hook keeps the caller's stdin, a prompt reads from the terminal, and nothing a hook reads can shorten the list. Tests: in each of the three, a first liberator that reads all of stdin, and a second that must still run.\n"
+}

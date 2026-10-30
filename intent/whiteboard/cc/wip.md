@@ -6,7 +6,7 @@ session_id: 2472cc07-be26-4598-9b44-35f0f4446163
 heartbeat_at: 2026-10-30 07:44Z
 status: active
 focus: "30 Oct: 0074 herdr, arngz and menuz liberators on cc/0074-herdr-arngz-menuz (d134642), 18 bats green on both bashes; Molt-matts copies ready, not committed; enabling waits on a Molt release"
-claims: [ISSUE:0074]
+claims: [ISSUE:0074, ISSUE:0075]
 ---
 
 # Control Claude (cc)
