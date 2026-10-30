@@ -20,8 +20,9 @@ claims: []
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only. (edited)
-- Next session: rhadamanth brew upgrade gtools (0.8.2) if hv hasn't; kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof first run re-booked (denied at the hard close).
+- gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout. (edited)
+- After the cut: kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
+- 1.2.0 RC queue: READY cc/0068-use-brew-a4 4292121; cc/0075-more-loops 2e2e9f9 (re-hand after its stdin test); building cc 0067, 0074 follow-ups, 0073, zsh fix (Molt-matts), dc 0069, 0070, 0065, 0072+0076, 0077. Gate: scratchpad rc.sh (both bashes, tripwire HOME), macOS CI by workflow_dispatch, then one cut.
 
 ## Holds
 

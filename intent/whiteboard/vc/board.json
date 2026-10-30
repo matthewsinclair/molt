@@ -921,10 +921,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 34,
-      "text": "gtools liberator on rhadamanth: source = switch (Molt issue 0073), then enable in Molt-matts; kovacs and gyges are enabled brew only.",
+      "text": "gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout.",
       "state": "live",
       "recorded_at": "2026-10-29T15:54:12.032Z",
-      "edited_at": "2026-10-29T19:31:09.363Z"
+      "edited_at": "2026-10-30T09:16:40.670Z"
     },
     {
       "node": "vc",
@@ -975,9 +975,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 36,
-      "text": "Next session: rhadamanth brew upgrade gtools (0.8.2) if hv hasn't; kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof first run re-booked (denied at the hard close).",
+      "text": "After the cut: kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew.",
       "state": "live",
-      "recorded_at": "2026-10-29T20:12:39.337Z"
+      "recorded_at": "2026-10-29T20:12:39.337Z",
+      "edited_at": "2026-10-30T09:16:40.507Z"
     },
     {
       "node": "vc",
@@ -994,6 +995,14 @@
       "text": "hv 30 Oct (TUI): 0076's doctor check on Linux goes into 1.2.0 (dc, with 0072 ask 1), and its cause gets a bounded read-only probe, the fix in only if found and small before the cut; doctor stays quiet on a passing liberator, so cc todo 16 closes on its proof with no code for todo 17; vc commits Molt's .hrdrcfg edit.",
       "state": "live",
       "recorded_at": "2026-10-30T08:58:49.259Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 37,
+      "text": "1.2.0 RC queue: READY cc/0068-use-brew-a4 4292121; cc/0075-more-loops 2e2e9f9 (re-hand after its stdin test); building cc 0067, 0074 follow-ups, 0073, zsh fix (Molt-matts), dc 0069, 0070, 0065, 0072+0076, 0077. Gate: scratchpad rc.sh (both bashes, tripwire HOME), macOS CI by workflow_dispatch, then one cut.",
+      "state": "live",
+      "recorded_at": "2026-10-30T09:16:40.388Z"
     }
   ],
   "sent": [

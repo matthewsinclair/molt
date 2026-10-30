@@ -1,0 +1,15 @@
+{
+  "id": "01M661HNJ4M29GBPYJYRVWZXA3",
+  "ts": "2026-10-30T09:16:40.388Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "1.2.0 RC queue: READY cc/0068-use-brew-a4 4292121; cc/0075-more-loops 2e2e9f9 (re-hand after its stdin test); building cc 0067, 0074 follow-ups, 0073, zsh fix (Molt-matts), dc 0069, 0070, 0065, 0072+0076, 0077. Gate: scratchpad rc.sh (both bashes, tripwire HOME), macOS CI by workflow_dispatch, then one cut."
+  }
+}
