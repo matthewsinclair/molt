@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-30
+
 ### Added
 
 - `herdr` liberator (macOS): links Herdr's key bindings, `~/.config/herdr-app/keys.json`, as a file, and `~/.config/hrdrcfg`, hrdrcfg's defaults and spaces, as the whole directory, since `hrdrcfg discover` rewrites space files there and adds new ones. The rest of `~/.config/herdr-app`, the app's own state and its `settings.json`, stays the sleeve's. Each link is made only when the user repo has its source under `config/`. Since Herdr refuses bindings it cannot read, check and verify name every link that is not in place, and a `keys.json` that is not one JSON object, with jq's own reason, so a file that cannot be read does not read as bad JSON, or that cannot be checked because jq is missing; install links, then fails on such a file, with a jq install hint where jq is missing. Enabled on no sleeve until the Macs run this release, since molt 1.1.0 has no such liberator (issue 0074)
@@ -290,7 +292,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/matthewsinclair/molt/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/matthewsinclair/molt/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/matthewsinclair/molt/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/matthewsinclair/molt/compare/v0.3.0...v1.0.0
