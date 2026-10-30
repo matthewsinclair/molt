@@ -27,16 +27,20 @@ _herdr_links() {
   fi
 }
 
-# Why the user repo $1's keys.json does not parse, or nothing when it does or
-# the repo has none. Herdr refuses bindings it cannot read, so a file that does
-# not parse is a fault even when its link is sound.
+# Why the user repo $1's keys.json is not the one JSON object Herdr reads, or
+# nothing when it is or the repo has none. Herdr refuses bindings it cannot
+# read, so such a file is a fault even when its link is sound. `jq empty`
+# passed an empty file, whitespace, two objects and a top-level array, all of
+# which Herdr refuses; jq's own first line says why, so an unreadable file does
+# not read as bad JSON.
 _herdr_keys_fault() {
-  local keys="$1/config/herdr-app/keys.json"
+  local keys="$1/config/herdr-app/keys.json" err
   [[ -f "$keys" ]] || return 0
   if ! command -v jq &>/dev/null; then
-    echo "jq is not installed, so $(molt_tilde "$keys") was not parsed"
-  elif ! jq empty "$keys" &>/dev/null; then
-    echo "$(molt_tilde "$keys") is not valid JSON"
+    echo "jq is not installed, so $(molt_tilde "$keys") cannot be read"
+  elif ! err="$(jq -se 'length == 1 and (.[0] | type == "object")' "$keys" 2>&1 >/dev/null)"; then
+    err="${err%%$'\n'*}"
+    echo "$(molt_tilde "$keys") is not one JSON object${err:+ ($err)}"
   fi
 }
 
@@ -65,6 +69,19 @@ herdr_install() {
   fi
   user_repo="$(molt_find_user_repo)" || return 1
   molt_link_all "$(_herdr_links "$user_repo")" || return 1
+  # A keys.json Herdr cannot read fails install too: check failing sends
+  # resleeve here, and returning 0 printed "installed" and "Sleeve ready" with
+  # the fault still standing.
+  local fault
+  fault="$(_herdr_keys_fault "$user_repo")"
+  if [[ -n "$fault" ]]; then
+    if ! command -v jq &>/dev/null; then
+      molt_error "herdr: $fault; install jq (eg brew install jq), then run molt resleeve"
+    else
+      molt_error "herdr: $fault; fix it in the user repo, then run molt resleeve"
+    fi
+    return 1
+  fi
   molt_info "Liberator complete: herdr"
 }
 

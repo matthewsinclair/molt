@@ -54,6 +54,16 @@ _menuz_env() {
     [ "$(cat "$HOME"/.config/menuz.molt-backup.*/menuz.yaml)" = "old" ]
 }
 
+@test "menuz links nothing for a repo without its config" {
+    _menuz_env
+    rm -r "$MENUZ_REPO/config/menuz"
+    run menuz_check
+    assert_success
+    run menuz_install
+    assert_success
+    [ ! -e "$HOME/.config/menuz" ]
+}
+
 @test "menuz does nothing on Linux" {
     _menuz_env
     molt_platform() { echo "linux"; }

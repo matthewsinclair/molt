@@ -59,6 +59,16 @@ _arngz_env() {
     assert_output_contains "VERIFY FAIL: ~/.config/arngz points at $BATS_TEST_TMPDIR/other"
 }
 
+@test "arngz links nothing for a repo without its config" {
+    _arngz_env
+    rm -r "$ARNGZ_REPO/config/arngz"
+    run arngz_check
+    assert_success
+    run arngz_install
+    assert_success
+    [ ! -e "$HOME/.config/arngz" ]
+}
+
 @test "arngz does nothing on Linux" {
     _arngz_env
     molt_platform() { echo "linux"; }
