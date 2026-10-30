@@ -33,7 +33,9 @@ setup_env() {
     # launchctl, faked first on PATH, so no test reaches the real launchd: it
     # logs each call's argv as one line of <word>s, and setenv and getenv keep
     # a value per name in LAUNCHD, which starts empty, as a login has not yet
-    # run the plist.
+    # run the plist. print shows them all in the GUI domain's environment
+    # block, as launchd does; with LAUNCHD_GETENV_EMPTY set, getenv answers
+    # nothing, as it did on gyges for values the domain held (issue 0072).
     export LAUNCHD="$BATS_TEST_TMPDIR/launchd" LAUNCHCTL_LOG="$BATS_TEST_TMPDIR/launchctl.log"
     mkdir -p "$LAUNCHD" "$BATS_TEST_TMPDIR/launchctl-stub"
     cat > "$BATS_TEST_TMPDIR/launchctl-stub/launchctl" <<'EOF'
@@ -42,12 +44,37 @@ printf '<%s>' "$@" >> "$LAUNCHCTL_LOG"
 echo >> "$LAUNCHCTL_LOG"
 case "$1" in
   setenv) printf '%s' "$3" > "$LAUNCHD/$2" ;;
-  getenv) if [ -f "$LAUNCHD/$2" ]; then cat "$LAUNCHD/$2"; echo; fi ;;
+  getenv) if [ -z "${LAUNCHD_GETENV_EMPTY:-}" ] && [ -f "$LAUNCHD/$2" ]; then cat "$LAUNCHD/$2"; echo; fi ;;
+  print)  printf '%s = {\n\ttype = User\n\tenvironment = {\n' "$2"
+          for f in "$LAUNCHD"/*; do
+            if [ -f "$f" ]; then printf '\t\t%s => %s\n' "${f##*/}" "$(cat "$f")"; fi
+          done
+          printf '\t}\n}\n' ;;
   *)      exit 1 ;;
 esac
 EOF
     chmod +x "$BATS_TEST_TMPDIR/launchctl-stub/launchctl"
     export PATH="$BATS_TEST_TMPDIR/launchctl-stub:$PATH"
+
+    # systemctl, faked the same way for the systemd user manager on Linux:
+    # `systemctl --user show-environment` prints SYSTEMD_ENV when a test sets
+    # it, as GNOME's login shell uploads its environment over environment.d's
+    # (issue 0076), and molt.conf's lines otherwise, as the manager read them.
+    # With SYSTEMD_FAILS set it fails as a session with no user bus does.
+    export SYSTEMCTL_LOG="$BATS_TEST_TMPDIR/systemctl.log"
+    mkdir -p "$BATS_TEST_TMPDIR/systemctl-stub"
+    cat > "$BATS_TEST_TMPDIR/systemctl-stub/systemctl" <<'EOF'
+#!/bin/sh
+printf '<%s>' "$@" >> "$SYSTEMCTL_LOG"
+echo >> "$SYSTEMCTL_LOG"
+[ "$*" = "--user show-environment" ] || exit 1
+if [ -n "${SYSTEMD_FAILS:-}" ]; then echo "Failed to connect to bus: No medium found" >&2; exit 1; fi
+if [ -n "${SYSTEMD_ENV:-}" ]; then cat "$SYSTEMD_ENV"; exit 0; fi
+if [ -f "$HOME/.config/environment.d/molt.conf" ]; then grep -v '^#' "$HOME/.config/environment.d/molt.conf"; fi
+exit 0
+EOF
+    chmod +x "$BATS_TEST_TMPDIR/systemctl-stub/systemctl"
+    export PATH="$BATS_TEST_TMPDIR/systemctl-stub:$PATH"
 }
 
 # The sh script the plist $1 runs at login, read from its ProgramArguments by
@@ -458,4 +485,61 @@ EOF
     run env_check
     assert_success
     [ ! -s "$LAUNCHCTL_LOG" ]
+}
+
+# gyges, 28 Oct: launchctl getenv answered nothing for both pairs while
+# `launchctl print gui/501` held them, so check failed a loaded agent (issue
+# 0072). It reads the GUI domain itself.
+@test "on macOS check reads launchd's GUI domain, so it passes where launchctl getenv answers nothing (issue 0072)" {
+    setup_env
+    on_macos
+    declare_moved
+    env_install >/dev/null
+    log_in
+    export LAUNCHD_GETENV_EMPTY=1
+    run env_check
+    assert_success
+    refute_output_contains "launchd does not hold"
+    grep -qxF "<print><gui/$(id -u)>" "$LAUNCHCTL_LOG"
+}
+
+# kovacs, 30 Oct: GNOME's login shell uploads its environment into the systemd
+# user manager over environment.d's, so the manager held a PATH molt.conf does
+# not (issue 0076). check names each pair the manager holds otherwise.
+@test "on Linux check names each pair the systemd user manager holds otherwise, and says to log out and back in (issue 0076)" {
+    setup_env
+    on_linux
+    declare_moved
+    echo 'export UTILZ_INSTALL_PREFIX="/opt/utilz"' >> "$VARS"
+    env_install >/dev/null
+    export SYSTEMD_ENV="$BATS_TEST_TMPDIR/uploaded"
+    printf '%s\n' "CLAUDE_CONFIG_DIR=$CONFIG" "PATH=/usr/bin:/bin:/snap/bin:/snap/bin" > "$SYSTEMD_ENV"
+    run env_check
+    assert_failure
+    assert_output_contains "env: the systemd user manager holds another PATH, so GUI apps and user services get /usr/bin:/bin:/snap/bin:/snap/bin"
+    assert_output_contains "env: the systemd user manager does not hold UTILZ_INSTALL_PREFIX, so GUI apps and user services do not get it"
+    refute_output_contains "CLAUDE_CONFIG_DIR, so"
+    assert_output_contains "env: the desktop session set the manager's environment at login, so log out and back in after molt upgrade"
+    refute_output_contains "set-environment"
+}
+
+@test "on Linux check reads the systemd user manager, and passes when it holds every pair as published (issue 0076)" {
+    setup_env
+    on_linux
+    declare_moved
+    env_install >/dev/null
+    run env_check
+    assert_success
+    grep -qxF "<--user><show-environment>" "$SYSTEMCTL_LOG"
+}
+
+@test "on Linux check reports a systemd user manager it cannot read, and fails (issue 0076)" {
+    setup_env
+    on_linux
+    declare_moved
+    env_install >/dev/null
+    export SYSTEMD_FAILS=1
+    run env_check
+    assert_failure
+    assert_output_contains "env: systemctl --user show-environment failed: Failed to connect to bus: No medium found, so what GUI apps get is unknown"
 }
