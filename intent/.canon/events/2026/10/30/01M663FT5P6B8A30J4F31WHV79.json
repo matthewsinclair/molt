@@ -1,0 +1,16 @@
+{
+  "id": "01M663FT5P6B8A30J4F31WHV79",
+  "ts": "2026-10-30T09:50:36.726Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 37,
+    "text": "1.2.0 RC queue, all reviewed READY: cc/0075-more-loops 2e2e9f9, cc/0068-use-brew-a4 4292121, cc/0067-doctor-other-tree 74a2258, cc/0074-follow-ups 272b329, cc/0073-gtools-switch 5df5e8c, dc/0070-resleeve-args 6d72af3, dc/0069-doctor-github d052e16, dc/0065-test-home b6422de; to come from dc: the env check (0072 with 0076) and 0077. Dry merge: one conflict, 0067 with 0069 in lib/molt.sh, keep both. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then the rollout to rhadamanth and kovacs (ssh)."
+  }
+}

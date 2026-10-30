@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "4b74c7fe-9bb2-4455-b698-d49777270c17",
-    "heartbeat_at": "2026-10-30T09:25:15.896Z",
+    "heartbeat_at": "2026-10-30T09:50:36.552Z",
     "status": "active",
     "focus": "30 Oct, hv AFK, molt-vc has the pen (decisions 36-38): Molt 1.2.0, one cut today; the RC queue is todo 37; hv's own proofs on return: molt maintain on rhadamanth (0075), a GNOME re-login on kovacs (0076).",
     "claims": [],
@@ -1000,10 +1000,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 37,
-      "text": "1.2.0 RC queue: reviewed READY cc/0068-use-brew-a4 4292121, cc/0075-more-loops 2e2e9f9, dc/0070-resleeve-args 6d72af3; READY to review cc/0067-doctor-other-tree 74a2258, dc/0069-doctor-github 9425cd5 (its critic run pending), dc/0065-test-home 2736e96; building cc 0074 follow-ups (defects only), 0073, the zsh fix (Molt-matts), dc 0072+0076, 0077. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then rollout rhadamanth and kovacs (ssh).",
+      "text": "1.2.0 RC queue, all reviewed READY: cc/0075-more-loops 2e2e9f9, cc/0068-use-brew-a4 4292121, cc/0067-doctor-other-tree 74a2258, cc/0074-follow-ups 272b329, cc/0073-gtools-switch 5df5e8c, dc/0070-resleeve-args 6d72af3, dc/0069-doctor-github d052e16, dc/0065-test-home b6422de; to come from dc: the env check (0072 with 0076) and 0077. Dry merge: one conflict, 0067 with 0069 in lib/molt.sh, keep both. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then the rollout to rhadamanth and kovacs (ssh).",
       "state": "live",
       "recorded_at": "2026-10-30T09:16:40.388Z",
-      "edited_at": "2026-10-30T09:26:24.960Z"
+      "edited_at": "2026-10-30T09:50:36.726Z"
     },
     {
       "node": "vc",
@@ -1472,6 +1472,11 @@
       "id": "01M661M4WM4XP8D5CX8YTG4RGV",
       "sender": "dc",
       "handled_at": "2026-10-30T09:25:07.700Z"
+    },
+    {
+      "id": "01M6622W7WREBJEPS9H4Y2JA3H",
+      "sender": "dc",
+      "handled_at": "2026-10-30T09:50:36.596Z"
     }
   ]
 }
