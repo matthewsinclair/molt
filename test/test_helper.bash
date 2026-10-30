@@ -86,8 +86,8 @@ teardown_file() {
     fi
 }
 
-# Per-test setup, the one every test gets: setup runs it, and a file that
-# replaces setup runs it first.
+# Per-test setup: setup runs it, and formula.bats, which replaces setup, runs it
+# first. The other files that replace setup make their own.
 molt_test_setup() {
     BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
     export BATS_TEST_TMPDIR
