@@ -1,0 +1,15 @@
+{
+  "id": "01M6603E1F5HA1SQ8136D07R3W",
+  "ts": "2026-10-30T08:51:25.359Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.edit",
+  "subject": {
+    "type": "issue",
+    "id": "0074"
+  },
+  "payload": {
+    "bytes": 2544,
+    "title": "herdr, arngz, menuz and hammerspoon liberators: link Herdr's keys and hrdrcfg, the arngz desks, the menuz config and Hammerspoon's init.lua from Molt-matts on the Macs"
+  }
+}
