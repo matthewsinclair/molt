@@ -17,12 +17,11 @@ _(none)_
 
 ## TODO
 
-_(none)_
+- gtools liberator brew-leg proof (issue 0057; was hold 17, released 30 Oct as its conditions are met: Gtools cut, its tap present, gtools enabled brew-only on gyges and kovacs at Molt-matts 5eb59f5). molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs, on kovacs through kovacs-sysadm and on gyges when reachable. rhadamanth-sysadm sends the gtools lines from kovacs's first molt upgrade.
 
 ## Holds
 
 - Holding the deletion of templates/env/retired/ (the claude liberator's old plist and claude.conf templates, kept only for the byte-identical retire check in lib/env.sh; vc's Q4 ruling, 24 Oct) until gyges has resleeved onto the env liberator. rhadamanth (v1.0.0) and kovacs (1.0.1 from brew) already have. hv, 25 Oct: gyges's resleeve is P3 or P4 and not today, as it needs the network reconfigured. DEFERRED by hv, 25 Oct 2026 (relayed by vc): out of Molt's next release, which ships templates/env/retired/ as it is; the deletion goes into the release after gyges resleeves. Released when vc confirms gyges's resleeve. (edited)
-- Holding the brew-leg proof of the gtools liberator (issue 0057, closed at its as-built) until Gtools is cut and its private tap exists, and hv has enabled gtools on a sleeve. Then molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs; on kovacs too, through kovacs-sysadm, if Gtools ships a Linux formula. Released when that proof is in.
 
 ## Watch-outs
 

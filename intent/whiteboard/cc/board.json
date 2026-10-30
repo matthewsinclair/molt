@@ -454,7 +454,8 @@
       "kind": "hold",
       "seq": 17,
       "text": "Holding the brew-leg proof of the gtools liberator (issue 0057, closed at its as-built) until Gtools is cut and its private tap exists, and hv has enabled gtools on a sleeve. Then molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs; on kovacs too, through kovacs-sysadm, if Gtools ships a Linux formula. Released when that proof is in.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T08:35:25.468Z",
       "recorded_at": "2026-10-25T07:39:52.450Z"
     },
     {
@@ -484,6 +485,14 @@
       "state": "archived",
       "archived_at": "2026-10-30T08:08:54.696Z",
       "recorded_at": "2026-10-30T07:52:17.310Z"
+    },
+    {
+      "node": "cc",
+      "kind": "todo",
+      "seq": 16,
+      "text": "gtools liberator brew-leg proof (issue 0057; was hold 17, released 30 Oct as its conditions are met: Gtools cut, its tap present, gtools enabled brew-only on gyges and kovacs at Molt-matts 5eb59f5). molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs, on kovacs through kovacs-sysadm and on gyges when reachable. rhadamanth-sysadm sends the gtools lines from kovacs's first molt upgrade.",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:35:25.507Z"
     }
   ],
   "sent": [

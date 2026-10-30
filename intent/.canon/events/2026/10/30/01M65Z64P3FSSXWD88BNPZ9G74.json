@@ -1,0 +1,15 @@
+{
+  "id": "01M65Z64P3FSSXWD88BNPZ9G74",
+  "ts": "2026-10-30T08:35:25.507Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "gtools liberator brew-leg proof (issue 0057; was hold 17, released 30 Oct as its conditions are met: Gtools cut, its tap present, gtools enabled brew-only on gyges and kovacs at Molt-matts 5eb59f5). molt install gtools must tap over ssh and install, and molt doctor must report Homebrew's gtools as what PATH runs, on kovacs through kovacs-sysadm and on gyges when reachable. rhadamanth-sysadm sends the gtools lines from kovacs's first molt upgrade."
+  }
+}
