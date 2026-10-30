@@ -1712,6 +1712,44 @@ molt_foreign_home_paths() {
   done < <(grep -rIlE '(Users|home)' "$dir" 2>/dev/null)
 }
 
+# doctor's GitHub line for what `ssh -T git@github.com` printed ($1) and how it
+# ended ($2, its exit status), returning 0 only when GitHub named the sleeve's
+# user. A bound running out, timeout's 124 or ssh's own "timed out", is
+# github.com not reached, not a refusal (issue 0069).
+molt_github_auth_verdict() {
+  local out="$1" status="$2" user
+  if [[ "$out" == *"successfully authenticated"* ]]; then
+    user="${out#*Hi }"
+    user="${user%%!*}"
+    echo "Checking GitHub auth... ✓ authenticated as $user"
+    return 0
+  fi
+  if [[ "$status" -eq 124 ]]; then
+    echo "Checking GitHub auth... ⚠ could not reach github.com within ${MOLT_GITHUB_TIMEOUT} s"
+  elif [[ "$out" == *"timed out"* ]]; then
+    echo "Checking GitHub auth... ⚠ could not reach github.com within ${MOLT_GITHUB_CONNECT_TIMEOUT} s"
+  else
+    echo "Checking GitHub auth... ⚠ not authenticated"
+  fi
+  return 1
+}
+
+# Asks GitHub over ssh who this sleeve is, and prints doctor's line for the
+# answer. ssh bounds its own connect and handshake, BatchMode keeps it from
+# prompting, and -n keeps it off the caller's stdin (issue 0075's class);
+# timeout, where one is installed, bounds the whole exchange. It used to kill
+# ssh after 5 s and read that as not authenticated (issue 0069).
+molt_github_auth_check() {
+  local out status=0
+  local ssh_cmd=(ssh -n -o BatchMode=yes -o "ConnectTimeout=${MOLT_GITHUB_CONNECT_TIMEOUT}" -T git@github.com)
+  if command -v timeout &>/dev/null; then
+    out="$(timeout "$MOLT_GITHUB_TIMEOUT" "${ssh_cmd[@]}" 2>&1)" || status=$?
+  else
+    out="$("${ssh_cmd[@]}" 2>&1)" || status=$?
+  fi
+  molt_github_auth_verdict "$out" "$status"
+}
+
 # A check that passes says what passed in words and names no path; only a check
 # that fails about a path names it (contract A3, issue 0066). `command -v molt`
 # says where the running copy lives.
@@ -2020,18 +2058,7 @@ cmd_doctor() {
 
   # GitHub auth
   checks=$((checks + 1))
-  local gh_auth_output
-  if gh_auth_output="$(timeout 5 ssh -T git@github.com 2>&1)"; then
-    :
-  fi
-  if [[ "$gh_auth_output" == *"successfully authenticated"* ]]; then
-    local gh_user
-    gh_user="$(echo "$gh_auth_output" | grep -o 'Hi [^!]*' | sed 's/Hi //')"
-    echo "Checking GitHub auth... ✓ authenticated as $gh_user"
-  else
-    echo "Checking GitHub auth... ⚠ not authenticated"
-    not_passed=$((not_passed + 1))
-  fi
+  molt_github_auth_check || not_passed=$((not_passed + 1))
 
   # Config carries no foreign (other-user) absolute home paths
   checks=$((checks + 1))
