@@ -6,7 +6,7 @@ session_id: 2472cc07-be26-4598-9b44-35f0f4446163
 heartbeat_at: 2026-10-30 09:48Z
 status: active
 focus: "30 Oct, Molt 1.2.0 on vc's orders: all five branches READY with vc (0075 2e2e9f9, 0068 4292121, 0067 74a2258, 0074 272b329, 0073 5df5e8c); 0076 fix 1 pushed in Molt-matts d4ce4e0; close-out drafted in scratchpad, waiting for vc's word"
-claims: [ISSUE:0076]
+claims: []
 ---
 
 # Control Claude (cc)

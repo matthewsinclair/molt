@@ -8,9 +8,7 @@
     "heartbeat_at": "2026-10-30T09:48:30.128Z",
     "status": "active",
     "focus": "30 Oct, Molt 1.2.0 on vc's orders: all five branches READY with vc (0075 2e2e9f9, 0068 4292121, 0067 74a2258, 0074 272b329, 0073 5df5e8c); 0076 fix 1 pushed in Molt-matts d4ce4e0; close-out drafted in scratchpad, waiting for vc's word",
-    "claims": [
-      "ISSUE:0076"
-    ],
+    "claims": [],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
   },
