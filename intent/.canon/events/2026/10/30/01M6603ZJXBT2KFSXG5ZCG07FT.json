@@ -1,0 +1,15 @@
+{
+  "id": "01M6603ZJXBT2KFSXG5ZCG07FT",
+  "ts": "2026-10-30T08:51:43.326Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes"
+  }
+}

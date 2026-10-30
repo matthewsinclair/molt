@@ -3,21 +3,25 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
-heartbeat_at: 2026-10-30 08:32Z
+heartbeat_at: 2026-10-30 08:51Z
 status: active
-focus: "25 Oct: 0066 merged (d3363c0) and closed (475f12b); 0065 deferred past the release; no work in hand, kovacs re-run is vc's via kovacs-sysadm"
-claims: []
+focus: "30 Oct: Molt 1.2.0 (vc decision 36): docs for 0074 and 0075 on main first, then 0070, 0069, 0065 and 0072 ask 1, each on its own branch for vc"
+claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- Molt 1.2.0 docs on main (vc decision 36): CHANGELOG [Unreleased] and README liberator table for 0074 and 0075; MODULES.md level with liberators/
 
 ## TODO
 
-_(none)_
+- 0070 on branch: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do
+- 0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated
+- 0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes
+- 0072 ask 1 on branch: doctor env check reads launchctl print gui/$UID; ask 2 stays open for gyges
+- CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; then the release check
 
 ## Holds
 

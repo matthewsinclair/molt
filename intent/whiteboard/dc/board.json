@@ -5,10 +5,15 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "19bd805c-8bd4-48c6-96cd-fa397bda01da",
-    "heartbeat_at": "2026-10-30T08:32:27.845Z",
+    "heartbeat_at": "2026-10-30T08:51:54.113Z",
     "status": "active",
-    "focus": "25 Oct: 0066 merged (d3363c0) and closed (475f12b); 0065 deferred past the release; no work in hand, kovacs re-run is vc's via kovacs-sysadm",
-    "claims": [],
+    "focus": "30 Oct: Molt 1.2.0 (vc decision 36): docs for 0074 and 0075 on main first, then 0070, 0069, 0065 and 0072 ask 1, each on its own branch for vc",
+    "claims": [
+      "ISSUE:0070",
+      "ISSUE:0069",
+      "ISSUE:0065",
+      "ISSUE:0072"
+    ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
   },
@@ -352,6 +357,54 @@
       "state": "archived",
       "archived_at": "2026-10-25T19:46:55.874Z",
       "recorded_at": "2026-10-25T18:32:44.895Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 22,
+      "text": "Molt 1.2.0 docs on main (vc decision 36): CHANGELOG [Unreleased] and README liberator table for 0074 and 0075; MODULES.md level with liberators/",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:51:43.201Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 6,
+      "text": "0070 on branch: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:51:43.241Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 7,
+      "text": "0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:51:43.277Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 8,
+      "text": "0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:51:43.325Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 9,
+      "text": "0072 ask 1 on branch: doctor env check reads launchctl print gui/$UID; ask 2 stays open for gyges",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:51:43.361Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 10,
+      "text": "CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; then the release check",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:51:43.402Z"
     }
   ],
   "sent": [
@@ -517,6 +570,11 @@
       "id": "01M5P69EZ02VB1H5QE5H6JGWTB",
       "sender": "vc",
       "handled_at": "2026-10-24T05:35:35.751Z"
+    },
+    {
+      "id": "01M66018CE8E24QHBJC70FRDRG",
+      "sender": "vc",
+      "handled_at": "2026-10-30T08:51:59.322Z"
     }
   ]
 }

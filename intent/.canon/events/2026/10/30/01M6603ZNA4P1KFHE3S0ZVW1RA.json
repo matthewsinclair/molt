@@ -1,0 +1,15 @@
+{
+  "id": "01M6603ZNA4P1KFHE3S0ZVW1RA",
+  "ts": "2026-10-30T08:51:43.402Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; then the release check"
+  }
+}

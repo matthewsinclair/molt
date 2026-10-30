@@ -1,0 +1,15 @@
+{
+  "id": "01M6603ZF1CQFW1A3MGBX4GAYC",
+  "ts": "2026-10-30T08:51:43.201Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Molt 1.2.0 docs on main (vc decision 36): CHANGELOG [Unreleased] and README liberator table for 0074 and 0075; MODULES.md level with liberators/"
+  }
+}

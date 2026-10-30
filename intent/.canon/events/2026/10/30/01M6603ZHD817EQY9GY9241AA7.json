@@ -1,0 +1,15 @@
+{
+  "id": "01M6603ZHD817EQY9GY9241AA7",
+  "ts": "2026-10-30T08:51:43.277Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated"
+  }
+}
