@@ -1712,6 +1712,32 @@ molt_foreign_home_paths() {
   done < <(grep -rIlE '(Users|home)' "$dir" 2>/dev/null)
 }
 
+# For doctor's passing molt-on-PATH line: when the tree this doctor runs from
+# is not the one that serves molt, says so, in words (A3: a pass names no
+# path), and names molt use, the only step that switches the sleeve's tree.
+# A dev clone's doctor on a brew sleeve once advised a resleeve that would have
+# linked the sleeve to the clone (issue 0067). Nothing when they are one tree.
+_molt_doctor_other_tree_note() {
+  local link served tree own
+  link="$(molt_switch_link)"
+  if [[ -e "$link" || -L "$link" ]]; then
+    served="$(molt_served_tree)" || return 0
+  else
+    served="$(molt_brew_on_path)" || return 0
+  fi
+  molt_same_file "$served" "$MOLT_ROOT" && return 0
+  tree="$(molt_tree)"
+  case "$tree" in
+    dev|opt)
+      if own="$(_molt_use_root "$tree" 2>/dev/null)" && molt_same_file "$own" "$MOLT_ROOT"; then
+        echo "; this doctor runs from the $tree tree, which does not serve molt, and molt use $tree switches the sleeve to it"
+      else
+        echo "; this doctor runs from a $tree tree that is not this sleeve's, so nothing switches the sleeve to it; molt use says which tree serves molt"
+      fi ;;
+    *) echo "; this doctor runs from the $tree tree, which does not serve molt; molt use says which tree does" ;;
+  esac
+}
+
 # A check that passes says what passed in words and names no path; only a check
 # that fails about a path names it (contract A3, issue 0066). `command -v molt`
 # says where the running copy lives.
@@ -1801,9 +1827,9 @@ cmd_doctor() {
     echo "Checking molt on PATH... ⚠ $shadow"
     not_passed=$((not_passed + 1))
   elif [[ -e "$(molt_switch_link)" || -L "$(molt_switch_link)" ]]; then
-    echo "Checking molt on PATH... ✓ molt use's link"
+    echo "Checking molt on PATH... ✓ molt use's link$(_molt_doctor_other_tree_note)"
   else
-    echo "Checking molt on PATH... ✓ brew's; no link of molt's"
+    echo "Checking molt on PATH... ✓ brew's; no link of molt's$(_molt_doctor_other_tree_note)"
   fi
 
   # User stack repo

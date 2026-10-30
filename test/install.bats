@@ -427,7 +427,8 @@ setup() {
     PATH="$BATS_TEST_TMPDIR/stray:$PATH" run "$DEV/bin/molt" doctor
     assert_output_contains "Checking molt on PATH... ⚠ there is no ~/.local/bin/molt, so brew should serve molt"
     run "$DEV/bin/molt" doctor
-    grep -qxF -- "Checking molt on PATH... ✓ brew's; no link of molt's" <<< "$output"
+    # Run from the test's dev tree, which is not this sleeve's: issue 0067's note.
+    grep -qxF -- "Checking molt on PATH... ✓ brew's; no link of molt's; this doctor runs from a dev tree that is not this sleeve's, so nothing switches the sleeve to it; molt use says which tree serves molt" <<< "$output"
 }
 
 # ST0008 AT004
@@ -490,6 +491,42 @@ setup() {
     run local-bin_install
     assert_success
     [[ "$(readlink "$HOME/.local/bin/molt")" == "$KEG/bin/molt" ]]
+}
+
+# Issue 0067: on a sleeve brew serves, with no link, molt run from a dev tree
+# read local-bin as not installed, and a resleeve would have linked the sleeve
+# to that tree. No link while Homebrew's molt is what PATH runs is brew.
+@test "local-bin passes, and its install links nothing, from a dev tree on a sleeve brew serves" {
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    mkdir -p "$HOME/.local/bin"
+    load_liberator local-bin
+    MOLT_ROOT="$DEV"
+    run local-bin_check
+    assert_success
+    run local-bin_install
+    assert_success
+    assert_output_contains "so brew serves molt, not this dev tree"
+    [[ ! -e "$HOME/.local/bin/molt" && ! -L "$HOME/.local/bin/molt" ]]
+}
+
+@test "doctor from the sleeve's own dev tree on a sleeve brew serves names molt use dev, never a resleeve" {
+    export MOLT_PRJ_DIR="$BATS_TEST_TMPDIR/prj"
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    run "$DEV/bin/molt" doctor
+    assert_output_contains "Checking molt on PATH... ✓ brew's; no link of molt's; this doctor runs from the dev tree, which does not serve molt, and molt use dev switches the sleeve to it"
+    refute_output_contains "local-bin"
+    refute_output_contains "resleeve"
+}
+
+@test "doctor from a dev clone that is not the sleeve's says nothing switches the sleeve to it" {
+    install_fake_brew
+    "$DEV/bin/molt" install --prefix "$KEG" --managed-by brew
+    run "$DEV/bin/molt" doctor
+    assert_output_contains "this doctor runs from a dev tree that is not this sleeve's, so nothing switches the sleeve to it; molt use says which tree serves molt"
+    refute_output_contains "local-bin"
+    refute_output_contains "resleeve"
 }
 
 # ST0008 AT004
