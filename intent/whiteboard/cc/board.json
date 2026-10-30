@@ -5,12 +5,16 @@
     "name": "Control Claude",
     "role": "control",
     "session_id": "2472cc07-be26-4598-9b44-35f0f4446163",
-    "heartbeat_at": "2026-10-30T08:08:54.731Z",
+    "heartbeat_at": "2026-10-30T09:25:10.858Z",
     "status": "active",
-    "focus": "30 Oct: 0074 (d134642) and 0075 (be49bdd, hooks keep stdin) built on their branches and tested; both wait on hv's merge and full suite",
+    "focus": "30 Oct, Molt 1.2.0 on vc's orders: (a) 0075 rest, (b) 0068 and (c) 0067 READY with vc; next (g) 0074 follow-ups (worktree made, no edits yet), then (d) 0073 code, then (f) 0076's Molt-matts zsh fix",
     "claims": [
       "ISSUE:0074",
-      "ISSUE:0075"
+      "ISSUE:0075",
+      "ISSUE:0068",
+      "ISSUE:0067",
+      "ISSUE:0073",
+      "ISSUE:0076"
     ],
     "recorded_at": "2026-10-21T04:42:52.142Z",
     "migrated_at": "2026-10-21T04:42:52.142Z"
@@ -509,8 +513,17 @@
       "kind": "todo",
       "seq": 18,
       "text": "molt maintain never upgrades Linuxbrew: the brew liberator is macOS only (check, install and verify stop off macOS), and kovacs's molt.toml has no brew entry, so maintain there runs editors alone and kovacs-sysadm ran brew upgrade by hand (30 Oct). Separate from 0075. Molt code, on vc's word.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T09:25:05.321Z",
       "recorded_at": "2026-10-30T08:43:35.557Z"
+    },
+    {
+      "node": "cc",
+      "kind": "doing",
+      "seq": 16,
+      "text": "Molt 1.2.0 (vc decision 36), on vc's orders: READY and with vc: (a) 0075's other loops cc/0075-more-loops 2e2e9f9, (b) 0068 cc/0068-use-brew-a4 4292121, (c) 0067 cc/0067-doctor-other-tree 74a2258. Next, in order: (g) 0074 follow-ups cc/0074-follow-ups (install fails on the keys fault; strict jq -se one object; jq's error line in the fault; their tests and the no-config tests; no shared helper), (d) 0073 code only, (f) 0076 ask 1, the Molt-matts zsh fix (typeset -U path PATH; zshrc's path_add lines into zprofile). Book every bats run with vc, doctor legs one at a time. 0074 and 0075 close after their rollout proofs.",
+      "state": "live",
+      "recorded_at": "2026-10-30T09:25:05.360Z"
     }
   ],
   "sent": [
@@ -674,6 +687,16 @@
       "id": "01M5P7M4R6TPPP4P8R1J6M8SGC",
       "sender": "vc",
       "handled_at": "2026-10-24T05:56:58.740Z"
+    },
+    {
+      "id": "01M66018B1HFM3TB9W37RMH72X",
+      "sender": "vc",
+      "handled_at": "2026-10-30T09:25:05.591Z"
+    },
+    {
+      "id": "01M660D37B0B1BM4Z64Z7T2FWC",
+      "sender": "dc",
+      "handled_at": "2026-10-30T09:25:05.554Z"
     }
   ]
 }

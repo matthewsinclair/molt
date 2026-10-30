@@ -1,0 +1,15 @@
+{
+  "id": "01M66212PGF7CT1S12T2D708FQ",
+  "ts": "2026-10-30T09:25:05.360Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "cc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Molt 1.2.0 (vc decision 36), on vc's orders: READY and with vc: (a) 0075's other loops cc/0075-more-loops 2e2e9f9, (b) 0068 cc/0068-use-brew-a4 4292121, (c) 0067 cc/0067-doctor-other-tree 74a2258. Next, in order: (g) 0074 follow-ups cc/0074-follow-ups (install fails on the keys fault; strict jq -se one object; jq's error line in the fault; their tests and the no-config tests; no shared helper), (d) 0073 code only, (f) 0076 ask 1, the Molt-matts zsh fix (typeset -U path PATH; zshrc's path_add lines into zprofile). Book every bats run with vc, doctor legs one at a time. 0074 and 0075 close after their rollout proofs."
+  }
+}

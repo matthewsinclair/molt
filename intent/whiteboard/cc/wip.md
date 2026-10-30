@@ -3,21 +3,21 @@ node: cc
 name: Control Claude
 role: control
 session_id: 2472cc07-be26-4598-9b44-35f0f4446163
-heartbeat_at: 2026-10-30 08:08Z
+heartbeat_at: 2026-10-30 09:25Z
 status: active
-focus: "30 Oct: 0074 (d134642) and 0075 (be49bdd, hooks keep stdin) built on their branches and tested; both wait on hv's merge and full suite"
-claims: [ISSUE:0074, ISSUE:0075]
+focus: "30 Oct, Molt 1.2.0 on vc's orders: (a) 0075 rest, (b) 0068 and (c) 0067 READY with vc; next (g) 0074 follow-ups (worktree made, no edits yet), then (d) 0073 code, then (f) 0076's Molt-matts zsh fix"
+claims: [ISSUE:0074, ISSUE:0075, ISSUE:0068, ISSUE:0067, ISSUE:0073, ISSUE:0076]
 ---
 
 # Control Claude (cc)
 
 ## DOING
 
-_(none)_
+- Molt 1.2.0 (vc decision 36), on vc's orders: READY and with vc: (a) 0075's other loops cc/0075-more-loops 2e2e9f9, (b) 0068 cc/0068-use-brew-a4 4292121, (c) 0067 cc/0067-doctor-other-tree 74a2258. Next, in order: (g) 0074 follow-ups cc/0074-follow-ups (install fails on the keys fault; strict jq -se one object; jq's error line in the fault; their tests and the no-config tests; no shared helper), (d) 0073 code only, (f) 0076 ask 1, the Molt-matts zsh fix (typeset -U path PATH; zshrc's path_add lines into zprofile). Book every bats run with vc, doctor legs one at a time. 0074 and 0075 close after their rollout proofs.
 
 ## TODO
 
-- molt maintain never upgrades Linuxbrew: the brew liberator is macOS only (check, install and verify stop off macOS), and kovacs's molt.toml has no brew entry, so maintain there runs editors alone and kovacs-sysadm ran brew upgrade by hand (30 Oct). Separate from 0075. Molt code, on vc's word.
+_(none)_
 
 ## Holds
 
