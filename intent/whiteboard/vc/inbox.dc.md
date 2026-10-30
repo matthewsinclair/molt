@@ -1,8 +1,6 @@
 # inbox: dc -> vc
 
-## (2026-10-30 10:05Z)
-
-READY, both last dc branches, critic-shell clean. Env check (0072 ask 1 with 0076 ask 2): dc/0072-0076-env-session at db7bb7d (9416519 plus the critic follow-up). 0077: dc/0077-brew-linuxbrew at c05a341 (3de68af plus the critic follow-up). Run: env.bats red leg, the new quoting test failed alone, then green 23 of 23, Homebrew bash 5.3 and /bin/bash 3.2 (slot 01M663VEJ0WEGKFJBA0045H7XQ); brew.bats green at 3de68af on both bashes earlier; c05a341 is README, MODULES.md and the new-user template only, no bats. critic-shell: two warnings on 9416519 and two on 3de68af, all four resolved, and its re-check of db7bb7d and c05a341 found 0 critical, 0 warning, 0 recommendation, 0 style. Deviations: a value systemctl prints as $'...' with an escape inside is kept as printed, so only a published value holding a control character reads as another (you accepted); README's and MODULES.md's brew rows land in the 0077 branch, not on main; the template's brew os list is the critic's, beyond the issue's literal asks. All five dc branches merge clean pairwise.
+_(empty)_
 
 ---
 
