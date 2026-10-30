@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 2472cc07-be26-4598-9b44-35f0f4446163
-heartbeat_at: 2026-10-30 07:44Z
+heartbeat_at: 2026-10-30 08:08Z
 status: active
-focus: "30 Oct: 0074 herdr, arngz and menuz liberators on cc/0074-herdr-arngz-menuz (d134642), 18 bats green on both bashes; Molt-matts copies ready, not committed; enabling waits on a Molt release"
+focus: "30 Oct: 0074 (d134642) and 0075 (be49bdd, hooks keep stdin) built on their branches and tested; both wait on hv's merge and full suite"
 claims: [ISSUE:0074, ISSUE:0075]
 ---
 
@@ -18,7 +18,6 @@ _(none)_
 ## TODO
 
 - kovacs: the systemd user manager's PATH is not molt.conf's: no ~/.local/bin, and /snap/bin twice (rhadamanth-sysadm, 30 Oct). GUI apps there get it; Herdr does not, as its core takes ssh's environment. File a Molt issue on hv's word.
-- molt maintain on rhadamanth (30 Oct, rhadamanth-sysadm) ran only brew's hook and skipped editors' doom upgrade, exit 0. Likely cause, unproven: cmd_maintain reads its liberator list with while read ... <<< "$liberators" (lib/molt.sh ~2949) and each hook inherits that stdin, so a brew or npm step that reads stdin empties the rest of the list. Fix: hooks run with </dev/null, and a test whose first hook reads stdin. Molt code, on hv's word.
 
 ## Holds
 
