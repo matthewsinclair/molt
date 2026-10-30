@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: 2472cc07-be26-4598-9b44-35f0f4446163
-heartbeat_at: 2026-10-30 05:42Z
+heartbeat_at: 2026-10-30 05:43Z
 status: active
-focus: "30 Oct: Molt-matts zsh PATH fix for Herdr on kovacs (hv, through rhadamanth-sysadm): 761497c is in; the zshenv step is written and checked, with rhadamanth-sysadm to commit"
+focus: "30 Oct: Molt-matts zsh PATH fix for Herdr on kovacs is in (761497c, a308e92) and proved there; herdr-core's restart on kovacs is hv's"
 claims: []
 ---
 
@@ -17,7 +17,7 @@ _(none)_
 
 ## TODO
 
-_(none)_
+- kovacs: the systemd user manager's PATH is not molt.conf's: no ~/.local/bin, and /snap/bin twice (rhadamanth-sysadm, 30 Oct). GUI apps there get it; Herdr does not, as its core takes ssh's environment. File a Molt issue on hv's word.
 
 ## Holds
 
