@@ -20,7 +20,7 @@ claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076]
 - 0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated
 - 0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes
 - 0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS and systemctl --user show-environment on Linux, naming how PATH differs; 0072 ask 2 stays for gyges, 0076 ask 1 is vc probe (edited)
-- CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; then the release check
+- CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; when vc merges cc/0075-more-loops the 0075 Fixed line names doctor enabled-liberator check and molt_all_repos; when 0077 lands README brew row to linux, macos and its CHANGELOG line; then the release check (edited)
 
 ## Holds
 
