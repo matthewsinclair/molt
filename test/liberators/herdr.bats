@@ -26,6 +26,7 @@ _herdr_env() {
 }
 
 @test "herdr_install links keys.json as a file and hrdrcfg as a directory, then check and verify pass" {
+    require_command jq "reading keys.json needs jq"
     _herdr_env
     run herdr_install
     assert_success
@@ -57,17 +58,57 @@ _herdr_env() {
     [ "$(cat "$HOME/.config/herdr-app/settings.json")" = "state" ]
 }
 
-@test "herdr_check and herdr_verify fail when keys.json is not valid JSON" {
+@test "herdr_check and herdr_verify fail when keys.json is not valid JSON, giving jq's reason" {
     require_command jq "parsing keys.json needs jq"
     _herdr_env
     herdr_install
     printf '{"global": \n' > "$HERDR_REPO/config/herdr-app/keys.json"
     run herdr_check
     assert_failure
-    assert_output_contains "keys.json is not valid JSON"
+    assert_output_contains "keys.json is not one JSON object (jq: "
     run herdr_verify
     assert_failure
     assert_output_contains "VERIFY FAIL"
+}
+
+# jq empty passed each of these; Herdr reads none of them.
+@test "herdr_check fails on an empty keys.json, two objects and a top-level array" {
+    require_command jq "parsing keys.json needs jq"
+    _herdr_env
+    herdr_install
+    local body
+    for body in '' '{} {}' '[]'; do
+        printf '%s' "$body" > "$HERDR_REPO/config/herdr-app/keys.json"
+        run herdr_check
+        assert_failure
+        assert_output_contains "keys.json is not one JSON object"
+    done
+}
+
+# check failing sends resleeve to install, which once linked, said complete
+# and returned 0, so resleeve said "Sleeve ready" over the fault.
+@test "herdr_install fails over a keys.json Herdr cannot read, and never says it is complete" {
+    require_command jq "parsing keys.json needs jq"
+    _herdr_env
+    printf '{"global": \n' > "$HERDR_REPO/config/herdr-app/keys.json"
+    run herdr_install
+    assert_failure
+    assert_output_contains "herdr: $HERDR_REPO/config/herdr-app/keys.json is not one JSON object"
+    assert_output_contains "fix it in the user repo, then run molt resleeve"
+    refute_output_contains "Liberator complete"
+}
+
+# A sleeve with no jq: `command -v jq` answers nothing.
+@test "herdr_check and herdr_install name a missing jq, and install says how to get it" {
+    _herdr_env
+    command() { if [[ "$1" == -v && "$2" == jq ]]; then return 1; fi; builtin command "$@"; }
+    run herdr_check
+    assert_failure
+    assert_output_contains "herdr: jq is not installed, so $HERDR_REPO/config/herdr-app/keys.json cannot be read"
+    run herdr_install
+    assert_failure
+    assert_output_contains "install jq (eg brew install jq), then run molt resleeve"
+    refute_output_contains "Liberator complete"
 }
 
 @test "herdr links nothing for a repo without its config" {

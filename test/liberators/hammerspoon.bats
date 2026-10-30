@@ -54,6 +54,16 @@ _hs_env() {
     assert_output_contains "VERIFY FAIL: ~/.hammerspoon/init.lua is not a symlink"
 }
 
+@test "hammerspoon links nothing for a repo without its config" {
+    _hs_env
+    rm -r "$HS_REPO/config/hammerspoon"
+    run hammerspoon_check
+    assert_success
+    run hammerspoon_install
+    assert_success
+    [ ! -e "$HOME/.hammerspoon" ]
+}
+
 @test "hammerspoon does nothing on Linux" {
     _hs_env
     molt_platform() { echo "linux"; }
