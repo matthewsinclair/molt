@@ -22,7 +22,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - gtools on rhadamanth: 0073's code ships in 1.2.0 (Gtools 0129 is closed), then Molt-matts enables source = switch there at the rollout. (edited)
 - After the cut: kovacs brew upgrade intent (3.2.7) on hv's go; Gtools install-proof re-booked when Gtools runs again. rhadamanth's gtools is 0.8.2 from brew. (edited)
-- 1.2.0 RC queue: reviewed READY cc/0068-use-brew-a4 4292121, cc/0075-more-loops 2e2e9f9, dc/0070-resleeve-args 6d72af3; READY to review cc/0067-doctor-other-tree 74a2258; dc 0069 and 0065 green, READY next; building cc 0074 follow-ups (defects only), 0073, the zsh fix (Molt-matts), dc 0072+0076, 0077. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then rollout rhadamanth and kovacs (ssh). (edited)
+- 1.2.0 RC queue: reviewed READY cc/0068-use-brew-a4 4292121, cc/0075-more-loops 2e2e9f9, dc/0070-resleeve-args 6d72af3; READY to review cc/0067-doctor-other-tree 74a2258, dc/0069-doctor-github 9425cd5 (its critic run pending), dc/0065-test-home 2736e96; building cc 0074 follow-ups (defects only), 0073, the zsh fix (Molt-matts), dc 0072+0076, 0077. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then rollout rhadamanth and kovacs (ssh). (edited)
 
 ## Holds
 

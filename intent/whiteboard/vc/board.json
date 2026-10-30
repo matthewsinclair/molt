@@ -1000,10 +1000,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 37,
-      "text": "1.2.0 RC queue: reviewed READY cc/0068-use-brew-a4 4292121, cc/0075-more-loops 2e2e9f9, dc/0070-resleeve-args 6d72af3; READY to review cc/0067-doctor-other-tree 74a2258; dc 0069 and 0065 green, READY next; building cc 0074 follow-ups (defects only), 0073, the zsh fix (Molt-matts), dc 0072+0076, 0077. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then rollout rhadamanth and kovacs (ssh).",
+      "text": "1.2.0 RC queue: reviewed READY cc/0068-use-brew-a4 4292121, cc/0075-more-loops 2e2e9f9, dc/0070-resleeve-args 6d72af3; READY to review cc/0067-doctor-other-tree 74a2258, dc/0069-doctor-github 9425cd5 (its critic run pending), dc/0065-test-home 2736e96; building cc 0074 follow-ups (defects only), 0073, the zsh fix (Molt-matts), dc 0072+0076, 0077. Gate: rc.sh in vc's scratchpad (both bashes, tripwire HOME), macOS CI by workflow_dispatch, one cut, then rollout rhadamanth and kovacs (ssh).",
       "state": "live",
       "recorded_at": "2026-10-30T09:16:40.388Z",
-      "edited_at": "2026-10-30T09:25:15.809Z"
+      "edited_at": "2026-10-30T09:26:24.960Z"
     },
     {
       "node": "vc",
