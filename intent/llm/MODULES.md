@@ -44,7 +44,7 @@
 | pplr           | `liberators/pplr.sh`           | Pplr people/contacts manager, ~/bin symlinks            |
 | utilz          | `liberators/utilz.sh`          | Utilz framework, bats-core, ~/bin symlinks              |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, ~/bin symlink                     |
-| brew           | `liberators/brew.sh`           | Homebrew lifecycle, package maintenance (macos)         |
+| brew           | `liberators/brew.sh`           | Homebrew lifecycle, package maintenance (linux, macos)  |
 | claude         | `liberators/claude.sh`         | Claude Code config, its state out of $HOME (ST0006)     |
 | env            | `liberators/env.sh`            | Sleeve variables for shells and GUI apps (ST0008 WP05)  |
 | agents         | `liberators/agents.sh`         | A home for each sleeve agent, from its role (ST0006)    |
