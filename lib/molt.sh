@@ -1936,7 +1936,9 @@ cmd_doctor() {
     local not_installed=""
     local not_installed_why=""
     local why=""
-    while IFS= read -r lib; do
+    # On fd 3, so a check keeps the caller's stdin and cannot read the rest of
+    # the list (issue 0075; see molt_resleeve).
+    while IFS= read -r lib <&3; do
       [[ -z "$lib" ]] && continue
       enabled_count=$((enabled_count + 1))
       # Capture rather than discard. The check function already prints exactly
@@ -1954,7 +1956,7 @@ cmd_doctor() {
           not_installed_why="${not_installed_why}         ${line}"$'\n'
         done <<< "$(echo "$why" | head -3)"
       fi
-    done <<< "$enabled"
+    done 3<<< "$enabled"
     # This once printed ✓ for every ratio, so a sleeve with nothing installed
     # passed and the missing liberator was never named. A count is not a verdict: a pass
     # carries none, and a failure says how many of how many, both counted
@@ -3001,8 +3003,9 @@ molt_all_repos() {
     echo "config:${user_repo}"
   fi
 
-  # Liberator repos (enabled liberators only)
-  while IFS= read -r lib; do
+  # Liberator repos (enabled liberators only). On fd 3, so a liberator's code
+  # keeps the caller's stdin and cannot read the rest of the list (issue 0075).
+  while IFS= read -r lib <&3; do
     [[ -z "$lib" ]] && continue
     # Load liberator quietly: anything it printed would mix with the repo list
     liberator_load "$lib" >/dev/null 2>&1 || continue
@@ -3013,7 +3016,7 @@ molt_all_repos() {
         echo "${lib}:${repo_path}"
       fi
     fi
-  done <<< "$liberators"
+  done 3<<< "$liberators"
 }
 
 _git_detect_remote() {
