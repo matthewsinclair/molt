@@ -1,0 +1,15 @@
+{
+  "id": "01M661VKFV0RKQ1MDNGC1BW7T8",
+  "ts": "2026-10-30T09:22:05.947Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 30 Oct, going AFK: molt-vc has the pen to close out the issues and get 1.2.0 done; no new work for its own sake, no bald yaks. So the critic's shared liberator helper and the extra 0075 stdin test are dropped; only defects are fixed."
+  }
+}

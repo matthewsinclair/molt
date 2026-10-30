@@ -1003,6 +1003,14 @@
       "text": "1.2.0 RC queue: READY cc/0068-use-brew-a4 4292121; cc/0075-more-loops 2e2e9f9 (re-hand after its stdin test); building cc 0067, 0074 follow-ups, 0073, zsh fix (Molt-matts), dc 0069, 0070, 0065, 0072+0076, 0077. Gate: scratchpad rc.sh (both bashes, tripwire HOME), macOS CI by workflow_dispatch, then one cut.",
       "state": "live",
       "recorded_at": "2026-10-30T09:16:40.388Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 38,
+      "text": "hv 30 Oct, going AFK: molt-vc has the pen to close out the issues and get 1.2.0 done; no new work for its own sake, no bald yaks. So the critic's shared liberator helper and the extra 0075 stdin test are dropped; only defects are fixed.",
+      "state": "live",
+      "recorded_at": "2026-10-30T09:22:05.947Z"
     }
   ],
   "sent": [
