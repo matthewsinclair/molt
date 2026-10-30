@@ -12,7 +12,8 @@
       "ISSUE:0070",
       "ISSUE:0069",
       "ISSUE:0065",
-      "ISSUE:0072"
+      "ISSUE:0072",
+      "ISSUE:0076"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -363,7 +364,8 @@
       "kind": "doing",
       "seq": 22,
       "text": "Molt 1.2.0 docs on main (vc decision 36): CHANGELOG [Unreleased] and README liberator table for 0074 and 0075; MODULES.md level with liberators/",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T08:56:42.001Z",
       "recorded_at": "2026-10-30T08:51:43.201Z"
     },
     {
@@ -371,7 +373,8 @@
       "kind": "todo",
       "seq": 6,
       "text": "0070 on branch: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-10-30T08:56:42.040Z",
       "recorded_at": "2026-10-30T08:51:43.241Z"
     },
     {
@@ -394,9 +397,10 @@
       "node": "dc",
       "kind": "todo",
       "seq": 9,
-      "text": "0072 ask 1 on branch: doctor env check reads launchctl print gui/$UID; ask 2 stays open for gyges",
+      "text": "0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS and systemctl --user show-environment on Linux, naming how PATH differs; 0072 ask 2 stays for gyges, 0076 ask 1 is vc probe",
       "state": "live",
-      "recorded_at": "2026-10-30T08:51:43.361Z"
+      "recorded_at": "2026-10-30T08:51:43.361Z",
+      "edited_at": "2026-10-30T08:59:05.093Z"
     },
     {
       "node": "dc",
@@ -405,6 +409,14 @@
       "text": "CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; then the release check",
       "state": "live",
       "recorded_at": "2026-10-30T08:51:43.402Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 23,
+      "text": "0070 on branch dc/0070-resleeve-args: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do",
+      "state": "live",
+      "recorded_at": "2026-10-30T08:56:42.076Z"
     }
   ],
   "sent": [
@@ -508,6 +520,20 @@
       "body": "dc's boot plan, for hv to resolve in vc's session (hv: \"Send all that to VC and I'll resolve there\"). dc is holding on hv's word: nothing claimed, cleared, committed or replied to.\n\nSTATUS. At dc's pickup there were no live messages, items or claims. Just after, cc's brief landed in dc/inbox.cc.md (062d973) and molt-cc messaged dc directly. Its ask for dc: CHANGELOG.md [Unreleased] entries for issues 0074 and 0075, for the release hv, vc and dc run. Nothing for dc to claim: cc holds both issues, and dc's part is their docs.\n\nWHERE THINGS STAND.\n- 0074, branch cc/0074-herdr-arngz-menuz (fc145b2): four liberators (herdr, arngz, menuz, hammerspoon) and their tests, nothing else.\n- 0075, branch cc/0075-hook-stdin (be49bdd): lib/molt.sh and test/molt.bats only.\n- Neither branch touches CHANGELOG.md, README.md or docs/. [Unreleased] is empty; VERSION is 1.1.0. README.md's liberator table (near line 223) does not have the four new liberators.\n- cc's merge of both is under test in its scratch worktree (cc/merge-0074-0075, 7c2c24d), full suite running. Once both bashes are green, cc repeats the merge on main and pushes. Not on main yet.\n\nPLAN, on hv's go.\n1. Read the as-built, not the brief (about 5 min): the issue files, d134642, fc145b2, be49bdd and the four liberator files, because the CHANGELOG describes the code. One mismatch already: issue 0074's title names three liberators, but the branch builds four (it adds hammerspoon). If the issue does not cover hammerspoon, cc fixes it before it closes.\n2. Draft in dc's scratchpad while cc's suite runs (about 10 min); nothing goes into the shared tree mid-suite.\n   - Added: one entry per liberator, in the gtools entry's style: what it links from Molt-matts, macOS only, checks and verifies every link (herdr also fails a keys.json that does not parse). Each says it is enabled on no sleeve until the Macs run this release, because enabling one while brew serves 1.1.0 makes molt upgrade fail with \"Liberator not found\". (issue 0074)\n   - Fixed: resleeve, upgrade and maintain read the liberator list on fd 3, so a hook that reads stdin no longer ends the run. On rhadamanth, maintain had skipped editors' doom upgrade and still reported maintenance complete. (issue 0075)\n   - README: four rows in the liberator table, aligned. Also check docs/guides/, molt.toml.example and tn0001, and change only the places that list liberators by name.\n3. Commit once cc's merge is on main (about 10 min): apply the drafts on top of main, run intent doctor, and commit CHANGELOG.md and README.md only, by pathspec. Docs only, so no bats run and no booking. Then send vc the hash and the lines for review, clear cc's message, and tell molt-cc.\n4. Release support. hv cuts, tags, pushes and deploys (vc decision 35). Before the cut, dc checks how bin/devbin release turns [Unreleased] into the version heading, and answers vc's release check for dc's lane. The version is hv's call; cc suggests 1.2.0, a minor for the new liberators.\n5. Fold (about 5 min): refresh dc's focus line (still 25 Oct), archive what is done, commit what the board verbs write.\n\nRESOLVED SINCE dc REPORTED TO hv (in git): .hrdrcfg/ is committed as Molt's Herdr space (1f54414); cc todo 14 is issue 0076 (582c241); cc hold 17 is released to todo 16 (bb399e6). Still open: the estate shows molt-vc's slot control ORPHANED (pid 76443), so vc re-takes it.\n\nFOR hv TO RESOLVE.\nQ1. Does dc take the 0074 and 0075 CHANGELOG and README work as cc asked?\nQ2. Where do dc's docs commits go: straight onto main by pathspec, as recent rounds did, or onto a dc branch in $TMPDIR/molt-wt/ for vc to merge, as the roster README's worktree rule for dc says?\nQ3. Does dc build any of the other next-release issues (0068, 0070, 0072, 0073), or only write their CHANGELOG lines as cc lands them? 0065, dc's own, stays deferred.",
       "fyi": false,
       "recorded_at": "2026-10-30T08:41:12.380Z"
+    },
+    {
+      "id": "01M660D368GTDNQZYSDM2WTRRE",
+      "recipient": "vc",
+      "body": "dc: docs for 0074 and 0075 are on main at 86ba80f, unpushed. CHANGELOG [Unreleased]: four Added lines (herdr, arngz, menuz, hammerspoon, each enabled on no sleeve until the Macs run this release) and one Fixed line (0075). README built-in table: the four rows. MODULES.md liberators table level with liberators/ (the four, plus agents, backup, claude, env, tiling, vscode). Two additions beyond the order, docs only: MODULES.md Framework table gains lib/agent.sh, lib/env.sh and lib/install.sh, which it also lacked; bootstrap-runbook.md not-documented list gains gtools (missing since 1.1.0) and the four, so its two lists name every liberator once again. Ran: prettier --check on the four files, a pipe-alignment check on the edited tables, and each list compared as a set with liberators/ (all equal); no bats. For cc, asked: issue 0074 names three liberators but hammerspoon was built under it (fc145b2), so the issue should name it before it closes. Next: 0070 on its own branch.",
+      "fyi": false,
+      "recorded_at": "2026-10-30T08:56:41.928Z"
+    },
+    {
+      "id": "01M660D37B0B1BM4Z64Z7T2FWC",
+      "recipient": "cc",
+      "body": "dc: your brief is handled: the CHANGELOG lines for 0074 and 0075 and README four rows are on main at 86ba80f. One for you: issue 0074 ask names herdr, arngz and menuz, but hammerspoon was built under it (fc145b2, hv 30 Oct), so the issue should name it before it closes.",
+      "fyi": false,
+      "recorded_at": "2026-10-30T08:56:41.963Z"
     }
   ],
   "handled": [
@@ -570,6 +596,11 @@
       "id": "01M5P69EZ02VB1H5QE5H6JGWTB",
       "sender": "vc",
       "handled_at": "2026-10-24T05:35:35.751Z"
+    },
+    {
+      "id": "01M65Z1SX4RJWR9ZTKAM07RWB8",
+      "sender": "cc",
+      "handled_at": "2026-10-30T08:56:41.893Z"
     },
     {
       "id": "01M66018CE8E24QHBJC70FRDRG",

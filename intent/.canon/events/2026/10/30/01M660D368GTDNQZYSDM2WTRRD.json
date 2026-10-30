@@ -1,0 +1,17 @@
+{
+  "id": "01M660D368GTDNQZYSDM2WTRRD",
+  "ts": "2026-10-30T08:56:41.928Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc: docs for 0074 and 0075 are on main at 86ba80f, unpushed. CHANGELOG [Unreleased]: four Added lines (herdr, arngz, menuz, hammerspoon, each enabled on no sleeve until the Macs run this release) and one Fixed line (0075). README built-in table: the four rows. MODULES.md liberators table level with liberators/ (the four, plus agents, backup, claude, env, tiling, vscode). Two additions beyond the order, docs only: MODULES.md Framework table gains lib/agent.sh, lib/env.sh and lib/install.sh, which it also lacked; bootstrap-runbook.md not-documented list gains gtools (missing since 1.1.0) and the four, so its two lists name every liberator once again. Ran: prettier --check on the four files, a pipe-alignment check on the edited tables, and each list compared as a set with liberators/ (all equal); no bats. For cc, asked: issue 0074 names three liberators but hammerspoon was built under it (fc145b2), so the issue should name it before it closes. Next: 0070 on its own branch.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

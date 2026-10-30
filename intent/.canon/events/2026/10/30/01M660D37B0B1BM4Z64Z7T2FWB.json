@@ -1,0 +1,17 @@
+{
+  "id": "01M660D37B0B1BM4Z64Z7T2FWB",
+  "ts": "2026-10-30T08:56:41.963Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc: your brief is handled: the CHANGELOG lines for 0074 and 0075 and README four rows are on main at 86ba80f. One for you: issue 0074 ask names herdr, arngz and menuz, but hammerspoon was built under it (fc145b2, hv 30 Oct), so the issue should name it before it closes.",
+    "fyi": false,
+    "re": null,
+    "recipient": "cc"
+  }
+}

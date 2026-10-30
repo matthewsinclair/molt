@@ -1,0 +1,16 @@
+{
+  "id": "01M660HF0576TJGZSVVWZ7RE9T",
+  "ts": "2026-10-30T08:59:05.093Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 9,
+    "text": "0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS and systemctl --user show-environment on Linux, naming how PATH differs; 0072 ask 2 stays for gyges, 0076 ask 1 is vc probe"
+  }
+}

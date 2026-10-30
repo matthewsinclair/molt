@@ -6,21 +6,20 @@ session_id: 19bd805c-8bd4-48c6-96cd-fa397bda01da
 heartbeat_at: 2026-10-30 08:51Z
 status: active
 focus: "30 Oct: Molt 1.2.0 (vc decision 36): docs for 0074 and 0075 on main first, then 0070, 0069, 0065 and 0072 ask 1, each on its own branch for vc"
-claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072]
+claims: [ISSUE:0070, ISSUE:0069, ISSUE:0065, ISSUE:0072, ISSUE:0076]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- Molt 1.2.0 docs on main (vc decision 36): CHANGELOG [Unreleased] and README liberator table for 0074 and 0075; MODULES.md level with liberators/
+- 0070 on branch dc/0070-resleeve-args: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do
 
 ## TODO
 
-- 0070 on branch: resleeve refuses an unknown argument with Unknown option, as upgrade and maintain do
 - 0069 on branch: doctor GitHub check gets ssh its own connect bound and -n; a timeout reports unreachable, not unauthenticated
 - 0065 on branch: test_helper setup gives every test a fake HOME; proved on the five named files under both bashes
-- 0072 ask 1 on branch: doctor env check reads launchctl print gui/$UID; ask 2 stays open for gyges
+- 0072 ask 1 with 0076 ask 2, one branch: doctor env check reads what the GUI session holds through a reader per platform, launchctl print gui/$UID on macOS and systemctl --user show-environment on Linux, naming how PATH differs; 0072 ask 2 stays for gyges, 0076 ask 1 is vc probe (edited)
 - CHANGELOG line for each issue as it lands, cc and dc, ahead of vc cut; then the release check
 
 ## Holds
