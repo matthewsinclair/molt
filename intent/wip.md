@@ -1,5 +1,5 @@
 ---
-verblock: "1 Nov 2026:v0.65: Matthew Sinclair - localfold; 0079's last proof waits on hv's GNOME re-login"
+verblock: "1 Nov 2026:v0.66: Matthew Sinclair - rg removed on gyges; 0079 waits on hv's GNOME re-login"
 ---
 
 # Work In Progress
@@ -13,7 +13,6 @@ verblock: "1 Nov 2026:v0.65: Matthew Sinclair - localfold; 0079's last proof wai
 - **Devbin 0.1.19 sweep:** devbin-vc commits the vendored `bin/.devbin` in Molt's tree, START and END to vc; keep the tree clean for it.
 - **rhadamanth and gyges:** rustup on a quieter day, booked (hv 1 Nov); 0079's rule then puts its cargo first.
 - **Molt's next release:** 0078 (low, dc). Doctor's resleeve hint where only a login clears the env check, and the env liberator's PATH refusal naming zshrc.
-- **gyges's stale `~/.cargo/bin/rg`:** hv ruled it removed (1 Nov). No removal is confirmed, so get gyges-sysadm's word through devbin-vc.
 - **gyges, when reachable:** brew upgrade molt to 1.2.0, the four new liberators, and 0072's ask 2. 0071 stays deferred.
 - **farcaster, pihole, when next reachable:** resync the clones onto the purged histories, set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then `molt upgrade`.
 - **rhadamanth backup:** hv's, after 19 Dec.

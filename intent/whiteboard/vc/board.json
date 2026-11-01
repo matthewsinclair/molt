@@ -1097,7 +1097,8 @@
       "kind": "todo",
       "seq": 42,
       "text": "gyges: hv ruled on 1 Nov (decision 41) that the stale ~/.cargo/bin/rg goes (ripgrep 13.0.0; brew's 15.2.0 answers). devbin-vc has asked gyges-sysadm for ls, command -v rg and rg --version, and passes the answer on. If rg is still there, the rm is hv's word in gyges-sysadm's window, never relayed.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-01T10:00:56.018Z",
       "recorded_at": "2026-11-01T09:45:49.032Z",
       "edited_at": "2026-11-01T09:50:10.470Z"
     }
