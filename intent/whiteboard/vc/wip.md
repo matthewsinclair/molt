@@ -21,7 +21,7 @@ _(none)_
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - Issue 0079 (closed and pushed; kovacs rolled out green 1 Nov, slot 01M6B79F14HZNYE1W87D0RH7NP): once hv is back from the GNOME re-login on kovacs, tell kovacs-sysadm, which survives the logout, to check the systemd user manager's PATH and molt doctor's env check, the last kovacs proof. (edited)
-- Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.
+- Devbin 0.1.19 sweep, the one Molt item that moves while decision 43 parks the rest: when it reaches Molt, devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it. hv accepted devbin's XDG cache default, ~/.cache/devbin, and Molt, Molt-matts and Molt-flynn set neither DEVBIN_CACHE_HOME nor XDG_CACHE_HOME (vc's grep, 1 Nov). (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 
 ## Holds
@@ -38,6 +38,7 @@ _(none)_
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
+- hv 1 Nov, first-hand in devbin-vc's window (11:16Z by its clock): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so Molt parks its runs, asks, pushes and items for hv, rustup and 0079's kovacs proof included, until devbin-vc says the sweep is done.
 
 ---
 

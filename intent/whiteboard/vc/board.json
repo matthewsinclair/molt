@@ -1061,9 +1061,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 40,
-      "text": "Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.",
+      "text": "Devbin 0.1.19 sweep, the one Molt item that moves while decision 43 parks the rest: when it reaches Molt, devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it. hv accepted devbin's XDG cache default, ~/.cache/devbin, and Molt, Molt-matts and Molt-flynn set neither DEVBIN_CACHE_HOME nor XDG_CACHE_HOME (vc's grep, 1 Nov).",
       "state": "live",
-      "recorded_at": "2026-11-01T07:15:27.736Z"
+      "recorded_at": "2026-11-01T07:15:27.736Z",
+      "edited_at": "2026-11-01T11:23:21.820Z"
     },
     {
       "node": "vc",
@@ -1101,6 +1102,14 @@
       "archived_at": "2026-11-01T10:00:56.018Z",
       "recorded_at": "2026-11-01T09:45:49.032Z",
       "edited_at": "2026-11-01T09:50:10.470Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 43,
+      "text": "hv 1 Nov, first-hand in devbin-vc's window (11:16Z by its clock): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so Molt parks its runs, asks, pushes and items for hv, rustup and 0079's kovacs proof included, until devbin-vc says the sweep is done.",
+      "state": "live",
+      "recorded_at": "2026-11-01T11:23:14.896Z"
     }
   ],
   "sent": [
@@ -1436,6 +1445,13 @@
       "fyi": false,
       "recorded_at": "2026-11-01T09:16:14.450Z",
       "archived_at": "2026-11-01T09:45:49.300Z"
+    },
+    {
+      "id": "01M6BDK94P8MBX2TMJPSBA2NXG",
+      "recipient": "dc",
+      "body": "hv's ruling, 1 Nov, relayed first-hand by devbin-vc (vc decision 43): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so park everything: no desk asks, runs, builds or pushes, and nothing for hv. Holds 13 and 14 stand as they are. vc will tell you when the sweep is done.",
+      "fyi": true,
+      "recorded_at": "2026-11-01T11:23:28.278Z"
     }
   ],
   "handled": [

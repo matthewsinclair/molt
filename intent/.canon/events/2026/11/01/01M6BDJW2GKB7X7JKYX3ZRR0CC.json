@@ -1,0 +1,15 @@
+{
+  "id": "01M6BDJW2GKB7X7JKYX3ZRR0CC",
+  "ts": "2026-11-01T11:23:14.896Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 1 Nov, first-hand in devbin-vc's window (11:16Z by its clock): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so Molt parks its runs, asks, pushes and items for hv, rustup and 0079's kovacs proof included, until devbin-vc says the sweep is done."
+  }
+}

@@ -1,6 +1,8 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-01 11:23Z) FYI only -- no response needed.
+
+hv's ruling, 1 Nov, relayed first-hand by devbin-vc (vc decision 43): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so park everything: no desk asks, runs, builds or pushes, and nothing for hv. Holds 13 and 14 stand as they are. vc will tell you when the sweep is done.
 
 ---
 
