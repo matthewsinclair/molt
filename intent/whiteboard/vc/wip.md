@@ -38,6 +38,7 @@ _(none)_
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI), issue 0079: use rustup; ~/.cargo/bin goes ahead of Homebrew's bin wherever rustup is installed (kovacs now; rhadamanth and gyges get rustup later, booked); every Molt-* config fixed, Molt-flynn taking Molt-matts' PATH block without INTENT_HOME and UTILZ_HOME; gyges's stale ~/.cargo/bin/rg removed; dc builds, vc merges, hv pushes; 0078 stays held.
+- hv 1 Nov (molt-vc's TUI), after 0079 merged: Flynn's zshenv takes Molt-matts' ~/.config/molt/env.sh line now (dc builds, vc checks and merges, Molt-flynn's push carries it with 0079); path_add and path_prepend stay copied in each stack, self-contained at shell startup.
 
 ---
 

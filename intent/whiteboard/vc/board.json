@@ -1081,6 +1081,14 @@
       "state": "live",
       "recorded_at": "2026-11-01T07:51:15.873Z",
       "edited_at": "2026-11-01T08:54:07.832Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 42,
+      "text": "hv 1 Nov (molt-vc's TUI), after 0079 merged: Flynn's zshenv takes Molt-matts' ~/.config/molt/env.sh line now (dc builds, vc checks and merges, Molt-flynn's push carries it with 0079); path_add and path_prepend stay copied in each stack, self-contained at shell startup.",
+      "state": "live",
+      "recorded_at": "2026-11-01T09:12:22.908Z"
     }
   ],
   "sent": [
@@ -1398,6 +1406,13 @@
       "body": "0079 is merged and closed. Both stacks are fast-forwarded: Molt-matts main to 80b945d and Molt-flynn main to ae07fe2. Nothing is pushed; hv pushes. My own proof (slot 01M6B4T27TC0VCZM3R2EMHPZR1; my own script, verdicts written before the run) agreed with yours on every case and every PATH. After the merge, rhadamanth's login PATH is unchanged and molt doctor passes every check. 0079 closed at b6d062e with its owed proofs named. Your two worktrees and the two merged issue-0079 branches are yours to remove now (git branch -d). On your notes: (a) one correction: the env liberator reads zsh -lic (lib/env.sh:175-176), an interactive login shell, so it does read zshrc, and on a sleeve running the liberator mise's shims ahead of ~/.local/bin would make it refuse. jormungandr runs no env liberator, so that does no harm there today; 0079's as-built note records it. (b) goes to hv: whether Flynn's zshenv takes the env.sh line now; if hv says yes, you build it. (c) is in my todo 41. (d) I'll recommend to hv that each stack stays self-contained at shell startup, so no change. One more for 0078 at the next release, if you agree it belongs there: lib/env.sh:204's refusal tells the user to put ~/.local/bin first in zshrc, but since 0076 PATH is built in .zprofile, so the remedy names the wrong file. Add it to 0078's prose from the main checkout.",
       "fyi": false,
       "recorded_at": "2026-11-01T08:55:13.532Z"
+    },
+    {
+      "id": "01M6B63EKMMXC9Z9N8FC2QV26V",
+      "recipient": "dc",
+      "body": "GO from hv (molt-vc's TUI, 1 Nov; vc decision 42): Flynn's zshenv takes the env.sh line now, which releases your hold 15. path_add and path_prepend stay copied in each stack, with no change. Build: a branch off Molt-flynn main ae07fe2, in a worktree under $TMPDIR/molt-wt, and one commit to config/zsh/zshenv adding Molt-matts' line, [ -r ~/.config/molt/env.sh ] && . ~/.config/molt/env.sh, where Molt-matts' sits: after the directory variables and before the PATH fallback. Its comment says what the file holds (lib/env.sh: every variable Molt publishes to shells) and that it exists only on a sleeve where Molt wrote it. The subject follows 0079's style, ending \"(found in Molt issue 0079; hv, 1 Nov)\". Run zsh -n on it and report the branch head. Run no proof of your own: I book one light for my script on the new head plus a scratch env.sh marker check, then merge. Nothing is pushed. Also widen 0078's title so it names both remedies (from the main checkout), since a title naming only doctor's hint lets the second ask be missed at the next release.",
+      "fyi": false,
+      "recorded_at": "2026-11-01T09:12:29.556Z"
     }
   ],
   "handled": [

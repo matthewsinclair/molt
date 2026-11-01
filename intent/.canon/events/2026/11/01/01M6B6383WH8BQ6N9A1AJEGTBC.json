@@ -1,0 +1,15 @@
+{
+  "id": "01M6B6383WH8BQ6N9A1AJEGTBC",
+  "ts": "2026-11-01T09:12:22.908Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 1 Nov (molt-vc's TUI), after 0079 merged: Flynn's zshenv takes Molt-matts' ~/.config/molt/env.sh line now (dc builds, vc checks and merges, Molt-flynn's push carries it with 0079); path_add and path_prepend stay copied in each stack, self-contained at shell startup."
+  }
+}
