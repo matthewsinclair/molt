@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 09:14Z
+heartbeat_at: 2026-11-01 09:16Z
 status: active
-focus: "1 Nov: Flynn's zshenv sources Molt's env.sh (vc decision 42): built on Molt-flynn issue-0079-env-sh at ff6fa35, reported to vc, who proves and merges; 0078's title names both remedies; holds 0072 ask 2 (gyges) and 0078 (next release)"
+focus: "1 Nov: 0079 and Flynn's env.sh line landed (vc merged; hv pushes); dc's worktrees and branches removed; holds 0072 ask 2 (gyges) and 0078 (next release)"
 claims: [ISSUE:0072, ISSUE:0078]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0072, ISSUE:0078]
 
 ## DOING
 
-- Flynn's zshenv sources ~/.config/molt/env.sh (vc decision 42, hv 1 Nov): Molt-flynn branch issue-0079-env-sh at ff6fa35 off ae07fe2; vc proves and merges, hv pushes; dc removes the worktree once it lands
+_(none)_
 
 ## TODO
 

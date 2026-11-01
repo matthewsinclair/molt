@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00",
-    "heartbeat_at": "2026-11-01T09:14:12.305Z",
+    "heartbeat_at": "2026-11-01T09:16:39.920Z",
     "status": "active",
-    "focus": "1 Nov: Flynn's zshenv sources Molt's env.sh (vc decision 42): built on Molt-flynn issue-0079-env-sh at ff6fa35, reported to vc, who proves and merges; 0078's title names both remedies; holds 0072 ask 2 (gyges) and 0078 (next release)",
+    "focus": "1 Nov: 0079 and Flynn's env.sh line landed (vc merged; hv pushes); dc's worktrees and branches removed; holds 0072 ask 2 (gyges) and 0078 (next release)",
     "claims": [
       "ISSUE:0072",
       "ISSUE:0078"
@@ -508,7 +508,8 @@
       "kind": "doing",
       "seq": 28,
       "text": "Flynn's zshenv sources ~/.config/molt/env.sh (vc decision 42, hv 1 Nov): Molt-flynn branch issue-0079-env-sh at ff6fa35 off ae07fe2; vc proves and merges, hv pushes; dc removes the worktree once it lands",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-01T09:16:39.830Z",
       "recorded_at": "2026-11-01T09:14:04.771Z"
     }
   ],
@@ -778,6 +779,11 @@
       "id": "01M6B63EKMMXC9Z9N8FC2QV26V",
       "sender": "vc",
       "handled_at": "2026-11-01T09:14:12.266Z"
+    },
+    {
+      "id": "01M6B6AA7JY6VTF0V7WANV86YK",
+      "sender": "vc",
+      "handled_at": "2026-11-01T09:16:39.877Z"
     }
   ]
 }
