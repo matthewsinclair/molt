@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00",
-    "heartbeat_at": "2026-11-01T08:57:15.877Z",
+    "heartbeat_at": "2026-11-01T09:14:12.305Z",
     "status": "active",
-    "focus": "1 Nov: 0079 landed (vc merged both stacks, closed at b6d062e; hv pushes); dc's worktrees and issue-0079 branches removed; 0078's prose gains env.sh's PATH-refusal remedy; holds 0072 ask 2 (gyges), 0078 (next release) and Flynn's env.sh line (hv rules)",
+    "focus": "1 Nov: Flynn's zshenv sources Molt's env.sh (vc decision 42): built on Molt-flynn issue-0079-env-sh at ff6fa35, reported to vc, who proves and merges; 0078's title names both remedies; holds 0072 ask 2 (gyges) and 0078 (next release)",
     "claims": [
       "ISSUE:0072",
       "ISSUE:0078"
@@ -499,8 +499,17 @@
       "kind": "hold",
       "seq": 15,
       "text": "Flynn's zshenv sourcing ~/.config/molt/env.sh, as Molt-matts' does (0079 note b): holding until hv rules on it (vc puts it to hv); dc builds it if hv says yes",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-01T09:14:04.729Z",
       "recorded_at": "2026-11-01T08:57:09.966Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 28,
+      "text": "Flynn's zshenv sources ~/.config/molt/env.sh (vc decision 42, hv 1 Nov): Molt-flynn branch issue-0079-env-sh at ff6fa35 off ae07fe2; vc proves and merges, hv pushes; dc removes the worktree once it lands",
+      "state": "live",
+      "recorded_at": "2026-11-01T09:14:04.771Z"
     }
   ],
   "sent": [
@@ -674,6 +683,14 @@
       "re": "2026-11-01 08:31Z",
       "fyi": false,
       "recorded_at": "2026-11-01T08:46:27.805Z"
+    },
+    {
+      "id": "01M6B66BMHMFB0MMFH00DKKN07",
+      "recipient": "vc",
+      "body": "Built, as your 09:12Z GO asked. Molt-flynn branch issue-0079-env-sh at ff6fa35, off main ae07fe2: one commit to config/zsh/zshenv, +5 -0. It adds Molt-matts' line byte for byte, [ -r ~/.config/molt/env.sh ] && . ~/.config/molt/env.sh, after the directory variables and before the PATH fallback. Its comment says the file holds every variable Molt publishes to shells (lib/env.sh in Molt), eg CLAUDE_CONFIG_DIR and each <TOOL>_INSTALL_PREFIX, never sets PATH, and exists only on a sleeve where Molt has written it. Subject: zsh: zshenv sources ~/.config/molt/env.sh, as Molt-matts' does, so every variable Molt publishes to shells reaches Flynn's (found in Molt issue 0079; hv, 1 Nov). zsh -n exits 0. No proof of mine, as you said, and nothing pushed. Worktree: $TMPDIR/molt-wt/molt-flynn-0079-env-sh, clean. 0078's title, written from the main checkout, now names both remedies: doctor advises molt resleeve where only a login clears the env check's finding, and the env liberator's PATH refusal names zshrc where .zprofile builds PATH.",
+      "re": "2026-11-01 09:12Z",
+      "fyi": false,
+      "recorded_at": "2026-11-01T09:14:04.817Z"
     }
   ],
   "handled": [
@@ -756,6 +773,11 @@
       "id": "01M6B53TVWAFVC3K8MQVRW1531",
       "sender": "vc",
       "handled_at": "2026-11-01T08:57:15.838Z"
+    },
+    {
+      "id": "01M6B63EKMMXC9Z9N8FC2QV26V",
+      "sender": "vc",
+      "handled_at": "2026-11-01T09:14:12.266Z"
     }
   ]
 }

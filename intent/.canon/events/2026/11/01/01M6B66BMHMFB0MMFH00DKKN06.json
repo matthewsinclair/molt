@@ -1,0 +1,17 @@
+{
+  "id": "01M6B66BMHMFB0MMFH00DKKN06",
+  "ts": "2026-11-01T09:14:04.817Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "Built, as your 09:12Z GO asked. Molt-flynn branch issue-0079-env-sh at ff6fa35, off main ae07fe2: one commit to config/zsh/zshenv, +5 -0. It adds Molt-matts' line byte for byte, [ -r ~/.config/molt/env.sh ] && . ~/.config/molt/env.sh, after the directory variables and before the PATH fallback. Its comment says the file holds every variable Molt publishes to shells (lib/env.sh in Molt), eg CLAUDE_CONFIG_DIR and each <TOOL>_INSTALL_PREFIX, never sets PATH, and exists only on a sleeve where Molt has written it. Subject: zsh: zshenv sources ~/.config/molt/env.sh, as Molt-matts' does, so every variable Molt publishes to shells reaches Flynn's (found in Molt issue 0079; hv, 1 Nov). zsh -n exits 0. No proof of mine, as you said, and nothing pushed. Worktree: $TMPDIR/molt-wt/molt-flynn-0079-env-sh, clean. 0078's title, written from the main checkout, now names both remedies: doctor advises molt resleeve where only a login clears the env check's finding, and the env liberator's PATH refusal names zshrc where .zprofile builds PATH.",
+    "fyi": false,
+    "re": "2026-11-01 09:12Z",
+    "recipient": "vc"
+  }
+}
