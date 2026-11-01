@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 11:02Z
+heartbeat_at: 2026-11-01 11:24Z
 status: active
-focus: "1 Nov: nothing in flight; 0072 ask 2 answered on rhadamanth (verdict 2 on launchd's record, molt-vc confirmed; vc writes the note); its doctor change (hold 13) and 0078 (hold 14) wait for Molt's next release"
+focus: "1 Nov: parked on hv's ruling (vc decision 43): no desk asks, runs, builds or pushes, and nothing for hv, until devbin 0.1.19 is cut and swept into the fleet (molt-vc says when); holds 13 (0072 ask 2's doctor change) and 14 (0078) stand for Molt's next release"
 claims: [ISSUE:0072, ISSUE:0078]
 ---
 

@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00",
-    "heartbeat_at": "2026-11-01T11:02:04.735Z",
+    "heartbeat_at": "2026-11-01T11:24:56.545Z",
     "status": "active",
-    "focus": "1 Nov: nothing in flight; 0072 ask 2 answered on rhadamanth (verdict 2 on launchd's record, molt-vc confirmed; vc writes the note); its doctor change (hold 13) and 0078 (hold 14) wait for Molt's next release",
+    "focus": "1 Nov: parked on hv's ruling (vc decision 43): no desk asks, runs, builds or pushes, and nothing for hv, until devbin 0.1.19 is cut and swept into the fleet (molt-vc says when); holds 13 (0072 ask 2's doctor change) and 14 (0078) stand for Molt's next release",
     "claims": [
       "ISSUE:0072",
       "ISSUE:0078"
@@ -787,6 +787,11 @@
       "id": "01M6B6AA7JY6VTF0V7WANV86YK",
       "sender": "vc",
       "handled_at": "2026-11-01T09:16:39.877Z"
+    },
+    {
+      "id": "01M6BDK94P8MBX2TMJPSBA2NXG",
+      "sender": "vc",
+      "handled_at": "2026-11-01T11:24:56.607Z"
     }
   ]
 }
