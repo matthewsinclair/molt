@@ -1,0 +1,16 @@
+{
+  "id": "01M6B51TGFYDJAZGR7ZYVAWZCH",
+  "ts": "2026-11-01T08:54:07.631Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 39,
+    "text": "Issue 0079 (closed 1 Nov; merged into Molt-matts main 80b945d and Molt-flynn main ae07fe2): hv pushes both, Molt-flynn's with its two September commits; then kovacs's molt upgrade through kovacs-sysadm in a window devbin-vc names, with the proof 0079 names, and hv's GNOME re-login."
+  }
+}

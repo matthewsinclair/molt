@@ -20,9 +20,9 @@ _(none)_
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- Issue 0079: ~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, in Molt-matts and Molt-flynn; dc builds, vc proves and merges, hv pushes; then kovacs's rollout through kovacs-sysadm in devbin-vc's window. (edited)
+- Issue 0079 (closed 1 Nov; merged into Molt-matts main 80b945d and Molt-flynn main ae07fe2): hv pushes both, Molt-flynn's with its two September commits; then kovacs's molt upgrade through kovacs-sysadm in a window devbin-vc names, with the proof 0079 names, and hv's GNOME re-login. (edited)
 - Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.
-- rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; the 0079 rule then puts its cargo first (hv 1 Nov).
+- rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 
 ## Holds
 

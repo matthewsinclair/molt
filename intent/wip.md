@@ -1,12 +1,12 @@
 ---
-verblock: "1 Nov 2026:v0.63: Matthew Sinclair - issue 0079 in build; folded for hv's compact"
+verblock: "1 Nov 2026:v0.64: Matthew Sinclair - issue 0079 merged and closed; hv's push and kovacs remain"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Issue 0079:** `~/.cargo/bin` ahead of Homebrew's bin wherever rustup is installed, in Molt-matts and Molt-flynn: dc banks WIP on `issue-0079`, its proof is booked after the go, vc proves and merges, hv pushes, then kovacs in devbin-vc's window.
+- **Issue 0079 (closed):** merged into Molt-matts main `80b945d` and Molt-flynn main `ae07fe2`. hv pushes both; Molt-flynn's push also carries two September commits. Then kovacs's `molt upgrade` goes through kovacs-sysadm in devbin-vc's window, followed by hv's GNOME re-login.
 
 ## TODO
 
