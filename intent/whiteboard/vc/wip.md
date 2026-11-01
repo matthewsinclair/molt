@@ -20,7 +20,7 @@ _(none)_
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- Issue 0079 (closed and pushed 1 Nov: Molt-matts 80b945d, Molt-flynn ff6fa35): kovacs's molt upgrade through kovacs-sysadm in the window devbin-vc names (slot 01M6B79F14HZNYE1W87D0RH7NP), with the proof 0079 names, then hv's GNOME re-login. (edited)
+- Issue 0079 (closed and pushed; kovacs rolled out green 1 Nov, slot 01M6B79F14HZNYE1W87D0RH7NP): once hv is back from the GNOME re-login on kovacs, tell kovacs-sysadm, which survives the logout, to check the systemd user manager's PATH and molt doctor's env check, the last kovacs proof. (edited)
 - Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 

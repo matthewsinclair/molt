@@ -6,7 +6,7 @@ verblock: "1 Nov 2026:v0.64: Matthew Sinclair - issue 0079 merged and closed; hv
 
 ## DOING
 
-- **Issue 0079 (closed, pushed):** Molt-matts `80b945d` and Molt-flynn `ff6fa35` are on their remotes. kovacs's `molt upgrade` goes through kovacs-sysadm in devbin-vc's window (slot `01M6B79F14HZNYE1W87D0RH7NP`), followed by hv's GNOME re-login.
+- **Issue 0079 (closed, pushed, kovacs green):** Molt-matts `80b945d` and Molt-flynn `ff6fa35` are on their remotes, and kovacs's `molt upgrade` is proved. What remains is the GUI session after hv's GNOME re-login, which kovacs-sysadm checks once told hv is back.
 
 ## TODO
 
