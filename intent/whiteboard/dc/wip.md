@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 08:47Z
+heartbeat_at: 2026-11-01 08:57Z
 status: active
-focus: "1 Nov: 0079 built (Molt-matts 80b945d, Molt-flynn ae07fe2) and proved (light, PASS), reported to vc for review and merge; worktrees kept in $TMPDIR/molt-wt until it lands; holds 0072 ask 2 (gyges) and 0078 (next release)"
-claims: [ISSUE:0072, ISSUE:0078, ISSUE:0079]
+focus: "1 Nov: 0079 landed (vc merged both stacks, closed at b6d062e; hv pushes); dc's worktrees and issue-0079 branches removed; 0078's prose gains env.sh's PATH-refusal remedy; holds 0072 ask 2 (gyges), 0078 (next release) and Flynn's env.sh line (hv rules)"
+claims: [ISSUE:0072, ISSUE:0078]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0079: built on issue-0079 (Molt-matts 80b945d, Molt-flynn ae07fe2), light proof PASS on devbin-vc's desk (slot 01M6B4AV2B4WP61HD5NS1Y3W90), reported to vc; vc reviews, proves and merges, hv pushes; dc removes both worktrees once it lands (edited)
+_(none)_
 
 ## TODO
 
@@ -22,7 +22,8 @@ _(none)_
 ## Holds
 
 - 0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges can be reached, by gyges-sysadm or ssh (vc decision 36: gyges later)
-- 0078 (doctor advises molt resleeve where only a login clears the GUI session): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check
+- 0078 (doctor advises molt resleeve where only a login clears the GUI session, and env.sh's PATH refusal names zshrc where PATH is built in .zprofile): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check's remedies in lib/env.sh (edited)
+- Flynn's zshenv sourcing ~/.config/molt/env.sh, as Molt-matts' does (0079 note b): holding until hv rules on it (vc puts it to hv); dc builds it if hv says yes
 
 ## Watch-outs
 

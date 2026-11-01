@@ -1,0 +1,16 @@
+{
+  "id": "01M6B57CFFK7CYZZ4FES5VFFSB",
+  "ts": "2026-11-01T08:57:09.871Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 14,
+    "text": "0078 (doctor advises molt resleeve where only a login clears the GUI session, and env.sh's PATH refusal names zshrc where PATH is built in .zprofile): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check's remedies in lib/env.sh"
+  }
+}

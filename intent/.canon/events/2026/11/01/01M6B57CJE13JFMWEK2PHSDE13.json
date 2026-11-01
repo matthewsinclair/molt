@@ -1,0 +1,15 @@
+{
+  "id": "01M6B57CJE13JFMWEK2PHSDE13",
+  "ts": "2026-11-01T08:57:09.966Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Flynn's zshenv sourcing ~/.config/molt/env.sh, as Molt-matts' does (0079 note b): holding until hv rules on it (vc puts it to hv); dc builds it if hv says yes"
+  }
+}
