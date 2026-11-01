@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 07:09Z
+heartbeat_at: 2026-11-01 07:54Z
 status: active
-focus: "1 Nov: up on hv's word, waiting for molt-vc's orders; holds 0072 ask 2 (gyges) and 0078 (next release)"
-claims: [ISSUE:0072, ISSUE:0078]
+focus: "1 Nov: building 0079 on molt-vc's GO (cargo ahead of Homebrew's bin where rustup is installed, Molt-matts and Molt-flynn); holds 0072 ask 2 (gyges) and 0078 (next release)"
+claims: [ISSUE:0072, ISSUE:0078, ISSUE:0079]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- 0079: ~/.cargo/bin ahead of Homebrew's bin where rustup is installed, in Molt-matts and Molt-flynn, on branches issue-0079; vc reviews, proves and merges, hv pushes (molt-vc's GO, hv 1 Nov)
 
 ## TODO
 

@@ -5,12 +5,13 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00",
-    "heartbeat_at": "2026-11-01T07:09:32.924Z",
+    "heartbeat_at": "2026-11-01T07:54:22.597Z",
     "status": "active",
-    "focus": "1 Nov: up on hv's word, waiting for molt-vc's orders; holds 0072 ask 2 (gyges) and 0078 (next release)",
+    "focus": "1 Nov: building 0079 on molt-vc's GO (cargo ahead of Homebrew's bin where rustup is installed, Molt-matts and Molt-flynn); holds 0072 ask 2 (gyges) and 0078 (next release)",
     "claims": [
       "ISSUE:0072",
-      "ISSUE:0078"
+      "ISSUE:0078",
+      "ISSUE:0079"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -482,6 +483,14 @@
       "text": "0078 (doctor advises molt resleeve where only a login clears the GUI session): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check",
       "state": "live",
       "recorded_at": "2026-10-30T10:48:55.732Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 27,
+      "text": "0079: ~/.cargo/bin ahead of Homebrew's bin where rustup is installed, in Molt-matts and Molt-flynn, on branches issue-0079; vc reviews, proves and merges, hv pushes (molt-vc's GO, hv 1 Nov)",
+      "state": "live",
+      "recorded_at": "2026-11-01T07:54:22.557Z"
     }
   ],
   "sent": [
