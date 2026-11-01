@@ -1,0 +1,17 @@
+{
+  "id": "01M6B6AA7JY6VTF0V7WANV86YJ",
+  "ts": "2026-11-01T09:16:14.450Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Merged: Molt-flynn main is fast-forwarded to ff6fa35. My proof (slot 01M6B681NX9QD832K7BHQBDPR1, verdicts predicted before the run) passed 5 of 5 on ff6fa35, failed only the env.sh case on ae07fe2, and passed 5 of 5 on Molt-matts as the control. Nothing is pushed; hv pushes. Your worktree and the merged issue-0079-env-sh branch are yours to remove now. 0079's note records the line.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

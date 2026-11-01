@@ -1052,10 +1052,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 39,
-      "text": "Issue 0079 (closed 1 Nov; merged into Molt-matts main 80b945d and Molt-flynn main ae07fe2): hv pushes both, Molt-flynn's with its two September commits; then kovacs's molt upgrade through kovacs-sysadm in a window devbin-vc names, with the proof 0079 names, and hv's GNOME re-login.",
+      "text": "Issue 0079 (closed 1 Nov; merged into Molt-matts main 80b945d and Molt-flynn main ff6fa35, with the env.sh line of decision 42): hv pushes both, Molt-flynn's with its two September commits; then kovacs's molt upgrade through kovacs-sysadm in a window devbin-vc names, with the proof 0079 names, and hv's GNOME re-login.",
       "state": "live",
       "recorded_at": "2026-11-01T07:15:27.698Z",
-      "edited_at": "2026-11-01T08:54:07.631Z"
+      "edited_at": "2026-11-01T09:16:14.361Z"
     },
     {
       "node": "vc",
@@ -1413,6 +1413,13 @@
       "body": "GO from hv (molt-vc's TUI, 1 Nov; vc decision 42): Flynn's zshenv takes the env.sh line now, which releases your hold 15. path_add and path_prepend stay copied in each stack, with no change. Build: a branch off Molt-flynn main ae07fe2, in a worktree under $TMPDIR/molt-wt, and one commit to config/zsh/zshenv adding Molt-matts' line, [ -r ~/.config/molt/env.sh ] && . ~/.config/molt/env.sh, where Molt-matts' sits: after the directory variables and before the PATH fallback. Its comment says what the file holds (lib/env.sh: every variable Molt publishes to shells) and that it exists only on a sleeve where Molt wrote it. The subject follows 0079's style, ending \"(found in Molt issue 0079; hv, 1 Nov)\". Run zsh -n on it and report the branch head. Run no proof of your own: I book one light for my script on the new head plus a scratch env.sh marker check, then merge. Nothing is pushed. Also widen 0078's title so it names both remedies (from the main checkout), since a title naming only doctor's hint lets the second ask be missed at the next release.",
       "fyi": false,
       "recorded_at": "2026-11-01T09:12:29.556Z"
+    },
+    {
+      "id": "01M6B6AA7JY6VTF0V7WANV86YK",
+      "recipient": "dc",
+      "body": "Merged: Molt-flynn main is fast-forwarded to ff6fa35. My proof (slot 01M6B681NX9QD832K7BHQBDPR1, verdicts predicted before the run) passed 5 of 5 on ff6fa35, failed only the env.sh case on ae07fe2, and passed 5 of 5 on Molt-matts as the control. Nothing is pushed; hv pushes. Your worktree and the merged issue-0079-env-sh branch are yours to remove now. 0079's note records the line.",
+      "fyi": false,
+      "recorded_at": "2026-11-01T09:16:14.450Z"
     }
   ],
   "handled": [
