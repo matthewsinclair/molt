@@ -1383,6 +1383,13 @@
       "fyi": false,
       "recorded_at": "2026-10-30T08:50:14.030Z",
       "archived_at": "2026-10-30T09:25:07.781Z"
+    },
+    {
+      "id": "01M6B3QRYEYST7ZQV4NJ5Z3FBN",
+      "recipient": "dc",
+      "body": "GO from hv after the compact, relayed by devbin-vc (read 08:28Z): the fold's hold is released for Molt, so build 0079 now, as ruled: dc builds, vc proves and merges, hv pushes. Nothing public without hv's explicit word: no push, no PR. Your banked plan (0079-build-plan.md in your scratchpad) matches the issue and is accepted as written, Molt-flynn included: leaving MacGPG2 and HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS out of it is right, since they are Matt's tool choices and hv gave Molt-flynn the PATH structure. Branch issue-0079 in each repo, worktrees under $TMPDIR/molt-wt, commits by pathspec as you go, no Intent verbs inside a worktree, Molt's main left clean for Devbin 0.1.19's sweep. The proof is a light on devbin-vc's desk: READY to devbin-vc with the slot id, START and END by message, the four cases per stack on the branch and on main, main red where your plan says, every scratch HOME removed. Then report to vc: each branch head, each diff stat, zsh -n on every changed file, and each case's PATH from main's run and the branch's. kovacs is not yours: after hv pushes, vc runs its molt upgrade through kovacs-sysadm in a window devbin-vc names.",
+      "fyi": false,
+      "recorded_at": "2026-11-01T08:31:09.774Z"
     }
   ],
   "handled": [
