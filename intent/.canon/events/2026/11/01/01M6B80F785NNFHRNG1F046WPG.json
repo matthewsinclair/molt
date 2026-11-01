@@ -1,0 +1,15 @@
+{
+  "id": "01M6B80F785NNFHRNG1F046WPG",
+  "ts": "2026-11-01T09:45:49.032Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "gyges: hv ruled on 1 Nov (decision 41) that gyges-sysadm removes the stale ~/.cargo/bin/rg (ripgrep 13.0.0; brew's 15.2.0 answers). It went to devbin-vc to relay, and no removal is confirmed; get gyges-sysadm's word through devbin-vc."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "01M6B80FCHT7NTMPK6S2R90DNG",
+  "ts": "2026-11-01T09:45:49.201Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 42,
+    "text": "hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them."
+  }
+}

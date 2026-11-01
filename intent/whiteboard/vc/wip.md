@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: f9057992-2161-43b3-8345-abc8a9e07a60
-heartbeat_at: 2026-11-01 08:00Z
+heartbeat_at: 2026-11-01 09:45Z
 status: active
 focus: "1 Nov: issue 0079 (~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, Molt-matts and Molt-flynn; hv's rulings, decision 41): dc building, vc to prove and merge, hv pushes; Devbin 0.1.19's vendored sweep later, Molt's tree held clean for it"
 claims: []
@@ -23,6 +23,7 @@ _(none)_
 - Issue 0079 (closed and pushed; kovacs rolled out green 1 Nov, slot 01M6B79F14HZNYE1W87D0RH7NP): once hv is back from the GNOME re-login on kovacs, tell kovacs-sysadm, which survives the logout, to check the systemd user manager's PATH and molt doctor's env check, the last kovacs proof. (edited)
 - Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
+- gyges: hv ruled on 1 Nov (decision 41) that gyges-sysadm removes the stale ~/.cargo/bin/rg (ripgrep 13.0.0; brew's 15.2.0 answers). It went to devbin-vc to relay, and no removal is confirmed; get gyges-sysadm's word through devbin-vc.
 
 ## Holds
 
@@ -37,8 +38,7 @@ _(none)_
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
-- hv 1 Nov (molt-vc's TUI), issue 0079: use rustup; ~/.cargo/bin goes ahead of Homebrew's bin wherever rustup is installed (kovacs now; rhadamanth and gyges get rustup later, booked); every Molt-* config fixed, Molt-flynn taking Molt-matts' PATH block without INTENT_HOME and UTILZ_HOME; gyges's stale ~/.cargo/bin/rg removed; dc builds, vc merges, hv pushes; 0078 stays held.
-- hv 1 Nov (molt-vc's TUI), after 0079 merged: Flynn's zshenv takes Molt-matts' ~/.config/molt/env.sh line now (dc builds, vc checks and merges, Molt-flynn's push carries it with 0079); path_add and path_prepend stay copied in each stack, self-contained at shell startup.
+- hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 
 ---
 
