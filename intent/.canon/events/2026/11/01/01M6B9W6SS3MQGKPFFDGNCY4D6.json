@@ -1,0 +1,16 @@
+{
+  "id": "01M6B9W6SS3MQGKPFFDGNCY4D6",
+  "ts": "2026-11-01T10:18:26.489Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 13,
+    "text": "0072 ask 2's doctor change (ask 2 answered 1 Nov, verdict 2 on launchd's record, molt-vc: a GUI app's PATH is launchd's default, never the env agent's): doctor says so plainly instead of offering the bootout/bootstrap remedy for PATH. Holding with 14 until hv plans Molt's next release (vc decision 35: Molt held for code)"
+  }
+}

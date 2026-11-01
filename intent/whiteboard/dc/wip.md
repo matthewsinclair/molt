@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 09:52Z
+heartbeat_at: 2026-11-01 10:18Z
 status: active
-focus: "1 Nov: folded for hv's compact; nothing in flight: 0079 and Flynn's env.sh line landed and are pushed (Molt-matts 80b945d, Molt-flynn ff6fa35); holds 0072 ask 2 (gyges) and 0078 (next release)"
+focus: "1 Nov: nothing in flight; 0072 ask 2 answered on rhadamanth (verdict 2 on launchd's record, molt-vc confirmed; vc writes the note); its doctor change (hold 13) and 0078 (hold 14) wait for Molt's next release"
 claims: [ISSUE:0072, ISSUE:0078]
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- 0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges runs molt 1.2.0, the first step of intent/wip.md's gyges item, in vc's order (vc decision 36: gyges later) (edited)
+- 0072 ask 2's doctor change (ask 2 answered 1 Nov, verdict 2 on launchd's record, molt-vc: a GUI app's PATH is launchd's default, never the env agent's): doctor says so plainly instead of offering the bootout/bootstrap remedy for PATH. Holding with 14 until hv plans Molt's next release (vc decision 35: Molt held for code) (edited)
 - 0078 (doctor advises molt resleeve where only a login clears the GUI session, and env.sh's PATH refusal names zshrc where PATH is built in .zprofile): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check's remedies in lib/env.sh (edited)
 
 ## Watch-outs
