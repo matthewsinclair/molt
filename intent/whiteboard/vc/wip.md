@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: f9057992-2161-43b3-8345-abc8a9e07a60
-heartbeat_at: 2026-11-01 09:45Z
+heartbeat_at: 2026-11-01 09:52Z
 status: active
 focus: "1 Nov: issue 0079 (~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, Molt-matts and Molt-flynn; hv's rulings, decision 41): dc building, vc to prove and merge, hv pushes; Devbin 0.1.19's vendored sweep later, Molt's tree held clean for it"
 claims: []
