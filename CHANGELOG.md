@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `cldr` liberator: cldr, the time journal renderer, from Homebrew (`brew install matthewsinclair/cldr/cldr`, a public tap), installed by its full name so Homebrew trusts it and `brew upgrade` includes it, and a cldr installed before the trust gate trusted by install. Its config directory, `$XDG_CONFIG_HOME/cldr` when that is set and absolute, else `~/.config/cldr`, is linked whole to the user repo's `config/cldr/`, since an editor's save may replace a linked file with a plain copy; made only when the user repo has it. Check and verify name the cldr PATH runs and every link not in place. Full Disk Access for the calendar store stays the user's grant; `cldr doctor` reports it. Enabled on no sleeve until the Macs run this release (issue 0080)
+
 ## [1.2.0] - 2026-10-30
 
 ### Added

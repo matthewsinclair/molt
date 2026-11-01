@@ -232,6 +232,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | arngz          | arngz window desks, config directory linking    | macos        |
 | menuz          | menuz menu bar config, directory linking        | macos        |
 | hammerspoon    | Hammerspoon init.lua linking                    | macos        |
+| cldr           | cldr from Homebrew, config directory linking    | linux, macos |
 
 ### molt.toml
 
