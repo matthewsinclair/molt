@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "f9057992-2161-43b3-8345-abc8a9e07a60",
-    "heartbeat_at": "2026-11-01T11:03:21.923Z",
+    "heartbeat_at": "2026-11-01T11:27:34.217Z",
     "status": "active",
-    "focus": "1 Nov: 0079 closed and rolled out; its last proof (todo 39) waits on hv's GNOME re-login on kovacs. 0072 ask 2 answered; its doctor change is held with 0078 for Molt's next release. Devbin 0.1.19 sweep on devbin-vc's word; Molt's tree held clean for it",
+    "focus": "1 Nov: Molt parked (decision 43) until devbin 0.1.19 is cut and swept into the fleet; nothing moves unless devbin-vc names something this release needs from Molt. The Devbin sweep (todo 40) is the one item that moves; Molt's tree is clean for it",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1451,7 +1451,8 @@
       "recipient": "dc",
       "body": "hv's ruling, 1 Nov, relayed first-hand by devbin-vc (vc decision 43): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so park everything: no desk asks, runs, builds or pushes, and nothing for hv. Holds 13 and 14 stand as they are. vc will tell you when the sweep is done.",
       "fyi": true,
-      "recorded_at": "2026-11-01T11:23:28.278Z"
+      "recorded_at": "2026-11-01T11:23:28.278Z",
+      "archived_at": "2026-11-01T11:27:25.013Z"
     }
   ],
   "handled": [

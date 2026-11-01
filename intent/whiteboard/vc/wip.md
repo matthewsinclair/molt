@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: f9057992-2161-43b3-8345-abc8a9e07a60
-heartbeat_at: 2026-11-01 11:03Z
+heartbeat_at: 2026-11-01 11:27Z
 status: active
-focus: "1 Nov: 0079 closed and rolled out; its last proof (todo 39) waits on hv's GNOME re-login on kovacs. 0072 ask 2 answered; its doctor change is held with 0078 for Molt's next release. Devbin 0.1.19 sweep on devbin-vc's word; Molt's tree held clean for it"
+focus: "1 Nov: Molt parked (decision 43) until devbin 0.1.19 is cut and swept into the fleet; nothing moves unless devbin-vc names something this release needs from Molt. The Devbin sweep (todo 40) is the one item that moves; Molt's tree is clean for it"
 claims: []
 ---
 
