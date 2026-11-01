@@ -1035,7 +1035,8 @@
       "kind": "todo",
       "seq": 38,
       "text": "rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there (hv's). 0078 (low, dc) waits for Molt's next release.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-01T07:55:15.223Z",
       "recorded_at": "2026-10-30T10:49:23.201Z",
       "edited_at": "2026-10-30T10:59:15.322Z"
     },
