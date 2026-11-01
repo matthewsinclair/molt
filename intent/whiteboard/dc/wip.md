@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 08:33Z
+heartbeat_at: 2026-11-01 08:47Z
 status: active
-focus: "1 Nov: building 0079 on vc's GO after the compact: branch issue-0079 in Molt-matts and Molt-flynn (worktrees in $TMPDIR/molt-wt), proof a light on devbin-vc's desk, then report to vc; holds 0072 ask 2 (gyges) and 0078 (next release)"
+focus: "1 Nov: 0079 built (Molt-matts 80b945d, Molt-flynn ae07fe2) and proved (light, PASS), reported to vc for review and merge; worktrees kept in $TMPDIR/molt-wt until it lands; holds 0072 ask 2 (gyges) and 0078 (next release)"
 claims: [ISSUE:0072, ISSUE:0078, ISSUE:0079]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0072, ISSUE:0078, ISSUE:0079]
 
 ## DOING
 
-- 0079: ~/.cargo/bin ahead of Homebrew's bin where rustup is installed, in Molt-matts and Molt-flynn, on branches issue-0079; vc reviews, proves and merges, hv pushes (molt-vc's GO, hv 1 Nov)
+- 0079: built on issue-0079 (Molt-matts 80b945d, Molt-flynn ae07fe2), light proof PASS on devbin-vc's desk (slot 01M6B4AV2B4WP61HD5NS1Y3W90), reported to vc; vc reviews, proves and merges, hv pushes; dc removes both worktrees once it lands (edited)
 
 ## TODO
 

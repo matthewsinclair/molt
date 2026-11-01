@@ -1,0 +1,16 @@
+{
+  "id": "01M6B4N04KDWP6DKW8CFF8N23Z",
+  "ts": "2026-11-01T08:47:07.411Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 27,
+    "text": "0079: built on issue-0079 (Molt-matts 80b945d, Molt-flynn ae07fe2), light proof PASS on devbin-vc's desk (slot 01M6B4AV2B4WP61HD5NS1Y3W90), reported to vc; vc reviews, proves and merges, hv pushes; dc removes both worktrees once it lands"
+  }
+}

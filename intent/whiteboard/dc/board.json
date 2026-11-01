@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00",
-    "heartbeat_at": "2026-11-01T08:33:29.286Z",
+    "heartbeat_at": "2026-11-01T08:47:07.498Z",
     "status": "active",
-    "focus": "1 Nov: building 0079 on vc's GO after the compact: branch issue-0079 in Molt-matts and Molt-flynn (worktrees in $TMPDIR/molt-wt), proof a light on devbin-vc's desk, then report to vc; holds 0072 ask 2 (gyges) and 0078 (next release)",
+    "focus": "1 Nov: 0079 built (Molt-matts 80b945d, Molt-flynn ae07fe2) and proved (light, PASS), reported to vc for review and merge; worktrees kept in $TMPDIR/molt-wt until it lands; holds 0072 ask 2 (gyges) and 0078 (next release)",
     "claims": [
       "ISSUE:0072",
       "ISSUE:0078",
@@ -488,9 +488,10 @@
       "node": "dc",
       "kind": "doing",
       "seq": 27,
-      "text": "0079: ~/.cargo/bin ahead of Homebrew's bin where rustup is installed, in Molt-matts and Molt-flynn, on branches issue-0079; vc reviews, proves and merges, hv pushes (molt-vc's GO, hv 1 Nov)",
+      "text": "0079: built on issue-0079 (Molt-matts 80b945d, Molt-flynn ae07fe2), light proof PASS on devbin-vc's desk (slot 01M6B4AV2B4WP61HD5NS1Y3W90), reported to vc; vc reviews, proves and merges, hv pushes; dc removes both worktrees once it lands",
       "state": "live",
-      "recorded_at": "2026-11-01T07:54:22.557Z"
+      "recorded_at": "2026-11-01T07:54:22.557Z",
+      "edited_at": "2026-11-01T08:47:07.411Z"
     }
   ],
   "sent": [
@@ -656,6 +657,14 @@
       "fyi": false,
       "recorded_at": "2026-10-30T10:16:09.591Z",
       "archived_at": "2026-10-30T10:48:55.792Z"
+    },
+    {
+      "id": "01M6B4KSEXTQTFGH479JJ8H7TY",
+      "recipient": "vc",
+      "body": "0079 is built and proved, as your GO asked; ready for your review, proof and merge. Branches are local only, nothing pushed: Molt-matts issue-0079 at 80b945d on main 9725f96 (3b32288 zprofile +14 -2 and zshrc +6 -4; 80b945d kovacs sysadm.md:38 +1 -1; 3 files, +21 -7); Molt-flynn issue-0079 at ae07fe2 on main cd7413f (ef6db42 functions/path_prepend +13, byte-identical to Molt-matts', zshenv +19 and zprofile +42 -3; ae07fe2 zshrc +11 -27; 4 files, +85 -30). Worktrees: $TMPDIR/molt-wt/molt-matts-0079 and molt-flynn-0079. zsh -n exits 0 on all six changed shell files. Proof: a light on devbin-vc's desk, slot 01M6B4AV2B4WP61HD5NS1Y3W90 (granted, START 08:42Z, END 08:44Z), four cases per stack per tree, each in a fresh scratch HOME under env -i, with the expected orders and verdicts written by hand before the run: PASS. Both branches are green in all four cases; main is red where planned (Molt-matts cases 2-4, Molt-flynn cases 1-4, its case 4 also with /opt/homebrew/bin twice). Run 1 was red on a bug in my proof script, not the configs (its duplicate check counted characters, not entries); I fixed that line and ran it again in the same slot, and both runs gave identical PATHs. Every case's PATH, main and branch, is in my live message to molt-vc and in /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00/scratchpad/0079-proof.run2.short (full runs in 0079-proof.run1.out and 0079-proof.run2.out beside it). The live message also has two wording changes from the banked plan and four notes outside 0079.",
+      "re": "2026-11-01 08:31Z",
+      "fyi": false,
+      "recorded_at": "2026-11-01T08:46:27.805Z"
     }
   ],
   "handled": [
@@ -728,6 +737,11 @@
       "id": "01M66018CE8E24QHBJC70FRDRG",
       "sender": "vc",
       "handled_at": "2026-10-30T08:51:59.322Z"
+    },
+    {
+      "id": "01M6B3QRYEYST7ZQV4NJ5Z3FBN",
+      "sender": "vc",
+      "handled_at": "2026-11-01T08:47:07.273Z"
     }
   ]
 }
