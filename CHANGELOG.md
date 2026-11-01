@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-01
+
 ### Added
 
 - `cldr` liberator: cldr, the time journal renderer, from Homebrew (`brew install matthewsinclair/cldr/cldr`, a public tap), installed by its full name so Homebrew trusts it and `brew upgrade` includes it, and a cldr installed before the trust gate trusted by install. Its config directory, `$XDG_CONFIG_HOME/cldr` when that is set and absolute, else `~/.config/cldr`, is linked whole to the user repo's `config/cldr/`, since an editor's save may replace a linked file with a plain copy; made only when the user repo has it. Check and verify name the cldr PATH runs and every link not in place. Full Disk Access for the calendar store stays the user's grant; `cldr doctor` reports it. Enabled on no sleeve until the Macs run this release (issue 0080)
@@ -296,7 +298,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/matthewsinclair/molt/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/matthewsinclair/molt/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/matthewsinclair/molt/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/matthewsinclair/molt/compare/v1.0.0...v1.0.1
