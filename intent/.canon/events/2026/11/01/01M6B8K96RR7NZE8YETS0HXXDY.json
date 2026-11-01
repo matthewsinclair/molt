@@ -1,0 +1,16 @@
+{
+  "id": "01M6B8K96RR7NZE8YETS0HXXDY",
+  "ts": "2026-11-01T09:56:05.464Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 13,
+    "text": "0072 ask 2 (does the env agent's PATH reach a GUI app on macOS 27): holding until gyges runs molt 1.2.0, the first step of intent/wip.md's gyges item, in vc's order (vc decision 36: gyges later)"
+  }
+}
