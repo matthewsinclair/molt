@@ -1,0 +1,16 @@
+{
+  "id": "01M6B1EQ2A07CKM7H25MV5G8RD",
+  "ts": "2026-11-01T07:51:15.786Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 39,
+    "text": "Issue 0079: ~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, in Molt-matts and Molt-flynn; dc builds, vc proves and merges, hv pushes; then kovacs's rollout through kovacs-sysadm in devbin-vc's window."
+  }
+}

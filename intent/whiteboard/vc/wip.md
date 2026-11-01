@@ -21,8 +21,9 @@ _(none)_
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there (hv's). 0078 (low, dc) waits for Molt's next release. (edited)
-- hv 1 Nov, through devbin-vc: put ~/.cargo/bin ahead of Homebrew's bin in Molt-matts' zprofile, so rustup's proxy honours a project's rust-toolchain pin; proofs on rhadamanth, kovacs and gyges; each sleeve's rollout on hv's word through devbin-vc.
+- Issue 0079: ~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, in Molt-matts and Molt-flynn; dc builds, vc proves and merges, hv pushes; then kovacs's rollout through kovacs-sysadm in devbin-vc's window. (edited)
 - Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.
+- rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; the 0079 rule then puts its cargo first (hv 1 Nov).
 
 ## Holds
 
@@ -37,6 +38,7 @@ _(none)_
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
+- hv 1 Nov (molt-vc's TUI), issue 0079: use rustup; ~/.cargo/bin goes ahead of Homebrew's bin wherever rustup is installed (kovacs now; rhadamanth and gyges get rustup later, booked); every Molt-* config fixed, Molt-flynn taking Molt-matts' PATH block without INTENT_HOME and UTILZ_HOME; gyges's stale ~/.cargo/bin/rg removed; dc builds, vc merges, hv pushes; 0078 stays held.
 
 ---
 

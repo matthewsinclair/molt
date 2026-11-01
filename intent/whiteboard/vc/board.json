@@ -1051,9 +1051,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 39,
-      "text": "hv 1 Nov, through devbin-vc: put ~/.cargo/bin ahead of Homebrew's bin in Molt-matts' zprofile, so rustup's proxy honours a project's rust-toolchain pin; proofs on rhadamanth, kovacs and gyges; each sleeve's rollout on hv's word through devbin-vc.",
+      "text": "Issue 0079: ~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, in Molt-matts and Molt-flynn; dc builds, vc proves and merges, hv pushes; then kovacs's rollout through kovacs-sysadm in devbin-vc's window.",
       "state": "live",
-      "recorded_at": "2026-11-01T07:15:27.698Z"
+      "recorded_at": "2026-11-01T07:15:27.698Z",
+      "edited_at": "2026-11-01T07:51:15.786Z"
     },
     {
       "node": "vc",
@@ -1062,6 +1063,22 @@
       "text": "Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.",
       "state": "live",
       "recorded_at": "2026-11-01T07:15:27.736Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 41,
+      "text": "hv 1 Nov (molt-vc's TUI), issue 0079: use rustup; ~/.cargo/bin goes ahead of Homebrew's bin wherever rustup is installed (kovacs now; rhadamanth and gyges get rustup later, booked); every Molt-* config fixed, Molt-flynn taking Molt-matts' PATH block without INTENT_HOME and UTILZ_HOME; gyges's stale ~/.cargo/bin/rg removed; dc builds, vc merges, hv pushes; 0078 stays held.",
+      "state": "live",
+      "recorded_at": "2026-11-01T07:51:15.658Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 41,
+      "text": "rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; the 0079 rule then puts its cargo first (hv 1 Nov).",
+      "state": "live",
+      "recorded_at": "2026-11-01T07:51:15.873Z"
     }
   ],
   "sent": [

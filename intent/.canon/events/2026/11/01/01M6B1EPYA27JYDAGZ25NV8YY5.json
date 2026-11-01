@@ -1,0 +1,15 @@
+{
+  "id": "01M6B1EPYA27JYDAGZ25NV8YY5",
+  "ts": "2026-11-01T07:51:15.658Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 1 Nov (molt-vc's TUI), issue 0079: use rustup; ~/.cargo/bin goes ahead of Homebrew's bin wherever rustup is installed (kovacs now; rhadamanth and gyges get rustup later, booked); every Molt-* config fixed, Molt-flynn taking Molt-matts' PATH block without INTENT_HOME and UTILZ_HOME; gyges's stale ~/.cargo/bin/rg removed; dc builds, vc merges, hv pushes; 0078 stays held."
+  }
+}

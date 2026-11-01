@@ -1,0 +1,15 @@
+{
+  "id": "01M6B1EQ510Y76BRERJ58QFCC0",
+  "ts": "2026-11-01T07:51:15.873Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; the 0079 rule then puts its cargo first (hv 1 Nov)."
+  }
+}
