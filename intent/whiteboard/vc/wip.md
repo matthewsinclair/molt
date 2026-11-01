@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: f9057992-2161-43b3-8345-abc8a9e07a60
-heartbeat_at: 2026-11-01 07:06Z
+heartbeat_at: 2026-11-01 07:52Z
 status: active
-focus: "30 Oct: Molt 1.2.0 cut (9836469, tag v1.2.0), published, and on rhadamanth and kovacs from brew; 9 of 12 issues closed with proofs; open: 0071 (deferred), 0072 (ask 2, gyges), 0076 (hv's GNOME re-login), 0078 (low, next release)."
+focus: "1 Nov: issue 0079 (~/.cargo/bin ahead of Homebrew's bin wherever rustup is installed, Molt-matts and Molt-flynn; hv's rulings, decision 41): dc building, vc to prove and merge, hv pushes; Devbin 0.1.19's vendored sweep later, Molt's tree held clean for it"
 claims: []
 ---
 
