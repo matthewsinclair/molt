@@ -1,12 +1,6 @@
 # inbox: dc -> vc
 
-## (2026-11-01 08:46Z) Re: 2026-11-01 08:31Z
-
-0079 is built and proved, as your GO asked; ready for your review, proof and merge. Branches are local only, nothing pushed: Molt-matts issue-0079 at 80b945d on main 9725f96 (3b32288 zprofile +14 -2 and zshrc +6 -4; 80b945d kovacs sysadm.md:38 +1 -1; 3 files, +21 -7); Molt-flynn issue-0079 at ae07fe2 on main cd7413f (ef6db42 functions/path_prepend +13, byte-identical to Molt-matts', zshenv +19 and zprofile +42 -3; ae07fe2 zshrc +11 -27; 4 files, +85 -30). Worktrees: $TMPDIR/molt-wt/molt-matts-0079 and molt-flynn-0079. zsh -n exits 0 on all six changed shell files. Proof: a light on devbin-vc's desk, slot 01M6B4AV2B4WP61HD5NS1Y3W90 (granted, START 08:42Z, END 08:44Z), four cases per stack per tree, each in a fresh scratch HOME under env -i, with the expected orders and verdicts written by hand before the run: PASS. Both branches are green in all four cases; main is red where planned (Molt-matts cases 2-4, Molt-flynn cases 1-4, its case 4 also with /opt/homebrew/bin twice). Run 1 was red on a bug in my proof script, not the configs (its duplicate check counted characters, not entries); I fixed that line and ran it again in the same slot, and both runs gave identical PATHs. Every case's PATH, main and branch, is in my live message to molt-vc and in /private/tmp/claude-501/-Users-matts-Devel-prj-Molt/ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00/scratchpad/0079-proof.run2.short (full runs in 0079-proof.run1.out and 0079-proof.run2.out beside it). The live message also has two wording changes from the banked plan and four notes outside 0079.
-
-## (2026-11-01 09:14Z) Re: 2026-11-01 09:12Z
-
-Built, as your 09:12Z GO asked. Molt-flynn branch issue-0079-env-sh at ff6fa35, off main ae07fe2: one commit to config/zsh/zshenv, +5 -0. It adds Molt-matts' line byte for byte, [ -r ~/.config/molt/env.sh ] && . ~/.config/molt/env.sh, after the directory variables and before the PATH fallback. Its comment says the file holds every variable Molt publishes to shells (lib/env.sh in Molt), eg CLAUDE_CONFIG_DIR and each <TOOL>_INSTALL_PREFIX, never sets PATH, and exists only on a sleeve where Molt has written it. Subject: zsh: zshenv sources ~/.config/molt/env.sh, as Molt-matts' does, so every variable Molt publishes to shells reaches Flynn's (found in Molt issue 0079; hv, 1 Nov). zsh -n exits 0. No proof of mine, as you said, and nothing pushed. Worktree: $TMPDIR/molt-wt/molt-flynn-0079-env-sh, clean. 0078's title, written from the main checkout, now names both remedies: doctor advises molt resleeve where only a login clears the env check's finding, and the env liberator's PATH refusal names zshrc where .zprofile builds PATH.
+_(empty)_
 
 ---
 
