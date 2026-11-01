@@ -1,0 +1,16 @@
+{
+  "id": "01M6B7ADESRDBND36DKDP4ZGTR",
+  "ts": "2026-11-01T09:33:46.329Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 39,
+    "text": "Issue 0079 (closed and pushed 1 Nov: Molt-matts 80b945d, Molt-flynn ff6fa35): kovacs's molt upgrade through kovacs-sysadm in the window devbin-vc names (slot 01M6B79F14HZNYE1W87D0RH7NP), with the proof 0079 names, then hv's GNOME re-login."
+  }
+}
