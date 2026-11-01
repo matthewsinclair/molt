@@ -1046,6 +1046,22 @@
       "text": "hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).",
       "state": "live",
       "recorded_at": "2026-10-30T11:32:41.748Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 39,
+      "text": "hv 1 Nov, through devbin-vc: put ~/.cargo/bin ahead of Homebrew's bin in Molt-matts' zprofile, so rustup's proxy honours a project's rust-toolchain pin; proofs on rhadamanth, kovacs and gyges; each sleeve's rollout on hv's word through devbin-vc.",
+      "state": "live",
+      "recorded_at": "2026-11-01T07:15:27.698Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 40,
+      "text": "Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.",
+      "state": "live",
+      "recorded_at": "2026-11-01T07:15:27.736Z"
     }
   ],
   "sent": [

@@ -1,0 +1,15 @@
+{
+  "id": "01M6AZD5AJ9GJZ94HMBFCM8RSS",
+  "ts": "2026-11-01T07:15:27.698Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "hv 1 Nov, through devbin-vc: put ~/.cargo/bin ahead of Homebrew's bin in Molt-matts' zprofile, so rustup's proxy honours a project's rust-toolchain pin; proofs on rhadamanth, kovacs and gyges; each sleeve's rollout on hv's word through devbin-vc."
+  }
+}

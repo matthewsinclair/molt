@@ -21,6 +21,8 @@ _(none)_
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth's next login publishes INTENT_INSTALL_PREFIX to launchd, doctor's one finding there (hv's). 0078 (low, dc) waits for Molt's next release. (edited)
+- hv 1 Nov, through devbin-vc: put ~/.cargo/bin ahead of Homebrew's bin in Molt-matts' zprofile, so rustup's proxy honours a project's rust-toolchain pin; proofs on rhadamanth, kovacs and gyges; each sleeve's rollout on hv's word through devbin-vc.
+- Devbin 0.1.19 sweep, later, on devbin-vc's word: devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it.
 
 ## Holds
 
