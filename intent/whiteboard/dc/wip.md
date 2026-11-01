@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: ac9097a1-d3c4-4892-8dbf-ddfcd3b2ef00
-heartbeat_at: 2026-11-01 11:24Z
+heartbeat_at: 2026-11-01 11:26Z
 status: active
-focus: "1 Nov: parked on hv's ruling (vc decision 43): no desk asks, runs, builds or pushes, and nothing for hv, until devbin 0.1.19 is cut and swept into the fleet (molt-vc says when); holds 13 (0072 ask 2's doctor change) and 14 (0078) stand for Molt's next release"
+focus: "1 Nov: parked on hv's ruling (vc decision 43): no work, desk asks, runs, builds or pushes, and nothing for hv, until devbin 0.1.19 is cut and swept into the fleet (molt-vc says when), unless devbin-vc names something this release needs from Molt; holds 13 (0072 ask 2's doctor change) and 14 (0078) stand for Molt's next release"
 claims: [ISSUE:0072, ISSUE:0078]
 ---
 
