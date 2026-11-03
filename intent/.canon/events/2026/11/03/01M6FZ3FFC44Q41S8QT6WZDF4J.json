@@ -1,0 +1,15 @@
+{
+  "id": "01M6FZ3FFC44Q41S8QT6WZDF4J",
+  "ts": "2026-11-03T05:46:22.572Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "1.4.0 on HEAD (hv 3 Nov, decision 44): dc builds 0081 (karabiner liberator), then 0072 ask 2, then 0078; vc reviews each commit as it lands, closes each issue with an as-built note, adds Molt-matts' .gitignore line now and rhadamanth's enable once 1.4.0 is installed there; the full suite, push and cut go to hv."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M6FZ30ET0C46K7Q7CNYN42XV",
+  "ts": "2026-11-03T05:46:07.194Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 3 Nov (molt-vc's TUI): decision 43 is lifted. Karabiner (issue 0081), 0072 ask 2 and 0078 ship in 1.4.0, built on HEAD with no worktrees and no desk bookings: 'Just do this all on HEAD. The only other activity now is the Pplr rebuild and these Molt changes are trivial, so just do them and get this done.' and 'Do it on head and just do it. I will tell pplr-vc that is happening.' dc builds; vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut stay hv's (decision 35)."
+  }
+}

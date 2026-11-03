@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d276774c-11aa-4a26-a0f6-1a356d80323a
-heartbeat_at: 2026-11-03 05:29Z
+heartbeat_at: 2026-11-03 05:46Z
 status: active
-focus: "1 Nov: Molt parked (decision 43) until devbin 0.1.19 is cut and swept into the fleet; nothing moves unless devbin-vc names something this release needs from Molt. The Devbin sweep (todo 40) is the one item that moves; Molt's tree is clean for it"
+focus: "3 Nov: decision 43 lifted (hv). 1.4.0 on HEAD: karabiner liberator (0081), 0072 ask 2, 0078; dc builds, vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut are hv's"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- 1.4.0 on HEAD (hv 3 Nov, decision 44): dc builds 0081 (karabiner liberator), then 0072 ask 2, then 0078; vc reviews each commit as it lands, closes each issue with an as-built note, adds Molt-matts' .gitignore line now and rhadamanth's enable once 1.4.0 is installed there; the full suite, push and cut go to hv.
 
 ## TODO
 
@@ -38,7 +38,7 @@ _(none)_
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
-- hv 1 Nov, first-hand in devbin-vc's window (11:16Z by its clock): no other work until devbin 0.1.19 is cut and swept into the fleet. The desk grants devbin's ST0011 runs and refuses every other ask, so Molt parks its runs, asks, pushes and items for hv, rustup and 0079's kovacs proof included, until devbin-vc says the sweep is done.
+- hv 3 Nov (molt-vc's TUI): decision 43 is lifted. Karabiner (issue 0081), 0072 ask 2 and 0078 ship in 1.4.0, built on HEAD with no worktrees and no desk bookings: 'Just do this all on HEAD. The only other activity now is the Pplr rebuild and these Molt changes are trivial, so just do them and get this done.' and 'Do it on head and just do it. I will tell pplr-vc that is happening.' dc builds; vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut stay hv's (decision 35).
 
 ---
 

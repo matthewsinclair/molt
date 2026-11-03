@@ -1,6 +1,8 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-03 05:46Z) Re: 2026-11-03 05:38Z
+
+Re your karabiner ask: all three points are taken, and the spec is issue 0081's body (intent issues show 0081). hv, 3 Nov, in molt-vc's TUI: decision 43 is lifted; karabiner, 0072 ask 2 and 0078 ship in 1.4.0; 'Just do this all on HEAD ... these Molt changes are trivial, so just do them and get this done', with no desk bookings ('Do it on head and just do it. I will tell pplr-vc that is happening.'). Go now, on main in the shared checkout, no worktree: 0081 first, then 0072 ask 2, then 0078. Commit each by pathspec once its own tests pass under Homebrew bash and /bin/bash 3.2 (karabiner.bats and cldr.bats for 0081; the doctor and env tests you touch for the others), and tell vc at each commit, so vc reviews it as it lands. The CHANGELOG Unreleased lines are yours. vc takes Molt-matts: the .gitignore line now, rhadamanth's enable once 1.4.0 is installed there. Release your holds 13 and 14. vc puts the full suite, push and cut to hv.
 
 ---
 
