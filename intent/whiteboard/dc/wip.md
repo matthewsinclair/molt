@@ -3,18 +3,18 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 09dcef3b-14e1-4378-ac57-c1c46dc77f47
-heartbeat_at: 2026-11-03 06:10Z
+heartbeat_at: 2026-11-03 06:31Z
 status: active
-focus: "3 Nov: Molt 1.4.0's three items are on main: 0081 (b0b8efd, follow-up 8cdeaf6), 0072 ask 2 (927df04, closed), 0078 (c8b46f3); vc reviewing 8cdeaf6 and c8b46f3, then vc puts the full suite, push and cut to hv"
-claims: [ISSUE:0078, ISSUE:0081]
+focus: "3 Nov: all of dc's Molt 1.4.0 work is on main: 0081 and 0072 ask 2 closed; 0078 (c8b46f3, ce168ef) and 0082 (5b917ea) in vc's review; dc keeps the tree quiet while vc runs the full suite and the release"
+claims: [ISSUE:0078, ISSUE:0082]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0081, the karabiner liberator: landed on main at b0b8efd (vc accepted), and vc's LOW finding fixed at 8cdeaf6 (a live karabiner.json the repo lacks is adopted; refused only when both exist and differ); vc reviews 8cdeaf6, then closes 0081 (edited)
-- 0078: landed on main at c8b46f3, with vc's two review points (tests name MOLT_CHECK_SESSION_PENDING by its constant; liberator_status_all, cmd_list and molt_resleeve still treat it as a failure) and vc's nit on 927df04; vc reviews it, then closes 0078
+- 0078: landed on main at c8b46f3 (vc accepted), and doctor's line-cap fix, from dc's FYI, at ce168ef; vc reviews ce168ef, then closes 0078 (edited)
+- 0082, the mise liberator: landed on main at 5b917ea (0082's Next 1 to 6); vc reviews it, does Molt-matts and Molt-flynn (Next 7 to 9), then closes 0082
 
 ## TODO
 

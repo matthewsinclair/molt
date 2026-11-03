@@ -1,0 +1,15 @@
+{
+  "id": "01M6G1N85SJHAZJ0H9FC67HZ9D",
+  "ts": "2026-11-03T06:31:02.073Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0082, the mise liberator: landed on main at 5b917ea (0082's Next 1 to 6); vc reviews it, does Molt-matts and Molt-flynn (Next 7 to 9), then closes 0082"
+  }
+}

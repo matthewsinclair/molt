@@ -5,12 +5,12 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "09dcef3b-14e1-4378-ac57-c1c46dc77f47",
-    "heartbeat_at": "2026-11-03T06:10:42.933Z",
+    "heartbeat_at": "2026-11-03T06:31:02.115Z",
     "status": "active",
-    "focus": "3 Nov: Molt 1.4.0's three items are on main: 0081 (b0b8efd, follow-up 8cdeaf6), 0072 ask 2 (927df04, closed), 0078 (c8b46f3); vc reviewing 8cdeaf6 and c8b46f3, then vc puts the full suite, push and cut to hv",
+    "focus": "3 Nov: all of dc's Molt 1.4.0 work is on main: 0081 and 0072 ask 2 closed; 0078 (c8b46f3, ce168ef) and 0082 (5b917ea) in vc's review; dc keeps the tree quiet while vc runs the full suite and the release",
     "claims": [
       "ISSUE:0078",
-      "ISSUE:0081"
+      "ISSUE:0082"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -520,7 +520,8 @@
       "kind": "doing",
       "seq": 29,
       "text": "0081, the karabiner liberator: landed on main at b0b8efd (vc accepted), and vc's LOW finding fixed at 8cdeaf6 (a live karabiner.json the repo lacks is adopted; refused only when both exist and differ); vc reviews 8cdeaf6, then closes 0081",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-03T06:31:01.846Z",
       "recorded_at": "2026-11-03T05:47:58.806Z",
       "edited_at": "2026-11-03T06:10:42.801Z"
     },
@@ -546,9 +547,18 @@
       "node": "dc",
       "kind": "doing",
       "seq": 30,
-      "text": "0078: landed on main at c8b46f3, with vc's two review points (tests name MOLT_CHECK_SESSION_PENDING by its constant; liberator_status_all, cmd_list and molt_resleeve still treat it as a failure) and vc's nit on 927df04; vc reviews it, then closes 0078",
+      "text": "0078: landed on main at c8b46f3 (vc accepted), and doctor's line-cap fix, from dc's FYI, at ce168ef; vc reviews ce168ef, then closes 0078",
       "state": "live",
-      "recorded_at": "2026-11-03T06:10:42.891Z"
+      "recorded_at": "2026-11-03T06:10:42.891Z",
+      "edited_at": "2026-11-03T06:31:01.982Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 31,
+      "text": "0082, the mise liberator: landed on main at 5b917ea (0082's Next 1 to 6); vc reviews it, does Molt-matts and Molt-flynn (Next 7 to 9), then closes 0082",
+      "state": "live",
+      "recorded_at": "2026-11-03T06:31:02.073Z"
     }
   ],
   "sent": [
@@ -851,6 +861,16 @@
       "id": "01M6FZX9M9MCA8M1VSRPWN3FVW",
       "sender": "vc",
       "handled_at": "2026-11-03T06:10:49.519Z"
+    },
+    {
+      "id": "01M6G0XMESAJJ65KVA5NE65CV3",
+      "sender": "vc",
+      "handled_at": "2026-11-03T06:31:08.384Z"
+    },
+    {
+      "id": "01M6G1DXWVSZY2GGHMFKGFZ77Z",
+      "sender": "vc",
+      "handled_at": "2026-11-03T06:31:08.384Z"
     }
   ]
 }

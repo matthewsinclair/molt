@@ -1,0 +1,16 @@
+{
+  "id": "01M6G1N82YT7GJS562WYDFZMSJ",
+  "ts": "2026-11-03T06:31:01.982Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 30,
+    "text": "0078: landed on main at c8b46f3 (vc accepted), and doctor's line-cap fix, from dc's FYI, at ce168ef; vc reviews ce168ef, then closes 0078"
+  }
+}
