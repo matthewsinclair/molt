@@ -178,7 +178,8 @@ $HOME/.config/environment.d/molt.conf:0" ]
     login_path "/opt/homebrew/bin:$HOME/.local/bin:/usr/bin"
     run env_install
     assert_failure
-    assert_output_contains "a login shell's PATH starts with /opt/homebrew/bin, not ~/.local/bin"
+    assert_output_contains "a login shell's PATH starts with /opt/homebrew/bin, not ~/.local/bin, so it was not published: put ~/.local/bin first on PATH in .zprofile; nothing in .zshrc may prepend ahead of it"
+    refute_output_contains "in zshrc"
     printf '#!/bin/sh\nexit 3\n' > "$MOLT_LOGIN_SHELL"
     run env_install
     assert_failure
@@ -290,6 +291,9 @@ LANG=en_GB.UTF-8
     echo "<!-- an edit -->" >> "$plist"
     run env_check
     assert_failure
+    # A file molt would write again is a plain failure, for a resleeve, even
+    # with the session behind as well (issue 0078).
+    [ "$status" -ne "$MOLT_CHECK_SESSION_PENDING" ]
     assert_output_contains "env: ~/Library/LaunchAgents/com.molt.env.plist is not what molt would publish"
     login_path "$HOME/.local/bin:/usr/bin"
     run env_install
@@ -470,6 +474,9 @@ EOF
     printf '%s' "/old/utilz" > "$LAUNCHD/UTILZ_INSTALL_PREFIX"
     run env_check
     assert_failure
+    # Every file is as molt would write it, and only launchd is behind: a
+    # login clears that, a resleeve does not (issue 0078).
+    [ "$status" -eq "$MOLT_CHECK_SESSION_PENDING" ]
     assert_output_contains "env: launchd holds another UTILZ_INSTALL_PREFIX, so GUI apps get /old/utilz"
     assert_output_contains "env: launchd does not hold PATH, and GUI apps do not get the PATH Molt's agent publishes either way: on macOS each app runs with its own PATH"
     refute_output_contains "PATH, so GUI apps"
@@ -516,7 +523,9 @@ EOF
     printf '%s' "/old/bin:/usr/bin:/bin" > "$LAUNCHD/PATH"
     run env_check
     assert_failure
-    assert_output_contains "env: launchd holds another PATH, and GUI apps do not get the PATH Molt's agent publishes either way: on macOS each app runs with its own PATH, launchd's default unless the app sets one, so a bootstrap changes nothing for them (issue 0072)"
+    [ "$status" -eq "$MOLT_CHECK_SESSION_PENDING" ]
+    assert_output_contains "env: launchd holds another PATH, and GUI apps do not get the PATH Molt's agent publishes either way: on macOS each app runs with its own PATH, launchd's default unless the app sets one, so a bootstrap changes nothing for them"
+    refute_output_contains "(issue 0072)"
     refute_output_contains "so GUI apps get"
     refute_output_contains "launchctl bootout"
 }
@@ -559,6 +568,8 @@ EOF
     export SYSTEMD_FAILS=1
     run env_check
     assert_failure
+    # A session it cannot see is not one that is merely behind (issue 0078).
+    [ "$status" -ne "$MOLT_CHECK_SESSION_PENDING" ]
     assert_output_contains "env: systemctl --user show-environment failed: Failed to connect to bus: No medium found, so what GUI apps get is unknown"
 }
 

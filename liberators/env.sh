@@ -58,14 +58,26 @@ _env_published_line() {
   printf '%s' "${out:-nothing}"
 }
 
+# When the only finding is a pair the GUI session does not hold yet, every file
+# is as molt would write it and a login clears the rest, so the check returns
+# MOLT_CHECK_SESSION_PENDING, and doctor does not send the reader to a resleeve
+# that would change nothing (issue 0078). A session it cannot read is a plain
+# failure.
 env_check() {
-  local lines pairs ok=0
+  local lines pairs ok=0 session=0
   lines="$(_env_lines)"
   pairs="$(molt_env_given <<< "$lines")"
   _env_report_refusals molt_info "env: " "$lines" || ok=1
   molt_env_report_faults molt_info "env: " "$pairs" || ok=1
-  molt_env_report_session molt_info "env: " "$pairs" || ok=1
-  return $ok
+  molt_env_report_session molt_info "env: " "$pairs" || session=$?
+  if [[ $ok -ne 0 ]]; then
+    return 1
+  fi
+  case "$session" in
+    0) return 0 ;;
+    1) return "$MOLT_CHECK_SESSION_PENDING" ;;
+    *) return 1 ;;
+  esac
 }
 
 env_install() {

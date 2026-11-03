@@ -2019,8 +2019,12 @@ cmd_doctor() {
     local enabled_count=0
     local not_installed_count=0
     local not_installed=""
-    local not_installed_why=""
+    local pending_count=0
+    local pending=""
+    local failed_why=""
     local why=""
+    local check_status=0
+    local verdict=""
     # On fd 3, so a check keeps the caller's stdin and cannot read the rest of
     # the list (issue 0075; see molt_resleeve).
     while IFS= read -r lib <&3; do
@@ -2029,33 +2033,52 @@ cmd_doctor() {
       # Capture rather than discard. The check function already prints exactly
       # why it failed; &>/dev/null threw that away and left the operator with a
       # ratio and no lead. Assign separately from `local` -- `local x="$(...)"`
-      # returns local's status, not the command's (SC2155).
-      if ! why="$(liberator_load "$lib" 2>&1 && liberator_check "$lib" 2>&1)"; then
+      # returns local's status, not the command's (SC2155). The status is kept
+      # too: a check that returns MOLT_CHECK_SESSION_PENDING has its files in
+      # place, and only a login clears what it found (issue 0078).
+      check_status=0
+      why="$(liberator_load "$lib" 2>&1 && liberator_check "$lib" 2>&1)" || check_status=$?
+      [[ $check_status -ne 0 ]] || continue
+      if [[ $check_status -eq $MOLT_CHECK_SESSION_PENDING ]]; then
+        pending_count=$((pending_count + 1))
+        pending="${pending:+$pending, }$lib"
+      else
         not_installed_count=$((not_installed_count + 1))
         not_installed="${not_installed:+$not_installed, }$lib"
-        # As the check printed them: molt's prefix already names the
-        # liberator, and the verdict line names it, in the same order, for a
-        # line without one (issue 0026).
-        while IFS= read -r line; do
-          [[ -z "$line" ]] && continue
-          not_installed_why="${not_installed_why}         ${line}"$'\n'
-        done <<< "$(echo "$why" | head -3)"
       fi
+      # As the check printed them: molt's prefix already names the
+      # liberator, and the verdict line names it, in the same order, for a
+      # line without one (issue 0026).
+      while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        failed_why="${failed_why}         ${line}"$'\n'
+      done <<< "$(echo "$why" | head -3)"
     done 3<<< "$enabled"
     # This once printed ✓ for every ratio, so a sleeve with nothing installed
     # passed and the missing liberator was never named. A count is not a verdict: a pass
     # carries none, and a failure says how many of how many, both counted
     # here, and names them (hv, 23 Oct). It matters most when it is least
     # visible: when a liberator breaks estate-wide, this is the instrument that
-    # should notice.
+    # should notice. One whose files are in place but not yet in the session
+    # still fails, since GUI apps really do not get them (issue 0059), but a
+    # resleeve renders the same files again, so it is named only for a
+    # liberator it would install (issue 0078).
     if [[ "$enabled_count" -eq 0 ]]; then
       echo "Checking enabled liberators... ✓ none enabled"
-    elif [[ "$not_installed_count" -eq 0 ]]; then
+    elif [[ "$not_installed_count" -eq 0 && "$pending_count" -eq 0 ]]; then
       echo "Checking enabled liberators... ✓ all installed"
     else
-      echo "Checking enabled liberators... ⚠ $not_installed_count of $enabled_count not installed: ${not_installed}"
-      [[ -n "$not_installed_why" ]] && printf '%s' "$not_installed_why"
-      echo "         Run \`molt resleeve\` to install, or \`molt list\` for status."
+      if [[ "$not_installed_count" -gt 0 ]]; then
+        verdict="$not_installed_count of $enabled_count not installed: ${not_installed}"
+      fi
+      if [[ "$pending_count" -gt 0 ]]; then
+        verdict="${verdict:+$verdict; }$pending_count of $enabled_count published, not yet in the session: ${pending}"
+      fi
+      echo "Checking enabled liberators... ⚠ $verdict"
+      [[ -n "$failed_why" ]] && printf '%s' "$failed_why"
+      if [[ "$not_installed_count" -gt 0 ]]; then
+        echo "         Run \`molt resleeve\` to install, or \`molt list\` for status."
+      fi
       not_passed=$((not_passed + 1))
     fi
   else

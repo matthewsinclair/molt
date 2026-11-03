@@ -201,7 +201,7 @@ molt_env_path_pair() {
     return 0
   fi
   if [[ "${path%%:*}" != "$MOLT_LOCAL_BIN" ]]; then
-    printf '!\t%s\n' "a login shell's PATH starts with ${path%%:*}, not $(molt_tilde "$MOLT_LOCAL_BIN"), so it was not published: put $(molt_tilde "$MOLT_LOCAL_BIN") first on PATH in zshrc"
+    printf '!\t%s\n' "a login shell's PATH starts with ${path%%:*}, not $(molt_tilde "$MOLT_LOCAL_BIN"), so it was not published: put $(molt_tilde "$MOLT_LOCAL_BIN") first on PATH in .zprofile; nothing in .zshrc may prepend ahead of it"
     return 0
   fi
   printf 'PATH\tgui\t%s\n' "$path"
@@ -405,8 +405,9 @@ _molt_env_session_value() {
 # with launchctl print, since launchctl getenv can answer nothing for what the
 # domain holds (issue 0072). On Linux it reads the systemd user manager, which
 # GNOME's login shell fills over environment.d's values at each login (issue
-# 0076). It reads only, and never sets anything. Returns non-zero when it
-# reported any.
+# 0076). It reads only, and never sets anything. Returns 1 when it reported
+# any, and 2 when it could not read the session at all, so env_check can tell a
+# session that does not hold a pair yet from one it cannot see (issue 0078).
 #
 # On macOS a GUI app runs with its own PATH, launchd's default unless the app
 # sets one, so the PATH the agent publishes reaches none of them, whatever
@@ -421,18 +422,18 @@ molt_env_report_session() {
     macos)
       if ! out="$(launchctl print "gui/$uid" 2>&1)"; then
         "$log" "${prefix}launchctl print gui/$uid failed: $out, so what GUI apps get is unknown"
-        return 1
+        return 2
       fi
       vars="$(_molt_env_launchd_vars <<< "$out")"
       holder="launchd" who="GUI apps"
       remedy="$(molt_tilde "$(molt_env_gui_file)") takes effect at the next login, or now with: launchctl bootout gui/$uid/com.molt.env; launchctl bootstrap gui/$uid $(molt_tilde "$(molt_env_gui_file)")"
       apps_own="PATH"
-      apps_own_why="on macOS each app runs with its own PATH, launchd's default unless the app sets one, so a bootstrap changes nothing for them (issue 0072)"
+      apps_own_why="on macOS each app runs with its own PATH, launchd's default unless the app sets one, so a bootstrap changes nothing for them"
       ;;
     linux)
       if ! out="$(systemctl --user show-environment 2>&1)"; then
         "$log" "${prefix}systemctl --user show-environment failed: $out, so what GUI apps get is unknown"
-        return 1
+        return 2
       fi
       vars="$(_molt_env_systemd_vars <<< "$out")"
       holder="the systemd user manager" who="GUI apps and user services"

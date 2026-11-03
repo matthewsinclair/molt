@@ -1296,6 +1296,36 @@ refute_path_on_pass() {
     assert_doctor_closed
 }
 
+# kovacs and rhadamanth, 30 Oct: env's files were in place and only the GUI
+# session was behind, yet doctor called env not installed and sent the reader
+# to a resleeve, which renders the same files again (issue 0078).
+@test "doctor names a liberator only the session is behind on apart, still fails, and names a resleeve only for one it would install (issue 0078)" {
+    _floor_sleeve
+    MOLT_LIBERATORS_DIR="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$MOLT_LIBERATORS_DIR"
+    # The counts expected are the fixture's own, never written down.
+    local lib libs=(alpha beta) behind=(beta) failing=(alpha)
+    for lib in "${libs[@]}"; do
+        printf '\n[[liberator]]\nname = "%s"\n' "$lib" >> "$INSTANCE/molt.toml"
+    done
+    printf 'alpha_check() { :; }\n' > "$MOLT_LIBERATORS_DIR/alpha.sh"
+    # The stub reads the status's name when doctor runs it.
+    printf 'beta_check() { echo "beta: a login takes it"; return "$MOLT_CHECK_SESSION_PENDING"; }\n' > "$MOLT_LIBERATORS_DIR/beta.sh"
+    run cmd_doctor
+    assert_output_contains "Checking enabled liberators... ⚠ ${#behind[@]} of ${#libs[@]} published, not yet in the session: beta"
+    assert_output_contains "         beta: a login takes it"
+    refute_output_contains "Run \`molt resleeve\` to install"
+    assert_doctor_closed
+
+    printf 'alpha_check() { echo "alpha: not here"; return 1; }\n' > "$MOLT_LIBERATORS_DIR/alpha.sh"
+    run cmd_doctor
+    assert_output_contains "Checking enabled liberators... ⚠ ${#failing[@]} of ${#libs[@]} not installed: alpha; ${#behind[@]} of ${#libs[@]} published, not yet in the session: beta"
+    assert_output_contains "         alpha: not here"
+    assert_output_contains "         beta: a login takes it"
+    assert_output_contains "         Run \`molt resleeve\` to install, or \`molt list\` for status."
+    assert_doctor_closed
+}
+
 # What the test's own disk does with case, found by making a file and asking
 # for it in another case, not by the question doctor asks.
 _disk_folds_case() {

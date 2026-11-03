@@ -8,6 +8,15 @@ MOLT_LIBERATORS_DIR="${MOLT_LIBERATORS_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")
 # Track loaded liberators (space-delimited string for bash 3.2 compat)
 _MOLT_LOADED_LIBERATORS=" "
 
+# The status a liberator's check returns when what it installs is in place, as
+# molt would write it, and only the session a login sets up does not hold it
+# yet: launchd's GUI domain on macOS, the systemd user manager on Linux. A
+# login clears that and a resleeve does not, so doctor names such a liberator
+# apart from one a resleeve would install (issue 0078). Any other non-zero
+# status is a plain failure; this is 3 because some checks already return 2.
+# shellcheck disable=SC2034 # read by cmd_doctor (lib/molt.sh) and env_check
+MOLT_CHECK_SESSION_PENDING=3
+
 # --- Liberator Lifecycle ---
 
 liberator_load() {
