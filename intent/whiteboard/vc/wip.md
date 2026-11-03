@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d276774c-11aa-4a26-a0f6-1a356d80323a
-heartbeat_at: 2026-11-03 08:59Z
+heartbeat_at: 2026-11-03 11:34Z
 status: active
-focus: "3 Nov: booted after hv's compact; holding for hv's word. Molt 1.4.0 is rolled out; left are hv's own Karabiner Settings check (todo 43) and the parked todos"
+focus: "3 Nov: 0083-0085 on main (the docs sweep and the code defects it found), unreleased; holding for hv's word; hv's calls from them are in wip.md TODO"
 claims: []
 ---
 
