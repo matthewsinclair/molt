@@ -1062,7 +1062,8 @@
       "kind": "todo",
       "seq": 40,
       "text": "Devbin 0.1.19 sweep, the one Molt item that moves while decision 43 parks the rest: when it reaches Molt, devbin-vc commits the vendored bin/.devbin pathspec in Molt's tree with START and END to vc; hold the tree clean for it. hv accepted devbin's XDG cache default, ~/.cache/devbin, and Molt, Molt-matts and Molt-flynn set neither DEVBIN_CACHE_HOME nor XDG_CACHE_HOME (vc's grep, 1 Nov).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-03T05:47:23.402Z",
       "recorded_at": "2026-11-01T07:15:27.736Z",
       "edited_at": "2026-11-01T11:23:21.820Z"
     },
