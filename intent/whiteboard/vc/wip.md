@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.0 rollout (released 3 Nov: d0a4518, tap 814de96): all three Macs run it with molt doctor green (dc's compare). rhadamanth: karabiner on (Molt-matts dfb0e56), and hv's molt upgrade at 07:24Z linked ~/.config/karabiner, adopted assets/ and the backups, and restarted the agent (Load at 07:24:47Z); Homebrew's mise and asdf are off it (rhadamanth-sysadm, on hv's word). Left: hv's Caps Lock check on the built-in keyboard and the Keychron B11 Pro; mise's three leftover folders on rhadamanth, on hv's word; gyges's mise uninstall (hv's own), its karabiner and its four missing 1.2.0 liberators, on hv's word. (edited)
+- Molt 1.4.0 rollout (released 3 Nov: d0a4518, tap 814de96): all three Macs run it with molt doctor green (dc's compare). rhadamanth: karabiner on (Molt-matts dfb0e56), and hv's molt upgrade at 07:24Z linked ~/.config/karabiner, adopted assets/ and the backups, and restarted the agent (Load at 07:24:47Z). mise and asdf are off every sleeve (0082 done). Left: hv's Caps Lock check on the built-in keyboard and the Keychron B11 Pro; gyges's karabiner and its four missing 1.2.0 liberators, on hv's word. (edited)
 
 ## TODO
 
