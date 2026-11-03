@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d276774c-11aa-4a26-a0f6-1a356d80323a
-heartbeat_at: 2026-11-03 08:56Z
+heartbeat_at: 2026-11-03 08:59Z
 status: active
-focus: "3 Nov: localfolded before hv's compact; on the bounce, run /in-session and hold for hv's word. Molt 1.4.0 is rolled out; left are hv's own Karabiner Settings check (todo 43) and the parked todos"
+focus: "3 Nov: booted after hv's compact; holding for hv's word. Molt 1.4.0 is rolled out; left are hv's own Karabiner Settings check (todo 43) and the parked todos"
 claims: []
 ---
 
