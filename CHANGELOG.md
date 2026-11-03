@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `karabiner` liberator: Karabiner-Elements' config directory, `$XDG_CONFIG_HOME/karabiner` when that is set and absolute, else `~/.config/karabiner`, is linked whole to the user repo's `config/karabiner/`, since Karabiner saves `karabiner.json` by renaming a new file over the old one, which would replace a linked file with a plain copy; made only when the user repo has it, and on macOS only. A real directory already there is adopted: each of its entries, such as `assets/`, `automatic_backups/` and a `karabiner.json` the repo lacks, moves into the repo directory where it has no entry of that name, and the rest is kept as the dated `.molt-backup`. When both hold a `karabiner.json` and the two differ, install refuses before moving anything and names both files. Once install has made the link it restarts Karabiner's Console-User-Server agent, when it is loaded, as Karabiner's docs say, so the agent watches the file through the link; a failed restart fails install and names the command to run. Karabiner-Elements itself stays a hand install, since its driver needs the user's approval. cldr's rule for the XDG config home moves into lib, where both liberators read it (issue 0081)
+- `mise` liberator: mise, the runtime manager, moves out of `dev-tools` with its behaviour unchanged: check and verify look for mise on PATH, and install installs nothing, pointing at https://mise.run. Off on every sleeve (hv, 3 Nov): both templates name it with `enabled = false`, and turning it on is a `molt.toml` change (issue 0082)
+
+### Changed
+
+- `dev-tools` no longer requires mise: it checks for jq, tree, rg, fzf and curl alone, so a sleeve without mise passes it (issue 0082)
 
 ### Fixed
 

@@ -215,7 +215,8 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | desktop        | GNOME settings, GTK config, accessibility       | linux        |
 | tiling         | Tactile GNOME extension grid tiling             | linux        |
 | vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
-| dev-tools      | CLI tools (jq, tree, rg, fzf, curl) + mise      | linux, macos |
+| dev-tools      | CLI tools (jq, tree, rg, fzf, curl)             | linux, macos |
+| mise           | mise runtime manager, off by default            | linux, macos |
 | ssh            | SSH key detection, config rendering + fragments | linux, macos |
 | utilz          | Utilz, from a checkout or Homebrew, per sleeve  | linux, macos |
 | brew           | Homebrew maintenance and upgrade                | linux, macos |

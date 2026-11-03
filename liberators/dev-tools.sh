@@ -1,31 +1,28 @@
 #!/usr/bin/env bash
-# dev-tools.sh — Liberator: CLI tools and runtime managers
-# Frees you from bare-bones coreutils.
+# dev-tools.sh — Liberator: CLI tools
+# Frees you from bare-bones coreutils: jq, tree, rg, fzf and curl. It checks for
+# them and installs none; install names the package manager's line. mise, which
+# it once required, is its own liberator, off on every sleeve (issue 0082).
+
+# The CLI tools check, install and verify all look for, named once.
+MOLT_DEV_TOOLS=(jq tree rg fzf curl)
 
 dev-tools_check() {
-  local ok=0
+  local ok=0 cmd
 
-  # Check key CLI tools
-  for cmd in jq tree rg fzf curl; do
+  for cmd in "${MOLT_DEV_TOOLS[@]}"; do
     if ! command -v "$cmd" &>/dev/null; then
       molt_info "dev-tools: $cmd not installed"
       ok=1
     fi
   done
 
-  # Check mise
-  if ! command -v mise &>/dev/null; then
-    molt_info "dev-tools: mise not installed"
-    ok=1
-  fi
-
   return $ok
 }
 
 dev-tools_install() {
-  # Verify key CLI tools are present
-  local missing=()
-  for cmd in jq tree rg fzf curl; do
+  local missing=() cmd
+  for cmd in "${MOLT_DEV_TOOLS[@]}"; do
     if ! command -v "$cmd" &>/dev/null; then
       missing+=("$cmd")
     fi
@@ -37,29 +34,18 @@ dev-tools_install() {
     return 1
   fi
 
-  # Verify mise is installed
-  if ! command -v mise &>/dev/null; then
-    molt_error "mise not found. Install it (https://mise.run) then re-run."
-    return 1
-  fi
-
   molt_info "Liberator complete: dev-tools"
 }
 
 dev-tools_verify() {
-  local errors=0
+  local errors=0 cmd
 
-  for cmd in jq tree rg fzf curl; do
+  for cmd in "${MOLT_DEV_TOOLS[@]}"; do
     if ! command -v "$cmd" &>/dev/null; then
       molt_error "VERIFY FAIL: $cmd not installed"
       errors=1
     fi
   done
-
-  if ! command -v mise &>/dev/null; then
-    molt_error "VERIFY FAIL: mise not installed"
-    errors=1
-  fi
 
   if [[ $errors -eq 0 ]]; then
     molt_info "Verified: dev-tools liberator is fully operational"

@@ -68,6 +68,13 @@ name = "dev-tools"
 enabled = false
 os = ["linux", "macos"]
 
+# The runtime manager, off on every sleeve (hv, 3 Nov 2026); enabled = true
+# turns it on.
+[[liberator]]
+name = "mise"
+enabled = false
+os = ["linux", "macos"]
+
 # Needs no config/ directory, so it is enabled; it stays here for its place
 # in the run order.
 [[liberator]]

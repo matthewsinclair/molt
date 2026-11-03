@@ -14,7 +14,7 @@ Steps are grouped by **liberator** (config module). Each step is tagged:
 
 Stating the gap rather than implying completeness is deliberate: a runbook that silently covers half the system is indistinguishable from one that covers all of it, and the reader has no way to tell which they are holding. The same principle the framework's own checks are held to.
 
-Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`, `desktop`, `dev-tools`, `ssh`, `intent`, `claude`.
+Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`, `desktop`, `dev-tools`, `mise`, `ssh`, `intent`, `claude`.
 
 **NOT documented here** — these arrived after the Phase 1 resleeve and their steps have never been captured: `agents`, `arngz`, `backup`, `brew`, `cldr`, `env`, `gnome-terminal`, `gtools`, `hammerspoon`, `herdr`, `iterm2`, `karabiner`, `local-bin`, `menuz`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
 
@@ -76,6 +76,7 @@ curl https://mise.run | sh
 
 - **Why**: Manages language runtimes (Ruby, Node, Python, etc.) without polluting system packages. Replaces asdf.
 - **Gotcha**: Activation line goes in zshrc: `eval "$(~/.local/bin/mise activate zsh)"`
+- **Liberator**: `mise`, off on every sleeve since 3 Nov 2026 (issue 0082). It checks that mise is on PATH and installs nothing.
 
 ---
 
@@ -271,6 +272,7 @@ mise use --global python@3
 ```
 
 - Configured per-project or globally via `~/.config/mise/config.toml`
+- **Liberator**: `mise`, off on every sleeve since 3 Nov 2026 (issue 0082).
 
 ---
 

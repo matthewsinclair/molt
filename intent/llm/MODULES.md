@@ -35,7 +35,8 @@
 | desktop        | `liberators/desktop.sh`        | GNOME settings, GTK config (Linux)                      |
 | tiling         | `liberators/tiling.sh`         | Tactile GNOME extension grid tiling (Linux)             |
 | vscode         | `liberators/vscode.sh`         | VS Code settings linking, CLI setup, dock pin           |
-| dev-tools      | `liberators/dev-tools.sh`      | CLI tools (bat, rg, fd, etc.) + mise                    |
+| dev-tools      | `liberators/dev-tools.sh`      | CLI tools (jq, tree, rg, fzf, curl)                     |
+| mise           | `liberators/mise.sh`           | mise runtime manager, off on every sleeve               |
 | npm            | `liberators/npm.sh`            | ~/.npmrc, npm's cache under XDG (issue 0031)            |
 | ssh            | `liberators/ssh.sh`            | SSH key generation, config linking                      |
 | local-bin      | `liberators/local-bin.sh`      | ~/bin directory, molt CLI symlink                       |

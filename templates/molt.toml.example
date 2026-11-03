@@ -81,6 +81,11 @@ enabled = true
 os = ["linux", "macos"]
 
 [[liberator]]
+name = "mise"
+enabled = false                      # off on every sleeve (hv, 3 Nov 2026)
+os = ["linux", "macos"]
+
+[[liberator]]
 name = "npm"
 enabled = true
 os = ["linux", "macos"]
