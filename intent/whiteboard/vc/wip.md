@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d276774c-11aa-4a26-a0f6-1a356d80323a
-heartbeat_at: 2026-11-03 08:02Z
+heartbeat_at: 2026-11-03 08:43Z
 status: active
-focus: "3 Nov: Molt 1.4.0 out and rolled out to all three Macs, doctor green; mise and asdf off every sleeve; gyges gets nothing more (hv). Only hv's own Karabiner hand checks on rhadamanth remain, for vc to record"
+focus: "3 Nov: localfolded before hv's compact; on the bounce, run /in-session and hold for hv's word. Molt 1.4.0 is rolled out; left are hv's own Karabiner Settings check (todo 43) and the parked todos"
 claims: []
 ---
 
@@ -37,8 +37,6 @@ _(none)_
 - hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
-- hv 3 Nov (molt-vc's TUI): decision 43 is lifted. Karabiner (issue 0081), 0072 ask 2 and 0078 ship in 1.4.0, built on HEAD with no worktrees and no desk bookings: 'Just do this all on HEAD. The only other activity now is the Pplr rebuild and these Molt changes are trivial, so just do them and get this done.' and 'Do it on head and just do it. I will tell pplr-vc that is happening.' dc builds; vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut stay hv's (decision 35).
-- hv 3 Nov (molt-vc's TUI), on rhadamanth-sysadm's finding that dev-tools requires mise: 'It's #1 above, but Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now). And we should do the same for Molt-flynn, too.' (issue 0082, in 1.4.0). On the release: 'vc runs them': vc runs the full suite under both bashes, pushes Molt and Molt-matts, reads CI, and releases 1.4.0 with devbin to the Homebrew tap; brew upgrade and molt upgrade on hv's Macs stay hv's. Molt-flynn, whose remote is Flynn's own GitHub, was pushed on hv's later word ('push Molt-flynn too'): 6b730b9. (edited)
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz; it runs Homebrew's Molt 1.4.0 with doctor green, and nothing more is enabled there; 0071 stays deferred. rhadamanth's Karabiner hand checks are hv's own.
 
 ---

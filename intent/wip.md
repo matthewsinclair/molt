@@ -1,15 +1,16 @@
 ---
-verblock: "3 Nov 2026:v0.71: Matthew Sinclair - Molt 1.4.0 out and rolled out; gyges gets nothing more"
+verblock: "3 Nov 2026:v0.72: Matthew Sinclair - localfold before hv's compact: DOING and TODO only"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Nothing in flight.** Molt 1.4.0 is out (tag at d0a4518, tap 814de96) and every Mac runs it with doctor green. mise and asdf are off every sleeve. gyges gets nothing more (hv, 3 Nov). rhadamanth's Karabiner hand checks are hv's own, and vc records them on 0081.
+- **Nothing in flight.** Every node holds after hv's compact until hv gives the word.
 
 ## TODO
 
+- **rhadamanth's Karabiner Settings check, hv's own:** at hv's next Karabiner setting change, the change shows as a Molt-matts diff with `~/.config/karabiner` still a link; vc records it on 0081.
 - **rhadamanth and gyges:** rustup on a quieter day, booked (hv 1 Nov); 0079's rule then puts its cargo first.
-- **farcaster, pihole, when next reachable:** resync the clones onto the purged histories, set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then `molt upgrade`. dev-tools goes on there, as it no longer needs mise.
+- **farcaster, pihole, when next reachable:** resync the clones onto the purged histories, set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then `molt upgrade`; dev-tools goes on there.
 - **rhadamanth backup:** hv's, after 19 Dec.
