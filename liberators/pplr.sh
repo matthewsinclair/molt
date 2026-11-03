@@ -41,7 +41,7 @@ pplr_install() {
 
   mkdir -p "$MOLT_LOCAL_BIN"
 
-  # Link the pplr dispatcher into ~/bin
+  # Link the pplr dispatcher into MOLT_LOCAL_BIN
   molt_link "$repo/bin/pplr" "$MOLT_LOCAL_BIN/pplr" || return 1
 
   molt_info "Liberator complete: pplr"

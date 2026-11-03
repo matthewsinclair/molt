@@ -1,8 +1,9 @@
 # Instance variables for __MOLT_HOSTNAME__
 # Sourced by molt_render when rendering .tmpl files, and read by molt for
-# MOLT_INSTALL_PREFIX, MOLT_CLAUDE_CONFIG_DIR and MOLT_FONT_FAMILY. The env
+# MOLT_INSTALL_PREFIX, MOLT_CLAUDE_CONFIG_DIR and MOLT_FONT_FAMILY, and by some
+# liberators for their own, eg tiling's MOLT_TACTILE_ACTIVATE. The env
 # liberator publishes each other <TOOL>_INSTALL_PREFIX exported here.
-# All variables must be exported for envsubst.
+# All variables must be exported: envsubst and molt see only exported ones.
 
 export MOLT_HOSTNAME="__MOLT_HOSTNAME__"
 export MOLT_PLATFORM="macos"

@@ -1,6 +1,6 @@
-# @@MOLT:BEGIN@@ — managed by molt, do not edit below this line
-# Rendered from config/ssh/config.tmpl — manual edits will be overwritten.
-# Add your own entries ABOVE this line.
+# @@MOLT:BEGIN@@ managed by molt: do not edit below this line
+# Rendered from config/ssh/config.tmpl: manual edits will be overwritten.
+# Add your own entries ABOVE the marker line.
 
 # GitHub: @__MOLT_GITHUB__
 Host github.com-__MOLT_GITHUB__
@@ -16,4 +16,5 @@ Host github.com
   IdentityFile ~/.ssh/${MOLT_SSH_KEY}
   IdentitiesOnly yes
 
-# @@MOLT:END@@ — end of molt-managed section
+# @@MOLT:END@@: end of the template. This host's config.d fragments, if any,
+# follow it in ~/.ssh/config, and molt rewrites them with the rest.

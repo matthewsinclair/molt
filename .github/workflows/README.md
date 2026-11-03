@@ -1,27 +1,27 @@
-# CI/CD Workflows
+# CI Workflows
 
 ## Workflows
 
-### tests.yml — Main Test Workflow
+### tests.yml: the test workflow
 
-Runs on push to `main` and all PRs targeting `main`.
+Runs on a push to `main`, a release tag (`v[0-9]*` or `[0-9]*`), a pull request to `main`, and on demand (`gh workflow run tests.yml --ref main`). A push that changes only `intent/whiteboard/` and `intent/.canon/` starts no run, and a newer run for the same event and ref cancels an older one.
 
-| Job          | Runner        | What it does                                     |
-| ------------ | ------------- | ------------------------------------------------ |
-| test-linux   | ubuntu-latest | Install bats from source, run all `.bats` tests  |
-| test-macos   | macos-latest  | Install bats via brew, run all `.bats` tests     |
-| shellcheck   | ubuntu-latest | Non-blocking ShellCheck on all shell scripts     |
-| test-summary | ubuntu-latest | Aggregate results, fail if either platform fails |
+| Job          | Runner        | Runs                        | What it does                                                                                         |
+| ------------ | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| test-linux   | ubuntu-latest | every run                   | Installs bats-core 1.12.0 from source, and zsh, then runs `bats test/*.bats test/liberators/*.bats`  |
+| test-macos   | macos-latest  | on a release tag or demand  | Installs bats-core with Homebrew, then runs the same suite                                           |
+| shellcheck   | ubuntu-latest | every run                   | Runs `shellcheck -x` over `bin/molt`, `lib/*.sh` and `liberators/*.sh`; any finding fails the job    |
+| test-summary | ubuntu-latest | unless the run is cancelled | Fails unless test-linux passed, and test-macos passed where the run required it or skipped where not |
 
-### pr-checks.yml — PR Validation
+### pr-checks.yml: pull request checks
 
-Runs on PR opened, synchronize, or reopened.
+Runs when a pull request is opened, synchronised or reopened. Every job only prints warnings.
 
-| Job                  | What it does                                 |
-| -------------------- | -------------------------------------------- |
-| check-documentation  | Warn if scripts changed without docs updates |
-| commit-message-check | Validate commit message length               |
-| pr-size-check        | Warn on large PRs (>500 lines)               |
+| Job                  | What it does                                                             |
+| -------------------- | ------------------------------------------------------------------------ |
+| check-documentation  | Warns when `bin/`, `lib/` or `liberators/` changed and no `.md` file did |
+| commit-message-check | Warns on a commit subject shorter than 10 or longer than 72 characters   |
+| pr-size-check        | Notes a pull request over 500 changed lines, and warns over 1000         |
 
 ## Badge
 
@@ -31,14 +31,17 @@ Runs on PR opened, synchronize, or reopened.
 
 ## Running Tests Locally
 
+From the dev checkout:
+
 ```bash
-molt test                    # All tests
-molt test zsh                # Single liberator
-bats test/*.bats             # Direct bats invocation
+bin/molt test                             # ShellCheck, then every test
+bin/molt test zsh                         # ShellCheck, then one liberator's tests
+PATH=/bin:$PATH bin/molt test             # the same under macOS's /bin/bash 3.2
+bats test/*.bats test/liberators/*.bats   # bats directly, without ShellCheck
 ```
 
 ## Troubleshooting
 
-- **bats not found**: Install via `brew install bats-core` (macOS) or from source (Linux)
-- **ShellCheck issues**: Non-blocking in CI. Fix locally with `shellcheck bin/molt lib/*.sh`
-- **Test failures on one platform only**: Check platform-specific code paths in liberators
+- **bats not found**: `brew install bats-core` on macOS, or install it from source on Linux.
+- **ShellCheck findings**: the shellcheck job fails on any, and `molt test` runs no tests until ShellCheck is clean. `shellcheck -x bin/molt lib/*.sh liberators/*.sh` lists them.
+- **A failure on one platform only**: check the liberator's platform-specific code, and run the suite under `/bin/bash` 3.2 as well, since CI's macOS leg runs only on a release tag or on demand.

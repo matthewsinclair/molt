@@ -9,9 +9,9 @@ This guide walks you through setting up MOLT on a new machine.
 - [Homebrew](https://brew.sh), on macOS or Linux
 - bash 3.2 or later
 - git
-- `gettext` — provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
-- `bats` — the test suite; `molt doctor` checks for it, with `envsubst`
-- `timeout`, from coreutils — the bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it; `molt doctor`'s GitHub check uses it where it is installed, to bound the whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`
+- `gettext`, which provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
+- `bats`, the test suite: `molt doctor` checks for it, with `envsubst`
+- `timeout`, from coreutils: the bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it; `molt doctor`'s GitHub check uses it where it is installed, to bound the whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`
 - A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
 - A terminal you're comfortable in
 
@@ -25,13 +25,13 @@ The formula installs Molt into its keg and links `molt` into Homebrew's `bin`, s
 
 ## Set MOLT_PRJ_DIR
 
-MOLT needs to know where your repos live. There is no default — you choose the layout per machine:
+MOLT needs to know where your repos live. There is no default. You choose the layout per machine:
 
 ```bash
 export MOLT_PRJ_DIR="$HOME/Projects"
 ```
 
-Add this to your `.zshenv` or `.bashrc` so it persists.
+Add this to your `.zshenv` or `.bashrc` so it persists. Once the `zsh` liberator has run, `~/.zshenv` is a link to your config repo's `config/zsh/zshenv`, so set it there.
 
 ## Clone your config repo
 
@@ -39,7 +39,7 @@ Add this to your `.zshenv` or `.bashrc` so it persists.
 git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
 ```
 
-Molt finds your config repo by looking for `Molt-$(whoami)` in `$MOLT_CFG_DIR`, which defaults to the `cfg/` directory beside `$MOLT_PRJ_DIR`, and then in `$MOLT_PRJ_DIR` itself.
+Molt finds your config repo by looking for `Molt-$(whoami)` in `$MOLT_CFG_DIR`, which defaults to the `cfg/` directory beside `$MOLT_PRJ_DIR`, then in `$MOLT_PRJ_DIR` itself, then in your home directory, and takes the first that holds a `config/` directory.
 
 ## Preview with dry-run
 
@@ -55,7 +55,7 @@ This shows what would happen without changing anything. You'll see which liberat
 molt resleeve
 ```
 
-MOLT loads your manifest, runs each enabled liberator, and links your config into place. Existing files are backed up before being replaced.
+MOLT loads your manifest, runs each enabled liberator, and links your config into place. A file of yours that it replaces is backed up first, beside it, as `<file>.molt-backup.<timestamp>`.
 
 ```
 MOLT v<version> — My Opinionated Local Terminal
@@ -67,10 +67,13 @@ Zen: Loading liberators...
 Zen: Manifest: ...
 
   system: ✓ ok
+Zen: Running liberator: zsh (install)
+...
   zsh: ✓ installed
-  git: ✓ installed
+  git: ✓ ok
   editors: ✓ ok
   ...
+
 Zen: Sleeve ready. Welcome back.
 ```
 
@@ -81,7 +84,7 @@ After the initial resleeve, use `molt upgrade` to bring Molt and your config for
 ```bash
 molt upgrade              # upgrade Molt + pull config + upgrade hooks + resleeve
 molt upgrade --dry-run    # preview only
-molt upgrade zsh,git      # upgrade specific liberators only
+molt upgrade zsh,git      # only these liberators' upgrade hooks: no pull, and no resleeve without --resleeve
 molt upgrade --no-resleeve # upgrade without resleeve
 ```
 
@@ -101,7 +104,7 @@ This is useful as a first step before a full upgrade, or when you just want to s
 
 ### System maintenance
 
-`molt maintain` runs heavier system maintenance tasks — things like `brew upgrade`, `doom upgrade`, or other slow operations that you'd run weekly or monthly rather than daily:
+`molt maintain` runs heavier system maintenance tasks, such as `brew upgrade`, `doom upgrade`, or other slow operations that you'd run weekly or monthly rather than daily:
 
 ```bash
 molt maintain             # run all maintenance hooks
@@ -113,9 +116,9 @@ molt maintain brew        # maintain specific liberators only
 
 The typical update sequence is:
 
-1. `molt upgrade --self` — sync repos
-2. `molt upgrade` — run upgrade hooks + resleeve
-3. `molt maintain` — run maintenance (when you have time)
+1. `molt upgrade --self`: sync repos
+2. `molt upgrade`: run upgrade hooks + resleeve
+3. `molt maintain`: run maintenance (when you have time)
 
 ## Checking health
 
@@ -123,7 +126,7 @@ The typical update sequence is:
 molt doctor
 ```
 
-Runs its diagnostic checks, among them: the tree Molt runs from (in a dev checkout, that `lib/`, `liberators/` and `test/` are there; from opt or brew, each file against the install's manifest), manifest validity (including that the manifest's `user_repo` still names the real directory), liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, that each managed repo's `core.ignorecase` matches what its disk does with case, and the font the sleeve declares. It closes with `All checks passed.` and exits 0, or with how many of the checks that ran did not pass and exits 1.
+Runs its diagnostic checks, among them: the tree Molt runs from (in a dev checkout, that `lib/`, `liberators/` and `test/` are there; from opt or brew, each file against the install's manifest), the manifest (that there is one, and that its `user_repo`, where it declares one, still names the real directory), liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, that each managed repo's `core.ignorecase` matches what its disk does with case, and the font the sleeve declares. It closes with `All checks passed.` and exits 0, or with how many of the checks that ran did not pass and exits 1.
 
 ## Your config repo
 
@@ -134,6 +137,7 @@ Molt-you/
   config/
     zsh/zshrc               # -> ~/.zshrc
     zsh/zshenv              # -> ~/.zshenv
+    zsh/zprofile            # -> ~/.zprofile
     git/gitconfig           # -> ~/.gitconfig
     doom/                   # -> ~/.config/doom
     alacritty/alacritty.toml
@@ -142,6 +146,7 @@ Molt-you/
     vscode/settings.json
   instances/
     mymachine/
+      instance.toml         # this machine, and its [terminal] colours for the zsh liberator
       molt.toml             # what to install on this machine
       vars.sh               # template variables for this machine
       ssh/config.d/         # SSH config fragments appended after render
@@ -166,7 +171,7 @@ The checkout is the bleeding edge. The opt install is a published copy of it, wh
 ### The dev checkout
 
 ```bash
-git clone https://github.com/you/molt "$MOLT_PRJ_DIR/Molt"
+git clone https://github.com/matthewsinclair/molt "$MOLT_PRJ_DIR/Molt"
 export PATH="$HOME/.local/bin:$PATH"
 "$MOLT_PRJ_DIR/Molt/bin/molt" use dev
 ```
@@ -175,7 +180,7 @@ The clone is the dev tree, exact-case `Molt`. `molt use dev` links `~/.local/bin
 
 ### The switch: `molt use`
 
-`~/.local/bin/molt` is the switch, and `molt use` is the one verb that sets it:
+`~/.local/bin/molt` is the switch, and `molt use` is the one verb that moves it:
 
 ```bash
 molt use          # show which tree serves molt, and change nothing
@@ -184,7 +189,7 @@ molt use opt      # link it to the opt install
 molt use brew     # remove it, so Homebrew's molt answers
 ```
 
-**No link means brew.** A user who never runs `molt use` has no `~/.local/bin/molt`, and runs Homebrew's. For the switch to take, `~/.local/bin` must come before Homebrew's `bin` on PATH, ahead of the first one `brew shellenv` adds. When another `molt` runs instead, `molt use` with no argument fails and `molt doctor` marks the check not passed, each naming it. Resleeve never moves the switch: it makes a missing or broken link only from a dev or opt tree, and nothing at all from brew.
+**No link means brew.** A user who never runs `molt use` has no `~/.local/bin/molt`, and runs Homebrew's. For the switch to take, `~/.local/bin` must come before Homebrew's `bin` on PATH, ahead of the first one `brew shellenv` adds. When another `molt` runs instead, `molt use` with no argument fails and `molt doctor` marks the check not passed, each naming it. Resleeve never moves the switch. From a dev or opt tree it replaces a broken link, and makes a missing one unless Homebrew's `molt` is what PATH runs; from brew it makes nothing.
 
 ### Publishing to opt: `molt install`
 
@@ -203,7 +208,7 @@ For a completely fresh machine where nothing is set up yet, the bootstrap script
 
 ```bash
 MOLT_PRJ_DIR=$HOME/Projects \
-  bash <(curl -fsSL https://raw.githubusercontent.com/you/molt/main/bin/bootstrap.sh)
+  bash <(curl -fsSL https://raw.githubusercontent.com/matthewsinclair/molt/main/bin/bootstrap.sh)
 ```
 
 It clones the framework into `$MOLT_PRJ_DIR/Molt` and your config repo into `$MOLT_CFG_DIR/Molt-$(whoami)`, links `molt` into `~/.local/bin`, shows a dry-run, and asks at the terminal before applying.
@@ -212,6 +217,6 @@ It clones the framework from `MOLT_REPO` (default `matthewsinclair/molt`) and yo
 
 ## Next steps
 
-- [Creating a New User Config Repo](new-user.md) — scaffold a fresh `Molt-{user}` repo
-- [Writing a Liberator](writing-a-liberator.md) — add your own config modules
-- [Template System](templates.md) — per-instance config rendering
+- [Creating a New User Config Repo](new-user.md): scaffold a fresh `Molt-{user}` repo
+- [Writing a Liberator](writing-a-liberator.md): add your own config modules
+- [Template System](templates.md): per-instance config rendering

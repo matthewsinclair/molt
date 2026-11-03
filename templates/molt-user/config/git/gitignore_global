@@ -1,4 +1,4 @@
-# Global gitignore — applies across all repos via core.excludesfile
+# Global gitignore: applies across all repos via core.excludesfile
 
 # macOS
 .DS_Store

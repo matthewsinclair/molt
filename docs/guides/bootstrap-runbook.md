@@ -1,12 +1,12 @@
-# Bootstrap Runbook — Phase 1 Manual Resleeve
+# Bootstrap Runbook: Phase 1 Manual Resleeve
 
-This documents every step taken to bootstrap kovacs (Ubuntu 24.04 ARM64, Parallels on rhadamanth) from a bare VM to a fully opinionated dev environment, by hand, before the liberators existed. It is the record the liberators were built from, not a specification of what they do now.
+This documents every step taken to bootstrap kovacs (Ubuntu 24.04 ARM64 at the time, Parallels on rhadamanth) from a bare VM to a fully opinionated dev environment, by hand, before the liberators existed. It is the record the liberators were built from, not a specification of what they do now.
 
 Steps are grouped by **liberator** (config module). Each step is tagged:
 
-- **[agnostic]** — platform-independent, works on any sleeve
-- **[linux]** — Linux-specific (apt, systemd, Wayland, etc.)
-- **[instance]** — machine-specific (kovacs only)
+- **[agnostic]**: platform-independent, works on any sleeve
+- **[linux]**: Linux-specific (apt, systemd, Wayland, etc.)
+- **[instance]**: machine-specific (kovacs only)
 
 ## What this covers, and what it does not
 
@@ -16,9 +16,9 @@ Stating the gap rather than implying completeness is deliberate: a runbook that 
 
 Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`, `desktop`, `dev-tools`, `mise`, `ssh`, `intent`, `claude`.
 
-**NOT documented here** — these arrived after the Phase 1 resleeve and their steps have never been captured: `agents`, `arngz`, `backup`, `brew`, `cldr`, `env`, `gnome-terminal`, `gtools`, `hammerspoon`, `herdr`, `iterm2`, `karabiner`, `local-bin`, `menuz`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
+**NOT documented here**: these arrived after the Phase 1 resleeve and their steps have never been captured: `agents`, `arngz`, `backup`, `brew`, `cldr`, `env`, `gnome-terminal`, `gtools`, `hammerspoon`, `herdr`, `iterm2`, `karabiner`, `local-bin`, `menuz`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
 
-This is a record of what was done BY HAND on kovacs. It is not the install procedure — that is `molt resleeve`. The liberators automate the configuration recorded here. The packages they mostly do not install: `system`, `zsh`, `git`, `alacritty` and `dev-tools` check for theirs and name the install when one is missing. Where this record and a liberator disagree, the liberator is authoritative and this document is stale.
+This is a record of what was done BY HAND on kovacs. It is not the install procedure: that is `molt resleeve`. The liberators automate the configuration recorded here, but mostly not the packages. Of those documented here, `system`, `zsh`, `git`, `tmux`, `alacritty`, `dev-tools` and `mise` check for theirs and name the install when one is missing, and `editors` does the same for Emacs and Neovim. `editors` clones Doom Emacs and LazyVim itself, `keys` builds keyd from source, and `intent` installs Intent from Homebrew. Where this record and a liberator disagree, the liberator is authoritative and this document is stale.
 
 ## Molt itself
 
@@ -38,7 +38,7 @@ molt resleeve
 
 **This is for whoever works on Molt itself.** A sleeve installed from brew needs none of it.
 
-kovacs was bootstrapped in Phase 1 from a dev checkout, `$MOLT_PRJ_DIR/Molt`, cloned by `bin/bootstrap.sh`, which still sets one up there and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `molt use` and `molt install`. kovacs itself moves to brew only, through kovacs-sysadm (ST0008), and its old `~/bin/molt` gives way to Homebrew's `molt`; `~/bin` and `~/.local/bin` are different directories there.
+kovacs was bootstrapped in Phase 1 from a dev checkout of Molt. `bin/bootstrap.sh`, which came after Phase 1, sets one up at `$MOLT_PRJ_DIR/Molt` and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `molt use` and `molt install`. kovacs itself moves to brew only, through kovacs-sysadm (ST0008), and its old `~/bin/molt` gives way to Homebrew's `molt`; `~/bin` and `~/.local/bin` are different directories there.
 
 ---
 
@@ -66,7 +66,7 @@ sudo apt update && sudo apt install -y \
 ```
 
 - **Why**: Baseline tools needed by everything else.
-- **Gotcha**: `bat` is `batcat` on Ubuntu (aliased in zshrc). `fd-find` binary is `fdfind` (also aliased).
+- **Gotcha**: `bat` is `batcat` on Ubuntu, and `fd-find`'s binary is `fdfind`. The zshrc aliases neither.
 
 ### Install mise [linux]
 
@@ -90,6 +90,8 @@ Shell configuration and prompt.
 chsh -s $(which zsh)
 ```
 
+- **Now**: the `zsh` liberator runs this `chsh` itself when zsh is not the login shell.
+
 ### Install Starship prompt [agnostic]
 
 ```bash
@@ -97,21 +99,22 @@ curl -sS https://starship.rs/install.sh | sh
 ```
 
 - **Why**: Fast, cross-platform prompt with git integration, language versions.
-- Config: `Molt-{user}/config/starship/starship.toml`, or `starship.toml.tmpl`, rendered
+- Config: `Molt-{user}/config/starship/starship.toml.tmpl`, rendered, or a static `starship.toml`, linked
 - Installed at: `~/.config/starship.toml`
 
 ### Write zshrc [agnostic]
 
 - Config: `Molt-{user}/config/zsh/zshrc`
 - Symlink: `~/.zshrc`
-- **Design**: Thin coordinator. Sources functions via `fpath`, sets env vars, PATH, history options, aliases (one-liners only), activates tools.
+- **Design**: Thin coordinator. Sets env vars, history options and aliases (one-liners only), and activates tools. At the time it also loaded the functions through `fpath` and built PATH; now `zshenv` autoloads the functions and `zprofile` builds PATH.
 - Functions live in `config/zsh/functions/`, one per file.
 - **Highlander**: All git shortcuts live here as shell aliases (not in gitconfig).
 
 ### Write zshenv and zprofile [agnostic]
 
-- `~/.zshenv` → `config/zsh/zshenv` — minimal, intentionally near-empty
-- `~/.zprofile` → `config/zsh/zprofile` — empty placeholder to prevent system defaults
+- `~/.zshenv` → `config/zsh/zshenv`: minimal, intentionally near-empty at the time
+- `~/.zprofile` → `config/zsh/zprofile`: at the time an empty placeholder to prevent system defaults
+- **Now**: `zshenv` sources `~/.config/molt/env.sh`, which the `env` liberator writes, and `zprofile` builds the login PATH with `~/.local/bin` first, which the `env` liberator requires before it publishes that PATH for GUI apps.
 
 ---
 
@@ -124,7 +127,7 @@ Version control configuration.
 - Config: `Molt-{user}/config/git/gitconfig`
 - Symlink: `~/.gitconfig`
 - Contents: identity, defaults and the git-lfs filter; read the file itself for the rest.
-- **Highlander**: No `[alias]` section — all git shortcuts are shell aliases in zshrc.
+- **Highlander**: No `[alias]` section: all git shortcuts are shell aliases in zshrc.
 
 ### Install git-lfs [linux]
 
@@ -165,10 +168,10 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 - Config: `Molt-{user}/config/doom/`
 - Symlink: `~/.config/doom`
 - Structure:
-  - `config.el` — thin coordinator, loads custom modules
-  - `init.el` — Doom module declarations
-  - `packages.el` — additional packages
-  - `custom/*.el` — modular config files
+  - `config.el`: thin coordinator, loads custom modules
+  - `init.el`: Doom module declarations
+  - `packages.el`: additional packages
+  - `custom/*.el`: modular config files
 - **Gotcha**: Font is platform-conditional (JetBrainsMono Nerd Font on Linux, Menlo on macOS).
 - Run `doom sync` after config changes.
 
@@ -185,7 +188,7 @@ rm -rf ~/.config/nvim/.git
 
 ## alacritty
 
-Terminal emulator setup. **There is no `terminal` liberator any more** — WP-09 split it per emulator, so this section is `alacritty` and its siblings are `gnome-terminal`, `iterm2` and `terminal-app`, none of which are documented here.
+Terminal emulator setup. **There is no `terminal` liberator any more.** ST0001's WP-09 split it per emulator, so this section is `alacritty` and its siblings are `gnome-terminal`, `iterm2` and `terminal-app`, none of which are documented here.
 
 ### Install Alacritty [linux]
 
@@ -198,7 +201,7 @@ sudo apt install -y alacritty
 - Template: `Molt-{user}/config/alacritty/alacritty.toml.tmpl`
 - Rendered to: `~/.config/alacritty/alacritty.toml`
 
-**This is rendered, not symlinked.** The font comes from the instance's `vars.sh` (`MOLT_FONT_FAMILY`, `MOLT_FONT_SIZE`) so the declared value is the effective one — it was previously declared in both places and had already diverged. kovacs runs **MesloLGS Nerd Font at 11.0**, set by Molt-matts `25713b0`.
+**This is rendered, not symlinked.** The font comes from the instance's `vars.sh` (`MOLT_FONT_FAMILY`, `MOLT_FONT_SIZE`) so the declared value is the effective one. It was previously declared in both places and had already diverged. kovacs runs **MesloLGS Nerd Font at 11.0**, chosen in Molt-matts `25713b0` and declared in kovacs's `vars.sh` since `1adb536`.
 
 Other settings: copy-on-select, Super+C/V/X clipboard bindings for Parallels, Shift-Enter kitty-protocol encoding.
 
@@ -220,13 +223,15 @@ sudo systemctl enable keyd && sudo systemctl start keyd
 ```
 
 - **Why**: evdev-level key remapping, compositor-agnostic, survives Wayland.
+- **Now**: the `keys` liberator does this itself when keyd is missing: it clones and builds keyd, installs it through `sudo`, and enables and starts the service.
 
 ### Write keyd config [instance]
 
 - Config: `Molt-{user}/instances/kovacs/keyd/default.conf`
 - Install target: `/etc/keyd/default.conf`. The liberator copies it there through sudo and runs `sudo keyd reload`.
-- Maps leftmeta (Cmd) to a custom layer for CUA-style shortcuts (c/v/x)
-- **Status**: Config ready but Cmd key passthrough from Parallels is PARKED. Parallels is not sending leftmeta to the VM.
+- At the time it mapped leftmeta (Cmd) to a custom layer for CUA-style shortcuts (c/v/x).
+- **Status** at the time: config ready, but Cmd key passthrough from Parallels was PARKED, as Parallels was not sending leftmeta to the VM.
+- **Now**: since Molt-matts `a355f32` (10 Mar 2026) the Parallels profile passes Cmd as Super, Alacritty binds Super+C/V/X itself, and `default.conf` maps nothing. The `keys` liberator is disabled on kovacs.
 
 ---
 
@@ -257,7 +262,7 @@ gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']
 
 ## dev-tools
 
-Development tool configuration.
+CLI tools. The liberator checks for jq, tree, rg, fzf and curl, and installs none.
 
 ### CLI tools [linux]
 
@@ -287,7 +292,7 @@ ssh-keygen -t ed25519 -C "you@example.com"
 ```
 
 - Keys are per-instance secrets, NOT kept in Molt-{user}.
-- **Now**: when no private key is in `~/.ssh`, the liberator generates `~/.ssh/id_ed25519` itself, with no passphrase, and prints the public key to add to GitHub.
+- **Now**: when it finds no private key in `~/.ssh` (it looks for `id_*`, `personalid` and `personal_id`), the liberator generates `~/.ssh/id_ed25519` itself, with no passphrase, and says to add its public key to GitHub, naming `cat ~/.ssh/id_ed25519.pub`.
 
 ### Write SSH config [agnostic]
 
@@ -331,7 +336,7 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 
 ### Claude's state out of $HOME [agnostic]
 
-- A sleeve that declares `MOLT_CLAUDE_CONFIG_DIR` in its `vars.sh` has its state moved there once, with every Claude Code quit. The liberator repoints the paths in the moved state, installs a guard and a hook that refuse a session launched in `$HOME`, and hands `CLAUDE_CONFIG_DIR` to the `env` liberator, which runs after it and publishes it.
+- A sleeve that declares `MOLT_CLAUDE_CONFIG_DIR` in its `vars.sh` has its state moved there once, with every Claude Code quit. The liberator repoints the paths into `~/.claude` that the moved `settings.json` names, installs a guard and a hook that refuse a session launched in `$HOME`, at the agents root or below an agent home, or one that did not get `CLAUDE_CONFIG_DIR`, and hands `CLAUDE_CONFIG_DIR` to the `env` liberator, which runs after it and publishes it.
 
 ### Claude status line [agnostic]
 
@@ -346,24 +351,26 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 
 ## Config Summary
 
-| Source (Molt-{user}/config/)  | Target                                 | How      |
-| ----------------------------- | -------------------------------------- | -------- |
-| zsh/zshrc                     | ~/.zshrc                               | linked   |
-| zsh/zshenv                    | ~/.zshenv                              | linked   |
-| zsh/zprofile                  | ~/.zprofile                            | linked   |
-| git/gitconfig                 | ~/.gitconfig                           | linked   |
-| git/gitignore_global          | ~/.gitignore_global                    | linked   |
-| git/gitconfig\_<name>         | ~/.gitconfig\_<name>                   | linked   |
-| tmux/tmux.conf                | ~/.tmux.conf                           | linked   |
-| doom/                         | ~/.config/doom                         | linked   |
-| alacritty/alacritty.toml.tmpl | ~/.config/alacritty/alacritty.toml     | rendered |
-| starship/starship.toml(.tmpl) | ~/.config/starship.toml                | rendered |
-| gtk/gtk.css                   | ~/.config/gtk-3.0/gtk.css and gtk-4.0/ | linked   |
-| ssh/config.tmpl               | ~/.ssh/config                          | rendered |
-| claude/keybindings.json       | <config dir>/keybindings.json          | linked   |
-| claude/CLAUDE.md              | <config dir>/CLAUDE.md                 | linked   |
-| claude/AGENTS.md              | <config dir>/AGENTS.md                 | linked   |
-| ccstatusline/settings.json    | ~/.config/ccstatusline/settings.json   | linked   |
+| Source (Molt-{user}/config/)  | Target                                            | How      |
+| ----------------------------- | ------------------------------------------------- | -------- |
+| zsh/zshrc                     | ~/.zshrc                                          | linked   |
+| zsh/zshenv                    | ~/.zshenv                                         | linked   |
+| zsh/zprofile                  | ~/.zprofile                                       | linked   |
+| git/gitconfig                 | ~/.gitconfig                                      | linked   |
+| git/gitignore_global          | ~/.gitignore_global                               | linked   |
+| git/gitconfig\_<name>         | ~/.gitconfig\_<name>                              | linked   |
+| tmux/tmux.conf                | ~/.tmux.conf                                      | linked   |
+| doom/                         | ~/.config/doom                                    | linked   |
+| alacritty/alacritty.toml.tmpl | ~/.config/alacritty/alacritty.toml                | rendered |
+| starship/starship.toml.tmpl   | ~/.config/starship.toml                           | rendered |
+| gtk/gtk.css                   | ~/.config/gtk-3.0/gtk.css and gtk-4.0/            | linked   |
+| ssh/config.tmpl               | ~/.ssh/config                                     | rendered |
+| claude/keybindings.json       | <config dir>/keybindings.json                     | linked   |
+| claude/CLAUDE.md              | <config dir>/CLAUDE.md                            | linked   |
+| claude/AGENTS.md              | <config dir>/AGENTS.md                            | linked   |
+| claude/statusline.json        | <config dir>/settings.json, its `statusLine` key  | written  |
+| claude/attribution.json       | <config dir>/settings.json, its `attribution` key | written  |
+| ccstatusline/settings.json    | ~/.config/ccstatusline/settings.json              | linked   |
 
 Instance-specific config lives in `Molt-{user}/instances/{hostname}/`.
 
@@ -373,8 +380,8 @@ Instance-specific config lives in `Molt-{user}/instances/{hostname}/`.
 
 Key findings from the Highlander/Thin Coordinator audit:
 
-- **H1 (Fixed)**: Git aliases were in two places — unified to zshrc only
+- **H1 (Fixed)**: Git aliases were in two places, unified to zshrc only
 - **T1 (Fixed)**: zshrc functions extracted to `config/zsh/functions/`
 - **T2 (Fixed)**: Doom config.el inline logic extracted to custom/\*.el modules
 - **M1 (Fixed)**: keyd config captured in `instances/kovacs/keyd/`
-- **H3 (Fixed, then regressed, then fixed again)**: the font was unified to JetBrainsMono Nerd Font here in June. It did not stay unified: Molt-matts `25713b0` switched kovacs's `alacritty.toml` to MesloLGS while `vars.sh` still said JetBrainsMono, and the two sat diverged until 2026-09-08. The durable fix was not to re-unify the values but to remove the second place they could disagree — the config is now rendered from `vars.sh`. Copies of one fact drift; the fix is one copy, not matching copies.
+- **H3 (Fixed, then regressed, then fixed again)**: the font was unified to JetBrainsMono Nerd Font here in March. It did not stay unified: Molt-matts `25713b0` switched kovacs's `alacritty.toml` to MesloLGS while `vars.sh` still said JetBrainsMono, and the two sat diverged until 2026-09-08. The durable fix was not to re-unify the values but to remove the second place they could disagree: the config is now rendered from `vars.sh`. Copies of one fact drift; the fix is one copy, not matching copies.

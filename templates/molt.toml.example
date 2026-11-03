@@ -1,11 +1,11 @@
-# molt.toml — Stack manifest for MOLT
+# molt.toml: Stack manifest for MOLT
 # The authoritative source of truth for what your stack contains.
 #
 # Each liberator has an "enabled" flag. Set to false to skip it.
 # Only the liberators listed and enabled for this platform run; one that is not
 # listed does not run. A manifest that enables none for this platform is
-# refused: resleeve, upgrade and maintain fail, naming it. Only a sleeve with
-# no manifest at all runs every liberator Molt ships.
+# refused: resleeve, upgrade, maintain and molt git fail, naming it. Only a
+# sleeve with no manifest at all runs every liberator Molt ships.
 
 [stack]
 name = "my-stack"                    # Your stack name (typically molt-{userid})
@@ -67,7 +67,7 @@ os = ["linux", "macos"]
 
 [[liberator]]
 name = "keys"
-enabled = false                      # parked — Cmd key passthrough issue
+enabled = false                      # parked: Cmd key passthrough issue
 os = ["linux"]
 
 [[liberator]]

@@ -19,7 +19,7 @@ class Molt < Formula
   license "MIT"
 
   # No depends_on "bash": Molt runs on macOS's own bash 3.2 as well as bash 5,
-  # and CI's macOS runner proves it on every push.
+  # and CI's macOS runner proves it on every release tag.
 
   def install
     # Molt's own publish, run from the tag's checkout: it refuses a runtime set

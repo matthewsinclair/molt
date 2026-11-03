@@ -1,6 +1,6 @@
 # Template System
 
-Some config files need per-instance values — SSH key names, font families, project paths. MOLT's template system renders `.tmpl` files using `envsubst` with instance-specific variables. Only `MOLT_*` variables are substituted; any other `$VAR` is left as written.
+Some config files need per-instance values: SSH key names, font families, project paths. MOLT's template system renders `.tmpl` files using `envsubst` with instance-specific variables. Only `MOLT_*` variables are substituted; any other `$VAR` is left as written.
 
 ## How it works
 
@@ -39,9 +39,9 @@ export MOLT_FONT_FAMILY="Hack Nerd Font Mono"
 export MOLT_FONT_SIZE=12.0
 ```
 
-Variables are sourced in a subshell during rendering — they don't leak into the framework environment.
+Variables are sourced in a subshell during rendering, so they don't leak into the framework environment.
 
-`vars.sh` is read for more than templates. Molt also reads `MOLT_INSTALL_PREFIX` from it (where `molt install` publishes the opt tree), `MOLT_CLAUDE_CONFIG_DIR` (where the `claude` liberator keeps Claude Code's state) and `MOLT_FONT_FAMILY` (the font `molt doctor` checks for). The `env` liberator publishes each `<TOOL>_INSTALL_PREFIX` it exports, other than `MOLT_` ones, to shells and GUI apps.
+`vars.sh` is read for more than templates. Molt also reads `MOLT_INSTALL_PREFIX` from it (where `molt install` publishes the opt tree), `MOLT_CLAUDE_CONFIG_DIR` (where the `claude` liberator keeps Claude Code's state) and `MOLT_FONT_FAMILY` (the font `molt doctor` checks for), and some liberators read settings of their own there, as `backup` does its `MOLT_BACKUP_*` values and `tiling` its `MOLT_TACTILE_ACTIVATE`. The `env` liberator publishes each `<TOOL>_INSTALL_PREFIX` it exports, other than `MOLT_` ones, to shells and GUI apps.
 
 ## Using templates in liberators
 
@@ -71,7 +71,7 @@ Some configs benefit from instance-specific additions appended after the rendere
 ```
 instances/
   kovacs/
-    ssh/config.d/         # empty — no extra hosts
+    ssh/config.d/         # empty: no extra hosts
   rhadamanth/
     ssh/config.d/
       lan-hosts.conf      # LAN-specific SSH hosts
@@ -85,7 +85,7 @@ When `molt_render` writes a file, it also creates a `.molt-rendered` marker file
 
 - The source template path
 - The timestamp of rendering
-- A `digest` line: the SHA-256 of the template concatenated with the instance `vars.sh`
+- A `digest` line: the SHA-256 of the template concatenated with the instance `vars.sh` and any extra inputs the liberator passes, such as `ssh`'s fragments
 - An `output` line: the SHA-256 of the file as molt wrote it
 
 The marker lets `molt doctor` and liberator `_check` functions distinguish rendered files from manually-created ones, and the digest lets them tell whether the rendered file still matches what it was rendered from. The output hash lets the next render tell a hand edit from molt's own work: a file still as molt wrote it is replaced without a backup, and any other is backed up first. An existing symlink at the target is removed, never backed up.
@@ -97,8 +97,8 @@ molt renders a config only when its liberator's `_check` reports not-ok. A chang
 `molt_config_stale <source> <target>` closes that. Liberators that render **must** fold it into their `_check`:
 
 ```bash
-if molt_config_stale "config/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"; then
-  molt_info "alacritty: ~/.config/alacritty/alacritty.toml differs from its template or instance vars — re-rendering"
+if molt_config_stale "config/starship/starship.toml" "$HOME/.config/starship.toml"; then
+  molt_info "zsh: ~/.config/starship.toml differs from its template or instance vars — re-rendering"
   ok=1
 fi
 ```
@@ -109,10 +109,10 @@ It compares the digest recorded in `.molt-rendered` against a freshly computed o
 
 - git rewrites mtimes. A clone stamps every file with the clone time, and `git checkout -- <file>` restamps content that never changed, so every template would read stale after ordinary git operations.
 - A byte-identical template that is merely touched would read stale.
-- Across two filesystems mtime produces **false negatives**. A FUSE mount that truncates mtime to whole seconds, compared against an ext4 file carrying nanoseconds inside the same second, reports "not newer" — silently skipping a render that was needed.
+- Across two filesystems mtime produces **false negatives**. A FUSE mount that truncates mtime to whole seconds, compared against an ext4 file carrying nanoseconds inside the same second, reports "not newer", silently skipping a render that was needed.
 - A guest with no NTP has no clock authority to compare against at all.
 
-The digest covers the instance `vars.sh` as well as the template, because `molt_render` substitutes it. A vars-only edit changes the rendered output while leaving the template untouched, and vars.sh is by definition the per-machine file — the least visible edit there is.
+The digest covers the instance `vars.sh` as well as the template, because `molt_render` substitutes it. A vars-only edit changes the rendered output while leaving the template untouched, and vars.sh, by definition the per-machine file, is where an edit is least visible.
 
 It **fails closed**: if the digest cannot be computed, it reports stale. Re-rendering costs a moment; skipping a needed render does not announce itself.
 
@@ -123,11 +123,11 @@ Installs predating the digest carry no `digest` line, so each rendered config re
 A template may open with a marker:
 
 ```
-# @@MOLT:BEGIN@@ — managed by molt, do not edit below this line
-# Add your own entries ABOVE this line.
+# @@MOLT:BEGIN@@ managed by molt: do not edit below this line
+# Add your own entries ABOVE the marker line.
 ```
 
-When the existing file carries `@@MOLT:BEGIN@@` and the new render opens with it, on its first line, `molt_render` preserves everything above the marker from the current file and prepends it to the new render. A render with lines of its own above the marker keeps nothing, since those lines would be written again under the kept copy at every render; nor does a marker that is only mentioned further down. When lines above the marker are not kept and the file is backed up, molt warns how many of them the new render does not carry, and names the backup that holds them. Files without the marker — rendered scripts, plists — are replaced wholesale as before.
+When the existing file carries `@@MOLT:BEGIN@@` and the new render opens with it, on its first line, `molt_render` preserves everything above the marker from the current file and prepends it to the new render. A render with lines of its own above the marker keeps nothing, since those lines would be written again under the kept copy at every render; nor does a marker that is only mentioned further down. When lines above the marker are not kept and the file is backed up, molt warns how many of them the new render does not carry, and names the backup that holds them. Files without the marker, such as rendered scripts and plists, are replaced wholesale as before.
 
 Anything _below_ the marker is molt's to own and will be replaced. Content that must survive belongs either above the marker or in the template itself.
 
@@ -153,7 +153,7 @@ Some liberators read per-machine files from `instances/<hostname>/` rather than 
 | `desktop` | `instances/<host>/desktop/favorite-apps`      | one `.desktop` id per line; line order is dock order, blank lines and `#` comments ignored                                                                                                                                                                |
 | `desktop` | `instances/<host>/desktop/gsettings`          | one `<schema> <key> <value>` per line, the value to the end of the line as `gsettings get` prints it; blank lines and lines starting with `#` ignored, a `#` later in a line being part of the value; applied on install, read back and compared by check |
 | `agents`  | `instances/<host>/agents/<role>.md`           | appended to the agent's `AGENTS.md`, after the role's template, when the sleeve has one                                                                                                                                                                   |
-| `zsh`     | `instances/<host>/instance.toml` `[terminal]` | `bg_color` and `ssh_bg_color`: every instance's `ssh_bg_color` and this sleeve's `bg_color` build `~/.config/molt/iterm2-ssh-colors.sh`, the iTerm2 ssh wrapper                                                                                           |
+| `zsh`     | `instances/<host>/instance.toml` `[terminal]` | `bg_color` and `ssh_bg_color`: every instance's `ssh_bg_color` and this sleeve's `bg_color`, with the domains in `config/network/local-domains`, build `~/.config/molt/iterm2-ssh-colors.sh`, the iTerm2 ssh wrapper                                      |
 
 A liberator that builds a rendered file from one of these as well (as `ssh` does, putting its fragments after the template's render) builds the whole file before it is placed: `molt_render_tmp` into `<target>.molt-tmp` (which renders with `molt_render_text`), its own additions there, then `molt_render_place` with those files as extra inputs, so the sidecar's digest covers them. It passes the same files to `molt_config_stale` in `_check`; pass them to only one of the two and the digests never agree, so the liberator reinstalls on every run. A file added to after it is placed differs from every new render, so each install backs it up.
 

@@ -1,4 +1,4 @@
-# molt.toml — Stack manifest for __MOLT_HOSTNAME__
+# molt.toml: Stack manifest for __MOLT_HOSTNAME__
 # Personal config repo: __MOLT_GITHUB__/molt-__MOLT_USER__
 
 [stack]
@@ -11,10 +11,10 @@ hostname = "__MOLT_HOSTNAME__"
 instance_dir = "instances/__MOLT_HOSTNAME__"
 projects_dir = "~/Devel/prj"
 
-# Liberators run in the order listed here. Enabled out of the box: the
-# liberators that work on any sleeve. The rest are off until you want them:
-# what each needs is its tool installed, and it links or renders whatever
-# config/<name>/ holds once you add it.
+# Liberators run in the order listed here. Enabled out of the box: those this
+# skeleton has config for, or that need none. The rest are off until you want
+# them: enable each once its tool is installed and its config/<name>/, where it
+# needs one, is in place.
 
 [[liberator]]
 name = "system"
@@ -97,9 +97,9 @@ os = ["linux", "macos"]
 # The published environment: CLAUDE_CONFIG_DIR, each <TOOL>_INSTALL_PREFIX
 # vars.sh exports, and a login shell's PATH for GUI apps. After claude, which
 # hands over CLAUDE_CONFIG_DIR only once its state has moved. Off until vars.sh
-# declares MOLT_CLAUDE_CONFIG_DIR or a prefix, and zshrc puts ~/.local/bin
-# first on PATH; the claude check names this entry when a config dir is
-# declared and it is still off.
+# declares MOLT_CLAUDE_CONFIG_DIR or a prefix, and .zprofile puts ~/.local/bin
+# first on PATH with nothing in .zshrc ahead of it; the claude check names this
+# entry when a config dir is declared and it is still off.
 [[liberator]]
 name = "env"
 enabled = false

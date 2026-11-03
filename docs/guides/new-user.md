@@ -6,7 +6,7 @@ You only do this once per person. After the repo exists, day-to-day setup is cov
 
 ## Why a generator
 
-A personal config repo carries a small amount of identity — your name, email, GitHub handle, the first machine's hostname — threaded through several files (`gitconfig`, the ssh config, `vars.sh`, the manifest, the README). Cloning someone else's repo and find-replacing those by hand is error-prone and leaks the original owner's details. `molt new-user` does it deterministically from a tokenised skeleton.
+A personal config repo carries a small amount of identity: your user name, full name, email, GitHub handle and the first machine's hostname, threaded through several files (`gitconfig`, the ssh config, `vars.sh`, `instance.toml`, the manifest, the README). Cloning someone else's repo and find-replacing those by hand is error-prone and leaks the original owner's details. `molt new-user` does it deterministically from a tokenised skeleton.
 
 ## Usage
 
@@ -20,6 +20,8 @@ Each of `<user>`, `--name`, `--email`, `--github` and `--hostname` you don't pas
 - `--github` defaults to `<user>`
 - `--name` defaults to `<user>`
 - `--dest` defaults to `$MOLT_CFG_DIR/Molt-<user>` (or `./Molt-<user>` if `MOLT_CFG_DIR` is unset); `MOLT_CFG_DIR` defaults to the `cfg/` directory beside `MOLT_PRJ_DIR`
+
+Molt finds a config repo only by your login name, as `Molt-$(whoami)`, so `<user>` is your login name on the machines it will run on.
 
 Example, fully specified:
 
@@ -35,13 +37,13 @@ molt new-user flynn \
 
 These are the only values that vary per user. Everything else in the skeleton is shared structure.
 
-| Token            | Example                    | Lands in                                      |
-| ---------------- | -------------------------- | --------------------------------------------- |
-| `MOLT_USER`      | `flynn`                    | repo name, `molt.toml`, `vars.sh`, README     |
-| `MOLT_FULL_NAME` | `Flynn Sinclair`           | `gitconfig`, `gitconfig_<github>`             |
-| `MOLT_EMAIL`     | `flynn.sinclair@gmail.com` | `gitconfig`, `gitconfig_<github>`             |
-| `MOLT_GITHUB`    | `flynn-sinclair`           | ssh host alias, `gitconfig_<github>` filename |
-| `MOLT_HOSTNAME`  | `jormungandr`              | `instances/<hostname>/`                       |
+| Token            | Example                    | Lands in                                                                                             |
+| ---------------- | -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `MOLT_USER`      | `flynn`                    | repo name, `molt.toml`, `vars.sh`, README                                                            |
+| `MOLT_FULL_NAME` | `Flynn Sinclair`           | `gitconfig`, `gitconfig_<github>`, README                                                            |
+| `MOLT_EMAIL`     | `flynn.sinclair@gmail.com` | `gitconfig`, `gitconfig_<github>`                                                                    |
+| `MOLT_GITHUB`    | `flynn-sinclair`           | ssh host alias, `gitconfig_<github>` filename and the `gitconfig` include of it, `molt.toml`, README |
+| `MOLT_HOSTNAME`  | `jormungandr`              | `instances/<hostname>/` and its `instance.toml`, `molt.toml` and `vars.sh`, README                   |
 
 ## What it generates
 
@@ -69,10 +71,10 @@ The instance `molt.toml` is the list of what is enabled out of the box. Enable t
 
 The skeleton deliberately uses **distinct delimiter styles** for each, and the distinction matters:
 
-- `__MOLT_USER__`, `__MOLT_GITHUB__`, … — **scaffold-time** tokens. `molt new-user` substitutes these once, when the repo is created.
-- `${MOLT_SSH_KEY}`, `${MOLT_FONT_FAMILY}`, … — **resleeve-time** template vars, rendered later by `molt_render` via `envsubst` using the instance's `vars.sh`.
+- `__MOLT_USER__`, `__MOLT_GITHUB__`, …: **scaffold-time** tokens. `molt new-user` substitutes these once, when the repo is created.
+- `${MOLT_SSH_KEY}`, `${MOLT_FONT_FAMILY}`, …: **resleeve-time** template vars, which `envsubst` fills in at each resleeve from the instance's `vars.sh`.
 
-Because the delimiters differ, scaffolding never touches the runtime vars — a generated `config.tmpl` still contains a live `${MOLT_SSH_KEY}` for the ssh liberator to render per machine.
+Because the delimiters differ, scaffolding never touches the runtime vars: a generated `config.tmpl` still contains a live `${MOLT_SSH_KEY}` for the ssh liberator to render per machine.
 
 ## Git identity include
 
@@ -83,14 +85,14 @@ Because the delimiters differ, scaffolding never touches the runtime vars — a 
 	path = ~/.gitconfig_<github>
 ```
 
-The git liberator links **any** `config/git/gitconfig_*` file to `~/.<basename>`, so the filename can be whatever your handle is — nothing in the framework is hardcoded to a specific person.
+The git liberator links **any** `config/git/gitconfig_*` file to `~/.<basename>`, so the filename can be whatever your handle is: nothing in the framework is hardcoded to a specific person.
 
 ## Next steps
 
 `molt new-user` prints these on completion:
 
 ```bash
-cd <dest>
+cd "<dest>"
 git init && git add -A && git commit -m "Initial molt-<user> config"
 # create the GitHub repo <github>/molt-<user>, then:
 git remote add origin git@github.com-<github>:<github>/molt-<user>.git
@@ -102,7 +104,7 @@ The remote URL uses the `github.com-<github>` ssh host alias that the generated 
 
 ## Adding more machines
 
-Copy the first instance directory and edit it:
+Copy the first instance directory to one named for the new machine's short hostname (`hostname -s`), and edit it:
 
 ```bash
 cp -R instances/<first-host> instances/<new-host>

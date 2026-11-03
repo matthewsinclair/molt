@@ -4,7 +4,7 @@
 #
 # Each sleeve says where its Utilz comes from, on the utilz entry in molt.toml:
 #
-#     source = "checkout"   # a dev checkout at MOLT_UTILZ_HOME, linked into ~/bin
+#     source = "checkout"   # a dev checkout at MOLT_UTILZ_HOME, linked into MOLT_LOCAL_BIN
 #     source = "brew"       # brew install matthewsinclair/utilz/utilz; Molt links nothing
 #
 # No source means checkout. Either way the verdict names the utilz that PATH
@@ -44,7 +44,7 @@ utilz_repo() {
 utilz_repo_git_commands() { echo "pull status log diff fetch"; }
 
 # The checkout's utilities, one per line: the symlinks to the dispatcher in its
-# bin/, which install links into ~/bin beside the dispatcher.
+# bin/, which install links into MOLT_LOCAL_BIN beside the dispatcher.
 _utilz_checkout_utilities() {
   local link
   for link in "$1/bin/"*; do
@@ -165,10 +165,10 @@ _utilz_install_checkout() {
 
   molt_info "Found Utilz at: $repo"
 
-  # Ensure ~/bin exists
+  # Ensure MOLT_LOCAL_BIN exists
   mkdir -p "$MOLT_LOCAL_BIN"
 
-  # Link the utilz dispatcher into ~/bin
+  # Link the utilz dispatcher into MOLT_LOCAL_BIN
   molt_link "$repo/bin/utilz" "$MOLT_LOCAL_BIN/utilz" || return 1
 
   # Link all utility symlinks from the Utilz bin/ directory
