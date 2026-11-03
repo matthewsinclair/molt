@@ -3,18 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 09dcef3b-14e1-4378-ac57-c1c46dc77f47
-heartbeat_at: 2026-11-03 06:31Z
+heartbeat_at: 2026-11-03 07:18Z
 status: active
-focus: "3 Nov: all of dc's Molt 1.4.0 work is on main: 0081 and 0072 ask 2 closed; 0078 (c8b46f3, ce168ef) and 0082 (5b917ea) in vc's review; dc keeps the tree quiet while vc runs the full suite and the release"
-claims: [ISSUE:0078, ISSUE:0082]
+focus: "3 Nov: Molt 1.4.0 is out (v1.4.0 at d0a4518; vc reports CI green on Ubuntu and macOS and the tap at 814de96), carrying dc's 0081, 0072 ask 2, 0078, 0082 and the gtools.bats fix; nothing is queued for dc; rhadamanth's rollout is hv's, with vc's karabiner enable"
+claims: []
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0078: landed on main at c8b46f3 (vc accepted), and doctor's line-cap fix, from dc's FYI, at ce168ef; vc reviews ce168ef, then closes 0078 (edited)
-- 0082, the mise liberator: landed on main at 5b917ea (0082's Next 1 to 6); vc reviews it, does Molt-matts and Molt-flynn (Next 7 to 9), then closes 0082
+_(none)_
 
 ## TODO
 
