@@ -12,12 +12,12 @@
 # say (karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/),
 # and only when the user repo has config/karabiner.
 #
-# A real directory already there is adopted, not only backed up. When its
-# karabiner.json is missing or byte-identical to the repo's, each of its other
-# entries (assets/, automatic_backups/) moves into the repo directory where the
-# repo has no entry of that name, and molt_link keeps whatever is left as the
-# dated .molt-backup. When its karabiner.json differs, install refuses before
-# moving anything and names both files, so the user chooses which is kept.
+# A real directory already there is adopted, not only backed up: each of its
+# entries (karabiner.json, assets/, automatic_backups/) moves into the repo
+# directory where the repo has no entry of that name, and molt_link keeps
+# whatever is left as the dated .molt-backup. When both hold a karabiner.json
+# and the two differ, install refuses before moving anything and names both
+# files, so the user chooses which is kept.
 #
 # Karabiner's agent goes on watching the directory it found when it started,
 # so once install has made the link it restarts the agent, as the docs say, or
@@ -43,13 +43,14 @@ _karabiner_links() {
 }
 
 # Adopts a real directory at the target $2 into the repo directory $1, before
-# install links it. Refuses, moving nothing, when $2's karabiner.json differs
-# from $1's; else moves each of $2's other entries into $1 where $1 has no
-# entry of that name. Nothing to adopt when $2 is missing or a link.
+# install links it. Refuses, moving nothing, when both hold a karabiner.json
+# and the two differ; else moves each of $2's entries into $1 where $1 has no
+# entry of that name, so a karabiner.json the repo lacks comes with the rest.
+# Nothing to adopt when $2 is missing or a link.
 _karabiner_adopt() {
   local source="$1" target="$2" entry name
   [[ -d "$target" && ! -L "$target" ]] || return 0
-  if [[ -e "$target/karabiner.json" ]] && ! cmp -s "$target/karabiner.json" "$source/karabiner.json"; then
+  if [[ -e "$target/karabiner.json" && -e "$source/karabiner.json" ]] && ! cmp -s "$target/karabiner.json" "$source/karabiner.json"; then
     molt_error "karabiner: $(molt_tilde "$target/karabiner.json") differs from $(molt_tilde "$source/karabiner.json"), so nothing was moved or linked: copy the one to keep over the other, then install again"
     return 1
   fi
@@ -57,7 +58,7 @@ _karabiner_adopt() {
     # A glob that matched nothing is left as written.
     [[ -e "$entry" || -L "$entry" ]] || continue
     name="${entry##*/}"
-    if [[ "$name" == "karabiner.json" || -e "$source/$name" || -L "$source/$name" ]]; then
+    if [[ -e "$source/$name" || -L "$source/$name" ]]; then
       continue
     fi
     mv "$entry" "$source/$name" || { molt_error "karabiner: could not move $(molt_tilde "$entry") into $(molt_tilde "$source"), so it was not linked"; return 1; }

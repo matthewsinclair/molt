@@ -101,6 +101,18 @@ _kb_live_dir() {
     [ "$(cat "$KB_REPO/config/karabiner/automatic_backups/karabiner_20261103.json")" = "backup" ]
 }
 
+@test "karabiner_install adopts the live karabiner.json into a repo directory without one" {
+    _kb_env
+    rm "$KB_REPO/config/karabiner/karabiner.json"
+    _kb_live_dir '{"profiles": [{"name": "live"}]}'
+    run karabiner_install
+    assert_success
+    refute_output_contains "differs"
+    [ "$(readlink "$KB_LIVE")" = "$KB_REPO/config/karabiner" ]
+    grep -qF '"live"' "$KB_REPO/config/karabiner/karabiner.json"
+    [ "$(cat "$KB_REPO/config/karabiner/automatic_backups/karabiner_20261103.json")" = "backup" ]
+}
+
 @test "an entry the repo already has stays in the backup, not merged into the repo" {
     _kb_env
     _kb_live_dir '{"profiles": [{"name": "repo"}]}'
