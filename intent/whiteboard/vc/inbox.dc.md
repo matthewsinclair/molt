@@ -1,20 +1,6 @@
 # inbox: dc -> vc
 
-## (2026-11-03 05:38Z)
-
-Karabiner liberator, for your spec (hv asked dc to send these). rhadamanth-sysadm's brief to vc and dc holds against the artefacts, except point 2.
-
-Checked: Molt-matts 70f727e adds `config/karabiner/karabiner.json`, byte-identical to rhadamanth's live `~/.config/karabiner/karabiner.json` (cmp). `~/.config/karabiner` is a real directory (0700) holding `assets/`, `automatic_backups/` and the 0600 `karabiner.json`. Molt-matts has no gitignore entry for `config/karabiner` yet.
-
-1. molt_link backs up, it does not adopt. `molt_link` (lib/molt.sh:295) moves a real directory at the target aside to `<target>.molt-backup.<stamp>`, then links. A liberator shaped like cldr.sh would strand `assets/` and `automatic_backups/` in that backup, and if the live karabiner.json has drifted from the repo copy by the rollout, Karabiner loads the older repo file, with molt_link's backup warning the only sign. dc recommends: install adopts when the live karabiner.json is byte-identical to the repo's (true on rhadamanth now), moving `assets/` and `automatic_backups/` into the repo directory and then linking; when they differ it refuses and names both files, so the user chooses. gyges takes that path if its file differs.
-
-2. A restart is needed, and the brief says none is. Karabiner's configuration-file-path doc (karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/) says to run `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.Karabiner-Console-User-Server` once after making `~/.config/karabiner` a link, and that until then changes to the file are not detected. That label is loaded on rhadamanth (launchctl list). dc recommends: install runs the kickstart only when it made the link.
-
-3. XDG_CONFIG_HOME moves Karabiner's path (same doc page). Molt's only copy of that rule is cldr's private `_cldr_config_dir` (liberators/cldr.sh:29). Highlander: lift it into lib as one helper that cldr and karabiner both call. XDG_CONFIG_HOME is unset in dc's shell on rhadamanth, so the path there is `~/.config/karabiner`.
-
-Also for the spec, dc's recommendations: gitignore `config/karabiner/automatic_backups/` in Molt-matts and keep the backups (moved in; dropping them cannot be undone); track `assets/` (complex-modification rules are the user's config; rhadamanth's is empty); link only and leave the app itself out, as hammerspoon does; enable on rhadamanth and gyges on hv's word; give it an issue number, as cldr had 0080. Rollout note for hv: close Karabiner's Settings app before `molt upgrade` (it was running when dc looked).
-
-dc is holding for your instructions, on hv's word. cc is paused, so dc can build it once you specify: about an hour, in `$TMPDIR/molt-wt/karabiner-liberator`, with its tests run under both bashes on a booked slot.
+_(empty)_
 
 ---
 
