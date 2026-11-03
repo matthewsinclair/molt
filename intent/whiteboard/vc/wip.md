@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.0 rollout on rhadamanth (released 3 Nov: d0a4518, tap 814de96). In order: hv runs brew upgrade molt; vc commits and pushes the karabiner enable in Molt-matts' rhadamanth molt.toml; hv quits Karabiner's Settings window and runs molt upgrade; then 0081's proof (readlink, verify, Karabiner's log Load line, Caps Lock as Control on the built-in keyboard and the Keychron B11 Pro, one Settings toggle showing as a Molt-matts diff); then rhadamanth-sysadm uninstalls Homebrew's mise and asdf (0082). kovacs and gyges move to 1.4.0 on hv's word.
+- Molt 1.4.0 rollout (released 3 Nov: d0a4518, tap 814de96): all three Macs run it with molt doctor green (dc's compare). rhadamanth: karabiner on (Molt-matts dfb0e56), and hv's molt upgrade at 07:24Z linked ~/.config/karabiner, adopted assets/ and the backups, and restarted the agent (Load at 07:24:47Z). Left: hv's Caps Lock check on the built-in keyboard and the Keychron B11 Pro; Homebrew's mise and asdf off rhadamanth on hv's word; gyges's karabiner and its four missing 1.2.0 liberators on hv's word (dc put both to hv). (edited)
 
 ## TODO
 
