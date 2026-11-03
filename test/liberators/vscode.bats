@@ -1,5 +1,6 @@
 #!/usr/bin/env bats
-# vscode.bats — vscode liberator: the macOS 'code' CLI link (issue 0048)
+# vscode.bats — vscode liberator: the macOS 'code' CLI link (issue 0048) and
+# the GNOME dock (issue 0085)
 
 load "../test_helper.bash"
 
@@ -36,5 +37,62 @@ _vscode_env() {
     run vscode_install
     assert_failure
     assert_output_contains "vscode: could not link 'code' into $BATS_TEST_TMPDIR/local-bin"
+    refute_output_contains "Liberator complete"
+}
+
+# A Linux sleeve with VS Code's code on PATH and a gsettings that reaches dconf,
+# keeping each key in a file under $GS_STORE; the dock holds $1. A set fails
+# while $GS_STORE/refuse is there.
+_vscode_linux_env() {
+    load_liberator vscode
+    molt_platform() { echo linux; }
+    local root="$BATS_TEST_TMPDIR"
+    export GS_STORE="$root/gs"
+    mkdir -p "$root/bin" "$root/repo/config" "$GS_STORE/org.gnome.shell"
+    printf '#!/bin/sh\nexit 0\n' > "$root/bin/code"
+    cat > "$root/bin/gsettings" <<'FAKE'
+#!/bin/sh
+d="$GS_STORE/$2"
+case "$1" in
+  list-schemas) echo org.gnome.shell ;;
+  list-keys) echo favorite-apps ;;
+  set)
+    if [ -e "$GS_STORE/refuse" ]; then echo "set refused" >&2; exit 1; fi
+    printf '%s\n' "$4" > "$d/$3" ;;
+  get) cat "$d/$3" ;;
+esac
+FAKE
+    chmod +x "$root/bin/code" "$root/bin/gsettings"
+    printf '%s\n' "$1" > "$GS_STORE/org.gnome.shell/favorite-apps"
+    export PATH="$root/bin:/bin:/usr/bin"
+    gsettings_from_path
+    MOLT_USER_REPO_SEARCH_PATHS=("$root/repo")
+}
+
+_dock() {
+    cat "$GS_STORE/org.gnome.shell/favorite-apps"
+}
+
+@test "install puts code.desktop alone on an empty dock, as a list gsettings can read (issue 0085)" {
+    _vscode_linux_env "@as []"
+    run vscode_install
+    assert_success
+    [ "$(_dock)" = "['code.desktop']" ]
+}
+
+@test "install adds code.desktop after the dock's favourites" {
+    _vscode_linux_env "['firefox.desktop']"
+    run vscode_install
+    assert_success
+    [ "$(_dock)" = "['firefox.desktop', 'code.desktop']" ]
+}
+
+@test "install fails, saying so, when the dock cannot be set (issue 0085)" {
+    _vscode_linux_env "['firefox.desktop']"
+    : > "$GS_STORE/refuse"
+    run vscode_install
+    assert_failure
+    assert_output_contains "vscode: could not add VS Code to the GNOME dock favorites"
+    refute_output_contains "Added VS Code"
     refute_output_contains "Liberator complete"
 }

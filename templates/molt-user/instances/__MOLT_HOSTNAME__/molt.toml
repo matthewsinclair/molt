@@ -6,11 +6,6 @@ name = "molt-__MOLT_USER__"
 version = "0.1.0"
 user_repo = "Molt-__MOLT_USER__"
 
-[sleeve]
-hostname = "__MOLT_HOSTNAME__"
-instance_dir = "instances/__MOLT_HOSTNAME__"
-projects_dir = "~/Devel/prj"
-
 # Liberators run in the order listed here. Enabled out of the box: those this
 # skeleton has config for, or that need none. The rest are off until you want
 # them: enable each once its tool is installed and its config/<name>/, where it

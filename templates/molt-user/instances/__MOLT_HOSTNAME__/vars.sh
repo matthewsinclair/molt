@@ -6,7 +6,6 @@
 # All variables must be exported: envsubst and molt see only exported ones.
 
 export MOLT_HOSTNAME="__MOLT_HOSTNAME__"
-export MOLT_PLATFORM="macos"
 export MOLT_USER="__MOLT_USER__"
 export MOLT_SSH_KEY="id_ed25519"
 export MOLT_PRJ_DIR="$HOME/Devel/prj"

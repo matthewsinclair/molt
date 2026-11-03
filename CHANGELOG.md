@@ -10,6 +10,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The docs say what the code does: the README, every guide, `usage-rules.md`, the CI notes and `intent/llm/` were checked against the code and corrected, and the 24 Oct doc review's open findings closed. The README installs with Homebrew first, `writing-a-liberator.md` adds the shell a liberator runs in, the `molt git` hooks and the helpers it lacked, and `intent/llm/` describes Molt in place of Intent's Elixir starter text (issues 0083, 0084)
 
+### Removed
+
+- The molt-user skeleton's `[sleeve]` table, `instance.toml`'s `[instance]` table and `vars.sh`'s `MOLT_PLATFORM="macos"`, which nothing reads, the last whatever the platform (issue 0085)
+- CI's git identity steps, which no test has read since issue 0062 (issue 0085)
+
+### Fixed
+
+- `system`: check names a missing Homebrew on macOS, and on Linux takes the wheel group (Fedora, RHEL, Arch) as well as sudo, matching the group's name whole; install fails, naming each fault, where it had said complete for a user in no sudo group, whose check then failed on every run. `molt.toml.example` runs it on macOS too (issue 0085)
+- `molt new-user`'s next steps resleeve first, so the commit has git's name and email and the push its `github.com-<github>` ssh host, and `git init -b main` makes the branch the push names. Its help and messages name the `Molt-<user>` directory it makes (issue 0085)
+- `vscode`: an empty GNOME dock gets `['code.desktop']`, where it got `@as [, 'code.desktop']`; under bash 3.2 the entry goes in without the backslashes it kept; and a dock gsettings refuses fails install, where it was reported as added. The liberator guide's dock example does the same (issue 0085)
+- `claude`: a config dir that cannot be made says `CLAUDE_CONFIG_DIR` was not handed over, as every other refusal does (issue 0085)
+- `test/liberators/zsh.bats` gives each test a HOME of its own; its check and verify tests read the HOME of whoever ran bats (issue 0085)
+
 ## [1.4.0] - 2026-11-03
 
 ### Added

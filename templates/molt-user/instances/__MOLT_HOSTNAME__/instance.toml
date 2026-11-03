@@ -1,10 +1,3 @@
-[instance]
-hostname = "__MOLT_HOSTNAME__"
-os = "macos"
-arch = "arm64"
-type = "physical"
-model = "TODO: your machine model"
-
 [terminal]
 # The zsh liberator builds the iTerm2 ssh wrapper from these, so they take effect
 # only once zsh is enabled in molt.toml; this skeleton ships it disabled.

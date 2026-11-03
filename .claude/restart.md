@@ -17,7 +17,7 @@ The roster is the one in [`intent/whiteboard/README.md`](../intent/whiteboard/RE
 - **Autoload files contain the BODY ONLY**: a `name() { ... }` wrapper makes the first call silently no-op, then work. `jump` and `git_current_branch` are the convention in `Molt-matts/config/zsh/functions/`.
 - `fpath` and `autoload` are read at shell startup: changes need a fresh shell, not a `source`.
 - `VERSION` at the project root is the single source of truth for the version.
-- A test that commits names its own git identity, as `git.bats` does: `test/test_helper.bash` gives git an empty global config, so the identity CI's workflow sets is never read (issue 0062).
+- A test that commits names its own git identity, as `git.bats` does: `test/test_helper.bash` gives git an empty global config, so no machine's or runner's identity is read (issue 0062), and CI sets none.
 - iTerm2 SSH colours live in Molt-matts (user config), not the framework.
 - `molt upgrade` = config sync (fast). `molt maintain` = system maintenance (slow).
 - `doom upgrade` needs `--force` (Emacs `y-or-n-p` cannot read from shell stdin).

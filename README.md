@@ -31,7 +31,7 @@ The framework finds your personal repo by searching for `Molt-$(whoami)` (or `mo
 
 This separation means you can fork the framework independently from your config, and your config never contains framework code.
 
-To create a fresh personal repo, run `molt new-user <you>`. It scaffolds a `Molt-{user}` repo from a tokenised skeleton (git + ssh identity, a first instance, a minimal manifest), ready to `git init` and push. No copy-and-find-replace.
+To create a fresh personal repo, run `molt new-user <you>`. It scaffolds a `Molt-{user}` repo from a tokenised skeleton (git + ssh identity, a first instance, a minimal manifest), and prints the steps that follow: a first resleeve, then `git init` and push. No copy-and-find-replace.
 
 ## Quick start
 
@@ -216,42 +216,42 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 
 ### Built-in liberators
 
-| Liberator      | Concern                                         | OS           |
-| -------------- | ----------------------------------------------- | ------------ |
-| system         | Verify sudo (linux) or brew (macos)             | linux, macos |
-| local-bin      | `~/.local/bin` directory, molt CLI symlink      | linux, macos |
-| zsh            | Shell, Starship, config links, ssh tab colours  | linux, macos |
-| git            | Git + git-lfs verification, gitconfig linking   | linux, macos |
-| tmux           | Tmux verification, config linking               | linux, macos |
-| editors        | Doom Emacs + LazyVim, config linking, dock pin  | linux, macos |
-| alacritty      | Alacritty config linking, dock pin              | linux, macos |
-| gnome-terminal | GNOME Terminal profile via dconf                | linux        |
-| iterm2         | iTerm2 dynamic profile linking                  | macos        |
-| terminal-app   | Terminal.app profile import                     | macos        |
-| keys           | keyd build from source, key remapping           | linux        |
-| desktop        | GNOME keys, GTK stylesheet, dock favourites     | linux        |
-| tiling         | Tactile GNOME extension grid tiling             | linux        |
-| vscode         | VS Code settings linking, CLI setup, dock pin   | linux, macos |
-| dev-tools      | CLI tools (jq, tree, rg, fzf, curl)             | linux, macos |
-| mise           | mise runtime manager, off in the templates      | linux, macos |
-| ssh            | SSH key detection, config rendering + fragments | linux, macos |
-| utilz          | Utilz, from a checkout or Homebrew, per sleeve  | linux, macos |
-| brew           | Homebrew maintenance and upgrade                | linux, macos |
-| intent         | Intent from Homebrew, what PATH and gate run    | linux, macos |
-| gtools         | Gtools from Homebrew, from its private tap      | linux, macos |
-| pplr           | Pplr from a checkout, linked into ~/.local/bin  | linux, macos |
-| web            | Web scraper for LLMs, linked into ~/.local/bin  | linux, macos |
-| claude         | Claude Code config, and its state out of $HOME  | linux, macos |
-| env            | Publishes the sleeve's variables, shell and GUI | linux, macos |
-| npm            | ~/.npmrc, with npm's cache under XDG            | linux, macos |
-| agents         | A home for each sleeve agent, from its role     | linux, macos |
-| backup         | Checks the SuperDuper NAS backup; observes only | macos        |
-| herdr          | Herdr's key bindings and hrdrcfg config linking | macos        |
-| arngz          | arngz window desks, config directory linking    | macos        |
-| menuz          | menuz menu bar config, directory linking        | macos        |
-| hammerspoon    | Hammerspoon init.lua linking                    | macos        |
-| cldr           | cldr from Homebrew, config directory linking    | linux, macos |
-| karabiner      | Karabiner-Elements config directory linking     | macos        |
+| Liberator      | Concern                                                       | OS           |
+| -------------- | ------------------------------------------------------------- | ------------ |
+| system         | Verify sudo, the sudo or wheel group (linux) and brew (macos) | linux, macos |
+| local-bin      | `~/.local/bin` directory, molt CLI symlink                    | linux, macos |
+| zsh            | Shell, Starship, config links, ssh tab colours                | linux, macos |
+| git            | Git + git-lfs verification, gitconfig linking                 | linux, macos |
+| tmux           | Tmux verification, config linking                             | linux, macos |
+| editors        | Doom Emacs + LazyVim, config linking, dock pin                | linux, macos |
+| alacritty      | Alacritty config linking, dock pin                            | linux, macos |
+| gnome-terminal | GNOME Terminal profile via dconf                              | linux        |
+| iterm2         | iTerm2 dynamic profile linking                                | macos        |
+| terminal-app   | Terminal.app profile import                                   | macos        |
+| keys           | keyd build from source, key remapping                         | linux        |
+| desktop        | GNOME keys, GTK stylesheet, dock favourites                   | linux        |
+| tiling         | Tactile GNOME extension grid tiling                           | linux        |
+| vscode         | VS Code settings linking, CLI setup, dock pin                 | linux, macos |
+| dev-tools      | CLI tools (jq, tree, rg, fzf, curl)                           | linux, macos |
+| mise           | mise runtime manager, off in the templates                    | linux, macos |
+| ssh            | SSH key detection, config rendering + fragments               | linux, macos |
+| utilz          | Utilz, from a checkout or Homebrew, per sleeve                | linux, macos |
+| brew           | Homebrew maintenance and upgrade                              | linux, macos |
+| intent         | Intent from Homebrew, what PATH and gate run                  | linux, macos |
+| gtools         | Gtools from Homebrew, from its private tap                    | linux, macos |
+| pplr           | Pplr from a checkout, linked into ~/.local/bin                | linux, macos |
+| web            | Web scraper for LLMs, linked into ~/.local/bin                | linux, macos |
+| claude         | Claude Code config, and its state out of $HOME                | linux, macos |
+| env            | Publishes the sleeve's variables, shell and GUI               | linux, macos |
+| npm            | ~/.npmrc, with npm's cache under XDG                          | linux, macos |
+| agents         | A home for each sleeve agent, from its role                   | linux, macos |
+| backup         | Checks the SuperDuper NAS backup; observes only               | macos        |
+| herdr          | Herdr's key bindings and hrdrcfg config linking               | macos        |
+| arngz          | arngz window desks, config directory linking                  | macos        |
+| menuz          | menuz menu bar config, directory linking                      | macos        |
+| hammerspoon    | Hammerspoon init.lua linking                                  | macos        |
+| cldr           | cldr from Homebrew, config directory linking                  | linux, macos |
+| karabiner      | Karabiner-Elements config directory linking                   | macos        |
 
 ### molt.toml
 

@@ -55,7 +55,7 @@ molt_new_user() {
     return 1
   fi
 
-  molt_info "Scaffolding molt-${user} -> ${dest}"
+  molt_info "Scaffolding Molt-${user} -> ${dest}"
 
   mkdir -p "$(dirname "$dest")"
   if ! cp -R "$skeleton" "$dest"; then
@@ -83,7 +83,7 @@ molt_new_user() {
     _molt_subst_tokens "$file" "$user" "$full_name" "$email" "$github" "$hostname" || return 1
   done < <(find "$dest" -type f)
 
-  molt_info "Created molt-${user} at ${dest}"
+  molt_info "Created Molt-${user} at ${dest}"
   return 0
 }
 
@@ -136,14 +136,20 @@ cmd_new_user() {
 
   molt_new_user "$user" "$full_name" "$email" "$github" "$hostname" "$dest" || return 1
 
+  # The resleeve comes first: until it runs, git has no name or email for the
+  # commit, and ssh no github.com-<github> host for the push (issue 0085).
   cat <<EOF
 
 Next steps:
   cd "${dest}"
-  git init && git add -A && git commit -m "Initial molt-${user} config"
+  MOLT_CFG_DIR="$(dirname "$dest")" molt resleeve --dry-run
+  MOLT_CFG_DIR="$(dirname "$dest")" molt resleeve
+  # The resleeve links ~/.gitconfig, which gives git your name and email, and
+  # renders ~/.ssh/config, whose github.com-${github} host the push uses; with
+  # no key in ~/.ssh it makes ~/.ssh/id_ed25519: add its .pub to GitHub.
+  git init -b main && git add -A && git commit -m "Initial molt-${user} config"
   # create the GitHub repo ${github}/molt-${user}, then:
   git remote add origin git@github.com-${github}:${github}/molt-${user}.git
   git push -u origin main
-  MOLT_CFG_DIR="$(dirname "$dest")" molt resleeve --dry-run
 EOF
 }

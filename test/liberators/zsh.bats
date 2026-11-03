@@ -3,13 +3,10 @@
 
 load "../test_helper.bash"
 
+# The shared setup first, so each test has a HOME of its own and no check or
+# verify here reads the HOME of whoever runs bats (issue 0085).
 setup() {
-    export BATS_TEST_TMPDIR="${BATS_TMPDIR:-/tmp}/molt-test-$(date +%s)-$$-$RANDOM"
-    mkdir -p "$BATS_TEST_TMPDIR"
-    export ORIGINAL_PWD="$(pwd)"
-    cd "$BATS_TEST_TMPDIR"
-
-    # Load zsh liberator
+    molt_test_setup
     load_liberator "zsh"
 }
 

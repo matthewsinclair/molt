@@ -1,0 +1,15 @@
+{
+  "id": "01M6GHD54PNR2TEG50JCX230VG",
+  "ts": "2026-11-03T11:06:14.038Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0085"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "Code defects the docs sweep found: system's checks, new-user's next steps, vscode's dock, claude's mkdir refusal, zsh.bats' HOME, a dead CI step, dead template values (hv, 3 Nov)"
+  }
+}

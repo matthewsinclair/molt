@@ -23,7 +23,7 @@
 
 | Module         | File                           | Concern                                                                                         |
 | -------------- | ------------------------------ | ----------------------------------------------------------------------------------------------- |
-| system         | `liberators/system.sh`         | Verifies sudo, the sudo group (linux) and Homebrew (macos)                                      |
+| system         | `liberators/system.sh`         | Verifies sudo, the sudo or wheel group (linux) and Homebrew (macos)                             |
 | zsh            | `liberators/zsh.sh`            | zsh as the login shell, Starship prompt, config linking, iTerm2 ssh tab colours                 |
 | git            | `liberators/git.sh`            | Git + git-lfs verification, gitconfig linking                                                   |
 | tmux           | `liberators/tmux.sh`           | Tmux verification, config linking                                                               |

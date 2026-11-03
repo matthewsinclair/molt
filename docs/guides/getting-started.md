@@ -146,7 +146,7 @@ Molt-you/
     vscode/settings.json
   instances/
     mymachine/
-      instance.toml         # this machine, and its [terminal] colours for the zsh liberator
+      instance.toml         # this machine's [terminal] colours, for the zsh liberator
       molt.toml             # what to install on this machine
       vars.sh               # template variables for this machine
       ssh/config.d/         # SSH config fragments appended after render

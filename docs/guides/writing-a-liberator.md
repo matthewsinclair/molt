@@ -248,14 +248,20 @@ if [[ "$(molt_platform)" == "linux" ]]; then
   local favorites
   favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
   if [[ -n "$favorites" ]] && [[ "$favorites" != *"myapp.desktop"* ]]; then
-    local new_favorites
-    new_favorites="$(echo "$favorites" | sed "s/]/, 'myapp.desktop']/")"
-    molt_gsettings set org.gnome.shell favorite-apps "$new_favorites" || return 1
+    local entry="'myapp.desktop'" new_favorites
+    case "$favorites" in
+      "@as []" | "[]") new_favorites="[$entry]" ;;
+      *) new_favorites="${favorites/]/, $entry]}" ;;
+    esac
+    if ! molt_gsettings set org.gnome.shell favorite-apps "$new_favorites"; then
+      molt_error "myapp: could not add MyApp to the GNOME dock favorites"
+      return 1
+    fi
   fi
 fi
 ```
 
-Never call bare `gsettings`. `molt_gsettings_unreachable` fails, naming why, when gsettings is on PATH but none reaches dconf, and passes when there is no gsettings at all, which is no GNOME; `molt_gsettings` runs the one that reaches dconf, and with no gsettings it fails, so `favorites` is empty and nothing is set. The `vscode` liberator is a worked example.
+gsettings prints an empty list as `@as []`, which takes the first entry with no `, ` ahead of it. The entry is held in a variable because bash 3.2 keeps the backslashes of `\'` in a substitution's replacement. Never call bare `gsettings`. `molt_gsettings_unreachable` fails, naming why, when gsettings is on PATH but none reaches dconf, and passes when there is no gsettings at all, which is no GNOME; `molt_gsettings` runs the one that reaches dconf, and with no gsettings it fails, so `favorites` is empty and nothing is set. The `vscode` liberator is a worked example.
 
 ## Testing
 

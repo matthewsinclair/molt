@@ -6,7 +6,7 @@ You only do this once per person. After the repo exists, day-to-day setup is cov
 
 ## Why a generator
 
-A personal config repo carries a small amount of identity: your user name, full name, email, GitHub handle and the first machine's hostname, threaded through several files (`gitconfig`, the ssh config, `vars.sh`, `instance.toml`, the manifest, the README). Cloning someone else's repo and find-replacing those by hand is error-prone and leaks the original owner's details. `molt new-user` does it deterministically from a tokenised skeleton.
+A personal config repo carries a small amount of identity: your user name, full name, email, GitHub handle and the first machine's hostname, threaded through several files (`gitconfig`, the ssh config, `vars.sh`, the manifest, the README). Cloning someone else's repo and find-replacing those by hand is error-prone and leaks the original owner's details. `molt new-user` does it deterministically from a tokenised skeleton.
 
 ## Usage
 
@@ -43,7 +43,7 @@ These are the only values that vary per user. Everything else in the skeleton is
 | `MOLT_FULL_NAME` | `Flynn Sinclair`           | `gitconfig`, `gitconfig_<github>`, README                                                            |
 | `MOLT_EMAIL`     | `flynn.sinclair@gmail.com` | `gitconfig`, `gitconfig_<github>`                                                                    |
 | `MOLT_GITHUB`    | `flynn-sinclair`           | ssh host alias, `gitconfig_<github>` filename and the `gitconfig` include of it, `molt.toml`, README |
-| `MOLT_HOSTNAME`  | `jormungandr`              | `instances/<hostname>/` and its `instance.toml`, `molt.toml` and `vars.sh`, README                   |
+| `MOLT_HOSTNAME`  | `jormungandr`              | `instances/<hostname>/` and its `molt.toml` and `vars.sh`, README                                    |
 
 ## What it generates
 
@@ -93,14 +93,18 @@ The git liberator links **any** `config/git/gitconfig_*` file to `~/.<basename>`
 
 ```bash
 cd "<dest>"
-git init && git add -A && git commit -m "Initial molt-<user> config"
+MOLT_CFG_DIR="<parent>" molt resleeve --dry-run
+MOLT_CFG_DIR="<parent>" molt resleeve
+# The resleeve links ~/.gitconfig, which gives git your name and email, and
+# renders ~/.ssh/config, whose github.com-<github> host the push uses; with
+# no key in ~/.ssh it makes ~/.ssh/id_ed25519: add its .pub to GitHub.
+git init -b main && git add -A && git commit -m "Initial molt-<user> config"
 # create the GitHub repo <github>/molt-<user>, then:
 git remote add origin git@github.com-<github>:<github>/molt-<user>.git
 git push -u origin main
-MOLT_CFG_DIR="<parent>" molt resleeve --dry-run
 ```
 
-The remote URL uses the `github.com-<github>` ssh host alias that the generated `config/ssh/config.tmpl` defines, so it works once the ssh liberator has run.
+The resleeve comes first because the commit and the push both need what it puts in place: your name and email in the linked gitconfig, and the `github.com-<github>` ssh host that the generated `config/ssh/config.tmpl` defines. `git init -b main` names the branch the push names, whatever git's own default is.
 
 ## Adding more machines
 
@@ -108,7 +112,7 @@ Copy the first instance directory to one named for the new machine's short hostn
 
 ```bash
 cp -R instances/<first-host> instances/<new-host>
-$EDITOR instances/<new-host>/instance.toml   # hostname, os, arch
+$EDITOR instances/<new-host>/instance.toml   # [terminal] colours
 $EDITOR instances/<new-host>/vars.sh         # MOLT_HOSTNAME, fonts, etc.
 $EDITOR instances/<new-host>/molt.toml       # which liberators to enable
 ```

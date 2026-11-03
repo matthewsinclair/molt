@@ -154,3 +154,25 @@ _scaffold_flynn() {
     assert_directory_exists "$MOLT_CFG_DIR/Molt-flynn/instances/jormungandr"
     assert_output_contains "MOLT_CFG_DIR=\"$MOLT_CFG_DIR\" molt resleeve --dry-run"
 }
+
+# Until a resleeve has run, git has no identity for the commit and ssh no
+# github.com-<github> host for the push, and git init may make master where the
+# push names main (issue 0085).
+@test "molt new-user's next steps resleeve before the first commit and push, on main" {
+    export MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+    mkdir -p "$MOLT_CFG_DIR"
+    run_molt new-user flynn \
+        --name "Flynn Sinclair" \
+        --email "flynn.sinclair@gmail.com" \
+        --github flynn-sinclair \
+        --hostname jormungandr
+    assert_success
+    assert_output_contains "git init -b main"
+    local resleeve commit push
+    resleeve="$(grep -n 'molt resleeve$' <<< "$output" | cut -d: -f1)"
+    commit="$(grep -n 'git commit' <<< "$output" | cut -d: -f1)"
+    push="$(grep -n 'git push -u origin main' <<< "$output" | cut -d: -f1)"
+    [ -n "$resleeve" ] && [ -n "$commit" ] && [ -n "$push" ]
+    [ "$resleeve" -lt "$commit" ]
+    [ "$commit" -lt "$push" ]
+}

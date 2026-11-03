@@ -54,7 +54,7 @@ Commands:
                         Run system maintenance (brew update, doom upgrade, etc.)
                         With liberators: maintain only those (comma-separated)
   new-user <user> [--name N] [--email E] [--github GH] [--hostname H] [--dest DIR]
-                        Scaffold a new molt-{user} config repo from the skeleton.
+                        Scaffold a new Molt-{user} config repo from the skeleton.
                         Prompts for anything not passed as a flag.
   install [--prefix DIR] [--force] [--managed-by molt|brew]
                         Publish this dev tree to DIR (default: MOLT_INSTALL_PREFIX

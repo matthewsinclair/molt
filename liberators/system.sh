@@ -1,63 +1,48 @@
 #!/usr/bin/env bash
 # system.sh — Liberator: base system setup
 # Frees you from a bare OS.
+#
+# It installs nothing: it names what a sleeve lacks, and how to get it.
 
-system_check() {
-  local ok=0
-
-  # Check if sudo is available
+# What keeps this sleeve from being ready, one fault a line with its remedy, or
+# nothing: no sudo; on Linux, a user in neither the sudo group (Debian, Ubuntu)
+# nor the wheel group (Fedora, RHEL, Arch); on macOS, no Homebrew. Check,
+# install and verify all read it, so they cannot disagree (issue 0085).
+_system_faults() {
   if ! command -v sudo &>/dev/null; then
-    molt_info "system: sudo not available"
-    ok=1
+    echo "sudo is not installed: install it as root, then re-run"
   fi
-
-  # Check if current user is in sudo group (Linux)
-  if [[ "$(molt_platform)" == "linux" ]]; then
-    # Capture, then match (issue 0008): under pipefail a SIGPIPE'd writer would
-    # make this negated test report "not in sudo group" falsely.
-    local user_groups
-    user_groups="$(groups "$(whoami)" 2>/dev/null || true)"
-    if ! grep -qw sudo <<< "$user_groups"; then
-      molt_info "system: user not in sudo group"
-      ok=1
-    fi
-  fi
-
-  return $ok
-}
-
-system_install() {
-  local platform
-  platform="$(molt_platform)"
-
-  case "$platform" in
+  case "$(molt_platform)" in
     linux)
-      if ! command -v sudo &>/dev/null; then
-        molt_error "sudo not found. Install it then re-run."
-        return 1
-      fi
+      # Capture, then match (issue 0008): under pipefail a SIGPIPE'd writer
+      # would read as membership of no group.
+      local user user_groups
+      user="$(whoami)"
+      user_groups="$(groups "$user" 2>/dev/null)" || user_groups=""
+      case " $user_groups " in
+        *" sudo "* | *" wheel "*) ;;
+        *) echo "$user is in neither the sudo group nor the wheel group: as root, add $user to sudo (Debian, Ubuntu) or wheel (Fedora, RHEL, Arch), then log in again" ;;
+      esac
       ;;
     macos)
       if ! command -v brew &>/dev/null; then
-        molt_error "Homebrew not found. Install it (https://brew.sh) then re-run."
-        return 1
+        echo "Homebrew is not installed: install it from https://brew.sh, then re-run"
       fi
       ;;
   esac
+}
 
+system_check() {
+  molt_report_faults molt_info "" system "$(_system_faults)"
+}
+
+# Names each fault and fails: what a fault needs is the user's to install.
+system_install() {
+  molt_report_faults molt_error "" system "$(_system_faults)" || return 1
   molt_info "Liberator complete: system"
 }
 
 system_verify() {
-  local errors=0
-
-  if ! command -v sudo &>/dev/null; then
-    molt_error "VERIFY FAIL: sudo not available"
-    errors=1
-  fi
-
-  if [[ $errors -eq 0 ]]; then
-    molt_info "Verified: system liberator is fully operational"
-  fi
-  return $errors
+  molt_report_faults molt_error "VERIFY FAIL: " system "$(_system_faults)" || return 1
+  molt_info "Verified: system liberator is fully operational"
 }

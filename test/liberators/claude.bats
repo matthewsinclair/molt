@@ -616,6 +616,22 @@ JSON
     [ -z "$(ls -d "$CONFIG".molt-backup.* 2>/dev/null)" ]
 }
 
+# A config dir that cannot be made is refused as every other refusal is: the
+# line says CLAUDE_CONFIG_DIR was not handed over (issue 0085).
+@test "on a sleeve Claude Code has not run on, a config dir that cannot be made is not handed over" {
+    [ "$(id -u)" -ne 0 ] || skip "root can write into a read-only directory"
+    setup_declared
+    rm -rf "$HOME/.claude" "$HOME/.claude.json"
+    mkdir -p "$HOME/.config"
+    chmod 555 "$HOME/.config"
+    run claude_install
+    chmod 755 "$HOME/.config"
+    assert_failure
+    assert_output_contains "claude: could not create ~/.config/claude"
+    assert_output_contains "claude: CLAUDE_CONFIG_DIR was not handed over"
+    [ ! -e "$CONFIG" ]
+}
+
 # , and hv's ruling that nothing anti-brew is rendered (WP01 4b).
 @test "the GUI file is a LaunchAgent on macOS and an environment.d file on Linux, and nothing published names Molt's checkout" {
     # AT012 (ST0006 AC011).

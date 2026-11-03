@@ -611,6 +611,7 @@ _claude_relocate() {
       # state: it has not run here, so there is nothing to split.
       if [[ "$state" == none ]] && ! mkdir -p "$dir"; then
         molt_error "claude: could not create $(molt_tilde "$dir")"
+        _claude_unpublished
         return 1
       fi ;;
     home)

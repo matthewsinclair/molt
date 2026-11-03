@@ -18,7 +18,7 @@ user_repo = "Molt-you"               # your config repo's directory, exact-case;
 [[liberator]]
 name = "system"
 enabled = true
-os = ["linux"]
+os = ["linux", "macos"]
 
 [[liberator]]
 name = "local-bin"

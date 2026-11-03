@@ -109,9 +109,18 @@ vscode_install() {
     local favorites
     favorites="$(molt_gsettings get org.gnome.shell favorite-apps 2>/dev/null || echo "")"
     if [[ -n "$favorites" ]] && [[ "$favorites" != *"code.desktop"* ]]; then
-      local new_favorites
-      new_favorites="${favorites/]/, \'code.desktop\']}"
-      molt_gsettings set org.gnome.shell favorite-apps "$new_favorites"
+      local entry="'code.desktop'" new_favorites
+      # gsettings prints an empty list as "@as []", which takes the entry with
+      # no ", " ahead of it. The entry is a variable because bash 3.2 keeps the
+      # backslashes of \' in a substitution's replacement (issue 0085).
+      case "$favorites" in
+        "@as []" | "[]") new_favorites="[$entry]" ;;
+        *) new_favorites="${favorites/]/, $entry]}" ;;
+      esac
+      if ! molt_gsettings set org.gnome.shell favorite-apps "$new_favorites"; then
+        molt_error "vscode: could not add VS Code to the GNOME dock favorites"
+        return 1
+      fi
       molt_info "Added VS Code to GNOME dock favorites"
     fi
   fi
