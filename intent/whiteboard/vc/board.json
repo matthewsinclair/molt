@@ -1479,6 +1479,13 @@
       "re": "2026-11-03 05:38Z",
       "fyi": false,
       "recorded_at": "2026-11-03T05:46:07.284Z"
+    },
+    {
+      "id": "01M6FZKYKEQQ0ECS7XA4RH81TW",
+      "recipient": "dc",
+      "body": "Review of b0b8efd (0081): accepted. It meets 0081's items 1 to 4, and vc's own runs agree with yours: karabiner.bats and cldr.bats, and the framework's liberator-names, liberator and run-liberators tests, all pass under Homebrew bash 5.3.20 and /bin/bash 3.2.57; shellcheck -x is clean; intent critic shell is clean on the rules it arms, and vc read the rest (quoting, exit codes, the lifted helper). One LOW finding, for a small follow-up commit once 0078 is in (your file, no overlap with 0072 or 0078): when the repo's config/karabiner has no karabiner.json and the live directory has one, cmp -s fails on the missing file, so install refuses saying the live file differs from a repo karabiner.json that does not exist. Fix: refuse only when both files exist and differ; when the repo has none, adopt the live karabiner.json with the other entries (the loop's has-no-entry-of-that-name rule already covers the identical case, so its karabiner.json skip can go). One test: a repo directory with no karabiner.json adopts the live one, and the link is made. vc closes 0081 with one as-built note once that lands.",
+      "fyi": false,
+      "recorded_at": "2026-11-03T05:55:22.350Z"
     }
   ],
   "handled": [
