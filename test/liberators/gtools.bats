@@ -3,7 +3,7 @@
 # over ssh, and a verdict that names the gtools that actually runs (issue 0057)
 #
 # brew is the shared stub (fake_brew_formula). Nothing here reaches the real
-# Homebrew or the tap.
+# Homebrew, the tap or the user repo of the shell running bats.
 
 load "../test_helper.bash"
 
@@ -25,9 +25,19 @@ _fake_brew_no_gtools() {
     : > "$FAKE_PREFIX/taps"
 }
 
+# The liberator loaded against no user repo, so its source is the default,
+# brew. With MOLT_PRJ_DIR set, the search constants.sh builds finds the user
+# repo of the shell running bats, whose sleeve may say switch. The search holds
+# one empty folder, not none: an empty array trips set -u under bash 3.2.
+_gtools_no_repo() {
+    load_liberator gtools
+    mkdir -p "$BATS_TEST_TMPDIR/no-user-repo"
+    MOLT_USER_REPO_SEARCH_PATHS=("$BATS_TEST_TMPDIR/no-user-repo")
+}
+
 @test "gtools_check passes when Homebrew's gtools is what PATH runs" {
     _fake_brew_gtools
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_check
     assert_success
     assert_output_contains "gtools:9.9.9"
@@ -38,7 +48,7 @@ _fake_brew_no_gtools() {
 @test "gtools_check FAILS, naming brew install, when Gtools is not installed" {
     _fake_brew_gtools
     rm "$FAKE_PREFIX/.installed"
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_check
     assert_failure
     assert_output_contains "run: brew install $FORMULA"
@@ -48,7 +58,7 @@ _fake_brew_no_gtools() {
 
 @test "gtools_check FAILS, naming the ssh tap command, when the tap is missing" {
     _fake_brew_no_gtools
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_check
     assert_failure
     assert_output_contains "run: brew tap $TAP $TAP_URL, then brew install $FORMULA"
@@ -56,7 +66,7 @@ _fake_brew_no_gtools() {
 
 @test "gtools_install taps the private tap over ssh, then installs" {
     _fake_brew_no_gtools
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_install
     assert_success
     [ "$(cat "$FAKE_LOG")" = "brew tap $TAP $TAP_URL
@@ -66,7 +76,7 @@ brew install $FORMULA" ]
 @test "gtools_install does not tap again when the tap is there" {
     _fake_brew_gtools
     rm "$FAKE_PREFIX/.installed"
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_install
     assert_success
     [ "$(cat "$FAKE_LOG")" = "brew install $FORMULA" ]
@@ -75,7 +85,7 @@ brew install $FORMULA" ]
 @test "gtools_install FAILS, showing brew's reason, when the tap fails" {
     _fake_brew_no_gtools
     touch "$FAKE_PREFIX/.tap-fails"
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_install
     assert_failure
     assert_output_contains "Permission denied (publickey)"
@@ -89,7 +99,7 @@ brew install $FORMULA" ]
     printf '#!/bin/bash\necho "gtools 0.1.0 (dev)"\n' > "$BATS_TEST_TMPDIR/dev/gtools"
     chmod +x "$BATS_TEST_TMPDIR/dev/gtools"
     export PATH="$BATS_TEST_TMPDIR/dev:$PATH"
-    load_liberator gtools
+    _gtools_no_repo
     run gtools_check
     assert_failure
     assert_output_contains "PATH runs $BATS_TEST_TMPDIR/dev/gtools (gtools 0.1.0 (dev))"
