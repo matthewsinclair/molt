@@ -54,6 +54,7 @@
 | menuz          | `liberators/menuz.sh`          | menuz menu and bin/ directory linking (macos)           |
 | hammerspoon    | `liberators/hammerspoon.sh`    | Hammerspoon init.lua linking, arngz's hs CLI (macos)    |
 | cldr           | `liberators/cldr.sh`           | cldr from Homebrew, ~/.config/cldr directory linking    |
+| karabiner      | `liberators/karabiner.sh`      | Karabiner-Elements config directory linking (macos)     |
 
 ## Testing
 

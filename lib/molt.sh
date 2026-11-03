@@ -226,6 +226,18 @@ molt_tilde() {
   esac
 }
 
+# The XDG config home: $XDG_CONFIG_HOME when it is set and absolute, as the XDG
+# spec has it, else ~/.config. A liberator that links a tool's config directory
+# links it under this, for a tool that honours the variable, as cldr and
+# Karabiner do (issues 0080 and 0081).
+molt_xdg_config_home() {
+  if [[ "${XDG_CONFIG_HOME:-}" == /* ]]; then
+    echo "$XDG_CONFIG_HOME"
+  else
+    echo "$HOME/.config"
+  fi
+}
+
 # The absolute path $1 as the disk spells it: the directory it leads to, as
 # /bin/pwd -P names it, or, where it does not exist yet, its nearest ancestor
 # that does, so named, with the rest of $1 after it, as mkdir -p would make

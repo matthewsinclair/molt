@@ -24,22 +24,13 @@
 
 MOLT_CLDR_FORMULA="matthewsinclair/cldr/cldr"
 
-# The config directory cldr reads: $XDG_CONFIG_HOME/cldr when that is set and
-# absolute, as the XDG spec has it, else ~/.config/cldr.
-_cldr_config_dir() {
-  if [[ "${XDG_CONFIG_HOME:-}" == /* ]]; then
-    echo "$XDG_CONFIG_HOME/cldr"
-  else
-    echo "$HOME/.config/cldr"
-  fi
-}
-
 # Every link cldr_install makes, one "source<TAB>target" line each, for the
-# sources the user repo $1 has. check, install and verify all read this list.
+# sources the user repo $1 has: config/cldr to the cldr directory under the XDG
+# config home, which cldr reads. check, install and verify all read this list.
 _cldr_links() {
   local user_repo="$1"
   if [[ -d "$user_repo/config/cldr" ]]; then
-    printf '%s\t%s\n' "$user_repo/config/cldr" "$(_cldr_config_dir)"
+    printf '%s\t%s\n' "$user_repo/config/cldr" "$(molt_xdg_config_home)/cldr"
   fi
 }
 
