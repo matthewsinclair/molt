@@ -471,7 +471,8 @@ EOF
     run env_check
     assert_failure
     assert_output_contains "env: launchd holds another UTILZ_INSTALL_PREFIX, so GUI apps get /old/utilz"
-    assert_output_contains "env: launchd does not hold PATH, so GUI apps do not get it"
+    assert_output_contains "env: launchd does not hold PATH, and GUI apps do not get the PATH Molt's agent publishes either way: on macOS each app runs with its own PATH"
+    refute_output_contains "PATH, so GUI apps"
     refute_output_contains "launchd does not hold CLAUDE_CONFIG_DIR"
     assert_output_contains "takes effect at the next login, or now with: launchctl bootout gui/$(id -u)/com.molt.env; launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.molt.env.plist"
     run grep -c '^<setenv>' "$LAUNCHCTL_LOG"
@@ -501,6 +502,23 @@ EOF
     assert_success
     refute_output_contains "launchd does not hold"
     grep -qxF "<print><gui/$(id -u)>" "$LAUNCHCTL_LOG"
+}
+
+# Issue 0072's ask 2: an app runs with its own PATH, launchd's default unless
+# the app sets one, so the PATH the agent publishes reaches no GUI app whatever
+# launchd holds, and a bootstrap would change nothing for them.
+@test "on macOS check says plainly that GUI apps do not get the PATH Molt publishes, and offers no bootstrap for PATH alone (issue 0072)" {
+    setup_env
+    on_macos
+    declare_moved
+    env_install >/dev/null
+    log_in
+    printf '%s' "/old/bin:/usr/bin:/bin" > "$LAUNCHD/PATH"
+    run env_check
+    assert_failure
+    assert_output_contains "env: launchd holds another PATH, and GUI apps do not get the PATH Molt's agent publishes either way: on macOS each app runs with its own PATH, launchd's default unless the app sets one, so a bootstrap changes nothing for them (issue 0072)"
+    refute_output_contains "so GUI apps get"
+    refute_output_contains "launchctl bootout"
 }
 
 # kovacs, 30 Oct: GNOME's login shell uploads its environment into the systemd

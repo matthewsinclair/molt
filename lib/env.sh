@@ -407,8 +407,15 @@ _molt_env_session_value() {
 # GNOME's login shell fills over environment.d's values at each login (issue
 # 0076). It reads only, and never sets anything. Returns non-zero when it
 # reported any.
+#
+# On macOS a GUI app runs with its own PATH, launchd's default unless the app
+# sets one, so the PATH the agent publishes reaches none of them, whatever
+# launchd holds (issue 0072, ask 2). A PATH launchd holds otherwise is still
+# reported, and says so plainly, with no remedy: a bootstrap would change
+# nothing for the apps. The remedy follows only the pairs it would bring.
 molt_env_report_session() {
-  local log="$1" prefix="$2" pairs="$3" uid out vars holder who remedy name scope value got ok=0
+  local log="$1" prefix="$2" pairs="$3" uid out vars holder who remedy name scope value got found effect ok=0 remedy_due=0
+  local apps_own="" apps_own_why=""
   uid="$(id -u)"
   case "$(molt_platform)" in
     macos)
@@ -419,6 +426,8 @@ molt_env_report_session() {
       vars="$(_molt_env_launchd_vars <<< "$out")"
       holder="launchd" who="GUI apps"
       remedy="$(molt_tilde "$(molt_env_gui_file)") takes effect at the next login, or now with: launchctl bootout gui/$uid/com.molt.env; launchctl bootstrap gui/$uid $(molt_tilde "$(molt_env_gui_file)")"
+      apps_own="PATH"
+      apps_own_why="on macOS each app runs with its own PATH, launchd's default unless the app sets one, so a bootstrap changes nothing for them (issue 0072)"
       ;;
     linux)
       if ! out="$(systemctl --user show-environment 2>&1)"; then
@@ -434,15 +443,21 @@ molt_env_report_session() {
   while IFS=$'\t' read -r name scope value; do
     [[ -n "$name" ]] || continue
     if ! got="$(_molt_env_session_value "$vars" "$name")"; then
-      "$log" "${prefix}$holder does not hold $name, so $who do not get it"
+      found="$holder does not hold $name" effect="so $who do not get it"
     elif [[ "$got" != "$value" ]]; then
-      "$log" "${prefix}$holder holds another $name, so $who get $got"
+      found="$holder holds another $name" effect="so $who get $got"
     else
       continue
     fi
     ok=1
+    if [[ "$name" == "$apps_own" ]]; then
+      "$log" "${prefix}$found, and $who do not get the $name Molt's agent publishes either way: $apps_own_why"
+      continue
+    fi
+    "$log" "${prefix}$found, $effect"
+    remedy_due=1
   done <<< "$pairs"
-  if [[ $ok -ne 0 ]]; then
+  if [[ $remedy_due -ne 0 ]]; then
     "$log" "${prefix}$remedy"
   fi
   return $ok
