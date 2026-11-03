@@ -6,14 +6,7 @@ This file is the prescriptive DO / NEVER contract for working in Molt. Narrative
 
 ## Project conventions
 
-<!--
-Project-specific DO / NEVER rules. Terse and imperative. Examples:
-
-- Use `mix format` before every commit.
-- Tests live beside modules (`lib/foo/bar.ex` → `test/foo/bar_test.exs`).
-- Never commit directly to `main` — open a PR.
-- Business logic lives in service modules, not in controllers or LiveViews.
--->
+Molt's own must and never rules are in `intent/llm/RULES.md`, and are not repeated here.
 
 ## Intent-provided tooling
 
@@ -78,8 +71,6 @@ Full contract: `intent/docs/critics.md` at the Intent install.
 - Never manually edit `status:` fields in info.md frontmatter — use `intent st start | done | cancel` and `intent wp start | done`.
 - Never use leading zeros for ST or WP specifiers (`ST0035` or `35`, never `0035`) — leading zeros parse as octal in bash.
 - Never manually wrap lines in markdown files — let the renderer handle it.
-
-<!-- Add project-specific NEVER DOs here. -->
 
 ## See also
 

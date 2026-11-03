@@ -1,89 +1,42 @@
+---
+verblock: "3 Nov 2026:v0.1: Matthew Sinclair - vc: Molt's architecture, not the starter text (issue 0083)"
+---
+
 # ARCHITECTURE.md
 
-System architecture and design decisions for this project.
+How Molt is built, and how one run moves through it. `README.md` has the concepts (stack, sleeve, liberator, `molt.toml`), the layout of both repos and the CLI. [MODULES.md](MODULES.md) says which file owns each concern, [DECISION_TREE.md](DECISION_TREE.md) says where new code goes, and [RULES.md](RULES.md) holds the rules.
 
-## System Overview
+## Framework and stack
 
-<!-- Replace with a 2-3 sentence description of what the system does -->
+Molt is the framework and holds nobody's config. A user's stack, `Molt-<user>`, holds `config/`, the files liberators link or render into place, and `instances/<hostname>/`, one directory per sleeve with its `molt.toml`, `vars.sh` and overlays. `molt_find_user_repo` takes the first directory holding a `config/` among `MOLT_USER_REPO_SEARCH_PATHS`, which `lib/constants.sh` builds: `Molt-<user>`, then its lowercase form, under `MOLT_CFG_DIR`, then under `MOLT_PRJ_DIR`, then in `~`, and last `~/.molt-<user>`.
 
-This is a Phoenix/Ash web application.
+## The layers
 
-## Domain Map
+`bin/molt` finds `MOLT_ROOT` from its own resolved path, sources `lib/`, and hands each verb to a `cmd_*` function. It is a thin coordinator: it parses, calls and prints, and the logic is in `lib/`. `lib/` is the framework. `molt.sh` holds the core helpers (logging, platform, linking, rendering, the manifest, Homebrew) and most verbs; `liberator.sh` loads and runs liberators; `env.sh`, `install.sh`, `agent.sh` and `newuser.sh` each own one concern; and `constants.sh` holds every configurable path and default. `liberators/` holds one script per liberator, sourced on demand, each defining `<name>_check` and `<name>_install`, with optional `_upgrade`, `_maintain` and `_verify`.
 
-<!-- List your Ash domains and their responsibilities -->
+## One run
 
-```
-lib/my_app/
-├── accounts/        # User management, authentication
-│   ├── accounts.ex  # Domain module (code interfaces)
-│   ├── user.ex      # Resource
-│   └── token.ex     # Resource
-│
-├── content/         # Core content domain
-│   ├── content.ex   # Domain module
-│   └── ...
-│
-└── notifications/   # Email, push, webhooks
-    └── ...
-```
+`molt resleeve` finds the stack, then the liberators the sleeve's `molt.toml` enables for this platform, in manifest order. With no manifest it runs every liberator Molt ships, and a manifest that enables none for this platform is refused. For each liberator it runs `<name>_check`, and `<name>_install` only when the check fails. An unknown name is skipped with a warning, a failed install is reported and the run goes on, and the run fails at the end naming each failure. Order is how one liberator waits for another: `env` comes after `claude`, which hands over `CLAUDE_CONFIG_DIR` only once Claude Code's state has moved.
 
-### Domain Boundaries
+`molt upgrade` updates the framework as its tree allows: it pulls a dev tree, fast-forward only, upgrades the formula for a brew tree, and leaves an opt tree to `molt install --force`. It pulls the stack too, restarts on the new code when the framework changed, runs each liberator's `_upgrade` hook, and then resleeves, unless it was told not to or named only some liberators. `molt maintain` runs the slow `_maintain` hooks. `molt doctor` installs nothing: it runs each enabled liberator's `_check` and Molt's own checks, and names what did not pass.
 
-<!-- Describe how domains interact -->
+## What a run leaves on a sleeve
 
-- **Accounts** -- owns user identity, authentication, authorization
-- **Content** -- owns business content; calls Accounts for user references
-- **Notifications** -- triggered by other domains via Ash notifiers
+- Links into the stack from `$HOME` and the XDG config dir, made by `molt_link`, which first moves a real file it would replace to `<target>.molt-backup.<timestamp>`.
+- Files rendered with `envsubst` and the instance's `vars.sh`, from the stack's `.tmpl` files and Molt's own `templates/` (`docs/guides/templates.md`).
+- The published environment, rebuilt whole on each run by `lib/env.sh`, Molt's one env writer: `~/.config/molt/env.sh`, which `~/.zshenv` sources, and the GUI file, a LaunchAgent on macOS and an `environment.d` file on Linux. The `env` liberator gathers its values: `CLAUDE_CONFIG_DIR` from the `claude` liberator, each `<TOOL>_INSTALL_PREFIX` the instance's `vars.sh` exports, and, for GUI apps only, a login shell's `PATH`.
+- `~/.local/bin/molt`, the switch link `molt use` sets for a dev or opt tree. With no link, Homebrew's molt answers.
 
-## Data Flow
+## Trees and releases
 
-<!-- Describe the typical request flow -->
+A tree is a directory holding the runtime set: `bin/molt`, `lib/`, `liberators/`, `templates/` and `VERSION`. dev is the git checkout. opt is what `molt install` publishes from a clean dev tree to the prefix the instance's `vars.sh` declares, and brew is the same publish, run by the Homebrew formula in its keg. Each published tree carries a `.molt-install` manifest of its files' hashes. `molt use dev` or `molt use opt` points the switch link at that tree's `bin/molt`, and `molt use brew` removes the link (`lib/install.sh`).
 
-```
-Browser → Router → LiveView/Controller → Domain Code Interface → Ash Action → Database
-                                                                     ↓
-                                                               Notifiers → Side Effects
-```
+A release is cut by hand: a commit of `VERSION` and `CHANGELOG.md`, an annotated tag, both pushed to GitHub, CI read on the tag, then `tools/formula publish`, which renders `packaging/homebrew/molt.rb` for the newest tag into the `matthewsinclair/homebrew-molt` tap. `tools/` is outside the runtime set, because nothing on a sleeve runs it.
 
-## Key Patterns
+## Tests and CI
 
-### Authentication
+`molt test` runs ShellCheck, then bats over `test/` and `test/liberators/`, which holds one file per liberator, with `test/test_helper.bash` as the shared harness. It runs in the dev tree only. CI runs the suite on Linux at every push to main, and on macOS, whose bash is 3.2, only on a release tag or on demand. ShellCheck runs on every push.
 
-Using `phx.gen.auth` scope-based pattern. Auth handled at router level via plugs and `live_session` scopes. Access current user via `@scope.user`.
+## Why it is built this way
 
-### Authorization
-
-Ash policies on resources. `bypass` for admin. `can_action_name?/2` for UI conditionals.
-
-### Background Jobs
-
-<!-- Describe your background job setup: Oban, GenServer, etc. -->
-
-### External Integrations
-
-<!-- List external APIs, services, etc. -->
-
-## Directory Structure
-
-```
-lib/
-├── my_app/              # Domain layer
-│   ├── accounts/        # Domain: user management
-│   ├── content/         # Domain: core content
-│   └── repo.ex          # Ecto Repo
-├── my_app_web/          # Web layer
-│   ├── components/      # Reusable HEEX components
-│   ├── controllers/     # Traditional controllers
-│   ├── live/            # LiveView modules
-│   └── router.ex        # Route definitions
-└── my_app.ex            # Application module
-```
-
-## Decision Log
-
-<!-- Record significant architectural decisions -->
-
-| Date       | Decision          | Rationale                                                      |
-| ---------- | ----------------- | -------------------------------------------------------------- |
-| YYYY-MM-DD | Use Ash Framework | Declarative resources, built-in authorization, code generation |
-| YYYY-MM-DD | ...               | ...                                                            |
+The steel threads' design records and the closed issues hold the reasons: `intent st list --status all` and `intent issues list --kind all`.

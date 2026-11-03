@@ -1,0 +1,15 @@
+{
+  "id": "01M6GC3P6XG235JNKKZKNWRJHP",
+  "ts": "2026-11-03T09:33:40.957Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0083"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "intent/llm: ARCHITECTURE.md, RULES.md and DECISION_TREE.md are Intent's Elixir starter text, and RULES.md names a RULES-shell.md that never existed"
+  }
+}
