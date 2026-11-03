@@ -1,0 +1,16 @@
+{
+  "id": "01M6G0G1FGW366Z0PYRF86SDRJ",
+  "ts": "2026-11-03T06:10:42.801Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 29,
+    "text": "0081, the karabiner liberator: landed on main at b0b8efd (vc accepted), and vc's LOW finding fixed at 8cdeaf6 (a live karabiner.json the repo lacks is adopted; refused only when both exist and differ); vc reviews 8cdeaf6, then closes 0081"
+  }
+}

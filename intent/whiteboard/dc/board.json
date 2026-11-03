@@ -5,11 +5,10 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "09dcef3b-14e1-4378-ac57-c1c46dc77f47",
-    "heartbeat_at": "2026-11-03T05:47:58.933Z",
+    "heartbeat_at": "2026-11-03T06:10:42.933Z",
     "status": "active",
-    "focus": "3 Nov: building Molt 1.4.0 on main per vc's GO (hv lifted decision 43; no desk bookings): 0081 the karabiner liberator, then 0072 ask 2, then 0078; vc reviews each commit as it lands",
+    "focus": "3 Nov: Molt 1.4.0's three items are on main: 0081 (b0b8efd, follow-up 8cdeaf6), 0072 ask 2 (927df04, closed), 0078 (c8b46f3); vc reviewing 8cdeaf6 and c8b46f3, then vc puts the full suite, push and cut to hv",
     "claims": [
-      "ISSUE:0072",
       "ISSUE:0078",
       "ISSUE:0081"
     ],
@@ -520,16 +519,18 @@
       "node": "dc",
       "kind": "doing",
       "seq": 29,
-      "text": "0081, the karabiner liberator: building on main per vc's GO (hv lifted decision 43; 1.4.0 on HEAD, no desk bookings), to 0081's body; commit by pathspec once karabiner.bats and cldr.bats pass under Homebrew bash and /bin/bash 3.2, then tell vc",
+      "text": "0081, the karabiner liberator: landed on main at b0b8efd (vc accepted), and vc's LOW finding fixed at 8cdeaf6 (a live karabiner.json the repo lacks is adopted; refused only when both exist and differ); vc reviews 8cdeaf6, then closes 0081",
       "state": "live",
-      "recorded_at": "2026-11-03T05:47:58.806Z"
+      "recorded_at": "2026-11-03T05:47:58.806Z",
+      "edited_at": "2026-11-03T06:10:42.801Z"
     },
     {
       "node": "dc",
       "kind": "todo",
       "seq": 12,
       "text": "0072 ask 2, after 0081: on macOS, doctor's env check says plainly that GUI apps don't get the PATH Molt's agent publishes, with no bootout/bootstrap remedy for PATH (lib/env.sh, molt_env_report_session); its own tests under both bashes, commit by pathspec, tell vc",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-03T06:10:42.627Z",
       "recorded_at": "2026-11-03T05:47:58.850Z"
     },
     {
@@ -537,8 +538,17 @@
       "kind": "todo",
       "seq": 13,
       "text": "0078, after 0072 ask 2: doctor names molt resleeve only where a resleeve clears what failed (lib/molt.sh, cmd_doctor), and env's PATH refusal names .zprofile, not zshrc (lib/env.sh, molt_env_path_pair); its own tests under both bashes, commit by pathspec, tell vc",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-03T06:10:42.668Z",
       "recorded_at": "2026-11-03T05:47:58.892Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 30,
+      "text": "0078: landed on main at c8b46f3, with vc's two review points (tests name MOLT_CHECK_SESSION_PENDING by its constant; liberator_status_all, cmd_list and molt_resleeve still treat it as a failure) and vc's nit on 927df04; vc reviews it, then closes 0078",
+      "state": "live",
+      "recorded_at": "2026-11-03T06:10:42.891Z"
     }
   ],
   "sent": [
@@ -831,6 +841,16 @@
       "id": "01M6FZ30HMY7ZB629G57PW426X",
       "sender": "vc",
       "handled_at": "2026-11-03T05:48:06.179Z"
+    },
+    {
+      "id": "01M6FZKYKEQQ0ECS7XA4RH81TW",
+      "sender": "vc",
+      "handled_at": "2026-11-03T06:10:49.519Z"
+    },
+    {
+      "id": "01M6FZX9M9MCA8M1VSRPWN3FVW",
+      "sender": "vc",
+      "handled_at": "2026-11-03T06:10:49.519Z"
     }
   ]
 }

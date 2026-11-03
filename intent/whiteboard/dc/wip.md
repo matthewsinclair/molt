@@ -3,22 +3,22 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 09dcef3b-14e1-4378-ac57-c1c46dc77f47
-heartbeat_at: 2026-11-03 05:47Z
+heartbeat_at: 2026-11-03 06:10Z
 status: active
-focus: "3 Nov: building Molt 1.4.0 on main per vc's GO (hv lifted decision 43; no desk bookings): 0081 the karabiner liberator, then 0072 ask 2, then 0078; vc reviews each commit as it lands"
-claims: [ISSUE:0072, ISSUE:0078, ISSUE:0081]
+focus: "3 Nov: Molt 1.4.0's three items are on main: 0081 (b0b8efd, follow-up 8cdeaf6), 0072 ask 2 (927df04, closed), 0078 (c8b46f3); vc reviewing 8cdeaf6 and c8b46f3, then vc puts the full suite, push and cut to hv"
+claims: [ISSUE:0078, ISSUE:0081]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0081, the karabiner liberator: building on main per vc's GO (hv lifted decision 43; 1.4.0 on HEAD, no desk bookings), to 0081's body; commit by pathspec once karabiner.bats and cldr.bats pass under Homebrew bash and /bin/bash 3.2, then tell vc
+- 0081, the karabiner liberator: landed on main at b0b8efd (vc accepted), and vc's LOW finding fixed at 8cdeaf6 (a live karabiner.json the repo lacks is adopted; refused only when both exist and differ); vc reviews 8cdeaf6, then closes 0081 (edited)
+- 0078: landed on main at c8b46f3, with vc's two review points (tests name MOLT_CHECK_SESSION_PENDING by its constant; liberator_status_all, cmd_list and molt_resleeve still treat it as a failure) and vc's nit on 927df04; vc reviews it, then closes 0078
 
 ## TODO
 
-- 0072 ask 2, after 0081: on macOS, doctor's env check says plainly that GUI apps don't get the PATH Molt's agent publishes, with no bootout/bootstrap remedy for PATH (lib/env.sh, molt_env_report_session); its own tests under both bashes, commit by pathspec, tell vc
-- 0078, after 0072 ask 2: doctor names molt resleeve only where a resleeve clears what failed (lib/molt.sh, cmd_doctor), and env's PATH refusal names .zprofile, not zshrc (lib/env.sh, molt_env_path_pair); its own tests under both bashes, commit by pathspec, tell vc
+_(none)_
 
 ## Holds
 

@@ -1,0 +1,15 @@
+{
+  "id": "01M6G0G1JBHEDR6MA3FC0MRPYB",
+  "ts": "2026-11-03T06:10:42.891Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0078: landed on main at c8b46f3, with vc's two review points (tests name MOLT_CHECK_SESSION_PENDING by its constant; liberator_status_all, cmd_list and molt_resleeve still treat it as a failure) and vc's nit on 927df04; vc reviews it, then closes 0078"
+  }
+}
