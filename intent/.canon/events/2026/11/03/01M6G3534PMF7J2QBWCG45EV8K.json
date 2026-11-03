@@ -1,0 +1,16 @@
+{
+  "id": "01M6G3534PMF7J2QBWCG45EV8K",
+  "ts": "2026-11-03T06:57:09.782Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 45,
+    "text": "hv 3 Nov (molt-vc's TUI), on rhadamanth-sysadm's finding that dev-tools requires mise: 'It's #1 above, but Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now). And we should do the same for Molt-flynn, too.' (issue 0082, in 1.4.0). On the release: 'vc runs them': vc runs the full suite under both bashes, pushes Molt and Molt-matts, reads CI, and releases 1.4.0 with devbin to the Homebrew tap; brew upgrade and molt upgrade on hv's Macs stay hv's. Molt-flynn, whose remote is Flynn's own GitHub, was pushed on hv's later word ('push Molt-flynn too'): 6b730b9."
+  }
+}

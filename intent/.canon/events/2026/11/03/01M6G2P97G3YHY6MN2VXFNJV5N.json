@@ -1,0 +1,17 @@
+{
+  "id": "01M6G2P97G3YHY6MN2VXFNJV5N",
+  "ts": "2026-11-03T06:49:04.496Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "One more for 1.4.0, test-only. vc's full suite under Homebrew bash, run as the restart file's Quick Verification runs it (MOLT_PRJ_DIR set), fails one test: gtools.bats 507, 'gtools_check FAILS, naming it, when PATH runs another gtools'. Root cause: with MOLT_PRJ_DIR set, molt_find_user_repo finds the real Molt-matts, whose rhadamanth gtools entry says source = \"switch\" (Molt-matts 9725f96, 30 Oct), so _gtools_source reads switch and a dev gtools first on PATH passes. Only gtools.bats's switch tests point MOLT_USER_REPO_SEARCH_PATHS at a test folder; its default-source tests don't. vc's proof: the same test passes with MOLT_PRJ_DIR unset and still fails with GTOOLS_INSTALL_PREFIX removed; CI has no user repo, so CI never sees it. Fix: no gtools test reads a real user repo; the default-source tests run with the user-repo search pointed at a folder in BATS_TEST_TMPDIR that holds no repo (an empty array trips set -u under bash 3.2). If one sandbox in test_helper.bash holds for every test file, prefer it, since constants.bats tests the search's own default; otherwise keep it in gtools.bats. Draft it in your scratchpad now. vc's /bin/bash 3.2 pass of the full suite is still running in the tree, so apply and commit only when vc says that run has ended. Then run gtools.bats, with MOLT_PRJ_DIR set, under both bashes, and tell vc.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

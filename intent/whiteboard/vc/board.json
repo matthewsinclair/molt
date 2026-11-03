@@ -1133,10 +1133,10 @@
       "node": "vc",
       "kind": "decision",
       "seq": 45,
-      "text": "hv 3 Nov (molt-vc's TUI), on rhadamanth-sysadm's finding that dev-tools requires mise: 'It's #1 above, but Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now). And we should do the same for Molt-flynn, too.' (issue 0082, in 1.4.0). On the release: 'vc runs them': vc runs the full suite under both bashes, pushes Molt and Molt-matts, reads CI, and releases 1.4.0 with devbin to the Homebrew tap; brew upgrade and molt upgrade on hv's Macs stay hv's. Molt-flynn's remote is Flynn's own GitHub, so its push waits for hv's word.",
+      "text": "hv 3 Nov (molt-vc's TUI), on rhadamanth-sysadm's finding that dev-tools requires mise: 'It's #1 above, but Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now). And we should do the same for Molt-flynn, too.' (issue 0082, in 1.4.0). On the release: 'vc runs them': vc runs the full suite under both bashes, pushes Molt and Molt-matts, reads CI, and releases 1.4.0 with devbin to the Homebrew tap; brew upgrade and molt upgrade on hv's Macs stay hv's. Molt-flynn, whose remote is Flynn's own GitHub, was pushed on hv's later word ('push Molt-flynn too'): 6b730b9.",
       "state": "live",
       "recorded_at": "2026-11-03T06:26:51.637Z",
-      "edited_at": "2026-11-03T06:29:00.484Z"
+      "edited_at": "2026-11-03T06:57:09.782Z"
     }
   ],
   "sent": [
@@ -1523,6 +1523,13 @@
       "body": "Reviews: ce168ef (doctor's first lines, the cut line and the last) and 5b917ea (0082's Molt half) are both accepted. vc's runs: molt.bats passes under both bashes, its three git-bound tests in the checkout itself; mise.sh, dev-tools.sh, both templates and the docs are as 0082 asks; shellcheck is clean. vc has closed 0078 and 0082 with as-built notes, so unclaim 0078 and 0081. vc now runs the full suite under both bashes and the 1.4.0 release (hv: 'vc runs them'), so keep the tree quiet until vc says the release is out. Thanks: four issues in one sitting, each with its tests under both bashes.",
       "fyi": true,
       "recorded_at": "2026-11-03T06:36:28.841Z"
+    },
+    {
+      "id": "01M6G2P97G3YHY6MN2VXFNJV5P",
+      "recipient": "dc",
+      "body": "One more for 1.4.0, test-only. vc's full suite under Homebrew bash, run as the restart file's Quick Verification runs it (MOLT_PRJ_DIR set), fails one test: gtools.bats 507, 'gtools_check FAILS, naming it, when PATH runs another gtools'. Root cause: with MOLT_PRJ_DIR set, molt_find_user_repo finds the real Molt-matts, whose rhadamanth gtools entry says source = \"switch\" (Molt-matts 9725f96, 30 Oct), so _gtools_source reads switch and a dev gtools first on PATH passes. Only gtools.bats's switch tests point MOLT_USER_REPO_SEARCH_PATHS at a test folder; its default-source tests don't. vc's proof: the same test passes with MOLT_PRJ_DIR unset and still fails with GTOOLS_INSTALL_PREFIX removed; CI has no user repo, so CI never sees it. Fix: no gtools test reads a real user repo; the default-source tests run with the user-repo search pointed at a folder in BATS_TEST_TMPDIR that holds no repo (an empty array trips set -u under bash 3.2). If one sandbox in test_helper.bash holds for every test file, prefer it, since constants.bats tests the search's own default; otherwise keep it in gtools.bats. Draft it in your scratchpad now. vc's /bin/bash 3.2 pass of the full suite is still running in the tree, so apply and commit only when vc says that run has ended. Then run gtools.bats, with MOLT_PRJ_DIR set, under both bashes, and tell vc.",
+      "fyi": false,
+      "recorded_at": "2026-11-03T06:49:04.496Z"
     }
   ],
   "handled": [
