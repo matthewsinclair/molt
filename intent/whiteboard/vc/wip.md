@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d276774c-11aa-4a26-a0f6-1a356d80323a
-heartbeat_at: 2026-11-03 05:46Z
+heartbeat_at: 2026-11-03 07:17Z
 status: active
-focus: "3 Nov: decision 43 lifted (hv). 1.4.0 on HEAD: karabiner liberator (0081), 0072 ask 2, 0078; dc builds, vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut are hv's"
+focus: "3 Nov: Molt 1.4.0 released (0081 karabiner, 0082 mise, 0078, 0072 ask 2; tag at d0a4518, CI green on Ubuntu and macOS, tap 814de96). Next: rhadamanth's rollout, starting with hv's brew upgrade molt"
 claims: []
 ---
 
@@ -13,14 +13,13 @@ claims: []
 
 ## DOING
 
-- 1.4.0 on HEAD (hv 3 Nov, decision 44): dc builds 0081 (karabiner liberator), then 0072 ask 2, then 0078; vc reviews each commit as it lands, closes each issue with an as-built note, adds Molt-matts' .gitignore line now and rhadamanth's enable once 1.4.0 is installed there; the full suite, push and cut go to hv.
+- Molt 1.4.0 rollout on rhadamanth (released 3 Nov: d0a4518, tap 814de96). In order: hv runs brew upgrade molt; vc commits and pushes the karabiner enable in Molt-matts' rhadamanth molt.toml; hv quits Karabiner's Settings window and runs molt upgrade; then 0081's proof (readlink, verify, Karabiner's log Load line, Caps Lock as Control on the built-in keyboard and the Keychron B11 Pro, one Settings toggle showing as a Molt-matts diff); then rhadamanth-sysadm uninstalls Homebrew's mise and asdf (0082). kovacs and gyges move to 1.4.0 on hv's word.
 
 ## TODO
 
 - farcaster, pihole: resync Molt and Molt-matts clones onto the purged histories when next reachable. (edited)
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- Issue 0079 (closed and pushed; kovacs rolled out green 1 Nov, slot 01M6B79F14HZNYE1W87D0RH7NP): once hv is back from the GNOME re-login on kovacs, tell kovacs-sysadm, which survives the logout, to check the systemd user manager's PATH and molt doctor's env check, the last kovacs proof. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 
 ## Holds

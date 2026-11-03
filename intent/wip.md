@@ -1,17 +1,16 @@
 ---
-verblock: "3 Nov 2026:v0.69: Matthew Sinclair - decision 43 lifted; Molt 1.4.0 on HEAD (hv)"
+verblock: "3 Nov 2026:v0.70: Matthew Sinclair - Molt 1.4.0 released; rhadamanth rollout next"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Molt 1.4.0, on HEAD (hv, 3 Nov):** the karabiner liberator (issue 0081), then 0072's ask 2 (doctor says plainly that macOS GUI apps don't get the agent's PATH), then 0078 (doctor's resleeve hint where only a login clears the env check, and env's PATH refusal naming zshrc). dc builds, vc reviews each commit as it lands, and hv runs the full suite, push and cut. Molt-matts then enables karabiner on rhadamanth, once 1.4.0 is installed there.
+- **Molt 1.4.0 rollout on rhadamanth:** 1.4.0 is released (tag at d0a4518, tap 814de96), carrying the karabiner liberator (0081), mise as its own liberator, off everywhere (0082), and doctor's fixes (0078, 0072 ask 2). In order: hv runs `brew upgrade molt`; vc enables karabiner in Molt-matts' rhadamanth `molt.toml`; hv quits Karabiner's Settings window and runs `molt upgrade`; then 0081's proof; then rhadamanth-sysadm uninstalls Homebrew's mise and asdf.
 
 ## TODO
 
-- **Issue 0079's last proof:** after hv logs out of GNOME on kovacs and back in, tell kovacs-sysadm. It checks that the systemd user manager's PATH has `~/.cargo/bin` ahead of Linuxbrew's bin and that `molt doctor`'s env check passes.
+- **kovacs and gyges to 1.4.0, on hv's word:** kovacs through kovacs-sysadm (it runs 1.3.0, doctor green); gyges through gyges-sysadm, where karabiner waits until its live `karabiner.json` is compared with the repo's. Whether mise comes off kovacs and gyges is hv's call. 0071 stays deferred.
 - **rhadamanth and gyges:** rustup on a quieter day, booked (hv 1 Nov); 0079's rule then puts its cargo first.
-- **gyges, on hv's word:** brew upgrade molt to the current release and its new liberators, through gyges-sysadm; karabiner there only after its live `karabiner.json` is compared with the repo's. 0071 stays deferred.
-- **farcaster, pihole, when next reachable:** resync the clones onto the purged histories, set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then `molt upgrade`.
+- **farcaster, pihole, when next reachable:** resync the clones onto the purged histories, set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then `molt upgrade`; dev-tools goes on there, as it no longer needs mise.
 - **rhadamanth backup:** hv's, after 19 Dec.

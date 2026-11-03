@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "d276774c-11aa-4a26-a0f6-1a356d80323a",
-    "heartbeat_at": "2026-11-03T05:46:22.617Z",
+    "heartbeat_at": "2026-11-03T07:17:24.387Z",
     "status": "active",
-    "focus": "3 Nov: decision 43 lifted (hv). 1.4.0 on HEAD: karabiner liberator (0081), 0072 ask 2, 0078; dc builds, vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut are hv's",
+    "focus": "3 Nov: Molt 1.4.0 released (0081 karabiner, 0082 mise, 0078, 0072 ask 2; tag at d0a4518, CI green on Ubuntu and macOS, tap 814de96). Next: rhadamanth's rollout, starting with hv's brew upgrade molt",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1053,7 +1053,8 @@
       "kind": "todo",
       "seq": 39,
       "text": "Issue 0079 (closed and pushed; kovacs rolled out green 1 Nov, slot 01M6B79F14HZNYE1W87D0RH7NP): once hv is back from the GNOME re-login on kovacs, tell kovacs-sysadm, which survives the logout, to check the systemd user manager's PATH and molt doctor's env check, the last kovacs proof.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-03T07:17:24.258Z",
       "recorded_at": "2026-11-01T07:15:27.698Z",
       "edited_at": "2026-11-01T09:37:41.325Z"
     },
@@ -1126,7 +1127,8 @@
       "kind": "doing",
       "seq": 8,
       "text": "1.4.0 on HEAD (hv 3 Nov, decision 44): dc builds 0081 (karabiner liberator), then 0072 ask 2, then 0078; vc reviews each commit as it lands, closes each issue with an as-built note, adds Molt-matts' .gitignore line now and rhadamanth's enable once 1.4.0 is installed there; the full suite, push and cut go to hv.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-03T07:17:24.301Z",
       "recorded_at": "2026-11-03T05:46:22.572Z"
     },
     {
@@ -1137,6 +1139,14 @@
       "state": "live",
       "recorded_at": "2026-11-03T06:26:51.637Z",
       "edited_at": "2026-11-03T06:57:09.782Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 9,
+      "text": "Molt 1.4.0 rollout on rhadamanth (released 3 Nov: d0a4518, tap 814de96). In order: hv runs brew upgrade molt; vc commits and pushes the karabiner enable in Molt-matts' rhadamanth molt.toml; hv quits Karabiner's Settings window and runs molt upgrade; then 0081's proof (readlink, verify, Karabiner's log Load line, Caps Lock as Control on the built-in keyboard and the Keychron B11 Pro, one Settings toggle showing as a Molt-matts diff); then rhadamanth-sysadm uninstalls Homebrew's mise and asdf (0082). kovacs and gyges move to 1.4.0 on hv's word.",
+      "state": "live",
+      "recorded_at": "2026-11-03T07:17:24.344Z"
     }
   ],
   "sent": [
