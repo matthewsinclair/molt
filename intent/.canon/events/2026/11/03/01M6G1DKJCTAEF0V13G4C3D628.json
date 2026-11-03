@@ -1,0 +1,15 @@
+{
+  "id": "01M6G1DKJCTAEF0V13G4C3D628",
+  "ts": "2026-11-03T06:26:51.597Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0082"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "mise liberator: mise moves out of dev-tools into its own liberator, off on every sleeve, Molt-flynn included (hv, 3 Nov)"
+  }
+}

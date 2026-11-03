@@ -1,0 +1,17 @@
+{
+  "id": "01M6G1DXWVSZY2GGHMFKGFZ77Y",
+  "ts": "2026-11-03T06:27:02.171Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Next, after the head -3 fix: issue 0082, on HEAD, into 1.4.0. hv chose to split mise out of dev-tools, and went further: 'Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now).' The spec is 0082's Next 1 to 6, which are yours: liberators/mise.sh, holding dev-tools' mise check, install and verify unchanged in behaviour; dev-tools without mise; mise.bats and dev-tools.bats, each building PATH from stubs so the machine's own mise cannot leak in; both templates naming mise beside dev-tools with enabled = false; README, MODULES.md, CHANGELOG (Added and Changed), and the bootstrap runbook's mise steps attributed to the mise liberator and marked off since 3 Nov. devbin's vendored check text is out of scope. vc does 7 to 9: Molt-matts and Molt-flynn, plus rhadamanth's uninstall after the release. Commit by pathspec once its tests pass under both bashes, and tell vc. After that, vc runs the full suite and the release (hv: 'vc runs them'), so leave the tree quiet once you're done.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

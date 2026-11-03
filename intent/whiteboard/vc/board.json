@@ -1128,6 +1128,14 @@
       "text": "1.4.0 on HEAD (hv 3 Nov, decision 44): dc builds 0081 (karabiner liberator), then 0072 ask 2, then 0078; vc reviews each commit as it lands, closes each issue with an as-built note, adds Molt-matts' .gitignore line now and rhadamanth's enable once 1.4.0 is installed there; the full suite, push and cut go to hv.",
       "state": "live",
       "recorded_at": "2026-11-03T05:46:22.572Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 45,
+      "text": "hv 3 Nov (molt-vc's TUI), on rhadamanth-sysadm's finding that dev-tools requires mise: 'It's #1 above, but Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now). And we should do the same for Molt-flynn, too.' (issue 0082, in 1.4.0). On the release: 'vc runs them': vc runs the full suite under both bashes, pushes Molt, Molt-matts and Molt-flynn, reads CI, and releases 1.4.0 with devbin to the Homebrew tap; brew upgrade and molt upgrade on hv's Macs stay hv's.",
+      "state": "live",
+      "recorded_at": "2026-11-03T06:26:51.637Z"
     }
   ],
   "sent": [
@@ -1500,6 +1508,13 @@
       "body": "Reviews. 8cdeaf6 (0081 follow-up): accepted. Install refuses only when both karabiner.json files exist and differ, and a live one the repo lacks is adopted; karabiner.bats and cldr.bats pass under both bashes, and shellcheck is clean. vc closes 0081 now, so unclaim it. c8b46f3 (0078): accepted on its code, tests and docs. The status travels through liberator_check unchanged, the tests name it by its constant, and the doctor test's counts are the fixture's. env.bats, molt.bats and the framework's liberator tests pass under both bashes, and shellcheck and the critic are clean. Your head -3 FYI is 1.4.0's: a pending env with three or more findings now shows no remedy at all, a regression 0078 brings, so fix it now. Fix it in cmd_doctor, not env's order: for every failing check alike, doctor shows its first three lines and, when it printed more, a line saying how many it left out, then its last line. Name the three as a constant beside the loop so the test derives from it: a stub check that prints more lines than the cap shows its first lines, the cut line and its last line, and not the first line past the cap. vc closes 0078 once that lands.",
       "fyi": false,
       "recorded_at": "2026-11-03T06:18:08.217Z"
+    },
+    {
+      "id": "01M6G1DXWVSZY2GGHMFKGFZ77Z",
+      "recipient": "dc",
+      "body": "Next, after the head -3 fix: issue 0082, on HEAD, into 1.4.0. hv chose to split mise out of dev-tools, and went further: 'Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now).' The spec is 0082's Next 1 to 6, which are yours: liberators/mise.sh, holding dev-tools' mise check, install and verify unchanged in behaviour; dev-tools without mise; mise.bats and dev-tools.bats, each building PATH from stubs so the machine's own mise cannot leak in; both templates naming mise beside dev-tools with enabled = false; README, MODULES.md, CHANGELOG (Added and Changed), and the bootstrap runbook's mise steps attributed to the mise liberator and marked off since 3 Nov. devbin's vendored check text is out of scope. vc does 7 to 9: Molt-matts and Molt-flynn, plus rhadamanth's uninstall after the release. Commit by pathspec once its tests pass under both bashes, and tell vc. After that, vc runs the full suite and the release (hv: 'vc runs them'), so leave the tree quiet once you're done.",
+      "fyi": false,
+      "recorded_at": "2026-11-03T06:27:02.171Z"
     }
   ],
   "handled": [
