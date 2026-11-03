@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-03
+
 ### Added
 
 - `karabiner` liberator: Karabiner-Elements' config directory, `$XDG_CONFIG_HOME/karabiner` when that is set and absolute, else `~/.config/karabiner`, is linked whole to the user repo's `config/karabiner/`, since Karabiner saves `karabiner.json` by renaming a new file over the old one, which would replace a linked file with a plain copy; made only when the user repo has it, and on macOS only. A real directory already there is adopted: each of its entries, such as `assets/`, `automatic_backups/` and a `karabiner.json` the repo lacks, moves into the repo directory where it has no entry of that name, and the rest is kept as the dated `.molt-backup`. When both hold a `karabiner.json` and the two differ, install refuses before moving anything and names both files. Once install has made the link it restarts Karabiner's Console-User-Server agent, when it is loaded, as Karabiner's docs say, so the agent watches the file through the link; a failed restart fails install and names the command to run. Karabiner-Elements itself stays a hand install, since its driver needs the user's approval. cldr's rule for the XDG config home moves into lib, where both liberators read it (issue 0081)
@@ -314,7 +316,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/matthewsinclair/molt/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/matthewsinclair/molt/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/matthewsinclair/molt/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/matthewsinclair/molt/compare/v1.0.1...v1.1.0
