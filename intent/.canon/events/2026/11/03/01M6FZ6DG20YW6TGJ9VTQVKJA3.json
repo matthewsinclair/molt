@@ -1,0 +1,15 @@
+{
+  "id": "01M6FZ6DG20YW6TGJ9VTQVKJA3",
+  "ts": "2026-11-03T05:47:58.850Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "0072 ask 2, after 0081: on macOS, doctor's env check says plainly that GUI apps don't get the PATH Molt's agent publishes, with no bootout/bootstrap remedy for PATH (lib/env.sh, molt_env_report_session); its own tests under both bashes, commit by pathspec, tell vc"
+  }
+}

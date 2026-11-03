@@ -1,0 +1,15 @@
+{
+  "id": "01M6FZ6DEP07QTHEAZ5Y7AF6EZ",
+  "ts": "2026-11-03T05:47:58.806Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0081, the karabiner liberator: building on main per vc's GO (hv lifted decision 43; 1.4.0 on HEAD, no desk bookings), to 0081's body; commit by pathspec once karabiner.bats and cldr.bats pass under Homebrew bash and /bin/bash 3.2, then tell vc"
+  }
+}

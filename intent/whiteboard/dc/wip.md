@@ -3,26 +3,26 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 09dcef3b-14e1-4378-ac57-c1c46dc77f47
-heartbeat_at: 2026-11-03 05:32Z
+heartbeat_at: 2026-11-03 05:47Z
 status: active
-focus: "3 Nov: booted on hv's word, holding for vc's instructions; Molt stays parked under decision 43 until vc lifts it; rhadamanth-sysadm's karabiner liberator brief, sent to molt-vc too, waits on vc; holds 13 (0072 ask 2's doctor change) and 14 (0078) stand for Molt's next release"
-claims: [ISSUE:0072, ISSUE:0078]
+focus: "3 Nov: building Molt 1.4.0 on main per vc's GO (hv lifted decision 43; no desk bookings): 0081 the karabiner liberator, then 0072 ask 2, then 0078; vc reviews each commit as it lands"
+claims: [ISSUE:0072, ISSUE:0078, ISSUE:0081]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- 0081, the karabiner liberator: building on main per vc's GO (hv lifted decision 43; 1.4.0 on HEAD, no desk bookings), to 0081's body; commit by pathspec once karabiner.bats and cldr.bats pass under Homebrew bash and /bin/bash 3.2, then tell vc
 
 ## TODO
 
-_(none)_
+- 0072 ask 2, after 0081: on macOS, doctor's env check says plainly that GUI apps don't get the PATH Molt's agent publishes, with no bootout/bootstrap remedy for PATH (lib/env.sh, molt_env_report_session); its own tests under both bashes, commit by pathspec, tell vc
+- 0078, after 0072 ask 2: doctor names molt resleeve only where a resleeve clears what failed (lib/molt.sh, cmd_doctor), and env's PATH refusal names .zprofile, not zshrc (lib/env.sh, molt_env_path_pair); its own tests under both bashes, commit by pathspec, tell vc
 
 ## Holds
 
-- 0072 ask 2's doctor change (ask 2 answered 1 Nov, verdict 2 on launchd's record, molt-vc: a GUI app's PATH is launchd's default, never the env agent's): doctor says so plainly instead of offering the bootout/bootstrap remedy for PATH. Holding with 14 until hv plans Molt's next release (vc decision 35: Molt held for code) (edited)
-- 0078 (doctor advises molt resleeve where only a login clears the GUI session, and env.sh's PATH refusal names zshrc where PATH is built in .zprofile): holding until hv plans Molt's next release (vc, decisions 36 and 38); touches cmd_doctor's closing hint in lib/molt.sh and the env check's remedies in lib/env.sh (edited)
+_(none)_
 
 ## Watch-outs
 
