@@ -1326,6 +1326,46 @@ refute_path_on_pass() {
     assert_doctor_closed
 }
 
+# A liberator alpha whose check fails, printing each of $@ as a line.
+_alpha_check_prints() {
+    local line
+    {
+        printf 'alpha_check() {\n'
+        for line in "$@"; do
+            printf '    echo "%s"\n' "$line"
+        done
+        printf '    return 1\n}\n'
+    } > "$MOLT_LIBERATORS_DIR/alpha.sh"
+}
+
+# A pending env with three findings showed none of what clears them: its
+# remedy was its last line, past the lines doctor showed (issue 0078).
+@test "doctor shows a failing check's first lines, how many more it printed, and its last line (issue 0078)" {
+    _floor_sleeve
+    MOLT_LIBERATORS_DIR="$BATS_TEST_TMPDIR/liberators"
+    mkdir -p "$MOLT_LIBERATORS_DIR"
+    printf '\n[[liberator]]\nname = "alpha"\n' >> "$INSTANCE/molt.toml"
+    # As many lines as doctor shows, then the fixture's own past them: every
+    # count expected is the cap's or the fixture's, never written down.
+    local shown=() past=("alpha: past one" "alpha: past two" "alpha: the remedy") want="" i
+    for ((i = 1; i <= MOLT_DOCTOR_CHECK_LINES; i++)); do
+        shown+=("alpha: shown $i")
+        want="${want}         alpha: shown $i"$'\n'
+    done
+    _alpha_check_prints "${shown[@]}" "${past[@]}"
+    run cmd_doctor
+    assert_output_contains "${want}         ($((${#past[@]} - 1)) more lines left out)"$'\n'"         ${past[${#past[@]} - 1]}"
+    refute_output_contains "${past[0]}"
+    assert_doctor_closed
+
+    # One line past them is shown as it is, with nothing left out.
+    _alpha_check_prints "${shown[@]}" "${past[0]}"
+    run cmd_doctor
+    assert_output_contains "${want}         ${past[0]}"
+    refute_output_contains "left out"
+    assert_doctor_closed
+}
+
 # What the test's own disk does with case, found by making a file and asking
 # for it in another case, not by the question doctor asks.
 _disk_folds_case() {

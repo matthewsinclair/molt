@@ -1797,6 +1797,36 @@ molt_github_auth_check() {
   molt_github_auth_verdict "$out" "$status"
 }
 
+# How many of a failing check's first lines doctor shows under its verdict line
+# (issue 0026). A check that printed more has the rest counted and its last
+# line shown, since that is where a check says what clears its finding: a
+# pending env with three findings once showed no remedy at all (issue 0078).
+MOLT_DOCTOR_CHECK_LINES=3
+
+# The lines doctor shows for the failing check output $1, indented under its
+# verdict line, as the check printed them: the first MOLT_DOCTOR_CHECK_LINES
+# that are not empty, then, when it printed more, how many it leaves out, and
+# its last line.
+_molt_doctor_check_lines() {
+  local line count=0 last="" left_out noun indent="         "
+  while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
+    count=$((count + 1))
+    last="$line"
+    if [[ $count -le $MOLT_DOCTOR_CHECK_LINES ]]; then
+      printf '%s%s\n' "$indent" "$line"
+    fi
+  done <<< "$1"
+  [[ $count -gt $MOLT_DOCTOR_CHECK_LINES ]] || return 0
+  left_out=$((count - MOLT_DOCTOR_CHECK_LINES - 1))
+  if [[ $left_out -gt 0 ]]; then
+    noun="lines"
+    [[ $left_out -ne 1 ]] || noun="line"
+    printf '%s(%d more %s left out)\n' "$indent" "$left_out" "$noun"
+  fi
+  printf '%s%s\n' "$indent" "$last"
+}
+
 # A check that passes says what passed in words and names no path; only a check
 # that fails about a path names it (contract A3, issue 0066). `command -v molt`
 # says where the running copy lives.
@@ -2025,6 +2055,7 @@ cmd_doctor() {
     local why=""
     local check_status=0
     local verdict=""
+    local shown=""
     # On fd 3, so a check keeps the caller's stdin and cannot read the rest of
     # the list (issue 0075; see molt_resleeve).
     while IFS= read -r lib <&3; do
@@ -2048,11 +2079,10 @@ cmd_doctor() {
       fi
       # As the check printed them: molt's prefix already names the
       # liberator, and the verdict line names it, in the same order, for a
-      # line without one (issue 0026).
-      while IFS= read -r line; do
-        [[ -z "$line" ]] && continue
-        failed_why="${failed_why}         ${line}"$'\n'
-      done <<< "$(echo "$why" | head -3)"
+      # line without one (issue 0026). Its first lines and its last, where a
+      # check says what clears it (issue 0078).
+      shown="$(_molt_doctor_check_lines "$why")"
+      [[ -z "$shown" ]] || failed_why="${failed_why}${shown}"$'\n'
     done 3<<< "$enabled"
     # This once printed ✓ for every ratio, so a sleeve with nothing installed
     # passed and the missing liberator was never named. A count is not a verdict: a pass
