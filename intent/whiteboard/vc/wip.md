@@ -21,7 +21,7 @@ _(none)_
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
-- 0081: when hv reports rhadamanth's Karabiner hand checks (Caps Lock as Control on the built-in keyboard and the Keychron B11 Pro; one Settings change as a Molt-matts diff, the link in place), record them on 0081.
+- 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 
 ## Holds
 
