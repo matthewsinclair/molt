@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d276774c-11aa-4a26-a0f6-1a356d80323a
-heartbeat_at: 2026-11-03 07:17Z
+heartbeat_at: 2026-11-03 08:02Z
 status: active
-focus: "3 Nov: Molt 1.4.0 released (0081 karabiner, 0082 mise, 0078, 0072 ask 2; tag at d0a4518, CI green on Ubuntu and macOS, tap 814de96). Next: rhadamanth's rollout, starting with hv's brew upgrade molt"
+focus: "3 Nov: Molt 1.4.0 out and rolled out to all three Macs, doctor green; mise and asdf off every sleeve; gyges gets nothing more (hv). Only hv's own Karabiner hand checks on rhadamanth remain, for vc to record"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.0 rollout (released 3 Nov: d0a4518, tap 814de96): all three Macs run it with molt doctor green (dc's compare). rhadamanth: karabiner on (Molt-matts dfb0e56), and hv's molt upgrade at 07:24Z linked ~/.config/karabiner, adopted assets/ and the backups, and restarted the agent (Load at 07:24:47Z). mise and asdf are off every sleeve (0082 done). Left: hv's Caps Lock check on the built-in keyboard and the Keychron B11 Pro; gyges's karabiner and its four missing 1.2.0 liberators, on hv's word. (edited)
+_(none)_
 
 ## TODO
 
@@ -21,6 +21,7 @@ claims: []
 - farcaster, pihole: at resync, set core.hooksPath .githooks and run intent claude upgrade --apply. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
+- 0081: when hv reports rhadamanth's Karabiner hand checks (Caps Lock as Control on the built-in keyboard and the Keychron B11 Pro; one Settings change as a Molt-matts diff, the link in place), record them on 0081.
 
 ## Holds
 
@@ -38,6 +39,7 @@ _(none)_
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 - hv 3 Nov (molt-vc's TUI): decision 43 is lifted. Karabiner (issue 0081), 0072 ask 2 and 0078 ship in 1.4.0, built on HEAD with no worktrees and no desk bookings: 'Just do this all on HEAD. The only other activity now is the Pplr rebuild and these Molt changes are trivial, so just do them and get this done.' and 'Do it on head and just do it. I will tell pplr-vc that is happening.' dc builds; vc reviews each commit as it lands and takes the Molt-matts side; the full suite, push and cut stay hv's (decision 35).
 - hv 3 Nov (molt-vc's TUI), on rhadamanth-sysadm's finding that dev-tools requires mise: 'It's #1 above, but Flynn also shouldn't be using it. So we should make a mise liberator, extract it from wherever it's referenced, and then turn it off (for now). And we should do the same for Molt-flynn, too.' (issue 0082, in 1.4.0). On the release: 'vc runs them': vc runs the full suite under both bashes, pushes Molt and Molt-matts, reads CI, and releases 1.4.0 with devbin to the Homebrew tap; brew upgrade and molt upgrade on hv's Macs stay hv's. Molt-flynn, whose remote is Flynn's own GitHub, was pushed on hv's later word ('push Molt-flynn too'): 6b730b9. (edited)
+- hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz; it runs Homebrew's Molt 1.4.0 with doctor green, and nothing more is enabled there; 0071 stays deferred. rhadamanth's Karabiner hand checks are hv's own.
 
 ---
 
