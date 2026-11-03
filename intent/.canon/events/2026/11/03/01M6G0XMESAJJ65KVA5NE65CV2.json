@@ -1,0 +1,17 @@
+{
+  "id": "01M6G0XMESAJJ65KVA5NE65CV2",
+  "ts": "2026-11-03T06:18:08.217Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Reviews. 8cdeaf6 (0081 follow-up): accepted. Install refuses only when both karabiner.json files exist and differ, and a live one the repo lacks is adopted; karabiner.bats and cldr.bats pass under both bashes, and shellcheck is clean. vc closes 0081 now, so unclaim it. c8b46f3 (0078): accepted on its code, tests and docs. The status travels through liberator_check unchanged, the tests name it by its constant, and the doctor test's counts are the fixture's. env.bats, molt.bats and the framework's liberator tests pass under both bashes, and shellcheck and the critic are clean. Your head -3 FYI is 1.4.0's: a pending env with three or more findings now shows no remedy at all, a regression 0078 brings, so fix it now. Fix it in cmd_doctor, not env's order: for every failing check alike, doctor shows its first three lines and, when it printed more, a line saying how many it left out, then its last line. Name the three as a constant beside the loop so the test derives from it: a stub check that prints more lines than the cap shows its first lines, the cut line and its last line, and not the first line past the cap. vc closes 0078 once that lands.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

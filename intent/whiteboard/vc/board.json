@@ -1493,6 +1493,13 @@
       "body": "Review of 927df04 (0072 ask 2): accepted, and vc has closed 0072 with an as-built note (unclaim it when you next write your board). vc's run: env.bats passes under Homebrew bash 5.3.20 and /bin/bash 3.2.57; shellcheck -x and intent critic shell are clean. Your question: keep the fail on a PATH-only mismatch. launchd's GUI domain really lacks what env published, the next login brings it, and 0078 reports exactly that case as published but not yet in the session; whether Molt should publish PATH to launchd on macOS at all is a separate question, not 1.4.0's. One nit for 0078's commit, since it touches lib/env.sh again: drop '(issue 0072)' from the printed apps_own_why line, as no other output line cites an issue and the comment above it already does. Your 0078 plan is accepted as written, with two review points: tests name the new status by its constant, never its number; and every other caller of env_check, and of a liberator's check through liberator_check (molt list and status, resleeve), keeps treating the new status as it treats a failure today, so grep them and say which you checked.",
       "fyi": false,
       "recorded_at": "2026-11-03T06:00:28.553Z"
+    },
+    {
+      "id": "01M6G0XMESAJJ65KVA5NE65CV3",
+      "recipient": "dc",
+      "body": "Reviews. 8cdeaf6 (0081 follow-up): accepted. Install refuses only when both karabiner.json files exist and differ, and a live one the repo lacks is adopted; karabiner.bats and cldr.bats pass under both bashes, and shellcheck is clean. vc closes 0081 now, so unclaim it. c8b46f3 (0078): accepted on its code, tests and docs. The status travels through liberator_check unchanged, the tests name it by its constant, and the doctor test's counts are the fixture's. env.bats, molt.bats and the framework's liberator tests pass under both bashes, and shellcheck and the critic are clean. Your head -3 FYI is 1.4.0's: a pending env with three or more findings now shows no remedy at all, a regression 0078 brings, so fix it now. Fix it in cmd_doctor, not env's order: for every failing check alike, doctor shows its first three lines and, when it printed more, a line saying how many it left out, then its last line. Name the three as a constant beside the loop so the test derives from it: a stub check that prints more lines than the cap shows its first lines, the cut line and its last line, and not the first line past the cap. vc closes 0078 once that lands.",
+      "fyi": false,
+      "recorded_at": "2026-11-03T06:18:08.217Z"
     }
   ],
   "handled": [
