@@ -31,11 +31,11 @@ Molt is the framework and holds nobody's config. A user's stack, `Molt-<user>`, 
 
 A tree is a directory holding the runtime set: `bin/molt`, `lib/`, `liberators/`, `templates/` and `VERSION`. dev is the git checkout. opt is what `molt install` publishes from a clean dev tree to the prefix the instance's `vars.sh` declares, and brew is the same publish, run by the Homebrew formula in its keg. Each published tree carries a `.molt-install` manifest of its files' hashes. `molt use dev` or `molt use opt` points the switch link at that tree's `bin/molt`, and `molt use brew` removes the link (`lib/install.sh`).
 
-A release is cut by hand: a commit of `VERSION` and `CHANGELOG.md`, an annotated tag, both pushed to GitHub, CI read on the tag, then `tools/formula publish`, which renders `packaging/homebrew/molt.rb` for the newest tag into the `matthewsinclair/homebrew-molt` tap. `tools/` is outside the runtime set, because nothing on a sleeve runs it.
+A release is one command, `bin/devbin release vX.Y.Z`, devbin's release core, which `bin/.devbin/config.yaml` declares (issue 0087). It stamps `VERSION`, dates the version's `CHANGELOG.md` section, written `## [X.Y.Z] - unreleased` until then, and commits. It then runs the gates, `check all`, `test all` and `doctor`, where `test all` is the suite under the bash PATH finds and again with `/bin` first, under `/bin/bash` 3.2. Meanwhile CI runs on the release commit pushed to `candidate/<tag>`, the macOS job included. Once every leg is green it tags, pushes to both remotes, makes the GitHub release with the section as its notes, and runs `bin/devbin formula publish`, which renders `packaging/homebrew/molt.rb` for the tag into the `matthewsinclair/homebrew-molt` tap. `tools/`, outside the runtime set because nothing on a sleeve runs it, holds `test-bash32`, the `/bin/bash` 3.2 gate.
 
 ## Tests and CI
 
-`molt test` runs ShellCheck, then bats over `test/` and `test/liberators/`, which holds the liberators' suites, with `test/test_helper.bash` as the shared harness. It runs in the dev tree only. CI runs the suite on Linux at every push to main, and on macOS, whose bash is 3.2, only on a release tag or on demand. ShellCheck runs on every push.
+`molt test` runs ShellCheck, then bats over `test/` and `test/liberators/`, which holds the liberators' suites, with `test/test_helper.bash` as the shared harness. It runs in the dev tree only. CI runs the suite on Linux at every push to main or to a release candidate, and on macOS, whose bash is 3.2, only on a release candidate or tag, or on demand. ShellCheck runs on every push.
 
 ## Why it is built this way
 

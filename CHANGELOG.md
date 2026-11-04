@@ -4,7 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.2] - unreleased
+
+Homebrew goes from 1.4.0 to 1.4.2: 1.4.1 was tagged, but its formula was never published, so 1.4.2 brings 1.4.1's changes to brew as well.
+
+### Changed
+
+- Molt releases with `bin/devbin release vX.Y.Z`, devbin's release core, as pplr, cldr and ccusage do, in place of the hand cut: `bin/.devbin/config.yaml` turns on devbin's release and formula commands. A cut stamps `VERSION`, dates this file's `## [X.Y.Z] - unreleased` section and commits. It runs `check all`, `test all` and `doctor`, where `test all` is the suite under the bash PATH finds and, on macOS, again with `/bin` first under `/bin/bash` 3.2 (`tools/test-bash32`), and it reads CI on the release commit pushed to `candidate/<tag>`, which `tests.yml` now runs, its macOS job included. Once every leg is green it tags, pushes to both remotes, makes a GitHub release whose notes are the section, and publishes the formula to the tap with `bin/devbin formula publish`, under the cut's one yes. From 1.4.2 the published formula carries devbin's header in place of the template's. `tmp/`, where devbin's gates seal their verdicts, is ignored (issue 0087)
+
+### Removed
+
+- `tools/formula` and `test/formula.bats`: devbin's built-in formula renders the same formula from `packaging/homebrew/molt.rb`, byte for byte below the header, and publishes it (issue 0087)
 
 ## [1.4.1] - 2026-11-04
 
@@ -335,7 +345,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.4.1...HEAD
+[1.4.2]: https://github.com/matthewsinclair/molt/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/matthewsinclair/molt/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/matthewsinclair/molt/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/matthewsinclair/molt/compare/v1.2.0...v1.3.0

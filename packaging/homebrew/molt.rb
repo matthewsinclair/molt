@@ -1,10 +1,12 @@
 # Molt's Homebrew formula, kept as a TEMPLATE in Molt's own tree, outside the
 # runtime set molt install publishes (ST0008 D6; devbin docs/dev-opt-brew.md
-# T8). It is never installed from this file: `tools/formula render <tag> <out>`
-# writes the formula for a release tag, reading the tag's commit from git, and
-# `tools/formula publish` renders the newest release into the tap,
-# matthewsinclair/homebrew-molt, and pushes it. The tag and the revision below
-# are placeholders that render fills, exactly one of each.
+# T8). It is never installed from this file: devbin's built-in formula renders
+# it. `bin/devbin formula render <tag> <out>` writes the formula for a release
+# tag, reading the tag's commit from git, and `bin/devbin formula publish`,
+# every cut's after: line, renders the newest release into the tap,
+# matthewsinclair/homebrew-molt, and pushes it (issue 0087). The rendered
+# formula carries devbin's own header in place of this one. The tag and the
+# revision below are placeholders that render fills, exactly one of each.
 #
 # NOBODY TYPES A TAG OR A COMMIT INTO THIS FORMULA. brew checks out the tag at
 # install and stops when its commit is not the revision, so a wrong revision

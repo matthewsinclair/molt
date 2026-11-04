@@ -22,3 +22,6 @@ intent/.backup/
 
 # Intent's installer owns the hook carriers it writes beside each dispatcher.
 .githooks/*.intent
+
+# devbin's gate seals and logs and its release scratch (tmp/check, tmp/test, tmp/release).
+/tmp/

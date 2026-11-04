@@ -335,7 +335,7 @@ Molt/
   liberators/    # one script per liberator
   templates/     # what Molt renders or copies: the molt-user/ skeleton and molt.toml.example, the claude, agents and npm files, the AppArmor profile, and env/retired/ for the files the env liberator replaced
   test/          # bats suites (test_helper.bash is the shared harness, and its setup gives each test a HOME of its own), liberators/ for per-liberator suites, manual/ for probes run by hand
-  tools/         # formula, which writes the Homebrew formula
+  tools/         # test-bash32, the suite under /bin/bash 3.2 as a release gate
   packaging/     # homebrew/, the formula template
   docs/          # guides/, notes/ and blog/
   design/        # the logo and the original design brief

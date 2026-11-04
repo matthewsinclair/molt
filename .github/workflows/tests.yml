@@ -2,13 +2,19 @@ name: Molt Tests
 
 on:
   push:
-    branches: [ main ]
+    # main, and a release candidate: devbin's release core pushes the release
+    # commit to candidate/<tag> before it tags, and reads this workflow's run
+    # there as the CI verdict, the macOS leg included (issue 0087).
+    branches: [ main, 'candidate/**' ]
     # ONE TAG FILTER FOR THE WHOLE FLEET, carrying both release forms (hv,
     # 2026-09-22): Molt tags v0.1.1, and Utilz has tagged bare since 2.7.0.
     # This is the only place in this file where a tag's FORM is written.
     tags: ['v[0-9]*', '[0-9]*']
     # A push that only moves a board starts no run (devbin#0110). Path filters
     # are not evaluated for pushes of tags, so this cannot suppress a release.
+    # A candidate's push is filtered, but its release commit always changes
+    # VERSION and CHANGELOG.md, and the cut's pre-flight asks
+    # `bin/devbin ci-state --fires` whether that push starts a run.
     paths-ignore:
       - 'intent/whiteboard/**'
       # BOTH PATHS OR NEITHER (devbin#0110): GitHub skips a push only when EVERY
@@ -19,8 +25,8 @@ on:
       - 'intent/.canon/**'
   pull_request:
     branches: [ main ]
-  # ON DEMAND. The macOS leg no longer runs on a push (devbin#0108), so this is
-  # how it is asked for between releases:
+  # ON DEMAND. The macOS leg runs on no push but a candidate's (devbin#0108),
+  # so this is how it is asked for between releases:
   #
   #   gh workflow run tests.yml --ref main
   workflow_dispatch:
@@ -54,8 +60,8 @@ jobs:
         echo "PATH=/usr/local/bin:$PATH" >> "$GITHUB_ENV"
         bats --version
 
-    # tools/ is zsh (no Python ships), and test/formula.bats runs it. macOS
-    # carries zsh; the Ubuntu image does not.
+    # zsh.bats runs zsh_check and zsh_verify against a real zsh wherever there
+    # is one (require_command). macOS carries zsh; the Ubuntu image does not.
     - name: Install zsh
       run: sudo apt-get install -y zsh
 
@@ -70,16 +76,21 @@ jobs:
 
   test-macos:
     name: Test on macOS
-    # ON TAGS AND ON DEMAND, NEVER ON A PUSH (hv's ruling of 2026-09-21,
-    # devbin#0108). A macOS minute costs ten times a Linux one on a private
-    # repository, and the fleet applies one rule rather than one per repository.
+    # ON TAGS, CANDIDATES AND ON DEMAND, NEVER ON A PUSH TO MAIN (hv's ruling
+    # of 2026-09-21, devbin#0108). A macOS minute costs ten times a Linux one on
+    # a private repository, and the fleet applies one rule rather than one per
+    # repository. A candidate, candidate/<tag>, is the release commit devbin's
+    # release core pushes before it tags, and its run is the verdict the cut
+    # reads, so it carries this /bin/bash 3.2 leg as a tag's run does (issue
+    # 0087).
     #
     # The tag half asks github.ref_type, which GitHub documents as `branch` or
     # `tag`, and never the tag's spelling: on.push.tags above decides WHICH tags
     # start a run, and this decides whether the run carries macOS. A
     # pull_request's ref is refs/pull/N/merge, whose ref_type is `branch`, so
     # the leg skips there too -- deliberately, and Test Summary below knows it.
-    if: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
+    # Test Summary's MACOS_REQUIRED names the same three cases.
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
     runs-on: macos-latest
 
     steps:
@@ -139,7 +150,7 @@ jobs:
     env:
       LINUX: ${{ needs.test-linux.result }}
       MACOS: ${{ needs.test-macos.result }}
-      MACOS_REQUIRED: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' }}
+      MACOS_REQUIRED: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
 
     steps:
     - name: Summary
@@ -151,7 +162,7 @@ jobs:
         failed=""
         [ "$LINUX" = success ] || failed="$failed test-linux"
         # A SKIPPED macOS LEG IS A PASS ONLY WHERE IT WAS NOT ASKED FOR. On a
-        # release tag or an on-demand run it is a missing verdict wearing a
+        # release tag, a candidate or an on-demand run it is a missing verdict wearing a
         # pass. An EMPTY result -- a job GitHub never started, which is what a
         # billing refusal looks like from here -- is never acceptable, on any
         # event. Before this, the summary required macOS to have SUCCEEDED on

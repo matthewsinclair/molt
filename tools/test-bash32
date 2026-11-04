@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# test-bash32 [<arg>...] -- Molt's whole suite with /bin first on PATH, so
+# molt, bats and every test run under the bash macOS ships, /bin/bash 3.2, as
+# intent/llm/RULES.md requires before a push. It is test all's `bash32`
+# option in bin/.devbin/config.yaml, and so a gate of every cut (issue 0087).
+#
+# A WRAPPER, because devbin splits a run: line into words and execs it with no
+# shell, so no $ expands there and the config cannot put /bin first itself.
+# PATH, not `/bin/bash bin/molt test`, because bats and each test run through
+# `env bash` as well; Homebrew stays on PATH behind /bin, so git, bats and the
+# linter molt test runs still resolve.
+#
+# devbin holds the option to macOS (platforms: [macos] in the config), so a
+# Linux host counts it as inactive and never runs it. THE VERSION IS STILL
+# READ, NEVER ASSUMED: where the bash /bin puts first is not 3.2, as on a Mac
+# where it was replaced or in a run by hand elsewhere, this refuses, naming the
+# bash it found, rather than run the bash the suite option already runs and
+# call it 3.2, as Utilz's test-estate does. It execs bin/molt test, so the
+# gate's exit status is the suite's own.
+#
+# It lives in tools/, outside the runtime set, because nothing on a sleeve
+# runs it.
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PATH="/bin:$PATH"
+bash_path="$(command -v bash)"
+# shellcheck disable=SC2016 # single quotes on purpose: the bash under test expands its own BASH_VERSION
+version="$("$bash_path" -c 'echo "$BASH_VERSION"')"
+case "$version" in
+  3.2.*) ;;
+  *)
+    echo "test-bash32: with /bin first on PATH, bash is $bash_path at $version, not 3.2. This gate runs the suite under macOS's /bin/bash 3.2, and a run under $version would only repeat the suite option, so it refuses." >&2
+    exit 1
+    ;;
+esac
+echo "test-bash32: $bash_path at $version, with /bin first on PATH"
+cd "$root"
+exec bin/molt test "$@"

@@ -8,5 +8,58 @@ project:
   # languages:            # elixir, rust, swift, lua, shell -- this is what
   #   - elixir            # activates the built-in gates (design D11)
 
-# The devbin this project expects. Enforced by: devbin doctor
-devbin_version: "^0.1.0"
+# The devbin this project expects. Enforced by: devbin doctor. 0.1.19 is the
+# first whose release core reads the candidate's CI itself.
+devbin_version: "^0.1.19"
+
+# Molt's suite is `bin/molt test`, ShellCheck and then bats over test/ and
+# test/liberators/, which devbin's built-in `test shell` (bats tests) does not
+# fit, so no language is declared above. It is two options of test all, both
+# required by intent/llm/RULES.md: under the bash PATH finds, and with /bin
+# first, under macOS's /bin/bash 3.2. tools/test-bash32 puts /bin first, since
+# devbin splits a run: line into words and expands no $ in it, and the option
+# runs on macOS alone: a Linux host counts it inactive, and never fails it.
+commands:
+  test:
+    options:
+      suite:
+        summary: Molt's whole suite, ShellCheck then bats, under the bash PATH finds
+        run: bin/molt test
+        grammar: bats
+        log: SUITE
+      bash32:
+        summary: Molt's whole suite with /bin first, under macOS's /bin/bash 3.2
+        run: tools/test-bash32
+        grammar: bats
+        log: BASH32
+        platforms:
+          - macos
+  release:
+    enabled: true
+  formula:
+    enabled: true
+
+# The release core: bin/devbin release vX.Y.Z is the whole release, as pplr,
+# cldr and ccusage release (hv, 4 Nov 2026; issue 0087). Its gates run both
+# suites, the candidate's CI on candidate/<tag> includes the macOS job, the
+# object is a GitHub release carrying the CHANGELOG section as its notes, and
+# after: publishes the formula under the cut's one yes. The formula needs no
+# block: source mode, packaging/homebrew/molt.rb and homebrew-molt over ssh
+# are its defaults.
+release:
+  repo: matthewsinclair/molt
+  remotes:
+    - local
+    - upstream
+  branch: main
+  notes:
+    kind: changelog
+  gates:
+    - check all
+    - test all
+    - doctor
+  ci:
+    workflow: tests.yml
+  object: local
+  after:
+    - bin/devbin formula publish

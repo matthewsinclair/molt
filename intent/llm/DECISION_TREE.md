@@ -15,4 +15,4 @@ Where new code goes in Molt. Ask [MODULES.md](MODULES.md) first: when a module a
 7. **Sleeve agents?** `lib/agent.sh`. Their roles come from the stack's `config/agents/roles/`.
 8. **A new verb?** Its logic goes in the lib that owns the concern, and `bin/molt` parses its arguments and calls it.
 9. **What a new user's stack starts from?** `templates/molt-user/`. The other files Molt renders from its own templates are under `templates/` too.
-10. **Something a developer runs and a sleeve never does?** `tools/`, outside the runtime set, as `tools/formula` is.
+10. **Something a developer runs and a sleeve never does?** `tools/`, outside the runtime set, as `tools/test-bash32` is.

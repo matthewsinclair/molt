@@ -15,8 +15,9 @@
 | molt (install)        | `lib/install.sh`             | The trees Molt runs from (dev, opt, brew): `molt install`, which publishes one, `molt use`, which picks the one that serves molt, and the version line (ST0008)   |
 | liberator (framework) | `lib/liberator.sh`           | Liberator loading and discovery, and running each one's check, install, upgrade and maintain                                                                      |
 | newuser               | `lib/newuser.sh`             | Scaffold a new `Molt-{user}` config repo from the template skeleton                                                                                               |
-| formula               | `tools/formula`              | Renders Molt's Homebrew formula for a release tag, and publishes it to the tap                                                                                    |
-| formula template      | `packaging/homebrew/molt.rb` | Molt's Homebrew formula as a template, which `tools/formula` fills                                                                                                |
+| release               | `bin/.devbin/config.yaml`    | How Molt releases: devbin's release core and its formula, the gates, and the suite's two options (issue 0087)                                                     |
+| bash 3.2 gate         | `tools/test-bash32`          | The suite with `/bin` first, under macOS's `/bin/bash` 3.2, as `test all`'s `bash32` option (issue 0087)                                                          |
+| formula template      | `packaging/homebrew/molt.rb` | Molt's Homebrew formula as a template, which devbin's built-in formula renders and publishes                                                                      |
 | devbin (vendored)     | `bin/devbin`, `bin/.devbin/` | devbin's dev launcher, vendored: devbin owns it                                                                                                                   |
 
 ## Liberators
