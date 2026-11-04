@@ -6,13 +6,12 @@ on:
     # commit to candidate/<tag> before it tags, and reads this workflow's run
     # there as the CI verdict, the macOS leg included (issue 0087).
     branches: [ main, 'candidate/**' ]
-    # ONE TAG FILTER FOR THE WHOLE FLEET, carrying both release forms (hv,
-    # 2026-09-22): Molt tags v0.1.1, and Utilz has tagged bare since 2.7.0.
-    # This is the only place in this file where a tag's FORM is written.
-    tags: ['v[0-9]*', '[0-9]*']
-    # A push that only moves a board starts no run (devbin#0110). Path filters
-    # are not evaluated for pushes of tags, so this cannot suppress a release.
-    # A candidate's push is filtered, but its release commit always changes
+    # NO TAG STARTS A RUN (issue 0089): a cut tags only once the candidate's
+    # run is green, so a run on the tag would repeat that verdict, and nothing
+    # reads it. pplr's workflow has no tag trigger either.
+    #
+    # A push that only moves a board starts no run (devbin#0110). A
+    # candidate's push is filtered too, but its release commit always changes
     # VERSION and CHANGELOG.md, and the cut's pre-flight asks
     # `bin/devbin ci-state --fires` whether that push starts a run.
     paths-ignore:
@@ -35,8 +34,8 @@ on:
 # the reasoning). The EVENT is part of the key because a push to main and a
 # workflow_dispatch on main share a ref: a group keyed on the ref alone would
 # let a push cancel an on-demand macOS run after its ten-times minutes had been
-# spent, and let a dispatch cancel a push's run. A tag has its own ref, so a
-# release run is never cancelled by a push.
+# spent, and let a dispatch cancel a push's run. A candidate has its own ref,
+# so a release's run is never cancelled by a push to main.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
@@ -76,21 +75,18 @@ jobs:
 
   test-macos:
     name: Test on macOS
-    # ON TAGS, CANDIDATES AND ON DEMAND, NEVER ON A PUSH TO MAIN (hv's ruling
-    # of 2026-09-21, devbin#0108). A macOS minute costs ten times a Linux one on
-    # a private repository, and the fleet applies one rule rather than one per
+    # ON CANDIDATES AND ON DEMAND, NEVER ON A PUSH TO MAIN (hv's ruling of
+    # 2026-09-21, devbin#0108). A macOS minute costs ten times a Linux one on a
+    # private repository, and the fleet applies one rule rather than one per
     # repository. A candidate, candidate/<tag>, is the release commit devbin's
     # release core pushes before it tags, and its run is the verdict the cut
-    # reads, so it carries this /bin/bash 3.2 leg as a tag's run does (issue
-    # 0087).
+    # reads, so it carries this /bin/bash 3.2 leg (issue 0087). No tag starts
+    # a run (issue 0089).
     #
-    # The tag half asks github.ref_type, which GitHub documents as `branch` or
-    # `tag`, and never the tag's spelling: on.push.tags above decides WHICH tags
-    # start a run, and this decides whether the run carries macOS. A
-    # pull_request's ref is refs/pull/N/merge, whose ref_type is `branch`, so
-    # the leg skips there too -- deliberately, and Test Summary below knows it.
-    # Test Summary's MACOS_REQUIRED names the same three cases.
-    if: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
+    # A pull_request's ref is refs/pull/N/merge, so the leg skips there too,
+    # deliberately, and Test Summary below knows it. Test Summary's
+    # MACOS_REQUIRED names the same two cases.
+    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
     runs-on: macos-latest
 
     steps:
@@ -150,7 +146,7 @@ jobs:
     env:
       LINUX: ${{ needs.test-linux.result }}
       MACOS: ${{ needs.test-macos.result }}
-      MACOS_REQUIRED: ${{ github.ref_type == 'tag' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
+      MACOS_REQUIRED: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
 
     steps:
     - name: Summary
@@ -162,8 +158,7 @@ jobs:
         failed=""
         [ "$LINUX" = success ] || failed="$failed test-linux"
         # A SKIPPED macOS LEG IS A PASS ONLY WHERE IT WAS NOT ASKED FOR. On a
-        # release tag, a candidate or an on-demand run it is a missing verdict wearing a
-        # pass. An EMPTY result -- a job GitHub never started, which is what a
+        # candidate or an on-demand run it is a missing verdict wearing a pass. An EMPTY result -- a job GitHub never started, which is what a
         # billing refusal looks like from here -- is never acceptable, on any
         # event. Before this, the summary required macOS to have SUCCEEDED on
         # every event, so gating the leg without rewriting this would have

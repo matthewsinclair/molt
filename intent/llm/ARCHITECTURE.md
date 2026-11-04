@@ -35,7 +35,7 @@ A release is one command, `bin/devbin release vX.Y.Z`, devbin's release core, wh
 
 ## Tests and CI
 
-`molt test` runs ShellCheck, then bats over `test/` and `test/liberators/`, which holds the liberators' suites, with `test/test_helper.bash` as the shared harness. It runs in the dev tree only. CI runs the suite on Linux at every push to main or to a release candidate, and on macOS, whose bash is 3.2, only on a release candidate or tag, or on demand. ShellCheck runs on every push.
+`molt test` runs ShellCheck, then bats over `test/` and `test/liberators/`, which holds the liberators' suites, with `test/test_helper.bash` as the shared harness. It runs in the dev tree only. CI runs the suite on Linux at every push to main or to a release candidate, and on macOS, whose bash is 3.2, only on a release candidate or on demand. ShellCheck runs on every push.
 
 ## Why it is built this way
 
