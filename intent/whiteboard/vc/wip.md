@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 673529ac-4c4e-4478-8576-e7049a941d15
-heartbeat_at: 2026-11-04 18:23Z
+heartbeat_at: 2026-11-04 19:30Z
 status: active
-focus: "4 Nov: Molt 1.4.3 in hand with Molt's nodes (decision 47): molt-dc builds 0088 (design B), 0089, 0090 and the retired-template deletion; molt-vc reviews and merges each READY; then hv's cut"
+focus: "4 Nov: Molt 1.4.3 merged on main and dry-run clean; hv's cut next, then the rhadamanth rollout with dc's hold 16 just before hv's molt upgrade"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.3: 0088 (57fa747), 0091 (7a42b59) and 0089 (bed5ce9) pass, merged in a scratch worktree at cacef76; the merged tree's suite under both bashes runs in pplr-vc's slot 01M6KZK8. Next: replay the merges on main; dc's CHANGELOG lines and closes; bin/devbin release check and release v1.4.3 --dry-run; hv's cut. Then the rollout on rhadamanth: brew upgrade molt; dc lands Molt-matts 2f95dfe (its hold 16); hv's molt upgrade; hv pushes Molt-matts with 3d1de92; then Ccusage step 1 (hv) and slot 8GJE86, the restart, on hv's go. (edited)
+- Molt 1.4.3: 0088, 0091 and 0089 merged on main (b855193, ed39f72, 3f893d1) after the merged tree ran green in pplr-vc's slot 01M6KZK8 (648 of 648 under each bash); dc closed all three (856b111); release check and the v1.4.3 dry run are clean (19:30Z). Next: hv's bin/devbin release v1.4.3, with no Molt node writing to Molt's checkout from its stamp to its push. Then the rollout on rhadamanth: brew upgrade molt; dc lands Molt-matts 2f95dfe (its hold 16); hv's molt upgrade; hv pushes Molt-matts with 3d1de92; then Ccusage step 1 (hv) and slot 8GJE86, the restart, on hv's go. (edited)
 
 ## TODO
 
