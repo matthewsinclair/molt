@@ -188,7 +188,6 @@ Where your config repo lives, kept apart from development projects. Defaults to 
 | `MOLT_AGT_DIR`   | Where sleeve agents live      | `$(dirname "$MOLT_PRJ_DIR")/agt` |
 | `MOLT_LOCAL_BIN` | Where to symlink executables  | `~/.local/bin`                   |
 | `UTILZ_HOME`     | Override Utilz repo location  | `$MOLT_PRJ_DIR/Utilz`            |
-| `PPLR_HOME`      | Override Pplr repo location   | `$MOLT_PRJ_DIR/Pplr`             |
 
 ### MOLT_CLAUDE_CONFIG_DIR
 
@@ -210,7 +209,7 @@ A liberator is a config module that frees you from one default. Each liberator i
 - `{name}_maintain`: _(optional)_ System maintenance hook. Slow, runs during `molt maintain`.
 - `{name}_verify`: _(optional)_ A fuller check, for a liberator's own use. Molt does not run it: resleeve and doctor use `_check`.
 
-Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, Gtools, cldr, and Utilz on a `source = "brew"` sleeve), the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
+Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, Gtools, cldr, pplr, and Utilz on a `source = "brew"` sleeve), the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
 
 The framework discovers liberator scripts in `liberators/`, loads them on demand, and runs them through the lifecycle automatically.
 
@@ -239,7 +238,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | brew           | Homebrew maintenance and upgrade                              | linux, macos |
 | intent         | Intent from Homebrew, what PATH and gate run                  | linux, macos |
 | gtools         | Gtools from Homebrew, from its private tap                    | linux, macos |
-| pplr           | Pplr from a checkout, linked into ~/.local/bin                | linux, macos |
+| pplr           | pplr from Homebrew, or the dev or opt tree `pplr use` chose   | macos        |
 | web            | Web scraper for LLMs, linked into ~/.local/bin                | linux, macos |
 | claude         | Claude Code config, and its state out of $HOME                | linux, macos |
 | env            | Publishes the sleeve's variables, shell and GUI               | linux, macos |

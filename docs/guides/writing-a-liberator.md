@@ -82,7 +82,7 @@ myapp_repo_git_commands() { echo "pull status log diff fetch"; }
 
 ## Rules
 
-1. **Never install packages, except a liberator's own subject from a Homebrew tap, keyd, and Doom Emacs and the LazyVim starter.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. One exception is a tool that is the liberator's subject and comes from a Homebrew tap, as cldr, Intent and Gtools do and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, passing the tap's ssh URL when the tap is private, as Gtools' is, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves. The others are the `keys` liberator, which builds keyd from source and installs it with `sudo make install`, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing.
+1. **Never install packages, except a liberator's own subject from a Homebrew tap, keyd, and Doom Emacs and the LazyVim starter.** Check that prerequisites exist and fail with a hint if they're missing; the user installs packages, and liberators handle configuration. One exception is a tool that is the liberator's subject and comes from a Homebrew tap, as cldr, Intent, Gtools and pplr do and Utilz does on a `source = "brew"` sleeve. Its `_install` runs `molt_brew_install`, passing the tap's ssh URL when the tap is private, as Gtools' is, and its `_check` and `_verify` ask `molt_brew_faults` which copy PATH runs, never only whether a link resolves. A tool with a switch of its own may run its dev or opt tree instead, as pplr and Gtools on a `source = "switch"` sleeve do: their checks name that tree by its version line and ask `molt_brew_install_faults` only whether the formula is installed. The others are the `keys` liberator, which builds keyd from source and installs it with `sudo make install`, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing.
 
 2. **Use `molt_link`, or `molt_link_all` over a list, for static config.** It handles backup, mkdir, and idempotency.
 
@@ -204,7 +204,7 @@ Every call that can fail in `_install` ends in `|| return 1`, `molt_link_all` in
 | `molt_error msg`                            | Print `Zen [error]: msg` on stderr, which resleeve drops from a `_check`                                                                                                                                                  |
 | `molt_debug msg`                            | Print `Zen [debug]: msg` on stdout, only when `MOLT_DEBUG=1`                                                                                                                                                              |
 
-A liberator that links an executable links it into `$MOLT_LOCAL_BIN` (default `~/.local/bin`), as `pplr` and `utilz` do, and finds a template Molt itself ships under `$MOLT_ROOT/templates/`, as `claude` and `npm` do.
+A liberator that links an executable links it into `$MOLT_LOCAL_BIN` (default `~/.local/bin`), as `utilz` and `web` do, and finds a template Molt itself ships under `$MOLT_ROOT/templates/`, as `claude` and `npm` do.
 
 ## Adding to the manifest
 

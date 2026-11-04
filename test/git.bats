@@ -430,13 +430,6 @@ _git_full_repo() {
     assert_output_contains "fetch"
 }
 
-@test "pplr defines repo convention functions" {
-    load_molt_libs
-    load_liberator pplr
-    [ "$(type -t pplr_repo)" = "function" ]
-    [ "$(type -t pplr_repo_git_commands)" = "function" ]
-}
-
 @test "web defines repo convention functions" {
     load_molt_libs
     load_liberator web

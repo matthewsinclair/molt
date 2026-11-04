@@ -74,10 +74,9 @@ MOLT_USER_REPO_SEARCH_PATHS+=(
 )
 
 # --- Tool repos ---
-# Where tool liberators look for their repos: MOLT_PRJ_DIR/Utilz and
-# MOLT_PRJ_DIR/Pplr, each overridden by its own env var (eg UTILZ_HOME).
+# Where the utilz liberator looks for a checkout: MOLT_PRJ_DIR/Utilz, unless
+# UTILZ_HOME names another.
 MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Utilz}}"
-MOLT_PPLR_HOME="${PPLR_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Pplr}}"
 
 # --- Local bin ---
 # The directory of the per-user link that molt use sets (devbin docs/dev-opt-brew.md

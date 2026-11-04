@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - The docs say what the code does: the README, every guide, `usage-rules.md`, the CI notes and `intent/llm/` were checked against the code and corrected, and the 24 Oct doc review's open findings closed. The README installs with Homebrew first, `writing-a-liberator.md` adds the shell a liberator runs in, the `molt git` hooks and the helpers it lacked, and `intent/llm/` describes Molt in place of Intent's Elixir starter text (issues 0083, 0084)
+- `pplr` liberator installs pplr from Homebrew (`brew install matthewsinclair/pplr/pplr`, a public tap, for macOS on Apple silicon) instead of linking a checkout's `bin/pplr` into `~/.local/bin`. pplr 2.0 has no `bin/pplr`, so the upgrade hook failed `molt upgrade`. Check and verify name the pplr PATH runs. A dev or opt tree that `pplr use` chose is the user's choice, named and never faulted: only a Homebrew pplr not installed is a fault then (hv's rule in issue 0071). Otherwise Homebrew's pplr must be what PATH runs, as cldr's must. Molt's old link to a checkout's `bin/pplr` is named by check and removed by install, which leaves the link `pplr use` sets alone. The upgrade hook, `PPLR_HOME` and `molt git` over the Pplr checkout are gone, since `brew upgrade` upgrades pplr (issue 0086)
 
 ### Removed
 

@@ -43,7 +43,7 @@
 | local-bin      | `liberators/local-bin.sh`      | `~/.local/bin` (MOLT_LOCAL_BIN), and the molt link `molt use` sets                              |
 | intent         | `liberators/intent.sh`         | Intent from Homebrew, what PATH and the pre-commit gate run                                     |
 | gtools         | `liberators/gtools.sh`         | Gtools from Homebrew, private tap over ssh (issue 0057)                                         |
-| pplr           | `liberators/pplr.sh`           | Pplr people/contacts manager, from a checkout, linked into `~/.local/bin`                       |
+| pplr           | `liberators/pplr.sh`           | pplr from Homebrew, or the dev or opt tree `pplr use` chose (issue 0086)                        |
 | utilz          | `liberators/utilz.sh`          | Utilz from a checkout (linked into `~/.local/bin`, with bats-core) or from Homebrew, per sleeve |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, from `$MOLT_OPT_DIR/web`, its binary linked into `~/.local/bin`           |
 | brew           | `liberators/brew.sh`           | Homebrew lifecycle, package maintenance (linux, macos)                                          |
