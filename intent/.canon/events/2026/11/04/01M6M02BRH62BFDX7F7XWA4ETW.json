@@ -1,0 +1,16 @@
+{
+  "id": "01M6M02BRH62BFDX7F7XWA4ETW",
+  "ts": "2026-11-04T19:20:12.305Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 32,
+    "text": "0088 (Ccusage ISSUE:0003 step 2, design B): PASS from vc at 57fa747, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, the as-built's merge line and the close (drafted); vc's -x note left on hv's word (4 Nov)"
+  }
+}

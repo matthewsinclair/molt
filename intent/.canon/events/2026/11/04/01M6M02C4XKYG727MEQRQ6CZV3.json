@@ -1,0 +1,16 @@
+{
+  "id": "01M6M02C4XKYG727MEQRQ6CZV3",
+  "ts": "2026-11-04T19:20:12.701Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 35,
+    "text": "0091 (cc's hold 16): PASS from vc at 7a42b59, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, an as-built note and the close (drafted)"
+  }
+}

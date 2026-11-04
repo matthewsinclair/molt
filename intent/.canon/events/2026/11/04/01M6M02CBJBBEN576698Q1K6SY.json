@@ -1,0 +1,16 @@
+{
+  "id": "01M6M02CBJBBEN576698Q1K6SY",
+  "ts": "2026-11-04T19:20:12.914Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 16,
+    "text": "Land Molt-matts dc/0090-vars-instance (2f95dfe: MOLT_PLATFORM and the [instance] tables out, their facts into each vars.sh header) by cherry-pick onto Molt-matts main, unpushed, for hv to push with 3d1de92 (hv, 4 Nov): step 2 of vc's rollout (vc doing 10), after brew upgrade molt on rhadamanth and before hv's molt upgrade. Released when vc says hv's 1.4.3 molt upgrade on rhadamanth is next."
+  }
+}

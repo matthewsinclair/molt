@@ -1,0 +1,16 @@
+{
+  "id": "01M6M02BYGNQK1NV17TX82BEYJ",
+  "ts": "2026-11-04T19:20:12.496Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 33,
+    "text": "0089: PASS from vc at bed5ce9, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, an as-built note and the close (drafted); vc's tests.yml:161 note left on hv's word (4 Nov)"
+  }
+}
