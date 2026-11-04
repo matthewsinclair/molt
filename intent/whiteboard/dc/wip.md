@@ -3,7 +3,7 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 60313337-1bf1-45db-95a6-89501eec9dbb
-heartbeat_at: 2026-11-04 17:57Z
+heartbeat_at: 2026-11-04 18:24Z
 status: active
 focus: "4 Nov: Molt 1.4.3 READY to vc: 0088 at 57fa747, 0089 at bed5ce9, 0091 at 7a42b59; 0090 docs on main (dc856ce) and Molt-matts 3d1de92 unpushed for hv; Molt-matts dc/0090-vars-instance held for hv's 1.4.3 molt upgrade; CHANGELOG lines go on main as vc merges"
 claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090, ISSUE:0091]
@@ -13,9 +13,9 @@ claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090, ISSUE:0091]
 
 ## DOING
 
-- 0088 (Ccusage ISSUE:0003 step 2, design B): READY to vc at 01dff87 on dc/0088-securestorage; slot 01M6KSJW red 0/4, green 4/4 and env.bats+claude.bats 86/86 under each bash; CHANGELOG line on main at vc's merge (edited)
+- 0088 (Ccusage ISSUE:0003 step 2, design B): READY to vc at 57fa747 on dc/0088-securestorage, as-built in the issue; slots 01M6KSJW and 01M6KV1E: red as planned, green 6/6 and env.bats+claude.bats 88/88 under each bash; CHANGELOG line on main at vc's merge (edited)
 - 0089: READY to vc at bed5ce9 on dc/0089-ci-no-tags (tests.yml without its tag trigger; actionlint and ci-state --fires); CHANGELOG line on main at vc's merge (edited)
-- 0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; held for hv's call: Molt-matts branch dc/0090-vars-instance (2f95dfe), MOLT_PLATFORM and [instance] out, which marks every render stale until molt upgrade, so it lands just before hv's 1.4.3 molt upgrade (edited)
+- 0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; the vars.sh half lands per hold 16 (hv, 4 Nov); 0090 closes once it lands (edited)
 - 0091 (cc's hold 16): READY to vc at 7a42b59 on dc/0091-env-retired; slot 01M6KSJW env.bats+claude.bats 80/80 under each bash; CHANGELOG line on main at vc's merge (edited)
 
 ## TODO

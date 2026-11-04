@@ -1,0 +1,16 @@
+{
+  "id": "01M6KWVQA00B71KJHCEQX3AB7H",
+  "ts": "2026-11-04T18:24:09.024Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 34,
+    "text": "0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; the vars.sh half lands per hold 16 (hv, 4 Nov); 0090 closes once it lands"
+  }
+}
