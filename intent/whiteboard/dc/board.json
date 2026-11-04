@@ -5,14 +5,11 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "60313337-1bf1-45db-95a6-89501eec9dbb",
-    "heartbeat_at": "2026-11-04T19:14:33.006Z",
+    "heartbeat_at": "2026-11-04T19:29:39.158Z",
     "status": "active",
-    "focus": "4 Nov: Molt 1.4.3 READY to vc: 0088 at 57fa747, 0089 at bed5ce9, 0091 at 7a42b59; 0090 docs on main (dc856ce) and Molt-matts 3d1de92 unpushed for hv; Molt-matts dc/0090-vars-instance held for hv's 1.4.3 molt upgrade; CHANGELOG lines go on main as vc merges",
+    "focus": "4 Nov: Molt 1.4.3: 0088, 0089 and 0091 merged by vc and closed (856b111); 0090 closes once hold 16 lands, step 2 of vc's rollout after hv's cut; Molt-matts 3d1de92 unpushed for hv",
     "claims": [
-      "ISSUE:0088",
-      "ISSUE:0089",
-      "ISSUE:0090",
-      "ISSUE:0091"
+      "ISSUE:0090"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -569,7 +566,8 @@
       "kind": "doing",
       "seq": 32,
       "text": "0088 (Ccusage ISSUE:0003 step 2, design B): PASS from vc at 57fa747, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, the as-built's merge line and the close (drafted); vc's -x note left on hv's word (4 Nov)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-04T19:29:39.025Z",
       "recorded_at": "2026-11-04T17:09:42.255Z",
       "edited_at": "2026-11-04T19:20:33.771Z"
     },
@@ -578,7 +576,8 @@
       "kind": "doing",
       "seq": 33,
       "text": "0089: PASS from vc at bed5ce9, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, an as-built note and the close (drafted); vc's tests.yml:161 note left on hv's word (4 Nov)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-04T19:29:39.069Z",
       "recorded_at": "2026-11-04T17:09:42.298Z",
       "edited_at": "2026-11-04T19:20:33.919Z"
     },
@@ -596,7 +595,8 @@
       "kind": "doing",
       "seq": 35,
       "text": "0091 (cc's hold 16): PASS from vc at 7a42b59, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, an as-built note and the close (drafted)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-04T19:29:39.114Z",
       "recorded_at": "2026-11-04T17:23:08.461Z",
       "edited_at": "2026-11-04T19:20:12.701Z"
     },

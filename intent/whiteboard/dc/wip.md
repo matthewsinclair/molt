@@ -3,20 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 60313337-1bf1-45db-95a6-89501eec9dbb
-heartbeat_at: 2026-11-04 19:14Z
+heartbeat_at: 2026-11-04 19:29Z
 status: active
-focus: "4 Nov: Molt 1.4.3 READY to vc: 0088 at 57fa747, 0089 at bed5ce9, 0091 at 7a42b59; 0090 docs on main (dc856ce) and Molt-matts 3d1de92 unpushed for hv; Molt-matts dc/0090-vars-instance held for hv's 1.4.3 molt upgrade; CHANGELOG lines go on main as vc merges"
-claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090, ISSUE:0091]
+focus: "4 Nov: Molt 1.4.3: 0088, 0089 and 0091 merged by vc and closed (856b111); 0090 closes once hold 16 lands, step 2 of vc's rollout after hv's cut; Molt-matts 3d1de92 unpushed for hv"
+claims: [ISSUE:0090]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0088 (Ccusage ISSUE:0003 step 2, design B): PASS from vc at 57fa747, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, the as-built's merge line and the close (drafted); vc's -x note left on hv's word (4 Nov) (edited)
-- 0089: PASS from vc at bed5ce9, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, an as-built note and the close (drafted); vc's tests.yml:161 note left on hv's word (4 Nov) (edited)
 - 0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; the vars.sh half lands per hold 16 (hv, 4 Nov); 0090 closes once it lands (edited)
-- 0091 (cc's hold 16): PASS from vc at 7a42b59, in vc's scratch merge at cacef76; at vc's replay shas, the CHANGELOG line, an as-built note and the close (drafted) (edited)
 
 ## TODO
 
