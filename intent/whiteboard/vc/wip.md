@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 673529ac-4c4e-4478-8576-e7049a941d15
-heartbeat_at: 2026-11-04 17:18Z
+heartbeat_at: 2026-11-04 17:34Z
 status: active
 focus: "4 Nov: Molt 1.4.3 in hand with Molt's nodes (decision 47): molt-dc builds 0088 (design B), 0089, 0090 and the retired-template deletion; molt-vc reviews and merges each READY; then hv's cut"
 claims: []
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.3: review and merge molt-dc's branches for 0088, 0089, 0090 and the retired-template deletion as each READY comes; then the dry run for hv's cut.
+- Molt 1.4.3: take molt-dc's READYs for 0088 (01dff87), 0091 (7a42b59) and 0089 from vc's inbox. Slot 01M6KSJW ran 0088 red on main and green at 01dff87, and env.bats and claude.bats on both branches under both bashes, exit 0 (17:27Z to 17:32Z, molt-dc's END). vc read both diffs before the compact and found nothing blocking. Next: verdicts, merge in a scratch worktree and replay on main (the two touch lib/env.sh and sleeve-agents.md apart), 0090 after them, then the dry run for hv's cut. (edited)
 
 ## TODO
 
@@ -34,10 +34,10 @@ _(none)_
 ## Decisions
 
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
-- hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked with molt-vc. Laksa, Conflab and Molt are held for code.
+- hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked on the estate desk. Laksa and Conflab are held for code. (edited)
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
-- hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz; it runs Homebrew's Molt 1.4.0 with doctor green, and nothing more is enabled there; 0071 stays deferred. rhadamanth's Karabiner hand checks are hv's own.
+- hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)
 - hv 4 Nov (molt-vc's TUI, agreed with pplr-vc as its decision 31): Molt is back with Molt's nodes. molt-dc builds 1.4.3 (0088 design B, the claude liberator giving CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir; 0089; 0090; templates/env/retired/ deleted), molt-vc reviews and merges, pplr-vc keeps the desk, and hv cuts with bin/devbin release. 0071 closes as overtaken by 0086. The cut does not wait for devbin 0.1.20.
 
 ---

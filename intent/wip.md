@@ -1,12 +1,12 @@
 ---
-verblock: "4 Nov 2026:v0.74: Matthew Sinclair - 1.4.1 and 1.4.2 out; 1.4.3 in hand with Molt's nodes"
+verblock: "4 Nov 2026:v0.75: Matthew Sinclair - localfold; 0088 and 0091 green, for vc's merge"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Molt 1.4.3:** molt-dc builds 0088 (Ccusage 0003's step 2, design B), 0089 (tests.yml without its tag trigger), 0090 (hv's calls on the docs and Molt-matts) and the deletion of `templates/env/retired/`. molt-vc reviews and merges each, pplr-vc grants the runs after devbin 0.1.20's, and hv cuts with `bin/devbin release v1.4.3` (hv, 4 Nov; vc decision 47).
+- **Molt 1.4.3:** molt-dc's 0088 (Ccusage 0003's step 2, design B) and 0091 (`templates/env/retired/` deleted) ran green in their slot and wait for molt-vc's merge; 0089 (tests.yml without its tag trigger) and 0090 (hv's calls on the docs and Molt-matts) are in hand. molt-vc reviews and merges each, pplr-vc grants the runs, and hv cuts with `bin/devbin release v1.4.3` (hv, 4 Nov; vc decision 47).
 
 ## TODO
 

@@ -1,0 +1,16 @@
+{
+  "id": "01M6KT0BXW4Q5RZGTE88N7PMCJ",
+  "ts": "2026-11-04T17:34:15.484Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 10,
+    "text": "Molt 1.4.3: take molt-dc's READYs for 0088 (01dff87), 0091 (7a42b59) and 0089 from vc's inbox. Slot 01M6KSJW ran 0088 red on main and green at 01dff87, and env.bats and claude.bats on both branches under both bashes, exit 0 (17:27Z to 17:32Z, molt-dc's END). vc read both diffs before the compact and found nothing blocking. Next: verdicts, merge in a scratch worktree and replay on main (the two touch lib/env.sh and sleeve-agents.md apart), 0090 after them, then the dry run for hv's cut."
+  }
+}
