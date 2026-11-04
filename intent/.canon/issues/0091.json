@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 91,
+  "slug": "delete-templates-env-retired-and-the-env-writer",
+  "title": "Delete templates/env/retired/ and the env writer's retire check: every sleeve has moved onto the env liberator (cc's hold 16)",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-11-04",
+  "reporter": "Matthew Sinclair",
+  "body": "## What\n\n`lib/env.sh` keeps the files the claude liberator published `CLAUDE_CONFIG_DIR` through before the env liberator took them over, as templates under `templates/env/retired/`: `com.molt.claude-config-dir.plist.tmpl` for macOS and `claude.conf.tmpl` for Linux. They are kept only so that a retired file that is still what molt rendered can be told from one somebody changed: check names one still there, and install removes it, or refuses one that was changed. Its own comment says they \"go once every sleeve has moved\".\n\ncc held the deletion (cc's hold 16) until gyges resleeved onto the env liberator. molt-vc released it on 4 Nov 2026: env's check fails while either retired file remains (`molt_env_report_faults`), and doctor passes with env enabled on rhadamanth, gyges and kovacs, so neither file is left on any of them; farcaster and pihole run neither claude nor env. molt-vc, 4 Nov: build the deletion into 1.4.3, with molt-dc building it since cc is paused.\n\n## Next\n\n1. Remove `templates/env/retired/`, `_molt_env_retired`, `_molt_env_retired_state`, the retired loop in `molt_env_report_faults`, `_molt_env_retire` and its call in `molt_env_publish`, and the comments that name them. `molt_env_published` stays, for its callers in `liberators/claude.sh`.\n2. The tests of the retired files go with them, `intent/llm/MODULES.md` loses the retired templates' row, and the CHANGELOG line goes under `## [1.4.3] - unreleased`.\n3. Proof: nothing in Molt's code, tests or live docs names the retired files or functions after the change, and env.bats and claude.bats pass under both bashes in a slot pplr-vc grants. dc builds it on its own branch in `$TMPDIR/molt-wt/`, and molt-vc merges.\n"
+}

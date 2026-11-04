@@ -1,0 +1,15 @@
+{
+  "id": "01M6KSC0HDDJ2SZVTE4Z7186MN",
+  "ts": "2026-11-04T17:23:08.461Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0091 (cc's hold 16, released by vc 4 Nov): delete templates/env/retired/ and the retire check, on dc/0091-env-retired; READY to vc for 1.4.3"
+  }
+}

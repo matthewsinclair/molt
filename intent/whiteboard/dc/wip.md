@@ -6,7 +6,7 @@ session_id: 60313337-1bf1-45db-95a6-89501eec9dbb
 heartbeat_at: 2026-11-04 17:07Z
 status: active
 focus: "4 Nov: woke on hv's word; inboxes empty, no claims; dc's plan for today is with hv; holding for hv's word"
-claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090]
+claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090, ISSUE:0091]
 ---
 
 # DevX Claude (dc)
@@ -16,6 +16,7 @@ claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090]
 - 0088 (Ccusage ISSUE:0003 step 2, design B, hv 4 Nov): a command scope in lib/env.sh and the claude liberator's CLAUDE_SECURESTORAGE_CONFIG_DIR pair, on dc/0088-securestorage in $TMPDIR/molt-wt; READY to vc for 1.4.3
 - 0089 (hv 4 Nov): tests.yml drops its tag trigger, on dc/0089-ci-no-tags; READY to vc for 1.4.3
 - 0090 (hv 4 Nov): README platforms and Status, runbook's kovacs line, restart.md on main by pathspec; Molt-matts tidy once hv's 1.4.2 run on rhadamanth is done
+- 0091 (cc's hold 16, released by vc 4 Nov): delete templates/env/retired/ and the retire check, on dc/0091-env-retired; READY to vc for 1.4.3
 
 ## TODO
 

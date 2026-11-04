@@ -11,7 +11,8 @@
     "claims": [
       "ISSUE:0088",
       "ISSUE:0089",
-      "ISSUE:0090"
+      "ISSUE:0090",
+      "ISSUE:0091"
     ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -586,6 +587,14 @@
       "text": "0090 (hv 4 Nov): README platforms and Status, runbook's kovacs line, restart.md on main by pathspec; Molt-matts tidy once hv's 1.4.2 run on rhadamanth is done",
       "state": "live",
       "recorded_at": "2026-11-04T17:09:42.341Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 35,
+      "text": "0091 (cc's hold 16, released by vc 4 Nov): delete templates/env/retired/ and the retire check, on dc/0091-env-retired; READY to vc for 1.4.3",
+      "state": "live",
+      "recorded_at": "2026-11-04T17:23:08.461Z"
     }
   ],
   "sent": [
