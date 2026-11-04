@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-11-04
+
 ### Changed
 
 - The docs say what the code does: the README, every guide, `usage-rules.md`, the CI notes and `intent/llm/` were checked against the code and corrected, and the 24 Oct doc review's open findings closed. The README installs with Homebrew first, `writing-a-liberator.md` adds the shell a liberator runs in, the `molt git` hooks and the helpers it lacked, and `intent/llm/` describes Molt in place of Intent's Elixir starter text (issues 0083, 0084)
@@ -333,7 +335,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
-[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/matthewsinclair/molt/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/matthewsinclair/molt/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/matthewsinclair/molt/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/matthewsinclair/molt/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/matthewsinclair/molt/compare/v1.1.0...v1.2.0
