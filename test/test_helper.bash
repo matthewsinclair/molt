@@ -28,8 +28,16 @@ export TERM=dumb
 
 # Claude Code keeps its state wherever CLAUDE_CONFIG_DIR says, so a test that
 # inherited it from the shell running bats would read and write the real config
-# dir, whatever it did to HOME (ST0006). No test starts with either set.
-unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
+# dir, whatever it did to HOME (ST0006). No test starts with either set, nor
+# with CLAUDE_SECURESTORAGE_CONFIG_DIR, which env.sh exports on a sleeve in
+# ccusage's shared mode (issue 0088).
+unset CLAUDE_CONFIG_DIR CLAUDE_SECURESTORAGE_CONFIG_DIR XDG_CONFIG_HOME
+
+# Nor with the ccusage the machine running bats has: the claude liberator gives
+# CLAUDE_SECURESTORAGE_CONFIG_DIR where ccusage is installed, so it would change
+# what env publishes in any test (issue 0088). An empty MOLT_CCUSAGE names
+# none; a test that wants one names its own, or unsets it to search PATH.
+export MOLT_CCUSAGE=""
 
 # Nor with the agents root the shell running bats exports, which the user
 # repo's zshenv sets: a resleeve of an [[agent]] fixture would make homes there.
