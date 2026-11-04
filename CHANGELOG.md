@@ -6,9 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [1.4.3] - unreleased
 
+### Added
+
+- `claude` publishes `CLAUDE_SECURESTORAGE_CONFIG_DIR` where ccusage is installed, as ccusage's shared mode needs. env.sh at each shell start and, on macOS, the LaunchAgent at each login run `ccusage dir` by ccusage's PATH entry and set the variable to the directory it prints, or unset it when ccusage fails or prints anything but an existing directory, so it follows `ccusage use` with no `molt upgrade`. The env writer takes it as a third scope, `command`. environment.d cannot run a command, so a Linux desktop session goes without it, and doctor leaves the value to `ccusage doctor` (issue 0088)
+
 ### Changed
 
+- `tests.yml` no longer runs on a tag push. Since issue 0087 a release's CI verdict is the run on `candidate/<tag>`, which the cut reads before it tags, so a tag's run repeated it and nothing read it. The macOS job runs on a candidate and on a dispatch (issue 0089)
 - The README's platform list names the platforms a sleeve runs Molt on every day, macOS on Apple silicon, Ubuntu 26.04 on ARM64 and Raspberry Pi OS on ARM64, and lists Intel Macs, Fedora and RHEL, Arch and WSL2 as written for but not yet run on any sleeve. Its Status says Molt is in daily use on five sleeves and released through Homebrew, where it said early development. The bootstrap runbook says kovacs runs Homebrew's `molt` alone, as measured on 4 Nov, and `.claude/restart.md` checks the suite under both bashes with `bin/devbin test all` (issue 0090)
+
+### Removed
+
+- `templates/env/retired/`, and env's check and removal of the files the claude liberator published `CLAUDE_CONFIG_DIR` through before env took them over, a LaunchAgent on macOS and an environment.d file on Linux. They were kept only so env could tell its own rendering from a changed copy, and no sleeve has either left (issue 0091)
 
 ## [1.4.2] - 2026-11-04
 
