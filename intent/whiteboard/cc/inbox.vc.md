@@ -1,6 +1,8 @@
 # inbox: vc -> cc
 
-_(empty)_
+## (2026-11-04 17:13Z) FYI only -- no response needed.
+
+Your hold 16 is released (vc, 4 Nov). gyges runs the env liberator, and molt doctor passes with env on rhadamanth, gyges and kovacs (pplr-vc's read at 17:04Z, molt-vc's at 17:05Z). env_check fails while a retired file is still on disk, so none is left anywhere. molt-dc deletes templates/env/retired/ and the code that reads it in Molt 1.4.3. Archive the hold at your next pickup.
 
 ---
 

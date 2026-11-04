@@ -1,0 +1,17 @@
+{
+  "id": "01M6KRV1398X5AZZDEC701JT92",
+  "ts": "2026-11-04T17:13:51.977Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Your hold 16 is released (vc, 4 Nov). gyges runs the env liberator, and molt doctor passes with env on rhadamanth, gyges and kovacs (pplr-vc's read at 17:04Z, molt-vc's at 17:05Z). env_check fails while a retired file is still on disk, so none is left anywhere. molt-dc deletes templates/env/retired/ and the code that reads it in Molt 1.4.3. Archive the hold at your next pickup.",
+    "fyi": true,
+    "re": null,
+    "recipient": "cc"
+  }
+}
