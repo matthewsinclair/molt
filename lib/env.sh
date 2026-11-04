@@ -7,8 +7,13 @@
 # Each variable is a contributor's pair, "NAME<TAB>scope<TAB>value", where the
 # scope is "all" for env.sh and the GUI file, or "gui" for the GUI file alone:
 # PATH is the login shell's own, so env.sh, which every zsh sources before its
-# PATH is built, never sets it. The env liberator gathers the pairs and calls
-# the writer; the files are rebuilt whole from them every time, so a value a
+# PATH is built, never sets it. A "command" pair is for a value that changes
+# between runs of molt: its value is a command line, and the variable is what
+# the command prints, read where it is used, by env.sh at each shell start and
+# by the LaunchAgent at each login, and unset there when the command fails or
+# prints nothing. environment.d cannot run a command, so it leaves such a pair
+# out (issue 0088). The env liberator gathers the pairs and calls the writer;
+# the files are rebuilt whole from them every time, so a value a
 # contributor stops giving is gone from both at once, and env.sh and the GUI
 # file cannot drift apart. Nothing here sets anything through launchctl or
 # systemctl, nor runs sudo: the GUI file takes effect for apps launched after
@@ -107,6 +112,18 @@ molt_env_refusals() {
 # The pairs in the contributor lines on stdin, refusals left out.
 molt_env_given() {
   grep -v '^!	' | grep . || true
+}
+
+# A "command" pair for the variable $1, whose value is what the program $2
+# prints when it runs with the arguments after it. Each word is single-quoted
+# here, so it reaches sh byte for byte.
+molt_env_command_pair() {
+  local name="$1" word line=""
+  shift
+  for word in "$@"; do
+    line="${line:+$line }$(_molt_env_sh_quote "$word")"
+  done
+  printf '%s\tcommand\t%s\n' "$name" "$line"
 }
 
 # Each <TOOL>_INSTALL_PREFIX this sleeve's vars.sh exports, MOLT_ ones aside,
@@ -209,7 +226,9 @@ molt_env_path_pair() {
 
 # --- The files ---
 
-# env.sh for the pairs on stdin: an export line for each "all" pair.
+# env.sh for the pairs on stdin: an export line for each "all" pair, and for
+# each "command" pair a line that exports what its command prints, or unsets
+# the variable.
 _molt_env_shell_text() {
   local name scope value
   cat <<'EOF'
@@ -218,14 +237,28 @@ _molt_env_shell_text() {
 # molt reads each back from its export line, in exactly this form.
 EOF
   while IFS=$'\t' read -r name scope value; do
-    [[ "$scope" == all ]] || continue
-    printf 'export %s="%s"\n' "$name" "$value"
+    case "$scope" in
+      all) printf 'export %s="%s"\n' "$name" "$value" ;;
+      command) printf '%s\n' "$(_molt_env_command_text "$value" "export $name=\"\$_molt_env_v\"" "unset $name")" ;;
+    esac
   done
 }
 
 # The word $1 single-quoted for sh, so it reaches the command byte for byte.
 _molt_env_sh_quote() {
   printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
+}
+
+# The sh that runs the command line $1, a "command" pair's value, then the
+# statement $2 when the command succeeds and prints something, with what it
+# printed in _molt_env_v, and the statement $3 when it fails or prints nothing,
+# so a value inherited from launchd or a parent shell cannot outlive the
+# command's answer (ccusage-vc, 4 Nov). What the command says on stderr is
+# dropped: a shell start or a login is no place for it, and the tool that owns
+# the value checks it.
+_molt_env_command_text() {
+  # shellcheck disable=SC2016 # the $ are sh's to expand, at the shell start or login
+  printf 'if _molt_env_v="$(%s 2>/dev/null)" && [ -n "$_molt_env_v" ]; then %s; else %s; fi; unset _molt_env_v' "$1" "$2" "$3"
 }
 
 # The text $1 escaped for a plist <string>.
@@ -236,15 +269,22 @@ _molt_env_xml_text() {
 # The LaunchAgent for the pairs on stdin: at each login, sh runs one launchctl
 # setenv per pair, since setenv takes one name and one value and launchd keeps
 # only the first pair of a longer list (issue 0059). Each word is quoted, and
-# one failed setenv does not stop the rest. With no pair it runs true.
+# one failed setenv does not stop the rest. A "command" pair's setenv takes
+# what its command prints, and an unsetenv takes its place when the command
+# fails or prints nothing. With no pair it runs true.
 # launchctl is named bare: a launchd job's PATH finds /bin/launchctl, and a
 # test's stub comes first on its own.
 _molt_env_plist_text() {
-  local name scope value pairs script=""
+  local name scope value pairs line script=""
   pairs="$(cat)"
   while IFS=$'\t' read -r name scope value; do
     [[ -n "$name" ]] || continue
-    script="${script:+$script; }launchctl setenv $(_molt_env_sh_quote "$name") $(_molt_env_sh_quote "$value")"
+    if [[ "$scope" == command ]]; then
+      line="$(_molt_env_command_text "$value" "launchctl setenv $(_molt_env_sh_quote "$name") \"\$_molt_env_v\"" "launchctl unsetenv $(_molt_env_sh_quote "$name")")"
+    else
+      line="launchctl setenv $(_molt_env_sh_quote "$name") $(_molt_env_sh_quote "$value")"
+    fi
+    script="${script:+$script; }$line"
   done <<< "$pairs"
   cat <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -273,7 +313,8 @@ EOF
 EOF
 }
 
-# The environment.d file for the pairs on stdin.
+# The environment.d file for the pairs on stdin. environment.d cannot run a
+# command, so a "command" pair is left out.
 _molt_env_conf_text() {
   local name scope value
   cat <<'EOF'
@@ -283,7 +324,7 @@ _molt_env_conf_text() {
 # 0076).
 EOF
   while IFS=$'\t' read -r name scope value; do
-    [[ -n "$name" ]] || continue
+    [[ -n "$name" && "$scope" != command ]] || continue
     printf '%s=%s\n' "$name" "$value"
   done
 }
@@ -414,6 +455,10 @@ _molt_env_session_value() {
 # launchd holds (issue 0072, ask 2). A PATH launchd holds otherwise is still
 # reported, and says so plainly, with no remedy: a bootstrap would change
 # nothing for the apps. The remedy follows only the pairs it would bring.
+#
+# A "command" pair is left out: its value changes between runs of molt, and
+# the tool its command asks checks what the session holds, as ccusage doctor
+# does for CLAUDE_SECURESTORAGE_CONFIG_DIR (issue 0088).
 molt_env_report_session() {
   local log="$1" prefix="$2" pairs="$3" uid out vars holder who remedy name scope value got found effect ok=0 remedy_due=0
   local apps_own="" apps_own_why=""
@@ -442,7 +487,7 @@ molt_env_report_session() {
     *) return 0 ;;
   esac
   while IFS=$'\t' read -r name scope value; do
-    [[ -n "$name" ]] || continue
+    [[ -n "$name" && "$scope" != command ]] || continue
     if ! got="$(_molt_env_session_value "$vars" "$name")"; then
       found="$holder does not hold $name" effect="so $who do not get it"
     elif [[ "$got" != "$value" ]]; then

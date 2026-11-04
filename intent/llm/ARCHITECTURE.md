@@ -24,7 +24,7 @@ Molt is the framework and holds nobody's config. A user's stack, `Molt-<user>`, 
 
 - Links into the stack from `$HOME` and the XDG config dir, made by `molt_link`, which first moves a real file it would replace to `<target>.molt-backup.<timestamp>`.
 - Files rendered with `envsubst` and the instance's `vars.sh`, from the stack's `.tmpl` files and Molt's own `templates/` (`docs/guides/templates.md`).
-- The published environment, rebuilt whole on each run by `lib/env.sh`, Molt's one env writer: `~/.config/molt/env.sh`, which the stack's `zshenv` sources, and the GUI file, a LaunchAgent on macOS and an `environment.d` file on Linux. The `env` liberator gathers its values: `CLAUDE_CONFIG_DIR` from the `claude` liberator, each `<TOOL>_INSTALL_PREFIX` the instance's `vars.sh` exports, and, for GUI apps only, a login shell's `PATH`.
+- The published environment, rebuilt whole on each run by `lib/env.sh`, Molt's one env writer: `~/.config/molt/env.sh`, which the stack's `zshenv` sources, and the GUI file, a LaunchAgent on macOS and an `environment.d` file on Linux. The `env` liberator gathers its values: `CLAUDE_CONFIG_DIR` from the `claude` liberator and, where ccusage is installed, `CLAUDE_SECURESTORAGE_CONFIG_DIR`, a command pair that `env.sh` and the LaunchAgent read from `ccusage dir` each time they run; each `<TOOL>_INSTALL_PREFIX` the instance's `vars.sh` exports; and, for GUI apps only, a login shell's `PATH`.
 - `~/.local/bin/molt`, the switch link `molt use` sets for a dev or opt tree. With no link, Homebrew's molt answers.
 
 ## Trees and releases

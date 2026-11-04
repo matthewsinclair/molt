@@ -489,8 +489,17 @@ _claude_published() {
 # config dir. A declared dir that cannot be used is refused, a "!<TAB>why"
 # line, and what env.sh publishes is kept: dropped, Claude Code would start
 # afresh in ~/.claude.
+#
+# With CLAUDE_CONFIG_DIR, where ccusage is installed, it gives
+# CLAUDE_SECURESTORAGE_CONFIG_DIR as a "command" pair: `ccusage dir`, by
+# ccusage's absolute path. In ccusage's shared mode Claude Code reads its login
+# from the active profile's directory, which `ccusage use` changes between
+# runs of molt, so env.sh and the LaunchAgent ask ccusage each time, and unset
+# the variable when it answers nothing, as it does while shared mode is off
+# (issue 0088, Ccusage ISSUE:0003). Whether shared mode is on stays in
+# ccusage's own config.
 claude_env_pairs() {
-  local dir state="" why value
+  local dir state="" why value ccusage
   if ! dir="$(_claude_declared_dir)"; then
     printf '!\t%s\n' "CLAUDE_CONFIG_DIR: $dir"
     dir=""
@@ -504,7 +513,27 @@ claude_env_pairs() {
   else
     value="$(molt_env_published CLAUDE_CONFIG_DIR)"
   fi
-  [[ -z "$value" ]] || printf 'CLAUDE_CONFIG_DIR\tall\t%s\n' "$value"
+  [[ -n "$value" ]] || return 0
+  printf 'CLAUDE_CONFIG_DIR\tall\t%s\n' "$value"
+  ccusage="$(_claude_ccusage)"
+  [[ -z "$ccusage" ]] || molt_env_command_pair CLAUDE_SECURESTORAGE_CONFIG_DIR "$ccusage" dir
+}
+
+# The ccusage program by its absolute path, or nothing when this sleeve has
+# none. MOLT_CCUSAGE decides when it is set, and an empty one means none, as
+# test_helper sets it; unset, PATH is searched. A program found on PATH is
+# named by its PATH entry, eg /opt/homebrew/bin/ccusage, never by where a link
+# there resolves, which the next brew upgrade moves. The LaunchAgent runs it by
+# this path, since a login's PATH has no Homebrew.
+_claude_ccusage() {
+  local program
+  if [[ -n "${MOLT_CCUSAGE+set}" ]]; then
+    program="$MOLT_CCUSAGE"
+  else
+    program="$(command -v ccusage 2>/dev/null)" || program=""
+  fi
+  [[ "$program" == /* && -x "$program" ]] || return 0
+  printf '%s\n' "$program"
 }
 
 # Why CLAUDE_CONFIG_DIR would go unpublished on this sleeve, or nothing when it

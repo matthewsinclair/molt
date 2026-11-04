@@ -31,6 +31,12 @@ export TERM=dumb
 # dir, whatever it did to HOME (ST0006). No test starts with either set.
 unset CLAUDE_CONFIG_DIR XDG_CONFIG_HOME
 
+# Nor with the ccusage the machine running bats has: the claude liberator gives
+# CLAUDE_SECURESTORAGE_CONFIG_DIR where ccusage is installed, so it would change
+# what env publishes in any test (issue 0088). An empty MOLT_CCUSAGE names
+# none; a test that wants one names its own, or unsets it to search PATH.
+export MOLT_CCUSAGE=""
+
 # Nor with the agents root the shell running bats exports, which the user
 # repo's zshenv sets: a resleeve of an [[agent]] fixture would make homes there.
 # setup gives each test a root of its own; this one, removed with the run, is
