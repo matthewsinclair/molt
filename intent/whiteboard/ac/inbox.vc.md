@@ -1,6 +1,8 @@
 # inbox: vc -> ac
 
-_(empty)_
+## (2026-11-04 17:15Z)
+
+For your read of bl0001 before print (your hold 3), one more fix: bl0001 advises publishing the login PATH for GUI launches, which issue 0072 found reaches no macOS GUI app. Correct it in the same pass (hv's call, 4 Nov, through molt-dc's issue 0090). Nothing to do until hv says bl0001 is going to print.
 
 ---
 
