@@ -322,9 +322,15 @@ MOLT has opinions and says so. The tone is dry, terse, and functional. Output du
 
 ## Platform support
 
-- macOS (Apple Silicon and Intel)
-- Linux (Debian/Ubuntu, Fedora/RHEL, Arch)
-- WSL2
+Run every day on:
+
+- macOS on Apple silicon: rhadamanth and gyges
+- Ubuntu 26.04 on ARM64: kovacs, a Parallels VM
+- Raspberry Pi OS (Debian 13, trixie) on ARM64: farcaster and pihole
+
+CI runs the suite on Ubuntu at every push to main, and on macOS for each release candidate.
+
+Written for, but not yet run on any sleeve: Intel Macs, Fedora and RHEL, Arch, and WSL2. On Fedora, RHEL and Arch the `system` liberator takes the wheel group as well as sudo.
 
 ## Project structure
 
@@ -365,7 +371,7 @@ Liberators verify their own prerequisites and fail with install hints if anythin
 
 ## Status
 
-Early development. Sleeves in use: kovacs (Ubuntu ARM64), rhadamanth (macOS M4), gyges (macOS), farcaster (Linux) and pihole (Linux).
+In daily use on five sleeves: rhadamanth (macOS, M4), gyges (macOS), kovacs (Ubuntu ARM64), and farcaster and pihole (Raspberry Pi OS). Releases go out through Homebrew, as the [quick start](#quick-start) installs them, and [CHANGELOG.md](CHANGELOG.md) says what each one changed.
 
 ## License
 

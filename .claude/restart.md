@@ -30,8 +30,7 @@ The roster is the one in [`intent/whiteboard/README.md`](../intent/whiteboard/RE
 Measure these; never quote a count from a file.
 
 ```bash
-MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt test                   # Homebrew bash
-PATH=/bin:$PATH MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt test   # bash 3.2, as on CI's macOS runner
+MOLT_PRJ_DIR=$HOME/Devel/prj bin/devbin test all   # the suite under Homebrew bash, then /bin/bash 3.2 (tools/test-bash32), as a cut's gates run it
 MOLT_PRJ_DIR=$HOME/Devel/prj bin/molt doctor
 intent doctor
 intent wb status

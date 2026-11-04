@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3] - unreleased
+
+### Changed
+
+- The README's platform list names the platforms a sleeve runs Molt on every day, macOS on Apple silicon, Ubuntu 26.04 on ARM64 and Raspberry Pi OS on ARM64, and lists Intel Macs, Fedora and RHEL, Arch and WSL2 as written for but not yet run on any sleeve. Its Status says Molt is in daily use on five sleeves and released through Homebrew, where it said early development. The bootstrap runbook says kovacs runs Homebrew's `molt` alone, as measured on 4 Nov, and `.claude/restart.md` checks the suite under both bashes with `bin/devbin test all` (issue 0090)
+
 ## [1.4.2] - 2026-11-04
 
 Homebrew goes from 1.4.0 to 1.4.2: 1.4.1 was tagged, but its formula was never published, so 1.4.2 brings 1.4.1's changes to brew as well.
@@ -345,6 +351,7 @@ Homebrew goes from 1.4.0 to 1.4.2: 1.4.1 was tagged, but its formula was never p
 - Bats test suite with HOME-sandboxed test isolation
 - Platform support: macOS (Apple Silicon + Intel), Linux (Debian/Ubuntu, Fedora/RHEL, Arch), WSL2
 
+[1.4.3]: https://github.com/matthewsinclair/molt/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/matthewsinclair/molt/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/matthewsinclair/molt/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/matthewsinclair/molt/compare/v1.3.0...v1.4.0

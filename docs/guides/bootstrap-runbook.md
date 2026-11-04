@@ -38,7 +38,7 @@ molt resleeve
 
 **This is for whoever works on Molt itself.** A sleeve installed from brew needs none of it.
 
-kovacs was bootstrapped in Phase 1 from a dev checkout of Molt. `bin/bootstrap.sh`, which came after Phase 1, sets one up at `$MOLT_PRJ_DIR/Molt` and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `molt use` and `molt install`. kovacs itself moves to brew only, through kovacs-sysadm (ST0008), and its old `~/bin/molt` gives way to Homebrew's `molt`; `~/bin` and `~/.local/bin` are different directories there.
+kovacs was bootstrapped in Phase 1 from a dev checkout of Molt. `bin/bootstrap.sh`, which came after Phase 1, sets one up at `$MOLT_PRJ_DIR/Molt` and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `molt use` and `molt install`. kovacs itself has since moved to brew only (ST0008): on 4 Nov 2026 the only `molt` on its PATH was Homebrew's, 1.4.2, with no `~/bin/molt` or `~/.local/bin/molt` left. `~/bin` and `~/.local/bin` are different directories there.
 
 ---
 
