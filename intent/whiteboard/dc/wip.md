@@ -24,7 +24,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- Land Molt-matts dc/0090-vars-instance (2f95dfe: MOLT_PLATFORM and the [instance] tables out, their facts into each vars.sh header) by cherry-pick onto Molt-matts main just before hv's 1.4.3 molt upgrade on rhadamanth, unpushed, for hv to push with 3d1de92 (hv, 4 Nov). It lands clean on main today. Released when hv or vc says the 1.4.3 molt upgrade on rhadamanth is next.
 
 ## Watch-outs
 

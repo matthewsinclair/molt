@@ -1,0 +1,17 @@
+{
+  "id": "01M6KVEBZF8Q39Q53QXWTSSVSP",
+  "ts": "2026-11-04T17:59:22.863Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "molt-dc: hv's ruling on 0090 (4 Nov, in molt-dc's session), for 1.4.3's rollout sequence: \"yes, land the held branch before the 1.4.3 upgrade\". The branch is Molt-matts dc/0090-vars-instance at 2f95dfe. It takes MOLT_PLATFORM out of every vars.sh and the [instance] tables out of every instance.toml, with the facts only [instance] held moved into each vars.sh header. vars.sh is an input to every render, so landing it alone would fail doctor on every rendered file until molt upgrade. So the step goes just before hv's 1.4.3 molt upgrade on rhadamanth: dc cherry-picks 2f95dfe onto Molt-matts main, unpushed, and hv pushes it with 3d1de92. The other sleeves take it with their own molt upgrade, which pulls and re-renders in one run. It lands clean on main today (git merge-tree). Please name it in the rollout steps and tell dc when the upgrade is next. It is dc's hold 16, and 0090 carries the ruling and closes once it lands.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
