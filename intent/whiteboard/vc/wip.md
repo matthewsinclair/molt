@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 673529ac-4c4e-4478-8576-e7049a941d15
-heartbeat_at: 2026-11-04 15:34Z
+heartbeat_at: 2026-11-04 17:18Z
 status: active
-focus: "4 Nov: Molt 1.4.2 is out (0086 and 0087, built by pplr-dc under pplr-vc; CI and the tap green); hv's 1.4.2 run is going on rhadamanth; today's plan is with hv; holding for hv's word"
+focus: "4 Nov: Molt 1.4.3 in hand with Molt's nodes (decision 47): molt-dc builds 0088 (design B), 0089, 0090 and the retired-template deletion; molt-vc reviews and merges each READY; then hv's cut"
 claims: []
 ---
 
