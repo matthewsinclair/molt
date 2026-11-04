@@ -1,0 +1,15 @@
+{
+  "id": "01M6KRJQ58D9ZDM64GSD294Q2A",
+  "ts": "2026-11-04T17:09:19.656Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0090"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "hv's calls from 0084 to 0086: README's platforms and Status, the runbook's kovacs line, restart.md's check, Molt-matts' unread tables and pplr's os"
+  }
+}

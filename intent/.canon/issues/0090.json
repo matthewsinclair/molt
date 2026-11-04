@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 90,
+  "slug": "hv-s-calls-from-0084-to-0086-readme-s-platforms",
+  "title": "hv's calls from 0084 to 0086: README's platforms and Status, the runbook's kovacs line, restart.md's check, Molt-matts' unread tables and pplr's os",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-11-04",
+  "reporter": "Matthew Sinclair",
+  "body": "## What\n\n0084's sweep left hv four calls on the docs and the user stack, and 0086 one more, carried in `intent/wip.md`'s TODO. hv, 4 Nov 2026, in molt-dc's session: go, on dc's recommendations.\n\n1. README's platform list names Intel Macs, Fedora and RHEL, Arch and WSL2, which no sleeve runs and no test covers, and its Status says \"Early development\" at 1.4.2. The sleeves run macOS on Apple silicon (rhadamanth, gyges), Ubuntu 26.04 ARM64 (kovacs) and Raspberry Pi OS trixie ARM64 (farcaster, pihole). Recommendation taken: keep the others, labelled as written for and not yet run.\n2. `docs/guides/bootstrap-runbook.md` says kovacs moves to brew only, through kovacs-sysadm (ST0008). Whether it has needs the live sleeve: a read-only look on kovacs, then a line that says what is there.\n3. `.claude/restart.md`'s Quick Verification runs the suite under each bash by hand; `bin/devbin test all` runs both, as `intent/llm/RULES.md` says since 0087.\n4. Molt-matts: the `[sleeve]` tables in five `molt.toml`s, the `[instance]` tables in six `instance.toml`s and the `MOLT_PLATFORM` exports in five `vars.sh`s are read by nothing, as 0085 found for the skeleton, which lost them. kovacs's `[instance]` table already says ubuntu-24.04 for a sleeve on 26.04.\n5. Molt-matts: rhadamanth and gyges enable pplr with `os = [\"linux\", \"macos\"]`, while the formula is for macOS on Apple silicon alone (0086's note).\n\n## Not this issue\n\n- bl0001's advice to publish the login PATH for GUI launches waits with ac's hold on bl0001, read again before it goes to print.\n- `AGENTS.md`'s test command is Intent's default for shell, Intent issue 0672.\n\n## Next\n\ndc: 1 to 3 go on main by pathspec as docs, with a CHANGELOG line under 1.4.3; 4 and 5 are one Molt-matts commit once hv's 1.4.2 run on rhadamanth is done. Proof for 4 and 5: nothing in Molt or Molt-matts reads what goes, and `molt doctor` on rhadamanth reads the same before and after.\n"
+}

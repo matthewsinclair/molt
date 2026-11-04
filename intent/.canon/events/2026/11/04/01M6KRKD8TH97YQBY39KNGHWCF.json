@@ -1,0 +1,15 @@
+{
+  "id": "01M6KRKD8TH97YQBY39KNGHWCF",
+  "ts": "2026-11-04T17:09:42.298Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0089 (hv 4 Nov): tests.yml drops its tag trigger, on dc/0089-ci-no-tags; READY to vc for 1.4.3"
+  }
+}

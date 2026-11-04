@@ -1,0 +1,15 @@
+{
+  "id": "01M6KRKD7FNF7PWY2E51RGSEWG",
+  "ts": "2026-11-04T17:09:42.255Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0088 (Ccusage ISSUE:0003 step 2, design B, hv 4 Nov): a command scope in lib/env.sh and the claude liberator's CLAUDE_SECURESTORAGE_CONFIG_DIR pair, on dc/0088-securestorage in $TMPDIR/molt-wt; READY to vc for 1.4.3"
+  }
+}

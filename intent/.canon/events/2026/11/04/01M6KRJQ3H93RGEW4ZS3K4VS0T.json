@@ -1,0 +1,15 @@
+{
+  "id": "01M6KRJQ3H93RGEW4ZS3K4VS0T",
+  "ts": "2026-11-04T17:09:19.601Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0089"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "tests.yml stops running on tags: a release's CI verdict is its candidate's run (0087's follow-up)"
+  }
+}
