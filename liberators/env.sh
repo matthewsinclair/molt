@@ -49,15 +49,16 @@ _env_scope_names() {
 }
 
 # Where each pair is published, as install and verify name it. A "command"
-# pair is in env.sh, and in the GUI file on macOS alone, since environment.d
-# cannot run a command.
+# pair is in env.sh, and in the GUI file only where the writer's
+# molt_env_command_gui_file names one that can run its command.
 _env_published_line() {
-  local pairs="$1" gui shell_names gui_names command_names command_gui="" out=""
+  local pairs="$1" gui shell_names gui_names command_names command_gui out=""
   gui="$(molt_tilde "$(molt_env_gui_file)")"
+  command_gui="$(molt_env_command_gui_file)"
+  [[ -z "$command_gui" ]] || command_gui="$(molt_tilde "$command_gui")"
   shell_names="$(_env_scope_names "$pairs" all)"
   gui_names="$(_env_scope_names "$pairs" gui)"
   command_names="$(_env_scope_names "$pairs" command)"
-  [[ "$(molt_platform)" != macos ]] || command_gui="$gui"
   [[ -z "$shell_names" ]] || out="$shell_names in $(molt_tilde "$(molt_env_file)")${gui:+ and $gui}"
   [[ -z "$gui_names" ]] || out="${out:+$out; }$gui_names in ${gui:-no GUI file}"
   [[ -z "$command_names" ]] || out="${out:+$out; }$command_names, read from its command, in $(molt_tilde "$(molt_env_file)")${command_gui:+ and $command_gui}"

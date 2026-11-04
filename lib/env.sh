@@ -33,6 +33,13 @@ molt_env_gui_file() {
   esac
 }
 
+# The GUI file that runs a "command" pair's command on this platform: the
+# LaunchAgent on macOS, and nothing on Linux, since environment.d cannot run
+# one and _molt_env_conf_text leaves the pair out.
+molt_env_command_gui_file() {
+  [[ "$(molt_platform)" != macos ]] || molt_env_gui_file
+}
+
 # The files the claude liberator published CLAUDE_CONFIG_DIR through before
 # this writer took them over, one "template<TAB>target" line each, on this
 # platform. The templates are kept under templates/env/retired/ only so that a
@@ -253,12 +260,13 @@ _molt_env_sh_quote() {
 # statement $2 when the command succeeds and prints something, with what it
 # printed in _molt_env_v, and the statement $3 when it fails or prints nothing,
 # so a value inherited from launchd or a parent shell cannot outlive the
-# command's answer (ccusage-vc, 4 Nov). What the command says on stderr is
+# command's answer (ccusage-vc, 4 Nov). The command reads no stdin, so a zsh
+# fed its script on stdin keeps all of it, and what it says on stderr is
 # dropped: a shell start or a login is no place for it, and the tool that owns
 # the value checks it.
 _molt_env_command_text() {
   # shellcheck disable=SC2016 # the $ are sh's to expand, at the shell start or login
-  printf 'if _molt_env_v="$(%s 2>/dev/null)" && [ -n "$_molt_env_v" ]; then %s; else %s; fi; unset _molt_env_v' "$1" "$2" "$3"
+  printf 'if _molt_env_v="$(%s </dev/null 2>/dev/null)" && [ -n "$_molt_env_v" ]; then %s; else %s; fi; unset _molt_env_v' "$1" "$2" "$3"
 }
 
 # The text $1 escaped for a plist <string>.
