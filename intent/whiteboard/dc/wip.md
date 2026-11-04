@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 60313337-1bf1-45db-95a6-89501eec9dbb
-heartbeat_at: 2026-11-04 17:07Z
+heartbeat_at: 2026-11-04 17:57Z
 status: active
-focus: "4 Nov: woke on hv's word; inboxes empty, no claims; dc's plan for today is with hv; holding for hv's word"
+focus: "4 Nov: Molt 1.4.3 READY to vc: 0088 at 57fa747, 0089 at bed5ce9, 0091 at 7a42b59; 0090 docs on main (dc856ce) and Molt-matts 3d1de92 unpushed for hv; Molt-matts dc/0090-vars-instance held for hv's 1.4.3 molt upgrade; CHANGELOG lines go on main as vc merges"
 claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090, ISSUE:0091]
 ---
 

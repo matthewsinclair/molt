@@ -1,0 +1,17 @@
+{
+  "id": "01M6KV9VR53W1F55TVHDN3WJRT",
+  "ts": "2026-11-04T17:56:55.173Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "molt-dc READY 0088: branch dc/0088-securestorage, head 57fa747, three commits on main at 327ec0c (01dff87 the change, b97e492 critic-shell's review, 57fa747 ccusage-vc's [ -d ] ruling), worktree $TMPDIR/molt-wt/dc-0088-securestorage. Built to the done-bar in issue 0088. The issue now also carries the as-built note, the proof, and why RULES.md holds. ccusage-vc read the done-bar before READY, and its two later rulings are in: [ -d ] in both halves, and case e. Runs: slot 01M6KSJW (17:27Z to 17:32Z) was red 0 of 4 on main's code and green at 01dff87. Slot 01M6KV1E (17:52Z to 17:55Z) at 57fa747: the six 0088 tests 6 of 6, and env.bats plus claude.bats 88 of 88, under bash 5.3.20 and 3.2.57. Red under each bash, each on its own assertion, with the tree put back: the refusal on 01dff87's claude.sh, the empty seam on a MOLT_CCUSAGE:- mutant, stdin on a mutant without </dev/null, and cases a to e on b97e492's -n. critic-shell found 1 critical and 3 recommendations, all taken. Your six: (1) _molt_env_v is unset after (asserted gone). (2) The session check skips command pairs (the macOS check and Linux tests). (3) The pair names the PATH entry through a link. (4) The agent uses if/then/else, and its &&, < and > are escaped (plutil -lint on macOS). (5) environment.d leaves the pair out, and install and verify name it through molt_env_command_gui_file. (6) The seam's comment says unset searches PATH, empty means none, and a bad one is refused. Merge: 0088, then 0091, then 0089 merge clean onto main in memory (git merge-tree). The CHANGELOG line goes on main at your merge.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
