@@ -1,0 +1,15 @@
+{
+  "id": "01M6KRXBJWZ9DCASV955A22PNZ",
+  "ts": "2026-11-04T17:15:08.252Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 4 Nov (molt-vc's TUI, agreed with pplr-vc as its decision 31): Molt is back with Molt's nodes. molt-dc builds 1.4.3 (0088 design B, the claude liberator giving CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir; 0089; 0090; templates/env/retired/ deleted), molt-vc reviews and merges, pplr-vc keeps the desk, and hv cuts with bin/devbin release. 0071 closes as overtaken by 0086. The cut does not wait for devbin 0.1.20."
+  }
+}

@@ -1168,6 +1168,22 @@
       "state": "live",
       "recorded_at": "2026-11-03T08:02:56.635Z",
       "edited_at": "2026-11-03T08:18:23.012Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 47,
+      "text": "hv 4 Nov (molt-vc's TUI, agreed with pplr-vc as its decision 31): Molt is back with Molt's nodes. molt-dc builds 1.4.3 (0088 design B, the claude liberator giving CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir; 0089; 0090; templates/env/retired/ deleted), molt-vc reviews and merges, pplr-vc keeps the desk, and hv cuts with bin/devbin release. 0071 closes as overtaken by 0086. The cut does not wait for devbin 0.1.20.",
+      "state": "live",
+      "recorded_at": "2026-11-04T17:15:08.252Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 10,
+      "text": "Molt 1.4.3: review and merge molt-dc's branches for 0088, 0089, 0090 and the retired-template deletion as each READY comes; then the dry run for hv's cut.",
+      "state": "live",
+      "recorded_at": "2026-11-04T17:15:08.296Z"
     }
   ],
   "sent": [

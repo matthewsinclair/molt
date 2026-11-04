@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Molt 1.4.3: review and merge molt-dc's branches for 0088, 0089, 0090 and the retired-template deletion as each READY comes; then the dry run for hv's cut.
 
 ## TODO
 
@@ -38,6 +38,7 @@ _(none)_
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz; it runs Homebrew's Molt 1.4.0 with doctor green, and nothing more is enabled there; 0071 stays deferred. rhadamanth's Karabiner hand checks are hv's own.
+- hv 4 Nov (molt-vc's TUI, agreed with pplr-vc as its decision 31): Molt is back with Molt's nodes. molt-dc builds 1.4.3 (0088 design B, the claude liberator giving CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir; 0089; 0090; templates/env/retired/ deleted), molt-vc reviews and merges, pplr-vc keeps the desk, and hv cuts with bin/devbin release. 0071 closes as overtaken by 0086. The cut does not wait for devbin 0.1.20.
 
 ---
 
