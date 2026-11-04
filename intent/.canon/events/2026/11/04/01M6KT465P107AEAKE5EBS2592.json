@@ -1,0 +1,16 @@
+{
+  "id": "01M6KT465P107AEAKE5EBS2592",
+  "ts": "2026-11-04T17:36:20.662Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 35,
+    "text": "0091 (cc's hold 16): READY to vc at 7a42b59 on dc/0091-env-retired; slot 01M6KSJW env.bats+claude.bats 80/80 under each bash; CHANGELOG line on main at vc's merge"
+  }
+}

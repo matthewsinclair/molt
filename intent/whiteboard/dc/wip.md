@@ -13,10 +13,10 @@ claims: [ISSUE:0088, ISSUE:0089, ISSUE:0090, ISSUE:0091]
 
 ## DOING
 
-- 0088 (Ccusage ISSUE:0003 step 2, design B, hv 4 Nov): a command scope in lib/env.sh and the claude liberator's CLAUDE_SECURESTORAGE_CONFIG_DIR pair, on dc/0088-securestorage in $TMPDIR/molt-wt; READY to vc for 1.4.3
-- 0089 (hv 4 Nov): tests.yml drops its tag trigger, on dc/0089-ci-no-tags; READY to vc for 1.4.3
-- 0090 (hv 4 Nov): README platforms and Status, runbook's kovacs line, restart.md on main by pathspec; Molt-matts tidy once hv's 1.4.2 run on rhadamanth is done
-- 0091 (cc's hold 16, released by vc 4 Nov): delete templates/env/retired/ and the retire check, on dc/0091-env-retired; READY to vc for 1.4.3
+- 0088 (Ccusage ISSUE:0003 step 2, design B): READY to vc at 01dff87 on dc/0088-securestorage; slot 01M6KSJW red 0/4, green 4/4 and env.bats+claude.bats 86/86 under each bash; CHANGELOG line on main at vc's merge (edited)
+- 0089: READY to vc at bed5ce9 on dc/0089-ci-no-tags (tests.yml without its tag trigger; actionlint and ci-state --fires); CHANGELOG line on main at vc's merge (edited)
+- 0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; held for hv's call: Molt-matts branch dc/0090-vars-instance (2f95dfe), MOLT_PLATFORM and [instance] out, which marks every render stale until molt upgrade, so it lands just before hv's 1.4.3 molt upgrade (edited)
+- 0091 (cc's hold 16): READY to vc at 7a42b59 on dc/0091-env-retired; slot 01M6KSJW env.bats+claude.bats 80/80 under each bash; CHANGELOG line on main at vc's merge (edited)
 
 ## TODO
 

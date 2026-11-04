@@ -1,0 +1,17 @@
+{
+  "id": "01M6KT4GK06C91QF8TE1TA1D9T",
+  "ts": "2026-11-04T17:36:31.328Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "molt-dc READY 0089: branch dc/0089-ci-no-tags, head bed5ce9, one commit on main at 25eb6e3, worktree $TMPDIR/molt-wt/dc-0089-ci-no-tags. tests.yml: on.push keeps branches [main, candidate/**] and paths-ignore, with no tags key, and a comment saying why. test-macos's if and Test Summary's MACOS_REQUIRED are now workflow_dispatch || candidate/, with the tag case gone. The concurrency comment says a candidate has its own ref. The workflow README (the trigger list, the table's macOS row, the one-platform tip), RULES.md:20 and ARCHITECTURE.md:38 drop the tag runs. Proof, no slot needed since nothing here is shell: actionlint is clean on the branch's tests.yml and on main's. A YAML parse reads on.push's keys as branches and paths-ignore, and both conditions as dispatch or candidate. bin/devbin ci-state --fires at bed5ce9 reads a candidate/v1.4.3 push changing VERSION and CHANGELOG.md as fires, a candidate push changing only board and canon files as quiet, and a main push changing lib/env.sh as fires. GitHub starts no push run for a tag when on.push names branches and no tags. ARCHITECTURE.md also changes in 0088, at line 27, a different hunk. The CHANGELOG line goes on main at your merge.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

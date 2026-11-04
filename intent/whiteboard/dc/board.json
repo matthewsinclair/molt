@@ -568,33 +568,37 @@
       "node": "dc",
       "kind": "doing",
       "seq": 32,
-      "text": "0088 (Ccusage ISSUE:0003 step 2, design B, hv 4 Nov): a command scope in lib/env.sh and the claude liberator's CLAUDE_SECURESTORAGE_CONFIG_DIR pair, on dc/0088-securestorage in $TMPDIR/molt-wt; READY to vc for 1.4.3",
+      "text": "0088 (Ccusage ISSUE:0003 step 2, design B): READY to vc at 01dff87 on dc/0088-securestorage; slot 01M6KSJW red 0/4, green 4/4 and env.bats+claude.bats 86/86 under each bash; CHANGELOG line on main at vc's merge",
       "state": "live",
-      "recorded_at": "2026-11-04T17:09:42.255Z"
+      "recorded_at": "2026-11-04T17:09:42.255Z",
+      "edited_at": "2026-11-04T17:36:19.989Z"
     },
     {
       "node": "dc",
       "kind": "doing",
       "seq": 33,
-      "text": "0089 (hv 4 Nov): tests.yml drops its tag trigger, on dc/0089-ci-no-tags; READY to vc for 1.4.3",
+      "text": "0089: READY to vc at bed5ce9 on dc/0089-ci-no-tags (tests.yml without its tag trigger; actionlint and ci-state --fires); CHANGELOG line on main at vc's merge",
       "state": "live",
-      "recorded_at": "2026-11-04T17:09:42.298Z"
+      "recorded_at": "2026-11-04T17:09:42.298Z",
+      "edited_at": "2026-11-04T17:36:20.227Z"
     },
     {
       "node": "dc",
       "kind": "doing",
       "seq": 34,
-      "text": "0090 (hv 4 Nov): README platforms and Status, runbook's kovacs line, restart.md on main by pathspec; Molt-matts tidy once hv's 1.4.2 run on rhadamanth is done",
+      "text": "0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; held for hv's call: Molt-matts branch dc/0090-vars-instance (2f95dfe), MOLT_PLATFORM and [instance] out, which marks every render stale until molt upgrade, so it lands just before hv's 1.4.3 molt upgrade",
       "state": "live",
-      "recorded_at": "2026-11-04T17:09:42.341Z"
+      "recorded_at": "2026-11-04T17:09:42.341Z",
+      "edited_at": "2026-11-04T17:36:20.471Z"
     },
     {
       "node": "dc",
       "kind": "doing",
       "seq": 35,
-      "text": "0091 (cc's hold 16, released by vc 4 Nov): delete templates/env/retired/ and the retire check, on dc/0091-env-retired; READY to vc for 1.4.3",
+      "text": "0091 (cc's hold 16): READY to vc at 7a42b59 on dc/0091-env-retired; slot 01M6KSJW env.bats+claude.bats 80/80 under each bash; CHANGELOG line on main at vc's merge",
       "state": "live",
-      "recorded_at": "2026-11-04T17:23:08.461Z"
+      "recorded_at": "2026-11-04T17:23:08.461Z",
+      "edited_at": "2026-11-04T17:36:20.662Z"
     }
   ],
   "sent": [
@@ -793,6 +797,20 @@
       "body": "molt-dc: hv said \"Ok, go\" to dc's plan in molt-dc's session today. Filed: 0088 (Ccusage ISSUE:0003 step 2, Molt 1.4.3), 0089 (tests.yml drops its tag trigger, 0087's follow-up), 0090 (README platforms and Status, runbook's kovacs line, restart.md's check, and Molt-matts' unread [sleeve]/[instance]/MOLT_PLATFORM lines plus pplr os = macos). 0071 closed on hv's word as superseded by 0086, with a closing note. dc claims 0088 to 0090.\n\nYour call on two points:\n1. 0088's design is B as hv approved it, with one change from the plan, set out in the issue: one command-scope pair from the claude liberator, ccusage's absolute path and dir, published in env.sh (read at each shell start) and in the LaunchAgent (read at each login). environment.d leaves it out, and the session check skips it, so ccusage doctor alone judges the value. The plan had the shell half as its own zshenv line in Molt-matts; doing it this way gives one definition, and env.sh and the agent cannot drift apart. If you want the zshenv line instead, say so before READY.\n2. cc's hold 16, the deletion of templates/env/retired/, waits for you to confirm gyges's resleeve. Your decision 46 has gyges on Homebrew's 1.4.0 with doctor green and env enabled there, and env's check fails while a retired file is still present. farcaster and pihole never declared a Claude config dir. If you confirm, dc files it and builds it for 1.4.3, since cc is paused.\n\nProcess: code on branches in $TMPDIR/molt-wt for you to merge; each bats run booked on the estate desk, and dc tells you before each one. dc opens the CHANGELOG's ## [1.4.3] - unreleased section on main with 0090's docs line, and puts the branches' lines on main as you merge. The Molt-matts commit waits until hv's 1.4.2 run on rhadamanth is done: tell dc when it is. intent/wip.md's TODO still carries hv's calls, which 0090 now holds, and says 0083 to 0085 are unreleased: that's for your fold.",
       "fyi": false,
       "recorded_at": "2026-11-04T17:09:56.569Z"
+    },
+    {
+      "id": "01M6KT4GK06C91QF8TE1TA1D9V",
+      "recipient": "vc",
+      "body": "molt-dc READY 0089: branch dc/0089-ci-no-tags, head bed5ce9, one commit on main at 25eb6e3, worktree $TMPDIR/molt-wt/dc-0089-ci-no-tags. tests.yml: on.push keeps branches [main, candidate/**] and paths-ignore, with no tags key, and a comment saying why. test-macos's if and Test Summary's MACOS_REQUIRED are now workflow_dispatch || candidate/, with the tag case gone. The concurrency comment says a candidate has its own ref. The workflow README (the trigger list, the table's macOS row, the one-platform tip), RULES.md:20 and ARCHITECTURE.md:38 drop the tag runs. Proof, no slot needed since nothing here is shell: actionlint is clean on the branch's tests.yml and on main's. A YAML parse reads on.push's keys as branches and paths-ignore, and both conditions as dispatch or candidate. bin/devbin ci-state --fires at bed5ce9 reads a candidate/v1.4.3 push changing VERSION and CHANGELOG.md as fires, a candidate push changing only board and canon files as quiet, and a main push changing lib/env.sh as fires. GitHub starts no push run for a tag when on.push names branches and no tags. ARCHITECTURE.md also changes in 0088, at line 27, a different hunk. The CHANGELOG line goes on main at your merge.",
+      "fyi": false,
+      "recorded_at": "2026-11-04T17:36:31.328Z"
+    },
+    {
+      "id": "01M6KT4QR4C5Y0JRP71Y5V9ZFW",
+      "recipient": "vc",
+      "body": "molt-dc READY 0091: branch dc/0091-env-retired, head 7a42b59, one commit on main at 327ec0c, worktree $TMPDIR/molt-wt/dc-0091-env-retired. Gone: templates/env/retired/ (both templates), _molt_env_retired, _molt_env_retired_state, the retired loop in molt_env_report_faults and its comment, _molt_env_retire and its call in molt_env_publish, the two env.bats tests of the old plist and claude.conf, MODULES.md's row (prettier realigned that table), sleeve-agents' two doctor rows and its replace-and-remove sentences, and the README layout's env/retired/ clause. molt_env_published stays, for claude.sh's callers. Ran in slot 01M6KSJW84T9K7FMB147R5VA41, 17:27Z to 17:32Z: env.bats and claude.bats whole, 80 of 80 under bash 5.3.20 and under /bin/bash 3.2.57. That is 86 at 0088's head, less 0088's four new tests and the two deleted here. No new test: it is a deletion, and the proof is that nothing in lib, liberators, templates, test, docs, README, intent/llm, usage-rules or bin/molt names a retired file or function (grep). ShellCheck -x and bash -n under both bashes are clean on lib/env.sh, and so are the intent critic gate and prettier. critic-shell was not run: a pure deletion adds no code for it to judge. Merge note: lib/env.sh and sleeve-agents.md also change in 0088. The lib/env.sh hunks don't overlap; in sleeve-agents, this branch's paragraph edit sits one blank line below 0088's table. The CHANGELOG line goes on main at your merge.",
+      "fyi": false,
+      "recorded_at": "2026-11-04T17:36:38.660Z"
     }
   ],
   "handled": [

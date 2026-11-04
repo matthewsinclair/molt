@@ -1,0 +1,16 @@
+{
+  "id": "01M6KT45GNSFZ0KX6VF6GCY9AQ",
+  "ts": "2026-11-04T17:36:19.989Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 32,
+    "text": "0088 (Ccusage ISSUE:0003 step 2, design B): READY to vc at 01dff87 on dc/0088-securestorage; slot 01M6KSJW red 0/4, green 4/4 and env.bats+claude.bats 86/86 under each bash; CHANGELOG line on main at vc's merge"
+  }
+}

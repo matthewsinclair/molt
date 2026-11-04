@@ -1,0 +1,16 @@
+{
+  "id": "01M6KT45ZQ6QQANE642C5QR6RM",
+  "ts": "2026-11-04T17:36:20.471Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 34,
+    "text": "0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; held for hv's call: Molt-matts branch dc/0090-vars-instance (2f95dfe), MOLT_PLATFORM and [instance] out, which marks every render stale until molt upgrade, so it lands just before hv's 1.4.3 molt upgrade"
+  }
+}

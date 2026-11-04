@@ -1,0 +1,17 @@
+{
+  "id": "01M6KT4QR4C5Y0JRP71Y5V9ZFV",
+  "ts": "2026-11-04T17:36:38.660Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "molt-dc READY 0091: branch dc/0091-env-retired, head 7a42b59, one commit on main at 327ec0c, worktree $TMPDIR/molt-wt/dc-0091-env-retired. Gone: templates/env/retired/ (both templates), _molt_env_retired, _molt_env_retired_state, the retired loop in molt_env_report_faults and its comment, _molt_env_retire and its call in molt_env_publish, the two env.bats tests of the old plist and claude.conf, MODULES.md's row (prettier realigned that table), sleeve-agents' two doctor rows and its replace-and-remove sentences, and the README layout's env/retired/ clause. molt_env_published stays, for claude.sh's callers. Ran in slot 01M6KSJW84T9K7FMB147R5VA41, 17:27Z to 17:32Z: env.bats and claude.bats whole, 80 of 80 under bash 5.3.20 and under /bin/bash 3.2.57. That is 86 at 0088's head, less 0088's four new tests and the two deleted here. No new test: it is a deletion, and the proof is that nothing in lib, liberators, templates, test, docs, README, intent/llm, usage-rules or bin/molt names a retired file or function (grep). ShellCheck -x and bash -n under both bashes are clean on lib/env.sh, and so are the intent critic gate and prettier. critic-shell was not run: a pure deletion adds no code for it to judge. Merge note: lib/env.sh and sleeve-agents.md also change in 0088. The lib/env.sh hunks don't overlap; in sleeve-agents, this branch's paragraph edit sits one blank line below 0088's table. The CHANGELOG line goes on main at your merge.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
