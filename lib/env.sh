@@ -7,12 +7,13 @@
 # Each variable is a contributor's pair, "NAME<TAB>scope<TAB>value", where the
 # scope is "all" for env.sh and the GUI file, or "gui" for the GUI file alone:
 # PATH is the login shell's own, so env.sh, which every zsh sources before its
-# PATH is built, never sets it. A "command" pair is for a value that changes
-# between runs of molt: its value is a command line, and the variable is what
-# the command prints, read where it is used, by env.sh at each shell start and
-# by the LaunchAgent at each login, and unset there when the command fails or
-# prints nothing. environment.d cannot run a command, so it leaves such a pair
-# out (issue 0088). The env liberator gathers the pairs and calls the writer;
+# PATH is built, never sets it. A "command" pair is for a directory that
+# changes between runs of molt: its value is a command line, and the variable
+# is the directory the command prints, read where it is used, by env.sh at each
+# shell start and by the LaunchAgent at each login, and unset there when the
+# command fails or prints anything but an existing directory. environment.d
+# cannot run a command, so it leaves such a pair out (issue 0088). The env
+# liberator gathers the pairs and calls the writer;
 # the files are rebuilt whole from them every time, so a value a
 # contributor stops giving is gone from both at once, and env.sh and the GUI
 # file cannot drift apart. Nothing here sets anything through launchctl or
@@ -31,13 +32,6 @@ molt_env_gui_file() {
     macos) echo "$HOME/Library/LaunchAgents/com.molt.env.plist" ;;
     linux) echo "$HOME/.config/environment.d/molt.conf" ;;
   esac
-}
-
-# The GUI file that runs a "command" pair's command on this platform: the
-# LaunchAgent on macOS, and nothing on Linux, since environment.d cannot run
-# one and _molt_env_conf_text leaves the pair out.
-molt_env_command_gui_file() {
-  [[ "$(molt_platform)" != macos ]] || molt_env_gui_file
 }
 
 # The files the claude liberator published CLAUDE_CONFIG_DIR through before
@@ -257,16 +251,17 @@ _molt_env_sh_quote() {
 }
 
 # The sh that runs the command line $1, a "command" pair's value, then the
-# statement $2 when the command succeeds and prints something, with what it
-# printed in _molt_env_v, and the statement $3 when it fails or prints nothing,
-# so a value inherited from launchd or a parent shell cannot outlive the
-# command's answer (ccusage-vc, 4 Nov). The command reads no stdin, so a zsh
-# fed its script on stdin keeps all of it, and what it says on stderr is
-# dropped: a shell start or a login is no place for it, and the tool that owns
-# the value checks it.
+# statement $2 when the command succeeds and prints an existing directory, with
+# what it printed in _molt_env_v, and the statement $3 otherwise: when it fails,
+# prints nothing, or prints anything else, as another program of the same name
+# might. A value inherited from launchd or a parent shell cannot outlive the
+# command's answer, and a directory since removed is not kept (ccusage-vc, 4
+# Nov). The command reads no stdin, so a zsh fed its script on stdin keeps all
+# of it, and what it says on stderr is dropped: a shell start or a login is no
+# place for it, and the tool that owns the value checks it.
 _molt_env_command_text() {
   # shellcheck disable=SC2016 # the $ are sh's to expand, at the shell start or login
-  printf 'if _molt_env_v="$(%s </dev/null 2>/dev/null)" && [ -n "$_molt_env_v" ]; then %s; else %s; fi; unset _molt_env_v' "$1" "$2" "$3"
+  printf 'if _molt_env_v="$(%s </dev/null 2>/dev/null)" && [ -d "$_molt_env_v" ]; then %s; else %s; fi; unset _molt_env_v' "$1" "$2" "$3"
 }
 
 # The text $1 escaped for a plist <string>.
@@ -278,8 +273,8 @@ _molt_env_xml_text() {
 # setenv per pair, since setenv takes one name and one value and launchd keeps
 # only the first pair of a longer list (issue 0059). Each word is quoted, and
 # one failed setenv does not stop the rest. A "command" pair's setenv takes
-# what its command prints, and an unsetenv takes its place when the command
-# fails or prints nothing. With no pair it runs true.
+# the directory its command prints, and an unsetenv takes its place when the
+# command prints none. With no pair it runs true.
 # launchctl is named bare: a launchd job's PATH finds /bin/launchctl, and a
 # test's stub comes first on its own.
 _molt_env_plist_text() {
@@ -345,6 +340,13 @@ _molt_env_targets() {
     macos) printf '%s\t%s\n' "$(molt_env_gui_file)" _molt_env_plist_text ;;
     linux) printf '%s\t%s\n' "$(molt_env_gui_file)" _molt_env_conf_text ;;
   esac
+}
+
+# The GUI file that runs a "command" pair's command on this platform: the
+# LaunchAgent on macOS, and nothing on Linux, since environment.d cannot run
+# one and _molt_env_conf_text leaves the pair out.
+molt_env_command_gui_file() {
+  [[ "$(molt_platform)" != macos ]] || molt_env_gui_file
 }
 
 # The state of the target $1, built by the function $2 from the pairs $3:

@@ -493,7 +493,7 @@ shell_start() {
     CLAUDE_SECURESTORAGE_CONFIG_DIR=/stale sh -c '. "$1"; printf "%s|%s" "${CLAUDE_SECURESTORAGE_CONFIG_DIR-unset}" "${_molt_env_v-gone}"' sh "$HOME/.config/molt/env.sh"
 }
 
-@test "where ccusage is installed, env.sh and the plist set CLAUDE_SECURESTORAGE_CONFIG_DIR to what ccusage dir prints, and unset it when dir fails or prints nothing (issue 0088)" {
+@test "where ccusage is installed, env.sh and the plist set CLAUDE_SECURESTORAGE_CONFIG_DIR to what ccusage dir prints, and unset it when dir prints no existing directory (issue 0088)" {
     setup_env
     on_macos
     declare_moved
@@ -506,8 +506,8 @@ shell_start() {
 # Sourced by ~/.zshenv. Every variable molt publishes to shells is here, and
 # molt reads each back from its export line, in exactly this form.
 export CLAUDE_CONFIG_DIR=\"$HOME/.config/claude\"
-if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -n \"\$_molt_env_v\" ]; then export CLAUDE_SECURESTORAGE_CONFIG_DIR=\"\$_molt_env_v\"; else unset CLAUDE_SECURESTORAGE_CONFIG_DIR; fi; unset _molt_env_v" ]
-    [ "$(plist_script "$plist")" = "launchctl setenv 'CLAUDE_CONFIG_DIR' '$HOME/.config/claude'; if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -n \"\$_molt_env_v\" ]; then launchctl setenv 'CLAUDE_SECURESTORAGE_CONFIG_DIR' \"\$_molt_env_v\"; else launchctl unsetenv 'CLAUDE_SECURESTORAGE_CONFIG_DIR'; fi; unset _molt_env_v; launchctl setenv 'PATH' '$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin'" ]
+if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -d \"\$_molt_env_v\" ]; then export CLAUDE_SECURESTORAGE_CONFIG_DIR=\"\$_molt_env_v\"; else unset CLAUDE_SECURESTORAGE_CONFIG_DIR; fi; unset _molt_env_v" ]
+    [ "$(plist_script "$plist")" = "launchctl setenv 'CLAUDE_CONFIG_DIR' '$HOME/.config/claude'; if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -d \"\$_molt_env_v\" ]; then launchctl setenv 'CLAUDE_SECURESTORAGE_CONFIG_DIR' \"\$_molt_env_v\"; else launchctl unsetenv 'CLAUDE_SECURESTORAGE_CONFIG_DIR'; fi; unset _molt_env_v; launchctl setenv 'PATH' '$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin'" ]
     if command -v plutil >/dev/null; then
         plutil -lint "$plist"
     fi
@@ -517,6 +517,7 @@ if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -n \"\$_molt_
 
     # (a) dir answers: a shell start and a login get exactly what it printed.
     export CCUSAGE_DIR="$profile"
+    mkdir -p "$profile"
     run shell_start
     assert_success
     [ "$output" = "$profile|gone" ]
@@ -547,6 +548,18 @@ if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -n \"\$_molt_
     log_in
     [ ! -e "$LAUNCHD/CLAUDE_SECURESTORAGE_CONFIG_DIR" ]
     grep -qxF "<unsetenv><CLAUDE_SECURESTORAGE_CONFIG_DIR>" "$LAUNCHCTL_LOG"
+
+    # (e) dir succeeds and prints something that names no directory, as
+    # another program called ccusage might: the same as a failure.
+    export CCUSAGE_DIR="$BATS_TEST_TMPDIR/profiles/no such profile"
+    printf '%s' /stale > "$LAUNCHD/CLAUDE_SECURESTORAGE_CONFIG_DIR"
+    run shell_start
+    assert_success
+    [ "$output" = "unset|gone" ]
+    : > "$LAUNCHCTL_LOG"
+    log_in
+    [ ! -e "$LAUNCHD/CLAUDE_SECURESTORAGE_CONFIG_DIR" ]
+    grep -qxF "<unsetenv><CLAUDE_SECURESTORAGE_CONFIG_DIR>" "$LAUNCHCTL_LOG"
 }
 
 @test "env.sh's ccusage dir line reads none of the shell's stdin, so a shell fed its script on stdin keeps all of it (issue 0088)" {
@@ -556,6 +569,7 @@ if _molt_env_v=\"\$($QCCUSAGE 'dir' </dev/null 2>/dev/null)\" && [ -n \"\$_molt_
     ccusage_stub
     env_install >/dev/null
     export CCUSAGE_DIR="$BATS_TEST_TMPDIR/profiles/engineering01" CCUSAGE_READS_STDIN=1
+    mkdir -p "$CCUSAGE_DIR"
     run sh -c '. "$1"; read -r line; printf "%s|%s" "$CLAUDE_SECURESTORAGE_CONFIG_DIR" "$line"' sh "$HOME/.config/molt/env.sh" <<< "the rest of the script"
     assert_success
     [ "$output" = "$CCUSAGE_DIR|the rest of the script" ]

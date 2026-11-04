@@ -495,7 +495,7 @@ _claude_published() {
 # ccusage's absolute path. In ccusage's shared mode Claude Code reads its login
 # from the active profile's directory, which `ccusage use` changes between
 # runs of molt, so env.sh and the LaunchAgent ask ccusage each time, and unset
-# the variable when it answers nothing, as it does while shared mode is off
+# the variable when it answers no existing directory, as while shared mode is off
 # (issue 0088, Ccusage ISSUE:0003). Whether shared mode is on stays in
 # ccusage's own config.
 claude_env_pairs() {
