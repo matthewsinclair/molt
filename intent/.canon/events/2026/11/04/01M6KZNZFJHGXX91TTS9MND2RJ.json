@@ -1,0 +1,16 @@
+{
+  "id": "01M6KZNZFJHGXX91TTS9MND2RJ",
+  "ts": "2026-11-04T19:13:26.514Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 10,
+    "text": "Molt 1.4.3: 0088 (57fa747), 0091 (7a42b59) and 0089 (bed5ce9) pass, merged in a scratch worktree at cacef76; the merged tree's suite under both bashes runs in pplr-vc's slot 01M6KZK8. Next: replay the merges on main; dc's CHANGELOG lines and closes; bin/devbin release check and release v1.4.3 --dry-run; hv's cut. Then the rollout on rhadamanth: brew upgrade molt; dc lands Molt-matts 2f95dfe (its hold 16); hv's molt upgrade; hv pushes Molt-matts with 3d1de92; then Ccusage step 1 (hv) and slot 8GJE86, the restart, on hv's go."
+  }
+}

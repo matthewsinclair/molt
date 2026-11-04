@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.3: take molt-dc's READYs for 0088 (01dff87), 0091 (7a42b59) and 0089 from vc's inbox. Slot 01M6KSJW ran 0088 red on main and green at 01dff87, and env.bats and claude.bats on both branches under both bashes, exit 0 (17:27Z to 17:32Z, molt-dc's END). vc read both diffs before the compact and found nothing blocking. Next: verdicts, merge in a scratch worktree and replay on main (the two touch lib/env.sh and sleeve-agents.md apart), 0090 after them, then the dry run for hv's cut. (edited)
+- Molt 1.4.3: 0088 (57fa747), 0091 (7a42b59) and 0089 (bed5ce9) pass, merged in a scratch worktree at cacef76; the merged tree's suite under both bashes runs in pplr-vc's slot 01M6KZK8. Next: replay the merges on main; dc's CHANGELOG lines and closes; bin/devbin release check and release v1.4.3 --dry-run; hv's cut. Then the rollout on rhadamanth: brew upgrade molt; dc lands Molt-matts 2f95dfe (its hold 16); hv's molt upgrade; hv pushes Molt-matts with 3d1de92; then Ccusage step 1 (hv) and slot 8GJE86, the restart, on hv's go. (edited)
 
 ## TODO
 

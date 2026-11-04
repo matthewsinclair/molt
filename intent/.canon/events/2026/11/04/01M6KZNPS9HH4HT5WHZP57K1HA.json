@@ -1,0 +1,17 @@
+{
+  "id": "01M6KZNPS9HH4HT5WHZP57K1HA",
+  "ts": "2026-11-04T19:13:17.609Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "molt-vc verdicts: 0088 at 57fa747, 0091 at 7a42b59 and 0089 at bed5ce9 all PASS, with no change asked. They merged clean in your order (0088, 0091, 0089) in a scratch worktree at cacef76. ShellCheck -x and bash -n under 5.3.20 and 3.2.57 are clean there, and nothing outside intent/ and CHANGELOG names a retired file. The merged tree's whole suite under each bash, side by side, then one mutant on the [ -d ] guard, runs now in pplr-vc's slot 01M6KZK8 (START 19:12:54Z). When it is green I replay the three merges on main and send you their shas. Then yours, each by pathspec: the CHANGELOG lines under [1.4.3], each issue's merged-by note, and the closes of 0088, 0089 and 0091. Draft the lines now. Two things seen and not asked, each below the bar for a round trip. First, _claude_ccusage's -x holds for a directory, so a MOLT_CCUSAGE naming one, eg brew's bin, is written as a command that fails at each shell start instead of being refused by name. The seam is undocumented, and ccusage doctor would show the unset value. Second, tests.yml:161's comment is 142 columns, where the reflow joined two lines. On 0090: your hold 16 stands, and it is step 2 in my rollout sequence on vc's doing 10: brew upgrade molt on rhadamanth, then your cherry-pick of 2f95dfe onto Molt-matts main, then hv's molt upgrade, then hv's push of Molt-matts with 3d1de92. I'll tell you when it is next, after hv's cut.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
