@@ -70,16 +70,15 @@
 
 ## Templates
 
-| Module             | File                                            | Concern                                                                                                                                        |
-| ------------------ | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| molt.toml          | `templates/molt.toml.example`                   | Stack manifest example                                                                                                                         |
-| molt-user skeleton | `templates/molt-user/`                          | Skeleton tree for new `Molt-{user}` config repos (tokenised), which `molt new-user` copies                                                     |
-| agent CLAUDE.md    | `templates/agents/CLAUDE.md.tmpl`               | Each agent home's `CLAUDE.md`, which imports its `AGENTS.md` (ST0006)                                                                          |
-| AppArmor profile   | `templates/apparmor/bwrap-userns-restrict.tmpl` | Molt's copy of Ubuntu's bwrap profile, for a Linux sleeve with an ops or docs agent (issue 0032)                                               |
-| home guard         | `templates/claude/claude-home-guard.sh.tmpl`    | The hook that refuses a Claude Code session launched in `$HOME`, or under the agents root outside a home, rendered to `~/.config/molt/`        |
-| home guard hook    | `templates/claude/home-guard-hook.json`         | The settings entry that runs the home guard, in the user settings and each agent home's                                                        |
-| retired env files  | `templates/env/retired/`                        | The files the claude liberator published `CLAUDE_CONFIG_DIR` through before the env liberator, kept to tell molt's own copy from an edited one |
-| npmrc              | `templates/npm/npmrc.tmpl`                      | `~/.npmrc`, npm's cache under XDG (npm liberator)                                                                                              |
+| Module             | File                                            | Concern                                                                                                                                 |
+| ------------------ | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| molt.toml          | `templates/molt.toml.example`                   | Stack manifest example                                                                                                                  |
+| molt-user skeleton | `templates/molt-user/`                          | Skeleton tree for new `Molt-{user}` config repos (tokenised), which `molt new-user` copies                                              |
+| agent CLAUDE.md    | `templates/agents/CLAUDE.md.tmpl`               | Each agent home's `CLAUDE.md`, which imports its `AGENTS.md` (ST0006)                                                                   |
+| AppArmor profile   | `templates/apparmor/bwrap-userns-restrict.tmpl` | Molt's copy of Ubuntu's bwrap profile, for a Linux sleeve with an ops or docs agent (issue 0032)                                        |
+| home guard         | `templates/claude/claude-home-guard.sh.tmpl`    | The hook that refuses a Claude Code session launched in `$HOME`, or under the agents root outside a home, rendered to `~/.config/molt/` |
+| home guard hook    | `templates/claude/home-guard-hook.json`         | The settings entry that runs the home guard, in the user settings and each agent home's                                                 |
+| npmrc              | `templates/npm/npmrc.tmpl`                      | `~/.npmrc`, npm's cache under XDG (npm liberator)                                                                                       |
 
 ## Documentation
 
