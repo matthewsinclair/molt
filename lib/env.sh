@@ -28,19 +28,6 @@ molt_env_gui_file() {
   esac
 }
 
-# The files the claude liberator published CLAUDE_CONFIG_DIR through before
-# this writer took them over, one "template<TAB>target" line each, on this
-# platform. The templates are kept under templates/env/retired/ only so that a
-# file that is still byte for byte what molt rendered can be told from one
-# somebody changed; they go once every sleeve has moved.
-_molt_env_retired() {
-  local t="${MOLT_ROOT}/templates/env/retired"
-  case "$(molt_platform)" in
-    macos) printf '%s\t%s\n' "$t/com.molt.claude-config-dir.plist.tmpl" "$HOME/Library/LaunchAgents/com.molt.claude-config-dir.plist" ;;
-    linux) printf '%s\t%s\n' "$t/claude.conf.tmpl" "$HOME/.config/environment.d/claude.conf" ;;
-  esac
-}
-
 # Why the value $2, named $1, cannot be written as it stands into the files
 # that publish it, or nothing when it can. env.sh is read back, so a value is
 # refused rather than rewritten: a copy tidied here would be compared with
@@ -310,37 +297,11 @@ _molt_env_state() {
   fi
 }
 
-# The state of the retired file $2, from the template $1: absent; retired,
-# when it is byte for byte what molt rendered from $1 with the value env.sh
-# published or this sleeve's declared config dir; or changed.
-_molt_env_retired_state() {
-  local template="$1" target="$2" value
-  [[ -e "$target" || -L "$target" ]] || { echo absent; return; }
-  for value in "$(molt_env_published CLAUDE_CONFIG_DIR)" "$(molt_instance_var MOLT_CLAUDE_CONFIG_DIR 2>/dev/null)"; do
-    [[ -n "$value" && -f "$target" && ! -L "$target" ]] || continue
-    # shellcheck disable=SC2016 # envsubst takes the name, unexpanded
-    if [[ "$(MOLT_CLAUDE_CONFIG_DIR="$value" envsubst '${MOLT_CLAUDE_CONFIG_DIR}' < "$template"; echo x)" == "$(cat "$target"; echo x)" ]]; then
-      echo retired
-      return
-    fi
-  done
-  echo changed
-}
-
-# Reports, through $1 after the prefix $2, everything that keeps the files from
-# publishing the pairs $3: a retired file still there, and each file missing
-# or not what molt would write. Returns non-zero when it reported any.
+# Reports, through $1 after the prefix $2, each file that does not publish the
+# pairs $3: one missing, or not what molt would write. Returns non-zero when it
+# reported any.
 molt_env_report_faults() {
-  local log="$1" prefix="$2" pairs="$3" template target fn ok=0
-  while IFS=$'\t' read -r template target; do
-    [[ -n "$template" ]] || continue
-    case "$(_molt_env_retired_state "$template" "$target")" in
-      retired)
-        "$log" "${prefix}$(molt_tilde "$target") is retired, and molt resleeve removes it" ; ok=1 ;;
-      changed)
-        "$log" "${prefix}$(molt_tilde "$target") is retired but is not what molt rendered, so molt leaves it: move it aside by hand" ; ok=1 ;;
-    esac
-  done <<< "$(_molt_env_retired)"
+  local log="$1" prefix="$2" pairs="$3" target fn ok=0
   while IFS=$'\t' read -r target fn; do
     [[ -n "$target" ]] || continue
     case "$(_molt_env_state "$target" "$fn" "$pairs")" in
@@ -469,32 +430,11 @@ _molt_env_names() {
   cut -f1 <<< "$1" | grep . | paste -sd, - | sed 's/,/, /g'
 }
 
-# Removes each retired file that is still what molt rendered, and refuses,
-# naming it, one that is not, before anything is written.
-_molt_env_retire() {
-  local template target
-  while IFS=$'\t' read -r template target; do
-    [[ -n "$template" ]] || continue
-    case "$(_molt_env_retired_state "$template" "$target")" in
-      retired)
-        if ! rm -f "$target" "${target}.molt-rendered"; then
-          molt_error "env: could not remove the retired $(molt_tilde "$target")"
-          return 1
-        fi
-        molt_info "env: removed the retired $(molt_tilde "$target")" ;;
-      changed)
-        molt_error "env: $(molt_tilde "$target") is retired but is not what molt rendered, so nothing was published: move it aside by hand, then re-run"
-        return 1 ;;
-    esac
-  done <<< "$(_molt_env_retired)"
-}
-
-# Publishes the pairs $1: retires the old files, then writes each file that is
-# not current, through molt_render_place, which backs up a hand edit. Fails,
-# saying why, at the first step that does.
+# Publishes the pairs $1: writes each file that is not current, through
+# molt_render_place, which backs up a hand edit. Fails, saying why, at the
+# first step that does.
 molt_env_publish() {
   local pairs="$1" target fn
-  _molt_env_retire || return 1
   while IFS=$'\t' read -r target fn; do
     [[ -n "$target" ]] || continue
     [[ "$(_molt_env_state "$target" "$fn" "$pairs")" != current ]] || continue
