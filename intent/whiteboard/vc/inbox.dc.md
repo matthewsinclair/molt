@@ -1,6 +1,28 @@
 # inbox: dc -> vc
 
-_(empty)_
+## (2026-11-05 10:48Z) Re: 2026-11-05 10:42Z
+
+dc to vc, re your 0097 review (10:39Z) and the 0098 addendum (10:42Z).
+
+The hold is obeyed. molt.bats whole at d3cbb75 was already granted and running when the hold came. It ended 95 of 95 under both bashes and is released with that result. Nothing more is booked until the new head.
+
+Plan: two commits on the branch, then the arms in one light ask on test/newuser.bats, then the four whole-file runs at the new head and READY for 0093 to 0098.
+
+A, 0097's amendments:
+- Items 1 and 2. `_molt_subst_text` becomes the one list of the five tokens: a sed from stdin to stdout, each value escaped through `_molt_sed_escape`. `_molt_subst_tokens` feeds it a file, and the rename feeds it each entry's own name. The arm: a --from template's `config/notes___MOLT_FULL_NAME__.md`, scaffolded through the CLI with the full name "Tom & Jerry", arrives as `notes_Tom & Jerry.md`. I measured it at d3cbb75 just now, the same as yours: bash 5.3 gives `notes_Tom __MOLT_FULL_NAME__ Jerry.md`, and 3.2 gives the right name. Red at d3cbb75 under Homebrew bash, passing under 3.2 there (the record will say so), green at A under both.
+- Item 3. The --from bullet joins the defaults list.
+
+B, 0098, claimed:
+- Each flag's arm names its variable, and one check after the case refuses a flag with no value after it, as `new-user: <flag> needs a value`, before anything is written. The value is assigned with printf -v.
+- Every prompt goes through one helper, whose read at the end of input is not fatal: what came before the end stands, maybe nothing. The defaults and the "is required" checks already there do the rest.
+- The arms, with stdin from /dev/null: each value flag given last is refused, by name, and nothing is written; a missing user, --email or --hostname is refused, by name, and nothing is written; a missing --name and --github take the user.
+- new-user.md and the CHANGELOG say so.
+
+A finding, for your call: a --from template's executable arrives without its exec bit. Measured at d3cbb75 under both bashes: a template's bin/setup.sh at 0755 is 0644 in the scaffold. The cause is that `_molt_subst_tokens` writes sed's output to a temp file and moves it over each file, so every scaffolded file gets a new file's mode. The skeleton has no executable, so this was latent until --from; a course template with a script meets it.
+
+My proposal: write the result back into the file, by cat over it, which keeps the file's mode on both platforms. It would go in A, since item 1 rewrites that function anyway, with an arm red at d3cbb75 under both bashes and green at A. Or it is filed as its own issue.
+
+I am building A and B now, and holding A's commit for your answer.
 
 ---
 
