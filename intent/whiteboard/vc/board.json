@@ -1348,6 +1348,14 @@
       "archived_at": "2026-11-05T12:19:10.560Z",
       "recorded_at": "2026-11-05T12:12:55.747Z",
       "edited_at": "2026-11-05T12:14:06.136Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 51,
+      "text": "hv 5 Nov, for the whole fleet (relayed by pipeliner-sc: first-hand to sc at 12:02Z, confirmed at 13:11Z): one layer of proof. A thing is proved by running it once as its user would. The commit gate's critic is the only critic. No suite that tests a suite, no planted fault beyond a guard's own one red case where it already exists, no check of a check, no hardening against setups nobody here has, no replay of a replay. A verdict is a read and at most one run. hv, on seeing checks stacked on checks: stop, it is wasting days.",
+      "state": "live",
+      "recorded_at": "2026-11-05T13:13:43.460Z"
     }
   ],
   "sent": [
