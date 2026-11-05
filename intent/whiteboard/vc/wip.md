@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 10:39Z
+heartbeat_at: 2026-11-05 11:27Z
 status: active
-focus: "5 Nov: 0093 to 0098 on dc/doctor-participant; 0093 to 0096 accepted, 0097 accepted with amendments (one token list, the & fix, a docs nit) and 0098 added as a sixth commit; then dc's whole-file runs and READY, vc merges and closes, for hv's 1.4.5 cut with devbin 0.1.20 (381979a); WSL2 proof green, hv's laptop half open"
+focus: "5 Nov: Molt 1.4.5's batch, 0093 to 0098, merged at 4116a1b and closed at ca6a273; on molt-dc's landing END, vc hands Molt to hv through devbin-vc for the cut (bin/devbin release v1.4.5, dry-run first); then the CI read, pipeliner-dc's --from run on brew's 1.4.5 and the rollout; WSL2 laptop half hv's"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- 0093 to 0098 with dc (hv's word in molt-vc's window, 5 Nov; 0096 found by the WSL2 proof run; 0097 new-user --from for hv's per-person bootcamp stacks; 0098 found in vc's 0097 review, added by hv's 26 Oct found-work rule): one worktree, one commit per issue. 0093 to 0096 accepted at 3ce1a6c; 0097 at d3cbb75 accepted with amendments (one token list for contents and path names, which also fixes an & in a path name under bash 5.2 and later; a docs nit); 0098 a sixth commit. Then dc's four whole-file light runs at the final head and READY for all six; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a). (edited)
+- Molt 1.4.5: 0093 to 0098 merged at 4116a1b and closed at ca6a273. On molt-dc's landing END (worktrees, branch, claims), hand Molt to hv through devbin-vc for the cut: bin/devbin release v1.4.5, dry-run first. Nobody writes in Molt's checkout from the handover until hv has pushed. Then the CI read and the rollout to the sleeves (todo 44), and pipeliner-dc's --from run on brew's 1.4.5 (todo 47).
 
 ## TODO
 
@@ -21,7 +21,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Other sleeves onto Molt 1.4.4 and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
+- Other sleeves onto Molt 1.4.5 once hv has cut it (brew upgrade takes them past 1.4.4), and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
 - hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.
 - When brew installs Molt 1.4.5 (after hv's cut): tell pipeliner-dc, whose AE ST0002/07 re-run of the course template through molt new-user --from waits on it; the image's self-check then drops its newuser.sh-style stand-in for --from. The answer it builds on is /Users/matts/Devel/scratch/molt-vc/answer-pipeliner-dc-2026-11-05.md.
 

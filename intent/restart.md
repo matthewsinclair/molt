@@ -2,8 +2,8 @@
 
 ## DOING
 
-- **0093 to 0098 on `dc/doctor-participant`, with molt-dc:** 0093 to 0096 accepted at 3ce1a6c. 0097 at d3cbb75 is accepted with amendments: one token list for contents and path names, which also fixes an `&` in a path name under bash 5.2 and later, and a docs nit. 0098, new-user's two silent exits, is a sixth commit. Then dc's four whole-file light runs at the new head, and its READY.
+- **Molt 1.4.5, hv's cut:** 0093 to 0098 merged at 4116a1b and closed at ca6a273; waiting on molt-dc's landing END (worktrees, branch, claims), then vc hands Molt over through devbin-vc, and nobody writes in Molt's checkout until hv has pushed.
 
 ## TODO
 
-- **On dc's READY:** review the amendments and 0098, merge `dc/doctor-participant` in a scratch worktree, replay it on main, and close 0093 to 0098 with as-built notes; the 1.4.5 cut is hv's.
+- **After the cut:** read CI on the pushed head, tell pipeliner-dc that brew has 1.4.5 (vc todo 47), then the rollout to the other sleeves (vc todo 44).

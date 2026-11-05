@@ -1,0 +1,15 @@
+{
+  "id": "01M6NQCGZPJG3SMB4VN0G7W29P",
+  "ts": "2026-11-05T11:26:57.014Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Molt 1.4.5: 0093 to 0098 merged at 4116a1b and closed at ca6a273. On molt-dc's landing END (worktrees, branch, claims), hand Molt to hv through devbin-vc for the cut: bin/devbin release v1.4.5, dry-run first. Nobody writes in Molt's checkout from the handover until hv has pushed. Then the CI read and the rollout to the sleeves (todo 44), and pipeliner-dc's --from run on brew's 1.4.5 (todo 47)."
+  }
+}

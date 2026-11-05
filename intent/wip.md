@@ -1,17 +1,18 @@
 ---
-verblock: "5 Nov 2026:v0.89: Matthew Sinclair - 0097 reviewed, 0098 added"
+verblock: "5 Nov 2026:v0.90: Matthew Sinclair - 0093 to 0098 merged"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **0093 to 0098 on `dc/doctor-participant`:** 0093 to 0096 accepted; 0097 accepted with amendments and 0098 added as a sixth commit, both being built by dc; then dc's whole-file runs at the new head, its READY and vc's merge, for hv's 1.4.5 cut with devbin 0.1.20.
+- **Molt 1.4.5, hv's cut:** 0093 to 0098 merged at 4116a1b and closed; on molt-dc's landing END, vc hands over through devbin-vc, and hv runs `bin/devbin release v1.4.5`, dry-run first, with devbin 0.1.20's sweep aboard.
 
 ## TODO
 
+- **After the cut:** the CI read on the pushed head; then pipeliner-dc's `--from` run of the course template on brew's 1.4.5 (AE ST0002/07), which vc tells it of.
 - **WSL2 laptop half, hv's:** `wsl --import` of the proof image on hv's Windows 11 machine, by `/Users/matts/Devel/scratch/molt-vc/wsl2-proof/RESULT.md`.
-- **Other sleeves onto Molt 1.4.4:** kovacs through kovacs-sysadm, gyges when it is reachable: `brew upgrade molt`, `molt use brew`, `molt upgrade`, `molt doctor`.
+- **Other sleeves onto Molt 1.4.5, once cut:** kovacs through kovacs-sysadm, gyges when it is reachable: `brew upgrade molt`, `molt use brew`, `molt upgrade`, `molt doctor`.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches, which issue 0072 found reaches no macOS GUI app.
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).
