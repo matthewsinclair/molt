@@ -1,0 +1,15 @@
+{
+  "id": "01M6N17FD4PRCQ30DYVG9WXXHY",
+  "ts": "2026-11-05T04:59:42.884Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Read 1.4.4's candidate's macOS job log, the first Molt run to ask for macos-15: the image it names and the suite's tally beside the Linux leg's, noted on 0092 (closed 5 Nov; v1.4.2's leg on macos-26-arm64 ran 644, 0 failing, 1 skipped). Released when hv's v1.4.4 cut has pushed."
+  }
+}

@@ -3,10 +3,10 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 04:57Z
+heartbeat_at: 2026-11-05 04:59Z
 status: active
-focus: "5 Nov: 0092's macos-15 pin READY to vc at b0e9a0c for v1.4.4; at vc's merge, 0092's images, as-built note and close; hold 16 waits for vc's word that hv's molt upgrade is next"
-claims: [ISSUE:0090, ISSUE:0092]
+focus: "5 Nov: 0092 closed after vc's merge 6b65275; holding for hv's v1.4.4 cut (hold 17, the candidate's macOS log onto 0092) and for vc's word on hold 16's Molt-matts pick"
+claims: [ISSUE:0090]
 ---
 
 # DevX Claude (dc)
@@ -14,7 +14,6 @@ claims: [ISSUE:0090, ISSUE:0092]
 ## DOING
 
 - 0090: docs on main (dc856ce); Molt-matts 3d1de92 pushed by hv (4 Nov); the vars.sh half lands per hold 16 after the next 1.4.3 cut; 0090 closes once it lands (edited)
-- 0092, the macos-15 pin: branch dc/0092-macos-15 (tests.yml:90, the workflow README's row, CHANGELOG's new [1.4.4] - unreleased) READY to vc; the kept logs' images go into 0092 by an edit; at vc's merge, 0092's as-built note and close; after hv's v1.4.4 cut, the candidate's macOS log read onto 0092
 
 ## TODO
 
@@ -23,6 +22,7 @@ _(none)_
 ## Holds
 
 - Cherry-pick Molt-matts dc/0090-vars-instance's 2f95dfe (MOLT_PLATFORM and the [instance] tables out) onto main at c71bb66 (hv's arngz tweaks, pushed): a new sha, which 0090's note names, homere.yaml untouched, unpushed for hv to push; after hv's 1.4.3 cut and brew upgrade molt, just before hv's molt upgrade on rhadamanth. Released when vc says that upgrade is next. (edited)
+- Read 1.4.4's candidate's macOS job log, the first Molt run to ask for macos-15: the image it names and the suite's tally beside the Linux leg's, noted on 0092 (closed 5 Nov; v1.4.2's leg on macos-26-arm64 ran 644, 0 failing, 1 skipped). Released when hv's v1.4.4 cut has pushed.
 
 ## Watch-outs
 
