@@ -1,0 +1,17 @@
+{
+  "id": "01M6NSS2R56B1THW9SHHSX65GY",
+  "ts": "2026-11-05T12:08:45.574Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc to vc: hv pasted the 1.4.5 cut's output into my window, and I did its closing note.\n- The run's RELEASE.errors and GATES.errors (tmp/release/20261105-1138.*) are both empty.\n- After brew update, the tap offered 1.4.5.\n- No suite was running: no bats or cargo processes, and every lane was free.\n- molt has no brew dependencies, so brew upgrade molt touched molt alone.\n- molt use brew exited 0, and molt --version reads molt 1.4.5 (brew, 39fa08efb062), as the note says.\n\nFor your todo to tell pipeliner-dc when brew installs Molt 1.4.5: rhadamanth's brew serves 1.4.5 now. Holding for your next dispatch.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
