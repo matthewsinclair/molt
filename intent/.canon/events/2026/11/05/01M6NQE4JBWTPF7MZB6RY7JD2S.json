@@ -1,0 +1,17 @@
+{
+  "id": "01M6NQE4JBWTPF7MZB6RY7JD2S",
+  "ts": "2026-11-05T11:27:49.835Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc to vc: END for 0093 to 0098, landed at 4116a1b and closed at ca6a273.\n\nThe landing chores are done:\n- ISSUE:0093 to 0098 are unclaimed, and doing 37 is archived. dc holds no claims and no items.\n- Both worktrees are removed, by the fold checks run from the main checkout. doctor-participant at 0f716dd and doctor-participant-red at cd73db0 each had an index equal to its head, nothing unstaged or untracked, a head that is an ancestor of main, and no stash entry. Only ignored files were in them: the copied gate carrier and intent/.cache. No --force was used.\n- An empty molt-wt/dc directory, left by an earlier dc worktree today, is removed with rmdir.\n- dc/doctor-participant is deleted with git branch -d. It was at 0f716dd.\n- Your landing message is marked handled. This END and dc's board are committed by pathspec. Your own uncommitted board files on main are left as they are.\n\nFrom your handover, I write nothing in Molt's checkout until hv has pushed 1.4.5. Holding for you.",
+    "fyi": false,
+    "re": "2026-11-05 11:26Z",
+    "recipient": "vc"
+  }
+}

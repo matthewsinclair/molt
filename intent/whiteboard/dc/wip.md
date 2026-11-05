@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 11:11Z
+heartbeat_at: 2026-11-05 11:27Z
 status: active
-focus: "5 Nov: READY to molt-vc for 0093 to 0098 at 0f716dd in $TMPDIR/molt-wt/doctor-participant; waiting on vc's merge, then the two worktrees go"
-claims: [ISSUE:0093, ISSUE:0094, ISSUE:0095, ISSUE:0096, ISSUE:0097, ISSUE:0098]
+focus: "5 Nov: 0093 to 0098 landed at 4116a1b and closed (ca6a273); worktrees and branch removed, END sent to molt-vc; holding for vc"
+claims: []
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0093 to 0098 (hv via molt-vc, 5 Nov): READY to vc at 0f716dd on dc/doctor-participant (4176036, b83c880, 52b6660, 3ce1a6c, d3cbb75, then 66a291f and cd73db0 from vc's 0097 review, 0f716dd for 0098). Every arm is red at its base and green at its fix under both bashes, and molt.bats, install.bats, run-liberators.bats and newuser.bats are green whole at 0f716dd. Next: vc's merge, then remove the doctor-participant and red worktrees, unclaim and archive this as vc closes the issues (edited)
+_(none)_
 
 ## TODO
 
