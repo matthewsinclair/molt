@@ -290,3 +290,38 @@ _course_template() {
     assert_file_exists "$dest/config/notes_Tom & Jerry.md"
     grep -qxF 'by Tom & Jerry' "$dest/config/notes_Tom & Jerry.md" || fail "the contents lost the &"
 }
+
+# A file takes its tokens written back into it, never a new file moved over
+# it, so it keeps its mode: a script in the template stays executable (issue
+# 0097).
+@test "molt new-user --from keeps a template file's mode, so a script stays executable (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    mkdir -p "$template/bin"
+    printf '#!/bin/sh\necho __MOLT_USER__\n' > "$template/bin/setup"
+    chmod 755 "$template/bin/setup"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    [ -x "$dest/bin/setup" ] || fail "the script lost its exec bit: $(ls -l "$dest/bin/setup")"
+    grep -qx 'echo ada' "$dest/bin/setup" || fail "the script's token was not substituted"
+}
+
+# Under a UTF-8 locale, macOS's sed refuses a file that is not UTF-8, so the
+# substitution runs byte-wise. The locale is the test's own, since a caller's
+# LC_ALL=C would hide the fault. GNU sed passes such a file under either
+# locale, so on Linux this passes without the fix too (issue 0097).
+@test "molt new-user --from carries a file that is not UTF-8 byte for byte under a UTF-8 locale, tokens and all (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada" want="$BATS_TEST_TMPDIR/want.bin"
+    template="$(_course_template)"
+    printf '\211PNG\r\n\032\n\000\000\000\rIHDR\377\376\200' > "$template/config/logo.png"
+    printf '\377\376__MOLT_USER__\200\000' > "$template/config/blob.bin"
+    printf '\377\376ada\200\000' > "$want"
+    unset LC_ALL
+    export LANG=C.UTF-8 LC_CTYPE=C.UTF-8
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    cmp "$template/config/logo.png" "$dest/config/logo.png" || fail "logo.png changed in the scaffold"
+    cmp "$want" "$dest/config/blob.bin" || fail "blob.bin's token was not substituted byte-wise"
+}

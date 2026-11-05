@@ -10,8 +10,9 @@
 # Sourced by bin/molt after lib/molt.sh (uses molt_info / molt_error / MOLT_ROOT).
 
 # Escape a replacement string for safe use on the right-hand side of sed s|||.
+# Byte-wise, as _molt_subst_text's sed is, and for the same reason.
 _molt_sed_escape() {
-  printf '%s' "$1" | sed -e 's/[\\&|]/\\&/g'
+  printf '%s' "$1" | LC_ALL=C sed -e 's/[\\&|]/\\&/g'
 }
 
 # Substitute every __MOLT_*__ token in the text on stdin, to stdout.
@@ -20,6 +21,10 @@ _molt_sed_escape() {
 # names both go through it, so a token added here reaches both (issue 0097).
 # sed takes each value escaped, so an & in one stays an &, where bash 5.2's
 # patsub_replacement put the token back in its place in a ${name//token/value}.
+# sed runs byte-wise, under the C locale: under a UTF-8 one, macOS's sed
+# refuses a file that is not UTF-8, such as an image or a font, with "RE error:
+# illegal byte sequence", and the scaffold stopped half built. GNU sed passes
+# such a file either way (issue 0097).
 _molt_subst_text() {
   local e_user e_name e_email e_github e_host
   e_user="$(_molt_sed_escape "$1")"
@@ -27,7 +32,7 @@ _molt_subst_text() {
   e_email="$(_molt_sed_escape "$3")"
   e_github="$(_molt_sed_escape "$4")"
   e_host="$(_molt_sed_escape "$5")"
-  sed \
+  LC_ALL=C sed \
     -e "s|__MOLT_USER__|${e_user}|g" \
     -e "s|__MOLT_FULL_NAME__|${e_name}|g" \
     -e "s|__MOLT_EMAIL__|${e_email}|g" \
@@ -37,13 +42,15 @@ _molt_subst_text() {
 
 # Substitute every __MOLT_*__ token in the file $1, in place, with the values
 # $2 on, in _molt_subst_text's order (portable: no reliance on GNU vs BSD
-# `sed -i` differences).
+# `sed -i` differences). The result is written back into the file, never moved
+# over it, so the file keeps its mode: a script in a --from template stays
+# executable, where a moved file took a new file's mode (issue 0097).
 _molt_subst_tokens() {
   local file="$1"
   shift
   local tmp="${file}.molt-subst"
-  if _molt_subst_text "$@" < "$file" > "$tmp"; then
-    mv "$tmp" "$file"
+  if _molt_subst_text "$@" < "$file" > "$tmp" && cat "$tmp" > "$file"; then
+    rm -f "$tmp"
   else
     rm -f "$tmp"
     molt_error "Token substitution failed: $file"

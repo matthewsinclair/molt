@@ -27,7 +27,7 @@ Molt finds a config repo only by your login name, as `Molt-$(whoami)`, so `<user
 
 ## Scaffolding from another template
 
-`--from <template>` scaffolds from a directory of your own, such as a course's template, in place of Molt's skeleton. It goes through the same code: the same `__MOLT_*__` tokens are substituted in its file contents and its path names, so there is one scaffolder to keep. No `.git` is copied from it, at any depth, so a template that is a git checkout brings neither its history nor its objects into the new repo.
+`--from <template>` scaffolds from a directory of your own, such as a course's template, in place of Molt's skeleton. It goes through the same code: the same `__MOLT_*__` tokens are substituted in its file contents and its path names, so there is one scaffolder to keep. No `.git` is copied from it, at any depth, so a template that is a git checkout brings neither its history nor its objects into the new repo. Each file keeps its mode, so a script stays executable, and a file that is not text, such as an image or a font, arrives byte for byte.
 
 `molt new-user` refuses a `--from` that is not a directory, and one that holds no `config/`, since Molt finds a stack only by its `config/`. Each refusal names the path and why, and writes nothing.
 
