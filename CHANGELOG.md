@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.5] - unreleased
+
+### Added
+
+- `MOLT_TERMINAL_DRAWN_BY` in an instance's `vars.sh`, read through `molt_instance_var`, says who draws the sleeve's terminal. Set to `windows`, as for a WSL sleeve whose terminal is Windows Terminal, `molt doctor`'s font check passes without asking fontconfig and says why, since the font is the Windows side's to install. Any other value is reported and does not pass, and without it the check is as it was. The new-user skeleton's `vars.sh` names it among what molt reads (issue 0094)
+- `molt new-user --from <dir>` scaffolds a user stack from a template of your own, such as a course's, in place of Molt's skeleton, through the same code and the same `__MOLT_*__` tokens in contents and path names, so Molt keeps one scaffolder. No `.git` is copied from the template, at any depth. Each file keeps its mode, so a template's scripts stay executable, and a file that is not text, such as an image, arrives byte for byte. A `--from` that is not a directory, or that holds no `config/`, by which molt finds a stack, is refused, naming the path and why, with nothing written. Every value can come from flags. The next steps keep the resleeve, `git init` and the first commit, and the GitHub repo and remote lines stay the skeleton's (issue 0097)
+
+### Changed
+
+- `molt doctor` checks each git host the stack's ssh config names, where it asked github.com alone, so a sleeve whose stack reaches only a GitLab host can pass. A git host is an entry in molt's region of `~/.ssh/config`, the template's section and the config.d fragments after it, that sets `User git` itself. doctor dials it as `git@<name>` and passes it on GitHub's or GitLab's own reply naming the user. A reply doctor does not know is shown and not passed, and with no git host to dial the check passes, saying whether there is no ssh config, no molt region in it, or no `User git` entry in that region. Issue 0069's bounds and its split between a host not reached and a refusal hold for each host, as `MOLT_GIT_HOST_CONNECT_TIMEOUT` and `MOLT_GIT_HOST_TIMEOUT`, which were `MOLT_GITHUB_CONNECT_TIMEOUT` and `MOLT_GITHUB_TIMEOUT` (issue 0093)
+- `molt doctor`'s external dependencies are `envsubst` on every sleeve and `bats` only where molt runs from a dev tree, the one tree `molt test` runs in, so an opt or brew sleeve, as a participant's laptop is, no longer fails for want of bats. The line names what it checked: `bats envsubst` in a dev tree, `envsubst` elsewhere (issue 0095)
+- The `ssh` liberator comments a new key with `git config --global --includes user.email`, where it read no `[include]`, so an identity kept only in a file the global git config includes now reaches the key. The comment fell back to `user@host` instead, as the WSL2 proof run's `dev@devvm` showed. The fallback is as it was (issue 0096)
+
+### Fixed
+
+- `molt new-user` no longer ends with exit 1 and nothing said when a value flag is given last with no value after it, or when a value is left out and its prompt has nothing to read, as in a script run with no terminal. A flag with no value is refused, naming it, with nothing written, by one check for every value flag. With nothing to read, `<user>`, `--email` and `--hostname`, which have no default, are refused, each by name, and `--name` and `--github` take the user, as Enter at the prompt does. An empty value that is given is handled as before (issue 0098)
+
 ## [1.4.4] - 2026-11-05
 
 Homebrew goes from 1.4.2 to 1.4.4: 1.4.3's cut stopped on 4 Nov before its tag, GitHub giving its candidate's macOS job no runner, and devbin never re-dates a dated note, so 1.4.4 brings 1.4.3's changes to brew as well.

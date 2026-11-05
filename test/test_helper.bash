@@ -557,6 +557,28 @@ require_command() {
     fi
 }
 
+# Prints PATH as it is, but with each directory holding the command $1 standing
+# in as a directory of links to everything there except $1, made under
+# $BATS_TEST_TMPDIR, so a test runs with $1 gone and all else still found.
+# Usage: PATH="$(path_without fc-list)" run_molt doctor
+path_without() {
+    local cmd="$1" dir path="" shadow n=0 entry
+    local IFS=:
+    for dir in $PATH; do
+        if [[ -e "$dir/$cmd" ]]; then
+            n=$((n + 1))
+            shadow="$BATS_TEST_TMPDIR/no-$cmd-$n"
+            mkdir -p "$shadow"
+            for entry in "$dir"/*; do
+                [[ "${entry##*/}" == "$cmd" ]] || ln -s "$entry" "$shadow/${entry##*/}"
+            done
+            dir="$shadow"
+        fi
+        path="${path:+$path:}$dir"
+    done
+    printf '%s\n' "$path"
+}
+
 # Print debug info (only when MOLT_TEST_DEBUG=1)
 debug() {
     if [[ "${MOLT_TEST_DEBUG:-0}" == "1" ]]; then

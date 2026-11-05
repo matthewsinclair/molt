@@ -12,16 +12,26 @@ A personal config repo carries a small amount of identity: your user name, full 
 
 ```bash
 molt new-user <user> [--name "Full Name"] [--email you@example.com] \
-                     [--github <handle>] [--hostname <host>] [--dest <dir>]
+                     [--github <handle>] [--hostname <host>] [--dest <dir>] \
+                     [--from <template>]
 ```
 
-Each of `<user>`, `--name`, `--email`, `--github` and `--hostname` you don't pass is prompted for; `--dest` is never prompted for. Sensible defaults:
+Each of `<user>`, `--name`, `--email`, `--github` and `--hostname` you don't pass is prompted for; `--dest` and `--from` are never prompted for, so a script that passes every value meets no prompt. Sensible defaults:
 
 - `--github` defaults to `<user>`
 - `--name` defaults to `<user>`
 - `--dest` defaults to `$MOLT_CFG_DIR/Molt-<user>` (or `./Molt-<user>` if `MOLT_CFG_DIR` is unset); `MOLT_CFG_DIR` defaults to the `cfg/` directory beside `MOLT_PRJ_DIR`
+- `--from` defaults to Molt's own skeleton, `templates/molt-user`
+
+A flag given with no value after it is refused, naming it, and nothing is written. With nothing for a prompt to read, as in a script run with no terminal, `--name` and `--github` take their default, as Enter at the prompt does, and `<user>`, `--email` and `--hostname`, which have none, are refused, each by name.
 
 Molt finds a config repo only by your login name, as `Molt-$(whoami)`, so `<user>` is your login name on the machines it will run on.
+
+## Scaffolding from another template
+
+`--from <template>` scaffolds from a directory of your own, such as a course's template, in place of Molt's skeleton. It goes through the same code: the same `__MOLT_*__` tokens are substituted in its file contents and its path names, so there is one scaffolder to keep. No `.git` is copied from it, at any depth, so a template that is a git checkout brings neither its history nor its objects into the new repo. Each file keeps its mode, so a script stays executable, and a file that is not text, such as an image or a font, arrives byte for byte.
+
+`molt new-user` refuses a `--from` that is not a directory, and one that holds no `config/`, since Molt finds a stack only by its `config/`. Each refusal names the path and why, and writes nothing.
 
 Example, fully specified:
 
@@ -105,6 +115,8 @@ git push -u origin main
 ```
 
 The resleeve comes first because the commit and the push both need what it puts in place: your name and email in the linked gitconfig, and the `github.com-<github>` ssh host that the generated `config/ssh/config.tmpl` defines. `git init -b main` names the branch the push names, whatever git's own default is.
+
+From a `--from` template, the next steps are the resleeve, `git init` and the first commit. The GitHub comment, repo and remote lines are the skeleton's, and are left out, since a template names its own git host, if it names one.
 
 ## Adding more machines
 

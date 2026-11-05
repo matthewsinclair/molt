@@ -176,3 +176,205 @@ _scaffold_flynn() {
     [ "$resleeve" -lt "$commit" ]
     [ "$commit" -lt "$push" ]
 }
+
+# --- --from: another template (issue 0097) ---
+
+# A template of the test's own, as a course's would be: a config/, by which
+# molt finds a stack, tokens in file contents and in path names, among them a
+# tokened file inside a tokened directory, and a marker line the skeleton does
+# not carry. Prints its path.
+_course_template() {
+    local template="$BATS_TEST_TMPDIR/course-template"
+    mkdir -p "$template/config/git" "$template/instances/__MOLT_HOSTNAME__"
+    printf '[user]\n\tname = __MOLT_FULL_NAME__\n\temail = __MOLT_EMAIL__\n' > "$template/config/git/gitconfig"
+    printf 'login = __MOLT_USER__\nforge = __MOLT_GITHUB__\n' > "$template/config/git/forge___MOLT_GITHUB__"
+    printf 'export MOLT_HOSTNAME="__MOLT_HOSTNAME__"\n' > "$template/instances/__MOLT_HOSTNAME__/vars.sh"
+    printf 'notes for __MOLT_USER__\n' > "$template/instances/__MOLT_HOSTNAME__/notes___MOLT_USER__.md"
+    echo "# a course template" > "$template/README.md"
+    echo "$template"
+}
+
+@test "molt_new_user from another template substitutes its tokens in contents and path names (issue 0097)" {
+    _load_newuser
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$template"
+    assert_success
+    grep -qx '# a course template' "$dest/README.md" || fail "not scaffolded from the template: $(cat "$dest/README.md")"
+    [ ! -e "$dest/config/ssh/config.tmpl" ] || fail "the skeleton's files are in the scaffold"
+    assert_file_exists "$dest/config/git/forge_ada-l"
+    assert_file_exists "$dest/instances/analytical/vars.sh"
+    assert_file_exists "$dest/instances/analytical/notes_ada.md"
+    run cat "$dest/config/git/gitconfig"
+    assert_output_contains "name = Ada Lovelace"
+    assert_output_contains "email = ada@example.com"
+    run cat "$dest/config/git/forge_ada-l"
+    assert_output_contains "login = ada"
+    assert_output_contains "forge = ada-l"
+    run find "$dest" -name '*__MOLT_*'
+    [ -z "$output" ] || fail "tokens left in path names: $output"
+    run grep -rl '__MOLT_' "$dest"
+    assert_failure
+}
+
+@test "molt_new_user copies no .git from a template, at any depth (issue 0097)" {
+    _load_newuser
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    git -C "$template" init -q
+    git -C "$template" add -A
+    git -C "$template" -c user.name=t -c user.email=t@t commit -qm template
+    mkdir -p "$template/vendor/kit/.git"
+    echo "ref: refs/heads/__MOLT_USER__" > "$template/vendor/kit/.git/HEAD"
+    echo "kit" > "$template/vendor/kit/README"
+    run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$template"
+    assert_success
+    grep -qx '# a course template' "$dest/README.md" || fail "not scaffolded from the template"
+    assert_file_exists "$dest/vendor/kit/README"
+    run find "$dest" -name .git
+    [ -z "$output" ] || fail "a .git came from the template: $output"
+    grep -qx 'ref: refs/heads/__MOLT_USER__' "$template/vendor/kit/.git/HEAD" || fail "the template's own .git changed"
+}
+
+@test "molt_new_user refuses a template that is not a directory, or holds no config/, and writes nothing (issue 0097)" {
+    _load_newuser
+    local dest="$BATS_TEST_TMPDIR/Molt-ada" file="$BATS_TEST_TMPDIR/a-file" bare="$BATS_TEST_TMPDIR/no-config"
+    echo "not a template" > "$file"
+    mkdir -p "$bare/instances"
+    local not_dirs=("$file" "$BATS_TEST_TMPDIR/missing") template
+    for template in "${not_dirs[@]}"; do
+        run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$template"
+        assert_failure
+        assert_output_contains "new-user: $template is not a directory"
+        [ ! -e "$dest" ] || fail "$dest was written for $template"
+    done
+    run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$bare"
+    assert_failure
+    assert_output_contains "new-user: $bare holds no config/"
+    [ ! -e "$dest" ] || fail "$dest was written for a template with no config/"
+}
+
+@test "molt new-user --from scaffolds from the template with flags alone, and its next steps leave out the GitHub lines (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    grep -qx '# a course template' "$dest/README.md" || fail "not scaffolded from the template"
+    assert_output_contains "molt resleeve --dry-run"
+    assert_output_contains "git init -b main && git add -A && git commit"
+    refute_output_contains "GitHub"
+    refute_output_contains "git remote add"
+    refute_output_contains "git push"
+}
+
+@test "molt new-user refuses an empty --from as no directory, rather than read it as the skeleton (issue 0097)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from ""
+    assert_failure
+    assert_output_contains "is not a directory"
+    [ ! -e "$dest" ] || fail "$dest was written for an empty --from"
+}
+
+# bash 5.2 and later put the token back in place of an & in the value of a
+# ${name//token/value}, by patsub_replacement, where 3.2 keeps the &: a path
+# name takes its tokens through sed, as the contents do (issue 0097).
+@test "molt new-user --from keeps an & in a value whole in a path name, as in the contents (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    printf 'by __MOLT_FULL_NAME__\n' > "$template/config/notes___MOLT_FULL_NAME__.md"
+    run_molt new-user ada --name "Tom & Jerry" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    assert_file_exists "$dest/config/notes_Tom & Jerry.md"
+    grep -qxF 'by Tom & Jerry' "$dest/config/notes_Tom & Jerry.md" || fail "the contents lost the &"
+}
+
+# A file takes its tokens written back into it, never a new file moved over
+# it, so it keeps its mode: a script in the template stays executable (issue
+# 0097).
+@test "molt new-user --from keeps a template file's mode, so a script stays executable (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    mkdir -p "$template/bin"
+    printf '#!/bin/sh\necho __MOLT_USER__\n' > "$template/bin/setup"
+    chmod 755 "$template/bin/setup"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    [ -x "$dest/bin/setup" ] || fail "the script lost its exec bit: $(ls -l "$dest/bin/setup")"
+    grep -qx 'echo ada' "$dest/bin/setup" || fail "the script's token was not substituted"
+}
+
+# Under a UTF-8 locale, macOS's sed refuses a file that is not UTF-8, so the
+# substitution runs byte-wise. The locale is the test's own, since a caller's
+# LC_ALL=C would hide the fault. GNU sed passes such a file under either
+# locale, so on Linux this passes without the fix too (issue 0097).
+@test "molt new-user --from carries a file that is not UTF-8 byte for byte under a UTF-8 locale, tokens and all (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada" want="$BATS_TEST_TMPDIR/want.bin"
+    template="$(_course_template)"
+    printf '\211PNG\r\n\032\n\000\000\000\rIHDR\377\376\200' > "$template/config/logo.png"
+    printf '\377\376__MOLT_USER__\200\000' > "$template/config/blob.bin"
+    printf '\377\376ada\200\000' > "$want"
+    unset LC_ALL
+    export LANG=C.UTF-8 LC_CTYPE=C.UTF-8
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    cmp "$template/config/logo.png" "$dest/config/logo.png" || fail "logo.png changed in the scaffold"
+    cmp "$want" "$dest/config/blob.bin" || fail "blob.bin's token was not substituted byte-wise"
+}
+
+# --- a value flag with no value, or a prompt with nothing to read (issue 0098) ---
+
+@test "molt new-user refuses each value flag given last with no value, naming it, and writes nothing (issue 0098)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada" flags=() flag
+    # Every flag new-user's usage gives a value, as molt help prints it.
+    run_molt help
+    while IFS= read -r flag; do
+        flags+=("$flag")
+    done < <(grep 'new-user <user>' <<< "$output" | grep -o -- '\[--[a-z]*' | sed 's/^\[//')
+    [ "${#flags[@]}" -gt 0 ] || fail "molt help names no value flag for new-user: $output"
+    for flag in "${flags[@]}"; do
+        run_molt new-user ada --dest "$dest" "$flag" < /dev/null
+        assert_failure
+        assert_output_contains "new-user: $flag needs a value"
+        [ ! -e "$dest" ] || fail "$dest was written for $flag given last"
+    done
+}
+
+@test "molt new-user with nothing to read refuses a missing user, --email or --hostname, or an empty --email, naming it, and writes nothing (issue 0098)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada"
+    run_molt new-user --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "username is required"
+    [ ! -e "$dest" ] || fail "$dest was written with no user"
+    run_molt new-user ada --name "Ada Lovelace" --github ada-l \
+        --hostname analytical --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "email is required"
+    [ ! -e "$dest" ] || fail "$dest was written with no --email"
+    run_molt new-user ada --name "Ada Lovelace" --email "" --github ada-l \
+        --hostname analytical --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "email is required"
+    [ ! -e "$dest" ] || fail "$dest was written with an empty --email"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "hostname is required"
+    [ ! -e "$dest" ] || fail "$dest was written with no --hostname"
+}
+
+@test "molt new-user with nothing to read gives a missing --name and an empty --github the user, as Enter does (issue 0098)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada"
+    run_molt new-user ada --email ada@example.com --github "" --hostname analytical \
+        --dest "$dest" < /dev/null
+    assert_success
+    assert_file_exists "$dest/config/git/gitconfig_ada"
+    run cat "$dest/config/git/gitconfig"
+    assert_output_contains "name = ada"
+    assert_output_contains "path = ~/.gitconfig_ada"
+}

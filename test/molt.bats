@@ -150,16 +150,46 @@ TOML
     assert_doctor_closed
 }
 
-# A sleeve declaring the font "Test Font", for doctor run as molt runs, under
-# errexit: run in this shell, cmd_doctor would not show what bin/molt does.
+# A sleeve declaring the font "Test Font", and given $1, MOLT_TERMINAL_DRAWN_BY
+# as $1, for doctor run as molt runs, under errexit: run in this shell,
+# cmd_doctor would not show what bin/molt does.
 _font_sleeve() {
-    local repo
+    local repo vars
     repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    vars="$repo/instances/$(test_hostname)/vars.sh"
     create_test_repo "$repo"
     printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
     mkdir -p "$repo/instances/$(test_hostname)"
-    printf 'export MOLT_FONT_FAMILY="Test Font"\n' > "$repo/instances/$(test_hostname)/vars.sh"
+    printf 'export MOLT_FONT_FAMILY="Test Font"\n' > "$vars"
+    if [[ -n "${1:-}" ]]; then
+        printf 'export MOLT_TERMINAL_DRAWN_BY="%s"\n' "$1" >> "$vars"
+    fi
     export MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+}
+
+# An instance whose terminal Windows draws, as under WSL, declares it, and the
+# font check then passes and says why: the glyphs come from the Windows side,
+# so fontconfig here is not asked (issue 0094). The fake fc-list lists another
+# font, so a doctor that asked it would find Test Font not installed, and logs
+# each call.
+@test "molt doctor passes the font check where the instance says Windows draws its terminal, and asks fontconfig nothing (issue 0094)" {
+    _font_sleeve windows
+    local bin="$BATS_TEST_TMPDIR/fcbin" calls="$BATS_TEST_TMPDIR/fc-list-calls"
+    mkdir -p "$bin"
+    printf '#!/bin/sh\necho called >> "%s"\nprintf "Other Font\\n"\n' "$calls" > "$bin/fc-list"
+    chmod +x "$bin/fc-list"
+    PATH="$bin:$PATH" run_molt doctor
+    assert_output_contains "Checking declared font... ✓ Windows draws this terminal, so its font is the Windows side's to provide"
+    [ ! -e "$calls" ] || fail "doctor asked fc-list: $(cat "$calls")"
+    assert_doctor_closed
+}
+
+@test "molt doctor reports a MOLT_TERMINAL_DRAWN_BY it does not know, and does not pass the font check (issue 0094)" {
+    local drawn_by="Windows Terminal"
+    _font_sleeve "$drawn_by"
+    run_molt doctor
+    assert_output_contains "Checking declared font... ⚠ MOLT_TERMINAL_DRAWN_BY is \"$drawn_by\"; doctor knows only windows"
+    assert_doctor_closed
 }
 
 @test "molt doctor reports a declared font that is not installed, and carries on to its verdict (issue 0064)" {
@@ -175,86 +205,199 @@ _font_sleeve() {
 
 @test "molt doctor says it cannot verify the font without fontconfig, and carries on to its verdict (issue 0064)" {
     _font_sleeve
-    # PATH as it is, but each directory holding fc-list stands in as a copy
-    # of links to everything there except fc-list.
-    local dir path="" shadow n=0 entry
-    local IFS=:
-    for dir in $PATH; do
-        if [[ -e "$dir/fc-list" ]]; then
-            n=$((n + 1))
-            shadow="$BATS_TEST_TMPDIR/nofc$n"
-            mkdir -p "$shadow"
-            for entry in "$dir"/*; do
-                [[ "${entry##*/}" == fc-list ]] || ln -s "$entry" "$shadow/${entry##*/}"
-            done
-            dir="$shadow"
-        fi
-        path="${path:+$path:}$dir"
-    done
-    unset IFS
+    local path
+    path="$(path_without fc-list)"
     PATH="$path" command -v fc-list && fail "fc-list is still on PATH"
     PATH="$path" run_molt doctor
     assert_output_contains "Checking declared font... ? cannot verify Test Font"
     assert_doctor_closed
 }
 
-# doctor killed `ssh -T git@github.com` after 5 s and read that as not
-# authenticated, so from kovacs, whose handshake takes about 6 s, it failed a
-# sleeve whose auth worked (issue 0069). ssh now bounds its own connect and
-# handshake, a longer bound covers the whole exchange, and a bound running out
-# reads as github.com not reached. The stub ssh runs the answer $1 gives, after
-# writing the arguments it was given to $SSH_ARGS, one a line.
-_github_ssh() {
+# doctor dials each git host the stack's ssh config names, and judges each by
+# its own reply, where it once asked github.com alone, so a sleeve whose stack
+# reaches only a GitLab host could never pass (issue 0093). A git host is an
+# entry in molt's region of ~/.ssh/config that sets User git itself.
+#
+# The stub ssh logs the host it is asked for, its last argument without the
+# git@, to $SSH_HOSTS, one a line, and its arguments to $SSH_ARGS, one a line,
+# then runs the answer $1 gives, with that host in $host.
+_git_host_ssh() {
     SSH_BIN="$BATS_TEST_TMPDIR/sshbin"
     SSH_ARGS="$BATS_TEST_TMPDIR/ssh-args"
-    mkdir -p "$SSH_BIN" "$BATS_TEST_TMPDIR/home"
+    SSH_HOSTS="$BATS_TEST_TMPDIR/ssh-hosts"
+    mkdir -p "$SSH_BIN"
     cat > "$SSH_BIN/ssh" <<EOF
 #!/bin/sh
+for host; do :; done
+host="\${host#git@}"
 printf '%s\n' "\$@" > "$SSH_ARGS"
+printf '%s\n' "\$host" >> "$SSH_HOSTS"
 $1
 EOF
     chmod +x "$SSH_BIN/ssh"
 }
 
-_github_authenticated='echo "Hi tester! You have successfully authenticated, but GitHub does not provide shell access." >&2; exit 1'
+# ~/.ssh/config as molt renders it, with the sidecar that says so: the entry $1
+# above the marker, as the sleeve's own, unless $1 is empty, and the entries
+# after it below the marker, each given as "<name> <user>".
+_ssh_config() {
+    local above="$1" entry name user
+    shift
+    mkdir -p "$HOME/.ssh"
+    {
+        if [[ -n "$above" ]]; then
+            read -r name user <<< "$above"
+            printf 'Host %s\n  User %s\n\n' "$name" "$user"
+        fi
+        echo "# @@MOLT:BEGIN@@ managed by molt, do not edit below this line"
+        for entry in "$@"; do
+            read -r name user <<< "$entry"
+            printf '\nHost %s\n  HostName %s\n  User %s\n' "$name" "$name" "$user"
+        done
+    } > "$HOME/.ssh/config"
+    echo "rendered by the test" > "$HOME/.ssh/config.molt-rendered"
+}
 
-@test "molt doctor passes GitHub auth that answers late, within its bound (issue 0069)" {
-    _github_ssh "sleep 1; $_github_authenticated"
-    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_TIMEOUT=3 run_molt doctor
-    assert_output_contains "Checking GitHub auth... ✓ authenticated as tester"
+_github_authenticated='echo "Hi tester! You have successfully authenticated, but GitHub does not provide shell access." >&2; exit 1'
+_gitlab_welcome='echo "Welcome to GitLab, @tester!"; exit 0'
+
+@test "molt_git_hosts names each entry in molt's region that sets User git, by its first pattern it can dial (issue 0093)" {
+    load_molt_libs
+    local config="$BATS_TEST_TMPDIR/ssh-config"
+    cat > "$config" <<'EOF'
+Host above.example.com
+  User git
+# @@MOLT:BEGIN@@ managed by molt
+Host *.wild.example.com
+  User git
+Host two.example.com alias-two
+  user=git
+Host lan.example.com
+  User matts
+Host first-user.example.com
+  User matts
+  User git
+Match host matched.example.com
+  User git
+Host !neg.example.com *.any.example.com three.example.com
+  USER = "git"
+# --- molt config.d: lan-hosts.conf ---
+Host four.example.com
+  HostName four.internal
+  # User matts
+  User git
+EOF
+    run molt_git_hosts "$config"
+    assert_success
+    [ "$output" = "$(printf '%s\n' two.example.com three.example.com four.example.com)" ] \
+        || fail "molt's region named: $output"
+    run molt_git_hosts "$config" whole
+    assert_success
+    [ "$output" = "$(printf '%s\n' above.example.com two.example.com three.example.com four.example.com)" ] \
+        || fail "the whole file named: $output"
+}
+
+@test "molt doctor passes a GitLab-only stack's git host on GitLab's own reply (issue 0093)" {
+    _git_host_ssh "$_gitlab_welcome"
+    _ssh_config "" "gitlab.example.com git"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ gitlab.example.com as tester"
     assert_doctor_closed
 }
 
-@test "molt doctor asks ssh for GitHub auth with -n, BatchMode and its connect bound (issue 0069)" {
-    _github_ssh "$_github_authenticated"
-    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_CONNECT_TIMEOUT=7 run_molt doctor
-    assert_output_contains "Checking GitHub auth... ✓ authenticated as tester"
+@test "molt doctor dials each git host in molt's region by its own reply, and no other host (issue 0093)" {
+    local git_hosts=(github.com-tester gitlab.example.com)
+    _git_host_ssh 'case "$host" in
+        '"${git_hosts[0]}"') '"$_github_authenticated"' ;;
+        '"${git_hosts[1]}"') '"$_gitlab_welcome"' ;;
+        *) echo "not a git host of the stack: $host" >&2; exit 255 ;;
+    esac'
+    _ssh_config "mine.example.com git" "${git_hosts[0]} git" "lan.example.com matts" "${git_hosts[1]} git"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ ${git_hosts[0]} as tester, ${git_hosts[1]} as tester"
+    [ "$(cat "$SSH_HOSTS")" = "$(printf '%s\n' "${git_hosts[@]}")" ] || fail "doctor dialled: $(cat "$SSH_HOSTS")"
+    assert_doctor_closed
+}
+
+@test "molt doctor reports a git host whose reply it does not know, and does not pass it (issue 0093)" {
+    local known=(github.com-tester) unknown=(forge.example.com)
+    _git_host_ssh 'case "$host" in
+        '"${known[0]}"') '"$_github_authenticated"' ;;
+        *) echo "Hello from a forge doctor has never met"; exit 0 ;;
+    esac'
+    _ssh_config "" "${known[0]} git" "${unknown[0]} git"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking git hosts... ⚠ ${#unknown[@]} of $((${#known[@]} + ${#unknown[@]})) did not pass: ${unknown[0]}"
+    assert_output_contains "${unknown[0]}: doctor does not know this reply"
+    assert_output_contains "Hello from a forge doctor has never met"
+    assert_doctor_closed
+}
+
+@test "molt doctor passes with no git host to dial, says which case it found, and dials nothing (issue 0093)" {
+    _git_host_ssh "$_github_authenticated"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ none: there is no ssh config"
+    assert_doctor_closed
+    mkdir -p "$HOME/.ssh"
+    printf 'Host github.com\n  User git\n' > "$HOME/.ssh/config"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ none: the ssh config has no molt region"
+    assert_doctor_closed
+    _ssh_config "github.com git" "lan.example.com matts"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ none: the molt region of the ssh config names no host with User git"
+    assert_doctor_closed
+    [ ! -e "$SSH_HOSTS" ] || fail "doctor dialled: $(cat "$SSH_HOSTS")"
+}
+
+# doctor killed `ssh -T git@github.com` after 5 s and read that as not
+# authenticated, so from kovacs, whose handshake takes about 6 s, it failed a
+# sleeve whose auth worked (issue 0069). ssh now bounds its own connect and
+# handshake, a longer bound covers each git host's whole exchange, and a bound
+# running out reads as the host not reached.
+@test "molt doctor passes a git host that answers late, within its bound (issue 0069)" {
+    _git_host_ssh "sleep 1; $_github_authenticated"
+    _ssh_config "" "github.com git"
+    PATH="$SSH_BIN:$PATH" MOLT_GIT_HOST_TIMEOUT=3 run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ github.com as tester"
+    assert_doctor_closed
+}
+
+@test "molt doctor dials a git host as git@ with -n, BatchMode and its connect bound (issue 0069)" {
+    _git_host_ssh "$_github_authenticated"
+    _ssh_config "" "github.com git"
+    PATH="$SSH_BIN:$PATH" MOLT_GIT_HOST_CONNECT_TIMEOUT=7 run_molt doctor
+    assert_output_contains "Checking git hosts... ✓ github.com as tester"
     grep -qx -e '-n' "$SSH_ARGS" || fail "ssh was not given -n: $(cat "$SSH_ARGS")"
     grep -qx -e 'BatchMode=yes' "$SSH_ARGS" || fail "ssh was not given BatchMode=yes: $(cat "$SSH_ARGS")"
     grep -qx -e 'ConnectTimeout=7' "$SSH_ARGS" || fail "ssh was not given ConnectTimeout=7: $(cat "$SSH_ARGS")"
+    grep -qx -e 'git@github.com' "$SSH_ARGS" || fail "ssh was not asked for git@github.com: $(cat "$SSH_ARGS")"
 }
 
-@test "molt doctor reports GitHub not reached, not unauthenticated, when ssh never answers (issue 0069)" {
+@test "molt doctor reports a git host not reached, not unauthenticated, when ssh never answers (issue 0069)" {
     command -v timeout >/dev/null || skip "no timeout command, so nothing bounds a stub that never answers"
-    _github_ssh 'exec sleep 60'
-    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_TIMEOUT=2 run_molt doctor
-    assert_output_contains "Checking GitHub auth... ⚠ could not reach github.com within 2 s"
+    _git_host_ssh 'exec sleep 60'
+    _ssh_config "" "github.com git"
+    PATH="$SSH_BIN:$PATH" MOLT_GIT_HOST_TIMEOUT=2 run_molt doctor
+    assert_output_contains "github.com: could not reach it within 2 s"
     refute_output_contains "not authenticated"
     assert_doctor_closed
 }
 
-@test "molt doctor reports GitHub not reached when ssh's own connect bound runs out (issue 0069)" {
-    _github_ssh 'echo "ssh: connect to host github.com port 22: Operation timed out" >&2; exit 255'
-    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" MOLT_GITHUB_CONNECT_TIMEOUT=3 run_molt doctor
-    assert_output_contains "Checking GitHub auth... ⚠ could not reach github.com within 3 s"
+@test "molt doctor reports a git host not reached when ssh's own connect bound runs out (issue 0069)" {
+    _git_host_ssh 'echo "ssh: connect to host github.com port 22: Operation timed out" >&2; exit 255'
+    _ssh_config "" "github.com git"
+    PATH="$SSH_BIN:$PATH" MOLT_GIT_HOST_CONNECT_TIMEOUT=3 run_molt doctor
+    assert_output_contains "github.com: could not reach it within 3 s"
     refute_output_contains "not authenticated"
     assert_doctor_closed
 }
 
-@test "molt doctor still reports GitHub auth that ssh refuses as not authenticated (issue 0069)" {
-    _github_ssh 'echo "git@github.com: Permission denied (publickey)." >&2; exit 255'
-    HOME="$BATS_TEST_TMPDIR/home" PATH="$SSH_BIN:$PATH" run_molt doctor
-    assert_output_contains "Checking GitHub auth... ⚠ not authenticated"
+@test "molt doctor still reports a git host that refuses the key as not authenticated (issue 0069)" {
+    _git_host_ssh 'echo "git@github.com: Permission denied (publickey)." >&2; exit 255'
+    _ssh_config "" "github.com git"
+    PATH="$SSH_BIN:$PATH" run_molt doctor
+    assert_output_contains "github.com: not authenticated"
     refute_output_contains "could not reach"
     assert_doctor_closed
 }
