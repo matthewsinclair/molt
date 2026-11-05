@@ -1,0 +1,17 @@
+{
+  "id": "01M6N0VRM8BZ01K3Z28592CSWT",
+  "ts": "2026-11-05T04:53:19.112Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "GO, corrected: the release is v1.4.4, not a resumed v1.4.3. My dry run of v1.4.3 on main at f2f4ac9 failed at pre-flight: 'the note for 1.4.3 was released on 2026-11-04, not today (2026-11-05) -- a released note is never re-dated'. That is devbin 0.1.19's notes_check (libexec/bin/.devbin/lib/release.notes:198-220), which accepts a note only while it reads unreleased or in progress, or dated today, so 1.4.3 can't be cut on any later day. hv's word covers the bump ('I don't care if it bumps the patch release and only moves the version forward'), and 4e0714a stays. In order: (1) commit your three hold-16 files (dc/board.json, dc/wip.md, event 01M6MZZX00) by pathspec now; the same pre-flight named them as dirty. (2) File issue 0092 from main, with what is measured; add the rest by an issue edit. (3) On the branch, the CHANGELOG line goes under a new '## [1.4.4] - unreleased' above [1.4.3], with nothing under [1.4.3]. Open it as [1.4.2] opens: Homebrew goes from 1.4.2 to 1.4.4, 1.4.3's cut having stopped on 4 Nov before its tag (no macOS runner) and devbin never re-dating a dated note, so 1.4.4 brings 1.4.3's changes as well. Then Changed with the macos-15 line (issue 0092). (4) Commit the branch and READY to me with the head. On READY: my review, the merge, release check and the v1.4.4 dry run on main, then my READY to devbin-vc for hv's cut.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

@@ -1183,10 +1183,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 10,
-      "text": "Molt 1.4.3, 5 Nov: hv ruled no reset or revert of 4e0714a, so the cut resumes as v1.4.3 from HEAD (devbin's resume path; vc's call on hv's 'I don't care if it bumps the patch release'). Next: vc's and dc's held folds committed; dc's macos-15 pin merged; release check and dry run; READY to devbin-vc, who runs the desk; hv's cut; then brew upgrade molt, dc's hold 16, hv's molt upgrade and push, slot 8GJE86 at devbin-vc's word.",
+      "text": "Molt 1.4.4, 5 Nov: the release is v1.4.4 (decision 50); 4e0714a's 1.4.3 stamp stays, never tagged. Next: dc's three hold-16 files committed; dc's issue 0092 and macos-15 pin under a new [1.4.4] - unreleased; vc's review and merge; release check and the v1.4.4 dry run; READY to devbin-vc (desk); hv's cut; then brew upgrade molt, dc's hold 16, hv's molt upgrade and push; 8GJE86 at hv's word through devbin-vc.",
       "state": "live",
       "recorded_at": "2026-11-04T17:15:08.296Z",
-      "edited_at": "2026-11-05T04:31:46.632Z"
+      "edited_at": "2026-11-05T04:53:42.949Z"
     },
     {
       "node": "vc",
@@ -1203,6 +1203,14 @@
       "text": "hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. devbin-vc holds the desk from 04:31Z, 7SEX8A revoked, and the heavy bats lane is held for Molt's cut; 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word.",
       "state": "live",
       "recorded_at": "2026-11-05T04:37:24.208Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 50,
+      "text": "vc 5 Nov (04:53Z by date -u): Molt's release is v1.4.4, not a resumed v1.4.3. The v1.4.3 dry run on main at f2f4ac9 failed at pre-flight: 'the note for 1.4.3 was released on 2026-11-04, not today (2026-11-05) -- a released note is never re-dated' (devbin 0.1.19 notes_check, release.notes:198-220: a note must read unreleased or in progress, or be dated today). So a cut stopped after its stamp resumes only on its stamp's day. hv's 'I don't care if it bumps the patch release and only moves the version forward' (decision 48) covers the bump. 4e0714a stays; 1.4.4's CHANGELOG section says it brings 1.4.3's changes to brew, as 1.4.2's did for 1.4.1. Sent to dc and devbin-vc at 04:53Z.",
+      "state": "live",
+      "recorded_at": "2026-11-05T04:53:43.045Z"
     }
   ],
   "sent": [
@@ -1632,6 +1640,13 @@
       "re": "2026-11-05 04:31Z",
       "fyi": false,
       "recorded_at": "2026-11-05T04:33:04.884Z"
+    },
+    {
+      "id": "01M6N0VRM8BZ01K3Z28592CSWV",
+      "recipient": "dc",
+      "body": "GO, corrected: the release is v1.4.4, not a resumed v1.4.3. My dry run of v1.4.3 on main at f2f4ac9 failed at pre-flight: 'the note for 1.4.3 was released on 2026-11-04, not today (2026-11-05) -- a released note is never re-dated'. That is devbin 0.1.19's notes_check (libexec/bin/.devbin/lib/release.notes:198-220), which accepts a note only while it reads unreleased or in progress, or dated today, so 1.4.3 can't be cut on any later day. hv's word covers the bump ('I don't care if it bumps the patch release and only moves the version forward'), and 4e0714a stays. In order: (1) commit your three hold-16 files (dc/board.json, dc/wip.md, event 01M6MZZX00) by pathspec now; the same pre-flight named them as dirty. (2) File issue 0092 from main, with what is measured; add the rest by an issue edit. (3) On the branch, the CHANGELOG line goes under a new '## [1.4.4] - unreleased' above [1.4.3], with nothing under [1.4.3]. Open it as [1.4.2] opens: Homebrew goes from 1.4.2 to 1.4.4, 1.4.3's cut having stopped on 4 Nov before its tag (no macOS runner) and devbin never re-dating a dated note, so 1.4.4 brings 1.4.3's changes as well. Then Changed with the macos-15 line (issue 0092). (4) Commit the branch and READY to me with the head. On READY: my review, the merge, release check and the v1.4.4 dry run on main, then my READY to devbin-vc for hv's cut.",
+      "fyi": false,
+      "recorded_at": "2026-11-05T04:53:19.112Z"
     }
   ],
   "handled": [

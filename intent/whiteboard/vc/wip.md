@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.3, 5 Nov: hv ruled no reset or revert of 4e0714a, so the cut resumes as v1.4.3 from HEAD (devbin's resume path; vc's call on hv's 'I don't care if it bumps the patch release'). Next: vc's and dc's held folds committed; dc's macos-15 pin merged; release check and dry run; READY to devbin-vc, who runs the desk; hv's cut; then brew upgrade molt, dc's hold 16, hv's molt upgrade and push, slot 8GJE86 at devbin-vc's word. (edited)
+- Molt 1.4.4, 5 Nov: the release is v1.4.4 (decision 50); 4e0714a's 1.4.3 stamp stays, never tagged. Next: dc's three hold-16 files committed; dc's issue 0092 and macos-15 pin under a new [1.4.4] - unreleased; vc's review and merge; release check and the v1.4.4 dry run; READY to devbin-vc (desk); hv's cut; then brew upgrade molt, dc's hold 16, hv's molt upgrade and push; 8GJE86 at hv's word through devbin-vc. (edited)
 
 ## TODO
 
@@ -41,6 +41,7 @@ _(none)_
 - hv 4 Nov (molt-vc's TUI, agreed with pplr-vc as its decision 31): Molt is back with Molt's nodes. molt-dc builds 1.4.3 (0088 design B, the claude liberator giving CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir; 0089; 0090; templates/env/retired/ deleted), molt-vc reviews and merges, pplr-vc keeps the desk, and hv cuts with bin/devbin release. 0071 closes as overtaken by 0086. The cut does not wait for devbin 0.1.20.
 - hv 5 Nov, in molt-vc's TUI (answered before the clock read 2026-11-05 04:30Z by date -u): no reset or revert of the stopped cut's 4e0714a ('I am not going backwards here. I want to be able to push out a patch release and have it run end-to-end without failure and I don't care if it bumps the patch release and only moves the version forward'); devbin-vc runs the estate desk today and revokes 7SEX8A first; the test lane stays busy: devbin's 0319 rerun goes now, Molt's cut takes the lane at the first END once Molt is ready, and no run is stopped for another. Relayed to devbin-vc at 04:30Z.
 - hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. devbin-vc holds the desk from 04:31Z, 7SEX8A revoked, and the heavy bats lane is held for Molt's cut; 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word.
+- vc 5 Nov (04:53Z by date -u): Molt's release is v1.4.4, not a resumed v1.4.3. The v1.4.3 dry run on main at f2f4ac9 failed at pre-flight: 'the note for 1.4.3 was released on 2026-11-04, not today (2026-11-05) -- a released note is never re-dated' (devbin 0.1.19 notes_check, release.notes:198-220: a note must read unreleased or in progress, or be dated today). So a cut stopped after its stamp resumes only on its stamp's day. hv's 'I don't care if it bumps the patch release and only moves the version forward' (decision 48) covers the bump. 4e0714a stays; 1.4.4's CHANGELOG section says it brings 1.4.3's changes to brew, as 1.4.2's did for 1.4.1. Sent to dc and devbin-vc at 04:53Z.
 
 ---
 
