@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 09:14Z
+heartbeat_at: 2026-11-05 09:46Z
 status: active
 focus: "5 Nov: 0093, 0094, 0095 on hv's word through molt-vc; plan to vc first, then code in $TMPDIR/molt-wt/doctor-participant"
-claims: [ISSUE:0093, ISSUE:0094, ISSUE:0095]
+claims: [ISSUE:0093, ISSUE:0094, ISSUE:0095, ISSUE:0096]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0093, 0094, 0095, doctor on a participant's laptop (hv via molt-vc, 5 Nov): plan to molt-vc before code, then one worktree, doctor-participant, one commit per issue
+- 0093, 0094, 0095 and 0096, doctor and ssh on a participant's laptop (hv via molt-vc, 5 Nov): 0093 to 0095 committed in doctor-participant (4176036, b83c880, 52b6660), 0096 next, then READY for all four (edited)
 
 ## TODO
 
