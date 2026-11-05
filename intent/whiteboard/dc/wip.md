@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 13:17Z
+heartbeat_at: 2026-11-05 14:20Z
 status: active
-focus: "5 Nov: localfold on hv's word via molt-vc; 0093 to 0098 shipped in Molt 1.4.5 (v1.4.5 at 39fa08e); no claims, no items. After hv's compact: /in-session and its pickup, then hold for molt-vc's next dispatch, with no work started"
+focus: "5 Nov: on hv's word, working with pipeliner-sc on the devvm; sc says nothing on the devvm path is dc's today (Molt's runbook lines are molt-vc's). Holding read-only and reachable; a Molt defect from the Windows run comes through molt-vc on an issue"
 claims: []
 ---
 
