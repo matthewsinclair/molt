@@ -1,0 +1,16 @@
+{
+  "id": "01M6NJD9QASHBAF1H9451SMZN3",
+  "ts": "2026-11-05T09:59:59.466Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 37,
+    "text": "0093 to 0097, doctor, ssh and new-user on a participant's laptop (hv via molt-vc, 5 Nov): 0093 to 0096 committed in doctor-participant (4176036, b83c880, 52b6660, 3ce1a6c), 0097 next, then the four whole-file runs and READY for all five"
+  }
+}
