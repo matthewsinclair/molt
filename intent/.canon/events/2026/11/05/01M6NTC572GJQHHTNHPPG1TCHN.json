@@ -1,0 +1,16 @@
+{
+  "id": "01M6NTC572GJQHHTNHPPG1TCHN",
+  "ts": "2026-11-05T12:19:10.691Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 44,
+    "text": "gyges: confirm its Molt-matts is at 95a73a4 or later (issue 0090's owed line), one line from hv: git -C ~/Devel/cfg/Molt-matts log -1 --format='%h %s'. Molt 1.4.5 and a doctor passing every check are already there (hv's paste via molt-dc, 5 Nov), but doctor would pass the same with the old vars.sh. Then note 0090's owed line met on kovacs and gyges. farcaster and pihole go with todo 6."
+  }
+}

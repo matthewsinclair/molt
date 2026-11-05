@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- kovacs onto Molt 1.4.5 through kovacs-sysadm, on hv's go (5 Nov). Its read: hv's own molt maintain (pid 28154, from hv's herdr-core pane, 16:12:04 +04 = 12:12:04Z) has brought brew's molt 1.4.5 (keg 12:11:37Z), the only molt on PATH, and pulled Molt-matts clean to 95a73a4 (12:11:42Z). kovacs-sysadm rightly stopped before step 4. Owed: the re-render that 95a73a4's vars.sh change needs (0090's owed line). Once the maintain has exited and hv lifts kovacs-sysadm's own hold for devbin's CI in its window: molt doctor as the before, molt upgrade, molt doctor as the after, and whether env's files changed. devbin-vc: nothing on the desk needs kovacs. (edited)
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Other sleeves onto Molt 1.4.5: rhadamanth is on it (brew 1.4.5 at 39fa08e, molt doctor all passed, 5 Nov) and kovacs is doing 15; gyges when it is reachable (brew upgrade molt, molt use brew, molt upgrade, which brings Molt-matts 95a73a4, and molt doctor); farcaster and pihole go with todo 6. (edited)
+- gyges: confirm its Molt-matts is at 95a73a4 or later (issue 0090's owed line), one line from hv: git -C ~/Devel/cfg/Molt-matts log -1 --format='%h %s'. Molt 1.4.5 and a doctor passing every check are already there (hv's paste via molt-dc, 5 Nov), but doctor would pass the same with the old vars.sh. Then note 0090's owed line met on kovacs and gyges. farcaster and pihole go with todo 6. (edited)
 - hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.
 - AE ST0002/07, the owed proof for 0093 to 0097: agentic-engineering-dc runs the course template (AE main c4f7e96, devvm/molt-template/) through molt new-user --from on brew's Molt 1.4.5, which molt-vc told it of once the tap had be19428; record what it finds, doctor's misses above all, and answer any Molt question from the code in /Users/matts/Devel/scratch/molt-vc/. (edited)
 

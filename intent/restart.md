@@ -6,4 +6,4 @@
 
 ## TODO
 
-- **The rollout (vc todo 44):** kovacs through kovacs-sysadm, gyges when reachable; rhadamanth is on brew's 1.4.5.
+- **gyges's Molt-matts at 95a73a4 (vc todo 44):** one line from hv; rhadamanth, kovacs and gyges all run brew's 1.4.5 with doctor passing every check.

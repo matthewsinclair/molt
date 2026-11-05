@@ -1221,10 +1221,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 44,
-      "text": "Other sleeves onto Molt 1.4.5: rhadamanth is on it (brew 1.4.5 at 39fa08e, molt doctor all passed, 5 Nov) and kovacs is doing 15; gyges when it is reachable (brew upgrade molt, molt use brew, molt upgrade, which brings Molt-matts 95a73a4, and molt doctor); farcaster and pihole go with todo 6.",
+      "text": "gyges: confirm its Molt-matts is at 95a73a4 or later (issue 0090's owed line), one line from hv: git -C ~/Devel/cfg/Molt-matts log -1 --format='%h %s'. Molt 1.4.5 and a doctor passing every check are already there (hv's paste via molt-dc, 5 Nov), but doctor would pass the same with the old vars.sh. Then note 0090's owed line met on kovacs and gyges. farcaster and pihole go with todo 6.",
       "state": "live",
       "recorded_at": "2026-11-05T05:54:42.291Z",
-      "edited_at": "2026-11-05T12:12:55.901Z"
+      "edited_at": "2026-11-05T12:19:10.691Z"
     },
     {
       "node": "vc",
@@ -1340,7 +1340,8 @@
       "kind": "doing",
       "seq": 15,
       "text": "kovacs onto Molt 1.4.5 through kovacs-sysadm, on hv's go (5 Nov). Its read: hv's own molt maintain (pid 28154, from hv's herdr-core pane, 16:12:04 +04 = 12:12:04Z) has brought brew's molt 1.4.5 (keg 12:11:37Z), the only molt on PATH, and pulled Molt-matts clean to 95a73a4 (12:11:42Z). kovacs-sysadm rightly stopped before step 4. Owed: the re-render that 95a73a4's vars.sh change needs (0090's owed line). Once the maintain has exited and hv lifts kovacs-sysadm's own hold for devbin's CI in its window: molt doctor as the before, molt upgrade, molt doctor as the after, and whether env's files changed. devbin-vc: nothing on the desk needs kovacs.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T12:19:10.560Z",
       "recorded_at": "2026-11-05T12:12:55.747Z",
       "edited_at": "2026-11-05T12:14:06.136Z"
     }
@@ -2112,6 +2113,11 @@
       "id": "01M6NSS2R6S58DRN9XHMA4P4S1",
       "sender": "dc",
       "handled_at": "2026-11-05T12:10:06.399Z"
+    },
+    {
+      "id": "01M6NTA3ZC5VTY7HK8FQW7CVMP",
+      "sender": "dc",
+      "handled_at": "2026-11-05T12:19:10.513Z"
     }
   ]
 }

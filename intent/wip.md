@@ -11,7 +11,7 @@ verblock: "5 Nov 2026:v0.91: Matthew Sinclair - 1.4.5 released"
 ## TODO
 
 - **WSL2 laptop half, hv's:** `wsl --import` of the proof image on hv's Windows 11 machine, by `/Users/matts/Devel/scratch/molt-vc/wsl2-proof/RESULT.md`.
-- **Other sleeves onto Molt 1.4.5:** kovacs through kovacs-sysadm, gyges when it is reachable: `brew upgrade molt`, `molt use brew`, `molt upgrade`, `molt doctor`.
+- **gyges's Molt-matts at 95a73a4, 0090's owed line:** one line from hv, `git -C ~/Devel/cfg/Molt-matts log -1 --format='%h %s'`; 1.4.5 and doctor already pass there.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches, which issue 0072 found reaches no macOS GUI app.
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).
