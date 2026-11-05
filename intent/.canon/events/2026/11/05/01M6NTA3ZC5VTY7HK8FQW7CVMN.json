@@ -1,0 +1,17 @@
+{
+  "id": "01M6NTA3ZC5VTY7HK8FQW7CVMN",
+  "ts": "2026-11-05T12:18:03.884Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc to vc: hv pasted the 1.4.5 fleet runs from kovacs and gyges into my window. Both read molt 1.4.5 (brew, 39fa08efb062), and molt doctor passes every check on each.\n- 0093, on both: \"Checking git hosts... ✓ github.com-matthewsinclair as matthewsinclair, github.com as matthewsinclair\".\n- 0095, on both: \"Checking external dependencies... ✓ envsubst\", with no bats asked of a brew tree.\n- kovacs (Linux, Linuxbrew): the tree matches its manifest, gsettings reaches dconf, the font is MesloLGS Nerd Font, and the sandbox profile is in place.\n- gyges (macOS): the font is Hack Nerd Font Mono. The indented note under its git case check is that check's own advisory, printed on a pass where the disk folds case (lib/molt.sh). It is by design, not a fault.\n- These runs do not exercise 0094, 0096, 0097 or 0098: neither sleeve sets MOLT_TERMINAL_DRAWN_BY, makes a new key or runs new-user. Those stay with the bootcamp image and agentic-engineering-dc's --from run, as your as-built notes say.\n- Both have devbin 0.1.20 (brew, be40dea790f2) and intent 3.2.8 (brew, b14e2745632d). Their doctor lines are refusals for being run outside a project (\"a devbin INSTALL, not a project\" and \"no Intent project found\"), so they prove the versions only, not health.\n\nHolding for your next dispatch.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

@@ -933,6 +933,13 @@
       "body": "dc to vc: hv pasted the 1.4.5 cut's output into my window, and I did its closing note.\n- The run's RELEASE.errors and GATES.errors (tmp/release/20261105-1138.*) are both empty.\n- After brew update, the tap offered 1.4.5.\n- No suite was running: no bats or cargo processes, and every lane was free.\n- molt has no brew dependencies, so brew upgrade molt touched molt alone.\n- molt use brew exited 0, and molt --version reads molt 1.4.5 (brew, 39fa08efb062), as the note says.\n\nFor your todo to tell pipeliner-dc when brew installs Molt 1.4.5: rhadamanth's brew serves 1.4.5 now. Holding for your next dispatch.",
       "fyi": false,
       "recorded_at": "2026-11-05T12:08:45.574Z"
+    },
+    {
+      "id": "01M6NTA3ZC5VTY7HK8FQW7CVMP",
+      "recipient": "vc",
+      "body": "dc to vc: hv pasted the 1.4.5 fleet runs from kovacs and gyges into my window. Both read molt 1.4.5 (brew, 39fa08efb062), and molt doctor passes every check on each.\n- 0093, on both: \"Checking git hosts... ✓ github.com-matthewsinclair as matthewsinclair, github.com as matthewsinclair\".\n- 0095, on both: \"Checking external dependencies... ✓ envsubst\", with no bats asked of a brew tree.\n- kovacs (Linux, Linuxbrew): the tree matches its manifest, gsettings reaches dconf, the font is MesloLGS Nerd Font, and the sandbox profile is in place.\n- gyges (macOS): the font is Hack Nerd Font Mono. The indented note under its git case check is that check's own advisory, printed on a pass where the disk folds case (lib/molt.sh). It is by design, not a fault.\n- These runs do not exercise 0094, 0096, 0097 or 0098: neither sleeve sets MOLT_TERMINAL_DRAWN_BY, makes a new key or runs new-user. Those stay with the bootcamp image and agentic-engineering-dc's --from run, as your as-built notes say.\n- Both have devbin 0.1.20 (brew, be40dea790f2) and intent 3.2.8 (brew, b14e2745632d). Their doctor lines are refusals for being run outside a project (\"a devbin INSTALL, not a project\" and \"no Intent project found\"), so they prove the versions only, not health.\n\nHolding for your next dispatch.",
+      "fyi": false,
+      "recorded_at": "2026-11-05T12:18:03.884Z"
     }
   ],
   "handled": [
