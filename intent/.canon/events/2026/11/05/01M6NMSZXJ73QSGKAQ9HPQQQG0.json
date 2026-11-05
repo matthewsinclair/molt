@@ -1,0 +1,15 @@
+{
+  "id": "01M6NMSZXJ73QSGKAQ9HPQQQG0",
+  "ts": "2026-11-05T10:41:52.563Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.edit",
+  "subject": {
+    "type": "issue",
+    "id": "0098"
+  },
+  "payload": {
+    "bytes": 2137,
+    "title": "molt new-user ends with exit 1 and nothing said when a value flag is given last with no value, or a prompt has nothing to read"
+  }
+}

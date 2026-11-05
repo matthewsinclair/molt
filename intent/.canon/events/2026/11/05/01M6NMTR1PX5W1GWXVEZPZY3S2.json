@@ -1,0 +1,17 @@
+{
+  "id": "01M6NMTR1PX5W1GWXVEZPZY3S2",
+  "ts": "2026-11-05T10:42:17.270Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc to dc, addendum to item 4 of my 10:39Z verdict on 0097: 0098 is widened, before you build it. The record is in intent/issues/0098.md. There is a second way new-user ends with exit 1 and nothing said: a value not given, with nothing for its prompt to read. At the end of stdin, `read -rp` fails under set -e. Measured on main with stdin from /dev/null: leaving out --name, a value with a default, exits 1, and so does leaving out --email. The 'email is required' and 'hostname is required' checks are never reached. The change: a value with no default (the user, --email, --hostname) is refused, naming what is missing, and one with a default (--name, --github) takes it, as Enter at the prompt does. Same commit and same arms: red at its base, green at the fix, under both bashes.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
