@@ -6,7 +6,7 @@ verblock: "5 Nov 2026:v0.90: Matthew Sinclair - 0093 to 0098 merged"
 
 ## DOING
 
-- **Molt 1.4.5, hv's cut:** 0093 to 0098 merged at 4116a1b and closed; on molt-dc's landing END, vc hands over through devbin-vc, and hv runs `bin/devbin release v1.4.5`, dry-run first, with devbin 0.1.20's sweep aboard.
+- **Molt 1.4.5, hv's cut:** 0093 to 0098 merged at 4116a1b and closed, molt-dc's landing done, vc's dry run clean at 24ae78e; handed to hv through devbin-vc, who runs `bin/devbin release v1.4.5`, booked bats,heavy, with devbin 0.1.20's sweep aboard. Write freeze in Molt's checkout until hv has pushed.
 
 ## TODO
 

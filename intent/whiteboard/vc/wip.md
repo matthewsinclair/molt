@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 11:27Z
+heartbeat_at: 2026-11-05 11:32Z
 status: active
-focus: "5 Nov: Molt 1.4.5's batch, 0093 to 0098, merged at 4116a1b and closed at ca6a273; on molt-dc's landing END, vc hands Molt to hv through devbin-vc for the cut (bin/devbin release v1.4.5, dry-run first); then the CI read, pipeliner-dc's --from run on brew's 1.4.5 and the rollout; WSL2 laptop half hv's"
+focus: "5 Nov: Molt 1.4.5 handed to hv for the cut (0093 to 0098 merged at 4116a1b, closed, dry run clean at 24ae78e); write freeze in Molt's checkout until hv has pushed; then the CI read, pipeliner-dc's --from run on brew's 1.4.5 and the rollout; WSL2 laptop half hv's"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.5: 0093 to 0098 merged at 4116a1b and closed at ca6a273. On molt-dc's landing END (worktrees, branch, claims), hand Molt to hv through devbin-vc for the cut: bin/devbin release v1.4.5, dry-run first. Nobody writes in Molt's checkout from the handover until hv has pushed. Then the CI read and the rollout to the sleeves (todo 44), and pipeliner-dc's --from run on brew's 1.4.5 (todo 47).
+- Molt 1.4.5, handed to hv for the cut: 0093 to 0098 merged at 4116a1b and closed at ca6a273, molt-dc's landing END at 24ae78e, and vc's dry run at 24ae78e found no step failing. The cut: MOLT_PRJ_DIR=$HOME/Devel/prj bin/devbin release v1.4.5 in Molt's checkout, booked bats,heavy on the desk when hv says go. Its stamp dates the note on the day it runs, so a cut stopped after its stamp resumes that day or the next patch is cut. Write freeze in Molt's checkout from the handover until hv has pushed. Then the CI read, pipeliner-dc (todo 47) and the rollout (todo 44). (edited)
 
 ## TODO
 

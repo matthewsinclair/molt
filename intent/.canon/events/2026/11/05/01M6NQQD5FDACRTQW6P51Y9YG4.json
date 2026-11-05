@@ -1,0 +1,16 @@
+{
+  "id": "01M6NQQD5FDACRTQW6P51Y9YG4",
+  "ts": "2026-11-05T11:32:53.551Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 14,
+    "text": "Molt 1.4.5, handed to hv for the cut: 0093 to 0098 merged at 4116a1b and closed at ca6a273, molt-dc's landing END at 24ae78e, and vc's dry run at 24ae78e found no step failing. The cut: MOLT_PRJ_DIR=$HOME/Devel/prj bin/devbin release v1.4.5 in Molt's checkout, booked bats,heavy on the desk when hv says go. Its stamp dates the note on the day it runs, so a cut stopped after its stamp resumes that day or the next patch is cut. Write freeze in Molt's checkout from the handover until hv has pushed. Then the CI read, pipeliner-dc (todo 47) and the rollout (todo 44)."
+  }
+}
