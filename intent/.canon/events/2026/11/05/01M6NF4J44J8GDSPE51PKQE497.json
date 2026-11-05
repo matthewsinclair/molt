@@ -1,0 +1,15 @@
+{
+  "id": "01M6NF4J44J8GDSPE51PKQE497",
+  "ts": "2026-11-05T09:02:47.429Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "0093, 0094 and 0095, doctor on a participant's laptop: held until the course plan settles whether molt doctor is the first-run script's proof (hv, relayed by devbin-vc on 5 Nov); then dc builds them."
+  }
+}

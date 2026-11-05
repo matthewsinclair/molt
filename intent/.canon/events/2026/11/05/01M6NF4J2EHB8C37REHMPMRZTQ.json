@@ -1,0 +1,15 @@
+{
+  "id": "01M6NF4J2EHB8C37REHMPMRZTQ",
+  "ts": "2026-11-05T09:02:47.374Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Proof run for pipeliner-sc's WSL2 ask, on hv's yes relayed by devbin-vc on 5 Nov: desk request 01M6NF41P4VX6X7G4QGFYT7XBD (heavy), held until devbin-vc's desk grants it between cuts. Then Podman's podman-machine-default runs the x86_64 Ubuntu 24.04 resleeve and molt doctor, and the export goes to hv for wsl --import on hv's Windows 11 machine."
+  }
+}

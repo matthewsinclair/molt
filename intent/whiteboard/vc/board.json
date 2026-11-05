@@ -1249,8 +1249,25 @@
       "kind": "todo",
       "seq": 45,
       "text": "On hv's word, from molt-vc's WSL2 answer to pipeliner-sc (/Users/matts/Devel/scratch/molt-vc/answer-pipeliner-sc-2026-11-05.md): the x86_64 Ubuntu 24.04 proof run in Podman on rhadamanth (S, a desk ask; both heavy lanes on devbin's v0.1.20 re-cut until it ends), and doctor's three changes for a GitLab participant's laptop (GitHub-only auth S, local font XS, bats XS) as a Molt issue for dc.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T09:02:47.328Z",
       "recorded_at": "2026-11-05T08:57:26.907Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 5,
+      "text": "Proof run for pipeliner-sc's WSL2 ask, on hv's yes relayed by devbin-vc on 5 Nov: desk request 01M6NF41P4VX6X7G4QGFYT7XBD (heavy), held until devbin-vc's desk grants it between cuts. Then Podman's podman-machine-default runs the x86_64 Ubuntu 24.04 resleeve and molt doctor, and the export goes to hv for wsl --import on hv's Windows 11 machine.",
+      "state": "live",
+      "recorded_at": "2026-11-05T09:02:47.374Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 6,
+      "text": "0093, 0094 and 0095, doctor on a participant's laptop: held until the course plan settles whether molt doctor is the first-run script's proof (hv, relayed by devbin-vc on 5 Nov); then dc builds them.",
+      "state": "live",
+      "recorded_at": "2026-11-05T09:02:47.429Z"
     }
   ],
   "sent": [

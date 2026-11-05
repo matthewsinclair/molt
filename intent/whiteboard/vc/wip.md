@@ -22,11 +22,11 @@ _(none)_
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - Other sleeves onto Molt 1.4.4 and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
-- On hv's word, from molt-vc's WSL2 answer to pipeliner-sc (/Users/matts/Devel/scratch/molt-vc/answer-pipeliner-sc-2026-11-05.md): the x86_64 Ubuntu 24.04 proof run in Podman on rhadamanth (S, a desk ask; both heavy lanes on devbin's v0.1.20 re-cut until it ends), and doctor's three changes for a GitLab participant's laptop (GitHub-only auth S, local font XS, bats XS) as a Molt issue for dc.
 
 ## Holds
 
-_(none)_
+- Proof run for pipeliner-sc's WSL2 ask, on hv's yes relayed by devbin-vc on 5 Nov: desk request 01M6NF41P4VX6X7G4QGFYT7XBD (heavy), held until devbin-vc's desk grants it between cuts. Then Podman's podman-machine-default runs the x86_64 Ubuntu 24.04 resleeve and molt doctor, and the export goes to hv for wsl --import on hv's Windows 11 machine.
+- 0093, 0094 and 0095, doctor on a participant's laptop: held until the course plan settles whether molt doctor is the first-run script's proof (hv, relayed by devbin-vc on 5 Nov); then dc builds them.
 
 ## Watch-outs
 
