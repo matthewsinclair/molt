@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# newuser.sh — Scaffold a new molt-{user} config repo from the template skeleton.
+# newuser.sh — Scaffold a new molt-{user} config repo from the template skeleton,
+# or from another template named with --from.
 #
 # Owns the "create a personal config repo" concern. The skeleton lives in
 # templates/molt-user/ and uses __MOLT_*__ placeholders, deliberately distinct
@@ -40,14 +41,41 @@ _molt_subst_tokens() {
   fi
 }
 
+# Copies the template directory $1 to $2, which it makes, entry by entry, with
+# no .git at any depth: a template that is a git checkout would otherwise bring
+# its objects, and the token substitution would run through them (issue 0097).
+_molt_copy_template() {
+  local from="$1" to="$2" entry name
+  mkdir -p "$to" || return 1
+  for entry in "$from"/* "$from"/.[!.]* "$from"/..?*; do
+    [[ -e "$entry" || -L "$entry" ]] || continue
+    name="${entry##*/}"
+    [[ "$name" != .git ]] || continue
+    if [[ -d "$entry" && ! -L "$entry" ]]; then
+      _molt_copy_template "$entry" "$to/$name" || return 1
+    else
+      cp -R "$entry" "$to/$name" || return 1
+    fi
+  done
+}
+
 # Scaffold a new config repo. All params resolved by the caller.
 #   $1 user  $2 full_name  $3 email  $4 github  $5 hostname  $6 dest
+#   $7 the template, Molt's own skeleton when not given (issue 0097)
+# Any template goes through the same copy and the same __MOLT_*__ tokens, so
+# Molt keeps one scaffolder. One that is not a directory, or holds no config/,
+# by which molt_find_user_repo finds a stack, is refused before anything is
+# written.
 molt_new_user() {
   local user="$1" full_name="$2" email="$3" github="$4" hostname="$5" dest="$6"
-  local skeleton="${MOLT_ROOT}/templates/molt-user"
+  local template="${7-${MOLT_ROOT}/templates/molt-user}"
 
-  if [[ ! -d "$skeleton" ]]; then
-    molt_error "Skeleton not found: $skeleton"
+  if [[ ! -d "$template" ]]; then
+    molt_error "new-user: ${template} is not a directory, so there is no template to scaffold from"
+    return 1
+  fi
+  if [[ ! -d "$template/config" ]]; then
+    molt_error "new-user: ${template} holds no config/, and molt finds a stack only by its config/"
     return 1
   fi
   if [[ -e "$dest" ]]; then
@@ -58,17 +86,26 @@ molt_new_user() {
   molt_info "Scaffolding Molt-${user} -> ${dest}"
 
   mkdir -p "$(dirname "$dest")"
-  if ! cp -R "$skeleton" "$dest"; then
-    molt_error "Failed to copy skeleton to $dest"
+  if ! _molt_copy_template "$template" "$dest"; then
+    molt_error "Failed to copy the template $template to $dest"
     return 1
   fi
 
-  # Rename path placeholders (deepest-first so parent renames don't invalidate
-  # child paths). Only entries whose own name carries a token are touched.
-  local path renamed
+  # Rename path placeholders, deepest first, each entry by its own name alone:
+  # its parent is renamed after it, so a token in the parent's name stays in
+  # the path until then. Substituting along the whole path moved a tokened
+  # entry inside a tokened directory to a parent that did not exist yet, which
+  # a template from --from can hold, though the skeleton does not (issue 0097).
+  # The tokens are the five the contents take.
+  local path renamed name
   while IFS= read -r path; do
-    renamed="${path//__MOLT_HOSTNAME__/$hostname}"
-    renamed="${renamed//__MOLT_GITHUB__/$github}"
+    name="${path##*/}"
+    name="${name//__MOLT_HOSTNAME__/$hostname}"
+    name="${name//__MOLT_GITHUB__/$github}"
+    name="${name//__MOLT_USER__/$user}"
+    name="${name//__MOLT_EMAIL__/$email}"
+    name="${name//__MOLT_FULL_NAME__/$full_name}"
+    renamed="${path%/*}/${name}"
     if [[ "$renamed" != "$path" ]]; then
       if ! mv "$path" "$renamed"; then
         molt_error "Failed to rename $path"
@@ -90,6 +127,7 @@ molt_new_user() {
 # Thin coordinator: parse args, prompt for any missing required value, delegate.
 cmd_new_user() {
   local user="" full_name="" email="" github="" hostname="" dest=""
+  local from="" from_given=0
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -98,6 +136,9 @@ cmd_new_user() {
       --github)   github="${2:-}"; shift 2 ;;
       --hostname) hostname="${2:-}"; shift 2 ;;
       --dest)     dest="${2:-}"; shift 2 ;;
+      # Given, even empty, it names the template, so an empty one is refused
+      # as no directory rather than read as the skeleton (issue 0097).
+      --from)     from="${2:-}"; from_given=1; shift 2 ;;
       -*)         molt_error "Unknown flag: $1"; return 1 ;;
       *)
         if [[ -z "$user" ]]; then
@@ -134,22 +175,36 @@ cmd_new_user() {
     fi
   fi
 
-  molt_new_user "$user" "$full_name" "$email" "$github" "$hostname" "$dest" || return 1
+  local args=("$user" "$full_name" "$email" "$github" "$hostname" "$dest")
+  if [[ $from_given -eq 1 ]]; then
+    args+=("$from")
+  fi
+  molt_new_user "${args[@]}" || return 1
 
   # The resleeve comes first: until it runs, git has no name or email for the
-  # commit, and ssh no github.com-<github> host for the push (issue 0085).
+  # commit, and ssh no github.com-<github> host for the push (issue 0085). The
+  # GitHub lines are the skeleton's: a template from --from names its own git
+  # host, if it names one (issue 0097).
   cat <<EOF
 
 Next steps:
   cd "${dest}"
   MOLT_CFG_DIR="$(dirname "$dest")" molt resleeve --dry-run
   MOLT_CFG_DIR="$(dirname "$dest")" molt resleeve
+EOF
+  if [[ $from_given -eq 0 ]]; then
+    cat <<EOF
   # The resleeve links ~/.gitconfig, which gives git your name and email, and
   # renders ~/.ssh/config, whose github.com-${github} host the push uses; with
   # no key in ~/.ssh it makes ~/.ssh/id_ed25519: add its .pub to GitHub.
-  git init -b main && git add -A && git commit -m "Initial molt-${user} config"
+EOF
+  fi
+  echo "  git init -b main && git add -A && git commit -m \"Initial molt-${user} config\""
+  if [[ $from_given -eq 0 ]]; then
+    cat <<EOF
   # create the GitHub repo ${github}/molt-${user}, then:
   git remote add origin git@github.com-${github}:${github}/molt-${user}.git
   git push -u origin main
 EOF
+  fi
 }

@@ -176,3 +176,103 @@ _scaffold_flynn() {
     [ "$resleeve" -lt "$commit" ]
     [ "$commit" -lt "$push" ]
 }
+
+# --- --from: another template (issue 0097) ---
+
+# A template of the test's own, as a course's would be: a config/, by which
+# molt finds a stack, tokens in file contents and in path names, among them a
+# tokened file inside a tokened directory, and a marker line the skeleton does
+# not carry. Prints its path.
+_course_template() {
+    local template="$BATS_TEST_TMPDIR/course-template"
+    mkdir -p "$template/config/git" "$template/instances/__MOLT_HOSTNAME__"
+    printf '[user]\n\tname = __MOLT_FULL_NAME__\n\temail = __MOLT_EMAIL__\n' > "$template/config/git/gitconfig"
+    printf 'login = __MOLT_USER__\nforge = __MOLT_GITHUB__\n' > "$template/config/git/forge___MOLT_GITHUB__"
+    printf 'export MOLT_HOSTNAME="__MOLT_HOSTNAME__"\n' > "$template/instances/__MOLT_HOSTNAME__/vars.sh"
+    printf 'notes for __MOLT_USER__\n' > "$template/instances/__MOLT_HOSTNAME__/notes___MOLT_USER__.md"
+    echo "# a course template" > "$template/README.md"
+    echo "$template"
+}
+
+@test "molt_new_user from another template substitutes its tokens in contents and path names (issue 0097)" {
+    _load_newuser
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$template"
+    assert_success
+    grep -qx '# a course template' "$dest/README.md" || fail "not scaffolded from the template: $(cat "$dest/README.md")"
+    [ ! -e "$dest/config/ssh/config.tmpl" ] || fail "the skeleton's files are in the scaffold"
+    assert_file_exists "$dest/config/git/forge_ada-l"
+    assert_file_exists "$dest/instances/analytical/vars.sh"
+    assert_file_exists "$dest/instances/analytical/notes_ada.md"
+    run cat "$dest/config/git/gitconfig"
+    assert_output_contains "name = Ada Lovelace"
+    assert_output_contains "email = ada@example.com"
+    run cat "$dest/config/git/forge_ada-l"
+    assert_output_contains "login = ada"
+    assert_output_contains "forge = ada-l"
+    run find "$dest" -name '*__MOLT_*'
+    [ -z "$output" ] || fail "tokens left in path names: $output"
+    run grep -rl '__MOLT_' "$dest"
+    assert_failure
+}
+
+@test "molt_new_user copies no .git from a template, at any depth (issue 0097)" {
+    _load_newuser
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    git -C "$template" init -q
+    git -C "$template" add -A
+    git -C "$template" -c user.name=t -c user.email=t@t commit -qm template
+    mkdir -p "$template/vendor/kit/.git"
+    echo "ref: refs/heads/__MOLT_USER__" > "$template/vendor/kit/.git/HEAD"
+    echo "kit" > "$template/vendor/kit/README"
+    run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$template"
+    assert_success
+    grep -qx '# a course template' "$dest/README.md" || fail "not scaffolded from the template"
+    assert_file_exists "$dest/vendor/kit/README"
+    run find "$dest" -name .git
+    [ -z "$output" ] || fail "a .git came from the template: $output"
+    grep -qx 'ref: refs/heads/__MOLT_USER__' "$template/vendor/kit/.git/HEAD" || fail "the template's own .git changed"
+}
+
+@test "molt_new_user refuses a template that is not a directory, or holds no config/, and writes nothing (issue 0097)" {
+    _load_newuser
+    local dest="$BATS_TEST_TMPDIR/Molt-ada" file="$BATS_TEST_TMPDIR/a-file" bare="$BATS_TEST_TMPDIR/no-config"
+    echo "not a template" > "$file"
+    mkdir -p "$bare/instances"
+    local not_dirs=("$file" "$BATS_TEST_TMPDIR/missing") template
+    for template in "${not_dirs[@]}"; do
+        run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$template"
+        assert_failure
+        assert_output_contains "new-user: $template is not a directory"
+        [ ! -e "$dest" ] || fail "$dest was written for $template"
+    done
+    run molt_new_user ada "Ada Lovelace" ada@example.com ada-l analytical "$dest" "$bare"
+    assert_failure
+    assert_output_contains "new-user: $bare holds no config/"
+    [ ! -e "$dest" ] || fail "$dest was written for a template with no config/"
+}
+
+@test "molt new-user --from scaffolds from the template with flags alone, and its next steps leave out the GitHub lines (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    grep -qx '# a course template' "$dest/README.md" || fail "not scaffolded from the template"
+    assert_output_contains "molt resleeve --dry-run"
+    assert_output_contains "git init -b main && git add -A && git commit"
+    refute_output_contains "GitHub"
+    refute_output_contains "git remote add"
+    refute_output_contains "git push"
+}
+
+@test "molt new-user refuses an empty --from as no directory, rather than read it as the skeleton (issue 0097)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from ""
+    assert_failure
+    assert_output_contains "is not a directory"
+    [ ! -e "$dest" ] || fail "$dest was written for an empty --from"
+}
