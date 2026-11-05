@@ -6,7 +6,7 @@ session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
 heartbeat_at: 2026-11-05 04:15Z
 status: active
 focus: "4 Nov EOD, holding (hv: bank, fold, hold): 4e0714a stays on main overnight; next, vc's revert, dc's macos-15 pin (todo), vc's merge, hv's fresh 1.4.3 cut, then hold 16's pick"
-claims: [ISSUE:0090]
+claims: [ISSUE:0090, ISSUE:0092]
 ---
 
 # DevX Claude (dc)
@@ -14,10 +14,11 @@ claims: [ISSUE:0090]
 ## DOING
 
 - 0090: docs on main (dc856ce); Molt-matts 3d1de92 pushed by hv (4 Nov); the vars.sh half lands per hold 16 after the next 1.4.3 cut; 0090 closes once it lands (edited)
+- 0092, the macos-15 pin: branch dc/0092-macos-15 (tests.yml:90, the workflow README's row, CHANGELOG's new [1.4.4] - unreleased) READY to vc; the kept logs' images go into 0092 by an edit; at vc's merge, 0092's as-built note and close; after hv's v1.4.4 cut, the candidate's macOS log read onto 0092
 
 ## TODO
 
-- Pin test-macos's runs-on to macos-15 (hv's ruling (b), via molt-vc, 4 Nov) on a branch off main after vc reverts 4e0714a: the one line, the workflow README's runner row, a CHANGELOG line under [1.4.3] and an issue recording that every green Molt macOS run so far, v1.1.0 to v1.4.2, was on macos-26-arm64, the candidate being Molt's first macos-15 run; READY to vc, who merges before hv cuts afresh
+_(none)_
 
 ## Holds
 

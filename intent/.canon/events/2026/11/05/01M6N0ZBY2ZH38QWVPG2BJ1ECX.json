@@ -1,0 +1,15 @@
+{
+  "id": "01M6N0ZBY2ZH38QWVPG2BJ1ECX",
+  "ts": "2026-11-05T04:55:17.186Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0092, the macos-15 pin: branch dc/0092-macos-15 (tests.yml:90, the workflow README's row, CHANGELOG's new [1.4.4] - unreleased) READY to vc; the kept logs' images go into 0092 by an edit; at vc's merge, 0092's as-built note and close; after hv's v1.4.4 cut, the candidate's macOS log read onto 0092"
+  }
+}
