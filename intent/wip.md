@@ -1,5 +1,5 @@
 ---
-verblock: "5 Nov 2026:v0.91: Matthew Sinclair - 1.4.5 released"
+verblock: "5 Nov 2026:v0.92: Matthew Sinclair - localfold"
 ---
 
 # Work In Progress

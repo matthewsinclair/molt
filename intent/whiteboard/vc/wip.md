@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 12:06Z
+heartbeat_at: 2026-11-05 12:23Z
 status: active
-focus: "5 Nov: Molt 1.4.5 released and every CI run green (candidate 42020687220 with macOS; main 42023418293); next the rollout (todo 44) at hv's timing, and agentic-engineering-dc's AE ST0002/07 run on brew's 1.4.5; WSL2 laptop half hv's"
+focus: "5 Nov, localfolded: Molt 1.4.5 released (39fa08e), CI green, on rhadamanth, kovacs and gyges with doctor passing; 0093 to 0098 closed, 0090's owed line met; open: agentic-engineering-dc's AE ST0002/07 --from run on brew's 1.4.5 (todo 48) and hv's WSL2 laptop half (todo 46); holding for hv"
 claims: []
 ---
 
@@ -21,8 +21,8 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.
-- AE ST0002/07, the owed proof for 0093 to 0097: agentic-engineering-dc runs the course template (AE main c4f7e96, devvm/molt-template/) through molt new-user --from on brew's Molt 1.4.5, which molt-vc told it of once the tap had be19428; record what it finds, doctor's misses above all, and answer any Molt question from the code in /Users/matts/Devel/scratch/molt-vc/. (edited)
+- hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) since 5 Nov. (edited)
+- AE ST0002/07, the owed proof for 0093 to 0095 and 0097 (0096's and 0098's were the cut's suite and CI, which passed): agentic-engineering-dc runs the course template (AE main c4f7e96, devvm/molt-template/) through molt new-user --from on brew's Molt 1.4.5, which molt-vc told it of once the tap had be19428; record what it finds, doctor's misses above all, and answer any Molt question from the code in /Users/matts/Devel/scratch/molt-vc/. (edited)
 
 ## Holds
 
@@ -39,7 +39,7 @@ _(none)_
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)
-- hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. devbin-vc holds the desk from 04:31Z, 7SEX8A revoked, and the heavy bats lane is held for Molt's cut; 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word.
+- hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word; Molt 1.4.5's rollout went live on 5 Nov (rhadamanth, kovacs and gyges). (edited)
 
 ---
 

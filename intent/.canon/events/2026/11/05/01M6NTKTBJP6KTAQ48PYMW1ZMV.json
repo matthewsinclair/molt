@@ -1,0 +1,16 @@
+{
+  "id": "01M6NTKTBJP6KTAQ48PYMW1ZMV",
+  "ts": "2026-11-05T12:23:21.714Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 46,
+    "text": "hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) since 5 Nov."
+  }
+}

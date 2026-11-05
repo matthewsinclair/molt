@@ -1,0 +1,16 @@
+{
+  "id": "01M6NTKTJJZKWNHWRPTRV7NYBC",
+  "ts": "2026-11-05T12:23:21.938Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 48,
+    "text": "AE ST0002/07, the owed proof for 0093 to 0095 and 0097 (0096's and 0098's were the cut's suite and CI, which passed): agentic-engineering-dc runs the course template (AE main c4f7e96, devvm/molt-template/) through molt new-user --from on brew's Molt 1.4.5, which molt-vc told it of once the tap had be19428; record what it finds, doctor's misses above all, and answer any Molt question from the code in /Users/matts/Devel/scratch/molt-vc/."
+  }
+}
