@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 09:34Z
+heartbeat_at: 2026-11-05 10:07Z
 status: active
-focus: "5 Nov: Molt 1.4.4 released (bc96429) and rolled out on rhadamanth, no open issue; globalfold done (8dd9c8b); back from hv's compact, holding for hv's word through devbin-vc"
+focus: "5 Nov: 0093 to 0097 on dc/doctor-participant at d3cbb75 (0093 to 0096 accepted by vc, 0097 to review), then dc's whole-file runs and READY, vc merges and closes, for hv's 1.4.5 cut with devbin 0.1.20 (381979a); WSL2 proof green, hv's laptop half open; folded for hv's compact"
 claims: []
 ---
 
