@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 12:02Z
+heartbeat_at: 2026-11-05 12:06Z
 status: active
-focus: "5 Nov: Molt 1.4.5 released (39fa08e, tag v1.4.5, tap be19428); main's CI run 42023418293 to read; then the rollout; agentic-engineering-dc runs AE ST0002/07 on brew's 1.4.5; WSL2 laptop half hv's"
+focus: "5 Nov: Molt 1.4.5 released and every CI run green (candidate 42020687220 with macOS; main 42023418293); next the rollout (todo 44) at hv's timing, and agentic-engineering-dc's AE ST0002/07 run on brew's 1.4.5; WSL2 laptop half hv's"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.5 released by hv's cut (release commit 39fa08e, tag v1.4.5, GitHub release, formula in the tap at be19428), every leg green: candidate run 42020687220 and the local gates. Still to read: main's push run 42023418293 on 39fa08e. Then the rollout (todo 44): rhadamanth's brew upgrade molt and molt use brew when no suite runs, kovacs through kovacs-sysadm, gyges when reachable. agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) now, is told, and its /07 --from run on brew's 1.4.5 is the owed proof for 0093 to 0097. (edited)
+_(none)_
 
 ## TODO
 
@@ -23,6 +23,7 @@ claims: []
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - Other sleeves onto Molt 1.4.5 once hv has cut it (brew upgrade takes them past 1.4.4), and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
 - hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.
+- AE ST0002/07, the owed proof for 0093 to 0097: agentic-engineering-dc runs the course template (AE main c4f7e96, devvm/molt-template/) through molt new-user --from on brew's Molt 1.4.5, which molt-vc told it of once the tap had be19428; record what it finds, doctor's misses above all, and answer any Molt question from the code in /Users/matts/Devel/scratch/molt-vc/. (edited)
 
 ## Holds
 
