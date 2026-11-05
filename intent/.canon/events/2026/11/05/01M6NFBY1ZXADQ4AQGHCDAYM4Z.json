@@ -1,0 +1,15 @@
+{
+  "id": "01M6NFBY1ZXADQ4AQGHCDAYM4Z",
+  "ts": "2026-11-05T09:06:49.023Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0093, 0094 and 0095 with dc now, on hv's word in molt-vc's window (5 Nov): one worktree, one commit per issue, dc's plan to vc first; dc's bats proofs on the desk once devbin's v0.1.20 re-cut frees the bats lane; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5)."
+  }
+}

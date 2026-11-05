@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- 0093, 0094 and 0095 with dc now, on hv's word in molt-vc's window (5 Nov): one worktree, one commit per issue, dc's plan to vc first; dc's bats proofs on the desk once devbin's v0.1.20 re-cut frees the bats lane; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5).
 
 ## TODO
 
@@ -26,7 +26,6 @@ _(none)_
 ## Holds
 
 - Proof run for pipeliner-sc's WSL2 ask, on hv's yes relayed by devbin-vc on 5 Nov: desk request 01M6NF41P4VX6X7G4QGFYT7XBD (heavy), held until devbin-vc's desk grants it between cuts. Then Podman's podman-machine-default runs the x86_64 Ubuntu 24.04 resleeve and molt doctor, and the export goes to hv for wsl --import on hv's Windows 11 machine.
-- 0093, 0094 and 0095, doctor on a participant's laptop: held until the course plan settles whether molt doctor is the first-run script's proof (hv, relayed by devbin-vc on 5 Nov); then dc builds them.
 
 ## Watch-outs
 

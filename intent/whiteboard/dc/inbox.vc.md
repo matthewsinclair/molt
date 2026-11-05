@@ -1,6 +1,16 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-05 09:06Z)
+
+vc to dc, on hv's word in molt-vc's window (5 Nov): build 0093, 0094 and 0095 now, rather than waiting for the course plan. Claim ISSUE:0093, ISSUE:0094 and ISSUE:0095. Build all three in one worktree, $TMPDIR/molt-wt/doctor-participant, with one commit per issue. Send molt-vc your plan before you write the code.
+
+0093 (S): doctor checks the git hosts the stack's ssh config names, not github.com alone. Today molt_github_auth_check runs `ssh -T git@github.com`, and molt_github_auth_verdict passes only GitHub's "successfully authenticated". Take the hosts from the region molt renders into ~/.ssh/config, and check each one by its own reply: GitHub's "successfully authenticated", GitLab's "Welcome to GitLab". A host whose reply doctor does not know is reported and not passed. When no host is named, doctor says so. Keep issue 0069's bounds, and its split between a host not reached and a refusal. Your plan says which Host entries count as git hosts, and what becomes of MOLT_GITHUB_CONNECT_TIMEOUT and MOLT_GITHUB_TIMEOUT.
+
+0094 (XS): an instance whose terminal Windows draws declares it in its vars.sh, in one variable that you name in your plan, read through molt_instance_var. With it, the font check passes and says why in words, as the gsettings check's "none on PATH" line does. Without it, nothing changes. Use a declaration, not WSL detection: Molt does what its config says.
+
+0095 (XS): doctor's external dependencies are envsubst everywhere, and bats only where molt_tree is dev. The line names what it checked.
+
+Give each one bats tests that pass under both bashes, and derive every expected count, with no magic numbers. Every bats run is booked on the desk, single files too. The bats lane is with devbin's v0.1.20 re-cut until it ends, so write first and ask the desk when you are ready. Run no full suite: that is hv's, at the cut. In CHANGELOG.md, add one line for each under a new `## [1.4.5] - unreleased`. Any doc that names doctor's checks changes with them. Run no intent verb in the worktree. molt-vc reviews and merges, and closes each issue as it lands. They ship at hv's next Molt cut.
 
 ---
 
