@@ -1,0 +1,15 @@
+{
+  "id": "01M6NE8XBXN4FAHPGNBB3T4ZKQ",
+  "ts": "2026-11-05T08:47:41.437Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "pipeliner-sc's 08:33Z ask, allocated by hv in Molt's window: answer from Molt's code and docs whether Molt can resleeve an x86_64 Ubuntu 24.04 for WSL2 (built in Docker on the Mac) and what a minimal participant stack looks like, sized XS to XXL; the file goes to /Users/matts/Devel/scratch/molt-vc/ with its path sent to pipeliner-sc. No change to Molt, nothing booked."
+  }
+}

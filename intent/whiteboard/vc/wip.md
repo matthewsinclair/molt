@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- pipeliner-sc's 08:33Z ask, allocated by hv in Molt's window: answer from Molt's code and docs whether Molt can resleeve an x86_64 Ubuntu 24.04 for WSL2 (built in Docker on the Mac) and what a minimal participant stack looks like, sized XS to XXL; the file goes to /Users/matts/Devel/scratch/molt-vc/ with its path sent to pipeliner-sc. No change to Molt, nothing booked.
 
 ## TODO
 
@@ -25,7 +25,7 @@ _(none)_
 
 ## Holds
 
-- pipeliner-sc's ask of 5 Nov 08:33Z (/Users/matts/Devel/scratch/pipeliner-sc/ask-molt-vc-2026-11-05.md): can Molt resleeve an x86_64 Ubuntu 24.04 for WSL2, built in Docker on the Mac, for hv's 9 and 10 Nov bootcamp, and what a minimal participant stack looks like. Held until hv allocates it in Molt's window; the answer then goes to /Users/matts/Devel/scratch/molt-vc/ with its path sent to pipeliner-sc, sized XS to XXL.
+_(none)_
 
 ## Watch-outs
 
