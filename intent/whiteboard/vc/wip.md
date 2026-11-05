@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 06:02Z
+heartbeat_at: 2026-11-05 06:04Z
 status: active
-focus: "5 Nov: Molt 1.4.4 released (bc96429) and rolled out on rhadamanth, no open issue left; holding for hv's word through devbin-vc: 8GJE86, hv's push of Molt's intent/ records, the pending intent sync"
+focus: "5 Nov: Molt 1.4.4 released (bc96429) and rolled out on rhadamanth, no open issue; globalfold done (8dd9c8b); holding for hv's compact, then hv's word through devbin-vc"
 claims: []
 ---
 
