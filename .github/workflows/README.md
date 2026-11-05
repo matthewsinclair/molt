@@ -9,7 +9,7 @@ Runs on a push to `main` or to a release candidate (`candidate/**`, which devbin
 | Job          | Runner        | Runs                        | What it does                                                                                         |
 | ------------ | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
 | test-linux   | ubuntu-latest | every run                   | Installs bats-core 1.12.0 from source, and zsh, then runs `bats test/*.bats test/liberators/*.bats`  |
-| test-macos   | macos-latest  | on a candidate or demand    | Installs bats-core with Homebrew, then runs the same suite                                           |
+| test-macos   | macos-15      | on a candidate or demand    | Installs bats-core with Homebrew, then runs the same suite                                           |
 | shellcheck   | ubuntu-latest | every run                   | Runs `shellcheck -x` over `bin/molt`, `lib/*.sh` and `liberators/*.sh`; any finding fails the job    |
 | test-summary | ubuntu-latest | unless the run is cancelled | Fails unless test-linux passed, and test-macos passed where the run required it or skipped where not |
 
