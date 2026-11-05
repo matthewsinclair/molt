@@ -87,7 +87,7 @@ jobs:
     # deliberately, and Test Summary below knows it. Test Summary's
     # MACOS_REQUIRED names the same two cases.
     if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/candidate/') }}
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
     - uses: actions/checkout@v7
