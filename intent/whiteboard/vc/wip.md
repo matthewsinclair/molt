@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- kovacs onto Molt 1.4.5 through kovacs-sysadm, on hv's go in molt-vc's window (5 Nov): a read first (molt's version, the Molt-matts clone, no suite or brew running), then brew update and brew upgrade molt, molt use brew, molt upgrade (it pulls Molt-matts 95a73a4, 0090's owed line, and resleeves) and molt doctor; stops for sudo, the config-dir move's claude guard, a dirty clone or any utilz use or relink. Waiting on its report and END.
+- kovacs onto Molt 1.4.5 through kovacs-sysadm, on hv's go (5 Nov). Its read: hv's own molt maintain (pid 28154, from hv's herdr-core pane, 16:12:04 +04 = 12:12:04Z) has brought brew's molt 1.4.5 (keg 12:11:37Z), the only molt on PATH, and pulled Molt-matts clean to 95a73a4 (12:11:42Z). kovacs-sysadm rightly stopped before step 4. Owed: the re-render that 95a73a4's vars.sh change needs (0090's owed line). Once the maintain has exited and hv lifts kovacs-sysadm's own hold for devbin's CI in its window: molt doctor as the before, molt upgrade, molt doctor as the after, and whether env's files changed. devbin-vc: nothing on the desk needs kovacs. (edited)
 
 ## TODO
 

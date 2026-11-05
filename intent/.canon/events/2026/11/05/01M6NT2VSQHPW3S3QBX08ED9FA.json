@@ -1,0 +1,16 @@
+{
+  "id": "01M6NT2VSQHPW3S3QBX08ED9FA",
+  "ts": "2026-11-05T12:14:06.136Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 15,
+    "text": "kovacs onto Molt 1.4.5 through kovacs-sysadm, on hv's go (5 Nov). Its read: hv's own molt maintain (pid 28154, from hv's herdr-core pane, 16:12:04 +04 = 12:12:04Z) has brought brew's molt 1.4.5 (keg 12:11:37Z), the only molt on PATH, and pulled Molt-matts clean to 95a73a4 (12:11:42Z). kovacs-sysadm rightly stopped before step 4. Owed: the re-render that 95a73a4's vars.sh change needs (0090's owed line). Once the maintain has exited and hv lifts kovacs-sysadm's own hold for devbin's CI in its window: molt doctor as the before, molt upgrade, molt doctor as the after, and whether env's files changed. devbin-vc: nothing on the desk needs kovacs."
+  }
+}
