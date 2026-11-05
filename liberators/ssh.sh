@@ -170,7 +170,10 @@ ssh_install() {
   if ! _ssh_find_key &>/dev/null; then
     molt_info "Generating SSH key..."
     local email
-    email="$(git config --global user.email 2>/dev/null || echo "$(whoami)@$(molt_hostname)")"
+    # --includes, since a --global lookup reads no [include] unless asked, and
+    # an identity kept only in an included file then never reached the key,
+    # whose comment fell back to user@host (issue 0096).
+    email="$(git config --global --includes user.email 2>/dev/null || echo "$(whoami)@$(molt_hostname)")"
     ssh-keygen -t ed25519 -C "$email" -f "$HOME/.ssh/id_ed25519" -N ""
     molt_warn "New SSH key generated. Add public key to GitHub/remotes:"
     molt_warn "  cat ~/.ssh/id_ed25519.pub"

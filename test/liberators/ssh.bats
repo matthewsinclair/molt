@@ -46,6 +46,39 @@ _ssh_env() {
     assert_output_contains "re-rendering"
 }
 
+# A new key's comment is the user's git email. A --global lookup reads no
+# [include] unless asked, so an identity kept only in a file the global config
+# includes never reached the key, whose comment fell back to user@host: the
+# WSL2 proof's key came out dev@devvm (issue 0096). The fake ssh-keygen, first
+# on PATH, logs the comment it is given and makes the key, so the install goes
+# on as it would.
+@test "a new key's comment is the git email that only an included file gives (issue 0096)" {
+    _ssh_env
+    rm "$HOME/.ssh/id_ed25519" "$SSH_ROOT/repo/instances/$(test_hostname)/ssh/config.d/gyges.conf"
+    local email="included@example.com"
+    export GIT_CONFIG_GLOBAL="$SSH_ROOT/gitconfig"
+    printf '[include]\n\tpath = identity\n' > "$GIT_CONFIG_GLOBAL"
+    printf '[user]\n\temail = %s\n' "$email" > "$SSH_ROOT/identity"
+    mkdir -p "$SSH_ROOT/bin"
+    cat > "$SSH_ROOT/bin/ssh-keygen" <<EOF
+#!/bin/sh
+while [ \$# -gt 0 ]; do
+    case "\$1" in
+        -C) printf '%s\n' "\$2" > "$SSH_ROOT/keygen-comment"; shift 2 ;;
+        -f) : > "\$2"; : > "\$2.pub"; shift 2 ;;
+        *) shift ;;
+    esac
+done
+EOF
+    chmod +x "$SSH_ROOT/bin/ssh-keygen"
+    export PATH="$SSH_ROOT/bin:$PATH"
+
+    run ssh_install
+    assert_success
+    [ "$(cat "$SSH_ROOT/keygen-comment")" = "$email" ] \
+        || fail "the key's comment was: $(cat "$SSH_ROOT/keygen-comment")"
+}
+
 # A repo with no ssh config is allowed, and ssh_check passes it, so the install
 # passes it too rather than failing on molt_install_config's "Config not found".
 @test "ssh_install passes a user repo with no ssh config and no config.d fragments, as ssh_check does" {
