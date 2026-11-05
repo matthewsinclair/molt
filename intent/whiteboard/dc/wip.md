@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 14:20Z
+heartbeat_at: 2026-11-05 16:48Z
 status: active
-focus: "5 Nov: on hv's word, working with pipeliner-sc on the devvm; sc says nothing on the devvm path is dc's today (Molt's runbook lines are molt-vc's). Holding read-only and reachable; a Molt defect from the Windows run comes through molt-vc on an issue"
+focus: "5 Nov EOD, on hv's word via pipeliner-sc: quiesced and localfolded; nothing in progress, no claims, no items; docs checked against the code (new-user.md matches lib/newuser.sh as built). Hold, staying active, for molt-vc's next dispatch"
 claims: []
 ---
 
