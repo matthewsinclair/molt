@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 16:28Z
-status: active
+heartbeat_at: 2026-11-05 16:53Z
+status: paused
 focus: "5 Nov, localfolded: holding for hv's word, nothing in progress; Molt's devvm piece done (three resleeve recovery lines to agentic-engineering-ac, sc in copy, 14:21Z); molt-dc holds; open: hv's WSL2 laptop half (todo 46)"
 claims: []
 ---
