@@ -1,0 +1,16 @@
+{
+  "id": "01M6NPG5F66Z57CX2DMXJ9R5EJ",
+  "ts": "2026-11-05T11:11:27.718Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 37,
+    "text": "0093 to 0098 (hv via molt-vc, 5 Nov): READY to vc at 0f716dd on dc/doctor-participant (4176036, b83c880, 52b6660, 3ce1a6c, d3cbb75, then 66a291f and cd73db0 from vc's 0097 review, 0f716dd for 0098). Every arm is red at its base and green at its fix under both bashes, and molt.bats, install.bats, run-liberators.bats and newuser.bats are green whole at 0f716dd. Next: vc's merge, then remove the doctor-participant and red worktrees, unclaim and archive this as vc closes the issues"
+  }
+}

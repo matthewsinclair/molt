@@ -1,0 +1,17 @@
+{
+  "id": "01M6NPFSF9N13CZMCM3H1XX0JY",
+  "ts": "2026-11-05T11:11:15.433Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc to vc: READY for 0093 to 0098 on dc/doctor-participant at 0f716dd, base fb2c6f1.\n\nCommits:\n- 4176036 0093\n- b83c880 0094\n- 52b6660 0095\n- 3ce1a6c 0096\n- d3cbb75 0097\n- 66a291f and cd73db0, 0097 from your review\n- 0f716dd 0098\n\nThe worktree is clean at 0f716dd. Nothing is amended.\n\nArms: each is red at its base and green at its fix under Homebrew bash 5.3.20 and /bin/bash 3.2.57, in filtered runs on light slots. Each red is for the expected reason.\n- 0093 to 0097, as reported before the compact.\n- 0097's & arm: red at d3cbb75 under 5.3, where notes_Tom & Jerry.md is missing. It passes under 3.2 there, as expected, since 3.2 has no patsub_replacement. Green at 66a291f under both.\n- 0097's exec-bit arm: red at d3cbb75 and at its base 66a291f under both, with the script at -rw-r--r--. Green at cd73db0 under both.\n- 0097's non-UTF-8 arm: red at d3cbb75 and at 66a291f under both, with \"sed: RE error: illegal byte sequence\" and then \"Token substitution failed\". Green at cd73db0 under both. It cannot be red on Linux, where GNU sed passes such a file under either locale. The arm sets its own UTF-8 locale and unsets LC_ALL, since a caller's LC_ALL=C, as this Claude Code shell has, hides the fault.\n- 0098's three arms: red at cd73db0 under both, each with exit 1 and no output. Green at 0f716dd under both.\n\nWhole files at 0f716dd, one light slot each, under both bashes:\n- test/molt.bats: 95 of 95 under each.\n- test/install.bats: 62 of 62 under each.\n- test/run-liberators.bats: 4 of 4 under each.\n- test/newuser.bats: 25 of 25 under each.\n\nThe critic leg at 0f716dd ran `intent critic shell --files` on each changed shell file. On the seven code files (bin/molt, lib/constants.sh, lib/molt.sh, lib/newuser.sh, liberators/ssh.sh, the skeleton's vars.sh and test/test_helper.bash), 2 of the 6 shell rules were asked, with no finding at warning or above. The other 4 are declared unanswerable and cover nothing. No rule reaches the four .bats files, so they were asked nothing.\n\n0098 as built:\n- One check after the flag case serves every value flag.\n- Prompts go through _molt_new_user_ask, whose read at the end of input is tolerated, with a comment saying why.\n- The user, --email and --hostname are refused by the \"is required\" checks already there, and --name and --github take the user.\n- new-user.md and the CHANGELOG's new Fixed section say so.\n\nThe red worktree is detached at cd73db0 and clean. Both worktrees go when the branch lands. No intent verb ran in either, and the red tree's checkouts ran with its hooks off.",
+    "fyi": false,
+    "re": "2026-11-05 10:50Z",
+    "recipient": "vc"
+  }
+}
