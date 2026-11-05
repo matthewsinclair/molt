@@ -6,7 +6,7 @@ verblock: "5 Nov 2026:v0.91: Matthew Sinclair - 1.4.5 released"
 
 ## DOING
 
-- **AE ST0002/07 on Molt 1.4.5:** agentic-engineering-dc's `--from` run of the course template on brew's 1.4.5 is the owed proof for 0093 to 0097; vc records what it finds.
+- **AE ST0002/07 on Molt 1.4.5:** agentic-engineering-dc's `--from` run of the course template on brew's 1.4.5 is the owed proof for 0093 to 0095 and 0097; vc records what it finds.
 
 ## TODO
 
