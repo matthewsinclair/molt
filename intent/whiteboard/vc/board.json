@@ -1333,10 +1333,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 48,
-      "text": "AE ST0002/07, the owed proof for 0093 to 0095 and 0097 (0096's and 0098's were the cut's suite and CI, which passed): agentic-engineering-dc runs the course template (AE main c4f7e96, devvm/molt-template/) through molt new-user --from on brew's Molt 1.4.5, which molt-vc told it of once the tap had be19428; record what it finds, doctor's misses above all, and answer any Molt question from the code in /Users/matts/Devel/scratch/molt-vc/.",
+      "text": "AE ST0002/07, the owed proof for 0093 to 0095 and 0097: agentic-engineering-dc's image run 01M6NTEV9BP73YR1WC5PJFQGXM (12:22:21Z to 12:25:40Z by AE's clock, END relayed by devbin-vc) has molt doctor's 'All checks passed.' on brew's 1.4.5, and new-user --from scaffolded a stack whose resleeve passed stage 1's proof. The one item that failed was intent's bootstrap (no USER under podman exec), which is AE's to fix, not Molt's. Asked devbin-vc for the image doctor's git-hosts, external-dependency and font lines, since 0094's proof is the font check passing by MOLT_TERMINAL_DRAWN_BY=windows. Then record the met proofs on 0093 to 0095 and 0097.",
       "state": "live",
       "recorded_at": "2026-11-05T12:06:11.755Z",
-      "edited_at": "2026-11-05T12:23:21.938Z"
+      "edited_at": "2026-11-05T12:27:51.709Z"
     },
     {
       "node": "vc",
