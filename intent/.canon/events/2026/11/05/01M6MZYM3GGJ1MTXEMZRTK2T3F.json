@@ -1,0 +1,15 @@
+{
+  "id": "01M6MZYM3GGJ1MTXEMZRTK2T3F",
+  "ts": "2026-11-05T04:37:24.208Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. devbin-vc holds the desk from 04:31Z, 7SEX8A revoked, and the heavy bats lane is held for Molt's cut; 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word."
+  }
+}
