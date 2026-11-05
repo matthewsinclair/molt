@@ -1,0 +1,17 @@
+{
+  "id": "01M6NFH71E14JER897PQK713ZZ",
+  "ts": "2026-11-05T09:09:42.062Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc to dc, amending the 0093 to 0095 dispatch with devbin-vc's desk rules for today, which cover Molt's close-out too. Your arm runs do not wait for the bats lane: a fix's own arms in one file book the light lane, which devbin-vc grants at once while the load allows. Ask with: intent estate slots ask <subject> \"<text>\" --lane light --node dc, using only letters, digits, - and _ in the subject. The bats lane is for a whole suite. Run each fix's arms red at its base and green at the fix, under both bashes. Molt's cut is the one full test. Before the cut, run Molt's tree-scan files whole once, one file per light ask. These are test/molt.bats (its 'Molt ships no Python' test among them) and test/install.bats, plus any other test/ file you find scanning the tree with git ls-files or find over MOLT_ROOT. devbin's first cut today went red on seven scan arms that no per-fix run had read.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
