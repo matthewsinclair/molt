@@ -1,0 +1,16 @@
+{
+  "id": "01M6NT0Q6X9GXEBMXW3HNXBWVH",
+  "ts": "2026-11-05T12:12:55.901Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 44,
+    "text": "Other sleeves onto Molt 1.4.5: rhadamanth is on it (brew 1.4.5 at 39fa08e, molt doctor all passed, 5 Nov) and kovacs is doing 15; gyges when it is reachable (brew upgrade molt, molt use brew, molt upgrade, which brings Molt-matts 95a73a4, and molt doctor); farcaster and pihole go with todo 6."
+  }
+}

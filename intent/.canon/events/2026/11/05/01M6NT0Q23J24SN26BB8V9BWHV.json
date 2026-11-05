@@ -1,0 +1,15 @@
+{
+  "id": "01M6NT0Q23J24SN26BB8V9BWHV",
+  "ts": "2026-11-05T12:12:55.747Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "kovacs onto Molt 1.4.5 through kovacs-sysadm, on hv's go in molt-vc's window (5 Nov): a read first (molt's version, the Molt-matts clone, no suite or brew running), then brew update and brew upgrade molt, molt use brew, molt upgrade (it pulls Molt-matts 95a73a4, 0090's owed line, and resleeves) and molt doctor; stops for sudo, the config-dir move's claude guard, a dirty clone or any utilz use or relink. Waiting on its report and END."
+  }
+}
