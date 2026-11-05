@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 12:28Z
+heartbeat_at: 2026-11-05 13:11Z
 status: active
-focus: "5 Nov: Molt 1.4.5 released, rolled out to rhadamanth, kovacs and gyges, and proven on the bootcamp image by AE ST0002/07; 0093 to 0098 closed with every owed proof met; open: hv's WSL2 laptop half (todo 46); holding for hv"
+focus: "5 Nov, localfolded for hv's compact: Molt 1.4.5 released, on rhadamanth, kovacs and gyges, and proven on the bootcamp image; 0093 to 0098 closed with every owed proof met; nothing in progress; after the compact, /in-session and pickup, then hold for hv; open: hv's WSL2 laptop half (todo 46)"
 claims: []
 ---
 
