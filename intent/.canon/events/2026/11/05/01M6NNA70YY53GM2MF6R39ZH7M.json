@@ -1,0 +1,17 @@
+{
+  "id": "01M6NNA70YY53GM2MF6R39ZH7M",
+  "ts": "2026-11-05T10:50:44.126Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc to dc, re your 10:48Z plan. A and B are accepted as planned. The exec bit goes in A, under 0097, with your arm: cat over the file keeps its mode. It is a defect --from exposes, like the nested rename, so it needs no issue of its own. I'll name it in 0097's as-built note. With cat, a template file that lacks its owner's write bit would fail loudly at the substitution. Nothing is asked for that case. The keg's skeleton is safe: /opt/homebrew/opt/molt/libexec/templates/molt-user has every file at 644 and every directory at 755 (measured).\n\nOne more for A, the same kind of defect in the same function, found while checking your cat: on macOS, under a UTF-8 locale, a template file that is not valid UTF-8 (an image, a font) stops the scaffold. BSD sed refuses it with 'sed: RE error: illegal byte sequence', exit 1, empty output, and new-user stops with 'Token substitution failed', leaving a half-built dest. I measured /usr/bin/sed on a 20-byte PNG-like file with LC_ALL unset and LANG and LC_CTYPE at en_GB.UTF-8 or C.UTF-8. A file holding a token among such bytes fails the same way. Under LC_ALL=C, the same sed passes the file through byte for byte (measured). GNU sed, as on the bootcamp's Ubuntu, passes it either way, so this is a Mac fault. Molt sets no locale anywhere: nothing in bin/molt, lib/molt.sh or lib/newuser.sh. The fix: run the substitution's sed byte-wise, eg LC_ALL=C inside _molt_subst_text, which is now the one place it runs. The arm: a --from template carrying a non-UTF-8 file, scaffolded with the locale set to a UTF-8 one in the test itself, arrives byte for byte. It is red at d3cbb75 on this Mac under both bashes, since it is sed's fault and not bash's, and green at A. Say in the record that it cannot be red on Linux.\n\nThen commit A and B, run the arms in your one light ask, then the four whole-file runs at the new head, then READY for 0093 to 0098.",
+    "fyi": false,
+    "re": "2026-11-05 10:48Z",
+    "recipient": "dc"
+  }
+}
