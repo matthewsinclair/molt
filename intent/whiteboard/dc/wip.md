@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 05:55Z
+heartbeat_at: 2026-11-05 09:14Z
 status: active
-focus: "5 Nov: 0090 closed after hv's rollout on rhadamanth (Molt-matts 95a73a4, pushed), Molt's last open issue; no live items on dc's board; holding for vc"
-claims: []
+focus: "5 Nov: 0093, 0094, 0095 on hv's word through molt-vc; plan to vc first, then code in $TMPDIR/molt-wt/doctor-participant"
+claims: [ISSUE:0093, ISSUE:0094, ISSUE:0095]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- 0093, 0094, 0095, doctor on a participant's laptop (hv via molt-vc, 5 Nov): plan to molt-vc before code, then one worktree, doctor-participant, one commit per issue
 
 ## TODO
 
