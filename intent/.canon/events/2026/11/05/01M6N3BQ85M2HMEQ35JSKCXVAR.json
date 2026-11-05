@@ -1,0 +1,16 @@
+{
+  "id": "01M6N3BQ85M2HMEQ35JSKCXVAR",
+  "ts": "2026-11-05T05:36:59.142Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 10,
+    "text": "Molt 1.4.4, 5 Nov: RELEASED by hv's cut: bc96429, tag v1.4.4 (949fa42) on local and upstream, release object 05:34:55Z, homebrew-molt 7a456f7; slot 01M6N1BC END green at 05:36:04Z. Next, the rhadamanth rollout through devbin-vc: hv's brew upgrade molt and molt use brew; dc's hold 16 pick of 2f95dfe on vc's word; hv's molt upgrade, molt doctor and Molt-matts push; dc closes 0090; vc checks 0088 in a new login shell; 8GJE86 at hv's word. Owed: the main push's run 41974875491."
+  }
+}

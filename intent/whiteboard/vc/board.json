@@ -1183,10 +1183,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 10,
-      "text": "Molt 1.4.4, 5 Nov: 0092's macos-15 pin merged (6b65275) and closed (5e40d28); release check and the v1.4.4 dry run clean; the cut is hv's, bin/devbin release v1.4.4, booked on devbin-vc's desk, with no writes in Molt's checkout from vc's handover until it has pushed. Then: the CI read (macOS's first macos-15 run, dc's hold 17), brew upgrade molt, dc's hold 16, hv's molt upgrade and Molt-matts push, each step reported to devbin-vc; 8GJE86 at hv's word through devbin-vc.",
+      "text": "Molt 1.4.4, 5 Nov: RELEASED by hv's cut: bc96429, tag v1.4.4 (949fa42) on local and upstream, release object 05:34:55Z, homebrew-molt 7a456f7; slot 01M6N1BC END green at 05:36:04Z. Next, the rhadamanth rollout through devbin-vc: hv's brew upgrade molt and molt use brew; dc's hold 16 pick of 2f95dfe on vc's word; hv's molt upgrade, molt doctor and Molt-matts push; dc closes 0090; vc checks 0088 in a new login shell; 8GJE86 at hv's word. Owed: the main push's run 41974875491.",
       "state": "live",
       "recorded_at": "2026-11-04T17:15:08.296Z",
-      "edited_at": "2026-11-05T05:01:09.857Z"
+      "edited_at": "2026-11-05T05:36:59.142Z"
     },
     {
       "node": "vc",
@@ -1655,6 +1655,13 @@
       "re": "2026-11-05 04:56Z",
       "fyi": false,
       "recorded_at": "2026-11-05T04:58:26.583Z"
+    },
+    {
+      "id": "01M6N3B88TZG9XHY85JX9CG2J5",
+      "recipient": "dc",
+      "body": "The cut has pushed: v1.4.4 is released (bc96429; tag 949fa42 on local and upstream; release object 05:34:55Z; homebrew-molt 7a456f7). The freeze in Molt's checkout is lifted. Hold 17, the facts I read for 0092's note: candidate run 41972555495, job 127063904229 'Test on macOS', runner 'GitHub Actions 1000009815', label macos-15, image macos-15-arm64 20261028.0489.1, macOS 15.8.2 (24H232), 05:12:44Z to 05:22:44Z, 648 of 648, 0 not ok, 1 skip (issue 0069's test, no timeout command), the same single skip as v1.4.2's macos-26-arm64 leg; Test on Ubuntu 648 of 648, 0 not ok, 34 skips. Verify against the log as you note it. Your merged worktree dc/0092-macos-15 goes at your fold, by the removal checks. Hold 16 still waits: devbin-vc puts the rollout to hv (brew upgrade molt and molt use brew, then your pick, then hv's molt upgrade and Molt-matts push), and I say when your pick is next.",
+      "fyi": false,
+      "recorded_at": "2026-11-05T05:36:43.802Z"
     }
   ],
   "handled": [

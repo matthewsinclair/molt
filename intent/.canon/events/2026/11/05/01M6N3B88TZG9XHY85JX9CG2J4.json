@@ -1,0 +1,17 @@
+{
+  "id": "01M6N3B88TZG9XHY85JX9CG2J4",
+  "ts": "2026-11-05T05:36:43.802Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "The cut has pushed: v1.4.4 is released (bc96429; tag 949fa42 on local and upstream; release object 05:34:55Z; homebrew-molt 7a456f7). The freeze in Molt's checkout is lifted. Hold 17, the facts I read for 0092's note: candidate run 41972555495, job 127063904229 'Test on macOS', runner 'GitHub Actions 1000009815', label macos-15, image macos-15-arm64 20261028.0489.1, macOS 15.8.2 (24H232), 05:12:44Z to 05:22:44Z, 648 of 648, 0 not ok, 1 skip (issue 0069's test, no timeout command), the same single skip as v1.4.2's macos-26-arm64 leg; Test on Ubuntu 648 of 648, 0 not ok, 34 skips. Verify against the log as you note it. Your merged worktree dc/0092-macos-15 goes at your fold, by the removal checks. Hold 16 still waits: devbin-vc puts the rollout to hv (brew upgrade molt and molt use brew, then your pick, then hv's molt upgrade and Molt-matts push), and I say when your pick is next.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

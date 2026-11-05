@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.4, 5 Nov: 0092's macos-15 pin merged (6b65275) and closed (5e40d28); release check and the v1.4.4 dry run clean; the cut is hv's, bin/devbin release v1.4.4, booked on devbin-vc's desk, with no writes in Molt's checkout from vc's handover until it has pushed. Then: the CI read (macOS's first macos-15 run, dc's hold 17), brew upgrade molt, dc's hold 16, hv's molt upgrade and Molt-matts push, each step reported to devbin-vc; 8GJE86 at hv's word through devbin-vc. (edited)
+- Molt 1.4.4, 5 Nov: RELEASED by hv's cut: bc96429, tag v1.4.4 (949fa42) on local and upstream, release object 05:34:55Z, homebrew-molt 7a456f7; slot 01M6N1BC END green at 05:36:04Z. Next, the rhadamanth rollout through devbin-vc: hv's brew upgrade molt and molt use brew; dc's hold 16 pick of 2f95dfe on vc's word; hv's molt upgrade, molt doctor and Molt-matts push; dc closes 0090; vc checks 0088 in a new login shell; 8GJE86 at hv's word. Owed: the main push's run 41974875491. (edited)
 
 ## TODO
 
