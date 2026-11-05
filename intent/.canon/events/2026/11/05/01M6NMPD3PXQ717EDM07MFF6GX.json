@@ -1,0 +1,16 @@
+{
+  "id": "01M6NMPD3PXQ717EDM07MFF6GX",
+  "ts": "2026-11-05T10:39:54.998Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 12,
+    "text": "0093 to 0098 with dc (hv's word in molt-vc's window, 5 Nov; 0096 found by the WSL2 proof run; 0097 new-user --from for hv's per-person bootcamp stacks; 0098 found in vc's 0097 review, added by hv's 26 Oct found-work rule): one worktree, one commit per issue. 0093 to 0096 accepted at 3ce1a6c; 0097 at d3cbb75 accepted with amendments (one token list for contents and path names, which also fixes an & in a path name under bash 5.2 and later; a docs nit); 0098 a sixth commit. Then dc's four whole-file light runs at the final head and READY for all six; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a)."
+  }
+}

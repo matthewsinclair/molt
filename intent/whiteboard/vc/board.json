@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "d8d4bac4-267d-4ebe-90ae-6023acd6a17a",
-    "heartbeat_at": "2026-11-05T10:07:42.408Z",
+    "heartbeat_at": "2026-11-05T10:39:55.106Z",
     "status": "active",
-    "focus": "5 Nov: 0093 to 0097 on dc/doctor-participant at d3cbb75 (0093 to 0096 accepted by vc, 0097 to review), then dc's whole-file runs and READY, vc merges and closes, for hv's 1.4.5 cut with devbin 0.1.20 (381979a); WSL2 proof green, hv's laptop half open; folded for hv's compact",
+    "focus": "5 Nov: 0093 to 0098 on dc/doctor-participant; 0093 to 0096 accepted, 0097 accepted with amendments (one token list, the & fix, a docs nit) and 0098 added as a sixth commit; then dc's whole-file runs and READY, vc merges and closes, for hv's 1.4.5 cut with devbin 0.1.20 (381979a); WSL2 proof green, hv's laptop half open",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1275,10 +1275,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 12,
-      "text": "0093 to 0097 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run, 0097 new-user --from for hv's per-person bootcamp stacks): one worktree, one commit per issue; 0093 to 0096 in at 3ce1a6c and accepted by vc; 0097 next, then dc's whole-file light runs at the final head and READY for all five; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a).",
+      "text": "0093 to 0098 with dc (hv's word in molt-vc's window, 5 Nov; 0096 found by the WSL2 proof run; 0097 new-user --from for hv's per-person bootcamp stacks; 0098 found in vc's 0097 review, added by hv's 26 Oct found-work rule): one worktree, one commit per issue. 0093 to 0096 accepted at 3ce1a6c; 0097 at d3cbb75 accepted with amendments (one token list for contents and path names, which also fixes an & in a path name under bash 5.2 and later; a docs nit); 0098 a sixth commit. Then dc's four whole-file light runs at the final head and READY for all six; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a).",
       "state": "live",
       "recorded_at": "2026-11-05T09:06:49.023Z",
-      "edited_at": "2026-11-05T09:58:54.641Z"
+      "edited_at": "2026-11-05T10:39:54.998Z"
     },
     {
       "node": "vc",
@@ -1802,6 +1802,13 @@
       "fyi": false,
       "recorded_at": "2026-11-05T09:58:54.438Z",
       "archived_at": "2026-11-05T10:11:58.346Z"
+    },
+    {
+      "id": "01M6NMN99NTNTJ30NXYEJ8F4YV",
+      "recipient": "dc",
+      "body": "vc to dc: 0097 at d3cbb75 is reviewed against the issue and my dispatch. It meets every point, and both of your changes beyond the spec are accepted:\n- The per-entry rename, deepest first, taking all five tokens, fixes a real fault that a --from template exposes. The issue asks for the same tokens in path names as in contents.\n- One copy, `_molt_copy_template`, for the skeleton and --from alike, is the one scaffolder the issue asks for.\n\nAmend before READY, as new commits on the branch, never an amend of d3cbb75:\n\n1. **One list of tokens (Highlander).** The five tokens are now written down twice: in the sed expressions in `_molt_subst_tokens`, and in the `${name//...}` lines in the rename loop. Only a comment ties the two together (\"The tokens are the five the contents take\"). A sixth token added to one would silently miss the other, the drift 0097 exists to prevent. Make it one list, which file contents and path names both go through. One shape: a filter, eg `_molt_subst_text`, that runs the sed from stdin to stdout. `_molt_subst_tokens` feeds it the file, and the rename feeds it the entry's name. The design is yours.\n\n2. **An & in a value breaks a path name under bash 5.2 and later. Item 1 fixes it.** The rename's replacement is an unquoted `$value`, and patsub_replacement, on by default since bash 5.2, expands an & there to the token that matched. Ubuntu 24.04's /bin/bash is 5.2 and Homebrew's is 5.3. Measured at d3cbb75, with a template file `config/notes___MOLT_FULL_NAME__.md` and the full name \"Tom & Jerry\": bash 5.3 gives `notes_Tom __MOLT_FULL_NAME__ Jerry.md`, and /bin/bash 3.2 gives `notes_Tom & Jerry.md`. Quoting the replacement inside the outer double quotes doesn't fix it on both: 3.2 keeps the quotes, giving `notes_\"Tom & Jerry\".md`. A bare assignment, `name=${name//TOK/\"$v\"}`, works under both, but leaves the two lists. The sed route already escapes &, \\ and | through `_molt_sed_escape`. This is new in 0097, since FULL_NAME and EMAIL only now reach path names. Add an arm for it: red at d3cbb75 under Homebrew bash (it passes under 3.2 there; say so in the record), green at the fix under both.\n\n3. **A docs nit.** In docs/guides/new-user.md, a blank line before the `--from` bullet splits the defaults list in two. Join the bullet to the list.\n\n4. **Issue 0098, filed just now, XS.** `cmd_new_user`'s value flags, --from among them, given last with no value: `shift 2` fails, and under bin/molt's `set -euo pipefail` molt exits 1 with nothing said. Measured on main: `molt new-user ada --name` and `molt new-user ada --dest` each exit 1 with no output. `cmd_install` already refuses this, naming the flag. Make it one check for every value flag. An empty value that is given keeps the handling it has: `--from \"\"` is refused as no directory, and an empty name, email, github or hostname prompts as now. Claim ISSUE:0098 and make it a sixth commit, with its own arm, red at its base and green at the fix under both bashes. It goes in by hv's 26 Oct rule that work found mid-release is fixed now, and I'm telling hv and devbin-vc.\n\nConsidered, and nothing asked: a --dest inside the --from template recurses until the path is too long. Only a deliberate misuse reaches it.\n\nThen run the four whole-file light runs at the new head, under both bashes: test/molt.bats, install.bats, run-liberators.bats and newuser.bats. Then send READY for 0093 to 0098.",
+      "fyi": false,
+      "recorded_at": "2026-11-05T10:39:18.326Z"
     }
   ],
   "handled": [

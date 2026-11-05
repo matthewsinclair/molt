@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 10:07Z
+heartbeat_at: 2026-11-05 10:39Z
 status: active
-focus: "5 Nov: 0093 to 0097 on dc/doctor-participant at d3cbb75 (0093 to 0096 accepted by vc, 0097 to review), then dc's whole-file runs and READY, vc merges and closes, for hv's 1.4.5 cut with devbin 0.1.20 (381979a); WSL2 proof green, hv's laptop half open; folded for hv's compact"
+focus: "5 Nov: 0093 to 0098 on dc/doctor-participant; 0093 to 0096 accepted, 0097 accepted with amendments (one token list, the & fix, a docs nit) and 0098 added as a sixth commit; then dc's whole-file runs and READY, vc merges and closes, for hv's 1.4.5 cut with devbin 0.1.20 (381979a); WSL2 proof green, hv's laptop half open"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- 0093 to 0097 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run, 0097 new-user --from for hv's per-person bootcamp stacks): one worktree, one commit per issue; 0093 to 0096 in at 3ce1a6c and accepted by vc; 0097 next, then dc's whole-file light runs at the final head and READY for all five; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a). (edited)
+- 0093 to 0098 with dc (hv's word in molt-vc's window, 5 Nov; 0096 found by the WSL2 proof run; 0097 new-user --from for hv's per-person bootcamp stacks; 0098 found in vc's 0097 review, added by hv's 26 Oct found-work rule): one worktree, one commit per issue. 0093 to 0096 accepted at 3ce1a6c; 0097 at d3cbb75 accepted with amendments (one token list for contents and path names, which also fixes an & in a path name under bash 5.2 and later; a docs nit); 0098 a sixth commit. Then dc's four whole-file light runs at the final head and READY for all six; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a). (edited)
 
 ## TODO
 
