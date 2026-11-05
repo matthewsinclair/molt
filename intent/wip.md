@@ -1,12 +1,12 @@
 ---
-verblock: "4 Nov 2026:v0.75: Matthew Sinclair - localfold; 0088 and 0091 green, for vc's merge"
+verblock: "5 Nov 2026:v0.77: Matthew Sinclair - hv: the 1.4.3 cut resumes forward, no reset"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Molt 1.4.3:** molt-dc's 0088 (Ccusage 0003's step 2, design B) and 0091 (`templates/env/retired/` deleted) ran green in their slot and wait for molt-vc's merge; 0089 (tests.yml without its tag trigger) and 0090 (hv's calls on the docs and Molt-matts) are in hand. molt-vc reviews and merges each, pplr-vc grants the runs, and hv cuts with `bin/devbin release v1.4.3` (hv, 4 Nov; vc decision 47).
+- **Molt 1.4.3:** 0088, 0089 and 0091 are merged and closed. The 4 Nov cut stopped at its legs, GitHub giving the candidate's macOS job no runner, and its release commit 4e0714a stays on main: hv ruled on 5 Nov that nothing goes backwards, so the cut resumes as v1.4.3 from HEAD. molt-dc pins the macOS job to macos-15, molt-vc merges, then hv's cut and the rhadamanth rollout (vc's board, doing 10).
 
 ## TODO
 

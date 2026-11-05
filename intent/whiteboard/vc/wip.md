@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 673529ac-4c4e-4478-8576-e7049a941d15
-heartbeat_at: 2026-11-04 19:30Z
+session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
+heartbeat_at: 2026-11-05 04:15Z
 status: active
-focus: "4 Nov: Molt 1.4.3 merged on main and dry-run clean; hv's cut next, then the rhadamanth rollout with dc's hold 16 just before hv's molt upgrade"
+focus: "5 Nov: Molt 1.4.3 recut: reset or revert 4e0714a, dc's macos-15 pin, merge, dry run, hv's cut, then the rhadamanth rollout"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.3: 0088, 0091 and 0089 merged on main (b855193, ed39f72, 3f893d1) after the merged tree ran green in pplr-vc's slot 01M6KZK8 (648 of 648 under each bash); dc closed all three (856b111); release check and the v1.4.3 dry run are clean (19:30Z). Next: hv's bin/devbin release v1.4.3, with no Molt node writing to Molt's checkout from its stamp to its push. Then the rollout on rhadamanth: brew upgrade molt; dc lands Molt-matts 2f95dfe (its hold 16); hv's molt upgrade; hv pushes Molt-matts with 3d1de92; then Ccusage step 1 (hv) and slot 8GJE86, the restart, on hv's go. (edited)
+- Molt 1.4.3, 5 Nov: hv ruled no reset or revert of 4e0714a, so the cut resumes as v1.4.3 from HEAD (devbin's resume path; vc's call on hv's 'I don't care if it bumps the patch release'). Next: vc's and dc's held folds committed; dc's macos-15 pin merged; release check and dry run; READY to devbin-vc, who runs the desk; hv's cut; then brew upgrade molt, dc's hold 16, hv's molt upgrade and push, slot 8GJE86 at devbin-vc's word. (edited)
 
 ## TODO
 
@@ -39,6 +39,7 @@ _(none)_
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)
 - hv 4 Nov (molt-vc's TUI, agreed with pplr-vc as its decision 31): Molt is back with Molt's nodes. molt-dc builds 1.4.3 (0088 design B, the claude liberator giving CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir; 0089; 0090; templates/env/retired/ deleted), molt-vc reviews and merges, pplr-vc keeps the desk, and hv cuts with bin/devbin release. 0071 closes as overtaken by 0086. The cut does not wait for devbin 0.1.20.
+- hv 5 Nov, in molt-vc's TUI (answered before the clock read 2026-11-05 04:30Z by date -u): no reset or revert of the stopped cut's 4e0714a ('I am not going backwards here. I want to be able to push out a patch release and have it run end-to-end without failure and I don't care if it bumps the patch release and only moves the version forward'); devbin-vc runs the estate desk today and revokes 7SEX8A first; the test lane stays busy: devbin's 0319 rerun goes now, Molt's cut takes the lane at the first END once Molt is ready, and no run is stopped for another. Relayed to devbin-vc at 04:30Z.
 
 ---
 
