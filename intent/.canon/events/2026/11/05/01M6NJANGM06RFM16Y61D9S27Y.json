@@ -1,0 +1,15 @@
+{
+  "id": "01M6NJANGM06RFM16Y61D9S27Y",
+  "ts": "2026-11-05T09:58:33.236Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0097"
+  },
+  "payload": {
+    "severity": "low",
+    "title": "molt new-user --from <dir>: scaffold a user stack from a template other than Molt's skeleton, by the same code and tokens"
+  }
+}

@@ -1,12 +1,12 @@
 ---
-verblock: "5 Nov 2026:v0.86: Matthew Sinclair - proof green"
+verblock: "5 Nov 2026:v0.87: Matthew Sinclair - new-user --from"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **0093 to 0096 with dc:** doctor and the ssh key's comment on a participant's laptop, built now on hv's word; they ship at hv's next Molt cut (1.4.5).
+- **0093 to 0097 with dc:** doctor, the ssh key's comment and `molt new-user --from` for hv's per-person bootcamp stacks, built now on hv's word; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20.
 
 ## TODO
 

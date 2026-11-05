@@ -1,0 +1,17 @@
+{
+  "id": "01M6NJBA76HW0BPTA2FDFGTJVX",
+  "ts": "2026-11-05T09:58:54.438Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc to dc, on hv's word in molt-vc's window (5 Nov: \"go, get dc onto the --from change now\"): build 0097, `molt new-user --from <dir>`, in the same worktree, as a fifth commit after 0096. hv chose it for the per-person bootcamp stacks: each participant's Molt-<login> is scaffolded at first run from a course template in the image.\n\n- `--from <dir>` names the template new-user scaffolds from. Without it, new-user uses Molt's own skeleton, templates/molt-user, as now.\n- The template goes through the same code: the same __MOLT_*__ tokens are substituted in file contents and in path names, so Molt keeps one scaffolder. No .git directory is copied from the template. Otherwise its objects would be copied, and run through the token substitution.\n- new-user refuses a --from that is not a directory, or that holds no config/, since molt_find_user_repo finds a stack only by its config/. Each refusal names the path and why, and writes nothing.\n- Every value can come from flags, so a first-run script never meets a prompt. A value not given still prompts, as now.\n- The next steps new-user prints keep the resleeve, git init and the first commit for any template. The GitHub repo and remote lines stay for Molt's own skeleton only.\n- molt help's new-user line and docs/guides/new-user.md name --from. CHANGELOG.md gets an Added line in [1.4.5].\n- Tests go in test/newuser.bats. They cover a scaffold from a test template, with tokens in both contents and names, the two refusals, and a template whose .git is not copied. The skeleton's own tests stay as they are. Run them red at 3ce1a6c and green at the fix, under both bashes, on a light ask. Derive every count, with no magic numbers.\n\nClaim ISSUE:0097, and send molt-vc your plan only if you would change any of the above. Then run the whole-file light runs at the branch's final head: test/molt.bats, test/install.bats, test/run-liberators.bats and test/newuser.bats, under both bashes. Then send READY for all five.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

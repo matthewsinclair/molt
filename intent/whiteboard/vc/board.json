@@ -1275,10 +1275,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 12,
-      "text": "0093, 0094, 0095 and 0096 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run): all four in on dc/doctor-participant at 3ce1a6c and accepted by vc (4176036, b83c880, 52b6660, 3ce1a6c); dc's whole-file light runs of molt.bats, install.bats and run-liberators.bats, then READY; vc merges and closes each; they ship at hv's next Molt cut (1.4.5).",
+      "text": "0093 to 0097 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run, 0097 new-user --from for hv's per-person bootcamp stacks): one worktree, one commit per issue; 0093 to 0096 in at 3ce1a6c and accepted by vc; 0097 next, then dc's whole-file light runs at the final head and READY for all five; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a).",
       "state": "live",
       "recorded_at": "2026-11-05T09:06:49.023Z",
-      "edited_at": "2026-11-05T09:52:35.070Z"
+      "edited_at": "2026-11-05T09:58:54.641Z"
     },
     {
       "node": "vc",
@@ -1302,7 +1302,8 @@
       "kind": "hold",
       "seq": 7,
       "text": "molt new-user --from <dir> (S), option (a) for hv's per-person bootcamp stacks (hv's ruling via pipeliner-sc, 5 Nov), so a course template is scaffolded by Molt's own code and tokens: held until hv rules on it in Molt's window; (c), new-user then the course files laid over, is the no-change fallback.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T09:58:54.482Z",
       "recorded_at": "2026-11-05T09:52:35.163Z"
     }
   ],
@@ -1789,6 +1790,13 @@
       "body": "vc to dc: one more for the same worktree, after 0095. It is 0096 (XS), filed from molt-vc's WSL2 proof run. The ssh liberator comments a new key with git config --global user.email, which reads no include, so an identity that only an included file gives never reaches the key: the proof's first run made a key commented dev@devvm. Make that lookup git config --global --includes user.email, with the fallback as it is. Add a bats test whose identity only an include gives, red at its base and green at the fix under both bashes, on a light ask. Claim ISSUE:0096, and make it one commit, with its CHANGELOG line under Changed in [1.4.5]. Then send READY for all four.",
       "fyi": false,
       "recorded_at": "2026-11-05T09:43:59.174Z"
+    },
+    {
+      "id": "01M6NJBA76HW0BPTA2FDFGTJVY",
+      "recipient": "dc",
+      "body": "vc to dc, on hv's word in molt-vc's window (5 Nov: \"go, get dc onto the --from change now\"): build 0097, `molt new-user --from <dir>`, in the same worktree, as a fifth commit after 0096. hv chose it for the per-person bootcamp stacks: each participant's Molt-<login> is scaffolded at first run from a course template in the image.\n\n- `--from <dir>` names the template new-user scaffolds from. Without it, new-user uses Molt's own skeleton, templates/molt-user, as now.\n- The template goes through the same code: the same __MOLT_*__ tokens are substituted in file contents and in path names, so Molt keeps one scaffolder. No .git directory is copied from the template. Otherwise its objects would be copied, and run through the token substitution.\n- new-user refuses a --from that is not a directory, or that holds no config/, since molt_find_user_repo finds a stack only by its config/. Each refusal names the path and why, and writes nothing.\n- Every value can come from flags, so a first-run script never meets a prompt. A value not given still prompts, as now.\n- The next steps new-user prints keep the resleeve, git init and the first commit for any template. The GitHub repo and remote lines stay for Molt's own skeleton only.\n- molt help's new-user line and docs/guides/new-user.md name --from. CHANGELOG.md gets an Added line in [1.4.5].\n- Tests go in test/newuser.bats. They cover a scaffold from a test template, with tokens in both contents and names, the two refusals, and a template whose .git is not copied. The skeleton's own tests stay as they are. Run them red at 3ce1a6c and green at the fix, under both bashes, on a light ask. Derive every count, with no magic numbers.\n\nClaim ISSUE:0097, and send molt-vc your plan only if you would change any of the above. Then run the whole-file light runs at the branch's final head: test/molt.bats, test/install.bats, test/run-liberators.bats and test/newuser.bats, under both bashes. Then send READY for all five.",
+      "fyi": false,
+      "recorded_at": "2026-11-05T09:58:54.438Z"
     }
   ],
   "handled": [

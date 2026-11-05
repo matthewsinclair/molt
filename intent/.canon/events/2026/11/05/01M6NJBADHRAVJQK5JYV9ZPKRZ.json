@@ -1,0 +1,16 @@
+{
+  "id": "01M6NJBADHRAVJQK5JYV9ZPKRZ",
+  "ts": "2026-11-05T09:58:54.641Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 12,
+    "text": "0093 to 0097 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run, 0097 new-user --from for hv's per-person bootcamp stacks): one worktree, one commit per issue; 0093 to 0096 in at 3ce1a6c and accepted by vc; 0097 next, then dc's whole-file light runs at the final head and READY for all five; vc merges and closes each; they ship at hv's next Molt cut (1.4.5) with devbin 0.1.20's sweep (381979a)."
+  }
+}
