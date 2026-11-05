@@ -5,12 +5,10 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "b0610444-b5ad-4f84-85fb-6cac5d11e75b",
-    "heartbeat_at": "2026-11-05T05:39:41.812Z",
+    "heartbeat_at": "2026-11-05T05:52:37.243Z",
     "status": "active",
-    "focus": "5 Nov: v1.4.4 is out (bc96429); 0092 done, its first macos-15 run noted; hold 16's Molt-matts pick waits for vc's word in the rhadamanth rollout",
-    "claims": [
-      "ISSUE:0090"
-    ],
+    "focus": "5 Nov: 0090 closed after hv's rollout on rhadamanth (Molt-matts 95a73a4, pushed), Molt's last open issue; no live items on dc's board; holding for vc",
+    "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
   },
@@ -586,7 +584,8 @@
       "kind": "doing",
       "seq": 34,
       "text": "0090: docs on main (dc856ce); Molt-matts 3d1de92 pushed by hv (4 Nov); the vars.sh half lands per hold 16 after the next 1.4.3 cut; 0090 closes once it lands",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T05:52:21.140Z",
       "recorded_at": "2026-11-04T17:09:42.341Z",
       "edited_at": "2026-11-04T19:57:17.631Z"
     },
@@ -605,7 +604,8 @@
       "kind": "hold",
       "seq": 16,
       "text": "Cherry-pick Molt-matts dc/0090-vars-instance's 2f95dfe (MOLT_PLATFORM and the [instance] tables out) onto main at c71bb66 (hv's arngz tweaks, pushed): a new sha, which 0090's note names, homere.yaml untouched, unpushed for hv to push; after hv's 1.4.3 cut and brew upgrade molt, just before hv's molt upgrade on rhadamanth. Released when vc says that upgrade is next.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T05:52:21.182Z",
       "recorded_at": "2026-11-04T17:59:05.975Z",
       "edited_at": "2026-11-05T04:38:06.080Z"
     },

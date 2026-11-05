@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 05:39Z
+heartbeat_at: 2026-11-05 05:52Z
 status: active
-focus: "5 Nov: v1.4.4 is out (bc96429); 0092 done, its first macos-15 run noted; hold 16's Molt-matts pick waits for vc's word in the rhadamanth rollout"
-claims: [ISSUE:0090]
+focus: "5 Nov: 0090 closed after hv's rollout on rhadamanth (Molt-matts 95a73a4, pushed), Molt's last open issue; no live items on dc's board; holding for vc"
+claims: []
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- 0090: docs on main (dc856ce); Molt-matts 3d1de92 pushed by hv (4 Nov); the vars.sh half lands per hold 16 after the next 1.4.3 cut; 0090 closes once it lands (edited)
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Cherry-pick Molt-matts dc/0090-vars-instance's 2f95dfe (MOLT_PLATFORM and the [instance] tables out) onto main at c71bb66 (hv's arngz tweaks, pushed): a new sha, which 0090's note names, homere.yaml untouched, unpushed for hv to push; after hv's 1.4.3 cut and brew upgrade molt, just before hv's molt upgrade on rhadamanth. Released when vc says that upgrade is next. (edited)
+_(none)_
 
 ## Watch-outs
 
