@@ -1,0 +1,16 @@
+{
+  "id": "01M6NSDC67PRFRVSMV8SBZCAPS",
+  "ts": "2026-11-05T12:02:22.024Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 14,
+    "text": "Molt 1.4.5 released by hv's cut (release commit 39fa08e, tag v1.4.5, GitHub release, formula in the tap at be19428), every leg green: candidate run 42020687220 and the local gates. Still to read: main's push run 42023418293 on 39fa08e. Then the rollout (todo 44): rhadamanth's brew upgrade molt and molt use brew when no suite runs, kovacs through kovacs-sysadm, gyges when reachable. agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) now, is told, and its /07 --from run on brew's 1.4.5 is the owed proof for 0093 to 0097."
+  }
+}

@@ -2,8 +2,9 @@
 
 ## DOING
 
-- **Molt 1.4.5, handed to hv for the cut:** 0093 to 0098 merged at 4116a1b and closed at ca6a273, molt-dc's landing END at 24ae78e, vc's dry run clean there. Write freeze in Molt's checkout until hv has pushed: read HEAD with `GIT_OPTIONAL_LOCKS=0 git log -1` before any write, and write nothing while a `release: v1.4.5` commit has no pushed tag.
+- **Molt 1.4.5, released at 39fa08e:** tag v1.4.5 pushed, GitHub release made, the formula in the tap at be19428. main's push CI run 42023418293 on 39fa08e is still to read.
 
 ## TODO
 
-- **After the cut:** read CI on the pushed head, tell pipeliner-dc that brew has 1.4.5 (vc todo 47), then the rollout to the other sleeves (vc todo 44).
+- **The rollout (vc todo 44):** rhadamanth's `brew upgrade molt` then `molt use brew` when no suite runs, kovacs through kovacs-sysadm, gyges when reachable.
+- **AE ST0002/07:** agentic-engineering-dc runs the course template through `molt new-user --from` on brew's 1.4.5; record what it finds against 0093 to 0097's owed proofs.

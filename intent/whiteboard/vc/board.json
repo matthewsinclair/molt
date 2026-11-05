@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "d8d4bac4-267d-4ebe-90ae-6023acd6a17a",
-    "heartbeat_at": "2026-11-05T11:32:53.647Z",
+    "heartbeat_at": "2026-11-05T12:02:22.156Z",
     "status": "active",
-    "focus": "5 Nov: Molt 1.4.5 handed to hv for the cut (0093 to 0098 merged at 4116a1b, closed, dry run clean at 24ae78e); write freeze in Molt's checkout until hv has pushed; then the CI read, pipeliner-dc's --from run on brew's 1.4.5 and the rollout; WSL2 laptop half hv's",
+    "focus": "5 Nov: Molt 1.4.5 released (39fa08e, tag v1.4.5, tap be19428); main's CI run 42023418293 to read; then the rollout; agentic-engineering-dc runs AE ST0002/07 on brew's 1.4.5; WSL2 laptop half hv's",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1312,17 +1312,18 @@
       "kind": "todo",
       "seq": 47,
       "text": "When brew installs Molt 1.4.5 (after hv's cut): tell pipeliner-dc, whose AE ST0002/07 re-run of the course template through molt new-user --from waits on it; the image's self-check then drops its newuser.sh-style stand-in for --from. The answer it builds on is /Users/matts/Devel/scratch/molt-vc/answer-pipeliner-dc-2026-11-05.md.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T12:02:22.115Z",
       "recorded_at": "2026-11-05T11:00:32.961Z"
     },
     {
       "node": "vc",
       "kind": "doing",
       "seq": 14,
-      "text": "Molt 1.4.5, handed to hv for the cut: 0093 to 0098 merged at 4116a1b and closed at ca6a273, molt-dc's landing END at 24ae78e, and vc's dry run at 24ae78e found no step failing. The cut: MOLT_PRJ_DIR=$HOME/Devel/prj bin/devbin release v1.4.5 in Molt's checkout, booked bats,heavy on the desk when hv says go. Its stamp dates the note on the day it runs, so a cut stopped after its stamp resumes that day or the next patch is cut. Write freeze in Molt's checkout from the handover until hv has pushed. Then the CI read, pipeliner-dc (todo 47) and the rollout (todo 44).",
+      "text": "Molt 1.4.5 released by hv's cut (release commit 39fa08e, tag v1.4.5, GitHub release, formula in the tap at be19428), every leg green: candidate run 42020687220 and the local gates. Still to read: main's push run 42023418293 on 39fa08e. Then the rollout (todo 44): rhadamanth's brew upgrade molt and molt use brew when no suite runs, kovacs through kovacs-sysadm, gyges when reachable. agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) now, is told, and its /07 --from run on brew's 1.4.5 is the owed proof for 0093 to 0097.",
       "state": "live",
       "recorded_at": "2026-11-05T11:26:57.014Z",
-      "edited_at": "2026-11-05T11:32:53.551Z"
+      "edited_at": "2026-11-05T12:02:22.024Z"
     }
   ],
   "sent": [
