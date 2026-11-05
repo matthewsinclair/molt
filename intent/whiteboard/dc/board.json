@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "b0610444-b5ad-4f84-85fb-6cac5d11e75b",
-    "heartbeat_at": "2026-11-05T09:59:51.165Z",
+    "heartbeat_at": "2026-11-05T10:10:54.568Z",
     "status": "active",
-    "focus": "5 Nov: 0093, 0094, 0095 on hv's word through molt-vc; plan to vc first, then code in $TMPDIR/molt-wt/doctor-participant",
+    "focus": "5 Nov: 0093 to 0097 committed in $TMPDIR/molt-wt/doctor-participant at d3cbb75; after hv's compact, the four whole-file light runs, then READY to molt-vc",
     "claims": [
       "ISSUE:0093",
       "ISSUE:0094",
@@ -646,10 +646,10 @@
       "node": "dc",
       "kind": "doing",
       "seq": 37,
-      "text": "0093 to 0097, doctor, ssh and new-user on a participant's laptop (hv via molt-vc, 5 Nov): 0093 to 0096 committed in doctor-participant (4176036, b83c880, 52b6660, 3ce1a6c), 0097 next, then the four whole-file runs and READY for all five",
+      "text": "0093 to 0097 (hv via molt-vc, 5 Nov): all five committed on dc/doctor-participant, head d3cbb75 (4176036, b83c880, 52b6660, 3ce1a6c, d3cbb75), each red at its base and green at the fix under both bashes; vc accepted 0093 to 0096. After the compact: test/molt.bats, install.bats, run-liberators.bats and newuser.bats whole at d3cbb75 under both bashes, one light ask each, then READY for all five",
       "state": "live",
       "recorded_at": "2026-11-05T09:14:48.881Z",
-      "edited_at": "2026-11-05T09:59:59.466Z"
+      "edited_at": "2026-11-05T10:10:54.462Z"
     }
   ],
   "sent": [
@@ -905,7 +905,8 @@
       "body": "dc to vc: my plan for 0093, 0094 and 0095, before any code. The three are claimed at 5ee6c59.\n\nWorktree: branch dc/doctor-participant from main at $TMPDIR/molt-wt/doctor-participant, with main's gate carrier copied in and no intent verb run there. Three commits, in issue order. Each carries its code, its bats tests, the docs that name its check and its CHANGELOG line. The first opens `## [1.4.5] - unreleased` above [1.4.4].\n\n0093, git hosts:\n- Which Host entries count: an entry in molt's region of ~/.ssh/config that sets `User git` itself.\n  - The region runs from the `@@MOLT:BEGIN@@` line to the end of the file. It holds the template's section and the config.d fragments that _ssh_render appends after `@@MOLT:END@@`.\n  - Entries above the marker are the sleeve's own, and doctor does not dial them.\n  - A file with no marker is all molt's when its .molt-rendered sidecar is there, and none of it otherwise.\n  - An entry runs from a Host line to the next Host or Match line. Keywords match in any case, and `User=git` counts.\n  - Doctor dials the first Host pattern with no `*`, `?` or `!`, so an entry of wildcards alone is skipped. Include lines are not followed.\n  - On rhadamanth that gives github.com-matthewsinclair and github.com, and none of the LAN hosts (User matts or pi).\n- Each name is dialled as `git@<name>`, as a git remote names it, so a User set in a block above the marker cannot change it. The command is `ssh -n -o BatchMode=yes -o ConnectTimeout=<c> -T git@<name>`, under `timeout <t>` where it is installed. Those are 0069's bounds, applied per host.\n- Each host is judged by its own reply:\n  - Passes: GitHub's \"successfully authenticated\" (user from \"Hi <user>!\") and GitLab's \"Welcome to GitLab, @<user>!\".\n  - 0069's split stays: timeout's 124 and ssh's own \"timed out\" read \"could not reach <name> within <n> s\", and \"Permission denied\" reads \"not authenticated\".\n  - Any other reply reads \"doctor does not know this reply\" and does not pass. What ssh printed goes under it, the way _molt_doctor_check_lines shows a failing check.\n- The lines doctor prints:\n  - All hosts pass: `Checking git hosts... ✓ github.com-matthewsinclair as matthewsinclair, github.com as matthewsinclair`.\n  - Some fail: `⚠ 1 of 2 did not pass: <name>`, with one line per failing host under it.\n  - No host named: `✓ none: the stack's ssh config names no host with User git`, and nothing is dialled. I count that as a pass, as \"✓ none enabled\" and gsettings's \"✓ none on PATH\" are: doctor read the config, and it names nothing to dial. Tell me if you want it to count as not passed.\n- The timeouts become MOLT_GIT_HOST_CONNECT_TIMEOUT and MOLT_GIT_HOST_TIMEOUT, defaults 10 and 20, each bounding one host's exchange. I searched Molt, its docs and Molt-matts: only lib/molt.sh and the 0069 tests read the old names, so they go with no alias. The cost is one exchange per host: rhadamanth's doctor dials twice where it dialled once, and the worst case is 20 s per host.\n- Code:\n  - molt_git_hosts: an awk over the file, pure.\n  - molt_git_host_verdict: pure, and replaces molt_github_auth_verdict.\n  - molt_git_hosts_check: does the dialling, and replaces molt_github_auth_check.\n- Tests, in molt.bats:\n  - Fixture: _github_ssh becomes a fixture that writes ~/.ssh/config with a line above the marker and the entries each test names. Its stub ssh answers by the host it is given and logs that host.\n  - Arms: a GitLab-only stack passes; a GitHub host and a GitLab host are each dialled and pass, while a LAN entry and a git entry above the marker are not dialled; an unknown reply is reported and does not pass; and with no git host, nothing is dialled.\n  - 0069's five tests stay, on a fixture naming one GitHub host, with the new names.\n  - A parser test covers the marker, the sidecar, keyword case, `User=git`, Host lines with several patterns, and Match.\n  - Every count comes from the fixture's host array.\n  - Side effect: a doctor test with no ssh fixture will dial nothing. Today it runs the real ssh, which reads the real ~/.ssh/config, since ssh takes the home directory from the user's account entry, not from HOME (checked: with HOME at an empty directory, `ssh -G github.com-matthewsinclair` still resolves the alias).\n- Docs: getting-started.md lines 14 and 129, and README.md line 359.\n\n0094, the font check where Windows draws the terminal:\n- The variable is MOLT_TERMINAL_DRAWN_BY in vars.sh, read through molt_instance_var. `windows` is the one value doctor knows.\n- With `windows`, doctor prints `Checking declared font... ✓ Windows draws this terminal, so its font is the Windows side's to provide`. That holds whether or not MOLT_FONT_FAMILY is declared, and doctor does not ask fc-list.\n- With any other value, doctor prints `⚠ MOLT_TERMINAL_DRAWN_BY is \"<value>\"; doctor knows only windows`, and the check does not pass. A typo then neither passes quietly nor falls back to the fontconfig check quietly.\n- Unset or empty, the check runs as it does today. A vars.sh that cannot be read is reported as it is today.\n- Tests, in molt.bats beside 0064's font tests:\n  - With `windows`, the check passes with the font not installed, and with no fc-list.\n  - An unknown value is reported and does not pass.\n  - 0064's tests cover \"without it, nothing changes\".\n- Docs: the list in templates.md line 44 of what Molt reads from vars.sh, bootstrap-runbook.md line 208, and getting-started.md line 129.\n\n0095, external dependencies:\n- envsubst is required everywhere, and bats only where molt_tree is dev. The pass line names exactly what doctor checked: `✓ bats envsubst` in a dev tree, as today, and `✓ envsubst` elsewhere. A missing tool reads `⚠ missing: ...`, as today.\n- Tests, in install.bats, run doctor from the trees its fixtures publish:\n  - The arm: from the opt tree with bats off PATH, doctor says `✓ envsubst`.\n  - From the dev tree, doctor names both.\n  - Hiding bats needs the shadow PATH that 0064's fc-list test builds inline. I'd make that one helper, path_without, in test_helper.bash, and have both tests use it.\n- Docs: README.md line 357, and getting-started.md lines 13 and 129.\n\nCHANGELOG: 0094 goes under Added. 0093, with its renamed timeouts, and 0095 go under Changed.\n\nProof:\n- Each fix's arms are one light ask: `intent estate slots ask <subject> \"<text>\" --lane light --node dc`.\n- In it, the arms run by name under Homebrew bash and under /bin/bash 3.2, red at the fix's base and green at the fix. The red run is a scratch worktree at the fix's parent, with the fix's test files copied in.\n- shellcheck runs on each changed file before each commit.\n- Before the cut, one light ask each runs a whole file: test/molt.bats, test/install.bats, and test/run-liberators.bats, which loops over liberators/*.sh. The whole molt.bats run matters most, since 0093 changes the ssh in every doctor test.\n- No full suite.\n\nNot in this change: bin/bootstrap.sh's own `timeout 5 ssh -n -T` before it clones over ssh.\n\nGo, or amend?",
       "re": "2026-11-05 09:06Z",
       "fyi": false,
-      "recorded_at": "2026-11-05T09:16:42.750Z"
+      "recorded_at": "2026-11-05T09:16:42.750Z",
+      "archived_at": "2026-11-05T10:10:54.303Z"
     }
   ],
   "handled": [
@@ -1063,6 +1064,31 @@
       "id": "01M6N3B88TZG9XHY85JX9CG2J5",
       "sender": "vc",
       "handled_at": "2026-11-05T05:39:41.768Z"
+    },
+    {
+      "id": "01M6NFBXY8DC1TQDE5TT2RBEVV",
+      "sender": "vc",
+      "handled_at": "2026-11-05T10:10:54.254Z"
+    },
+    {
+      "id": "01M6NFH71E14JER897PQK71400",
+      "sender": "vc",
+      "handled_at": "2026-11-05T10:10:54.254Z"
+    },
+    {
+      "id": "01M6NG1D3Q3Q8HJPVPZWRHNR13",
+      "sender": "vc",
+      "handled_at": "2026-11-05T10:10:54.254Z"
+    },
+    {
+      "id": "01M6NHFZY63J442S9PJNWFF24W",
+      "sender": "vc",
+      "handled_at": "2026-11-05T10:10:54.254Z"
+    },
+    {
+      "id": "01M6NJBA76HW0BPTA2FDFGTJVY",
+      "sender": "vc",
+      "handled_at": "2026-11-05T10:10:54.254Z"
     }
   ]
 }

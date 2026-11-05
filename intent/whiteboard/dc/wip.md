@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 09:59Z
+heartbeat_at: 2026-11-05 10:10Z
 status: active
-focus: "5 Nov: 0093, 0094, 0095 on hv's word through molt-vc; plan to vc first, then code in $TMPDIR/molt-wt/doctor-participant"
+focus: "5 Nov: 0093 to 0097 committed in $TMPDIR/molt-wt/doctor-participant at d3cbb75; after hv's compact, the four whole-file light runs, then READY to molt-vc"
 claims: [ISSUE:0093, ISSUE:0094, ISSUE:0095, ISSUE:0096, ISSUE:0097]
 ---
 
@@ -13,7 +13,7 @@ claims: [ISSUE:0093, ISSUE:0094, ISSUE:0095, ISSUE:0096, ISSUE:0097]
 
 ## DOING
 
-- 0093 to 0097, doctor, ssh and new-user on a participant's laptop (hv via molt-vc, 5 Nov): 0093 to 0096 committed in doctor-participant (4176036, b83c880, 52b6660, 3ce1a6c), 0097 next, then the four whole-file runs and READY for all five (edited)
+- 0093 to 0097 (hv via molt-vc, 5 Nov): all five committed on dc/doctor-participant, head d3cbb75 (4176036, b83c880, 52b6660, 3ce1a6c, d3cbb75), each red at its base and green at the fix under both bashes; vc accepted 0093 to 0096. After the compact: test/molt.bats, install.bats, run-liberators.bats and newuser.bats whole at d3cbb75 under both bashes, one light ask each, then READY for all five (edited)
 
 ## TODO
 
