@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- pipeliner-sc's 08:33Z ask, allocated by hv in Molt's window: answer from Molt's code and docs whether Molt can resleeve an x86_64 Ubuntu 24.04 for WSL2 (built in Docker on the Mac) and what a minimal participant stack looks like, sized XS to XXL; the file goes to /Users/matts/Devel/scratch/molt-vc/ with its path sent to pipeliner-sc. No change to Molt, nothing booked.
+_(none)_
 
 ## TODO
 
@@ -22,6 +22,7 @@ claims: []
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - Other sleeves onto Molt 1.4.4 and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
+- On hv's word, from molt-vc's WSL2 answer to pipeliner-sc (/Users/matts/Devel/scratch/molt-vc/answer-pipeliner-sc-2026-11-05.md): the x86_64 Ubuntu 24.04 proof run in Podman on rhadamanth (S, a desk ask; both heavy lanes on devbin's v0.1.20 re-cut until it ends), and doctor's three changes for a GitLab participant's laptop (GitHub-only auth S, local font XS, bats XS) as a Molt issue for dc.
 
 ## Holds
 
