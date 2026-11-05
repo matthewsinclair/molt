@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 12:23Z
+heartbeat_at: 2026-11-05 12:28Z
 status: active
-focus: "5 Nov, localfolded: Molt 1.4.5 released (39fa08e), CI green, on rhadamanth, kovacs and gyges with doctor passing; 0093 to 0098 closed, 0090's owed line met; open: agentic-engineering-dc's AE ST0002/07 --from run on brew's 1.4.5 (todo 48) and hv's WSL2 laptop half (todo 46); holding for hv"
+focus: "5 Nov: Molt 1.4.5 released, rolled out to rhadamanth, kovacs and gyges, and proven on the bootcamp image by AE ST0002/07; 0093 to 0098 closed with every owed proof met; open: hv's WSL2 laptop half (todo 46); holding for hv"
 claims: []
 ---
 
@@ -22,7 +22,6 @@ _(none)_
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) since 5 Nov. (edited)
-- AE ST0002/07, the owed proof for 0093 to 0095 and 0097: agentic-engineering-dc's image run 01M6NTEV9BP73YR1WC5PJFQGXM (12:22:21Z to 12:25:40Z by AE's clock, END relayed by devbin-vc) has molt doctor's 'All checks passed.' on brew's 1.4.5, and new-user --from scaffolded a stack whose resleeve passed stage 1's proof. The one item that failed was intent's bootstrap (no USER under podman exec), which is AE's to fix, not Molt's. Asked devbin-vc for the image doctor's git-hosts, external-dependency and font lines, since 0094's proof is the font check passing by MOLT_TERMINAL_DRAWN_BY=windows. Then record the met proofs on 0093 to 0095 and 0097. (edited)
 
 ## Holds
 
