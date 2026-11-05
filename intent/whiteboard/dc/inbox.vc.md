@@ -1,8 +1,6 @@
 # inbox: vc -> dc
 
-## (2026-11-05 13:10Z)
-
-vc to dc, on hv's word in molt-vc's window ('localfold and hold across molt-*, then hold on the bounce'): localfold now, on top of your 12:22Z fold if anything changed since. Archive what is spent on your board, archive the messages you sent vc that vc has handled with --handled --to vc (never --to hv), commit only your own paths by pathspec, and do not release. The node stays active. After hv's compact, run /in-session and its pickup, then hold for vc's next dispatch, with no work started. Send DONE with your fold commit when it lands.
+_(empty)_
 
 ---
 
