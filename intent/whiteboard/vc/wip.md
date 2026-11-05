@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 06:07Z
+heartbeat_at: 2026-11-05 09:18Z
 status: active
 focus: "5 Nov: Molt 1.4.4 released (bc96429) and rolled out on rhadamanth, no open issue; globalfold done (8dd9c8b); back from hv's compact, holding for hv's word through devbin-vc"
 claims: []
