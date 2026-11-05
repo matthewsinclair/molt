@@ -1,0 +1,15 @@
+{
+  "id": "01M6M2697DBZ5NR0EB2NKFHF3P",
+  "ts": "2026-11-04T19:57:17.933Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Pin test-macos's runs-on to macos-15 (hv's ruling (b), via molt-vc, 4 Nov) on a branch off main after vc reverts 4e0714a: the one line, the workflow README's runner row, a CHANGELOG line under [1.4.3] and an issue recording that every green Molt macOS run so far, v1.1.0 to v1.4.2, was on macos-26-arm64, the candidate being Molt's first macos-15 run; READY to vc, who merges before hv cuts afresh"
+  }
+}

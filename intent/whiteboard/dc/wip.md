@@ -2,10 +2,10 @@
 node: dc
 name: DevX Claude
 role: devx
-session_id: 60313337-1bf1-45db-95a6-89501eec9dbb
-heartbeat_at: 2026-11-04 19:29Z
+session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
+heartbeat_at: 2026-11-05 04:15Z
 status: active
-focus: "4 Nov: Molt 1.4.3: 0088, 0089 and 0091 merged by vc and closed (856b111); 0090 closes once hold 16 lands, step 2 of vc's rollout after hv's cut; Molt-matts 3d1de92 unpushed for hv"
+focus: "4 Nov EOD, holding (hv: bank, fold, hold): 4e0714a stays on main overnight; next, vc's revert, dc's macos-15 pin (todo), vc's merge, hv's fresh 1.4.3 cut, then hold 16's pick"
 claims: [ISSUE:0090]
 ---
 
@@ -13,15 +13,15 @@ claims: [ISSUE:0090]
 
 ## DOING
 
-- 0090: docs on main (dc856ce, CHANGELOG [1.4.3] opened); Molt-matts 3d1de92 on main, unpushed, for hv to push; the vars.sh half lands per hold 16 (hv, 4 Nov); 0090 closes once it lands (edited)
+- 0090: docs on main (dc856ce); Molt-matts 3d1de92 pushed by hv (4 Nov); the vars.sh half lands per hold 16 after the next 1.4.3 cut; 0090 closes once it lands (edited)
 
 ## TODO
 
-_(none)_
+- Pin test-macos's runs-on to macos-15 (hv's ruling (b), via molt-vc, 4 Nov) on a branch off main after vc reverts 4e0714a: the one line, the workflow README's runner row, a CHANGELOG line under [1.4.3] and an issue recording that every green Molt macOS run so far, v1.1.0 to v1.4.2, was on macos-26-arm64, the candidate being Molt's first macos-15 run; READY to vc, who merges before hv cuts afresh
 
 ## Holds
 
-- Land Molt-matts dc/0090-vars-instance (2f95dfe: MOLT_PLATFORM and the [instance] tables out, their facts into each vars.sh header) by cherry-pick onto Molt-matts main, unpushed, for hv to push with 3d1de92 (hv, 4 Nov): step 2 of vc's rollout (vc doing 10), after brew upgrade molt on rhadamanth and before hv's molt upgrade. Released when vc says hv's 1.4.3 molt upgrade on rhadamanth is next. (edited)
+- Land Molt-matts dc/0090-vars-instance (2f95dfe: MOLT_PLATFORM and the [instance] tables out, their facts into each vars.sh header) by cherry-pick onto Molt-matts main, unpushed, for hv to push (hv, 4 Nov): after the next 1.4.3 cut, between hv's brew upgrade molt and hv's molt upgrade on rhadamanth; hv's uncommitted homere.yaml is hv's. Released when vc says hv's 1.4.3 molt upgrade on rhadamanth is next. (edited)
 
 ## Watch-outs
 
