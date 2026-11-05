@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.4, 5 Nov: the release is v1.4.4 (decision 50); 4e0714a's 1.4.3 stamp stays, never tagged. Next: dc's three hold-16 files committed; dc's issue 0092 and macos-15 pin under a new [1.4.4] - unreleased; vc's review and merge; release check and the v1.4.4 dry run; READY to devbin-vc (desk); hv's cut; then brew upgrade molt, dc's hold 16, hv's molt upgrade and push; 8GJE86 at hv's word through devbin-vc. (edited)
+- Molt 1.4.4, 5 Nov: 0092's macos-15 pin merged (6b65275) and closed (5e40d28); release check and the v1.4.4 dry run clean; the cut is hv's, bin/devbin release v1.4.4, booked on devbin-vc's desk, with no writes in Molt's checkout from vc's handover until it has pushed. Then: the CI read (macOS's first macos-15 run, dc's hold 17), brew upgrade molt, dc's hold 16, hv's molt upgrade and Molt-matts push, each step reported to devbin-vc; 8GJE86 at hv's word through devbin-vc. (edited)
 
 ## TODO
 

@@ -1,0 +1,16 @@
+{
+  "id": "01M6N1A4B1DJKT2B5NGGAMT7J8",
+  "ts": "2026-11-05T05:01:09.857Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 10,
+    "text": "Molt 1.4.4, 5 Nov: 0092's macos-15 pin merged (6b65275) and closed (5e40d28); release check and the v1.4.4 dry run clean; the cut is hv's, bin/devbin release v1.4.4, booked on devbin-vc's desk, with no writes in Molt's checkout from vc's handover until it has pushed. Then: the CI read (macOS's first macos-15 run, dc's hold 17), brew upgrade molt, dc's hold 16, hv's molt upgrade and Molt-matts push, each step reported to devbin-vc; 8GJE86 at hv's word through devbin-vc."
+  }
+}
