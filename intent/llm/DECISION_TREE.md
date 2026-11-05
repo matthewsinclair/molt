@@ -1,5 +1,5 @@
 ---
-verblock: "3 Nov 2026:v0.1: Matthew Sinclair - vc: Molt's placement tree, not the starter text (issue 0083)"
+verblock: "3 Nov 2026:v0.1: Matthew Sinclair - Molt's placement tree"
 ---
 
 # DECISION_TREE.md
