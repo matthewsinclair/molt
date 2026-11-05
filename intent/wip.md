@@ -1,12 +1,12 @@
 ---
-verblock: "5 Nov 2026:v0.88: Matthew Sinclair - localfold"
+verblock: "5 Nov 2026:v0.89: Matthew Sinclair - 0097 reviewed, 0098 added"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **0093 to 0097 on `dc/doctor-participant`:** all five in at d3cbb75, 0093 to 0096 accepted and 0097 to review; then dc's whole-file runs, its READY and vc's merge, for hv's 1.4.5 cut with devbin 0.1.20.
+- **0093 to 0098 on `dc/doctor-participant`:** 0093 to 0096 accepted; 0097 accepted with amendments and 0098 added as a sixth commit, both being built by dc; then dc's whole-file runs at the new head, its READY and vc's merge, for hv's 1.4.5 cut with devbin 0.1.20.
 
 ## TODO
 
