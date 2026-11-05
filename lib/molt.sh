@@ -2230,11 +2230,17 @@ cmd_doctor() {
     not_passed=$((not_passed + 1))
   fi
 
-  # External dependencies
+  # External dependencies: envsubst on every sleeve, since every render needs
+  # it, and bats only where molt runs from a dev tree, the one tree molt test
+  # runs in, so an opt or brew sleeve does not fail for want of it (issue
+  # 0095). The line names what it checked. $tree is the tree check's answer.
   checks=$((checks + 1))
   local deps_ok=1
   local missing_deps=""
-  local required_deps=(bats envsubst)
+  local required_deps=(envsubst)
+  if [[ "$tree" == dev ]]; then
+    required_deps=(bats envsubst)
+  fi
   for dep in "${required_deps[@]}"; do
     if ! command -v "$dep" &>/dev/null; then
       deps_ok=0

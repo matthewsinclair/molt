@@ -354,7 +354,7 @@ MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tool
 
 - **bash** 3.2 or later (framework scripts)
 - **awk** (manifest parsing)
-- **bats** (test suite; `molt doctor` checks for it)
+- **bats** (test suite; `molt doctor` checks for it where molt runs from a dev checkout, the one tree `molt test` runs in)
 - **envsubst**, from gettext (template rendering; `molt doctor` checks for it)
 - **timeout**, from coreutils. The bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it. `molt doctor`'s git host check uses it where it is installed, to bound each host's whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`.
 

@@ -205,23 +205,8 @@ _font_sleeve() {
 
 @test "molt doctor says it cannot verify the font without fontconfig, and carries on to its verdict (issue 0064)" {
     _font_sleeve
-    # PATH as it is, but each directory holding fc-list stands in as a copy
-    # of links to everything there except fc-list.
-    local dir path="" shadow n=0 entry
-    local IFS=:
-    for dir in $PATH; do
-        if [[ -e "$dir/fc-list" ]]; then
-            n=$((n + 1))
-            shadow="$BATS_TEST_TMPDIR/nofc$n"
-            mkdir -p "$shadow"
-            for entry in "$dir"/*; do
-                [[ "${entry##*/}" == fc-list ]] || ln -s "$entry" "$shadow/${entry##*/}"
-            done
-            dir="$shadow"
-        fi
-        path="${path:+$path:}$dir"
-    done
-    unset IFS
+    local path
+    path="$(path_without fc-list)"
     PATH="$path" command -v fc-list && fail "fc-list is still on PATH"
     PATH="$path" run_molt doctor
     assert_output_contains "Checking declared font... ? cannot verify Test Font"

@@ -304,6 +304,31 @@ setup() {
     assert_output_contains "is Homebrew's keg with no manifest; brew upgrade matthewsinclair/molt/molt writes one"
 }
 
+# doctor needs envsubst on every sleeve, and bats only where molt runs from a
+# dev tree, the one tree molt test runs in, so an opt or brew sleeve, as a
+# participant's laptop is, does not fail for want of bats. The line names what
+# it checked (issue 0095).
+@test "doctor from an opt tree checks envsubst alone, and passes without bats (issue 0095)" {
+    "$DEV/bin/molt" install --prefix "$OPT"
+    local path
+    path="$(path_without bats)"
+    PATH="$path" command -v bats && fail "bats is still on PATH"
+    PATH="$path" run "$OPT/bin/molt" doctor
+    grep -qxF "Checking external dependencies... ✓ envsubst" <<< "$output" \
+        || fail "Expected the line 'Checking external dependencies... ✓ envsubst'\nActual output:\n$output"
+}
+
+@test "doctor from a dev tree checks bats and envsubst both (issue 0095)" {
+    local path
+    path="$(path_without bats)"
+    PATH="$path" run "$DEV/bin/molt" doctor
+    grep -qxF "Checking external dependencies... ⚠ missing: bats" <<< "$output" \
+        || fail "Expected the line 'Checking external dependencies... ⚠ missing: bats'\nActual output:\n$output"
+    run "$DEV/bin/molt" doctor
+    grep -qxF "Checking external dependencies... ✓ bats envsubst" <<< "$output" \
+        || fail "Expected the line 'Checking external dependencies... ✓ bats envsubst'\nActual output:\n$output"
+}
+
 @test "--force is refused over a current manifest whose tool is not molt" {
     mkdir -p "$OPT" && echo "mine" > "$OPT/notes.txt"
     printf '# tool: other\n# managed_by: molt\n' > "$OPT/.molt-install"
