@@ -205,7 +205,7 @@ sudo apt install -y alacritty
 
 Other settings: copy-on-select, Super+C/V/X clipboard bindings for Parallels, Shift-Enter kitty-protocol encoding.
 
-`molt doctor`'s `Checking declared font...` asserts the declared font is one fontconfig can resolve; nothing installs fonts, so a fresh sleeve gets the config naming the font and none of the font.
+`molt doctor`'s `Checking declared font...` asserts the declared font is one fontconfig can resolve; nothing installs fonts, so a fresh sleeve gets the config naming the font and none of the font. A sleeve whose terminal Windows draws, as under WSL, declares `MOLT_TERMINAL_DRAWN_BY="windows"` in its `vars.sh`, and the check then passes without asking fontconfig, since the font is the Windows side's to install.
 
 ---
 

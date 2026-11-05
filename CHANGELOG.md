@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [1.4.5] - unreleased
 
+### Added
+
+- `MOLT_TERMINAL_DRAWN_BY` in an instance's `vars.sh`, read through `molt_instance_var`, says who draws the sleeve's terminal. Set to `windows`, as for a WSL sleeve whose terminal is Windows Terminal, `molt doctor`'s font check passes without asking fontconfig and says why, since the font is the Windows side's to install. Any other value is reported and does not pass, and without it the check is as it was. The new-user skeleton's `vars.sh` names it among what molt reads (issue 0094)
+
 ### Changed
 
 - `molt doctor` checks each git host the stack's ssh config names, where it asked github.com alone, so a sleeve whose stack reaches only a GitLab host can pass. A git host is an entry in molt's region of `~/.ssh/config`, the template's section and the config.d fragments after it, that sets `User git` itself. doctor dials it as `git@<name>` and passes it on GitHub's or GitLab's own reply naming the user. A reply doctor does not know is shown and not passed, and with no git host to dial the check passes, saying whether there is no ssh config, no molt region in it, or no `User git` entry in that region. Issue 0069's bounds and its split between a host not reached and a refusal hold for each host, as `MOLT_GIT_HOST_CONNECT_TIMEOUT` and `MOLT_GIT_HOST_TIMEOUT`, which were `MOLT_GITHUB_CONNECT_TIMEOUT` and `MOLT_GITHUB_TIMEOUT` (issue 0093)

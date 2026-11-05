@@ -150,16 +150,46 @@ TOML
     assert_doctor_closed
 }
 
-# A sleeve declaring the font "Test Font", for doctor run as molt runs, under
-# errexit: run in this shell, cmd_doctor would not show what bin/molt does.
+# A sleeve declaring the font "Test Font", and given $1, MOLT_TERMINAL_DRAWN_BY
+# as $1, for doctor run as molt runs, under errexit: run in this shell,
+# cmd_doctor would not show what bin/molt does.
 _font_sleeve() {
-    local repo
+    local repo vars
     repo="$BATS_TEST_TMPDIR/cfg/Molt-$(whoami)"
+    vars="$repo/instances/$(test_hostname)/vars.sh"
     create_test_repo "$repo"
     printf '[[liberator]]\nname = "git"\nenabled = false\n' > "$repo/molt.toml"
     mkdir -p "$repo/instances/$(test_hostname)"
-    printf 'export MOLT_FONT_FAMILY="Test Font"\n' > "$repo/instances/$(test_hostname)/vars.sh"
+    printf 'export MOLT_FONT_FAMILY="Test Font"\n' > "$vars"
+    if [[ -n "${1:-}" ]]; then
+        printf 'export MOLT_TERMINAL_DRAWN_BY="%s"\n' "$1" >> "$vars"
+    fi
     export MOLT_CFG_DIR="$BATS_TEST_TMPDIR/cfg"
+}
+
+# An instance whose terminal Windows draws, as under WSL, declares it, and the
+# font check then passes and says why: the glyphs come from the Windows side,
+# so fontconfig here is not asked (issue 0094). The fake fc-list lists another
+# font, so a doctor that asked it would find Test Font not installed, and logs
+# each call.
+@test "molt doctor passes the font check where the instance says Windows draws its terminal, and asks fontconfig nothing (issue 0094)" {
+    _font_sleeve windows
+    local bin="$BATS_TEST_TMPDIR/fcbin" calls="$BATS_TEST_TMPDIR/fc-list-calls"
+    mkdir -p "$bin"
+    printf '#!/bin/sh\necho called >> "%s"\nprintf "Other Font\\n"\n' "$calls" > "$bin/fc-list"
+    chmod +x "$bin/fc-list"
+    PATH="$bin:$PATH" run_molt doctor
+    assert_output_contains "Checking declared font... ✓ Windows draws this terminal, so its font is the Windows side's to provide"
+    [ ! -e "$calls" ] || fail "doctor asked fc-list: $(cat "$calls")"
+    assert_doctor_closed
+}
+
+@test "molt doctor reports a MOLT_TERMINAL_DRAWN_BY it does not know, and does not pass the font check (issue 0094)" {
+    local drawn_by="Windows Terminal"
+    _font_sleeve "$drawn_by"
+    run_molt doctor
+    assert_output_contains "Checking declared font... ⚠ MOLT_TERMINAL_DRAWN_BY is \"$drawn_by\"; doctor knows only windows"
+    assert_doctor_closed
 }
 
 @test "molt doctor reports a declared font that is not installed, and carries on to its verdict (issue 0064)" {

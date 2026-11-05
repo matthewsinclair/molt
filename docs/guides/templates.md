@@ -41,7 +41,7 @@ export MOLT_FONT_SIZE=12.0
 
 Variables are sourced in a subshell during rendering, so they don't leak into the framework environment.
 
-`vars.sh` is read for more than templates. Molt also reads `MOLT_INSTALL_PREFIX` from it (where `molt install` publishes the opt tree), `MOLT_CLAUDE_CONFIG_DIR` (where the `claude` liberator keeps Claude Code's state) and `MOLT_FONT_FAMILY` (the font `molt doctor` checks for), and some liberators read settings of their own there, as `backup` does its `MOLT_BACKUP_*` values and `tiling` its `MOLT_TACTILE_ACTIVATE`. The `env` liberator publishes each `<TOOL>_INSTALL_PREFIX` it exports, other than `MOLT_` ones, to shells and GUI apps.
+`vars.sh` is read for more than templates. Molt also reads `MOLT_INSTALL_PREFIX` from it (where `molt install` publishes the opt tree), `MOLT_CLAUDE_CONFIG_DIR` (where the `claude` liberator keeps Claude Code's state), `MOLT_FONT_FAMILY` (the font `molt doctor` checks for) and `MOLT_TERMINAL_DRAWN_BY` (`windows` where Windows draws the sleeve's terminal, as under WSL, so that `molt doctor` leaves the font to the Windows side), and some liberators read settings of their own there, as `backup` does its `MOLT_BACKUP_*` values and `tiling` its `MOLT_TACTILE_ACTIVATE`. The `env` liberator publishes each `<TOOL>_INSTALL_PREFIX` it exports, other than `MOLT_` ones, to shells and GUI apps.
 
 ## Using templates in liberators
 

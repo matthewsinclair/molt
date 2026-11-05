@@ -2367,15 +2367,33 @@ cmd_doctor() {
   # opens fine, just without powerline or devicon glyphs, with no error anywhere.
   # Same shape as the dangling-symlink and mtime defects: everything reports
   # success, the result is wrong.
+  #
+  # An instance whose terminal Windows draws, as under WSL, says so in
+  # MOLT_TERMINAL_DRAWN_BY: the font is then the Windows side's to install, and
+  # fontconfig here says nothing about the glyphs anyone sees (issue 0094). A
+  # declaration, not a detection: molt does what its config says.
   checks=$((checks + 1))
-  local font_family="" font_status=0
+  local font_family="" font_status=0 drawn_by="" drawn_status=0
   font_family="$(molt_instance_var MOLT_FONT_FAMILY)" || font_status=$?
-  # With no user repo, or no host name, nothing declares a font.
+  drawn_by="$(molt_instance_var MOLT_TERMINAL_DRAWN_BY)" || drawn_status=$?
+  # With no user repo, or no host name, nothing declares a font, nor who draws
+  # the terminal.
   if [[ $font_status -eq 3 ]]; then
     font_family=""
   fi
+  if [[ $drawn_status -eq 3 ]]; then
+    drawn_by=""
+  fi
   if [[ $font_status -eq 2 ]]; then
     echo "Checking declared font... ⚠ $font_family"
+    not_passed=$((not_passed + 1))
+  elif [[ $drawn_status -eq 2 ]]; then
+    echo "Checking declared font... ⚠ $drawn_by"
+    not_passed=$((not_passed + 1))
+  elif [[ "$drawn_by" == windows ]]; then
+    echo "Checking declared font... ✓ Windows draws this terminal, so its font is the Windows side's to provide"
+  elif [[ -n "$drawn_by" ]]; then
+    echo "Checking declared font... ⚠ MOLT_TERMINAL_DRAWN_BY is \"$drawn_by\"; doctor knows only windows"
     not_passed=$((not_passed + 1))
   elif [[ -z "$font_family" ]]; then
     echo "Checking declared font... ⚠ this instance declares no MOLT_FONT_FAMILY"

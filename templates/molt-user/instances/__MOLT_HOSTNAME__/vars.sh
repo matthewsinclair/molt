@@ -1,7 +1,9 @@
 # Instance variables for __MOLT_HOSTNAME__
 # Sourced by molt_render when rendering .tmpl files, and read by molt for
-# MOLT_INSTALL_PREFIX, MOLT_CLAUDE_CONFIG_DIR and MOLT_FONT_FAMILY, and by some
-# liberators for their own, eg tiling's MOLT_TACTILE_ACTIVATE. The env
+# MOLT_INSTALL_PREFIX, MOLT_CLAUDE_CONFIG_DIR, MOLT_FONT_FAMILY and
+# MOLT_TERMINAL_DRAWN_BY (set it to windows where Windows draws this sleeve's
+# terminal, as under WSL, and doctor leaves the font to the Windows side), and
+# by some liberators for their own, eg tiling's MOLT_TACTILE_ACTIVATE. The env
 # liberator publishes each other <TOOL>_INSTALL_PREFIX exported here.
 # All variables must be exported: envsubst and molt see only exported ones.
 
