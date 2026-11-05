@@ -13,8 +13,7 @@ claims: []
 
 ## DOING
 
-- 0093, 0094 and 0095 with dc now, on hv's word in molt-vc's window (5 Nov): one worktree, one commit per issue, dc's plan to vc first; dc's bats proofs on the desk once devbin's v0.1.20 re-cut frees the bats lane; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5).
-- WSL2 proof run in the heavy slot (desk request 01M6NF41P4VX6X7G4QGFYT7XBD), started 09:36Z: /Users/matts/Devel/scratch/molt-vc/wsl2-proof/run-proof.sh, its log proof.log beside it; END to devbin-vc with the result, then the export to hv for wsl --import on hv's Windows 11 machine.
+- 0093, 0094, 0095 and 0096 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run): one worktree, one commit per issue; 0093 (4176036) and 0094 (b83c880) accepted by vc; each fix's arms red then green on a light ask; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5). (edited)
 
 ## TODO
 
@@ -23,6 +22,7 @@ claims: []
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - Other sleeves onto Molt 1.4.4 and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
+- hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.
 
 ## Holds
 

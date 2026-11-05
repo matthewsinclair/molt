@@ -1,0 +1,11 @@
+{
+  "schema": "intent/issue@3.0",
+  "number": 96,
+  "slug": "ssh-liberator-a-new-key-s-comment-ignores-an-ide",
+  "title": "ssh liberator: a new key's comment ignores an identity that ~/.gitconfig includes, since a --global lookup reads no include",
+  "status": "open",
+  "severity": "low",
+  "created": "2026-11-05",
+  "reporter": "Matthew Sinclair",
+  "body": "The ssh liberator takes a new key's comment from `git config --global user.email` (`liberators/ssh.sh`, `ssh_install`). git reads no `[include]` for a `--global` lookup, so an identity kept only in a file that `~/.gitconfig` includes never reaches the key. The comment falls back to `$(whoami)@$(molt_hostname)` instead. hv's stacks put `[user]` straight in `gitconfig`, so they never showed it. A course stack that keeps each person's identity in an included file, outside the stack, gives every laptop's key the same comment.\n\nFound by molt-vc's WSL2 proof run for pipeliner-sc's bootcamp ask (5 Nov, `/Users/matts/Devel/scratch/molt-vc/wsl2-proof/RESULT.md`). There, the first run wrote the person's identity to `~/.config/git/identity`, and the key `molt resleeve` made was commented `dev@devvm`. It is the one `--global` lookup in Molt's runtime.\n\nThe change: that lookup reads includes (`git config --global --includes user.email`), with the fallback as it is, and a bats test with an identity that only an include gives. Size XS.\n"
+}

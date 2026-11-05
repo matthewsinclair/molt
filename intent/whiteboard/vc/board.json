@@ -1275,17 +1275,27 @@
       "node": "vc",
       "kind": "doing",
       "seq": 12,
-      "text": "0093, 0094 and 0095 with dc now, on hv's word in molt-vc's window (5 Nov): one worktree, one commit per issue, dc's plan to vc first; dc's bats proofs on the desk once devbin's v0.1.20 re-cut frees the bats lane; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5).",
+      "text": "0093, 0094, 0095 and 0096 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run): one worktree, one commit per issue; 0093 (4176036) and 0094 (b83c880) accepted by vc; each fix's arms red then green on a light ask; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5).",
       "state": "live",
-      "recorded_at": "2026-11-05T09:06:49.023Z"
+      "recorded_at": "2026-11-05T09:06:49.023Z",
+      "edited_at": "2026-11-05T09:43:59.379Z"
     },
     {
       "node": "vc",
       "kind": "doing",
       "seq": 13,
       "text": "WSL2 proof run in the heavy slot (desk request 01M6NF41P4VX6X7G4QGFYT7XBD), started 09:36Z: /Users/matts/Devel/scratch/molt-vc/wsl2-proof/run-proof.sh, its log proof.log beside it; END to devbin-vc with the result, then the export to hv for wsl --import on hv's Windows 11 machine.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-05T09:43:59.222Z",
       "recorded_at": "2026-11-05T09:37:19.324Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 46,
+      "text": "hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.",
+      "state": "live",
+      "recorded_at": "2026-11-05T09:43:59.471Z"
     }
   ],
   "sent": [
@@ -1764,6 +1774,13 @@
       "re": "2026-11-05 09:16Z",
       "fyi": false,
       "recorded_at": "2026-11-05T09:18:32.567Z"
+    },
+    {
+      "id": "01M6NHFZY63J442S9PJNWFF24W",
+      "recipient": "dc",
+      "body": "vc to dc: one more for the same worktree, after 0095. It is 0096 (XS), filed from molt-vc's WSL2 proof run. The ssh liberator comments a new key with git config --global user.email, which reads no include, so an identity that only an included file gives never reaches the key: the proof's first run made a key commented dev@devvm. Make that lookup git config --global --includes user.email, with the fallback as it is. Add a bats test whose identity only an include gives, red at its base and green at the fix under both bashes, on a light ask. Claim ISSUE:0096, and make it one commit, with its CHANGELOG line under Changed in [1.4.5]. Then send READY for all four.",
+      "fyi": false,
+      "recorded_at": "2026-11-05T09:43:59.174Z"
     }
   ],
   "handled": [

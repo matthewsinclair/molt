@@ -1,0 +1,17 @@
+{
+  "id": "01M6NHFZY63J442S9PJNWFF24V",
+  "ts": "2026-11-05T09:43:59.174Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc to dc: one more for the same worktree, after 0095. It is 0096 (XS), filed from molt-vc's WSL2 proof run. The ssh liberator comments a new key with git config --global user.email, which reads no include, so an identity that only an included file gives never reaches the key: the proof's first run made a key commented dev@devvm. Make that lookup git config --global --includes user.email, with the fallback as it is. Add a bats test whose identity only an include gives, red at its base and green at the fix under both bashes, on a light ask. Claim ISSUE:0096, and make it one commit, with its CHANGELOG line under Changed in [1.4.5]. Then send READY for all four.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
