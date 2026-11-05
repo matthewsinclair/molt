@@ -23,6 +23,8 @@ Each of `<user>`, `--name`, `--email`, `--github` and `--hostname` you don't pas
 - `--dest` defaults to `$MOLT_CFG_DIR/Molt-<user>` (or `./Molt-<user>` if `MOLT_CFG_DIR` is unset); `MOLT_CFG_DIR` defaults to the `cfg/` directory beside `MOLT_PRJ_DIR`
 - `--from` defaults to Molt's own skeleton, `templates/molt-user`
 
+A flag given with no value after it is refused, naming it, and nothing is written. With nothing for a prompt to read, as in a script run with no terminal, `--name` and `--github` take their default, as Enter at the prompt does, and `<user>`, `--email` and `--hostname`, which have none, are refused, each by name.
+
 Molt finds a config repo only by your login name, as `Molt-$(whoami)`, so `<user>` is your login name on the machines it will run on.
 
 ## Scaffolding from another template

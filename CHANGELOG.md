@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `molt doctor`'s external dependencies are `envsubst` on every sleeve and `bats` only where molt runs from a dev tree, the one tree `molt test` runs in, so an opt or brew sleeve, as a participant's laptop is, no longer fails for want of bats. The line names what it checked: `bats envsubst` in a dev tree, `envsubst` elsewhere (issue 0095)
 - The `ssh` liberator comments a new key with `git config --global --includes user.email`, where it read no `[include]`, so an identity kept only in a file the global git config includes now reaches the key. The comment fell back to `user@host` instead, as the WSL2 proof run's `dev@devvm` showed. The fallback is as it was (issue 0096)
 
+### Fixed
+
+- `molt new-user` no longer ends with exit 1 and nothing said when a value flag is given last with no value after it, or when a value is left out and its prompt has nothing to read, as in a script run with no terminal. A flag with no value is refused, naming it, with nothing written, by one check for every value flag. With nothing to read, `<user>`, `--email` and `--hostname`, which have no default, are refused, each by name, and `--name` and `--github` take the user, as Enter at the prompt does. An empty value that is given is handled as before (issue 0098)
+
 ## [1.4.4] - 2026-11-05
 
 Homebrew goes from 1.4.2 to 1.4.4: 1.4.3's cut stopped on 4 Nov before its tag, GitHub giving its candidate's macOS job no runner, and devbin never re-dates a dated note, so 1.4.4 brings 1.4.3's changes to brew as well.

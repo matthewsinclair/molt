@@ -140,41 +140,62 @@ molt_new_user() {
   return 0
 }
 
+# Asks for a value the command line left out, and prints the answer. At the
+# end of input, as in a script run with no terminal, read fails, and what came
+# before the end stands as the answer, maybe nothing: the caller handles that
+# as it does Enter at the prompt, taking the value's default, or refusing a
+# value that has none, by name. Under bin/molt's set -e the failed read ended
+# molt with nothing said (issue 0098).
+_molt_new_user_ask() {
+  local answer=""
+  # Tolerated: read fails only at the end of input, handled as said above.
+  read -rp "$1" answer || true
+  printf '%s' "$answer"
+}
+
 # Thin coordinator: parse args, prompt for any missing required value, delegate.
 cmd_new_user() {
   local user="" full_name="" email="" github="" hostname="" dest=""
-  local from="" from_given=0
+  local from="" from_given=0 var
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --name)     full_name="${2:-}"; shift 2 ;;
-      --email)    email="${2:-}"; shift 2 ;;
-      --github)   github="${2:-}"; shift 2 ;;
-      --hostname) hostname="${2:-}"; shift 2 ;;
-      --dest)     dest="${2:-}"; shift 2 ;;
+      --name)     var=full_name ;;
+      --email)    var=email ;;
+      --github)   var=github ;;
+      --hostname) var=hostname ;;
+      --dest)     var=dest ;;
       # Given, even empty, it names the template, so an empty one is refused
       # as no directory rather than read as the skeleton (issue 0097).
-      --from)     from="${2:-}"; from_given=1; shift 2 ;;
+      --from)     var=from; from_given=1 ;;
       -*)         molt_error "Unknown flag: $1"; return 1 ;;
       *)
-        if [[ -z "$user" ]]; then
-          user="$1"; shift
-        else
+        if [[ -n "$user" ]]; then
           molt_error "Unexpected argument: $1"; return 1
         fi
+        user="$1"; shift; continue
         ;;
     esac
+    # Every flag takes a value, so one check serves them all: given last, a
+    # flag made shift 2 fail, which ended molt with nothing said (issue 0098).
+    # A value given empty is still given, and is handled as it was.
+    if [[ $# -lt 2 ]]; then
+      molt_error "new-user: $1 needs a value"
+      return 1
+    fi
+    printf -v "$var" '%s' "$2"
+    shift 2
   done
 
-  [[ -z "$user" ]]      && read -rp "Short username (eg flynn): " user
+  [[ -z "$user" ]]      && user="$(_molt_new_user_ask "Short username (eg flynn): ")"
   if [[ -z "$user" ]]; then molt_error "username is required"; return 1; fi
-  [[ -z "$full_name" ]] && read -rp "Full name [${user}]: " full_name
+  [[ -z "$full_name" ]] && full_name="$(_molt_new_user_ask "Full name [${user}]: ")"
   full_name="${full_name:-$user}"
-  [[ -z "$email" ]]     && read -rp "Email: " email
+  [[ -z "$email" ]]     && email="$(_molt_new_user_ask "Email: ")"
   if [[ -z "$email" ]]; then molt_error "email is required"; return 1; fi
-  [[ -z "$github" ]]    && read -rp "GitHub handle [${user}]: " github
+  [[ -z "$github" ]]    && github="$(_molt_new_user_ask "GitHub handle [${user}]: ")"
   github="${github:-$user}"
-  [[ -z "$hostname" ]]  && read -rp "First machine hostname: " hostname
+  [[ -z "$hostname" ]]  && hostname="$(_molt_new_user_ask "First machine hostname: ")"
   if [[ -z "$hostname" ]]; then molt_error "hostname is required"; return 1; fi
 
   # Directory name is Capitalised (Molt-matts, Molt-flynn), matching every

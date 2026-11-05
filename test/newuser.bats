@@ -325,3 +325,56 @@ _course_template() {
     cmp "$template/config/logo.png" "$dest/config/logo.png" || fail "logo.png changed in the scaffold"
     cmp "$want" "$dest/config/blob.bin" || fail "blob.bin's token was not substituted byte-wise"
 }
+
+# --- a value flag with no value, or a prompt with nothing to read (issue 0098) ---
+
+@test "molt new-user refuses each value flag given last with no value, naming it, and writes nothing (issue 0098)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada" flags=() flag
+    # Every flag new-user's usage gives a value, as molt help prints it.
+    run_molt help
+    while IFS= read -r flag; do
+        flags+=("$flag")
+    done < <(grep 'new-user <user>' <<< "$output" | grep -o -- '\[--[a-z]*' | sed 's/^\[//')
+    [ "${#flags[@]}" -gt 0 ] || fail "molt help names no value flag for new-user: $output"
+    for flag in "${flags[@]}"; do
+        run_molt new-user ada --dest "$dest" "$flag" < /dev/null
+        assert_failure
+        assert_output_contains "new-user: $flag needs a value"
+        [ ! -e "$dest" ] || fail "$dest was written for $flag given last"
+    done
+}
+
+@test "molt new-user with nothing to read refuses a missing user, --email or --hostname, or an empty --email, naming it, and writes nothing (issue 0098)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada"
+    run_molt new-user --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "username is required"
+    [ ! -e "$dest" ] || fail "$dest was written with no user"
+    run_molt new-user ada --name "Ada Lovelace" --github ada-l \
+        --hostname analytical --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "email is required"
+    [ ! -e "$dest" ] || fail "$dest was written with no --email"
+    run_molt new-user ada --name "Ada Lovelace" --email "" --github ada-l \
+        --hostname analytical --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "email is required"
+    [ ! -e "$dest" ] || fail "$dest was written with an empty --email"
+    run_molt new-user ada --name "Ada Lovelace" --email ada@example.com --github ada-l \
+        --dest "$dest" < /dev/null
+    assert_failure
+    assert_output_contains "hostname is required"
+    [ ! -e "$dest" ] || fail "$dest was written with no --hostname"
+}
+
+@test "molt new-user with nothing to read gives a missing --name and an empty --github the user, as Enter does (issue 0098)" {
+    local dest="$BATS_TEST_TMPDIR/Molt-ada"
+    run_molt new-user ada --email ada@example.com --github "" --hostname analytical \
+        --dest "$dest" < /dev/null
+    assert_success
+    assert_file_exists "$dest/config/git/gitconfig_ada"
+    run cat "$dest/config/git/gitconfig"
+    assert_output_contains "name = ada"
+    assert_output_contains "path = ~/.gitconfig_ada"
+}
