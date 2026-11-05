@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 04:15Z
+heartbeat_at: 2026-11-05 04:57Z
 status: active
-focus: "4 Nov EOD, holding (hv: bank, fold, hold): 4e0714a stays on main overnight; next, vc's revert, dc's macos-15 pin (todo), vc's merge, hv's fresh 1.4.3 cut, then hold 16's pick"
+focus: "5 Nov: 0092's macos-15 pin READY to vc at b0e9a0c for v1.4.4; at vc's merge, 0092's images, as-built note and close; hold 16 waits for vc's word that hv's molt upgrade is next"
 claims: [ISSUE:0090, ISSUE:0092]
 ---
 

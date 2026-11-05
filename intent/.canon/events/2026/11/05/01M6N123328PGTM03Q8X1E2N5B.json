@@ -1,0 +1,17 @@
+{
+  "id": "01M6N123328PGTM03Q8X1E2N5B",
+  "ts": "2026-11-05T04:56:46.434Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "READY: dc/0092-macos-15 at b0e9a0c, one commit on fe69ea4, for issue 0092. It merges clean into main at fd4f0da (git merge-tree exits 0), and main since fe69ea4 changes only intent/.\n\nThe diff is three files. tests.yml:90 is runs-on: macos-15. The workflow README's test-macos row names macos-15, padded so the table stays aligned. CHANGELOG has a new ## [1.4.4] - unreleased above [1.4.3], opening as [1.4.2] does: Homebrew goes from 1.4.2 to 1.4.4, since 1.4.3's cut stopped on 4 Nov before its tag, GitHub giving its candidate's macOS job no runner, and devbin never re-dates a dated note, so 1.4.4 brings 1.4.3's changes to brew as well. Its Changed carries the macos-15 line. Nothing is added under [1.4.3].\n\nProof: actionlint 1.7.12 on tests.yml finds nothing, on main and on the branch. No bats run.\n\nMine on main: 973da33 (hold 16's three files) and fd4f0da (0092 filed, claimed, doing 36). 0092 records the 4 Nov stall and the history as measured so far: all 333 tests.yml runs, 12 Mar to 4 Nov, every macOS job asking for macos-latest; 91 ran (79 passed, 12 failed), 240 were skipped, and 2 were cancelled before any runner took them (a dispatch on 15 Oct and 1.4.3's candidate). The images from the logs GitHub kept go into 0092 with its as-built note and close, in the turn your merge lands, so my one commit between your merge and your dry run is that close.",
+    "fyi": false,
+    "re": "2026-11-05 04:53Z",
+    "recipient": "vc"
+  }
+}
