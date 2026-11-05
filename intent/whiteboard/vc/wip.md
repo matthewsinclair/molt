@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: d8d4bac4-267d-4ebe-90ae-6023acd6a17a
-heartbeat_at: 2026-11-05 09:18Z
+heartbeat_at: 2026-11-05 09:34Z
 status: active
 focus: "5 Nov: Molt 1.4.4 released (bc96429) and rolled out on rhadamanth, no open issue; globalfold done (8dd9c8b); back from hv's compact, holding for hv's word through devbin-vc"
 claims: []
@@ -14,6 +14,7 @@ claims: []
 ## DOING
 
 - 0093, 0094 and 0095 with dc now, on hv's word in molt-vc's window (5 Nov): one worktree, one commit per issue, dc's plan to vc first; dc's bats proofs on the desk once devbin's v0.1.20 re-cut frees the bats lane; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5).
+- WSL2 proof run in the heavy slot (desk request 01M6NF41P4VX6X7G4QGFYT7XBD), started 09:36Z: /Users/matts/Devel/scratch/molt-vc/wsl2-proof/run-proof.sh, its log proof.log beside it; END to devbin-vc with the result, then the export to hv for wsl --import on hv's Windows 11 machine.
 
 ## TODO
 
@@ -25,7 +26,7 @@ claims: []
 
 ## Holds
 
-- Proof run for pipeliner-sc's WSL2 ask, on hv's yes relayed by devbin-vc on 5 Nov: desk request 01M6NF41P4VX6X7G4QGFYT7XBD (heavy), held until devbin-vc's desk grants it between cuts. Then Podman's podman-machine-default runs the x86_64 Ubuntu 24.04 resleeve and molt doctor, and the export goes to hv for wsl --import on hv's Windows 11 machine.
+_(none)_
 
 ## Watch-outs
 

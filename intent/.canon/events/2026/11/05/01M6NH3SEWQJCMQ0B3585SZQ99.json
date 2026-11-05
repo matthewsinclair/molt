@@ -1,0 +1,15 @@
+{
+  "id": "01M6NH3SEWQJCMQ0B3585SZQ99",
+  "ts": "2026-11-05T09:37:19.324Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "WSL2 proof run in the heavy slot (desk request 01M6NF41P4VX6X7G4QGFYT7XBD), started 09:36Z: /Users/matts/Devel/scratch/molt-vc/wsl2-proof/run-proof.sh, its log proof.log beside it; END to devbin-vc with the result, then the export to hv for wsl --import on hv's Windows 11 machine."
+  }
+}
