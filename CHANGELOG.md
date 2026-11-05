@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.4] - unreleased
+## [1.4.4] - 2026-11-05
 
 Homebrew goes from 1.4.2 to 1.4.4: 1.4.3's cut stopped on 4 Nov before its tag, GitHub giving its candidate's macOS job no runner, and devbin never re-dates a dated note, so 1.4.4 brings 1.4.3's changes to brew as well.
 
