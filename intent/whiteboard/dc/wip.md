@@ -21,7 +21,7 @@ claims: [ISSUE:0090]
 
 ## Holds
 
-- Land Molt-matts dc/0090-vars-instance (2f95dfe: MOLT_PLATFORM and the [instance] tables out, their facts into each vars.sh header) by cherry-pick onto Molt-matts main, unpushed, for hv to push (hv, 4 Nov): after the next 1.4.3 cut, between hv's brew upgrade molt and hv's molt upgrade on rhadamanth; hv's uncommitted homere.yaml is hv's. Released when vc says hv's 1.4.3 molt upgrade on rhadamanth is next. (edited)
+- Cherry-pick Molt-matts dc/0090-vars-instance's 2f95dfe (MOLT_PLATFORM and the [instance] tables out) onto main at c71bb66 (hv's arngz tweaks, pushed): a new sha, which 0090's note names, homere.yaml untouched, unpushed for hv to push; after hv's 1.4.3 cut and brew upgrade molt, just before hv's molt upgrade on rhadamanth. Released when vc says that upgrade is next. (edited)
 
 ## Watch-outs
 

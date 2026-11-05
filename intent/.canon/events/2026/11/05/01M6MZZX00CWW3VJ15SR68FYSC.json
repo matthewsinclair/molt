@@ -1,0 +1,16 @@
+{
+  "id": "01M6MZZX00CWW3VJ15SR68FYSC",
+  "ts": "2026-11-05T04:38:06.080Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "seq": 16,
+    "text": "Cherry-pick Molt-matts dc/0090-vars-instance's 2f95dfe (MOLT_PLATFORM and the [instance] tables out) onto main at c71bb66 (hv's arngz tweaks, pushed): a new sha, which 0090's note names, homere.yaml untouched, unpushed for hv to push; after hv's 1.4.3 cut and brew upgrade molt, just before hv's molt upgrade on rhadamanth. Released when vc says that upgrade is next."
+  }
+}
