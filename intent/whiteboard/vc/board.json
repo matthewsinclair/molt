@@ -1305,6 +1305,14 @@
       "state": "archived",
       "archived_at": "2026-11-05T09:58:54.482Z",
       "recorded_at": "2026-11-05T09:52:35.163Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 47,
+      "text": "When brew installs Molt 1.4.5 (after hv's cut): tell pipeliner-dc, whose AE ST0002/07 re-run of the course template through molt new-user --from waits on it; the image's self-check then drops its newuser.sh-style stand-in for --from. The answer it builds on is /Users/matts/Devel/scratch/molt-vc/answer-pipeliner-dc-2026-11-05.md.",
+      "state": "live",
+      "recorded_at": "2026-11-05T11:00:32.961Z"
     }
   ],
   "sent": [

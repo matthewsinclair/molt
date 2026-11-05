@@ -23,6 +23,7 @@ claims: []
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - Other sleeves onto Molt 1.4.4 and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6. (edited)
 - hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for pipeliner-sc.
+- When brew installs Molt 1.4.5 (after hv's cut): tell pipeliner-dc, whose AE ST0002/07 re-run of the course template through molt new-user --from waits on it; the image's self-check then drops its newuser.sh-style stand-in for --from. The answer it builds on is /Users/matts/Devel/scratch/molt-vc/answer-pipeliner-dc-2026-11-05.md.
 
 ## Holds
 
