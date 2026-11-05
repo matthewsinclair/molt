@@ -1759,42 +1759,156 @@ _molt_doctor_other_tree_note() {
   esac
 }
 
-# doctor's GitHub line for what `ssh -T git@github.com` printed ($1) and how it
-# ended ($2, its exit status), returning 0 only when GitHub named the sleeve's
-# user. A bound running out, timeout's 124 or ssh's own "timed out", is
-# github.com not reached, not a refusal (issue 0069).
-molt_github_auth_verdict() {
-  local out="$1" status="$2" user
-  if [[ "$out" == *"successfully authenticated"* ]]; then
-    user="${out#*Hi }"
-    user="${user%%!*}"
-    echo "Checking GitHub auth... ✓ authenticated as $user"
-    return 0
-  fi
+# The git hosts in molt's region of the ssh config $1, one a line, in the order
+# the file names them (issue 0093). A git host is a Host entry there that sets
+# User git itself, named by the first of its patterns with no *, ? or !, which
+# doctor dials as git@<name>, as a git remote names it: an entry of wildcards
+# alone has nothing to dial. molt's region runs from the @@MOLT:BEGIN@@ line to
+# the end of the file, so it holds the template's section and the config.d
+# fragments the ssh liberator puts after it; the entries above the marker are
+# the sleeve's own, not the stack's. With $2 set, the file is all molt's, as
+# one rendered from a template without the marker is. Keywords match in any
+# case, with a space or an = before the value, and an entry's User is the
+# first it sets, as ssh takes the first value it obtains. An entry runs to the
+# next Host or Match line, and Include lines are not followed.
+molt_git_hosts() {
+  awk -v whole="${2:-}" '
+    function end_entry() {
+      if (name != "" && user == "git") print name
+      name = ""; user = ""; inside = 0
+    }
+    BEGIN { on = (whole != "") }
+    !on { if (index($0, "@@MOLT:BEGIN@@")) on = 1; next }
+    {
+      line = $0
+      sub(/^[ \t]+/, "", line)
+      if (line == "" || substr(line, 1, 1) == "#") next
+      if (!match(line, /^[A-Za-z0-9]+/)) next
+      key = tolower(substr(line, 1, RLENGTH))
+      rest = substr(line, RLENGTH + 1)
+      sub(/^[ \t]*=?[ \t]*/, "", rest)
+      gsub(/"/, "", rest)
+      n = split(rest, word, /[ \t]+/)
+      if (key == "host") {
+        end_entry()
+        inside = 1
+        for (i = 1; i <= n; i++) {
+          if (word[i] == "" || word[i] ~ /[*?]/ || substr(word[i], 1, 1) == "!") continue
+          name = word[i]
+          break
+        }
+      } else if (key == "match") {
+        end_entry()
+      } else if (key == "user" && inside && user == "" && n > 0) {
+        user = word[1]
+      }
+    }
+    END { end_entry() }
+  ' "$1"
+}
+
+# doctor's word on the git host $1, from what `ssh -T git@$1` printed ($2) and
+# how it ended ($3, its exit status). Each host is judged by its own reply,
+# never by its name (issue 0093): "$1 as <user>" when it answered as GitHub or
+# GitLab does to a key it knows, returning 0, and otherwise "$1: <why>",
+# returning 1, or 2 for a reply doctor does not know, whose lines the caller
+# shows. A bound running out, timeout's 124 or ssh's own "timed out", is the
+# host not reached, and ssh's "Permission denied" is a refusal (issue 0069).
+molt_git_host_verdict() {
+  local name="$1" out="$2" status="$3" user
+  case "$out" in
+    *"successfully authenticated"*)
+      user="${out#*Hi }"
+      echo "$name as ${user%%!*}"
+      return 0 ;;
+    *"Welcome to GitLab, @"*)
+      user="${out#*Welcome to GitLab, @}"
+      echo "$name as ${user%%!*}"
+      return 0 ;;
+  esac
   if [[ "$status" -eq 124 ]]; then
-    echo "Checking GitHub auth... ⚠ could not reach github.com within ${MOLT_GITHUB_TIMEOUT} s"
+    echo "$name: could not reach it within ${MOLT_GIT_HOST_TIMEOUT} s"
   elif [[ "$out" == *"timed out"* ]]; then
-    echo "Checking GitHub auth... ⚠ could not reach github.com within ${MOLT_GITHUB_CONNECT_TIMEOUT} s"
+    echo "$name: could not reach it within ${MOLT_GIT_HOST_CONNECT_TIMEOUT} s"
+  elif [[ "$out" == *"Permission denied"* ]]; then
+    echo "$name: not authenticated"
+  elif [[ -z "$out" ]]; then
+    echo "$name: no reply, and ssh ended with status $status"
   else
-    echo "Checking GitHub auth... ⚠ not authenticated"
+    echo "$name: doctor does not know this reply"
+    return 2
   fi
   return 1
 }
 
-# Asks GitHub over ssh who this sleeve is, and prints doctor's line for the
-# answer. ssh bounds its own connect and handshake, BatchMode keeps it from
-# prompting, and -n keeps it off the caller's stdin (issue 0075's class);
-# timeout, where one is installed, bounds the whole exchange. It used to kill
-# ssh after 5 s and read that as not authenticated (issue 0069).
-molt_github_auth_check() {
-  local out status=0
-  local ssh_cmd=(ssh -n -o BatchMode=yes -o "ConnectTimeout=${MOLT_GITHUB_CONNECT_TIMEOUT}" -T git@github.com)
-  if command -v timeout &>/dev/null; then
-    out="$(timeout "$MOLT_GITHUB_TIMEOUT" "${ssh_cmd[@]}" 2>&1)" || status=$?
-  else
-    out="$("${ssh_cmd[@]}" 2>&1)" || status=$?
+# Dials each git host molt_git_hosts finds in molt's region of ~/.ssh/config,
+# and prints doctor's line for their answers, returning 0 when every one
+# passed. With none to dial it passes, saying which of three cases it found: no
+# ssh config, an ssh config with no molt region, or a molt region naming no
+# host with User git. ssh bounds its own connect and handshake, BatchMode keeps
+# it from prompting, and -n keeps it off the caller's stdin (issue 0075's
+# class); timeout, where one is installed, bounds each host's whole exchange
+# (issue 0069). It once asked github.com alone, so a sleeve whose stack
+# reaches only a GitLab host could never pass (issue 0093).
+molt_git_hosts_check() {
+  local config="$HOME/.ssh/config" whole="" list name out status verdict rc shown
+  local names=() passed="" failed="" why="" n_failed=0
+  if [[ ! -e "$config" && ! -L "$config" ]]; then
+    echo "Checking git hosts... ✓ none: there is no ssh config"
+    return 0
   fi
-  molt_github_auth_verdict "$out" "$status"
+  if ! grep -qF '@@MOLT:BEGIN@@' "$config" 2>/dev/null; then
+    if [[ ! -r "$config" ]]; then
+      echo "Checking git hosts... ⚠ $(molt_tilde "$config") cannot be read"
+      return 1
+    fi
+    if [[ ! -f "${config}.molt-rendered" ]]; then
+      echo "Checking git hosts... ✓ none: the ssh config has no molt region"
+      return 0
+    fi
+    whole=1
+  fi
+  if ! list="$(molt_git_hosts "$config" "$whole")"; then
+    echo "Checking git hosts... ⚠ $(molt_tilde "$config") could not be read for its git hosts"
+    return 1
+  fi
+  while IFS= read -r name; do
+    if [[ -n "$name" ]]; then names+=("$name"); fi
+  done <<< "$list"
+  if [[ ${#names[@]} -eq 0 ]]; then
+    echo "Checking git hosts... ✓ none: the molt region of the ssh config names no host with User git"
+    return 0
+  fi
+  local ssh_cmd
+  for name in "${names[@]}"; do
+    ssh_cmd=(ssh -n -o BatchMode=yes -o "ConnectTimeout=${MOLT_GIT_HOST_CONNECT_TIMEOUT}" -T "git@$name")
+    status=0
+    if command -v timeout &>/dev/null; then
+      out="$(timeout "$MOLT_GIT_HOST_TIMEOUT" "${ssh_cmd[@]}" 2>&1)" || status=$?
+    else
+      out="$("${ssh_cmd[@]}" 2>&1)" || status=$?
+    fi
+    rc=0
+    verdict="$(molt_git_host_verdict "$name" "$out" "$status")" || rc=$?
+    if [[ $rc -eq 0 ]]; then
+      passed="${passed:+$passed, }$verdict"
+      continue
+    fi
+    n_failed=$((n_failed + 1))
+    failed="${failed:+$failed, }$name"
+    why="${why}         ${verdict}"$'\n'
+    if [[ $rc -eq 2 ]]; then
+      shown="$(_molt_doctor_check_lines "$out" | sed 's/^/  /')"
+      why="${why}${shown}"$'\n'
+    fi
+  done
+  if [[ $n_failed -eq 0 ]]; then
+    echo "Checking git hosts... ✓ $passed"
+    return 0
+  fi
+  echo "Checking git hosts... ⚠ $n_failed of ${#names[@]} did not pass: $failed"
+  printf '%s' "$why"
+  return 1
 }
 
 # How many of a failing check's first lines doctor shows under its verdict line
@@ -2158,9 +2272,9 @@ cmd_doctor() {
     not_passed=$((not_passed + 1))
   fi
 
-  # GitHub auth
+  # The git hosts the stack's ssh config names, each by its own reply
   checks=$((checks + 1))
-  molt_github_auth_check || not_passed=$((not_passed + 1))
+  molt_git_hosts_check || not_passed=$((not_passed + 1))
 
   # Config carries no foreign (other-user) absolute home paths
   checks=$((checks + 1))

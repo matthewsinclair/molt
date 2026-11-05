@@ -11,7 +11,7 @@ This guide walks you through setting up MOLT on a new machine.
 - git
 - `gettext`, which provides `envsubst`, used to render `.tmpl` config (macOS: `brew install gettext && brew link --force gettext`)
 - `bats`, the test suite: `molt doctor` checks for it, with `envsubst`
-- `timeout`, from coreutils: the bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it; `molt doctor`'s GitHub check uses it where it is installed, to bound the whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`
+- `timeout`, from coreutils: the bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it; `molt doctor`'s git host check uses it where it is installed, to bound each host's whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`
 - A Nerd Font for prompt glyphs (eg `brew install --cask font-hack-nerd-font`)
 - A terminal you're comfortable in
 
@@ -126,7 +126,7 @@ The typical update sequence is:
 molt doctor
 ```
 
-Runs its diagnostic checks, among them: the tree Molt runs from (in a dev checkout, that `lib/`, `liberators/` and `test/` are there; from opt or brew, each file against the install's manifest), the manifest (that there is one, and that its `user_repo`, where it declares one, still names the real directory), liberator health, external dependencies, SSH key presence, GitHub authentication, config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, that each managed repo's `core.ignorecase` matches what its disk does with case, and the font the sleeve declares. It closes with `All checks passed.` and exits 0, or with how many of the checks that ran did not pass and exits 1.
+Runs its diagnostic checks, among them: the tree Molt runs from (in a dev checkout, that `lib/`, `liberators/` and `test/` are there; from opt or brew, each file against the install's manifest), the manifest (that there is one, and that its `user_repo`, where it declares one, still names the real directory), liberator health, external dependencies, SSH key presence, the git hosts the stack's ssh config names (each entry in molt's region of `~/.ssh/config` that sets `User git`, dialled as `git@<name>` and passed on GitHub's or GitLab's own reply naming the user; with none to dial it passes and says why), config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, that each managed repo's `core.ignorecase` matches what its disk does with case, and the font the sleeve declares. It closes with `All checks passed.` and exits 0, or with how many of the checks that ran did not pass and exits 1.
 
 ## Your config repo
 
