@@ -6,4 +6,4 @@
 
 ## TODO
 
-- **The rollout (vc todo 44):** rhadamanth's `brew upgrade molt` then `molt use brew` when no suite runs, kovacs through kovacs-sysadm, gyges when reachable.
+- **The rollout (vc todo 44):** kovacs through kovacs-sysadm, gyges when reachable; rhadamanth is on brew's 1.4.5.

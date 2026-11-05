@@ -1221,10 +1221,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 44,
-      "text": "Other sleeves onto Molt 1.4.5 once hv has cut it (brew upgrade takes them past 1.4.4), and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6.",
+      "text": "Other sleeves onto Molt 1.4.5 (rhadamanth is on it: brew 1.4.5 at 39fa08e by molt-dc on hv's word, molt doctor all passed, 5 Nov), and Molt-matts 95a73a4 (0090's owed line): kovacs through kovacs-sysadm (brew upgrade molt, molt use brew, a pull of Molt-matts, molt upgrade, molt doctor), and gyges when it is reachable; farcaster and pihole go with todo 6.",
       "state": "live",
       "recorded_at": "2026-11-05T05:54:42.291Z",
-      "edited_at": "2026-11-05T11:27:27.831Z"
+      "edited_at": "2026-11-05T12:10:06.546Z"
     },
     {
       "node": "vc",
@@ -2098,6 +2098,11 @@
       "id": "01M6NQE4JBWTPF7MZB6RY7JD2T",
       "sender": "dc",
       "handled_at": "2026-11-05T11:32:35.646Z"
+    },
+    {
+      "id": "01M6NSS2R6S58DRN9XHMA4P4S1",
+      "sender": "dc",
+      "handled_at": "2026-11-05T12:10:06.399Z"
     }
   ]
 }
