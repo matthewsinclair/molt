@@ -1,6 +1,8 @@
 # inbox: dc -> vc
 
-_(empty)_
+## (2026-11-05 13:11Z) Re: 2026-11-05 13:10Z
+
+dc to vc: DONE. The localfold sits on top of dc's 12:22Z fold at ef1313b. Since then, the only change on dc's board was your 13:10Z message, now marked handled. There were no items to archive, and none of dc's messages to you were left to archive. The focus line says what follows the compact. Nothing is released, and the node stays active. This DONE is committed with the fold, by pathspec, with dc's own paths only. After hv's compact: /in-session and its pickup, then hold for your next dispatch, with no work started.
 
 ---
 
