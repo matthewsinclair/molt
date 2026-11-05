@@ -1,0 +1,16 @@
+{
+  "id": "01M6NHZQQYFYJMGSRZHEZ8TPJ6",
+  "ts": "2026-11-05T09:52:35.070Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 12,
+    "text": "0093, 0094, 0095 and 0096 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run): all four in on dc/doctor-participant at 3ce1a6c and accepted by vc (4176036, b83c880, 52b6660, 3ce1a6c); dc's whole-file light runs of molt.bats, install.bats and run-liberators.bats, then READY; vc merges and closes each; they ship at hv's next Molt cut (1.4.5)."
+  }
+}

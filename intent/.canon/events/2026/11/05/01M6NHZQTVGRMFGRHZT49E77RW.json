@@ -1,0 +1,15 @@
+{
+  "id": "01M6NHZQTVGRMFGRHZT49E77RW",
+  "ts": "2026-11-05T09:52:35.163Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "molt new-user --from <dir> (S), option (a) for hv's per-person bootcamp stacks (hv's ruling via pipeliner-sc, 5 Nov), so a course template is scaffolded by Molt's own code and tokens: held until hv rules on it in Molt's window; (c), new-user then the course files laid over, is the no-change fallback."
+  }
+}

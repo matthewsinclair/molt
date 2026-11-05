@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- 0093, 0094, 0095 and 0096 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run): one worktree, one commit per issue; 0093 (4176036) and 0094 (b83c880) accepted by vc; each fix's arms red then green on a light ask; vc reviews, merges and closes each; they ship at hv's next Molt cut (1.4.5). (edited)
+- 0093, 0094, 0095 and 0096 with dc, on hv's word in molt-vc's window (5 Nov; 0096 found by the WSL2 proof run): all four in on dc/doctor-participant at 3ce1a6c and accepted by vc (4176036, b83c880, 52b6660, 3ce1a6c); dc's whole-file light runs of molt.bats, install.bats and run-liberators.bats, then READY; vc merges and closes each; they ship at hv's next Molt cut (1.4.5). (edited)
 
 ## TODO
 
@@ -26,7 +26,7 @@ claims: []
 
 ## Holds
 
-_(none)_
+- molt new-user --from <dir> (S), option (a) for hv's per-person bootcamp stacks (hv's ruling via pipeliner-sc, 5 Nov), so a course template is scaffolded by Molt's own code and tokens: held until hv rules on it in Molt's window; (c), new-user then the course files laid over, is the no-change fallback.
 
 ## Watch-outs
 
