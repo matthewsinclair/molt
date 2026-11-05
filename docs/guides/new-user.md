@@ -21,7 +21,6 @@ Each of `<user>`, `--name`, `--email`, `--github` and `--hostname` you don't pas
 - `--github` defaults to `<user>`
 - `--name` defaults to `<user>`
 - `--dest` defaults to `$MOLT_CFG_DIR/Molt-<user>` (or `./Molt-<user>` if `MOLT_CFG_DIR` is unset); `MOLT_CFG_DIR` defaults to the `cfg/` directory beside `MOLT_PRJ_DIR`
-
 - `--from` defaults to Molt's own skeleton, `templates/molt-user`
 
 Molt finds a config repo only by your login name, as `Molt-$(whoami)`, so `<user>` is your login name on the machines it will run on.

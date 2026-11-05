@@ -14,25 +14,35 @@ _molt_sed_escape() {
   printf '%s' "$1" | sed -e 's/[\\&|]/\\&/g'
 }
 
-# Substitute every __MOLT_*__ token in a single file, in place (portable: no
-# reliance on GNU vs BSD `sed -i` differences).
-_molt_subst_tokens() {
-  local file="$1" user="$2" full_name="$3" email="$4" github="$5" hostname="$6"
+# Substitute every __MOLT_*__ token in the text on stdin, to stdout.
+#   $1 user  $2 full_name  $3 email  $4 github  $5 hostname
+# The one list of the tokens and the values they take: file contents and path
+# names both go through it, so a token added here reaches both (issue 0097).
+# sed takes each value escaped, so an & in one stays an &, where bash 5.2's
+# patsub_replacement put the token back in its place in a ${name//token/value}.
+_molt_subst_text() {
   local e_user e_name e_email e_github e_host
-  e_user="$(_molt_sed_escape "$user")"
-  e_name="$(_molt_sed_escape "$full_name")"
-  e_email="$(_molt_sed_escape "$email")"
-  e_github="$(_molt_sed_escape "$github")"
-  e_host="$(_molt_sed_escape "$hostname")"
-
-  local tmp="${file}.molt-subst"
-  if sed \
+  e_user="$(_molt_sed_escape "$1")"
+  e_name="$(_molt_sed_escape "$2")"
+  e_email="$(_molt_sed_escape "$3")"
+  e_github="$(_molt_sed_escape "$4")"
+  e_host="$(_molt_sed_escape "$5")"
+  sed \
     -e "s|__MOLT_USER__|${e_user}|g" \
     -e "s|__MOLT_FULL_NAME__|${e_name}|g" \
     -e "s|__MOLT_EMAIL__|${e_email}|g" \
     -e "s|__MOLT_GITHUB__|${e_github}|g" \
-    -e "s|__MOLT_HOSTNAME__|${e_host}|g" \
-    "$file" > "$tmp"; then
+    -e "s|__MOLT_HOSTNAME__|${e_host}|g"
+}
+
+# Substitute every __MOLT_*__ token in the file $1, in place, with the values
+# $2 on, in _molt_subst_text's order (portable: no reliance on GNU vs BSD
+# `sed -i` differences).
+_molt_subst_tokens() {
+  local file="$1"
+  shift
+  local tmp="${file}.molt-subst"
+  if _molt_subst_text "$@" < "$file" > "$tmp"; then
     mv "$tmp" "$file"
   else
     rm -f "$tmp"
@@ -96,15 +106,14 @@ molt_new_user() {
   # the path until then. Substituting along the whole path moved a tokened
   # entry inside a tokened directory to a parent that did not exist yet, which
   # a template from --from can hold, though the skeleton does not (issue 0097).
-  # The tokens are the five the contents take.
+  # A name takes its tokens through _molt_subst_text, as the contents do.
+  local values=("$user" "$full_name" "$email" "$github" "$hostname")
   local path renamed name
   while IFS= read -r path; do
-    name="${path##*/}"
-    name="${name//__MOLT_HOSTNAME__/$hostname}"
-    name="${name//__MOLT_GITHUB__/$github}"
-    name="${name//__MOLT_USER__/$user}"
-    name="${name//__MOLT_EMAIL__/$email}"
-    name="${name//__MOLT_FULL_NAME__/$full_name}"
+    if ! name="$(printf '%s\n' "${path##*/}" | _molt_subst_text "${values[@]}")"; then
+      molt_error "Token substitution failed in the name of $path"
+      return 1
+    fi
     renamed="${path%/*}/${name}"
     if [[ "$renamed" != "$path" ]]; then
       if ! mv "$path" "$renamed"; then
@@ -117,7 +126,7 @@ molt_new_user() {
   # Substitute tokens inside every file.
   local file
   while IFS= read -r file; do
-    _molt_subst_tokens "$file" "$user" "$full_name" "$email" "$github" "$hostname" || return 1
+    _molt_subst_tokens "$file" "${values[@]}" || return 1
   done < <(find "$dest" -type f)
 
   molt_info "Created Molt-${user} at ${dest}"

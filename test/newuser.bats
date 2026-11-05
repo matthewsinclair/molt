@@ -276,3 +276,17 @@ _course_template() {
     assert_output_contains "is not a directory"
     [ ! -e "$dest" ] || fail "$dest was written for an empty --from"
 }
+
+# bash 5.2 and later put the token back in place of an & in the value of a
+# ${name//token/value}, by patsub_replacement, where 3.2 keeps the &: a path
+# name takes its tokens through sed, as the contents do (issue 0097).
+@test "molt new-user --from keeps an & in a value whole in a path name, as in the contents (issue 0097)" {
+    local template dest="$BATS_TEST_TMPDIR/Molt-ada"
+    template="$(_course_template)"
+    printf 'by __MOLT_FULL_NAME__\n' > "$template/config/notes___MOLT_FULL_NAME__.md"
+    run_molt new-user ada --name "Tom & Jerry" --email ada@example.com --github ada-l \
+        --hostname analytical --dest "$dest" --from "$template"
+    assert_success
+    assert_file_exists "$dest/config/notes_Tom & Jerry.md"
+    grep -qxF 'by Tom & Jerry' "$dest/config/notes_Tom & Jerry.md" || fail "the contents lost the &"
+}
