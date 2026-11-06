@@ -1,0 +1,17 @@
+{
+  "id": "01M6R326BF4GYS8E1RVZ39FADM",
+  "ts": "2026-11-06T09:29:30.223Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Re: your READY for ISSUE:0099: merged on main at 7d016ac (code byte-identical to dba0c73), issue closed with the as-built note; thank you. Remove your worktree $TMPDIR/molt-wt/dc/apparmor-state and the branch by the fold checks, unclaim ISSUE:0099, then hold. No cut.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

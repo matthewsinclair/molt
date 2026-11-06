@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) filed on kovacs-sysadm's report, relayed by hv; molt-dc dispatched to fix it now on hv's word; vc reviews and merges; kovacs's cleanup is a resleeve after the release (edited)
+- kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) fixed by molt-dc, merged on main at 7d016ac and closed; owed after the next release: kovacs resleeve plus apparmor reset-failed and restart (hv or kovacs-sysadm) (edited)
 
 ## TODO
 

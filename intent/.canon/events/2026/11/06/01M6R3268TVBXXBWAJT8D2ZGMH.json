@@ -1,0 +1,16 @@
+{
+  "id": "01M6R3268TVBXXBWAJT8D2ZGMH",
+  "ts": "2026-11-06T09:29:30.138Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 16,
+    "text": "kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) fixed by molt-dc, merged on main at 7d016ac and closed; owed after the next release: kovacs resleeve plus apparmor reset-failed and restart (hv or kovacs-sysadm)"
+  }
+}

@@ -1361,10 +1361,10 @@
       "node": "vc",
       "kind": "doing",
       "seq": 16,
-      "text": "kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) filed on kovacs-sysadm's report, relayed by hv; molt-dc dispatched to fix it now on hv's word; vc reviews and merges; kovacs's cleanup is a resleeve after the release",
+      "text": "kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) fixed by molt-dc, merged on main at 7d016ac and closed; owed after the next release: kovacs resleeve plus apparmor reset-failed and restart (hv or kovacs-sysadm)",
       "state": "live",
       "recorded_at": "2026-11-06T08:50:19.656Z",
-      "edited_at": "2026-11-06T09:07:54.615Z"
+      "edited_at": "2026-11-06T09:29:30.138Z"
     },
     {
       "node": "vc",
@@ -1919,6 +1919,13 @@
       "body": "Dispatch on hv's word (6 Nov): fix issue 0099 now. Spec is the issue (intent issues show 0099): only bwrap-userns-restrict stays in molt_apparmor_dir; its .molt-rendered sidecar and the .molt-orig distro copy move to one Molt-owned root dir outside it (eg /var/lib/molt/apparmor/, one function, test-overridable like MOLT_APPARMOR_DIR); a resleeve migrates the old layout and reloads; putting the distro copy back works from the new place; molt doctor's sandbox check fails while a Molt file other than the profile is in molt_apparmor_dir; /etc/claude-code sidecars unchanged. Claim ISSUE:0099, branch and worktree in $TMPDIR/molt-wt/<branch>, intent verbs from main only. Proof per decision 51: the fix's own bats test red at its base, green at the fix, one booked light slot per file (the desk has no controller yet; book and wait, vc is getting it granted). Send vc READY with the branch head when done; no cut.",
       "fyi": false,
       "recorded_at": "2026-11-06T09:07:45.022Z"
+    },
+    {
+      "id": "01M6R326BF4GYS8E1RVZ39FADN",
+      "recipient": "dc",
+      "body": "Re: your READY for ISSUE:0099: merged on main at 7d016ac (code byte-identical to dba0c73), issue closed with the as-built note; thank you. Remove your worktree $TMPDIR/molt-wt/dc/apparmor-state and the branch by the fold checks, unclaim ISSUE:0099, then hold. No cut.",
+      "fyi": false,
+      "recorded_at": "2026-11-06T09:29:30.223Z"
     }
   ],
   "handled": [
@@ -2171,6 +2178,11 @@
       "id": "01M6NXBS3S4CJJ6T9C8VW44NT8",
       "sender": "dc",
       "handled_at": "2026-11-05T13:11:45.231Z"
+    },
+    {
+      "id": "01M6R304HDJJ5V9YJHZ76EC2SY",
+      "sender": "dc",
+      "handled_at": "2026-11-06T09:29:30.000Z"
     }
   ]
 }
