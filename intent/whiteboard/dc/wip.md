@@ -2,10 +2,10 @@
 node: dc
 name: DevX Claude
 role: devx
-session_id: b0610444-b5ad-4f84-85fb-6cac5d11e75b
-heartbeat_at: 2026-11-05 16:53Z
-status: paused
-focus: "5 Nov EOD, on hv's word via pipeliner-sc: quiesced and localfolded; nothing in progress, no claims, no items; docs checked against the code (new-user.md matches lib/newuser.sh as built). Hold, staying active, for molt-vc's next dispatch"
+session_id: 7dcf280a-15d9-49d7-acb9-24d814ed9dc9
+heartbeat_at: 2026-11-06 05:45Z
+status: active
+focus: "6 Nov: woke on hv's word and booted; inboxes empty, no claims, no items, nothing in progress; holding for instructions from hv or molt-vc's dispatch"
 claims: []
 ---
 
