@@ -1,0 +1,16 @@
+{
+  "id": "01M6R1TN3Q2XXWCHW5A3M734EN",
+  "ts": "2026-11-06T09:07:54.615Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 16,
+    "text": "kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) filed on kovacs-sysadm's report, relayed by hv; molt-dc dispatched to fix it now on hv's word; vc reviews and merges; kovacs's cleanup is a resleeve after the release"
+  }
+}

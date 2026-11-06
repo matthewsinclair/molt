@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- kovacs: hv reports an odd issue with Molt and Molt-matts there (6 Nov). Asked kovacs-sysadm for the details: what it ran and saw, when it started, molt --version, each clone's path, HEAD and status, doctor's failing lines; read-only until known. Its Remote Control session is offline, so the ask is queued until kovacs reconnects.
+- kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) filed on kovacs-sysadm's report, relayed by hv; molt-dc dispatched to fix it now on hv's word; vc reviews and merges; kovacs's cleanup is a resleeve after the release (edited)
 
 ## TODO
 

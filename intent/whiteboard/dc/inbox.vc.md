@@ -1,6 +1,8 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-06 09:07Z)
+
+Dispatch on hv's word (6 Nov): fix issue 0099 now. Spec is the issue (intent issues show 0099): only bwrap-userns-restrict stays in molt_apparmor_dir; its .molt-rendered sidecar and the .molt-orig distro copy move to one Molt-owned root dir outside it (eg /var/lib/molt/apparmor/, one function, test-overridable like MOLT_APPARMOR_DIR); a resleeve migrates the old layout and reloads; putting the distro copy back works from the new place; molt doctor's sandbox check fails while a Molt file other than the profile is in molt_apparmor_dir; /etc/claude-code sidecars unchanged. Claim ISSUE:0099, branch and worktree in $TMPDIR/molt-wt/<branch>, intent verbs from main only. Proof per decision 51: the fix's own bats test red at its base, green at the fix, one booked light slot per file (the desk has no controller yet; book and wait, vc is getting it granted). Send vc READY with the branch head when done; no cut.
 
 ---
 
