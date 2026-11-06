@@ -1339,7 +1339,7 @@ _floor_sleeve() {
     assert_output_contains "Checking managed floor... ✓ none needed, and none of molt's here"
 }
 
-@test "doctor's sandbox profile check warns on a Linux ops sleeve whose sandbox profile is not molt's, or not taking, and on one that takes none carrying molt's, and passes otherwise" {
+@test "doctor's sandbox profile check warns on a Linux ops sleeve whose sandbox profile is not molt's, or not taking, or has a file of molt's beside it, and on one that takes none carrying molt's, and passes otherwise (issue 0099)" {
     _floor_sleeve
     mkdir -p "$REPO/config/agents/roles/ops"
     printf '[stack]\nname = "test"\n\n[[agent]]\nrole = "ops"\n' > "$INSTANCE/molt.toml"
@@ -1355,6 +1355,16 @@ _floor_sleeve() {
     FAKE_BWRAP_STATUS=1 run cmd_doctor
     assert_output_contains "Checking sandbox profile... ⚠"
     assert_output_contains "         $profile is molt's, but bwrap's children still cannot make the sandbox's user namespace"
+
+    # A file of molt's beside the profile, as molt 1.4.5 left the distro's
+    # copy, is one AppArmor loads at boot.
+    echo "the distro's profile" > "$profile.molt-orig"
+    run cmd_doctor
+    assert_output_contains "Checking sandbox profile... ⚠"
+    assert_output_contains "         $profile.molt-orig is molt's, and AppArmor loads it at boot as it does every file in $BATS_TEST_TMPDIR/apparmor.d: molt resleeve moves it to $BATS_TEST_TMPDIR/apparmor-state/bwrap-userns-restrict.molt-orig"
+    _agents_sandbox >/dev/null
+    run cmd_doctor
+    grep -qxF -- "Checking sandbox profile... ✓ in place" <<< "$output"
 
     printf '[stack]\nname = "test"\n' > "$INSTANCE/molt.toml"
     run cmd_doctor

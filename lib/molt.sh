@@ -1463,13 +1463,21 @@ molt_claude_managed_dir() {
   esac
 }
 
-# Where AppArmor reads its profiles on a Linux sleeve. Root-owned; molt writes
-# bwrap-userns-restrict there through sudo, with its sidecar and the distro's
-# copy beside it, and nothing else (issue 0032). MOLT_APPARMOR_DIR stands in
-# for it where set, which the tests do, so no test reaches the host's
-# (issue 0061).
+# Where AppArmor reads its profiles on a Linux sleeve. Root-owned, and AppArmor
+# loads every file in it at boot, so molt writes bwrap-userns-restrict there
+# through sudo and nothing else: its sidecar and the distro's copy are in
+# molt_apparmor_state_dir (issues 0032, 0099). MOLT_APPARMOR_DIR stands in for
+# it where set, which the tests do, so no test reaches the host's (issue 0061).
 molt_apparmor_dir() {
   echo "${MOLT_APPARMOR_DIR:-/etc/apparmor.d}"
+}
+
+# Where molt keeps, root-owned, what it holds of the profiles it writes in
+# molt_apparmor_dir: their sidecars, and the distro's copy of the one it
+# replaced (issue 0099). MOLT_APPARMOR_STATE_DIR stands in for it where set,
+# as MOLT_APPARMOR_DIR does.
+molt_apparmor_state_dir() {
+  echo "${MOLT_APPARMOR_STATE_DIR:-/var/lib/molt/apparmor}"
 }
 
 # True when this sleeve's AppArmor parses the profile file $1, read with the
@@ -1548,16 +1556,30 @@ molt_sudo_remove() {
   fi
 }
 
+# The sidecar that says the root-owned file $1 is molt's: ${1}.molt-rendered,
+# beside it, but for a file in molt_apparmor_dir, where AppArmor would load it,
+# whose sidecar has the same name in molt_apparmor_state_dir (issue 0099).
+molt_root_file_sidecar() {
+  local dir
+  dir="$(molt_apparmor_dir)"
+  case "$1" in
+    "$dir"/*) echo "$(molt_apparmor_state_dir)/${1#"$dir"/}.molt-rendered" ;;
+    *)        echo "${1}.molt-rendered" ;;
+  esac
+}
+
 # The state of the root-owned file $2 that molt installs from $1, byte for
 # byte, one word: on a sleeve that wants it ($3 is 0), current, missing, stale,
 # or foreign (a file molt did not write, which it leaves); on one that does not
 # ($3 is anything else), absent, leftover (molt's, to remove), or unowned
-# (somebody else's, left alone). Molt's is the one beside molt's sidecar,
-# ${2}.molt-rendered. Fails, printing why, when the two cannot be compared.
+# (somebody else's, left alone). Molt's is the one with molt's sidecar, the
+# file molt_root_file_sidecar names. Fails, printing why, when the two cannot
+# be compared.
 molt_root_file_state() {
-  local src="$1" target="$2" wanted="$3" differ=0
+  local src="$1" target="$2" wanted="$3" sidecar differ=0
+  sidecar="$(molt_root_file_sidecar "$target")"
   if [[ "$wanted" -ne 0 ]]; then
-    if [[ -f "${target}.molt-rendered" ]]; then
+    if [[ -f "$sidecar" ]]; then
       echo leftover
     elif [[ -e "$target" ]]; then
       echo unowned
@@ -1566,7 +1588,7 @@ molt_root_file_state() {
     fi
     return 0
   fi
-  if [[ -e "$target" && ! -f "${target}.molt-rendered" ]]; then
+  if [[ -e "$target" && ! -f "$sidecar" ]]; then
     echo foreign
     return 0
   elif [[ ! -e "$target" ]]; then
@@ -1584,7 +1606,7 @@ molt_root_file_state() {
 }
 
 # Installs the bytes of $1 as the root-owned file $2, through sudo, its sidecar
-# first, so a file beside molt's sidecar is always one molt wrote. Fails,
+# first, so a file with molt's sidecar is always one molt wrote. Fails,
 # printing why.
 molt_root_file_install() {
   local src="$1" target="$2" sidecar digest why
@@ -1598,7 +1620,7 @@ molt_root_file_install() {
     echo "the sidecar of $target could not be written, so nothing was"
     return 1
   fi
-  if ! why="$(molt_sudo_install "$sidecar" "${target}.molt-rendered")" \
+  if ! why="$(molt_sudo_install "$sidecar" "$(molt_root_file_sidecar "$target")")" \
       || ! why="$(molt_sudo_install "$src" "$target")"; then
     rm -f "$sidecar"
     echo "$why"
@@ -1610,7 +1632,7 @@ molt_root_file_install() {
 # Removes the root-owned file $1 that molt installed, and its sidecar, through
 # sudo. Fails, printing why.
 molt_root_file_remove() {
-  molt_sudo_remove "$1" "${1}.molt-rendered"
+  molt_sudo_remove "$1" "$(molt_root_file_sidecar "$1")"
 }
 
 # --- CLI Commands ---

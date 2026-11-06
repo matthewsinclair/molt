@@ -490,23 +490,39 @@ molt_agent_floor_faults() {
 # denies bwrap's children every capability, so an ops or docs agent, fenced
 # with the sandbox and no unsandboxed commands, can run none. Molt's copy of
 # that profile denies them every capability but sys_admin. It replaces the
-# distro's, which is kept beside it as .molt-orig, once, and put back when the
-# sleeve no longer takes molt's. Only a profile beside molt's sidecar is ever
-# replaced by the distro's.
+# distro's, which is kept as .molt-orig in molt_apparmor_state_dir, once, and
+# put back when the sleeve no longer takes molt's. Only a profile with molt's
+# sidecar is ever replaced by the distro's.
 
 # Molt's profile, in the framework.
 molt_agent_sandbox_source() {
   echo "${MOLT_ROOT}/templates/apparmor/bwrap-userns-restrict.tmpl"
 }
 
-# The profile molt replaces; its sidecar is ${this}.molt-rendered.
+# The profile molt replaces; molt_root_file_sidecar names its sidecar.
 molt_agent_sandbox_target() {
   echo "$(molt_apparmor_dir)/bwrap-userns-restrict"
 }
 
 # Where the distro's profile is kept while molt's is in place.
 molt_agent_sandbox_orig() {
-  echo "$(molt_agent_sandbox_target).molt-orig"
+  echo "$(molt_apparmor_state_dir)/$(basename "$(molt_agent_sandbox_target)").molt-orig"
+}
+
+# Molt's files that molt 1.4.5 and earlier kept beside the profile, in
+# molt_apparmor_dir, a line for each one there: its path, a tab, and its place
+# now. AppArmor loads every file in that directory at boot, so the sidecar
+# failed the load and the distro's copy loaded its profiles over molt's
+# (issue 0099). The sidecar still says the profile is molt's.
+molt_agent_sandbox_strays() {
+  local target
+  target="$(molt_agent_sandbox_target)"
+  if [[ -e "${target}.molt-rendered" ]]; then
+    printf '%s\t%s\n' "${target}.molt-rendered" "$(molt_root_file_sidecar "$target")"
+  fi
+  if [[ -e "${target}.molt-orig" ]]; then
+    printf '%s\t%s\n' "${target}.molt-orig" "$(molt_agent_sandbox_orig)"
+  fi
 }
 
 # True when this sleeve is Linux, gives an ops or docs agent a home, the roles
@@ -564,16 +580,25 @@ molt_agent_sandbox_probe() {
 }
 
 # Names, a line each, what stands between this sleeve and the sandbox profile
-# it should take: apparmor_parser absent; a profile missing, stale, or not
-# molt's, and somebody's other than the distro's kept copy; molt's in place but
-# bwrap's children still refused, or bwrap or unshare absent so that cannot be
-# tried, which it runs bwrap to find out; molt's left on a sleeve that no
-# longer takes it, and no .molt-orig to put back. Takes the state
+# it should take: molt's files beside the profile, where AppArmor loads them,
+# and then nothing else, since the sidecar there is not where molt reads it;
+# apparmor_parser absent; a profile missing, stale, or not molt's, and
+# somebody's other than the distro's kept copy; molt's in place but bwrap's
+# children still refused, or bwrap or unshare absent so that cannot be tried,
+# which it runs bwrap to find out; molt's left on a sleeve that no longer
+# takes it, and no .molt-orig to put back. Takes the state
 # molt_agent_sandbox_state gave as $1 where the caller has it.
 molt_agent_sandbox_faults() {
-  local state target orig why
+  local state target orig why strays old new
   target="$(molt_tilde "$(molt_agent_sandbox_target)")"
   orig="$(molt_agent_sandbox_orig)"
+  strays="$(molt_agent_sandbox_strays)"
+  if [[ -n "$strays" ]]; then
+    while IFS=$'\t' read -r old new; do
+      echo "$(molt_tilde "$old") is molt's, and AppArmor loads it at boot as it does every file in $(molt_tilde "$(molt_apparmor_dir)"): molt resleeve moves it to $(molt_tilde "$new")"
+    done <<< "$strays"
+    return 0
+  fi
   if [[ $# -gt 0 ]]; then
     state="$1"
   elif ! state="$(molt_agent_sandbox_state)"; then

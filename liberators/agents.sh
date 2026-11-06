@@ -226,18 +226,36 @@ _agents_sandbox_take() {
   esac
 }
 
-# Puts this sleeve's sandbox profile right. Where a Linux sleeve gives an ops or
-# docs agent a home: checks this sleeve's AppArmor parses molt's, keeps the
-# distro's profile once as .molt-orig, installs molt's, its sidecar first, then
-# loads it and tries bwrap; loads molt's again where it is in place but bwrap's
-# children are still refused. Where none is wanted and molt's is in place: puts
-# the distro's back and loads it, then removes the sidecar and the orig. Any
-# other profile is left.
+# Puts this sleeve's sandbox profile right. First moves molt's files that molt
+# 1.4.5 and earlier kept beside the profile, where AppArmor loads them at boot,
+# to their places in molt_apparmor_state_dir (issue 0099). Where a Linux sleeve
+# gives an ops or docs agent a home: checks this sleeve's AppArmor parses
+# molt's, keeps the distro's profile once as .molt-orig, installs molt's, its
+# sidecar first, then loads it and tries bwrap; loads molt's again where it is
+# in place but bwrap's children are still refused, or where files were moved.
+# Where none is wanted and molt's is in place: puts the distro's back and loads
+# it, then removes the sidecar and the orig. Any other profile is left.
 _agents_sandbox() {
-  local state target orig src why status=0
+  local state target orig src why old new moved=0 status=0
   target="$(molt_agent_sandbox_target)"
   orig="$(molt_agent_sandbox_orig)"
   src="$(molt_agent_sandbox_source)"
+  # Each goes to its place before it leaves the old one, so a run cut short
+  # leaves it in one or both, and one already there, as the distro's copy kept
+  # first, is never overwritten.
+  while IFS=$'\t' read -r old new; do
+    [[ -n "$old" ]] || continue
+    if [[ ! -e "$new" ]] && ! why="$(molt_sudo_install "$old" "$new")"; then
+      molt_error "agents: sandbox profile: $why"
+      return 1
+    fi
+    if ! why="$(molt_sudo_remove "$old")"; then
+      molt_error "agents: sandbox profile: $why"
+      return 1
+    fi
+    molt_info "Moved: $(molt_tilde "$old") -> $(molt_tilde "$new")"
+    moved=1
+  done <<< "$(molt_agent_sandbox_strays)"
   if ! state="$(molt_agent_sandbox_state)"; then
     molt_error "agents: sandbox profile: $state, so nothing was written"
     return 1
@@ -253,6 +271,12 @@ _agents_sandbox() {
   case "$state" in
     absent | unowned) return 0 ;;
     current)
+      # The kernel may hold what AppArmor loaded at boot from the moved copy,
+      # the distro's profiles in place of molt's.
+      if [[ $moved -eq 1 ]]; then
+        _agents_sandbox_take "$target"
+        return
+      fi
       why="$(molt_agent_sandbox_probe)" || status=$?
       case $status in
         0) return 0 ;;
@@ -272,7 +296,7 @@ _agents_sandbox() {
       # answers for.
       if ! why="$(molt_sudo_install "$orig" "$target")" \
           || ! why="$(molt_apparmor_load "$target")" \
-          || ! why="$(molt_sudo_remove "${target}.molt-rendered" "$orig")"; then
+          || ! why="$(molt_sudo_remove "$(molt_root_file_sidecar "$target")" "$orig")"; then
         molt_error "agents: sandbox profile: $why"
         return 1
       fi

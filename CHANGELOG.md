@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- On a Linux sleeve with Molt's AppArmor profile, `apparmor.service` failed on every boot, and Ubuntu's `unpriv_bwrap` could load over Molt's, so Claude Code's sandbox refused an ops or docs agent's commands until the profile was loaded again by hand. Molt kept the profile's `.molt-rendered` sidecar and Ubuntu's copy, `.molt-orig`, beside it in `/etc/apparmor.d`, and AppArmor loads every file there: the sidecar does not parse, and the copy declares the same profiles. Both now live in `/var/lib/molt/apparmor`, which `molt_apparmor_state_dir` names and `MOLT_APPARMOR_STATE_DIR` stands in for, as `MOLT_APPARMOR_DIR` does for `/etc/apparmor.d`, where only the profile is left. A resleeve moves the two from where 1.4.5 and earlier kept them, reporting `Moved: <old> -> <new>`, and loads Molt's profile again; until it has, `molt doctor`'s sandbox check fails naming each. Putting Ubuntu's profile back works from the new place. The managed floor's sidecar in `/etc/claude-code` stays beside it (issue 0099)
+
 ## [1.4.5] - 2026-11-05
 
 ### Added
