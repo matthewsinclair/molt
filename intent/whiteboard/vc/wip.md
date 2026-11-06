@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 6aca64e8-cfe0-46f2-bbaf-0b7290b00173
-heartbeat_at: 2026-11-06 05:47Z
+heartbeat_at: 2026-11-06 08:50Z
 status: active
-focus: "6 Nov: booted on hv's restart and holding for hv's instructions; nothing in progress, no claims, no live messages; hv's four inboxes empty"
+focus: "6 Nov: investigating the Molt and Molt-matts issue hv relayed from kovacs; asked kovacs-sysadm for the details (queued: it is offline over Remote Control); nothing else in progress, no claims"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- kovacs: hv reports an odd issue with Molt and Molt-matts there (6 Nov). Asked kovacs-sysadm for the details: what it ran and saw, when it started, molt --version, each clone's path, HEAD and status, doctor's failing lines; read-only until known. Its Remote Control session is offline, so the ask is queued until kovacs reconnects.
 
 ## TODO
 

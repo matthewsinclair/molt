@@ -1,0 +1,15 @@
+{
+  "id": "01M6R0TEW8V32MZJ17ZZA1RFBA",
+  "ts": "2026-11-06T08:50:19.656Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "kovacs: hv reports an odd issue with Molt and Molt-matts there (6 Nov). Asked kovacs-sysadm for the details: what it ran and saw, when it started, molt --version, each clone's path, HEAD and status, doctor's failing lines; read-only until known. Its Remote Control session is offline, so the ask is queued until kovacs reconnects."
+  }
+}

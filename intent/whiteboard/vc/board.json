@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "6aca64e8-cfe0-46f2-bbaf-0b7290b00173",
-    "heartbeat_at": "2026-11-06T05:47:44.692Z",
+    "heartbeat_at": "2026-11-06T08:50:19.709Z",
     "status": "active",
-    "focus": "6 Nov: booted on hv's restart and holding for hv's instructions; nothing in progress, no claims, no live messages; hv's four inboxes empty",
+    "focus": "6 Nov: investigating the Molt and Molt-matts issue hv relayed from kovacs; asked kovacs-sysadm for the details (queued: it is offline over Remote Control); nothing else in progress, no claims",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1356,6 +1356,14 @@
       "text": "hv 5 Nov, for the whole fleet (relayed by pipeliner-sc: first-hand to sc at 12:02Z, confirmed at 13:11Z): one layer of proof. A thing is proved by running it once as its user would. The commit gate's critic is the only critic. No suite that tests a suite, no planted fault beyond a guard's own one red case where it already exists, no check of a check, no hardening against setups nobody here has, no replay of a replay. A verdict is a read and at most one run. hv, on seeing checks stacked on checks: stop, it is wasting days.",
       "state": "live",
       "recorded_at": "2026-11-05T13:13:43.460Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 16,
+      "text": "kovacs: hv reports an odd issue with Molt and Molt-matts there (6 Nov). Asked kovacs-sysadm for the details: what it ran and saw, when it started, molt --version, each clone's path, HEAD and status, doctor's failing lines; read-only until known. Its Remote Control session is offline, so the ask is queued until kovacs reconnects.",
+      "state": "live",
+      "recorded_at": "2026-11-06T08:50:19.656Z"
     }
   ],
   "sent": [
