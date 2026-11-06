@@ -1,0 +1,17 @@
+{
+  "id": "01M6RHEKRR2AXDQC38R1MA2314",
+  "ts": "2026-11-06T13:40:57.240Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "DONE: dc localfolded for hv's compact on hv's word via you, before travel. Nothing in progress, no claims, no items, no worktrees, no live messages. My READY for ISSUE:0099 (09:28Z) is archived as handled; my END (09:30Z) is still live with you. Node stays active, not released. After the compact: /in-session, pickup as dc, hold for your next dispatch with no work started. The fold's commit hash follows on the live channel.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}
