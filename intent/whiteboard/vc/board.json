@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "6aca64e8-cfe0-46f2-bbaf-0b7290b00173",
-    "heartbeat_at": "2026-11-06T08:50:19.709Z",
+    "heartbeat_at": "2026-11-06T13:40:16.960Z",
     "status": "active",
-    "focus": "6 Nov: investigating the Molt and Molt-matts issue hv relayed from kovacs; asked kovacs-sysadm for the details (queued: it is offline over Remote Control); nothing else in progress, no claims",
+    "focus": "6 Nov fold for hv's compact and travel: issue 0099 merged at 7d016ac and closed; Molt 1.4.6's cut ready but not run (slot released); nothing in progress, no claims",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1297,7 +1297,8 @@
       "kind": "todo",
       "seq": 46,
       "text": "hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) since 5 Nov.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-06T13:40:16.216Z",
       "recorded_at": "2026-11-05T09:43:59.471Z",
       "edited_at": "2026-11-05T12:23:21.714Z"
     },
@@ -1362,7 +1363,8 @@
       "kind": "doing",
       "seq": 16,
       "text": "kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) fixed by molt-dc, merged on main at 7d016ac and closed; owed after the next release: kovacs resleeve plus apparmor reset-failed and restart (hv or kovacs-sysadm)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-06T13:40:16.053Z",
       "recorded_at": "2026-11-06T08:50:19.656Z",
       "edited_at": "2026-11-06T09:29:30.138Z"
     },
@@ -1373,6 +1375,14 @@
       "text": "ccusage 0.1.9 renames account selection to `ccusage activate` (Ccusage ISSUE:0007, 29943b5); when it ships, reword liberators/claude.sh:496's comment ('which `ccusage use` changes between') to activate. Comment only, nothing in Molt runs it (ccusage-vc's FYI, 6 Nov).",
       "state": "live",
       "recorded_at": "2026-11-06T09:15:48.623Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 50,
+      "text": "Molt 1.4.6 cut (carries issue 0099): dry run clean at 9bfb1a6; book bats lane with devbin-vc, hv runs bin/devbin release v1.4.6; then CI read and END to devbin-vc. After it, kovacs: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor, and sends systemctl status apparmor (0099's owed proof).",
+      "state": "live",
+      "recorded_at": "2026-11-06T13:40:16.360Z"
     }
   ],
   "sent": [
@@ -1918,14 +1928,16 @@
       "recipient": "dc",
       "body": "Dispatch on hv's word (6 Nov): fix issue 0099 now. Spec is the issue (intent issues show 0099): only bwrap-userns-restrict stays in molt_apparmor_dir; its .molt-rendered sidecar and the .molt-orig distro copy move to one Molt-owned root dir outside it (eg /var/lib/molt/apparmor/, one function, test-overridable like MOLT_APPARMOR_DIR); a resleeve migrates the old layout and reloads; putting the distro copy back works from the new place; molt doctor's sandbox check fails while a Molt file other than the profile is in molt_apparmor_dir; /etc/claude-code sidecars unchanged. Claim ISSUE:0099, branch and worktree in $TMPDIR/molt-wt/<branch>, intent verbs from main only. Proof per decision 51: the fix's own bats test red at its base, green at the fix, one booked light slot per file (the desk has no controller yet; book and wait, vc is getting it granted). Send vc READY with the branch head when done; no cut.",
       "fyi": false,
-      "recorded_at": "2026-11-06T09:07:45.022Z"
+      "recorded_at": "2026-11-06T09:07:45.022Z",
+      "archived_at": "2026-11-06T13:40:16.704Z"
     },
     {
       "id": "01M6R326BF4GYS8E1RVZ39FADN",
       "recipient": "dc",
       "body": "Re: your READY for ISSUE:0099: merged on main at 7d016ac (code byte-identical to dba0c73), issue closed with the as-built note; thank you. Remove your worktree $TMPDIR/molt-wt/dc/apparmor-state and the branch by the fold checks, unclaim ISSUE:0099, then hold. No cut.",
       "fyi": false,
-      "recorded_at": "2026-11-06T09:29:30.223Z"
+      "recorded_at": "2026-11-06T09:29:30.223Z",
+      "archived_at": "2026-11-06T13:40:16.704Z"
     }
   ],
   "handled": [

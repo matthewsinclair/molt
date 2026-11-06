@@ -1,0 +1,15 @@
+{
+  "id": "01M6RHDBV8QAM0C5KWTP37B0VG",
+  "ts": "2026-11-06T13:40:16.360Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt 1.4.6 cut (carries issue 0099): dry run clean at 9bfb1a6; book bats lane with devbin-vc, hv runs bin/devbin release v1.4.6; then CI read and END to devbin-vc. After it, kovacs: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor, and sends systemctl status apparmor (0099's owed proof)."
+  }
+}

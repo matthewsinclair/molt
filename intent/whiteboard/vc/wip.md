@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 6aca64e8-cfe0-46f2-bbaf-0b7290b00173
-heartbeat_at: 2026-11-06 08:50Z
+heartbeat_at: 2026-11-06 13:40Z
 status: active
-focus: "6 Nov: investigating the Molt and Molt-matts issue hv relayed from kovacs; asked kovacs-sysadm for the details (queued: it is offline over Remote Control); nothing else in progress, no claims"
+focus: "6 Nov fold for hv's compact and travel: issue 0099 merged at 7d016ac and closed; Molt 1.4.6's cut ready but not run (slot released); nothing in progress, no claims"
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- kovacs: issue 0099 (AppArmor sidecar and kept distro profile in /etc/apparmor.d) fixed by molt-dc, merged on main at 7d016ac and closed; owed after the next release: kovacs resleeve plus apparmor reset-failed and restart (hv or kovacs-sysadm) (edited)
+_(none)_
 
 ## TODO
 
@@ -21,8 +21,8 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) since 5 Nov. (edited)
 - ccusage 0.1.9 renames account selection to `ccusage activate` (Ccusage ISSUE:0007, 29943b5); when it ships, reword liberators/claude.sh:496's comment ('which `ccusage use` changes between') to activate. Comment only, nothing in Molt runs it (ccusage-vc's FYI, 6 Nov).
+- Molt 1.4.6 cut (carries issue 0099): dry run clean at 9bfb1a6; book bats lane with devbin-vc, hv runs bin/devbin release v1.4.6; then CI read and END to devbin-vc. After it, kovacs: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor, and sends systemctl status apparmor (0099's owed proof).
 
 ## Holds
 
