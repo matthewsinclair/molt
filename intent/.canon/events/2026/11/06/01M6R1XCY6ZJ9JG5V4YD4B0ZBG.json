@@ -1,0 +1,15 @@
+{
+  "id": "01M6R1XCY6ZJ9JG5V4YD4B0ZBG",
+  "ts": "2026-11-06T09:09:24.550Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ISSUE:0099 on vc's 09:07Z dispatch (hv's word): the profile's sidecar and the distro's .molt-orig leave molt_apparmor_dir for one Molt-owned root dir; a resleeve migrates the old layout and reloads; doctor's sandbox check fails on any other Molt file there; branch dc/apparmor-state in $TMPDIR/molt-wt; its own bats test red at base, green at fix, booked light per file; READY to vc with the head; no cut"
+  }
+}

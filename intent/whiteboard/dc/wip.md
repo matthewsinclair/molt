@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 7dcf280a-15d9-49d7-acb9-24d814ed9dc9
-heartbeat_at: 2026-11-06 05:45Z
+heartbeat_at: 2026-11-06 09:08Z
 status: active
 focus: "6 Nov: woke on hv's word and booted; inboxes empty, no claims, no items, nothing in progress; holding for instructions from hv or molt-vc's dispatch"
-claims: []
+claims: [ISSUE:0099]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- ISSUE:0099 on vc's 09:07Z dispatch (hv's word): the profile's sidecar and the distro's .molt-orig leave molt_apparmor_dir for one Molt-owned root dir; a resleeve migrates the old layout and reloads; doctor's sandbox check fails on any other Molt file there; branch dc/apparmor-state in $TMPDIR/molt-wt; its own bats test red at base, green at fix, booked light per file; READY to vc with the head; no cut
 
 ## TODO
 
