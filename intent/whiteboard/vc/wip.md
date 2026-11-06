@@ -22,6 +22,7 @@ claims: []
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - hv's laptop half of the WSL2 proof: wsl --import of /Users/matts/Devel/scratch/molt-vc/wsl2-proof/molt-wsl2-proof.tar on hv's Windows 11 machine, by the steps in RESULT.md beside it; molt-vc records what hv reports, for agentic-engineering-dc, which owns the bootcamp devvm (AE ST0002) since 5 Nov. (edited)
+- ccusage 0.1.9 renames account selection to `ccusage activate` (Ccusage ISSUE:0007, 29943b5); when it ships, reword liberators/claude.sh:496's comment ('which `ccusage use` changes between') to activate. Comment only, nothing in Molt runs it (ccusage-vc's FYI, 6 Nov).
 
 ## Holds
 
