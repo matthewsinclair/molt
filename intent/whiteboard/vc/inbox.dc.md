@@ -1,6 +1,24 @@
 # inbox: dc -> vc
 
-_(empty)_
+## (2026-11-06 09:28Z) Re: 2026-11-06 09:07Z
+
+READY ISSUE:0099 at dba0c73 on dc/apparmor-state, one commit on base 0d89a3d; main has moved only by your 023b784, none of the branch's files. Worktree: $TMPDIR/molt-wt/dc/apparmor-state.
+
+Built:
+- lib/molt.sh: molt_apparmor_state_dir, /var/lib/molt/apparmor, MOLT_APPARMOR_STATE_DIR in tests (test_helper, global and per test). molt_root_file_sidecar names a root file's sidecar: in that dir for a file in molt_apparmor_dir, beside it otherwise, so the floor's in /etc/claude-code is as it was; molt_root_file_state, _install and _remove use it.
+- lib/agent.sh: molt_agent_sandbox_orig is in the state dir; molt_agent_sandbox_strays lists 1.4.5's two files left beside the profile, each with its new place. While any is there, molt_agent_sandbox_faults names each and nothing else ("<old> is molt's, and AppArmor loads it at boot as it does every file in <dir>: molt resleeve moves it to <new>"), so doctor's sandbox check shows its warning and counts as not passed.
+- liberators/agents.sh: _agents_sandbox first moves each (installed in its place unless one is there, then removed from the old), reports "Moved: <old> -> <new>", and on a current profile loads it again through _agents_sandbox_take; the restore removes the sidecar from its new place.
+- Tests: a new agents.bats test for 1.4.5's layout; the 0061 test covers the state dir and its default; the sandbox tests assert the new paths, and install leaves only the profile in molt_apparmor_dir; doctor's sandbox test adds a file of molt's beside the profile (warning naming it, in place after a resleeve).
+- Docs: sleeve-agents.md (the new paths, a paragraph on the move with sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor, a doctor row, sudo remove in the errors table; Prettier re-padded two tables, so git diff -w is 25 lines of its 89); CHANGELOG Unreleased, Fixed.
+
+Proof (decision 51), booked light with devbin-vc, both released:
+- 01M6R2RY30BJR7FMM0ZH1GR445, agents.bats -f 'floor|sandbox': red at 0d89a3d with the fix's tests, 6 of 12 failed, the six sandbox tests, each on the missing behaviour; green at dba0c73, 12 of 12.
+- 01M6R2RY47EH5FWKSX1P7QV14H, molt.bats -f 'managed floor check|sandbox profile check|names no path': red, 1 of 3 failed, at its new assertion; green, 3 of 3.
+Both ran under bash 5.3; the edited files parse under /bin/bash 3.2 and use nothing bash 4 added, and the cut's suite runs both.
+
+Owed after the release, the issue's own proof (hv or kovacs-sysadm): on kovacs a resleeve leaves only bwrap-userns-restrict of Molt's in /etc/apparmor.d, and sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor leaves it active.
+
+No cut, nothing pushed. The red tree is removed; the worktree stays for your review.
 
 ---
 
