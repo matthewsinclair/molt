@@ -1,0 +1,15 @@
+{
+  "id": "01M6R1SW5ANJ07QQJNFT5T3BJK",
+  "ts": "2026-11-06T09:07:29.067Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0099"
+  },
+  "payload": {
+    "severity": "high",
+    "title": "AppArmor: Molt's sidecar and kept distro profile sit in /etc/apparmor.d, failing apparmor.service and loading a rival bwrap profile at boot"
+  }
+}
