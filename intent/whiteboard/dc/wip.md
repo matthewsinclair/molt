@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 7dcf280a-15d9-49d7-acb9-24d814ed9dc9
-heartbeat_at: 2026-11-06 09:28Z
+heartbeat_at: 2026-11-06 09:30Z
 status: active
-focus: "6 Nov: ISSUE:0099 READY to vc at dba0c73 on dc/apparmor-state; red at base and green at the fix, booked light with devbin-vc and released; waiting on vc's review and merge; no cut, nothing pushed"
-claims: [ISSUE:0099]
+focus: "6 Nov: ISSUE:0099 landed at 7d016ac and closed by vc; worktree and branch removed by the fold checks, unclaimed, END to vc; nothing in progress, no claims, no items; holding for molt-vc's next dispatch"
+claims: []
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- ISSUE:0099 on vc's 09:07Z dispatch (hv's word): the profile's sidecar and the distro's .molt-orig leave molt_apparmor_dir for one Molt-owned root dir; a resleeve migrates the old layout and reloads; doctor's sandbox check fails on any other Molt file there; branch dc/apparmor-state in $TMPDIR/molt-wt; its own bats test red at base, green at fix, booked light per file; READY to vc with the head; no cut
+_(none)_
 
 ## TODO
 

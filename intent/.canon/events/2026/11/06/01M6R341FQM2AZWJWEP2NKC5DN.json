@@ -1,0 +1,17 @@
+{
+  "id": "01M6R341FQM2AZWJWEP2NKC5DN",
+  "ts": "2026-11-06T09:30:30.775Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "END for ISSUE:0099: the worktree $TMPDIR/molt-wt/dc/apparmor-state is removed by the fold checks (index at dba0c73 with nothing staged, nothing unstaged or untracked, base 0d89a3d an ancestor of main, no stash naming it, and the branch's eight files byte-identical between dba0c73 and main, since 7d016ac replayed it); branch dc/apparmor-state deleted (its one commit, dba0c73); the red tree went after its two slots ended. ISSUE:0099 unclaimed and doing 38 archived: no worktrees, no claims, no items. Holding.",
+    "fyi": false,
+    "re": "2026-11-06 09:29Z",
+    "recipient": "vc"
+  }
+}
