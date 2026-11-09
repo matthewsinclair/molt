@@ -1,0 +1,16 @@
+{
+  "id": "01M6ZB5Q07CM9TN09ZJY4GADZV",
+  "ts": "2026-11-09T05:05:55.207Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 51,
+    "text": "Doom/MELPA stale clone, all three sleeves (kovacs-sysadm and gyges-sysadm, 9 Nov, FYI; hand-repaired, nothing owed): MELPA renamed master to main and deleted master. Each sleeve's straight clone at ~/.config/emacs/.local/straight/repos/melpa is single-branch with remote.origin.fetch hard-wired to master, and Doom's recipe names no :branch, so straight never heals it: 'doom sync -u' fails at 'Updating recipe repos' with \"fatal: couldn't find remote ref refs/heads/master\". editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, so molt maintain fails on every Doom sleeve exactly once. Repaired by hand on rhadamanth, kovacs and gyges (melpa at 9a715f54 tracking origin/main, only origin/main left; molt maintain then rc 0 on both reporting sleeves, 190 packages current, init.31.1.el built). For hv to rule, Molt-side: (a) have the editors hook detect a recipe repo whose configured fetch refspec names a branch the remote no longer publishes and repoint it to the remote HEAD before doom sync, which is general; (b) pin melpa to :branch \"main\" in Molt-matts' Doom config, which is narrower and only fixes this rename; (c) leave it to hand, since every current sleeve is already fixed and a new sleeve clones main. Nothing started, no issue filed."
+  }
+}

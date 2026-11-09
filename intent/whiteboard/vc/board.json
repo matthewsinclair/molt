@@ -1388,9 +1388,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 51,
-      "text": "Doom/MELPA stale clone (kovacs-sysadm's report, 9 Nov, FYI): MELPA renamed master to main and deleted master, so a single-branch straight clone whose fetch refspec is hard-wired to master fails 'doom sync -u' with \"couldn't find remote ref refs/heads/master\". editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, so molt maintain fails on any Doom sleeve still pointed at master. Repointed by hand on rhadamanth and kovacs (melpa at 9a715f54, tracking origin/main; molt maintain then rc 0, 190 packages current); gyges is likely still stale. For hv to rule: whether Molt should detect or repair a renamed upstream default branch in a straight repo, or leave it to hand. Nothing started.",
+      "text": "Doom/MELPA stale clone, all three sleeves (kovacs-sysadm and gyges-sysadm, 9 Nov, FYI; hand-repaired, nothing owed): MELPA renamed master to main and deleted master. Each sleeve's straight clone at ~/.config/emacs/.local/straight/repos/melpa is single-branch with remote.origin.fetch hard-wired to master, and Doom's recipe names no :branch, so straight never heals it: 'doom sync -u' fails at 'Updating recipe repos' with \"fatal: couldn't find remote ref refs/heads/master\". editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, so molt maintain fails on every Doom sleeve exactly once. Repaired by hand on rhadamanth, kovacs and gyges (melpa at 9a715f54 tracking origin/main, only origin/main left; molt maintain then rc 0 on both reporting sleeves, 190 packages current, init.31.1.el built). For hv to rule, Molt-side: (a) have the editors hook detect a recipe repo whose configured fetch refspec names a branch the remote no longer publishes and repoint it to the remote HEAD before doom sync, which is general; (b) pin melpa to :branch \"main\" in Molt-matts' Doom config, which is narrower and only fixes this rename; (c) leave it to hand, since every current sleeve is already fixed and a new sleeve clones main. Nothing started, no issue filed.",
       "state": "live",
-      "recorded_at": "2026-11-09T05:05:22.185Z"
+      "recorded_at": "2026-11-09T05:05:22.185Z",
+      "edited_at": "2026-11-09T05:05:55.207Z"
     }
   ],
   "sent": [
