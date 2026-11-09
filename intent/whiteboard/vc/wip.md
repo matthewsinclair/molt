@@ -2,8 +2,8 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 6aca64e8-cfe0-46f2-bbaf-0b7290b00173
-heartbeat_at: 2026-11-06 13:40Z
+session_id: 3e603c77-1479-4763-aa34-9ca640d5aea3
+heartbeat_at: 2026-11-09 05:04Z
 status: active
 focus: "6 Nov fold for hv's compact and travel: issue 0099 merged at 7d016ac and closed; Molt 1.4.6's cut ready but not run (slot released); nothing in progress, no claims"
 claims: []
@@ -23,6 +23,7 @@ _(none)_
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - ccusage 0.1.9 renames account selection to `ccusage activate` (Ccusage ISSUE:0007, 29943b5); when it ships, reword liberators/claude.sh:496's comment ('which `ccusage use` changes between') to activate. Comment only, nothing in Molt runs it (ccusage-vc's FYI, 6 Nov).
 - Molt 1.4.6 cut (carries issue 0099): dry run clean at 9bfb1a6; book bats lane with devbin-vc, hv runs bin/devbin release v1.4.6; then CI read and END to devbin-vc. After it, kovacs: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor, and sends systemctl status apparmor (0099's owed proof).
+- Doom/MELPA stale clone (kovacs-sysadm's report, 9 Nov, FYI): MELPA renamed master to main and deleted master, so a single-branch straight clone whose fetch refspec is hard-wired to master fails 'doom sync -u' with "couldn't find remote ref refs/heads/master". editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, so molt maintain fails on any Doom sleeve still pointed at master. Repointed by hand on rhadamanth and kovacs (melpa at 9a715f54, tracking origin/main; molt maintain then rc 0, 190 packages current); gyges is likely still stale. For hv to rule: whether Molt should detect or repair a renamed upstream default branch in a straight repo, or leave it to hand. Nothing started.
 
 ## Holds
 

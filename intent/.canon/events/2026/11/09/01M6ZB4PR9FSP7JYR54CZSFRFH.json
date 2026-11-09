@@ -1,0 +1,15 @@
+{
+  "id": "01M6ZB4PR9FSP7JYR54CZSFRFH",
+  "ts": "2026-11-09T05:05:22.185Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Doom/MELPA stale clone (kovacs-sysadm's report, 9 Nov, FYI): MELPA renamed master to main and deleted master, so a single-branch straight clone whose fetch refspec is hard-wired to master fails 'doom sync -u' with \"couldn't find remote ref refs/heads/master\". editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, so molt maintain fails on any Doom sleeve still pointed at master. Repointed by hand on rhadamanth and kovacs (melpa at 9a715f54, tracking origin/main; molt maintain then rc 0, 190 packages current); gyges is likely still stale. For hv to rule: whether Molt should detect or repair a renamed upstream default branch in a straight repo, or leave it to hand. Nothing started."
+  }
+}
