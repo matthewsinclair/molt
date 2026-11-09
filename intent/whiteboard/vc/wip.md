@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 3e603c77-1479-4763-aa34-9ca640d5aea3
-heartbeat_at: 2026-11-09 05:36Z
+heartbeat_at: 2026-11-09 07:33Z
 status: active
-focus: "9 Nov: MELPA closed on all three Doom sleeves (todo 51 archived at c6663e2; decision 52 stands). Bats lane booked for the 1.4.6 cut: ask 01M6ZC8RWJGJXQC96WP51GYDRB, granted by webber-vc, 1/1 full, covering hv's dry run and release as one occupancy; vc starts it on hv's word and releases with --result. 1.4.6's readiness is UNPROVED: the 9bfb1a6 recorded on 6 Nov as its clean dry run is a valid object in no repo on this machine. Live-board sha sweep otherwise clean: 7d016ac is a Molt commit on main, 29943b5 is Ccusage's own as todo 49 says."
+focus: "9 Nov, after the 1.4.6 cut and rollout: v1.4.6 released at f2d262767020, annotated tag 69fa5aa1 on both remotes, formula on the tap at 94e58f54, and rolled out to rhadamanth, gyges and kovacs, each reading 'molt 1.4.6 (brew, f2d262767020)'. Issue 0099's owed proof is met on kovacs and written up on the issue itself (apparmor.service active, systemctl --failed empty, nested bwrap rc 0). Issue 0100 filed and unscheduled: the release gates demand a globally clean tree, so a peer node's pickup can red a cut, which cost this release one gate run; the fix shape is in the issue. Watchout 24 is a standing obligation to agentic-engineering-vc on two output strings. Nothing in progress, no claims, no worktrees, bats slot released and END sent; molt-dc unfrozen with nothing assigned. vc holds for hv."
 claims: []
 ---
 
@@ -41,8 +41,6 @@ _(none)_
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)
 - hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word; Molt 1.4.5's rollout went live on 5 Nov (rhadamanth, kovacs and gyges). (edited)
 - hv 5 Nov, for the whole fleet (relayed by pipeliner-sc: first-hand to sc at 12:02Z, confirmed at 13:11Z): one layer of proof. A thing is proved by running it once as its user would. The commit gate's critic is the only critic. No suite that tests a suite, no planted fault beyond a guard's own one red case where it already exists, no check of a check, no hardening against setups nobody here has, no replay of a replay. A verdict is a read and at most one run. hv, on seeing checks stacked on checks: stop, it is wasting days.
-- hv 9 Nov (first-hand in molt-vc's session, after kovacs-sysadm relayed it): the MELPA master-to-main rename is fixed by pinning melpa to :branch "main" in Molt-matts' Doom config. Molt ships no change for it, and hand-repair-only is rejected. rhadamanth-sysadm coordinates the change across the sleeves; no node gives the sleeves separate orders. molt-vc coordinates with rhadamanth-sysadm on how the pin is expressed, on hv's word.
-- hv 9 Nov (in molt-vc's session, asked and answered before the tag was pushed): the v1.4.6 tag stays at f2d262767020, which is vc's board commit 'wb(vc): commit vc's focus line...', not at its parent a7456a33 'release: v1.4.6'. The resume took HEAD as the release commit because VERSION already carried the stamp and the tree was clean there, and HEAD was vc's fix for the red leg. Deliberate, not an accident to be tidied; nobody re-tags or rewrites it.
 
 ---
 
