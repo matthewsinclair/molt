@@ -31,6 +31,7 @@ _(none)_
 ## Watch-outs
 
 - A sleeve armed for the config-dir move fails molt upgrade and resleeve while any claude process runs; arm and move in one sitting, Chrome quit. (edited)
+- AE's courseware uses two of Molt's output strings as an attendee's done-when test, so they are interface, not decoration: doctor's final line 'All checks passed.' (lib/molt.sh:2517) and resleeve's final line 'Sleeve ready. Welcome back.' (lib/molt.sh:2708). Both are asserted in Molt's own bats suite (test/molt.bats, test/run-liberators.bats, and herdr's and utilz's liberator tests), so a change to either goes red before it ships; the obligation is only to tell agentic-engineering-vc when such a change is deliberate, so its four lines move in the same week instead of surprising an instructor in front of a room. AE's lines: chapters/T03-molt/exercises.md:61, deck-prose.md:48, deck.md:85, reference.md:32. Note AE's wording says resleeve 'ends "Sleeve ready"' where Molt prints 'Sleeve ready. Welcome back.'; vc has told AE. Accepted by vc 9 Nov on AE's request; hv can overrule it.
 
 ## Decisions
 

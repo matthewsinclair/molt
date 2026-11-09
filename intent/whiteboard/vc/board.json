@@ -1419,6 +1419,14 @@
       "text": "Molt 1.4.6 rollout, the switch rests at brew: once the tap has v1.4.6 (formula published 9 Nov, tap main 94e58f54), on each sleeve 'brew upgrade molt', then 'molt use brew', and 'molt --version' reads molt 1.4.6 (brew, f2d262767020). Then kovacs's owed 0099 proof: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go 'sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor', and sends systemctl status apparmor. Until that restart lands, any reboot or apparmor restart lets the distro's unpriv_bwrap win again; 'sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict' repairs it. Word to the sleeves goes through rhadamanth-sysadm, not from vc.",
       "state": "live",
       "recorded_at": "2026-11-09T06:28:20.284Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 24,
+      "text": "AE's courseware uses two of Molt's output strings as an attendee's done-when test, so they are interface, not decoration: doctor's final line 'All checks passed.' (lib/molt.sh:2517) and resleeve's final line 'Sleeve ready. Welcome back.' (lib/molt.sh:2708). Both are asserted in Molt's own bats suite (test/molt.bats, test/run-liberators.bats, and herdr's and utilz's liberator tests), so a change to either goes red before it ships; the obligation is only to tell agentic-engineering-vc when such a change is deliberate, so its four lines move in the same week instead of surprising an instructor in front of a room. AE's lines: chapters/T03-molt/exercises.md:61, deck-prose.md:48, deck.md:85, reference.md:32. Note AE's wording says resleeve 'ends \"Sleeve ready\"' where Molt prints 'Sleeve ready. Welcome back.'; vc has told AE. Accepted by vc 9 Nov on AE's request; hv can overrule it.",
+      "state": "live",
+      "recorded_at": "2026-11-09T06:34:18.358Z"
     }
   ],
   "sent": [
