@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 836bfc66-b0d0-4133-9739-0a8bc7852967
-heartbeat_at: 2026-11-09 05:24Z
+heartbeat_at: 2026-11-09 07:55Z
 status: active
-focus: "6 Nov: localfolded for hv's compact on hv's word via molt-vc, before travel; nothing in progress, no claims, no items, no worktrees; after the compact: /in-session, pickup as dc, hold for molt-vc's next dispatch with no work started"
+focus: "9 Nov: booted for hv's session and held with nothing assigned, frozen through the 1.4.6 cut until vc's all-clear; localfolded for hv's compact on hv's word via molt-vc: nothing in progress, no claims, no worktrees; after the compact: /in-session, pickup as dc, hold for molt-vc's dispatch"
 claims: []
 ---
 
