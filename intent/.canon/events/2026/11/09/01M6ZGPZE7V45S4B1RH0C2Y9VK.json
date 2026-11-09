@@ -1,0 +1,16 @@
+{
+  "id": "01M6ZGPZE7V45S4B1RH0C2Y9VK",
+  "ts": "2026-11-09T06:42:43.783Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 24,
+    "text": "AE's courseware depends on ONE Molt string, not two formats: the resleeve MESSAGE 'Sleeve ready. Welcome back.' and doctor's final line 'All checks passed.'. Molt owes agentic-engineering-vc a word before either MESSAGE changes, and owes nothing about molt_info's 'Zen:' prefix, because AE's lines quote the message as a suffix with 'ends', so a prefix change or a move off molt_info leaves them true (AE's ac wrote it that way; AE's vc confirmed the immunity 9 Nov). Printed forms: doctor's is a bare echo at lib/molt.sh:2517 with no prefix; resleeve's is molt_info at 2708, which molt_log prefixes with 'Zen:' (lib/molt.sh:17-32), so it prints 'Zen: Sleeve ready. Welcome back.'. Suite cover: test/molt.bats:107 asserts doctor's whole output equals its line exactly; test/molt.bats:802 asserts the resleeve message as a substring, which is what AE's suffix claim needs; test/molt.bats:987 pins molt_info's format exactly as 'Zen: hello', which is Molt's own interest and not AE's. Residual, noted and deliberately not work: 802 would stay green if text were appended after the message on the same line, which would break AE's 'ends'. AE's lines: deck-prose.md:48 and deck.md:85 quote the resleeve message; exercises.md:61 and reference.md:32 quote doctor's. hv can overrule the obligation."
+  }
+}
