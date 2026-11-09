@@ -1388,10 +1388,18 @@
       "node": "vc",
       "kind": "todo",
       "seq": 51,
-      "text": "Doom/MELPA stale clone, all three sleeves (kovacs-sysadm and gyges-sysadm, 9 Nov, FYI; hand-repaired, nothing owed): MELPA renamed master to main and deleted master. Each sleeve's straight clone at ~/.config/emacs/.local/straight/repos/melpa is single-branch with remote.origin.fetch hard-wired to master, and Doom's recipe names no :branch, so straight never heals it: 'doom sync -u' fails at 'Updating recipe repos' with \"fatal: couldn't find remote ref refs/heads/master\". editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, so molt maintain fails on every Doom sleeve exactly once. Repaired by hand on rhadamanth, kovacs and gyges (melpa at 9a715f54 tracking origin/main, only origin/main left; molt maintain then rc 0 on both reporting sleeves, 190 packages current, init.31.1.el built). For hv to rule, Molt-side: (a) have the editors hook detect a recipe repo whose configured fetch refspec names a branch the remote no longer publishes and repoint it to the remote HEAD before doom sync, which is general; (b) pin melpa to :branch \"main\" in Molt-matts' Doom config, which is narrower and only fixes this rename; (c) leave it to hand, since every current sleeve is already fixed and a new sleeve clones main. Nothing started, no issue filed.",
+      "text": "Doom/MELPA rename, ruled by hv (decision 52) and NOT yet executed: pin melpa to :branch \"main\" in Molt-matts' Doom config; Molt ships no change; rhadamanth-sysadm coordinates across the sleeves; molt-vc settles the how with it on hv's word (coordination message sent 9 Nov). Cause: MELPA renamed master to main and deleted master, and each sleeve's straight clone of melpa is single-branch with remote.origin.fetch hard-wired to master, so 'doom sync -u' fails at 'Updating recipe repos' with \"fatal: couldn't find remote ref refs/heads/master\"; editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, which is Molt surfacing the fault, not hiding it. Finding that changes the fix: melpa is a straight recipe REPOSITORY, registered in Doom's own lisp/doom-packages.el straight-use-recipes block as (melpa :type git :host github :repo \"melpa/melpa\" :build nil) with no :branch, during straight's bootstrap and BEFORE $DOOMDIR/packages.el is read, so (package! melpa :recipe (:branch \"main\")) in packages.el is at best a no-op; the lever is straight-override-recipe ordered before that call, which in Doom means $DOOMDIR/cli.el. Doom here is 7ccac7f6; Molt-matts' config/doom/packages.el names no melpa. Not urgent: rhadamanth, kovacs and gyges are all on origin/main at 9a715f54 with molt maintain rc 0, so the pin only governs a future clone (a new sleeve, or farcaster and pihole when next reachable). Unverified and not asserted: whether straight repairs an existing single-branch clone once its recipe gains a :branch. Done when the pin is in Molt-matts and one 'doom sync -u' on one sleeve proves it.",
       "state": "live",
       "recorded_at": "2026-11-09T05:05:22.185Z",
-      "edited_at": "2026-11-09T05:05:55.207Z"
+      "edited_at": "2026-11-09T05:14:48.530Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 52,
+      "text": "hv 9 Nov (first-hand in molt-vc's session, after kovacs-sysadm relayed it): the MELPA master-to-main rename is fixed by pinning melpa to :branch \"main\" in Molt-matts' Doom config. Molt ships no change for it, and hand-repair-only is rejected. rhadamanth-sysadm coordinates the change across the sleeves; no node gives the sleeves separate orders. molt-vc coordinates with rhadamanth-sysadm on how the pin is expressed, on hv's word.",
+      "state": "live",
+      "recorded_at": "2026-11-09T05:13:58.672Z"
     }
   ],
   "sent": [

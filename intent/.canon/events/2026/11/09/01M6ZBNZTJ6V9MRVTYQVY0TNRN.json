@@ -1,0 +1,16 @@
+{
+  "id": "01M6ZBNZTJ6V9MRVTYQVY0TNRN",
+  "ts": "2026-11-09T05:14:48.530Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 51,
+    "text": "Doom/MELPA rename, ruled by hv (decision 52) and NOT yet executed: pin melpa to :branch \"main\" in Molt-matts' Doom config; Molt ships no change; rhadamanth-sysadm coordinates across the sleeves; molt-vc settles the how with it on hv's word (coordination message sent 9 Nov). Cause: MELPA renamed master to main and deleted master, and each sleeve's straight clone of melpa is single-branch with remote.origin.fetch hard-wired to master, so 'doom sync -u' fails at 'Updating recipe repos' with \"fatal: couldn't find remote ref refs/heads/master\"; editors_maintain (liberators/editors.sh:330-364) runs that command and molt_errors on it, which is Molt surfacing the fault, not hiding it. Finding that changes the fix: melpa is a straight recipe REPOSITORY, registered in Doom's own lisp/doom-packages.el straight-use-recipes block as (melpa :type git :host github :repo \"melpa/melpa\" :build nil) with no :branch, during straight's bootstrap and BEFORE $DOOMDIR/packages.el is read, so (package! melpa :recipe (:branch \"main\")) in packages.el is at best a no-op; the lever is straight-override-recipe ordered before that call, which in Doom means $DOOMDIR/cli.el. Doom here is 7ccac7f6; Molt-matts' config/doom/packages.el names no melpa. Not urgent: rhadamanth, kovacs and gyges are all on origin/main at 9a715f54 with molt maintain rc 0, so the pin only governs a future clone (a new sleeve, or farcaster and pihole when next reachable). Unverified and not asserted: whether straight repairs an existing single-branch clone once its recipe gains a :branch. Done when the pin is in Molt-matts and one 'doom sync -u' on one sleeve proves it."
+  }
+}
