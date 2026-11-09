@@ -1381,7 +1381,8 @@
       "kind": "todo",
       "seq": 50,
       "text": "Molt 1.4.6 cut (carries issue 0099). BATS LANE BOOKED 9 Nov: ask 01M6ZC8RWJGJXQC96WP51GYDRB, granted by webber-vc (estate controller), bats now 1/1 full; molt-vc starts it when hv is at the keyboard and releases with --result plus an END to webber-vc. READINESS EVIDENCE IS VOID, not merely stale: the '9bfb1a6' recorded here on 6 Nov as the clean dry run is not a valid object in Molt, devbin, Molt-matts, Utilz or Gtools, and appears in no reflog, so nothing proves 1.4.6 was dry-run clean. Do not treat the 6 Nov note as a precondition met. hv runs, per decision 35: 'bin/devbin release v1.4.6 --dry-run' first, then 'bin/devbin release v1.4.6', both inside this one booking so the lane is held once. Then the CI read and END to devbin-vc (devbin-vc is not running as of 9 Nov 05:30Z, so that leg has no recipient yet). After the cut, kovacs: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor, and sends systemctl status apparmor (0099's owed proof).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-09T06:28:20.327Z",
       "recorded_at": "2026-11-06T13:40:16.360Z",
       "edited_at": "2026-11-09T05:28:00.391Z"
     },
@@ -1402,6 +1403,22 @@
       "text": "hv 9 Nov (first-hand in molt-vc's session, after kovacs-sysadm relayed it): the MELPA master-to-main rename is fixed by pinning melpa to :branch \"main\" in Molt-matts' Doom config. Molt ships no change for it, and hand-repair-only is rejected. rhadamanth-sysadm coordinates the change across the sleeves; no node gives the sleeves separate orders. molt-vc coordinates with rhadamanth-sysadm on how the pin is expressed, on hv's word.",
       "state": "live",
       "recorded_at": "2026-11-09T05:13:58.672Z"
+    },
+    {
+      "node": "vc",
+      "kind": "decision",
+      "seq": 53,
+      "text": "hv 9 Nov (in molt-vc's session, asked and answered before the tag was pushed): the v1.4.6 tag stays at f2d262767020, which is vc's board commit 'wb(vc): commit vc's focus line...', not at its parent a7456a33 'release: v1.4.6'. The resume took HEAD as the release commit because VERSION already carried the stamp and the tree was clean there, and HEAD was vc's fix for the red leg. Deliberate, not an accident to be tidied; nobody re-tags or rewrites it.",
+      "state": "live",
+      "recorded_at": "2026-11-09T06:28:20.240Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 52,
+      "text": "Molt 1.4.6 rollout, the switch rests at brew: once the tap has v1.4.6 (formula published 9 Nov, tap main 94e58f54), on each sleeve 'brew upgrade molt', then 'molt use brew', and 'molt --version' reads molt 1.4.6 (brew, f2d262767020). Then kovacs's owed 0099 proof: hv runs molt upgrade from a plain terminal with Claude Code quit; kovacs-sysadm checks only bwrap-userns-restrict of Molt's is in /etc/apparmor.d, both files under /var/lib/molt/apparmor, molt doctor passes, then on hv's go 'sudo systemctl reset-failed apparmor && sudo systemctl restart apparmor', and sends systemctl status apparmor. Until that restart lands, any reboot or apparmor restart lets the distro's unpriv_bwrap win again; 'sudo apparmor_parser -r /etc/apparmor.d/bwrap-userns-restrict' repairs it. Word to the sleeves goes through rhadamanth-sysadm, not from vc.",
+      "state": "live",
+      "recorded_at": "2026-11-09T06:28:20.284Z"
     }
   ],
   "sent": [

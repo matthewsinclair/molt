@@ -1,0 +1,15 @@
+{
+  "id": "01M6ZFW589ZQN5QG82S6NZJTPJ",
+  "ts": "2026-11-09T06:28:05.002Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0100"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "Release gates require a globally clean tree, so a peer node's whiteboard pickup can red a cut"
+  }
+}

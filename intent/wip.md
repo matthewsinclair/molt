@@ -1,5 +1,5 @@
 ---
-verblock: "6 Nov 2026:v0.94: Matthew Sinclair - fold before travel"
+verblock: "9 Nov 2026:v0.95: Matthew Sinclair - 1.4.6 released"
 ---
 
 # Work In Progress
@@ -10,8 +10,9 @@ verblock: "6 Nov 2026:v0.94: Matthew Sinclair - fold before travel"
 
 ## TODO
 
-- **Molt 1.4.6 cut:** carries issue 0099; dry run clean, booked with devbin-vc on hv's word.
-- **kovacs after 1.4.6:** `molt upgrade`, then the apparmor reset-failed and restart (0099's owed proof).
+- **Molt 1.4.6 rollout:** released 9 Nov at f2d262767020, formula on the tap; `brew upgrade molt` then `molt use brew` per sleeve.
+- **kovacs, 0099's owed proof:** `molt upgrade`, then the apparmor reset-failed and restart.
+- **Issue 0100:** release gates demand a globally clean tree, so a peer's pickup can red a cut.
 - **Ccusage 0.1.9:** reword `liberators/claude.sh:496`'s `ccusage use` comment to `activate` when it ships.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
