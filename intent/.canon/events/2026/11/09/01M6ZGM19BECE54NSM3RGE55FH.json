@@ -1,0 +1,16 @@
+{
+  "id": "01M6ZGM19BECE54NSM3RGE55FH",
+  "ts": "2026-11-09T06:41:07.371Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 24,
+    "text": "AE's courseware uses two of Molt's output strings as an attendee's done-when test, so they are interface, not decoration. Doctor's final line is 'All checks passed.' (lib/molt.sh:2517, a bare echo with no prefix). Resleeve's final line PRINTS AS 'Zen: Sleeve ready. Welcome back.', not the bare string: molt_info goes through molt_log, which prefixes info with 'Zen:' (lib/molt.sh:17-32), so the literal at 2708 is not what a user sees. Both printed lines are pinned by the suite, by composition rather than by one assertion each: test/molt.bats:107 asserts doctor's whole output equals 'All checks passed.' exactly, which also proves it carries no prefix; test/molt.bats:987 asserts molt_info's format exactly as 'Zen: hello'; test/molt.bats:802 asserts the resleeve message as a substring. So a change to the prefix or to either message goes red before it ships, and the obligation is only to tell agentic-engineering-vc when such a change is deliberate, so its lines move in the same week instead of surprising an instructor mid-session. AE's affected lines for the resleeve string are chapters/T03-molt/deck-prose.md:48 and deck.md:85, which say it 'ends' with the bare string; exercises.md:61 and reference.md:32 use doctor's string correctly and were never wrong. Accepted by vc 9 Nov on AE's request; both referents were corrected from source by AE's ac and vc after vc recorded them. hv can overrule it."
+  }
+}
