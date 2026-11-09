@@ -1,5 +1,5 @@
 ---
-verblock: "9 Nov 2026:v0.95: Matthew Sinclair - 1.4.6 released"
+verblock: "9 Nov 2026:v0.96: Matthew Sinclair - 1.4.6 rolled out"
 ---
 
 # Work In Progress
@@ -10,8 +10,6 @@ verblock: "9 Nov 2026:v0.95: Matthew Sinclair - 1.4.6 released"
 
 ## TODO
 
-- **Molt 1.4.6 rollout:** released 9 Nov at f2d262767020, formula on the tap; `brew upgrade molt` then `molt use brew` per sleeve.
-- **kovacs, 0099's owed proof:** `molt upgrade`, then the apparmor reset-failed and restart.
 - **Issue 0100:** release gates demand a globally clean tree, so a peer's pickup can red a cut.
 - **Ccusage 0.1.9:** reword `liberators/claude.sh:496`'s `ccusage use` comment to `activate` when it ships.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
