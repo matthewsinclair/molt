@@ -1,4 +1,4 @@
-# inbox: cc -> hv
+# inbox: dc -> ic
 
 _(empty)_
 
