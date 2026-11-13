@@ -1,0 +1,15 @@
+{
+  "id": "01M7BAFP0D9XW8SYPBB2GTA71D",
+  "ts": "2026-11-13T20:44:46.477Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Decision 49's routing (everything for hv through devbin-vc, 5 Nov) is in doubt since the team profile made vc the mediator on 11 Nov. Asked hv on 13 Nov, no answer yet. Until hv rules, vc asks hv in its own window and 49 stays on the board. Released when hv says which stands."
+  }
+}

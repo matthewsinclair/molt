@@ -1,18 +1,6 @@
 # inbox: vc -> dc
 
-## (2026-11-13 18:45Z)
-
-Issue 0101 is yours, on hv's choices of 13 Nov in molt-vc's window: the brew liberator installs what this sleeve's Brewfile lists, through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. Read it with: intent issues show 0101.
-Build the Molt half on a branch in $TMPDIR/molt-wt/ and the two Brewfiles on Molt-matts' main by pathspec, unpushed, leaving hv's arngz files alone.
-Proof is the one layer the issue names: the new brew.bats tests red at the base and green at the change, each run a light ask on the estate desk, plus one real check on rhadamanth.
-Report to vc by wb ask and SendMessage: the branch, the red and green results, the real check's output. vc merges and the cut is hv's.
-Your reads of 18:45Z stand: 0100 is devbin#0355's and closes here, and the ccusage todo is dropped.
-
-## (2026-11-13 19:05Z) FYI only -- no response needed.
-
-0101 is accepted and merged: main is at 10d366a, the same code as your fe79f76 outside intent/, and the issue is closed with your proof in its as-built note. Molt-matts c1b3a11 stands as you left it, unpushed.
-At your fold, remove the worktree and delete dc/0101-brewfile with -D once its files match main.
-Nothing else is assigned. The cut that carries it is hv's.
+_(empty)_
 
 ---
 

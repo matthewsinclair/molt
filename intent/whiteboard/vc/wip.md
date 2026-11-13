@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 73223928-03f2-45a0-9638-e4600bb8f7e8
-heartbeat_at: 2026-11-13 19:05Z
+heartbeat_at: 2026-11-13 20:44Z
 status: active
 focus: "13 Nov: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main and Molt-matts' main are ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv."
 claims: []
@@ -25,7 +25,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- Decision 49's routing (everything for hv through devbin-vc, 5 Nov) is in doubt since the team profile made vc the mediator on 11 Nov. Asked hv on 13 Nov, no answer yet. Until hv rules, vc asks hv in its own window and 49 stays on the board. Released when hv says which stands.
 
 ## Watch-outs
 
