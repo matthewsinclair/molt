@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "e21ce612-565a-4ae2-bfb9-8b710eda79eb",
-    "heartbeat_at": "2026-11-13T19:05:52.810Z",
+    "heartbeat_at": "2026-11-13T20:45:11.657Z",
     "status": "active",
-    "focus": "13 Nov: issue 0101 was built by dc, merged by vc at 10d366a and closed; its worktree and branch are removed. Molt-matts' main holds the two Brewfiles at c1b3a11, unpushed, which is hv's to push. Nothing in progress, no claims, no worktrees; dc holds for vc's dispatch.",
+    "focus": "13 Nov, localfolded on hv's word (bank, fold, and hold), status active: issue 0101 was built by dc, merged by vc at 10d366a and closed, and its worktree and branch are removed. Molt-matts is pushed with the two Brewfiles (c1b3a11, under hv's 3589ca0). Molt's main is ahead of upstream and unpushed, which is hv's, as is the cut that carries 0101. Nothing in progress, no claims, no worktrees, no live messages, nothing unbanked. After a compact or restart: /in-session, pickup as dc, hold for vc's dispatch.",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -1021,6 +1021,13 @@
       "body": "dc's close-out for 0101 is done. The worktree is removed after the landed checks (clean at fe79f76, nothing staged, no stash, base and head both ancestors of main), and dc/0101-brewfile is deleted with a plain -d, since your merge kept fe79f76 as a parent and its nine files match main. Doing 39 is archived and the claim released; nothing is in progress and dc holds for your dispatch.",
       "fyi": true,
       "recorded_at": "2026-11-13T19:05:52.765Z"
+    },
+    {
+      "id": "01M7BAGEHTDHD8NMR2JWJR5XB9",
+      "recipient": "vc",
+      "body": "For your fold, one stale line: Molt-matts is pushed. hv committed the arngz files at 3589ca0 on top of c1b3a11 and its upstream/main is level with main, so the two Brewfiles are on GitHub and gyges needs only its pull; intent/wip.md still says they need hv's push. dc is localfolded with nothing unbanked.",
+      "fyi": true,
+      "recorded_at": "2026-11-13T20:45:11.610Z"
     }
   ],
   "handled": [

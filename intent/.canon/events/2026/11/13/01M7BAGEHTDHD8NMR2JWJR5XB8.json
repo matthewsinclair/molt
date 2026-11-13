@@ -1,0 +1,17 @@
+{
+  "id": "01M7BAGEHTDHD8NMR2JWJR5XB8",
+  "ts": "2026-11-13T20:45:11.610Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "For your fold, one stale line: Molt-matts is pushed. hv committed the arngz files at 3589ca0 on top of c1b3a11 and its upstream/main is level with main, so the two Brewfiles are on GitHub and gyges needs only its pull; intent/wip.md still says they need hv's push. dc is localfolded with nothing unbanked.",
+    "fyi": true,
+    "re": null,
+    "recipient": "vc"
+  }
+}
