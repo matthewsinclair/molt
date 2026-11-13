@@ -1,14 +1,16 @@
 ---
-verblock: "13 Nov 2026:v0.97: Matthew Sinclair - 0101 with dc"
+verblock: "13 Nov 2026:v0.98: Matthew Sinclair - 0101 merged, awaits the cut"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Issue 0101, with dc:** the brew liberator installs what the sleeve's Brewfile lists through `brew bundle`, and Molt-matts lists pigz for rhadamanth and gyges. vc merges, hv cuts.
+- Nothing in progress; vc holds for hv.
 
 ## TODO
+
+- **Next cut, hv's:** it carries issue 0101, merged at 10d366a: the brew liberator installs what a sleeve's Brewfile lists. Molt-matts' two Brewfiles (c1b3a11) need hv's push to reach gyges.
 
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "73223928-03f2-45a0-9638-e4600bb8f7e8",
-    "heartbeat_at": "2026-11-13T18:46:51.336Z",
+    "heartbeat_at": "2026-11-13T19:05:59.685Z",
     "status": "active",
-    "focus": "13 Nov: issue 0101 is with dc on hv's choices of the day: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. vc reads dc's proof and merges; the cut that carries it is hv's. 0100 is closed against devbin#0355. Molt's main is ahead of upstream and unpushed, which is hv's.",
+    "focus": "13 Nov: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main and Molt-matts' main are ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1439,8 +1439,17 @@
       "kind": "doing",
       "seq": 17,
       "text": "0101 with dc (hv's choices, 13 Nov): the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. vc reads dc's proof and merges; the cut that carries it is hv's.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-13T19:05:10.296Z",
       "recorded_at": "2026-11-13T18:46:45.737Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 53,
+      "text": "Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) reach gyges once hv pushes Molt-matts.",
+      "state": "live",
+      "recorded_at": "2026-11-13T19:05:59.639Z"
     }
   ],
   "sent": [
@@ -2003,6 +2012,13 @@
       "body": "Issue 0101 is yours, on hv's choices of 13 Nov in molt-vc's window: the brew liberator installs what this sleeve's Brewfile lists, through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. Read it with: intent issues show 0101.\nBuild the Molt half on a branch in $TMPDIR/molt-wt/ and the two Brewfiles on Molt-matts' main by pathspec, unpushed, leaving hv's arngz files alone.\nProof is the one layer the issue names: the new brew.bats tests red at the base and green at the change, each run a light ask on the estate desk, plus one real check on rhadamanth.\nReport to vc by wb ask and SendMessage: the branch, the red and green results, the real check's output. vc merges and the cut is hv's.\nYour reads of 18:45Z stand: 0100 is devbin#0355's and closes here, and the ccusage todo is dropped.",
       "fyi": false,
       "recorded_at": "2026-11-13T18:45:58.301Z"
+    },
+    {
+      "id": "01M7B4SA06BYDES4W9XEF7YWCD",
+      "recipient": "dc",
+      "body": "0101 is accepted and merged: main is at 10d366a, the same code as your fe79f76 outside intent/, and the issue is closed with your proof in its as-built note. Molt-matts c1b3a11 stands as you left it, unpushed.\nAt your fold, remove the worktree and delete dc/0101-brewfile with -D once its files match main.\nNothing else is assigned. The cut that carries it is hv's.",
+      "fyi": true,
+      "recorded_at": "2026-11-13T19:05:10.406Z"
     }
   ],
   "handled": [
@@ -2275,6 +2291,11 @@
       "id": "01M7B3MKV92GB4HW06N07GNDJB",
       "sender": "dc",
       "handled_at": "2026-11-13T18:46:51.280Z"
+    },
+    {
+      "id": "01M7B4JZG330NM4KCQ0FRT5VNF",
+      "sender": "dc",
+      "handled_at": "2026-11-13T19:05:10.361Z"
     }
   ]
 }

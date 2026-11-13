@@ -1,0 +1,17 @@
+{
+  "id": "01M7B4SA06BYDES4W9XEF7YWCC",
+  "ts": "2026-11-13T19:05:10.406Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "0101 is accepted and merged: main is at 10d366a, the same code as your fe79f76 outside intent/, and the issue is closed with your proof in its as-built note. Molt-matts c1b3a11 stands as you left it, unpushed.\nAt your fold, remove the worktree and delete dc/0101-brewfile with -D once its files match main.\nNothing else is assigned. The cut that carries it is hv's.",
+    "fyi": true,
+    "re": null,
+    "recipient": "dc"
+  }
+}
