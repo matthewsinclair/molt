@@ -209,7 +209,9 @@ A liberator is a config module that frees you from one default. Each liberator i
 - `{name}_maintain`: _(optional)_ System maintenance hook. Slow, runs during `molt maintain`.
 - `{name}_verify`: _(optional)_ A fuller check, for a liberator's own use. Molt does not run it: resleeve and doctor use `_check`.
 
-Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, Gtools, cldr, pplr, and Utilz on a `source = "brew"` sleeve), the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself; liberators handle configuration.
+Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, Gtools, cldr, pplr, and Utilz on a `source = "brew"` sleeve), the `brew` liberator, which installs what a sleeve's own `Brewfile` lists, the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself, or list them in the sleeve's `Brewfile`; liberators handle configuration.
+
+A sleeve's `Brewfile` is `instances/<host>/Brewfile` in your config repo, in Homebrew's own format, eg `brew "pigz"`. With one, the `brew` liberator's check fails while Homebrew lacks anything it lists, naming each, and `molt resleeve` installs what is missing with `brew bundle install`. The file is a minimum: nothing it leaves out is removed, and nothing it lists is upgraded except by `molt maintain`. A sleeve without one is unchanged.
 
 The framework discovers liberator scripts in `liberators/`, loads them on demand, and runs them through the lifecycle automatically.
 
@@ -235,7 +237,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | mise           | mise runtime manager, off in the templates                    | linux, macos |
 | ssh            | SSH key detection, config rendering + fragments               | linux, macos |
 | utilz          | Utilz, from a checkout or Homebrew, per sleeve                | linux, macos |
-| brew           | Homebrew maintenance and upgrade                              | linux, macos |
+| brew           | Homebrew maintenance, and what a sleeve's `Brewfile` lists    | linux, macos |
 | intent         | Intent from Homebrew, what PATH and gate run                  | linux, macos |
 | gtools         | Gtools from Homebrew, from its private tap                    | linux, macos |
 | pplr           | pplr from Homebrew, or the dev or opt tree `pplr use` chose   | macos        |
@@ -312,6 +314,7 @@ Molt-{user}/
     rhadamanth/
       molt.toml
       vars.sh
+      Brewfile                       # Packages this sleeve needs, which the brew liberator installs
 ```
 
 Liberators use `molt_link` to symlink config files from your repo into their expected locations. Existing files are backed up automatically. Template files (`.tmpl`) are rendered via `envsubst` using instance-specific variables.
