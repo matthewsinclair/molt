@@ -1,0 +1,15 @@
+{
+  "id": "01M7B3QK79YZMZ67E78E38J2VT",
+  "ts": "2026-11-13T18:46:45.737Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0101 with dc (hv's choices, 13 Nov): the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. vc reads dc's proof and merges; the cut that carries it is hv's."
+  }
+}

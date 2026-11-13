@@ -1,6 +1,12 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-13 18:45Z)
+
+Issue 0101 is yours, on hv's choices of 13 Nov in molt-vc's window: the brew liberator installs what this sleeve's Brewfile lists, through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. Read it with: intent issues show 0101.
+Build the Molt half on a branch in $TMPDIR/molt-wt/ and the two Brewfiles on Molt-matts' main by pathspec, unpushed, leaving hv's arngz files alone.
+Proof is the one layer the issue names: the new brew.bats tests red at the base and green at the change, each run a light ask on the estate desk, plus one real check on rhadamanth.
+Report to vc by wb ask and SendMessage: the branch, the red and green results, the real check's output. vc merges and the cut is hv's.
+Your reads of 18:45Z stand: 0100 is devbin#0355's and closes here, and the ccusage todo is dropped.
 
 ---
 

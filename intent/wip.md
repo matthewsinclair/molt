@@ -1,17 +1,15 @@
 ---
-verblock: "9 Nov 2026:v0.96: Matthew Sinclair - 1.4.6 rolled out"
+verblock: "13 Nov 2026:v0.97: Matthew Sinclair - 0101 with dc"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- Nothing in progress; vc holds for hv.
+- **Issue 0101, with dc:** the brew liberator installs what the sleeve's Brewfile lists through `brew bundle`, and Molt-matts lists pigz for rhadamanth and gyges. vc merges, hv cuts.
 
 ## TODO
 
-- **Issue 0100:** release gates demand a globally clean tree, so a peer's pickup can red a cut.
-- **Ccusage 0.1.9:** reword `liberators/claude.sh:496`'s `ccusage use` comment to `activate` when it ships.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).

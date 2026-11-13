@@ -1,0 +1,15 @@
+{
+  "id": "01M7B3PDMBBWFBZXSP01PKBADX",
+  "ts": "2026-11-13T18:46:07.243Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 13 Nov 2026, live in molt-vc's window (the quotes are hv's typed words; the rest is vc's wording of the three options hv chose in vc's dialog): pigz is declared for rhadamanth and gyges through the brew liberator. hv: 'What about a brew liberator that has the mimimum list of brew packages that we need on a sleeve?' and 'There's a way to extract a brew list and then import it into another brew install. The libertor should just do that, right?' So each sleeve's list is a Brewfile in Molt-matts, and the brew liberator installs what is missing from it with brew bundle (hv chose install over only naming it), pigz is listed on rhadamanth and gyges (hv's choice over rhadamanth alone), and molt-dc builds it (hv's choice). Issue 0101. It began with hv's word the same day: 'please ping agentic-engineering-vc for instructions. It wants pigz added to Molt-matts.'"
+  }
+}

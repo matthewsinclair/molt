@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 3e603c77-1479-4763-aa34-9ca640d5aea3
-heartbeat_at: 2026-11-09 07:33Z
+session_id: 73223928-03f2-45a0-9638-e4600bb8f7e8
+heartbeat_at: 2026-11-13 18:46Z
 status: active
-focus: "9 Nov, after the 1.4.6 cut and rollout: v1.4.6 released at f2d262767020, annotated tag 69fa5aa1 on both remotes, formula on the tap at 94e58f54, and rolled out to rhadamanth, gyges and kovacs, each reading 'molt 1.4.6 (brew, f2d262767020)'. Issue 0099's owed proof is met on kovacs and written up on the issue itself (apparmor.service active, systemctl --failed empty, nested bwrap rc 0). Issue 0100 filed and unscheduled: the release gates demand a globally clean tree, so a peer node's pickup can red a cut, which cost this release one gate run; the fix shape is in the issue. Watchout 24 is a standing obligation to agentic-engineering-vc on two output strings. Nothing in progress, no claims, no worktrees, bats slot released and END sent; molt-dc unfrozen with nothing assigned. vc holds for hv."
+focus: "13 Nov: issue 0101 is with dc on hv's choices of the day: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. vc reads dc's proof and merges; the cut that carries it is hv's. 0100 is closed against devbin#0355. Molt's main is ahead of upstream and unpushed, which is hv's."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- 0101 with dc (hv's choices, 13 Nov): the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges. vc reads dc's proof and merges; the cut that carries it is hv's.
 
 ## TODO
 
@@ -21,7 +21,6 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- ccusage 0.1.9 renames account selection to `ccusage activate` (Ccusage ISSUE:0007, 29943b5); when it ships, reword liberators/claude.sh:496's comment ('which `ccusage use` changes between') to activate. Comment only, nothing in Molt runs it (ccusage-vc's FYI, 6 Nov).
 
 ## Holds
 
