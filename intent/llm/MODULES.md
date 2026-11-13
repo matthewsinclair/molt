@@ -47,7 +47,7 @@
 | pplr           | `liberators/pplr.sh`           | pplr from Homebrew, or the dev or opt tree `pplr use` chose (issue 0086)                        |
 | utilz          | `liberators/utilz.sh`          | Utilz from a checkout (linked into `~/.local/bin`, with bats-core) or from Homebrew, per sleeve |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, from `$MOLT_OPT_DIR/web`, its binary linked into `~/.local/bin`           |
-| brew           | `liberators/brew.sh`           | Homebrew lifecycle, package maintenance (linux, macos)                                          |
+| brew           | `liberators/brew.sh`           | Homebrew maintenance, and installing what the sleeve's Brewfile lists (issue 0101)              |
 | claude         | `liberators/claude.sh`         | Claude Code config, its state out of $HOME (ST0006)                                             |
 | env            | `liberators/env.sh`            | Sleeve variables for shells and GUI apps (ST0008 WP05)                                          |
 | agents         | `liberators/agents.sh`         | A home for each sleeve agent, from its role (ST0006)                                            |

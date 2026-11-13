@@ -150,6 +150,7 @@ Molt-you/
       molt.toml             # what to install on this machine
       vars.sh               # template variables for this machine
       ssh/config.d/         # SSH config fragments appended after render
+      Brewfile              # optional: packages this machine needs, which the brew liberator installs
 ```
 
 Each machine gets its own directory under `instances/` with a manifest and optional overrides. See [Template System](templates.md) for how `.tmpl` files work.

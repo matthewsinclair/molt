@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- A sleeve can list the packages it needs in a Brewfile of its own, `instances/<host>/Brewfile` in the user repo, in Homebrew's own format, and the `brew` liberator has Homebrew install what is missing. Its check, and so `molt doctor`, fails while Homebrew lacks anything the file lists, saying what `brew bundle check` names as missing, and `molt resleeve` then runs `brew bundle install` on the file. The file is a minimum: nothing it leaves out is removed, and a listed formula that is only outdated passes the check and is left as it is, since `molt maintain` is what upgrades. The check is a read, so it keeps Homebrew from updating itself first, as it otherwise does before any `brew bundle`. Molt ships no Brewfile and writes none, and a sleeve without one is unchanged (issue 0101)
+
 ## [1.4.6] - 2026-11-09
 
 ### Fixed

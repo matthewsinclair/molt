@@ -3,11 +3,52 @@
 # Frees you from stale packages, wherever brew is on PATH: Homebrew on macOS,
 # Linuxbrew on Linux. It was macOS only, so nothing upgraded kovacs's
 # Linuxbrew (issue 0077).
+#
+# A sleeve may list the packages it needs in a Brewfile of its own in the user
+# repo, instances/<host>/Brewfile. With one, check and verify fail while
+# Homebrew lacks anything it lists, and install adds what is missing, through
+# `brew bundle` (issue 0101). The file is a minimum: nothing it leaves out is
+# removed, and what it lists is upgraded by brew_maintain alone. Molt ships no
+# Brewfile and writes none, and a sleeve without one is as it was.
+
+# This sleeve's Brewfile. Fails when its stack has none, or there is no stack.
+_brew_brewfile() {
+  local f
+  f="$(molt_instance_file Brewfile)" || return 1
+  [[ -f "$f" ]] || return 1
+  echo "$f"
+}
+
+# One line per fault between the Brewfile $1 and "Homebrew has everything it
+# lists", or nothing: what `brew bundle check` said, which names each thing
+# missing, or why the file cannot be read, and then the file and what installs
+# it. brew says it on stderr, which resleeve drops from a check, so the lines
+# are for the caller to log.
+#
+# A check is a read, so brew is kept from two things. --no-upgrade passes a
+# listed formula that is only outdated: without it doctor would fail at each
+# new version of one. HOMEBREW_NO_AUTO_UPDATE keeps brew from fetching first:
+# `bundle` is among the commands Homebrew updates itself before, once its last
+# fetch is a day old, and refreshes its API cache for.
+_brew_bundle_faults() {
+  local brewfile="$1" said line
+  said="$(HOMEBREW_NO_AUTO_UPDATE=1 brew bundle check --verbose --no-upgrade --file="$brewfile" 2>&1)" && return 0
+  [[ -n "$said" ]] || said="brew bundle check failed, and said nothing"
+  while IFS= read -r line; do
+    [[ -z "$line" ]] || printf '%s\n' "$line"
+  done <<< "$said"
+  echo "this sleeve's Brewfile is $(molt_tilde "$brewfile"), and molt resleeve installs what it lists"
+}
 
 brew_check() {
   if ! command -v brew &>/dev/null; then
     molt_info "brew: Homebrew not installed"
     return 1
+  fi
+
+  local brewfile
+  if brewfile="$(_brew_brewfile)"; then
+    molt_report_faults molt_info "" brew "$(_brew_bundle_faults "$brewfile")" || return 1
   fi
 
   return 0
@@ -19,15 +60,29 @@ brew_install() {
     return 1
   fi
 
+  # What the sleeve's Brewfile lists and Homebrew lacks. --no-upgrade leaves
+  # what is installed as it is, since brew_maintain upgrades. No cleanup, ever:
+  # the file is a minimum, and a cleanup removes whatever it does not list.
+  local brewfile
+  if brewfile="$(_brew_brewfile)"; then
+    molt_info "Installing what $(molt_tilde "$brewfile") lists and Homebrew lacks..."
+    if ! brew bundle install --no-upgrade --file="$brewfile"; then
+      molt_error "brew: brew bundle install failed for $(molt_tilde "$brewfile") (above)"
+      return 1
+    fi
+  fi
+
   molt_info "Liberator complete: brew"
 }
 
 brew_verify() {
-  local errors=0
+  local errors=0 brewfile
 
   if ! command -v brew &>/dev/null; then
     molt_error "VERIFY FAIL: brew not installed"
     errors=1
+  elif brewfile="$(_brew_brewfile)"; then
+    molt_report_faults molt_error "VERIFY FAIL: " brew "$(_brew_bundle_faults "$brewfile")" || errors=1
   fi
 
   if [[ $errors -eq 0 ]]; then
