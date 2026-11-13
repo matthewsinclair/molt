@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: e21ce612-565a-4ae2-bfb9-8b710eda79eb
-heartbeat_at: 2026-11-13 18:42Z
+heartbeat_at: 2026-11-13 18:51Z
 status: active
-focus: "9 Nov: booted for hv's session and held with nothing assigned, frozen through the 1.4.6 cut until vc's all-clear; localfolded for hv's compact on hv's word via molt-vc: nothing in progress, no claims, no worktrees; after the compact: /in-session, pickup as dc, hold for molt-vc's dispatch"
-claims: []
+focus: "13 Nov: building issue 0101 on vc's GO: the brew liberator installs what this sleeve's Brewfile lists through brew bundle. Branch dc/0101-brewfile in $TMPDIR/molt-wt, and the two Brewfiles on Molt-matts' main, unpushed. Proof is brew.bats red at the base and green at the change, booked on the desk, and one real check on rhadamanth; then the report to vc, which merges."
+claims: [ISSUE:0101]
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-_(none)_
+- 0101, on vc's GO of 13 Nov (hv's choices of the day): the brew liberator reads this sleeve's Brewfile through brew bundle, so check and verify fail naming what is missing and install adds it. Branch dc/0101-brewfile in $TMPDIR/molt-wt; Molt-matts gets a Brewfile listing pigz for rhadamanth and for gyges, on its main by pathspec, unpushed, hv's arngz files left alone. Proof: the new brew.bats tests red at the base and green at the change, each run a light ask on the desk, and one real check on rhadamanth. Then the report to vc, which merges; the cut is hv's.
 
 ## TODO
 

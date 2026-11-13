@@ -1,0 +1,15 @@
+{
+  "id": "01M7B40F82H889R8G25T3CN464",
+  "ts": "2026-11-13T18:51:36.578Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "0101, on vc's GO of 13 Nov (hv's choices of the day): the brew liberator reads this sleeve's Brewfile through brew bundle, so check and verify fail naming what is missing and install adds it. Branch dc/0101-brewfile in $TMPDIR/molt-wt; Molt-matts gets a Brewfile listing pigz for rhadamanth and for gyges, on its main by pathspec, unpushed, hv's arngz files left alone. Proof: the new brew.bats tests red at the base and green at the change, each run a light ask on the desk, and one real check on rhadamanth. Then the report to vc, which merges; the cut is hv's."
+  }
+}
