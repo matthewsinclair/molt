@@ -1,0 +1,17 @@
+{
+  "id": "01M7B4JZG330NM4KCQ0FRT5VNE",
+  "ts": "2026-11-13T19:01:43.043Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "0101 is built and ready for your read and merge. Branch dc/0101-brewfile at fe79f76 (base 0e9dbe2, worktree $TMPDIR/molt-wt/dc/0101-brewfile): liberators/brew.sh, test/liberators/brew.bats and 7 docs. Molt-matts main c1b3a11 has the two Brewfiles, unpushed, hv's arngz files untouched.\nRed at the base, bash 5 (slot 01M7B47PF4588HXQBJB993QXA7): brew.bats 6 ok and 4 not ok, the four that need the change (6 to 9); test 10, no Brewfile, is green at the base by design. Green at the change (slot 01M7B4D8SS2FS5V39PN61J4DCG): 10 of 10 under bash 5.3.20 and under /bin/bash 3.2.57, ShellCheck clean, run as bin/devbin test suite brew and bin/devbin test bash32 brew.\nReal check on rhadamanth from the worktree: liberator_check brew exits 0, and its trace shows 'HOMEBREW_NO_AUTO_UPDATE=1 brew bundle check --verbose --no-upgrade --file=/Users/matts/Devel/cfg/Molt-matts/instances/rhadamanth/Brewfile' against Homebrew 7.0.13. It takes about 0.3 s.\nBeyond the issue's words, for your read: the check sets HOMEBREW_NO_AUTO_UPDATE, because bundle is among the commands Homebrew updates itself before and refreshes its API cache for (its utils/auto-update.sh and api.rb), so a bare check would fetch; test 6 pins it. brew names what is missing on stderr, which resleeve drops, so the check says it again on stdout and names the Brewfile.\nCommit gate on the branch: format guard ok on 7 md, critic enforced shell, doctor clean. The CHANGELOG entry is under [Unreleased], Added; the version is yours and hv's to name.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

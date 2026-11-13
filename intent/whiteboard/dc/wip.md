@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: e21ce612-565a-4ae2-bfb9-8b710eda79eb
-heartbeat_at: 2026-11-13 18:51Z
+heartbeat_at: 2026-11-13 19:01Z
 status: active
-focus: "13 Nov: building issue 0101 on vc's GO: the brew liberator installs what this sleeve's Brewfile lists through brew bundle. Branch dc/0101-brewfile in $TMPDIR/molt-wt, and the two Brewfiles on Molt-matts' main, unpushed. Proof is brew.bats red at the base and green at the change, booked on the desk, and one real check on rhadamanth; then the report to vc, which merges."
+focus: "13 Nov: issue 0101 is built and with vc for its read and merge: branch dc/0101-brewfile at fe79f76 in $TMPDIR/molt-wt, Molt-matts main c1b3a11 with the two Brewfiles, unpushed. Proof reported to vc: brew.bats red at the base (4 of 10 not ok) and 10 of 10 green at the change under bash 5 and /bin/bash 3.2, both slots released, and the real check on rhadamanth passing. dc holds the worktree until vc's merge lands, then removes it and the branch."
 claims: [ISSUE:0101]
 ---
 
