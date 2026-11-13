@@ -1,0 +1,16 @@
+{
+  "id": "01M7BAJ4EMCPJ4B6V09SRMMQC8",
+  "ts": "2026-11-13T20:46:06.804Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 53,
+    "text": "Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) are pushed, so gyges gets its one at its next pull."
+  }
+}

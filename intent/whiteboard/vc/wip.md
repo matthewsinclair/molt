@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 73223928-03f2-45a0-9638-e4600bb8f7e8
-heartbeat_at: 2026-11-13 20:44Z
+heartbeat_at: 2026-11-13 20:46Z
 status: active
-focus: "13 Nov: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main and Molt-matts' main are ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv."
+focus: "13 Nov, folded for the night on hv's word: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11, pushed by hv). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main is ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv."
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) reach gyges once hv pushes Molt-matts.
+- Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) are pushed, so gyges gets its one at its next pull. (edited)
 
 ## Holds
 

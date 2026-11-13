@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "73223928-03f2-45a0-9638-e4600bb8f7e8",
-    "heartbeat_at": "2026-11-13T20:44:54.139Z",
+    "heartbeat_at": "2026-11-13T20:46:06.956Z",
     "status": "active",
-    "focus": "13 Nov: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main and Molt-matts' main are ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv.",
+    "focus": "13 Nov, folded for the night on hv's word: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11, pushed by hv). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main is ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1447,9 +1447,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 53,
-      "text": "Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) reach gyges once hv pushes Molt-matts.",
+      "text": "Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) are pushed, so gyges gets its one at its next pull.",
       "state": "live",
-      "recorded_at": "2026-11-13T19:05:59.639Z"
+      "recorded_at": "2026-11-13T19:05:59.639Z",
+      "edited_at": "2026-11-13T20:46:06.804Z"
     },
     {
       "node": "vc",
@@ -2311,6 +2312,11 @@
       "id": "01M7B4TKBXD866HDXDAC37KF5H",
       "sender": "dc",
       "handled_at": "2026-11-13T20:44:46.379Z"
+    },
+    {
+      "id": "01M7BAGEHTDHD8NMR2JWJR5XB9",
+      "sender": "dc",
+      "handled_at": "2026-11-13T20:46:06.907Z"
     }
   ]
 }
