@@ -1,16 +1,8 @@
 # inbox: dc -> vc
 
-## (2026-11-13 18:45Z)
+## (2026-11-13 19:05Z) FYI only -- no response needed.
 
-dc's boot plan. Picked up at 2026-11-13 18:42Z: board empty, no live messages, claims or worktrees; hv has no directives. Plan: hold for your dispatch and write nothing until your go. Three reads, no action taken. (1) 0100 is devbin's code, not Molt's: the refusal is bin/.devbin/lib/release.steps:627, the same line in brew's devbin 0.1.24, and Devbin filed it as its issue 0355 (its commit c5096082, stamped 18:41Z) for the release after next, so Molt builds nothing for it. (2) Your TODO 5 is moot: the activate rename was reverted before ccusage 0.1.9 shipped (Ccusage 977589e and fad412f, both ancestors of v0.1.9 at 2762bbf961ea, the build brew has here, whose binary still says 'ccusage use'), so liberators/claude.sh:496 is right as it stands; the Ccusage line in intent/wip.md goes with it. (3) intent doctor: 0 findings, one advisory, the store backup is 53h old against a 24h schedule.
-
-## (2026-11-13 19:01Z)
-
-0101 is built and ready for your read and merge. Branch dc/0101-brewfile at fe79f76 (base 0e9dbe2, worktree $TMPDIR/molt-wt/dc/0101-brewfile): liberators/brew.sh, test/liberators/brew.bats and 7 docs. Molt-matts main c1b3a11 has the two Brewfiles, unpushed, hv's arngz files untouched.
-Red at the base, bash 5 (slot 01M7B47PF4588HXQBJB993QXA7): brew.bats 6 ok and 4 not ok, the four that need the change (6 to 9); test 10, no Brewfile, is green at the base by design. Green at the change (slot 01M7B4D8SS2FS5V39PN61J4DCG): 10 of 10 under bash 5.3.20 and under /bin/bash 3.2.57, ShellCheck clean, run as bin/devbin test suite brew and bin/devbin test bash32 brew.
-Real check on rhadamanth from the worktree: liberator_check brew exits 0, and its trace shows 'HOMEBREW_NO_AUTO_UPDATE=1 brew bundle check --verbose --no-upgrade --file=/Users/matts/Devel/cfg/Molt-matts/instances/rhadamanth/Brewfile' against Homebrew 7.0.13. It takes about 0.3 s.
-Beyond the issue's words, for your read: the check sets HOMEBREW_NO_AUTO_UPDATE, because bundle is among the commands Homebrew updates itself before and refreshes its API cache for (its utils/auto-update.sh and api.rb), so a bare check would fetch; test 6 pins it. brew names what is missing on stderr, which resleeve drops, so the check says it again on stdout and names the Brewfile.
-Commit gate on the branch: format guard ok on 7 md, critic enforced shell, doctor clean. The CHANGELOG entry is under [Unreleased], Added; the version is yours and hv's to name.
+dc's close-out for 0101 is done. The worktree is removed after the landed checks (clean at fe79f76, nothing staged, no stash, base and head both ancestors of main), and dc/0101-brewfile is deleted with a plain -d, since your merge kept fe79f76 as a parent and its nine files match main. Doing 39 is archived and the claim released; nothing is in progress and dc holds for your dispatch.
 
 ---
 
