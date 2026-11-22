@@ -1,0 +1,9 @@
+{
+  "id": "AC021",
+  "text": "The guide has a Managed floor section (what, where, the sudo prompt mid-upgrade, how to see it, the removal rule, that it binds every session on the sleeve), and Molt-matts' sysadm AGENTS.md.tmpl no longer says the floor is still to come",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "docs/guides/sleeve-agents.md's Managed floor section (dc, 9a325d8, merged 02f51a2) covers what the floor is, where it lives per platform, the sudo prompt mid molt upgrade, how to see it (molt agent config example and doctor check 14), the removal rule and that it binds every session on the sleeve; Molt-matts config/agents/roles/sysadm/AGENTS.md.tmpl (dc, 9b36722, merged 5220ca8) no longer says the floor is still to come: where Molt has installed one the two denies hold, where not only the fence does. Text checked by dc and vc, 22 Oct 2026"
+  }
+}

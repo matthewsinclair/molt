@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 77,
+  "schema": "intent/issue@4.0",
+  "id": "0077",
   "slug": "brew-liberator-linuxbrew-too-so-molt-maintain-up",
   "title": "brew liberator: Linuxbrew too, so molt maintain upgrades kovacs's formulae",
   "status": "closed",

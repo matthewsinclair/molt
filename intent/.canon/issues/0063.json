@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 63,
+  "schema": "intent/issue@4.0",
+  "id": "0063",
   "slug": "version-line-drops-at-root-contract-a3-hv-s-ruli",
   "title": "Version line drops ' at <root>' (contract A3, hv's ruling)",
   "status": "closed",

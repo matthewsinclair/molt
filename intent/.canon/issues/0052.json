@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 52,
+  "schema": "intent/issue@4.0",
+  "id": "0052",
   "slug": "brew-maintain-ignores-a-failed-brew-update-upgra",
   "title": "brew_maintain ignores a failed brew update, upgrade or cleanup",
   "status": "closed",

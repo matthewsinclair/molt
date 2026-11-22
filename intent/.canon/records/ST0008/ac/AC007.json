@@ -1,0 +1,9 @@
+{
+  "id": "AC007",
+  "text": "matthewsinclair/homebrew-molt exists and carries the formula for the current release; the release steps name the formula publish",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "tap matthewsinclair/homebrew-molt cca72154 carries molt 1.0.0 (tag v1.0.0, rev 38422394); release steps in intent/wip.md name tools/formula publish (7582bd5)"
+  }
+}

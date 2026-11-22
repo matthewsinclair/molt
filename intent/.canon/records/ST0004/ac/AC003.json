@@ -1,0 +1,8 @@
+{
+  "id": "AC003",
+  "text": "The intent check fails when the gate home names an install directory that no longer exists.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

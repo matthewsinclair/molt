@@ -1,0 +1,8 @@
+{
+  "id": "AC004",
+  "text": "intent and utilz share one Homebrew check in lib/molt.sh, and intent's existing tests pass unchanged. A formula that is installed but not trusted is reported by check, and install trusts exactly that formula with `brew trust --formula`, saying so.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

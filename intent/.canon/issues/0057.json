@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 57,
+  "schema": "intent/issue@4.0",
+  "id": "0057",
   "slug": "gtools-liberator-brew-only-private-ssh-tap-per-h",
   "title": "gtools liberator: brew-only, private ssh tap, per hv's dev/opt/brew ruling for Gtools",
   "status": "closed",

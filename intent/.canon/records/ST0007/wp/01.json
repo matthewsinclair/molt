@@ -1,0 +1,9 @@
+{
+  "id": "01",
+  "title": "molt agent start, roles and home; config takes a role",
+  "scope": "S",
+  "status": "done",
+  "objective": "Build molt agent start, roles and home, and let config take a role, in lib/agent.sh and bin/molt's help, with tests that use a stand-in claude and hostname.",
+  "body": "Code, in `lib/agent.sh` beside `molt agent list` and `config`, and in `bin/molt`'s help:\n\n- one resolver for `start`, `home` and `config`: a role (`sysadm`) or a full name (`<host>-sysadm`), read through `molt_agents`, so the name is still derived in one place;\n- `molt agent start <role> [-- <claude args>]`: the thread's checks, then into the home and `exec claude start --name <name>` with whatever follows `--`;\n- `molt agent roles`: the declared roles, one a line, a disabled one marked `(disabled)`;\n- `molt agent home <role>`: the home's path, for `cd \"$(molt agent home sysadm)\"`.\n\nTests in `test/liberators/agents.bats`, with a stand-in `claude` on PATH that records the directory it ran in, its arguments and its `CLAUDE_CONFIG_DIR`; expected values come from the fixture, never from the code under test. CHANGELOG's Unreleased.\n",
+  "preamble": ""
+}

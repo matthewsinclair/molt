@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 86,
+  "schema": "intent/issue@4.0",
+  "id": "0086",
   "slug": "pplr-2-0-has-no-bin-pplr-so-the-pplr-liberator-f",
   "title": "pplr 2.0 has no bin/pplr, so the pplr liberator fails molt upgrade and resleeve: install pplr from Homebrew, in cldr's shape (hv, 4 Nov)",
   "status": "closed",

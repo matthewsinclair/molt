@@ -1,0 +1,10 @@
+{
+  "id": "AT042",
+  "kind": "test",
+  "file": "test/manifest.bats",
+  "covers": [
+    "AC005"
+  ],
+  "status": "green",
+  "note": "@test \"molt_agent_manifest_faults names an entry with no role, a role declared twice, a written name and a harness other than claude\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+}

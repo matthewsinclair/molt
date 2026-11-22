@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 43,
+  "schema": "intent/issue@4.0",
+  "id": "0043",
   "slug": "desktop-check-and-verify-pass-silently-when-a-gs",
   "title": "desktop check and verify pass silently when a gsettings file is declared but gsettings is absent",
   "status": "closed",

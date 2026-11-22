@@ -1,0 +1,10 @@
+{
+  "id": "AT054",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC014"
+  ],
+  "status": "green",
+  "note": "@test \"the home guard refuses a session launched in the agents root itself\". Red on c815d23, whose guard had no agents-root rule. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2."
+}

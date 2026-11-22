@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 22,
+  "schema": "intent/issue@4.0",
+  "id": "0022",
   "slug": "molt-tracks-claude-settings-local-json-a-persona",
   "title": "Molt tracks .claude/settings.local.json, a personal file, with rules hardcoded to rhadamanth paths",
   "status": "closed",

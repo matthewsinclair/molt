@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 38,
+  "schema": "intent/issue@4.0",
+  "id": "0038",
   "slug": "the-move-leaves-paths-into-claude-in-the-user-se",
   "title": "The move leaves paths into ~/.claude in the user settings it moves: a hook left so blocked every Bash call on rhadamanth",
   "status": "closed",

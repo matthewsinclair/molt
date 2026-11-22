@@ -1,0 +1,9 @@
+{
+  "id": "03",
+  "title": "Install Nerd Fonts",
+  "scope": "S",
+  "status": "done",
+  "objective": "Install Nerd Fonts on kovacs so that Doom Emacs icons, Starship prompt glyphs, and terminal UI elements render correctly.",
+  "body": "## Deliverables\n\n- Nerd Font(s) installed system-wide or per-user on kovacs\n- Alacritty configured to use the Nerd Font\n- Doom Emacs nerd-icons working\n\n## Acceptance Criteria\n\n- [ ] Starship prompt renders all glyphs correctly in Alacritty\n- [ ] Doom Emacs shows icons in treemacs/modeline\n- [ ] Font choice documented / added to molt-{user} config\n\n## Dependencies\n\n- None — fully independent",
+  "preamble": ""
+}

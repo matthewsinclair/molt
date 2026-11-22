@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 14,
+  "schema": "intent/issue@4.0",
+  "id": "0014",
   "slug": "tiling-never-refreshes-tactile-s-system-schema-a",
   "title": "tiling never refreshes Tactile's system schema and ignores failed sudo and gsettings calls",
   "status": "closed",

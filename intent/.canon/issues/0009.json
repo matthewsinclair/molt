@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 9,
+  "schema": "intent/issue@4.0",
+  "id": "0009",
   "slug": "claude-liberator-does-not-manage-the-claude-code",
   "title": "claude liberator does not manage the Claude Code status line",
   "status": "closed",

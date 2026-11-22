@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 12,
+  "schema": "intent/issue@4.0",
+  "id": "0012",
   "slug": "the-ssh-wrapper-resets-a-tab-to-black-not-to-the",
   "title": "the ssh wrapper resets a tab to black, not to the sleeve's own background",
   "status": "closed",

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 19,
+  "schema": "intent/issue@4.0",
+  "id": "0019",
   "slug": "ssh-alacritty-and-zsh-install-report-complete-ov",
   "title": "ssh, alacritty and zsh install report complete over a molt_install_config that failed",
   "status": "closed",

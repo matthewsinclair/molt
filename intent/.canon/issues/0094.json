@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 94,
+  "schema": "intent/issue@4.0",
+  "id": "0094",
   "slug": "doctor-s-font-check-assumes-this-machine-draws-t",
   "title": "doctor's font check assumes this machine draws the terminal: under WSL, Windows Terminal draws it",
   "status": "closed",

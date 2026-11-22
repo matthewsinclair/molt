@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 69,
+  "schema": "intent/issue@4.0",
+  "id": "0069",
   "slug": "molt-doctor-reports-github-not-authenticated-whe",
   "title": "molt doctor reports GitHub not authenticated when the ssh handshake is slower than its 5 s timeout",
   "status": "closed",

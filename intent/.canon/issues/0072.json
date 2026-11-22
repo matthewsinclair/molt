@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 72,
+  "schema": "intent/issue@4.0",
+  "id": "0072",
   "slug": "doctor-s-env-check-reads-launchctl-getenv-which",
   "title": "doctor's env check reads launchctl getenv, which misses what com.molt.env set in gui/$UID; and PATH may not reach GUI apps on macOS 27",
   "status": "closed",

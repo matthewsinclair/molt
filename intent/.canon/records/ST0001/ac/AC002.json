@@ -1,0 +1,9 @@
+{
+  "id": "AC002",
+  "text": "`molt upgrade` exists and works: pulls framework and config, runs upgrade hooks, resleeves.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "cmd_upgrade() at lib/molt.sh:1255; `molt upgrade [--self] [--dry-run] [liberators] [--resleeve|--no-resleeve]` live in bin/molt help; driven --dry-run this session"
+  }
+}

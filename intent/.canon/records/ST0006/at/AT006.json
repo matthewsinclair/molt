@@ -1,0 +1,10 @@
+{
+  "id": "AT006",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC002"
+  ],
+  "status": "green",
+  "note": "@test \"a native or node-run Claude Code counts as running; a grep, npm ls, ls or molt run naming it does not\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2; renamed after critic-shell's review."
+}

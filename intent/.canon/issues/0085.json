@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 85,
+  "schema": "intent/issue@4.0",
+  "id": "0085",
   "slug": "code-defects-the-docs-sweep-found-system-s-check",
   "title": "Code defects the docs sweep found: system's checks, new-user's next steps, vscode's dock, claude's mkdir refusal, zsh.bats' HOME, a dead CI step, dead template values (hv, 3 Nov)",
   "status": "closed",

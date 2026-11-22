@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 84,
+  "schema": "intent/issue@4.0",
+  "id": "0084",
   "slug": "molt-docs-fix-every-stale-or-wrong-claim-link-an",
   "title": "Molt docs: fix every stale or wrong claim, link and house-rule breach across the docs (hv, 3 Nov)",
   "status": "closed",

@@ -1,0 +1,10 @@
+{
+  "id": "AT019",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC004"
+  ],
+  "status": "green",
+  "note": "@test \"check and verify report env.sh, the GUI file or the guard missing or stale, and the hook missing from settings.json\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+}

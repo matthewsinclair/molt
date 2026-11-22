@@ -1,0 +1,10 @@
+{
+  "id": "AT005",
+  "kind": "test",
+  "file": "test/install.bats",
+  "covers": [
+    "AC005"
+  ],
+  "status": "green",
+  "note": "install.bats: upgrade by tree in opt (no framework pull, names install --force) and brew (current, outdated with restart, a failed brew update counted). The dev-tree pull is molt.bats' existing upgrade tests, unchanged by ST0008. Passing both bashes at ec5fe42, CI green."
+}

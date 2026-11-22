@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 65,
+  "schema": "intent/issue@4.0",
+  "id": "0065",
   "slug": "five-test-files-run-against-the-real-home-test-h",
   "title": "Five test files run against the real HOME: test_helper's setup should give every test a fake one",
   "status": "closed",

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 15,
+  "schema": "intent/issue@4.0",
+  "id": "0015",
   "slug": "molt-upgrade-reports-a-failed-git-pull-as-skippe",
   "title": "molt upgrade reports a failed git pull as skipped, with a cause that cannot be true, and drops git's reason",
   "status": "closed",

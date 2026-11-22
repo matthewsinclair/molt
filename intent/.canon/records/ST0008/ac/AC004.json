@@ -1,0 +1,8 @@
+{
+  "id": "AC004",
+  "text": "molt use with no argument reports the tree ~/bin/molt serves; molt use dev|opt|brew repoints it, refusing a tree that is not there; a resleeve from any tree leaves a healthy link as it is",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

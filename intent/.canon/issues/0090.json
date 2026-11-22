@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 90,
+  "schema": "intent/issue@4.0",
+  "id": "0090",
   "slug": "hv-s-calls-from-0084-to-0086-readme-s-platforms",
   "title": "hv's calls from 0084 to 0086: README's platforms and Status, the runbook's kovacs line, restart.md's check, Molt-matts' unread tables and pplr's os",
   "status": "closed",

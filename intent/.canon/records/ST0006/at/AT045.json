@@ -1,0 +1,10 @@
+{
+  "id": "AT045",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC011"
+  ],
+  "status": "green",
+  "note": "@test \"a vars.sh that does not parse, or stops before its end when sourced, is refused, and a moved sleeve gets no ~/.claude back\" (vc's WP01 review C1). Red on 41ef6b1, which read each as undeclared and recreated ~/.claude. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2."
+}

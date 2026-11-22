@@ -1,0 +1,8 @@
+{
+  "id": "AC002",
+  "text": "With `source = \"brew\"`, check and verify pass only when Homebrew's utilz, and every command its keg links, is what PATH runs, and they name whatever runs instead. install installs `matthewsinclair/utilz/utilz` by its full name and makes no links. Nothing in brew mode runs `git pull`, `utilz use` or `utilz relink`.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 6,
+  "schema": "intent/issue@4.0",
+  "id": "0006",
   "slug": "git-check-misses-gitignore-global-and-identity-l",
   "title": "git_check misses ~/.gitignore_global and identity links that git_install creates",
   "status": "closed",

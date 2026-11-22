@@ -1,0 +1,11 @@
+{
+  "id": "AT067",
+  "kind": "test",
+  "file": "test/liberators/agents.bats",
+  "covers": [
+    "AC005",
+    "AC016"
+  ],
+  "status": "green",
+  "note": "written on st0006-wp02 (critic-shell's fixes); to-write until that branch merges, as the file on main does not carry it yet. @test \"a re-render that would write a home's files as they are backs nothing up, with a preamble, an overlay and settings.json's memory dir in place, and one over a hand edit backs the edit up\". Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
+}

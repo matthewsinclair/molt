@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 34,
+  "schema": "intent/issue@4.0",
+  "id": "0034",
   "slug": "keys-sh-runs-sudo-make-install-systemctl-enable",
   "title": "keys.sh runs sudo make install, systemctl enable/start and keyd reload unchecked: a failure aborts the liberator with no line naming it",
   "status": "closed",

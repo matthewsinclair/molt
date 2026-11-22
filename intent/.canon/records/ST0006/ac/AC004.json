@@ -1,0 +1,8 @@
+{
+  "id": "AC004",
+  "text": "molt doctor reports CLAUDE_CONFIG_DIR unset, ~/.claude or ~/.claude.json present while the config dir is elsewhere (the XDG paths the native installer owns are not faults), and the env file, GUI file or hook missing or stale",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

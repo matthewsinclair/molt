@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 11,
+  "schema": "intent/issue@4.0",
+  "id": "0011",
   "slug": "the-iterm2-ssh-wrapper-returns-0-for-a-failed-ss",
   "title": "the iTerm2 ssh wrapper returns 0 for a failed ssh",
   "status": "closed",

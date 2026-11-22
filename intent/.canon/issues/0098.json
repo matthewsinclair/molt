@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 98,
+  "schema": "intent/issue@4.0",
+  "id": "0098",
   "slug": "molt-new-user-ends-with-exit-1-and-nothing-said",
   "title": "molt new-user ends with exit 1 and nothing said when a value flag is given last with no value, or a prompt has nothing to read",
   "status": "closed",

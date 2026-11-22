@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 61,
+  "schema": "intent/issue@4.0",
+  "id": "0061",
   "slug": "agents-tests-install-the-apparmor-profile-into-t",
   "title": "agents tests install the AppArmor profile into the host's real /etc/apparmor.d through sudo",
   "status": "closed",

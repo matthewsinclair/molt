@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 91,
+  "schema": "intent/issue@4.0",
+  "id": "0091",
   "slug": "delete-templates-env-retired-and-the-env-writer",
   "title": "Delete templates/env/retired/ and the env writer's retire check: every sleeve has moved onto the env liberator (cc's hold 16)",
   "status": "closed",

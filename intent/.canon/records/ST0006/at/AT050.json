@@ -1,0 +1,10 @@
+{
+  "id": "AT050",
+  "kind": "test",
+  "file": "test/templates.bats",
+  "covers": [
+    "AC015"
+  ],
+  "status": "green",
+  "note": "@test \"molt_render leaves the target as it was, and no temporary file, when envsubst fails\". Red on 41ef6b1, which moved the failed render into place. Green on branch st0006-wp01 at fb5bf7d under bash 5.3 and /bin/bash 3.2."
+}

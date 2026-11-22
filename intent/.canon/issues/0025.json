@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 25,
+  "schema": "intent/issue@4.0",
+  "id": "0025",
   "slug": "a-vars-sh-exit-trap-that-prints-makes-molt-insta",
   "title": "A vars.sh EXIT trap that prints makes molt_instance_var, and on stderr molt_instance_vars_fault, report the file stops before its end",
   "status": "closed",

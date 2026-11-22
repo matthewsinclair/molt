@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 41,
+  "schema": "intent/issue@4.0",
+  "id": "0041",
   "slug": "the-iterm2-ssh-wrapper-is-never-re-rendered-zsh",
   "title": "The iTerm2 ssh wrapper is never re-rendered: zsh_check does not look at it, so a [terminal] colour change never reaches the file",
   "status": "closed",

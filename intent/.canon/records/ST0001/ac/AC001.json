@@ -1,0 +1,9 @@
+{
+  "id": "AC001",
+  "text": "No Molt health check reports success while the condition it names is false: every check either asserts the thing it claims, or says plainly what it did not cover.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "lib/molt.sh check 6 warns+names+prints the reason it previously discarded; liberators/intent.sh intent_verify no longer passes on a mismatched link; test/liberators/intent.bats 11 of 15 arms fail against pre-fix code; 04 Sep 568e620 (dangling symlinks) and 9f28dce (mtime->digest) close the same class"
+  }
+}

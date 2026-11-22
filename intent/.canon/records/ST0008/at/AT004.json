@@ -1,0 +1,10 @@
+{
+  "id": "AT004",
+  "kind": "test",
+  "file": "test/install.bats",
+  "covers": [
+    "AC004"
+  ],
+  "status": "green",
+  "note": "install.bats: molt use reports and repoints the link, refuses a missing tree; local-bin leaves a healthy link. Passing both bashes at ec5fe42, CI green."
+}

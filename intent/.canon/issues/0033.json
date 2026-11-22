@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 33,
+  "schema": "intent/issue@4.0",
+  "id": "0033",
   "slug": "keys-sh-and-tiling-sh-write-root-owned-files-wit",
   "title": "keys.sh and tiling.sh write root-owned files with raw sudo cp/rm where molt_sudo_install/remove now exist (Highlander)",
   "status": "closed",

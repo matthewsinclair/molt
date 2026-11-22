@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 75,
+  "schema": "intent/issue@4.0",
+  "id": "0075",
   "slug": "molt-maintain-upgrade-and-resleeve-stop-after-a",
   "title": "molt maintain, upgrade and resleeve stop after a liberator hook that reads stdin, since their loop feeds the liberator list on stdin",
   "status": "closed",

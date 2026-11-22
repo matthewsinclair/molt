@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 48,
+  "schema": "intent/issue@4.0",
+  "id": "0048",
   "slug": "vscode-links-code-into-a-hardcoded-bin-not-molt",
   "title": "vscode links code into a hardcoded ~/bin, not MOLT_LOCAL_BIN",
   "status": "closed",

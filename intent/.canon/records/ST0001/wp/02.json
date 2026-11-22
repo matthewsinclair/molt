@@ -1,0 +1,9 @@
+{
+  "id": "02",
+  "title": "Set up kovacs SSH for GitHub",
+  "scope": "S",
+  "status": "done",
+  "objective": "Configure kovacs with its own SSH identity for direct GitHub access, so we can push/pull without going through rhadamanth.",
+  "body": "## Context\n\n- kovacs already has an ed25519 key at ~/.ssh/id_ed25519\n- Currently pushing from rhadamanth because kovacs has no SSH config for GitHub\n- rhadamanth uses ~/.ssh/personalid with host alias github.com-{github}\n\n## Deliverables\n\n- SSH config on kovacs for GitHub (github.com-{github} or similar)\n- kovacs public key added to GitHub account\n- Git remote URLs updated to use SSH\n\n## Acceptance Criteria\n\n- [ ] `ssh -T git@github.com` succeeds from kovacs\n- [ ] `git push` works from molt-{user} on kovacs\n- [ ] `git push` works from Molt on kovacs\n- [ ] SSH config stored in molt-{user}/config/ (Highlander-compliant)\n\n## Dependencies\n\n- Need GitHub account access to add the public key\n- No blockers from other WPs",
+  "preamble": ""
+}

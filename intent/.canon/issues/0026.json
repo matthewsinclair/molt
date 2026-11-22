@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 26,
+  "schema": "intent/issue@4.0",
+  "id": "0026",
   "slug": "molt-doctor-prefixes-a-failing-liberator-s-check",
   "title": "molt doctor prefixes a failing liberator's check lines with its name though they already carry molt's own `Zen: <lib>:` prefix",
   "status": "closed",

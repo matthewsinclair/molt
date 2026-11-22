@@ -1,0 +1,6 @@
+{
+  "path": "design.md",
+  "text": "# Design - ST0002: Proper per-instance config of per-instance variables\n\n## Approach\n\n[Planned approach for implementing this steel thread, including methodology and key steps]\n\n## Design Decisions\n\n[Key design decisions and their rationale]\n\n## Architecture\n\n[Architectural considerations and diagrams if applicable]\n\n## Alternatives Considered\n\n[Other approaches that were considered and why they were not chosen]\n",
+  "bytes": 416,
+  "sha256": "56763a77773da3ae752d372f2a4d4f157b19f39492ed36d791409d891305f334"
+}

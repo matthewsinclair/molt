@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 51,
+  "schema": "intent/issue@4.0",
+  "id": "0051",
   "slug": "molt-toml-example-enables-a-terminal-liberator-t",
   "title": "molt.toml.example enables a terminal liberator that does not exist",
   "status": "closed",

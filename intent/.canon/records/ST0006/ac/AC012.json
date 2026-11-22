@@ -1,0 +1,8 @@
+{
+  "id": "AC012",
+  "text": "When the user repo has config/claude/CLAUDE.md and AGENTS.md, the claude liberator links them into the config dir, backing up a regular file found there; check reports the link pending and doctor reports it broken or missing",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

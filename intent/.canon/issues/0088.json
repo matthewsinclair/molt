@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 88,
+  "schema": "intent/issue@4.0",
+  "id": "0088",
   "slug": "publish-claude-securestorage-config-dir-from-ccu",
   "title": "Publish CLAUDE_SECURESTORAGE_CONFIG_DIR from ccusage dir, read at each shell start and login (Ccusage ISSUE:0003, step 2)",
   "status": "closed",

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 70,
+  "schema": "intent/issue@4.0",
+  "id": "0070",
   "slug": "molt-resleeve-ignores-an-unknown-argument-and-ru",
   "title": "molt resleeve ignores an unknown argument and runs a real resleeve: --help, -h or a --dryrun typo resleeves the machine",
   "status": "closed",

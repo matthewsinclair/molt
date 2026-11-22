@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 55,
+  "schema": "intent/issue@4.0",
+  "id": "0055",
   "slug": "molt-doctor-exits-0-when-a-check-did-not-pass",
   "title": "molt doctor exits 0 when a check did not pass",
   "status": "closed",

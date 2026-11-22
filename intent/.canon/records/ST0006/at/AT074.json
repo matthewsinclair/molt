@@ -1,0 +1,10 @@
+{
+  "id": "AT074",
+  "kind": "non-test",
+  "prose": "kovacs after the WP06 upgrade: molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed; ls -l of molt-sysadm.json and its sidecar root-owned 644; doctor check 14 passes",
+  "covers": [
+    "AC020"
+  ],
+  "status": "n-a",
+  "note": "to-write: evidence from kovacs-sysadm after the upgrade. Done 22 Oct 2026 on kovacs by kovacs-sysadm after hv's upgrade; the two commands' output is AC020's evidence"
+}

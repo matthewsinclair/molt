@@ -1,0 +1,10 @@
+{
+  "id": "AT051",
+  "kind": "test",
+  "file": "test/templates.bats",
+  "covers": [
+    "AC015"
+  ],
+  "status": "green",
+  "note": "@test \"molt_render renders past an unset variable in vars.sh, reads what it declare -x's, and leaves out what it prints\". Red on 41ef6b1, where nounset stopped the render and the file's output was moved in as the rendered file; its declare -x case red on fb5bf7d, where the sourcing helper made it a local. Green on branch st0006-wp01 at 4cfe31a under bash 5.3 and /bin/bash 3.2."
+}

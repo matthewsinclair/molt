@@ -1,0 +1,10 @@
+{
+  "id": "AT018",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC004"
+  ],
+  "status": "green",
+  "note": "@test \"the native installer's own paths under ~/.local and ~/.cache are not faults\". Passes on main as well: it pins that no check reaches these paths, and before WP01 none looked (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+}

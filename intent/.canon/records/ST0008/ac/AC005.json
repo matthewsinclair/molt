@@ -1,0 +1,8 @@
+{
+  "id": "AC005",
+  "text": "molt upgrade pulls the config repos in every tree; in dev it pulls the framework as before; in opt it pulls no framework and names molt install --force; in brew it runs brew upgrade for the formula and restarts when the version changed, counting a failed brew upgrade in the verdict",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

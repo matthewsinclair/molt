@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 71,
+  "schema": "intent/issue@4.0",
+  "id": "0071",
   "slug": "pplr-liberator-can-only-link-the-dev-checkout-gi",
   "title": "pplr liberator can only link the dev checkout: give it a source choice (brew or checkout), as utilz has, for pplr's move to brew",
   "status": "closed",

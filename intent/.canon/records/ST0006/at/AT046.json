@@ -1,0 +1,10 @@
+{
+  "id": "AT046",
+  "kind": "test",
+  "file": "test/templates.bats",
+  "covers": [
+    "AC011"
+  ],
+  "status": "green",
+  "note": "@test \"molt_render refuses a vars.sh that does not parse or stops before its end, and leaves the target as it was\" (vc's WP01 review C1). Red on 41ef6b1, which rendered past the syntax error and, for a vars.sh that exits, backed the target up with nothing in its place. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2."
+}

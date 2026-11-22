@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 99,
+  "schema": "intent/issue@4.0",
+  "id": "0099",
   "slug": "apparmor-molt-s-sidecar-and-kept-distro-profile",
   "title": "AppArmor: Molt's sidecar and kept distro profile sit in /etc/apparmor.d, failing apparmor.service and loading a rival bwrap profile at boot",
   "status": "closed",

@@ -1,0 +1,8 @@
+{
+  "id": "AC018",
+  "text": "The floor's contents come verbatim from Molt-matts config/agents/roles/sysadm/floor.json; a sysadm sleeve with no floor.json, or one that is not a single object with permissions.deny, fails check and install naming the file, and nothing is written",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

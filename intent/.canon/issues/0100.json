@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 100,
+  "schema": "intent/issue@4.0",
+  "id": "0100",
   "slug": "release-gates-require-a-globally-clean-tree-so-a",
   "title": "Release gates require a globally clean tree, so a peer node's whiteboard pickup can red a cut",
   "status": "closed",

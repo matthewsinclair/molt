@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 97,
+  "schema": "intent/issue@4.0",
+  "id": "0097",
   "slug": "molt-new-user-from-dir-scaffold-a-user-stack-fro",
   "title": "molt new-user --from <dir>: scaffold a user stack from a template other than Molt's skeleton, by the same code and tokens",
   "status": "closed",

@@ -1,0 +1,10 @@
+{
+  "id": "AT001",
+  "kind": "test",
+  "file": "test/liberators/intent.bats",
+  "covers": [
+    "AC002"
+  ],
+  "status": "green",
+  "note": "@test 'intent_check FAILS, naming it, when PATH runs another intent'. Not observed red: written with the rewrite, and the pre-ST0004 liberator had no brew path to fail. Green at 70504ca under bash 5.3 and /bin/bash 3.2."
+}

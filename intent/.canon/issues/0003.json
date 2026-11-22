@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 3,
+  "schema": "intent/issue@4.0",
+  "id": "0003",
   "slug": "backup-check-verify-report-a-finished-run-failur",
   "title": "backup check/verify report a finished-run failure while a copy is running",
   "status": "closed",

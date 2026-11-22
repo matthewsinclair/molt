@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 67,
+  "schema": "intent/issue@4.0",
+  "id": "0067",
   "slug": "doctor-run-from-a-dev-tree-on-a-sleeve-brew-serv",
   "title": "doctor run from a dev tree on a sleeve brew serves reads local-bin as not installed, and its advice, molt resleeve, would link the sleeve to that tree",
   "status": "closed",

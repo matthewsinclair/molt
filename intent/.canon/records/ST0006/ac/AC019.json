@@ -1,0 +1,8 @@
+{
+  "id": "AC019",
+  "text": "molt doctor check 14 warns on a sleeve that takes the floor (an enabled sysadm agent and a declared MOLT_CLAUDE_CONFIG_DIR) whose floor is missing or stale, and on a sleeve that does not take it carrying a molt-written floor, and passes otherwise; the sudo helpers render to a user tmp first and write nothing into the managed dir unprivileged or when sudo is absent or refuses",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

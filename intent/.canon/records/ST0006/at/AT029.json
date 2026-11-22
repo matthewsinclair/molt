@@ -1,0 +1,10 @@
+{
+  "id": "AT029",
+  "kind": "test",
+  "file": "test/liberators/agents.bats",
+  "covers": [
+    "AC005"
+  ],
+  "status": "green",
+  "note": "@test \"re-rendering while every digest matches writes nothing, and memory/ and work/ stay the agent's\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Red on main 18ceff2: the branch's test files with lib/agent.sh copied onto main's code fail it (mutation check, molt-vc, 21 Oct). Green on main at bea7420, the WP02 merge: suite green under bash 5.3 and /bin/bash 3.2 (molt-vc, 21 Oct)."
+}

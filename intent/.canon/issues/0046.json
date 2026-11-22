@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 46,
+  "schema": "intent/issue@4.0",
+  "id": "0046",
   "slug": "bin-bootstrap-sh-sc2088-notes",
   "title": "bin/bootstrap.sh SC2088 notes",
   "status": "closed",

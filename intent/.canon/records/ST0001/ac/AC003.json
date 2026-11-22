@@ -1,0 +1,9 @@
+{
+  "id": "AC003",
+  "text": "The upgrade path is the same inside a VM sleeve and on bare metal.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "same molt upgrade path on kovacs (Ubuntu 24.04 ARM64 VM under Parallels) and on rhadamanth and gyges (macOS bare metal); all three report doctor green, and the kovacs decoupling of 04 Sep ran it on local ext4"
+  }
+}

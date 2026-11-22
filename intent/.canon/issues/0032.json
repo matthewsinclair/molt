@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 32,
+  "schema": "intent/issue@4.0",
+  "id": "0032",
   "slug": "claude-code-s-sandbox-cannot-start-on-ubuntu-bwr",
   "title": "Claude Code's sandbox cannot start on Ubuntu: bwrap-userns-restrict denies CAP_SYS_ADMIN to bwrap's children, so ops and docs fail closed on kovacs",
   "status": "closed",

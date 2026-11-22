@@ -1,0 +1,8 @@
+{
+  "id": "AC017",
+  "text": "On a sleeve whose manifest declares no enabled sysadm agent, or whose vars.sh declares no MOLT_CLAUDE_CONFIG_DIR, Molt renders no floor and removes a molt-sysadm.json drop-in whose sidecar molt wrote, never one it did not",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

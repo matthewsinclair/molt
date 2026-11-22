@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 7,
+  "schema": "intent/issue@4.0",
+  "id": "0007",
   "slug": "alacritty-check-never-flags-a-template-form-conf",
   "title": "alacritty check never flags a template-form config: molt_config_stale gets an absolute .tmpl path",
   "status": "closed",

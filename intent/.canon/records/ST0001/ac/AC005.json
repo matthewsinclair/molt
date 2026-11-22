@@ -1,0 +1,9 @@
+{
+  "id": "AC005",
+  "text": "A bootstrap runbook exists in the Molt repo covering the Phase 1 kovacs resleeve steps in order.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "docs/guides/bootstrap-runbook.md, 370 lines, 11 ordered sections (system, zsh, git, tmux, editors, alacritty, keys, desktop, dev-tools, ssh, intent) matching the Phase 1 liberator set; in the Molt repo, not Molt-matts"
+  }
+}

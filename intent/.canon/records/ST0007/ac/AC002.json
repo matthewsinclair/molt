@@ -1,0 +1,8 @@
+{
+  "id": "AC002",
+  "text": "molt agent start refuses, naming the fix and starting nothing, when the role is not declared (listing those that are) or not enabled, when its home is not current, when the sleeve declares a config dir and this shell's CLAUDE_CONFIG_DIR is not it, and while a session of that name runs",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

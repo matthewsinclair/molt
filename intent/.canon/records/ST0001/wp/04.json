@@ -1,0 +1,9 @@
+{
+  "id": "04",
+  "title": "Document Phase 1 bootstrap steps",
+  "scope": "M",
+  "status": "done",
+  "objective": "Capture the manual steps performed during Phase 1 (resleeve of kovacs) as structured documentation. This becomes the reference for what MOLT's automation needs to replicate.",
+  "body": "## Context\n\nPhase 1 was done manually across several Claude Code sessions. The steps are scattered across session history and memory files. We need a single, ordered document that could serve as both human-readable instructions and a specification for future automation.\n\n## Deliverables\n\n- Bootstrap runbook document in the Molt repo (docs/ or intent/docs/)\n- Ordered list of every step from bare VM to working environment\n- Notes on which steps are platform-specific vs platform-agnostic\n- Notes on which steps are user-specific vs universal\n\n## Acceptance Criteria\n\n- [ ] Document covers all Phase 1 steps in order\n- [ ] Each step notes: what was done, why, and any gotchas\n- [ ] Platform-specific vs agnostic steps are clearly marked\n- [ ] Document is in the Molt repo (not molt-{user})\n\n## Dependencies\n\n- Relies on memory/context from Phase 1 sessions\n- No technical blockers",
+  "preamble": ""
+}

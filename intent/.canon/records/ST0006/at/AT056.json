@@ -1,0 +1,10 @@
+{
+  "id": "AT056",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC014"
+  ],
+  "status": "green",
+  "note": "@test \"the home guard passes a session launched outside the agents root, a sibling sharing its name's start included\". Red on c815d23 at its root with * and $ in it, which no guard there carried. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2."
+}

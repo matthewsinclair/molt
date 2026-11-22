@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 92,
+  "schema": "intent/issue@4.0",
+  "id": "0092",
   "slug": "tests-yml-s-macos-job-pins-macos-15-on-4-nov-mac",
   "title": "tests.yml's macOS job pins macos-15: on 4 Nov macos-latest gave 1.4.3's candidate no runner, which stopped the cut",
   "status": "closed",

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 17,
+  "schema": "intent/issue@4.0",
+  "id": "0017",
   "slug": "doctor-check-10-flags-homebrew-s-linux-prefix-ho",
   "title": "doctor check 10 flags Homebrew's Linux prefix /home/linuxbrew as another user's home",
   "status": "closed",

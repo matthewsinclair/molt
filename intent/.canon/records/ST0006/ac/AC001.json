@@ -1,0 +1,8 @@
+{
+  "id": "AC001",
+  "text": "With CLAUDE_CONFIG_DIR set, the claude liberator reads and writes only under it, and no path under $HOME/.claude is touched",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

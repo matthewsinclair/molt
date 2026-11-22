@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 42,
+  "schema": "intent/issue@4.0",
+  "id": "0042",
   "slug": "the-iterm2-ssh-wrapper-hardcodes-lan-and-local-t",
   "title": "The iTerm2 ssh wrapper hardcodes .lan and .local; the house domain (hockenbury.internal since 23 Oct) should come from config",
   "status": "closed",

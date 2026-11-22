@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 101,
+  "schema": "intent/issue@4.0",
+  "id": "0101",
   "slug": "brew-liberator-installs-what-the-sleeve-s-brewfi",
   "title": "brew liberator installs what the sleeve's Brewfile lists, through brew bundle (pigz on rhadamanth and gyges)",
   "status": "closed",

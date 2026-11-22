@@ -1,0 +1,10 @@
+{
+  "id": "AT044",
+  "kind": "test",
+  "file": "test/molt.bats",
+  "covers": [
+    "AC005"
+  ],
+  "status": "green",
+  "note": "@test \"molt_config_digest counts an absent extra input as none, and its arrival as a change\". Red on WP01's head (st0006-wp01 820827c): an absent extra input failed the digest under pipefail (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+}

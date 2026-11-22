@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 78,
+  "schema": "intent/issue@4.0",
+  "id": "0078",
   "slug": "doctor-advises-molt-resleeve-where-only-a-login",
   "title": "doctor advises molt resleeve where only a login clears the env check's finding, and the env liberator's PATH refusal names zshrc where .zprofile builds PATH",
   "status": "closed",

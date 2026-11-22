@@ -1,0 +1,8 @@
+{
+  "id": "AC003",
+  "text": "In opt and brew, molt test and the lint are refused naming the dev tree, and doctor checks the manifest's checksums instead of requiring test/",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

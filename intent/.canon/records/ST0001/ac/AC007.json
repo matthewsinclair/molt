@@ -1,0 +1,9 @@
+{
+  "id": "AC007",
+  "text": "The runbook states its own currency and names what it does NOT cover, rather than implying completeness.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "new 'What this covers, and what it does not' section names the 11 covered and the 12 uncovered liberators explicitly, dates the document 2026-09-08, and states the liberator is authoritative where the two disagree"
+  }
+}

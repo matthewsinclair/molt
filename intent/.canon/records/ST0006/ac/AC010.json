@@ -1,0 +1,8 @@
+{
+  "id": "AC010",
+  "text": "sysadm's deny floor is rendered into the managed-settings.d drop-in and molt agent config shows those rules as managed",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

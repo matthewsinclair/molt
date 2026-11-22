@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 31,
+  "schema": "intent/issue@4.0",
+  "id": "0031",
   "slug": "the-status-line-fills-npm-on-every-sleeve-throug",
   "title": "The status line fills ~/.npm on every sleeve through npx; an npm liberator renders ~/.npmrc with the cache under XDG",
   "status": "closed",

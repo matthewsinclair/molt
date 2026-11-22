@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 56,
+  "schema": "intent/issue@4.0",
+  "id": "0056",
   "slug": "env-the-linux-gui-path-is-zsh-s-compiled-default",
   "title": "env: the Linux GUI PATH is zsh's compiled default, not the session PATH from /etc/environment",
   "status": "closed",

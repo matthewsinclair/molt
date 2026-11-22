@@ -1,0 +1,8 @@
+{
+  "id": "AC001",
+  "text": "molt install from a clean dev tree publishes the runtime set and a manifest to the prefix; it refuses with no prefix, from a dirty runtime set, from opt or brew, and over a prefix Molt did not write",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

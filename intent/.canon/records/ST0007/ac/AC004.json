@@ -1,0 +1,9 @@
+{
+  "id": "AC004",
+  "text": "The shared preamble in Molt-matts says what an agent does when its first prompt is start, and docs/guides/sleeve-agents.md starts agents with molt agent start",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "Molt b1db22d (guide's Starting an agent, README) and Molt-matts e6d5d2d, 83a2588 (the preamble's start section, approved by hv 23 Oct, and the hand-over line), read by vc against the CLI at 9c51fc3"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "AT003",
+  "kind": "test",
+  "file": "test/liberators/utilz.bats",
+  "covers": [
+    "AC002"
+  ],
+  "status": "green",
+  "note": "green under bash 5.3 and 3.2 at 092384c; goes red on the defect it rules out (critic-shell's mutants, 20 Oct)"
+}

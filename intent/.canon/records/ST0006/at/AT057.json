@@ -1,0 +1,10 @@
+{
+  "id": "AT057",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC014"
+  ],
+  "status": "green",
+  "note": "@test \"an agents root molt_agt_dir_fault refuses is refused before anything moves\". Red on c815d23, which had no root to refuse. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2."
+}

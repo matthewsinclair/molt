@@ -1,0 +1,8 @@
+{
+  "id": "AC006",
+  "text": "molt agent list names every declared agent with role, home and currency; molt agent config <name> prints the effective permissions with each rule tagged by its layer, and fails on an undeclared name listing the declared ones",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

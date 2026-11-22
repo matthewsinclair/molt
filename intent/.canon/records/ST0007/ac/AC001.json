@@ -1,0 +1,8 @@
+{
+  "id": "AC001",
+  "text": "molt agent start <role> runs Claude Code in the agent's home as claude start --name <host>-<role>, passing on whatever follows --; the agent's full name works as its role does",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

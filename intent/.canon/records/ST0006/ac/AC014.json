@@ -1,0 +1,8 @@
+{
+  "id": "AC014",
+  "text": "The home-launch guard refuses a prompt whose session started under MOLT_AGT_DIR without starting in an agent home itself (the agents root, or any directory below a home such as work/), and names the home to launch from; a session started exactly in an agent home passes, as does one started anywhere else but $HOME. The guard tests CLAUDE_PROJECT_DIR, the directory the session started in, never the hook input's cwd, which follows Claude's cd. Project settings load from the start directory's .claude/ with no parent fallback, so a launch below the home would keep the contract and lose the fence.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

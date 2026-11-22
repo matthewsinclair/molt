@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 8,
+  "schema": "intent/issue@4.0",
+  "id": "0008",
   "slug": "grep-q-pipelines-can-report-a-found-match-as-mis",
   "title": "grep -q pipelines can report a found match as missing under pipefail",
   "status": "closed",

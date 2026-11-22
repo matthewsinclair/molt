@@ -1,0 +1,10 @@
+{
+  "id": "AT058",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC014"
+  ],
+  "status": "green",
+  "note": "@test \"check reports a home guard rendered with an agents root that is no longer MOLT_AGT_DIR, and install renders it again\". Red on c815d23. Green on branch st0006-wp02 at b897a23 under bash 5.3 and /bin/bash 3.2."
+}

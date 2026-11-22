@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 79,
+  "schema": "intent/issue@4.0",
+  "id": "0079",
   "slug": "molt-zprofiles-put-homebrew-s-bin-ahead-of-cargo",
   "title": "Molt-* zprofiles put Homebrew's bin ahead of ~/.cargo/bin, so where rustup is installed brew's cargo answers and a project's toolchain pin is ignored",
   "status": "closed",

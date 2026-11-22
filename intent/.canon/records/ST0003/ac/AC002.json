@@ -1,0 +1,17 @@
+{
+  "id": "AC002",
+  "text": "The VM can be built from scratch with a single command.",
+  "kind": "non-test",
+  "state": {
+    "is": "fiat",
+    "because": "VM build was never started and is not worth finishing; molt upgrade delivers the in-situ path that mattered",
+    "by": "matts",
+    "at": "2026-09-08T11:14:01.455Z",
+    "invoker": {
+      "tty": false,
+      "env": "macos/aarch64"
+    },
+    "inherited_from": "ST0003",
+    "inherited_event": "01M20BK5KE8Y741GKDKT32Y1J5"
+  }
+}

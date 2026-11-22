@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 28,
+  "schema": "intent/issue@4.0",
+  "id": "0028",
   "slug": "molt-doctor-stops-silently-with-exit-1-at-its-ma",
   "title": "molt doctor stops silently with exit 1 at its manifest step when molt.toml has no user_repo key",
   "status": "closed",

@@ -1,0 +1,10 @@
+{
+  "id": "AT075",
+  "kind": "non-test",
+  "prose": "docs/guides/sleeve-agents.md has a Managed floor section covering what, where, the sudo prompt, how to see it, the removal rule and that it binds every session; Molt-matts roles/sysadm/AGENTS.md.tmpl's credential sentence says the floor is in place",
+  "covers": [
+    "AC021"
+  ],
+  "status": "n-a",
+  "note": "dc and vc check the text. Checked 22 Oct 2026: guide section at 9a325d8 (merged 02f51a2) and the sysadm role sentence at Molt-matts 9b36722 (merged 5220ca8); AC021 satisfied by evidence"
+}

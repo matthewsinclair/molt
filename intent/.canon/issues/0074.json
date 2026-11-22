@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 74,
+  "schema": "intent/issue@4.0",
+  "id": "0074",
   "slug": "herdr-arngz-menuz-and-hammerspoon-liberators-lin",
   "title": "herdr, arngz, menuz and hammerspoon liberators: link Herdr's keys and hrdrcfg, the arngz desks, the menuz config and Hammerspoon's init.lua from Molt-matts on the Macs",
   "status": "closed",

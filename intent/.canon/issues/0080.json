@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 80,
+  "schema": "intent/issue@4.0",
+  "id": "0080",
   "slug": "cldr-liberator-install-matthewsinclair-cldr-cldr",
   "title": "cldr liberator: install matthewsinclair/cldr/cldr and link ~/.config/cldr from the user repo's config/cldr",
   "status": "closed",

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 53,
+  "schema": "intent/issue@4.0",
+  "id": "0053",
   "slug": "liberator-has-repo-and-liberator-repo-have-no-ca",
   "title": "liberator_has_repo and liberator_repo have no caller",
   "status": "closed",

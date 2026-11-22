@@ -1,0 +1,9 @@
+{
+  "id": "AC013",
+  "text": "docs/blog/bl0001-so-you-want-to-run-a-local-agent.md holds a precis, an audience statement, the structure following hv's nine-point arc, and bullets per section; it is notes for hv to write from, not the piece",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "docs/blog/bl0001-so-you-want-to-run-a-local-agent.md at 159d205: precis, audience, nine sections on hv's arc, three to nine tagged bullets each, Molt: marking where the example begins; reviewed by vc 21 Oct"
+  }
+}

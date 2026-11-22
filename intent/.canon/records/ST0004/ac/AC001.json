@@ -1,0 +1,9 @@
+{
+  "id": "AC001",
+  "text": "On gyges, molt upgrade reports the intent liberator ok, naming the Homebrew Intent that a login shell runs.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "gyges-infra, 2026-09-23: molt upgrade exit 0 at Molt 70504ca / Molt-matts 857d49c -- 'Zen: intent: Homebrew's intent 3.2.0 (4e2f908a5857c4ac878aa8f071c5f09b60753993) runs from PATH and the gate' then 'intent: ✓ ok'; no warning or error lines"
+  }
+}

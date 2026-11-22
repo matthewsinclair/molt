@@ -1,0 +1,9 @@
+{
+  "id": "AC005",
+  "text": "On kovacs, with its utilz entry set to brew, `molt doctor` check 6 counts utilz installed.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "kovacs-sysadm, 20 Oct: after Molt-matts 9c92ca4 (source = brew), molt doctor check 6 15/15 installed with utilz and check 10 none; molt list shows utilz installed"
+  }
+}

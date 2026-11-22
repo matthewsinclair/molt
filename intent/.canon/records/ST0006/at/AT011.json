@@ -1,0 +1,10 @@
+{
+  "id": "AT011",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC011"
+  ],
+  "status": "green",
+  "note": "@test \"on a sleeve Claude Code has not run on, install creates the config dir and publishes it\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC020",
+  "text": "kovacs carries the floor: after molt upgrade, molt agent config kovacs-sysadm shows Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the user layer, the drop-in and its sidecar are root-owned 644, and doctor check 14 passes",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "kovacs, 22 Oct 2026, after hv's molt upgrade from a plain terminal (Molt 842a080, Molt-matts 5220ca8): kovacs-sysadm ran, read-only, molt agent config kovacs-sysadm, which lists /etc/claude-code/managed-settings.d/molt-sysadm.json in the managed layer with Read(~/.ssh/id_*) and Read(~/.aws/credentials) tagged managed above the same two from the home's fence; and molt doctor, 14/14 passing with check 14 'Checking managed floor... in place: /etc/claude-code/managed-settings.d/molt-sysadm.json'; ls shows molt-sysadm.json and its .molt-rendered sidecar root:root 644. Output relayed verbatim to vc's session"
+  }
+}

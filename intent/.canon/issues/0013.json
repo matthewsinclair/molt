@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 13,
+  "schema": "intent/issue@4.0",
+  "id": "0013",
   "slug": "doom-sync-cannot-answer-doom-s-rebuild-prompt-an",
   "title": "doom sync cannot answer Doom's rebuild prompt, and molt reports the failure as a warning",
   "status": "closed",

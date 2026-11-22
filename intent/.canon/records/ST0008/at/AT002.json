@@ -1,0 +1,10 @@
+{
+  "id": "AT002",
+  "kind": "test",
+  "file": "test/install.bats",
+  "covers": [
+    "AC002"
+  ],
+  "status": "green",
+  "note": "install.bats: molt_tree names dev, opt, brew and unknown; the version line names tree, commit and root. Passing both bashes at ec5fe42, CI green."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "AT043",
+  "kind": "test",
+  "file": "test/molt.bats",
+  "covers": [
+    "AC006"
+  ],
+  "status": "green",
+  "note": "@test \"molt help lists the agent command, and molt agent alone prints its usage and fails\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+}

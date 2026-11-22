@@ -1,0 +1,8 @@
+{
+  "id": "AC003",
+  "text": "molt agent roles lists the roles this sleeve declares, one a line, a disabled one marked; molt agent home <role> prints the home; molt agent config takes a role as well as a name; all three run through bin/molt",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

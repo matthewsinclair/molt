@@ -1,0 +1,10 @@
+{
+  "id": "AT006",
+  "kind": "test",
+  "file": "test/formula.bats",
+  "covers": [
+    "AC006"
+  ],
+  "status": "green",
+  "note": "formula.bats: render writes the tag and its commit from git. End to end: molt-cc's scratch-tap brew install at slot 287 (24 Oct 10:29-10:31Z) printed molt 0.3.0 (brew, 4e67722c8017) and brew test passed; teardown verified by vc."
+}

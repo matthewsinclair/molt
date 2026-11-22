@@ -1,0 +1,10 @@
+{
+  "id": "AT041",
+  "kind": "test",
+  "file": "test/manifest.bats",
+  "covers": [
+    "AC005"
+  ],
+  "status": "green",
+  "note": "@test \"[[agent]] entries are read by the one table parser, keyed on role, and kept apart from [[liberator]] entries\". Red on WP01's head (st0006-wp01 820827c), which has no agents code (molt-cc, 21 Oct). Green on branch st0006-wp02 under bash 5.3 and /bin/bash 3.2."
+}

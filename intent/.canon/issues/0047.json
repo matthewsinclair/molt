@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 47,
+  "schema": "intent/issue@4.0",
+  "id": "0047",
   "slug": "linux-gsettings-without-a-dconf-backend-liberato",
   "title": "Linux gsettings without a dconf backend: liberators write a keyfile GNOME never reads",
   "status": "closed",

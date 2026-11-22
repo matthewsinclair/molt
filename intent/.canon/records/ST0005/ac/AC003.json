@@ -1,0 +1,8 @@
+{
+  "id": "AC003",
+  "text": "With `source = \"checkout\"`, check and verify pass only when the checkout's utilz, and every command it links, is what PATH runs, and they name whatever runs instead, Homebrew's copy included.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

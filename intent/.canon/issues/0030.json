@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 30,
+  "schema": "intent/issue@4.0",
+  "id": "0030",
   "slug": "the-home-guard-cannot-refuse-a-launch-that-misse",
   "title": "The home guard cannot refuse a launch that missed CLAUDE_CONFIG_DIR, because it lives in the config dir the launch missed",
   "status": "closed",

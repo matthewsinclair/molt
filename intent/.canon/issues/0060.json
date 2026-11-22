@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 60,
+  "schema": "intent/issue@4.0",
+  "id": "0060",
   "slug": "test-helper-bash-clear-the-shellcheck-warnings-i",
   "title": "test_helper.bash: clear the shellcheck warnings it has carried since v1.0.1",
   "status": "closed",

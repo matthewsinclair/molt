@@ -1,0 +1,9 @@
+{
+  "id": "12",
+  "title": "Emacs macOS keybindings on Linux",
+  "scope": "S",
+  "status": "done",
+  "objective": "",
+  "body": "## Problem\n\n`010-keys.el` wraps all Cmd (Super/`s-`) keybindings in `(when (eq system-type 'darwin) ...)`. On Linux via Parallels, Cmd+C/V/X are mapped by the hypervisor to Ctrl+Shift+C/V/X. Emacs receives `C-S-c`, not `s-c` or `C-c`. So Cmd+C does nothing useful in Emacs.\n\n## What Was Done\n\nAdded a `gnu/linux` block to `010-keys.el` that maps `C-S-` (Ctrl+Shift) combos to the same functions as the macOS `s-` bindings. This matches what Parallels actually sends when Cmd is pressed.\n\nUpdated the stale comment about keyd mapping Cmd→Ctrl (no longer accurate).\n\n### Bindings Added\n\nAll core editing bindings: copy, paste, cut, select-all, undo, find, save, close-buffer, new-file, goto-line, kill-buffer, comment-toggle, tab-switching, quit, beginning/end of buffer/line/page, save-all.\n\nmacOS-only bindings (AppleScript dialogs, iconify-frame, preview) were intentionally excluded.\n\n## Acceptance Criteria\n\n- [x] Cmd+C/V/X/S/Z/A/F work in Emacs on kovacs\n- [x] Ctrl+C (evil/emacs prefix) still works as before\n- [x] No conflicts with Doom Evil mode defaults\n- [x] `doom sync` runs clean after changes\n\n## Dependencies\n\nNone (config change only)",
+  "preamble": ""
+}

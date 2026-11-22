@@ -1,0 +1,9 @@
+{
+  "id": "11",
+  "title": "Inline upgrade (molt upgrade)",
+  "scope": "S",
+  "status": "done",
+  "objective": "",
+  "body": "## Problem\n\nNo way to pull framework + config updates and re-apply them. Currently manual: `git pull` in both repos, then `molt resleeve`.\n\n## What Was Done\n\nAdded `molt upgrade` command that:\n\n1. Checks both repos for uncommitted changes (fails gracefully if dirty)\n2. `git pull --ff-only` in the molt framework repo (`$MOLT_ROOT`)\n3. `git pull --ff-only` in the user config repo (discovered via `molt_find_user_repo`)\n4. Reports version before/after if MOLT_VERSION changes\n5. Re-runs `molt resleeve` (or shows what would happen with `--dry-run`)\n\n### Implementation\n\n- `cmd_upgrade()` in `lib/molt.sh` — core logic\n- `upgrade` case added to `bin/molt` dispatcher\n- Help text updated\n- Reuses `molt_find_user_repo` for stack discovery\n- `--dry-run` support: pulls repos but skips resleeve, shows what liberators would run\n\n## Acceptance Criteria\n\n- [x] `molt upgrade` pulls latest from both repos\n- [x] `molt upgrade --dry-run` shows what would happen without resleeving\n- [x] Fails gracefully if repos have uncommitted changes\n- [x] Reports version before/after if changed\n- [x] Re-runs resleeve after pulling\n\n## Dependencies\n\nNone",
+  "preamble": ""
+}

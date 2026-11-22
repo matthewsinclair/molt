@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 95,
+  "schema": "intent/issue@4.0",
+  "id": "0095",
   "slug": "doctor-requires-bats-on-every-sleeve-though-only",
   "title": "doctor requires bats on every sleeve, though only a dev checkout runs Molt's tests",
   "status": "closed",

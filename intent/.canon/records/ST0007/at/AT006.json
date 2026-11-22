@@ -1,0 +1,9 @@
+{
+  "id": "AT006",
+  "kind": "non-test",
+  "prose": "The preamble's start section and the guide's Starting an agent, read against the CLI as built",
+  "covers": [
+    "AC004"
+  ],
+  "status": "n-a"
+}

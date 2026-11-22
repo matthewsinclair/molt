@@ -1,0 +1,10 @@
+{
+  "id": "AT070",
+  "kind": "test",
+  "file": "test/liberators/agents.bats",
+  "covers": [
+    "AC017"
+  ],
+  "status": "green",
+  "note": "to-write: with no enabled sysadm agent, or no declared MOLT_CLAUDE_CONFIG_DIR, install renders no floor and removes a molt-sysadm.json whose sidecar molt wrote; a drop-in without molt's sidecar is left and reported. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
+}

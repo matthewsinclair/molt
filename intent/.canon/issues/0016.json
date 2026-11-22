@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 16,
+  "schema": "intent/issue@4.0",
+  "id": "0016",
   "slug": "molt-error-writes-to-stdout-so-a-captured-call-s",
   "title": "molt_error writes to stdout, so a captured call's diagnostics never reach the user",
   "status": "closed",

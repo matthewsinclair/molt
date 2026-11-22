@@ -1,0 +1,11 @@
+{
+  "id": "AT024",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC002",
+    "AC011"
+  ],
+  "status": "green",
+  "note": "@test \"a move that fails after its copies are taken names them, and does not say nothing was changed\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+}

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 82,
+  "schema": "intent/issue@4.0",
+  "id": "0082",
   "slug": "mise-liberator-mise-moves-out-of-dev-tools-into",
   "title": "mise liberator: mise moves out of dev-tools into its own liberator, off on every sleeve, Molt-flynn included (hv, 3 Nov)",
   "status": "closed",

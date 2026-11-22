@@ -1,0 +1,8 @@
+{
+  "id": "AC002",
+  "text": "molt version names the running tree (dev, opt or brew), its commit and its root, from one tree-identity function",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

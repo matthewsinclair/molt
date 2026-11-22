@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 40,
+  "schema": "intent/issue@4.0",
+  "id": "0040",
   "slug": "claude-code-attribution-settings-are-hand-set-pe",
   "title": "Claude Code attribution settings are hand-set per sleeve; nothing in Molt or Molt-matts declares them",
   "status": "closed",

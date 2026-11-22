@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 66,
+  "schema": "intent/issue@4.0",
+  "id": "0066",
   "slug": "molt-doctor-names-no-path-on-a-check-that-passes",
   "title": "molt doctor names no path on a check that passes (contract A3's doctor clause)",
   "status": "closed",

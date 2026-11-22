@@ -1,0 +1,9 @@
+{
+  "id": "AC005",
+  "text": "gyges has no Intent v2 links and no local Intent checkout.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "gyges-infra, 2026-09-23, with hv's approval: ~/bin/intent, ~/.local/bin/intent and ~/Devel/prj/Intent all 'No such file or directory'; login and non-login zsh resolve /opt/homebrew/bin/intent, intent 3.2.0 (4e2f908a5)"
+  }
+}

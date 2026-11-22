@@ -1,0 +1,10 @@
+{
+  "id": "AT071",
+  "kind": "test",
+  "file": "test/liberators/agents.bats",
+  "covers": [
+    "AC018"
+  ],
+  "status": "green",
+  "note": "to-write: a sysadm sleeve with no floor.json, or a floor.json that is not one object with permissions.deny, fails check and install naming the file; nothing is written. Red on main's code before the merge (cc's tests at 1720f99 fail there: vc's mutation run, 22 Oct); green on the merged tree 8656983 under Homebrew bash 5.3 and /bin/bash 3.2, shellcheck clean in CI's set (vc, 22 Oct)"
+}

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 68,
+  "schema": "intent/issue@4.0",
+  "id": "0068",
   "slug": "molt-use-brew-removes-local-bin-molt-before-chec",
   "title": "molt use brew removes ~/.local/bin/molt before checking that a Homebrew molt would answer (devbin contract T5, amendment A4)",
   "status": "closed",

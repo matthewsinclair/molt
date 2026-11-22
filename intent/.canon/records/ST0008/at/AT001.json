@@ -1,0 +1,10 @@
+{
+  "id": "AT001",
+  "kind": "test",
+  "file": "test/install.bats",
+  "covers": [
+    "AC001"
+  ],
+  "status": "green",
+  "note": "install.bats: publishes the runtime set and a checking manifest; refuses no prefix, a dirty runtime set, opt and brew trees, and a prefix Molt did not write. All tests passing both bashes at ec5fe42 (slot 302), CI green."
+}

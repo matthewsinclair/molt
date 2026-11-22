@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 89,
+  "schema": "intent/issue@4.0",
+  "id": "0089",
   "slug": "tests-yml-stops-running-on-tags-a-release-s-ci-v",
   "title": "tests.yml stops running on tags: a release's CI verdict is its candidate's run (0087's follow-up)",
   "status": "closed",

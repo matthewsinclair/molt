@@ -1,0 +1,6 @@
+{
+  "path": "impl.md",
+  "text": "# Implementation - ST0002: Proper per-instance config of per-instance variables\n\n## Implementation\n\n[Notes on implementation details, decisions, challenges, and their resolutions]\n\n## Code Examples\n\n[Key code snippets and examples]\n\n## Technical Details\n\n[Specific technical details and considerations]\n\n## Challenges & Solutions\n\n[Challenges encountered during implementation and how they were resolved]\n",
+  "bytes": 405,
+  "sha256": "13f76685744d4573ae1f88c8786410005c6b887612029a0846d52e5e978b1e03"
+}

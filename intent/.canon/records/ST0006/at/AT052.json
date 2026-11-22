@@ -1,0 +1,10 @@
+{
+  "id": "AT052",
+  "kind": "test",
+  "file": "test/liberators/backup.bats",
+  "covers": [
+    "AC015"
+  ],
+  "status": "green",
+  "note": "@test \"the backup values are read from a vars.sh with an unset name in it, rather than ending molt, and one molt cannot read stops backup, saying why\". Red on 41ef6b1, which sourced vars.sh into molt's own shell. Green on branch st0006-wp01 at 4cfe31a under bash 5.3 and /bin/bash 3.2."
+}

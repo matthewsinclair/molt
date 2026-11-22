@@ -1,0 +1,8 @@
+{
+  "id": "AC002",
+  "text": "The intent check fails, naming the path, when intent on PATH is not Homebrew's.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

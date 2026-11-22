@@ -1,0 +1,10 @@
+{
+  "id": "AT025",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC011"
+  ],
+  "status": "green",
+  "note": "@test \"a ~/.claude holding its own .claude.json beside ~/.claude.json is not moved, and nothing is published\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct). Green on branch st0006-wp01 under bash 5.3 and /bin/bash 3.2."
+}

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 21,
+  "schema": "intent/issue@4.0",
+  "id": "0021",
   "slug": "ssh-zsh-and-alacritty-drop-the-statuses-of-a-fra",
   "title": "ssh, zsh and alacritty drop the statuses of a fragment append, chmod, chsh, the iTerm2 generator and gsettings",
   "status": "closed",

@@ -1,0 +1,8 @@
+{
+  "id": "AC006",
+  "text": "tools/formula render <tag> <out> writes a formula whose tag and revision come from git, and brew installs it from a scratch tap end to end, molt version naming brew",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 1,
+  "schema": "intent/issue@4.0",
+  "id": "0001",
   "slug": "backup-verify-passes-having-checked-nothing-back",
   "title": "backup_verify passes having checked nothing; backup liberator has no tests",
   "status": "closed",

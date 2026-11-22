@@ -1,0 +1,9 @@
+{
+  "id": "AC006",
+  "text": "Every step is tagged platform-specific, platform-agnostic or instance-specific.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "every subsection carries [agnostic], [linux] or [instance]; the legend is in the document header"
+  }
+}

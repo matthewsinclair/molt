@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 4,
+  "schema": "intent/issue@4.0",
+  "id": "0004",
   "slug": "ci-red-since-445067c-backup-bats-fixture-is-inva",
   "title": "CI red since 445067c: backup.bats fixture is invalid JSON under bash 3.2",
   "status": "closed",

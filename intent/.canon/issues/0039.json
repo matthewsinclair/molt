@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 39,
+  "schema": "intent/issue@4.0",
+  "id": "0039",
   "slug": "molt-realpath-falls-back-to-python3-resolve-in-s",
   "title": "_molt_realpath falls back to python3: resolve in shell (Molt ships no Python)",
   "status": "closed",

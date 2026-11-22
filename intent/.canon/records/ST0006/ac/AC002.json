@@ -1,0 +1,8 @@
+{
+  "id": "AC002",
+  "text": "The one-time move refuses while any Claude Code process runs, naming it, and otherwise moves ~/.claude and ~/.claude.json into the config dir with backups",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

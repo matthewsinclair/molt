@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 50,
+  "schema": "intent/issue@4.0",
+  "id": "0050",
   "slug": "bootstrap-piped-from-curl-reads-its-own-source-a",
   "title": "bootstrap piped from curl reads its own source as the resleeve answer",
   "status": "closed",

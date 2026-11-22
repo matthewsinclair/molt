@@ -1,0 +1,9 @@
+{
+  "id": "AT004",
+  "kind": "test",
+  "file": "test/liberators/agents.bats",
+  "covers": [
+    "AC003"
+  ],
+  "status": "green"
+}

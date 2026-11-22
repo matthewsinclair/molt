@@ -1,0 +1,10 @@
+{
+  "id": "AT003",
+  "kind": "test",
+  "file": "test/install.bats",
+  "covers": [
+    "AC003"
+  ],
+  "status": "green",
+  "note": "install.bats: molt test refused in opt naming the dev tree; doctor checks the manifest checksums. Passing both bashes at ec5fe42, CI green."
+}

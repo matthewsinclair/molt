@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 35,
+  "schema": "intent/issue@4.0",
+  "id": "0035",
   "slug": "desktop-liberator-hardcodes-its-gsettings-keys-a",
   "title": "desktop liberator hardcodes its gsettings keys and values and swallows every failure",
   "status": "closed",

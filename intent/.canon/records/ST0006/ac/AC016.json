@@ -1,0 +1,8 @@
+{
+  "id": "AC016",
+  "text": "A sleeve agent's AGENTS.md renders from three layers in order: the config repo's role-independent preamble config/agents/AGENTS.md.tmpl when it has one, the role's roles/<role>/AGENTS.md.tmpl, and the host overlay instances/<host>/agents/<role>.md when it has one; no paragraph common to every sleeve agent is written in a role template (Highlander).",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

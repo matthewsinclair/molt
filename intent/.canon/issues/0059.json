@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 59,
+  "schema": "intent/issue@4.0",
+  "id": "0059",
   "slug": "env-launchagent-runs-one-launchctl-setenv-with-e",
   "title": "env LaunchAgent runs one launchctl setenv with every pair; launchd keeps only the first, so GUI apps get no PATH or install prefixes",
   "status": "closed",

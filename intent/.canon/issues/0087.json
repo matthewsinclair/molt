@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 87,
+  "schema": "intent/issue@4.0",
+  "id": "0087",
   "slug": "molt-releases-with-bin-devbin-release-as-pplr-cl",
   "title": "Molt releases with bin/devbin release, as pplr, cldr and ccusage do: one command cuts 1.4.2 (hv, 4 Nov)",
   "status": "closed",

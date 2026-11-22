@@ -1,0 +1,9 @@
+{
+  "id": "AC004",
+  "text": "Molt does nothing with Intent on rhadamanth: the intent liberator is disabled in its manifest and no Intent file there was changed.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "Molt-matts 857d49c: rhadamanth manifest intent enabled=false; 'molt list' on rhadamanth prints 'intent: disabled'. Only read-only probes of rhadamanth's Intent (one git status there before hv's ruling can refresh the index stat cache)."
+  }
+}

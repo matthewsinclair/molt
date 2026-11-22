@@ -1,0 +1,10 @@
+{
+  "id": "AT010",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC011"
+  ],
+  "status": "green",
+  "note": "@test \"a declared config dir that is relative, not canonical, holds a quote or a line break, ends in a space, or is ~/.claude itself is refused before anything moves\". Red on main: fails against liberators/claude.sh before WP01 (molt-cc, 21 Oct); its non-canonical, line-break and trailing-space cases fail on 41ef6b1 too (vc C2). Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2."
+}

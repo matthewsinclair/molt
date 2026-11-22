@@ -1,0 +1,8 @@
+{
+  "id": "AC001",
+  "text": "A sleeve's utilz entry in molt.toml selects `source = \"checkout\"` or `source = \"brew\"`. With no `source` the sleeve gets checkout. Any other value makes check, verify and install refuse, naming the value.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

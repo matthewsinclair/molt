@@ -1,0 +1,9 @@
+{
+  "id": "03",
+  "title": "Roll out: kovacs on brew, rhadamanth and gyges as hv chooses",
+  "scope": "S",
+  "status": "done",
+  "objective": "Roll out the utilz liberator's per-sleeve `source`: kovacs and rhadamanth run utilz from Homebrew, gyges follows when it is reachable, and farcaster and pihole have utilz disabled.",
+  "body": "Roll out the per-sleeve `source` for the utilz liberator.\n\n- **kovacs: brew.** kovacs-sysadm set it in Molt-matts `9c92ca4`, pushed with hv's go on 20 Oct. `molt doctor` there shows check 6 at 15/15 installed, utilz included, and check 10 passes.\n- **rhadamanth: brew**, hv's choice on 20 Oct, set in Molt-matts `e567a83`. utilz check and verify pass, and report utilz:2.14.1 as what PATH runs.\n- **gyges: brew, agreed by hv, not yet set.** It waits for the next time Tailscale is on and gyges can be reached, and goes through gyges-infra (vc board todo 5).\n- **farcaster and pihole:** utilz is disabled on both, so there is nothing to do.\n\nClosed on 22 Oct 2026 on hv's ruling with gyges carried: the code is accepted (ST0005's contract 5/5), kovacs and rhadamanth are on brew, and gyges' one-line manifest change is a reachability wait, not work, recorded as vc board todo 5 to be done through gyges-infra.\n",
+  "preamble": ""
+}

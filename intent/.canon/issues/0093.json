@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 93,
+  "schema": "intent/issue@4.0",
+  "id": "0093",
   "slug": "doctor-checks-only-github-s-ssh-login-check-the",
   "title": "doctor checks only GitHub's ssh login: check the git hosts the stack's ssh config names, so a GitLab-only sleeve can pass",
   "status": "closed",

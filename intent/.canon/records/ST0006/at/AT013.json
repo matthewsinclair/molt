@@ -1,0 +1,10 @@
+{
+  "id": "AT013",
+  "kind": "test",
+  "file": "test/liberators/claude.bats",
+  "covers": [
+    "AC003"
+  ],
+  "status": "green",
+  "note": "@test \"the home guard exits 2 with the agent-home message for a session launched in $HOME, wherever it has cd'd since, and 0 for one launched anywhere else\". Red on main and on 41ef6b1, whose guard read the input's cwd. Green on branch st0006-wp01 at 28062ea under bash 5.3 and /bin/bash 3.2; the guard reads CLAUDE_PROJECT_DIR by vc's ruling, 21 Oct."
+}

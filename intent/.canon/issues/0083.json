@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 83,
+  "schema": "intent/issue@4.0",
+  "id": "0083",
   "slug": "intent-llm-architecture-md-rules-md-and-decision",
   "title": "intent/llm: ARCHITECTURE.md, RULES.md and DECISION_TREE.md are Intent's Elixir starter text, and RULES.md names a RULES-shell.md that never existed",
   "status": "closed",

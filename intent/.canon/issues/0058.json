@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 58,
+  "schema": "intent/issue@4.0",
+  "id": "0058",
   "slug": "utilz-liberator-brew-check-ignores-utilz-s-own-u",
   "title": "utilz liberator: brew check ignores utilz's own use switch, so a dev or opt link set reads as an unnamed fault",
   "status": "closed",

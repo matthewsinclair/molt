@@ -1,0 +1,8 @@
+{
+  "id": "AC011",
+  "text": "The move refuses a non-empty config dir, naming its contents, and never merges; after any refusal the env file and GUI file are not written in that run, and after a successful move they are",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

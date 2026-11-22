@@ -1,6 +1,6 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 29,
+  "schema": "intent/issue@4.0",
+  "id": "0029",
   "slug": "molt-render-place-backs-up-its-own-untouched-ren",
   "title": "molt_render_place backs up its own untouched render on every template change, warning that the file changed since last render",
   "status": "closed",
