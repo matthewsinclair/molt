@@ -39,6 +39,28 @@ commands:
   formula:
     enabled: true
 
+# Molt's tool, so the formula's @@INSTALL@@ publishes it into the keg with
+# bin/devbin install --prefix libexec --managed-by brew (devbin#0326, hv's
+# decision 11). The set is the one molt install publishes (lib/install.sh's
+# _molt_runtime_pathspecs), and the manifest is devbin's default,
+# .molt-install, which molt_version_line reads. Molt keeps its own publish and
+# switch until I7892f34 removes them, so bin/devbin install's opt publish and
+# bin/devbin use refuse here, naming these; the keg's publish is not refused.
+install:
+  publish: bin/molt install
+  switch: bin/molt use
+  links:
+    molt: bin/molt
+  files:
+    lib:
+      path: lib
+    liberators:
+      path: liberators
+    templates:
+      path: templates
+    version:
+      path: VERSION
+
 # The release core: bin/devbin release vX.Y.Z is the whole release, as pplr,
 # cldr and ccusage release (hv, 4 Nov 2026; issue 0087). Its gates run both
 # suites, the candidate's CI on candidate/<tag> includes the macOS job, the

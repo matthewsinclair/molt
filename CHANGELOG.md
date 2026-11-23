@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.8] - unreleased
+
+Homebrew goes from 1.4.6 to 1.4.8: 1.4.7 was tagged and released, but its formula was never published, so 1.4.8 brings 1.4.7's changes to brew as well.
+
+### Changed
+
+- The Homebrew formula installs Molt with devbin's one install body, `@@INSTALL@@`, which `bin/devbin formula` renders as `bin/devbin install --prefix libexec --managed-by brew` and the link `bin/molt`, in place of a call to `molt install` of its own. `bin/.devbin/config.yaml` declares Molt's tool in an `install:` block, its link `bin/molt` and the rest of the set `molt install` publishes, `lib/`, `liberators/`, `templates/` and `VERSION`, so the keg holds the same files, with the same `.molt-install` manifest, and `molt version` there still says `brew`. `molt install` and `molt use` stay Molt's own for now, and the block names them, so `bin/devbin install`'s opt publish and `bin/devbin use` refuse in Molt's checkout (devbin#0326, issue I7892f34)
+
 ## [1.4.7] - 2026-11-23
 
 ### Added

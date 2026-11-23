@@ -24,14 +24,7 @@ class Molt < Formula
   # and CI's macOS runner proves it on every release tag.
 
   def install
-    # Molt's own publish, run from the tag's checkout: it refuses a runtime set
-    # that is not clean, copies what git names under bin/molt, lib/,
-    # liberators/, templates/ and VERSION, and writes the manifest recording
-    # that Homebrew owns this tree, so molt install refuses to write into it.
-    system "bin/molt", "install", "--prefix", libexec, "--managed-by", "brew"
-    # Linked into bin as every formula is, so a sleeve that never runs molt use
-    # runs this install: no ~/.local/bin/molt means brew.
-    bin.install_symlink libexec/"bin/molt"
+    @@INSTALL@@
   end
 
   def caveats
