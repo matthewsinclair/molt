@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Molt's next patch cut, on hv's word of 23 Nov (hv's decision 6): dry run on a light slot, then book the cut on the Desk with --lane bats and hand hv the command once granted; Molt's checkout is frozen from that handover until vc names the tag. It carries 0101; I7892f34 ships later.
 
 ## TODO
 
@@ -24,7 +24,7 @@ _(none)_
 
 ## Holds
 
-- Molt's next cut, carrying 0101 and I7892f34, waits until I7892f34 is merged on main (hv, 23 Nov, hv's decision 4); then vc dry-runs it, books it on the Desk and hands hv the command. devbin-vc, 23 Nov: Molt's adoption is the fifth, after Pplr and Cldr (both to land), Gtools (blocked on devbin I514ea74) and Utilz (after Utilz ST0031/01). Released when I7892f34 is merged on main.
+_(none)_
 
 ## Watch-outs
 

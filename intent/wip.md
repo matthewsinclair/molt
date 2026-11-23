@@ -1,16 +1,15 @@
 ---
-verblock: "23 Nov 2026:v0.99: Matthew Sinclair - the cut waits for I7892f34"
+verblock: "23 Nov 2026:v0.99: Matthew Sinclair - Molt's next patch cut, on hv's word"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- Nothing in progress; vc holds for hv.
+- **Molt's next patch cut (hv, 23 Nov):** it carries 0101 (merged at 10d366a); vc dry-runs it, books it on the Desk and hands hv the command. I7892f34 ships in a later release.
 
 ## TODO
 
-- **Next cut, after I7892f34 is merged (hv, 23 Nov):** it carries 0101 (merged at 10d366a) and devbin#0326's adoption, which devbin-cc carries into Molt fifth, after Pplr, Cldr, Gtools and Utilz.
 - **I7892f34's docs half:** molt-dc's, once devbin-vc has read devbin-cc's Molt plan.
 
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).

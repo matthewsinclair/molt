@@ -1,0 +1,15 @@
+{
+  "id": "01M844HXBX52XRZVMMZMDYRMFP",
+  "ts": "2026-11-23T12:02:08.893Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Molt's next patch cut, on hv's word of 23 Nov (hv's decision 6): dry run on a light slot, then book the cut on the Desk with --lane bats and hand hv the command once granted; Molt's checkout is frozen from that handover until vc names the tag. It carries 0101; I7892f34 ships later."
+  }
+}

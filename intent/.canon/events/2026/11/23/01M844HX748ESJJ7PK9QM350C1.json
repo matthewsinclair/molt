@@ -1,0 +1,15 @@
+{
+  "id": "01M844HX748ESJJ7PK9QM350C1",
+  "ts": "2026-11-23T12:02:08.740Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, live in molt-vc's window, hv's typed words: 'Push it all, please.' (vc pushed main to upstream and local at 6c2909c), then 'We should cut a new molt release now, too.', said after vc reported that Molt's devbin#0326 adoption is fifth in devbin-cc's order. It supersedes hv's decision 4 of the same morning: Molt cuts now, carrying 0101, and I7892f34 ships in a later release. (vc's note: as decision 35 has it, vc dry-runs the cut, books it on the Desk and hands hv the command.)"
+  }
+}
