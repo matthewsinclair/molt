@@ -1,0 +1,17 @@
+{
+  "id": "01M844KDCT21405FARTT1N422T",
+  "ts": "2026-11-23T12:02:58.074Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Molt cuts 1.4.7 today on hv's word (hv's decision 6), carrying 0101. From vc's handover of the command to hv until vc's message naming the tag, write nothing in Molt's checkout: no wb verb, no pickup or touch, no commit. A restart in that window reads `intent estate status` and skips the pickup. Worktrees and other repos are outside the freeze. vc says when it starts and ends.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

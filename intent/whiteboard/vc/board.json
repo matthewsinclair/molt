@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-23T11:57:48.118Z",
+    "heartbeat_at": "2026-11-23T12:02:58.144Z",
     "status": "active",
-    "focus": "23 Nov: Intent ST0094 AC-11.6's doc fix (molt-dc's 0eea31a) is merged at 0cc5bff and pushed to upstream and local at 0481f59 on hv's word; intent-vc has it. hv ruled the next cut waits for I7892f34 (Molt's devbin#0326 adoption, fifth in devbin-cc's order) and the team profile stands, release steps to the Desk. Nothing in progress; vc holds for hv.",
+    "focus": "23 Nov: Molt cuts 1.4.7 now on hv's word (hv's decision 6), carrying 0101: dry run on a light slot (ask 01M844JPAKPT67W8DKZGXP09KP), then the cut booked with --lane bats and handed to hv. Molt's checkout is frozen from that handover until vc names the tag: read intent estate status before any pickup.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -2075,6 +2075,13 @@
       "re": "2026-11-23 11:56Z",
       "fyi": false,
       "recorded_at": "2026-11-23T11:57:47.932Z"
+    },
+    {
+      "id": "01M844KDCT21405FARTT1N422V",
+      "recipient": "dc",
+      "body": "Molt cuts 1.4.7 today on hv's word (hv's decision 6), carrying 0101. From vc's handover of the command to hv until vc's message naming the tag, write nothing in Molt's checkout: no wb verb, no pickup or touch, no commit. A restart in that window reads `intent estate status` and skips the pickup. Worktrees and other repos are outside the freeze. vc says when it starts and ends.",
+      "fyi": false,
+      "recorded_at": "2026-11-23T12:02:58.074Z"
     }
   ],
   "handled": [

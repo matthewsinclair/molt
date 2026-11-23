@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-23 11:57Z
+heartbeat_at: 2026-11-23 12:02Z
 status: active
-focus: "23 Nov: Intent ST0094 AC-11.6's doc fix (molt-dc's 0eea31a) is merged at 0cc5bff and pushed to upstream and local at 0481f59 on hv's word; intent-vc has it. hv ruled the next cut waits for I7892f34 (Molt's devbin#0326 adoption, fifth in devbin-cc's order) and the team profile stands, release steps to the Desk. Nothing in progress; vc holds for hv."
+focus: "23 Nov: Molt cuts 1.4.7 now on hv's word (hv's decision 6), carrying 0101: dry run on a light slot (ask 01M844JPAKPT67W8DKZGXP09KP), then the cut booked with --lane bats and handed to hv. Molt's checkout is frozen from that handover until vc names the tag: read intent estate status before any pickup."
 claims: []
 ---
 
