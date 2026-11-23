@@ -1,0 +1,15 @@
+{
+  "id": "01M84RMGK184WHTF5H15G1MSX4",
+  "ts": "2026-11-23T17:53:05.633Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, in devbin-vc's window at 17:52Z (relayed by devbin-vc, its decision 285; the quote is hv's): 'you have my approval across the estate to approve, checkin, commit, push, and cut anything that is needed to get this stuff done _tonight_ ... I want all of these releases cut, done, and dusted TONIGHT.' So Molt 1.4.8 is cut tonight: devbin 0.1.29 is cut, brew-upgraded and swept into Molt, then molt-vc books the cut on the Desk and runs bin/devbin release v1.4.8 --yes on rhadamanth, its pushes covered by this approval."
+  }
+}

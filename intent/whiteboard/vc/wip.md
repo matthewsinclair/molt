@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-23 17:26Z
+heartbeat_at: 2026-11-23 17:30Z
 status: active
-focus: "23 Nov: 1.4.7 is tagged at b8daf7b and released without a formula; molt-dc adopts devbin#0326, and a seat cuts 1.4.8 with its formula on hv's word (hv's decisions 10 and 11); then 1.4.8's rollout."
+focus: "23 Nov: 1.4.8 waits for devbin 0.1.29's sweep into Molt (hv's decision 12), with the devbin#0326 adoption on main at 0c2cc5c; then vc renders and dry-runs it, and a seat cuts it with --yes on hv's word (decisions 10 and 11); then 1.4.8's rollout."
 claims: []
 ---
 

@@ -143,6 +143,14 @@
       "text": "hv, 23 Nov 2026, in devbin-vc's window (relayed by devbin-vc; the quote is hv's, the question devbin-vc's): 'Yes, wait so that is fixed, please.' Molt 1.4.8 waits for devbin 0.1.29's sweep into Molt, so its formula carries I514ea74's fix (brew re-signs the keg after the manifest's hashes, so the formula re-hashes after install), and 0.1.29's pre-tag formula render check runs on the cut. molt-dc builds the devbin#0326 adoption meanwhile; devbin-vc says when 0.1.29 is out and swept, and 1.4.8 then books its cut at the Desk.",
       "state": "live",
       "recorded_at": "2026-11-23T17:12:26.806Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 13,
+      "text": "hv, 23 Nov 2026, in devbin-vc's window at 17:52Z (relayed by devbin-vc, its decision 285; the quote is hv's): 'you have my approval across the estate to approve, checkin, commit, push, and cut anything that is needed to get this stuff done _tonight_ ... I want all of these releases cut, done, and dusted TONIGHT.' So Molt 1.4.8 is cut tonight: devbin 0.1.29 is cut, brew-upgraded and swept into Molt, then molt-vc books the cut on the Desk and runs bin/devbin release v1.4.8 --yes on rhadamanth, its pushes covered by this approval.",
+      "state": "live",
+      "recorded_at": "2026-11-23T17:53:05.633Z"
     }
   ],
   "sent": [],
