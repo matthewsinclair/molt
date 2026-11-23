@@ -1,0 +1,15 @@
+{
+  "id": "01M84PA2XP5PJ7YGQ8Q9311M36",
+  "ts": "2026-11-23T17:12:26.806Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, in devbin-vc's window (relayed by devbin-vc; the quote is hv's, the question devbin-vc's): 'Yes, wait so that is fixed, please.' Molt 1.4.8 waits for devbin 0.1.29's sweep into Molt, so its formula carries I514ea74's fix (brew re-signs the keg after the manifest's hashes, so the formula re-hashes after install), and 0.1.29's pre-tag formula render check runs on the cut. molt-dc builds the devbin#0326 adoption meanwhile; devbin-vc says when 0.1.29 is out and swept, and 1.4.8 then books its cut at the Desk."
+  }
+}
