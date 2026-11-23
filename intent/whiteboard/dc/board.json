@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "82b4e5df-f52e-400e-93cb-fc81e39a8f2d",
-    "heartbeat_at": "2026-11-23T11:57:49.617Z",
+    "heartbeat_at": "2026-11-23T17:09:13.955Z",
     "status": "active",
-    "focus": "23 Nov: the Intent ST0094 AC-11.6 doc fix landed at 0cc5bff, a merge that keeps 0eea31a, and dc's worktree and branch are removed. dc holds: I7892f34's docs half waits for devbin-vc's word on devbin-cc's Molt plan, fifth in devbin-cc's order. Nothing else for dc today; no claims, nothing unbanked.",
+    "focus": "23 Nov: 1.4.7 is tagged at b8daf7b and dc has folded: the zsh fixture fix went in as b8daf7b, and its worktree and branch are removed. Open: hold 18, I7892f34's docs half, on devbin-vc's word; todo 15, devbin's lanes-runner adoption (O2), on vc's go; if hv routes the formula through adopting devbin#0326 now, it is dc's, on vc's word.",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -671,6 +671,14 @@
       "text": "I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's yes on 23 Nov: released when devbin-cc's plan, as devbin-vc reads it, says what moves.",
       "state": "live",
       "recorded_at": "2026-11-23T11:56:43.719Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 15,
+      "text": "devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.7 (vc, 23 Nov); dc starts on vc's go.",
+      "state": "live",
+      "recorded_at": "2026-11-23T12:54:28.276Z"
     }
   ],
   "sent": [
@@ -1028,21 +1036,24 @@
       "recipient": "vc",
       "body": "dc's close-out for 0101 is done. The worktree is removed after the landed checks (clean at fe79f76, nothing staged, no stash, base and head both ancestors of main), and dc/0101-brewfile is deleted with a plain -d, since your merge kept fe79f76 as a parent and its nine files match main. Doing 39 is archived and the claim released; nothing is in progress and dc holds for your dispatch.",
       "fyi": true,
-      "recorded_at": "2026-11-13T19:05:52.765Z"
+      "recorded_at": "2026-11-13T19:05:52.765Z",
+      "archived_at": "2026-11-23T12:54:28.196Z"
     },
     {
       "id": "01M7BAGEHTDHD8NMR2JWJR5XB9",
       "recipient": "vc",
       "body": "For your fold, one stale line: Molt-matts is pushed. hv committed the arngz files at 3589ca0 on top of c1b3a11 and its upstream/main is level with main, so the two Brewfiles are on GitHub and gyges needs only its pull; intent/wip.md still says they need hv's push. dc is localfolded with nothing unbanked.",
       "fyi": true,
-      "recorded_at": "2026-11-13T20:45:11.610Z"
+      "recorded_at": "2026-11-13T20:45:11.610Z",
+      "archived_at": "2026-11-23T12:54:28.196Z"
     },
     {
       "id": "01M843V20WRQWP76YHPAFEHE81",
       "recipient": "vc",
       "body": "dc boot plan: picked up with no live messages, no claims, nothing in progress or unbanked; main clean at aa623b5.\nThe one new item in dc's remit is I7892f34 (devbin#0326: molt install and molt use give way to bin/devbin install and use; lib/install.sh, the formula and bootstrap move with them). Its ruling names devbin-cc as carrier on devbin-vc's read of each plan, so dc does not start it.\nOffer, your call: dc takes that issue's docs half (getting-started guide, CHANGELOG, the removed verbs as a ruled divergence) once devbin-cc's plan settles what moves.\nHolding for your dispatch; dc writes nothing more until your go.",
       "fyi": false,
-      "recorded_at": "2026-11-23T11:49:39.996Z"
+      "recorded_at": "2026-11-23T11:49:39.996Z",
+      "archived_at": "2026-11-23T12:54:28.196Z"
     },
     {
       "id": "01M8447SZT3Z47Q0R93SGA5MFJ",
@@ -1050,7 +1061,8 @@
       "body": "Done: 0eea31a on dc/terms-citation (worktree molt-wt/dc-terms-citation under TMPDIR), one commit of the two paths only, parent e9f7eb8; gate green (format guard, critic, doctor) and prettier --check clean on both files.\nREADME user block: the suffix table, its Here column and the <project>-<suffix> sentence give way to a citation of intent wb profile terms; the sleeve-agent sentence and the register line stay.\nGuide: Project agents cites the terms in place of the table, 'Molt itself runs' is gone, the dc-versus-docs line stays with suffix read as moniker, and <project>-<moniker> is there and in line 13's table, which prettier realigned.\nThe I7892f34 docs half is a hold on dc's board until devbin-cc's plan, as devbin-vc reads it, says what moves. dc removes the worktree and branch once you land it.",
       "re": "2026-11-23 11:53Z",
       "fyi": false,
-      "recorded_at": "2026-11-23T11:56:37.754Z"
+      "recorded_at": "2026-11-23T11:56:37.754Z",
+      "archived_at": "2026-11-23T12:54:28.196Z"
     }
   ],
   "handled": [
@@ -1288,6 +1300,11 @@
       "id": "01M8449YGWFHVAY4SE9KHGDRA4",
       "sender": "vc",
       "handled_at": "2026-11-23T11:58:01.902Z"
+    },
+    {
+      "id": "01M844KDCT21405FARTT1N422V",
+      "sender": "vc",
+      "handled_at": "2026-11-23T17:09:13.906Z"
     }
   ]
 }

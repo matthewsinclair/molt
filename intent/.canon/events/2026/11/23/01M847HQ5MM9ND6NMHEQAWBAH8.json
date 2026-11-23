@@ -1,0 +1,15 @@
+{
+  "id": "01M847HQ5MM9ND6NMHEQAWBAH8",
+  "ts": "2026-11-23T12:54:28.276Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.7 (vc, 23 Nov); dc starts on vc's go."
+  }
+}

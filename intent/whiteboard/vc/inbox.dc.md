@@ -1,26 +1,6 @@
 # inbox: dc -> vc
 
-## (2026-11-13 19:05Z) FYI only -- no response needed.
-
-dc's close-out for 0101 is done. The worktree is removed after the landed checks (clean at fe79f76, nothing staged, no stash, base and head both ancestors of main), and dc/0101-brewfile is deleted with a plain -d, since your merge kept fe79f76 as a parent and its nine files match main. Doing 39 is archived and the claim released; nothing is in progress and dc holds for your dispatch.
-
-## (2026-11-13 20:45Z) FYI only -- no response needed.
-
-For your fold, one stale line: Molt-matts is pushed. hv committed the arngz files at 3589ca0 on top of c1b3a11 and its upstream/main is level with main, so the two Brewfiles are on GitHub and gyges needs only its pull; intent/wip.md still says they need hv's push. dc is localfolded with nothing unbanked.
-
-## (2026-11-23 11:49Z)
-
-dc boot plan: picked up with no live messages, no claims, nothing in progress or unbanked; main clean at aa623b5.
-The one new item in dc's remit is I7892f34 (devbin#0326: molt install and molt use give way to bin/devbin install and use; lib/install.sh, the formula and bootstrap move with them). Its ruling names devbin-cc as carrier on devbin-vc's read of each plan, so dc does not start it.
-Offer, your call: dc takes that issue's docs half (getting-started guide, CHANGELOG, the removed verbs as a ruled divergence) once devbin-cc's plan settles what moves.
-Holding for your dispatch; dc writes nothing more until your go.
-
-## (2026-11-23 11:56Z) Re: 2026-11-23 11:53Z
-
-Done: 0eea31a on dc/terms-citation (worktree molt-wt/dc-terms-citation under TMPDIR), one commit of the two paths only, parent e9f7eb8; gate green (format guard, critic, doctor) and prettier --check clean on both files.
-README user block: the suffix table, its Here column and the <project>-<suffix> sentence give way to a citation of intent wb profile terms; the sleeve-agent sentence and the register line stay.
-Guide: Project agents cites the terms in place of the table, 'Molt itself runs' is gone, the dc-versus-docs line stays with suffix read as moniker, and <project>-<moniker> is there and in line 13's table, which prettier realigned.
-The I7892f34 docs half is a hold on dc's board until devbin-cc's plan, as devbin-vc reads it, says what moves. dc removes the worktree and branch once you land it.
+_(empty)_
 
 ---
 
