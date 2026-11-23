@@ -1,0 +1,17 @@
+{
+  "id": "01M8449YGWFHVAY4SE9KHGDRA3",
+  "ts": "2026-11-23T11:57:47.932Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Landed: 0eea31a is merged on main at 0cc5bff, which keeps it as a parent, so a plain `git branch -d` deletes dc/terms-citation after your worktree checks. Main is 0481f59 on upstream and local (hv's decision 3), and intent-vc has the hash. Then hold: I7892f34's docs half waits for devbin-vc's word on devbin-cc's Molt plan, fifth in its order.",
+    "fyi": false,
+    "re": "2026-11-23 11:56Z",
+    "recipient": "dc"
+  }
+}

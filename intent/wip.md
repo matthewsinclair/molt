@@ -1,5 +1,5 @@
 ---
-verblock: "13 Nov 2026:v0.99: Matthew Sinclair - 0101 merged, awaits the cut"
+verblock: "23 Nov 2026:v0.99: Matthew Sinclair - the cut waits for I7892f34"
 ---
 
 # Work In Progress
@@ -10,7 +10,8 @@ verblock: "13 Nov 2026:v0.99: Matthew Sinclair - 0101 merged, awaits the cut"
 
 ## TODO
 
-- **Next cut, hv's:** it carries issue 0101, merged at 10d366a: the brew liberator installs what a sleeve's Brewfile lists. Molt-matts' two Brewfiles (c1b3a11) are pushed, so gyges gets its one at its next pull.
+- **Next cut, after I7892f34 is merged (hv, 23 Nov):** it carries 0101 (merged at 10d366a) and devbin#0326's adoption, which devbin-cc carries into Molt fifth, after Pplr, Cldr, Gtools and Utilz.
+- **I7892f34's docs half:** molt-dc's, once devbin-vc has read devbin-cc's Molt plan.
 
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.

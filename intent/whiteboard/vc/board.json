@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-23T11:48:26.390Z",
+    "heartbeat_at": "2026-11-23T11:57:48.118Z",
     "status": "active",
-    "focus": "13 Nov, folded for the night on hv's word: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11, pushed by hv). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main is ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv.",
+    "focus": "23 Nov: Intent ST0094 AC-11.6's doc fix (molt-dc's 0eea31a) is merged at 0cc5bff and pushed to upstream and local at 0481f59 on hv's word; intent-vc has it. hv ruled the next cut waits for I7892f34 (Molt's devbin#0326 adoption, fifth in devbin-cc's order) and the team profile stands, release steps to the Desk. Nothing in progress; vc holds for hv.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1476,7 +1476,8 @@
       "kind": "doing",
       "seq": 18,
       "text": "Land molt-dc's commit for Intent ST0094 AC-11.6 (the suffix tables in the whiteboard README and docs/guides/sleeve-agents.md cite intent wb profile terms), push main to upstream and local (hv's decision 3), and send intent-vc the hash.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-23T11:57:48.024Z",
       "recorded_at": "2026-11-23T11:55:36.881Z"
     }
   ],
@@ -2057,6 +2058,14 @@
       "re": "2026-11-23 11:49Z",
       "fyi": false,
       "recorded_at": "2026-11-23T11:53:20.233Z"
+    },
+    {
+      "id": "01M8449YGWFHVAY4SE9KHGDRA4",
+      "recipient": "dc",
+      "body": "Landed: 0eea31a is merged on main at 0cc5bff, which keeps it as a parent, so a plain `git branch -d` deletes dc/terms-citation after your worktree checks. Main is 0481f59 on upstream and local (hv's decision 3), and intent-vc has the hash. Then hold: I7892f34's docs half waits for devbin-vc's word on devbin-cc's Molt plan, fifth in its order.",
+      "re": "2026-11-23 11:56Z",
+      "fyi": false,
+      "recorded_at": "2026-11-23T11:57:47.932Z"
     }
   ],
   "handled": [
@@ -2349,6 +2358,11 @@
       "id": "01M843V20WRQWP76YHPAFEHE81",
       "sender": "dc",
       "handled_at": "2026-11-23T11:53:30.828Z"
+    },
+    {
+      "id": "01M8447SZT3Z47Q0R93SGA5MFJ",
+      "sender": "dc",
+      "handled_at": "2026-11-23T11:57:47.978Z"
     }
   ]
 }

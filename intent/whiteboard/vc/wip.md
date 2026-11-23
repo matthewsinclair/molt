@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-23 11:48Z
+heartbeat_at: 2026-11-23 11:57Z
 status: active
-focus: "13 Nov, folded for the night on hv's word: issue 0101 is merged at 10d366a and closed: the brew liberator installs what the sleeve's Brewfile lists through brew bundle, and Molt-matts lists pigz for rhadamanth and gyges (c1b3a11, pushed by hv). It ships with hv's next cut. 0100 is closed against devbin#0355. Molt's main is ahead of upstream and unpushed, which is hv's. Nothing in progress; vc holds for hv."
+focus: "23 Nov: Intent ST0094 AC-11.6's doc fix (molt-dc's 0eea31a) is merged at 0cc5bff and pushed to upstream and local at 0481f59 on hv's word; intent-vc has it. hv ruled the next cut waits for I7892f34 (Molt's devbin#0326 adoption, fifth in devbin-cc's order) and the team profile stands, release steps to the Desk. Nothing in progress; vc holds for hv."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Land molt-dc's commit for Intent ST0094 AC-11.6 (the suffix tables in the whiteboard README and docs/guides/sleeve-agents.md cite intent wb profile terms), push main to upstream and local (hv's decision 3), and send intent-vc the hash.
+_(none)_
 
 ## TODO
 

@@ -7,4 +7,4 @@
 ## TODO
 
 - **After a compact:** `/in-session` and its pickup as vc, put hv's inboxes in front of hv, then hold for hv's word.
-- **Next cut, hv's:** it carries issue 0101, merged at 10d366a. Dry-run it and book it on the desk before handing hv the command.
+- **Next cut:** waits until I7892f34 is merged (hv, 23 Nov); then dry-run it, book it on the Desk and hand hv the command.

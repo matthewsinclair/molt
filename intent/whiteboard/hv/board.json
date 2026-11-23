@@ -62,7 +62,8 @@
       "kind": "decision",
       "seq": 3,
       "text": "hv, 23 Nov 2026, live in molt-vc's window, choosing among vc's options (the wording is vc's): once molt-dc's commit for Intent ST0094 AC-11.6 lands on main and reads clean, vc pushes Molt's main to upstream and local (never cordee) and sends intent-vc the hash; if anything besides board commits and the fix is on main by then, vc pushes nothing and comes back to hv. (vc's note: decision 35, that hv runs every push, otherwise stands.)",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-23T11:57:48.071Z",
       "recorded_at": "2026-11-23T11:55:31.158Z"
     },
     {
