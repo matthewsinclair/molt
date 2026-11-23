@@ -49,18 +49,7 @@ The protocol itself is documented once, in the `/in-whiteboard` skill: file layo
 | `dc` | DevX Claude       | devx       | session   | Builds the developer experience: guides, README, CHANGELOG, role contracts. Same worktree discipline as `cc`.                                                                                                  |
 | `ac` | Authoring Claude  | authoring  | session   | Authors prose for hv: briefs, structures and notes hv writes from (the blog brief, ST0006 WP07). Writes docs on main directly, no branch or worktree (hv, 21 Oct).                                             |
 
-The project-Claude suffixes, as hv named them on 21 Oct 2026. Every Intent project uses the same suffixes; the Here column says which Molt runs.
-
-| Suffix | Name              | Here |
-| ------ | ----------------- | ---- |
-| `sc`   | Supervisor Claude | no   |
-| `vc`   | Validation Claude | yes  |
-| `cc`   | Control Claude    | yes  |
-| `ic`   | Interface Claude  | no   |
-| `ac`   | Authoring Claude  | yes  |
-| `dc`   | DevX Claude       | yes  |
-
-A session is named `<project>-<suffix>` (`molt-vc`, `molt-cc`, `molt-dc`, `molt-ac`). Sleeve agents, which run on a machine rather than in a project, are named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs` (ST0006). To add a node, register it with `intent wb register <moniker> --name "<display name>" --role <role>` and add a row here in the same commit.
+The seats, their monikers and the names of the sessions that run in them are defined once, in Intent's terms document, which `intent wb profile terms` prints. Sleeve agents, which run on a machine rather than in a project, are named `<hostname>-<role>` with roles `sysadm`, `ops` and `docs` (ST0006). To add a node, register it with `intent wb register <moniker> --name "<display name>" --role <role>` and add a row here in the same commit.
 
 ## Who reads the hv inbox
 
