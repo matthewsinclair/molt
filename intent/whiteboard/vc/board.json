@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-23T17:11:20.831Z",
+    "heartbeat_at": "2026-11-23T17:26:40.910Z",
     "status": "active",
     "focus": "23 Nov: 1.4.7 is tagged at b8daf7b and released without a formula; molt-dc adopts devbin#0326, and a seat cuts 1.4.8 with its formula on hv's word (hv's decisions 10 and 11); then 1.4.8's rollout.",
     "claims": [],
@@ -2110,7 +2110,8 @@
       "recipient": "dc",
       "body": "GO, hv's decision 11 (23 Nov, live in molt-vc's window): Molt adopts devbin#0326 now, ahead of devbin-cc's order, so 1.4.8 publishes its formula; 1.4.7 stays tagged and released without one. Build on a branch in $TMPDIR/molt-wt/: (1) packaging/homebrew/molt.rb's install holds exactly one @@INSTALL@@ line with nothing run before it, Molt's own publish and symlink lines gone, desc, caveats and test kept; (2) bin/.devbin/config.yaml declares Molt's tool, so bin/devbin install --prefix <dir> --managed-by brew publishes from Molt's checkout instead of refusing with VENDOR mode, its set and links matching what bin/molt install publishes today (bin/molt, lib/, liberators/, templates/, VERSION; the link bin/molt); (3) CHANGELOG gets a 1.4.8 unreleased section saying it brings 1.4.7's changes to brew, as 1.4.2's did for 1.4.1. Read first: devbin's docs/configuration.md (formula and install), docs/dev-opt-brew.md (T3, T8), bin/devbin help formula; ask devbin-cc for any 0326 adoption notes it keeps. Proof, one layer: from a clean checkout of the branch, bin/devbin install --prefix $TMPDIR/<x> --managed-by brew, then $TMPDIR/<x>/bin/molt version prints '(brew, ' and molt install refuses that prefix as it refuses a brew keg today; bin/devbin formula render v1.4.7 into $TMPDIR renders with no refusal (a render only, never published); any bats file you change, booked, under both bashes; bin/devbin release check. Send vc the branch head and the proof. vc lands it, and a seat cuts 1.4.8 under decision 10.",
       "fyi": false,
-      "recorded_at": "2026-11-23T17:11:04.973Z"
+      "recorded_at": "2026-11-23T17:11:04.973Z",
+      "archived_at": "2026-11-23T17:26:40.828Z"
     }
   ],
   "handled": [
