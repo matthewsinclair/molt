@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "82b4e5df-f52e-400e-93cb-fc81e39a8f2d",
-    "heartbeat_at": "2026-11-23T11:56:43.772Z",
+    "heartbeat_at": "2026-11-23T11:57:49.617Z",
     "status": "active",
-    "focus": "23 Nov: the Intent ST0094 AC-11.6 doc fix is committed at 0eea31a on dc/terms-citation and reported to vc, which lands it and pushes on hv's word; dc removes its worktree and branch once it lands. I7892f34's docs half is held until devbin-cc's plan says what moves. No claims.",
+    "focus": "23 Nov: the Intent ST0094 AC-11.6 doc fix landed at 0cc5bff, a merge that keeps 0eea31a, and dc's worktree and branch are removed. dc holds: I7892f34's docs half waits for devbin-vc's word on devbin-cc's Molt plan, fifth in devbin-cc's order. Nothing else for dc today; no claims, nothing unbanked.",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -1283,6 +1283,11 @@
       "id": "01M8441S39N154CTDQ9RJH5H1T",
       "sender": "vc",
       "handled_at": "2026-11-23T11:56:46.623Z"
+    },
+    {
+      "id": "01M8449YGWFHVAY4SE9KHGDRA4",
+      "sender": "vc",
+      "handled_at": "2026-11-23T11:58:01.902Z"
     }
   ]
 }
