@@ -58,6 +58,11 @@ release:
     - check all
     - test all
     - doctor
+  # What the seats sharing this checkout write: a pickup while a cut runs is
+  # named, and never refuses the cut (devbin decision 207, issue 0355).
+  unread:
+    - intent/whiteboard
+    - intent/.canon/events
   ci:
     workflow: tests.yml
   object: local
