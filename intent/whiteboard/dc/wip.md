@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-23 17:09Z
+heartbeat_at: 2026-11-23 17:15Z
 status: active
-focus: "23 Nov: 1.4.7 is tagged at b8daf7b and dc has folded: the zsh fixture fix went in as b8daf7b, and its worktree and branch are removed. Open: hold 18, I7892f34's docs half, on devbin-vc's word; todo 15, devbin's lanes-runner adoption (O2), on vc's go; if hv routes the formula through adopting devbin#0326 now, it is dc's, on vc's word."
+focus: "23 Nov: the devbin#0326 formula adoption landed as 0c2cc5c (vc's replay of 30fe28e), its worktree and branch removed. 1.4.8 waits for devbin 0.1.29's sweep (hv's decision 12). Holding: todo 15 (O2) after 1.4.8 on vc's go; hold 18, I7892f34's docs half, on devbin-vc's word."
 claims: []
 ---
 
@@ -17,7 +17,7 @@ _(none)_
 
 ## TODO
 
-- devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.7 (vc, 23 Nov); dc starts on vc's go.
+- devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.8 (vc, 23 Nov); dc starts on vc's go. (edited)
 
 ## Holds
 
