@@ -1,0 +1,15 @@
+{
+  "id": "01M8445YFSCQQV4JH0BV8FE8AK",
+  "ts": "2026-11-23T11:55:36.825Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Molt's next cut, carrying 0101 and I7892f34, waits until I7892f34 is merged on main (hv, 23 Nov, hv's decision 4); then vc dry-runs it, books it on the Desk and hands hv the command. devbin-vc, 23 Nov: Molt's adoption is the fifth, after Pplr and Cldr (both to land), Gtools (blocked on devbin I514ea74) and Utilz (after Utilz ST0031/01). Released when I7892f34 is merged on main."
+  }
+}

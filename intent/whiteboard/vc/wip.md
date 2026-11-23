@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Land molt-dc's commit for Intent ST0094 AC-11.6 (the suffix tables in the whiteboard README and docs/guides/sleeve-agents.md cite intent wb profile terms), push main to upstream and local (hv's decision 3), and send intent-vc the hash.
 
 ## TODO
 
@@ -21,11 +21,10 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Next cut, hv's: it carries 0101 (merged at 10d366a). On hv's word, dry-run it, book it on the desk, and only then hand hv the command. Molt-matts' two Brewfiles (c1b3a11) are pushed, so gyges gets its one at its next pull. (edited)
 
 ## Holds
 
-- Decision 49's routing (everything for hv through devbin-vc, 5 Nov) is in doubt since the team profile made vc the mediator on 11 Nov. Asked hv on 13 Nov, no answer yet. Until hv rules, vc asks hv in its own window and 49 stays on the board. Released when hv says which stands.
+- Molt's next cut, carrying 0101 and I7892f34, waits until I7892f34 is merged on main (hv, 23 Nov, hv's decision 4); then vc dry-runs it, books it on the Desk and hands hv the command. devbin-vc, 23 Nov: Molt's adoption is the fifth, after Pplr and Cldr (both to land), Gtools (blocked on devbin I514ea74) and Utilz (after Utilz ST0031/01). Released when I7892f34 is merged on main.
 
 ## Watch-outs
 
@@ -39,7 +38,6 @@ _(none)_
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)
-- hv 5 Nov, in devbin-vc's window (relayed by devbin-vc, received before the clock read 2026-11-05 04:37Z by date -u): all activity is coordinated through devbin-vc. Every Claude reports to its own vc, each vc to devbin-vc, and devbin-vc to hv; molt-vc sends devbin-vc Molt's state at each step (READY, START, END, the CI read, the rollout) and routes everything for hv through it. Pplr, Cldr and Ccusage stay down until Molt and devbin are stable. 8GJE86 stays ungranted until Molt's rollout is live and hv gives the word; Molt 1.4.5's rollout went live on 5 Nov (rhadamanth, kovacs and gyges). (edited)
 - hv 5 Nov, for the whole fleet (relayed by pipeliner-sc: first-hand to sc at 12:02Z, confirmed at 13:11Z): one layer of proof. A thing is proved by running it once as its user would. The commit gate's critic is the only critic. No suite that tests a suite, no planted fault beyond a guard's own one red case where it already exists, no check of a check, no hardening against setups nobody here has, no replay of a replay. A verdict is a read and at most one run. hv, on seeing checks stacked on checks: stop, it is wasting days.
 
 ---
