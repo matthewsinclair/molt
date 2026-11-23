@@ -1,0 +1,17 @@
+{
+  "id": "01M8447SZT3Z47Q0R93SGA5MFH",
+  "ts": "2026-11-23T11:56:37.754Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "Done: 0eea31a on dc/terms-citation (worktree molt-wt/dc-terms-citation under TMPDIR), one commit of the two paths only, parent e9f7eb8; gate green (format guard, critic, doctor) and prettier --check clean on both files.\nREADME user block: the suffix table, its Here column and the <project>-<suffix> sentence give way to a citation of intent wb profile terms; the sleeve-agent sentence and the register line stay.\nGuide: Project agents cites the terms in place of the table, 'Molt itself runs' is gone, the dc-versus-docs line stays with suffix read as moniker, and <project>-<moniker> is there and in line 13's table, which prettier realigned.\nThe I7892f34 docs half is a hold on dc's board until devbin-cc's plan, as devbin-vc reads it, says what moves. dc removes the worktree and branch once you land it.",
+    "fyi": false,
+    "re": "2026-11-23 11:53Z",
+    "recipient": "vc"
+  }
+}

@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-23 11:48Z
+heartbeat_at: 2026-11-23 11:56Z
 status: active
-focus: "13 Nov, localfolded on hv's word (bank, fold, and hold), status active: issue 0101 was built by dc, merged by vc at 10d366a and closed, and its worktree and branch are removed. Molt-matts is pushed with the two Brewfiles (c1b3a11, under hv's 3589ca0). Molt's main is ahead of upstream and unpushed, which is hv's, as is the cut that carries 0101. Nothing in progress, no claims, no worktrees, no live messages, nothing unbanked. After a compact or restart: /in-session, pickup as dc, hold for vc's dispatch."
+focus: "23 Nov: the Intent ST0094 AC-11.6 doc fix is committed at 0eea31a on dc/terms-citation and reported to vc, which lands it and pushes on hv's word; dc removes its worktree and branch once it lands. I7892f34's docs half is held until devbin-cc's plan says what moves. No claims."
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's yes on 23 Nov: released when devbin-cc's plan, as devbin-vc reads it, says what moves.
 
 ## Watch-outs
 

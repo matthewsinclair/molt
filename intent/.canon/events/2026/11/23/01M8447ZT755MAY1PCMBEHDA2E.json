@@ -1,0 +1,15 @@
+{
+  "id": "01M8447ZT755MAY1PCMBEHDA2E",
+  "ts": "2026-11-23T11:56:43.719Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's yes on 23 Nov: released when devbin-cc's plan, as devbin-vc reads it, says what moves."
+  }
+}
