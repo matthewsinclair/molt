@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-23 17:30Z
+heartbeat_at: 2026-11-23 20:43Z
 status: active
-focus: "23 Nov: 1.4.8 waits for devbin 0.1.29's sweep into Molt (hv's decision 12), with the devbin#0326 adoption on main at 0c2cc5c; then vc renders and dry-runs it, and a seat cuts it with --yes on hv's word (decisions 10 and 11); then 1.4.8's rollout."
+focus: "24 Nov: Molt v1.4.8 is released at 326d469 with its formula (homebrew-molt 009abdb); next is hv's rollout, then molt-dc's O2 on vc's go."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt's 1.4.8 cut (hv's decisions 10, 11 and 12): molt-dc's devbin#0326 adoption is on main at 0c2cc5c; 1.4.8 waits for devbin 0.1.29's sweep into Molt, which devbin-vc announces; then vc renders its formula, dry-runs it and a seat cuts it with --yes, booked on the Desk, START and END to devbin-vc. 1.4.7 is tagged at b8daf7b and released without a formula. (edited)
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- 1.4.8's rollout (hv's, when no suite runs): brew upgrade molt, then molt upgrade on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101, hv's decision 2); devbin-vc gets START and END, and agentic-engineering-vc a word once pigz is on.
+- 1.4.8's rollout (hv's, when no suite runs; v1.4.8 is released at 326d469 with its formula, homebrew-molt 009abdb): brew upgrade molt, then molt upgrade on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101, hv's decision 2); devbin-vc gets START and END, and agentic-engineering-vc a word once pigz is on. (edited)
 
 ## Holds
 

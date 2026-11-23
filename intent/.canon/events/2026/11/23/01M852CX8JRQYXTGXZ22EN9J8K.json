@@ -1,0 +1,16 @@
+{
+  "id": "01M852CX8JRQYXTGXZ22EN9J8K",
+  "ts": "2026-11-23T20:43:42.227Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 54,
+    "text": "1.4.8's rollout (hv's, when no suite runs; v1.4.8 is released at 326d469 with its formula, homebrew-molt 009abdb): brew upgrade molt, then molt upgrade on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101, hv's decision 2); devbin-vc gets START and END, and agentic-engineering-vc a word once pigz is on."
+  }
+}

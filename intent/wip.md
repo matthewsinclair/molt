@@ -1,16 +1,15 @@
 ---
-verblock: "23 Nov 2026:v1.00: Matthew Sinclair - 1.4.7 out without a formula; 0326 adoption and 1.4.8 next"
+verblock: "24 Nov 2026:v1.01: Matthew Sinclair - 1.4.8 released with its formula; rollout next"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **1.4.8's cut (hv, 23 Nov):** the devbin#0326 adoption is on main at 0c2cc5c; 1.4.8 waits for devbin 0.1.29's sweep into Molt (hv), then a seat cuts it with its formula. 1.4.7 is tagged at b8daf7b and released without a formula.
+- **1.4.8's rollout (hv's, when no suite runs):** `brew upgrade molt`, then `molt upgrade` on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101); vc tells devbin-vc its START and END, and agentic-engineering-vc once pigz is on.
 
 ## TODO
 
-- **1.4.8's rollout (hv's, when no suite runs):** `brew upgrade molt`, then `molt upgrade` on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101); vc tells devbin-vc its START and END, and agentic-engineering-vc once pigz is on.
 - **devbin's lanes runner (O2):** molt-dc's, after 1.4.8, on vc's go.
 - **I7892f34's docs half:** molt-dc's, once devbin-vc has read devbin-cc's Molt plan.
 
