@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt's devbin#0326 adoption and 1.4.8's cut (hv's decisions 10, 11 and 12): molt-dc builds the adoption (vc's GO of 23 Nov) and vc lands it on dc's proof; 1.4.8 waits for devbin 0.1.29's sweep into Molt, which devbin-vc announces; then a seat cuts it with its formula, booked on the Desk, START and END to devbin-vc. 1.4.7 is tagged at b8daf7b and released without a formula. (edited)
+- Molt's 1.4.8 cut (hv's decisions 10, 11 and 12): molt-dc's devbin#0326 adoption is on main at 0c2cc5c; 1.4.8 waits for devbin 0.1.29's sweep into Molt, which devbin-vc announces; then vc renders its formula, dry-runs it and a seat cuts it with --yes, booked on the Desk, START and END to devbin-vc. 1.4.7 is tagged at b8daf7b and released without a formula. (edited)
 
 ## TODO
 

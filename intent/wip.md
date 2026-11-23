@@ -6,7 +6,7 @@ verblock: "23 Nov 2026:v1.00: Matthew Sinclair - 1.4.7 out without a formula; 03
 
 ## DOING
 
-- **devbin#0326 adoption, then 1.4.8 (hv, 23 Nov):** molt-dc builds it; vc lands it on dc's proof; 1.4.8 waits for devbin 0.1.29's sweep into Molt (hv), then a seat cuts it with its formula. 1.4.7 is tagged at b8daf7b and released without a formula.
+- **1.4.8's cut (hv, 23 Nov):** the devbin#0326 adoption is on main at 0c2cc5c; 1.4.8 waits for devbin 0.1.29's sweep into Molt (hv), then a seat cuts it with its formula. 1.4.7 is tagged at b8daf7b and released without a formula.
 
 ## TODO
 

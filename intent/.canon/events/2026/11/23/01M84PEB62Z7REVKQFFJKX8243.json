@@ -1,0 +1,16 @@
+{
+  "id": "01M84PEB62Z7REVKQFFJKX8243",
+  "ts": "2026-11-23T17:14:46.338Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 20,
+    "text": "Molt's 1.4.8 cut (hv's decisions 10, 11 and 12): molt-dc's devbin#0326 adoption is on main at 0c2cc5c; 1.4.8 waits for devbin 0.1.29's sweep into Molt, which devbin-vc announces; then vc renders its formula, dry-runs it and a seat cuts it with --yes, booked on the Desk, START and END to devbin-vc. 1.4.7 is tagged at b8daf7b and released without a formula."
+  }
+}
