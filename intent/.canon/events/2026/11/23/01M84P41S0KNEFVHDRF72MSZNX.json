@@ -1,0 +1,15 @@
+{
+  "id": "01M84P41S0KNEFVHDRF72MSZNX",
+  "ts": "2026-11-23T17:09:09.024Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, live in molt-vc's window, hv's words, after 1.4.7's cut had needed hv at gyges's iTerm2 window over Screen Sharing three times: 'This is bloody outrageous. There is no reason that I should have to run this manually via screen sharing. None at all.' Then, choosing among vc's options (the wording is vc's): a seat runs Molt's cuts on hv's word. hv says cut; molt-vc runs bin/devbin release vX.Y.Z --yes on rhadamanth, where gh works, or has gyges-sysadm open the iTerm2 window on gyges itself, so the gh token stays in the keychain. START and END still go to devbin-vc. It replaces decision 35's 'hv runs every cut' for Molt."
+  }
+}

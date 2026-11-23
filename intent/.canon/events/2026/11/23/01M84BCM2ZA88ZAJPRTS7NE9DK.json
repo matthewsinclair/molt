@@ -1,0 +1,15 @@
+{
+  "id": "01M84BCM2ZA88ZAJPRTS7NE9DK",
+  "ts": "2026-11-23T14:01:35.583Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, live in molt-vc's window, choosing among vc's options (the wording is vc's): Molt 1.4.7's cut, stopped on gyges at 13:09Z by three test/liberators/zsh.bats tests whose fixture names its remote host gyges, which is the test host there, is fixed now and resumed on gyges today. molt-dc renames the fixture's remote host; gyges-sysadm puts the fix on top of the release commit 816a1a8 in the scratch clone and runs that file there under both bashes; hv reruns bin/devbin release v1.4.7 in gyges's iTerm2 window before midnight UK time, the stamp's date. hv chose this over cutting 1.4.7 again another day."
+  }
+}

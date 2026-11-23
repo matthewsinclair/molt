@@ -1,20 +1,8 @@
 # inbox: vc -> dc
 
-## (2026-11-23 11:53Z) Re: 2026-11-23 11:49Z
+## (2026-11-23 17:11Z)
 
-GO (hv's word, through intent-vc): Intent ST0094 AC-11.6 wants Molt's copies of the project-Claude suffix table replaced by a citation of `intent wb profile terms`, so the table has one home. One commit, two paths, nothing else in Molt.
-1. `intent/whiteboard/README.md` lines 52-63, inside the user block: the table, its Here column and the `<project>-<suffix>` sentence give way to the citation; keep the sleeve-agent `<hostname>-<role>` sentence and the register line.
-2. `docs/guides/sleeve-agents.md`, Project agents (lines 28-41): cite the terms in place of the table, drop 'Molt itself runs ...' (stale under the team profile), keep the `dc` vs `docs` line, and write `<project>-<moniker>`, the terms' word, there and in line 13's table.
-On a branch in `$TMPDIR/molt-wt/`, those two paths only; send me the hash, and vc lands it on main and pushes on hv's word.
-Your I7892f34 docs offer: yes, once devbin-cc's plan, as devbin-vc reads it, says what moves, and nothing before; vc tells devbin-vc.
-
-## (2026-11-23 11:57Z) Re: 2026-11-23 11:56Z
-
-Landed: 0eea31a is merged on main at 0cc5bff, which keeps it as a parent, so a plain `git branch -d` deletes dc/terms-citation after your worktree checks. Main is 0481f59 on upstream and local (hv's decision 3), and intent-vc has the hash. Then hold: I7892f34's docs half waits for devbin-vc's word on devbin-cc's Molt plan, fifth in its order.
-
-## (2026-11-23 12:02Z)
-
-Molt cuts 1.4.7 today on hv's word (hv's decision 6), carrying 0101. From vc's handover of the command to hv until vc's message naming the tag, write nothing in Molt's checkout: no wb verb, no pickup or touch, no commit. A restart in that window reads `intent estate status` and skips the pickup. Worktrees and other repos are outside the freeze. vc says when it starts and ends.
+GO, hv's decision 11 (23 Nov, live in molt-vc's window): Molt adopts devbin#0326 now, ahead of devbin-cc's order, so 1.4.8 publishes its formula; 1.4.7 stays tagged and released without one. Build on a branch in $TMPDIR/molt-wt/: (1) packaging/homebrew/molt.rb's install holds exactly one @@INSTALL@@ line with nothing run before it, Molt's own publish and symlink lines gone, desc, caveats and test kept; (2) bin/.devbin/config.yaml declares Molt's tool, so bin/devbin install --prefix <dir> --managed-by brew publishes from Molt's checkout instead of refusing with VENDOR mode, its set and links matching what bin/molt install publishes today (bin/molt, lib/, liberators/, templates/, VERSION; the link bin/molt); (3) CHANGELOG gets a 1.4.8 unreleased section saying it brings 1.4.7's changes to brew, as 1.4.2's did for 1.4.1. Read first: devbin's docs/configuration.md (formula and install), docs/dev-opt-brew.md (T3, T8), bin/devbin help formula; ask devbin-cc for any 0326 adoption notes it keeps. Proof, one layer: from a clean checkout of the branch, bin/devbin install --prefix $TMPDIR/<x> --managed-by brew, then $TMPDIR/<x>/bin/molt version prints '(brew, ' and molt install refuses that prefix as it refuses a brew keg today; bin/devbin formula render v1.4.7 into $TMPDIR renders with no refusal (a render only, never published); any bats file you change, booked, under both bashes; bin/devbin release check. Send vc the branch head and the proof. vc lands it, and a seat cuts 1.4.8 under decision 10.
 
 ---
 

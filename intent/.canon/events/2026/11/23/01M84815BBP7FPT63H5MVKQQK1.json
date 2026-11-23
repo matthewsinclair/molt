@@ -1,0 +1,15 @@
+{
+  "id": "01M84815BBP7FPT63H5MVKQQK1",
+  "ts": "2026-11-23T13:02:54.315Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, typed live in molt-vc's window and in molt-dc's (molt-dc relayed its copy), hv's words: 'Please finish booting, then hold for instructions from VC and then devbin-vc.' Said after each window's compact in the localfold+compact round hv called through devbin-vc at 12:52Z. (vc's reading: molt-dc takes molt-vc's instructions first and devbin-vc's after; molt-vc holds for devbin-vc's, and meanwhile carries out what devbin-vc has already asked, END for 1.4.7 with its seal and tag, and the fold.)"
+  }
+}

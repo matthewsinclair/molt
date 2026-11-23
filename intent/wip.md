@@ -1,15 +1,17 @@
 ---
-verblock: "23 Nov 2026:v0.99: Matthew Sinclair - Molt's next patch cut, on hv's word"
+verblock: "23 Nov 2026:v1.00: Matthew Sinclair - 1.4.7 out without a formula; 0326 adoption and 1.4.8 next"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Molt's next patch cut (hv, 23 Nov):** it carries 0101 (merged at 10d366a); vc dry-runs it, books it on the Desk and hands hv the command. I7892f34 ships in a later release.
+- **devbin#0326 adoption, then 1.4.8 (hv, 23 Nov):** molt-dc builds it; vc lands it on dc's proof; a seat cuts 1.4.8 with its formula on hv's word. 1.4.7 is tagged at b8daf7b and released without a formula.
 
 ## TODO
 
+- **1.4.8's rollout (hv's, when no suite runs):** `brew upgrade molt`, then `molt upgrade` on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101); vc tells devbin-vc its START and END, and agentic-engineering-vc once pigz is on.
+- **devbin's lanes runner (O2):** molt-dc's, after 1.4.8, on vc's go.
 - **I7892f34's docs half:** molt-dc's, once devbin-vc has read devbin-cc's Molt plan.
 
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).

@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-23 12:02Z
+heartbeat_at: 2026-11-23 17:11Z
 status: active
-focus: "23 Nov: Molt cuts 1.4.7 now on hv's word (hv's decision 6), carrying 0101: dry run on a light slot (ask 01M844JPAKPT67W8DKZGXP09KP), then the cut booked with --lane bats and handed to hv. Molt's checkout is frozen from that handover until vc names the tag: read intent estate status before any pickup."
+focus: "23 Nov: 1.4.7 is tagged at b8daf7b and released without a formula; molt-dc adopts devbin#0326, and a seat cuts 1.4.8 with its formula on hv's word (hv's decisions 10 and 11); then 1.4.8's rollout."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt's next patch cut, on hv's word of 23 Nov (hv's decision 6): dry run on a light slot, then book the cut on the Desk with --lane bats and hand hv the command once granted; Molt's checkout is frozen from that handover until vc names the tag. It carries 0101; I7892f34 ships later.
+- Molt's devbin#0326 adoption and 1.4.8's cut (hv's decisions 10 and 11): molt-dc builds the adoption (vc's GO of 23 Nov); vc lands it on dc's proof; a seat cuts 1.4.8 with its formula, booked on the Desk, START and END to devbin-vc. 1.4.7 is tagged at b8daf7b and released without a formula.
 
 ## TODO
 
@@ -21,6 +21,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
+- 1.4.8's rollout (hv's, when no suite runs): brew upgrade molt, then molt upgrade on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101, hv's decision 2); devbin-vc gets START and END, and agentic-engineering-vc a word once pigz is on.
 
 ## Holds
 
@@ -34,7 +35,7 @@ _(none)_
 ## Decisions
 
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
-- hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked on the estate desk. Laksa and Conflab are held for code. (edited)
+- hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked on the estate desk. Laksa and Conflab are held for code. For Molt's cuts (their gates, tag and pushes), hv's decision 10 of 23 Nov replaces it: a seat runs them on hv's word. (edited)
 - hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
 - hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
 - hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-23T12:02:58.144Z",
+    "heartbeat_at": "2026-11-23T17:11:20.831Z",
     "status": "active",
-    "focus": "23 Nov: Molt cuts 1.4.7 now on hv's word (hv's decision 6), carrying 0101: dry run on a light slot (ask 01M844JPAKPT67W8DKZGXP09KP), then the cut booked with --lane bats and handed to hv. Molt's checkout is frozen from that handover until vc names the tag: read intent estate status before any pickup.",
+    "focus": "23 Nov: 1.4.7 is tagged at b8daf7b and released without a formula; molt-dc adopts devbin#0326, and a seat cuts 1.4.8 with its formula on hv's word (hv's decisions 10 and 11); then 1.4.8's rollout.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -970,10 +970,10 @@
       "node": "vc",
       "kind": "decision",
       "seq": 35,
-      "text": "hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked on the estate desk. Laksa and Conflab are held for code.",
+      "text": "hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked on the estate desk. Laksa and Conflab are held for code. For Molt's cuts (their gates, tag and pushes), hv's decision 10 of 23 Nov replaces it: a seat runs them on hv's word.",
       "state": "live",
       "recorded_at": "2026-10-29T19:31:07.620Z",
-      "edited_at": "2026-11-04T17:34:15.301Z"
+      "edited_at": "2026-11-23T17:09:09.196Z"
     },
     {
       "node": "vc",
@@ -1485,9 +1485,27 @@
       "node": "vc",
       "kind": "doing",
       "seq": 19,
-      "text": "Molt's next patch cut, on hv's word of 23 Nov (hv's decision 6): dry run on a light slot, then book the cut on the Desk with --lane bats and hand hv the command once granted; Molt's checkout is frozen from that handover until vc names the tag. It carries 0101; I7892f34 ships later.",
+      "text": "Molt 1.4.7's cut (hv's decisions 6, 7 and 9), on gyges from the scratch clone at b8daf7b, the zsh.bats fixture fix on the release commit 816a1a8: the 16:07Z resume stopped at 16:23:41Z with no tag because GitHub could not get a macOS runner (CI run 45213077935); nothing to fix, and hv reruns today, before 00:00Z. On its end: END to devbin-vc with the seal and tag, rhadamanth's main fast-forwarded to it before any vc or dc commit, molt-dc told the tag, and gyges-sysadm asked to remove ~/Devel/scratch/molt-vc.",
+      "state": "archived",
+      "archived_at": "2026-11-23T17:11:20.419Z",
+      "recorded_at": "2026-11-23T12:02:08.893Z",
+      "edited_at": "2026-11-23T16:25:55.377Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 20,
+      "text": "Molt's devbin#0326 adoption and 1.4.8's cut (hv's decisions 10 and 11): molt-dc builds the adoption (vc's GO of 23 Nov); vc lands it on dc's proof; a seat cuts 1.4.8 with its formula, booked on the Desk, START and END to devbin-vc. 1.4.7 is tagged at b8daf7b and released without a formula.",
       "state": "live",
-      "recorded_at": "2026-11-23T12:02:08.893Z"
+      "recorded_at": "2026-11-23T17:11:20.734Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 54,
+      "text": "1.4.8's rollout (hv's, when no suite runs): brew upgrade molt, then molt upgrade on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101, hv's decision 2); devbin-vc gets START and END, and agentic-engineering-vc a word once pigz is on.",
+      "state": "live",
+      "recorded_at": "2026-11-23T17:11:20.783Z"
     }
   ],
   "sent": [
@@ -2066,7 +2084,8 @@
       "body": "GO (hv's word, through intent-vc): Intent ST0094 AC-11.6 wants Molt's copies of the project-Claude suffix table replaced by a citation of `intent wb profile terms`, so the table has one home. One commit, two paths, nothing else in Molt.\n1. `intent/whiteboard/README.md` lines 52-63, inside the user block: the table, its Here column and the `<project>-<suffix>` sentence give way to the citation; keep the sleeve-agent `<hostname>-<role>` sentence and the register line.\n2. `docs/guides/sleeve-agents.md`, Project agents (lines 28-41): cite the terms in place of the table, drop 'Molt itself runs ...' (stale under the team profile), keep the `dc` vs `docs` line, and write `<project>-<moniker>`, the terms' word, there and in line 13's table.\nOn a branch in `$TMPDIR/molt-wt/`, those two paths only; send me the hash, and vc lands it on main and pushes on hv's word.\nYour I7892f34 docs offer: yes, once devbin-cc's plan, as devbin-vc reads it, says what moves, and nothing before; vc tells devbin-vc.",
       "re": "2026-11-23 11:49Z",
       "fyi": false,
-      "recorded_at": "2026-11-23T11:53:20.233Z"
+      "recorded_at": "2026-11-23T11:53:20.233Z",
+      "archived_at": "2026-11-23T12:53:40.574Z"
     },
     {
       "id": "01M8449YGWFHVAY4SE9KHGDRA4",
@@ -2074,14 +2093,23 @@
       "body": "Landed: 0eea31a is merged on main at 0cc5bff, which keeps it as a parent, so a plain `git branch -d` deletes dc/terms-citation after your worktree checks. Main is 0481f59 on upstream and local (hv's decision 3), and intent-vc has the hash. Then hold: I7892f34's docs half waits for devbin-vc's word on devbin-cc's Molt plan, fifth in its order.",
       "re": "2026-11-23 11:56Z",
       "fyi": false,
-      "recorded_at": "2026-11-23T11:57:47.932Z"
+      "recorded_at": "2026-11-23T11:57:47.932Z",
+      "archived_at": "2026-11-23T12:53:40.574Z"
     },
     {
       "id": "01M844KDCT21405FARTT1N422V",
       "recipient": "dc",
       "body": "Molt cuts 1.4.7 today on hv's word (hv's decision 6), carrying 0101. From vc's handover of the command to hv until vc's message naming the tag, write nothing in Molt's checkout: no wb verb, no pickup or touch, no commit. A restart in that window reads `intent estate status` and skips the pickup. Worktrees and other repos are outside the freeze. vc says when it starts and ends.",
       "fyi": false,
-      "recorded_at": "2026-11-23T12:02:58.074Z"
+      "recorded_at": "2026-11-23T12:02:58.074Z",
+      "archived_at": "2026-11-23T17:11:20.683Z"
+    },
+    {
+      "id": "01M84P7K0DFQFAESK4VWP065GQ",
+      "recipient": "dc",
+      "body": "GO, hv's decision 11 (23 Nov, live in molt-vc's window): Molt adopts devbin#0326 now, ahead of devbin-cc's order, so 1.4.8 publishes its formula; 1.4.7 stays tagged and released without one. Build on a branch in $TMPDIR/molt-wt/: (1) packaging/homebrew/molt.rb's install holds exactly one @@INSTALL@@ line with nothing run before it, Molt's own publish and symlink lines gone, desc, caveats and test kept; (2) bin/.devbin/config.yaml declares Molt's tool, so bin/devbin install --prefix <dir> --managed-by brew publishes from Molt's checkout instead of refusing with VENDOR mode, its set and links matching what bin/molt install publishes today (bin/molt, lib/, liberators/, templates/, VERSION; the link bin/molt); (3) CHANGELOG gets a 1.4.8 unreleased section saying it brings 1.4.7's changes to brew, as 1.4.2's did for 1.4.1. Read first: devbin's docs/configuration.md (formula and install), docs/dev-opt-brew.md (T3, T8), bin/devbin help formula; ask devbin-cc for any 0326 adoption notes it keeps. Proof, one layer: from a clean checkout of the branch, bin/devbin install --prefix $TMPDIR/<x> --managed-by brew, then $TMPDIR/<x>/bin/molt version prints '(brew, ' and molt install refuses that prefix as it refuses a brew keg today; bin/devbin formula render v1.4.7 into $TMPDIR renders with no refusal (a render only, never published); any bats file you change, booked, under both bashes; bin/devbin release check. Send vc the branch head and the proof. vc lands it, and a seat cuts 1.4.8 under decision 10.",
+      "fyi": false,
+      "recorded_at": "2026-11-23T17:11:04.973Z"
     }
   ],
   "handled": [

@@ -1,0 +1,16 @@
+{
+  "id": "01M84BFCF86TNP6S2FE03W7VRT",
+  "ts": "2026-11-23T14:03:06.088Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 19,
+    "text": "Molt 1.4.7's cut (hv's decisions 6, 7 and 9), on gyges from the scratch clone at b8daf7b, the zsh.bats fixture fix on the release commit 816a1a8: the 16:07Z resume stopped at 16:23:41Z with no tag because GitHub could not get a macOS runner (CI run 45213077935); nothing to fix, and hv reruns today, before 00:00Z. On its end: END to devbin-vc with the seal and tag, rhadamanth's main fast-forwarded to it before any vc or dc commit, molt-dc told the tag, and gyges-sysadm asked to remove ~/Devel/scratch/molt-vc."
+  }
+}

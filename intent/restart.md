@@ -2,8 +2,8 @@
 
 ## DOING
 
-- **Molt's next patch cut (hv, 23 Nov):** vc dry-runs it, books it on the Desk and hands hv the command. Molt's checkout is frozen from that handover until vc names the tag: if a compact lands meanwhile, read `intent estate status` first and skip the pickup while the release runs.
+- **devbin#0326 adoption, then 1.4.8 (hv's decisions 10 and 11):** molt-dc builds the adoption on vc's GO; vc lands it on dc's proof, then a seat cuts 1.4.8 with `--yes` (rhadamanth, or gyges through gyges-sysadm), booked with devbin-vc, START and END to it. Cut well before 20:00Z or after it, so a stopped cut never straddles rhadamanth's midnight.
 
 ## TODO
 
-- **After a compact:** `/in-session` and its pickup as vc (outside a cut's freeze), put hv's inboxes in front of hv, then hold for hv's word.
+- **After a compact:** `/in-session` and its pickup as vc, put hv's inboxes in front of hv, then carry on with the DOING above. 1.4.8's rollout follows (`intent/wip.md`).

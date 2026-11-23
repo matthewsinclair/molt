@@ -1,0 +1,15 @@
+{
+  "id": "01M8454SZJDCFGJPE86BG4GZM2",
+  "ts": "2026-11-23T12:12:28.018Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 23 Nov 2026, in devbin-vc's window (relayed by devbin-vc; the quote is hv's): \"Get molt to use gyges.\" Molt 1.4.7's cut runs on gyges, so it does not wait behind Intent's P0 runs on rhadamanth, and for this cut it overrides the fleet's \"only rhadamanth cuts\" (devbin-vc's wording). rhadamanth's Desk does not book gyges, so devbin-vc denied the rhadamanth ask; START and END still go to devbin-vc. Then hv, live in molt-vc's window: \"Clone it into a scratch worktree at ~/Devel/scratch/... and then clean up afterwards.\" So the cut runs from gyges-sysadm's clone at ~/Devel/scratch/molt-vc/Molt, which is removed once the tag and formula are out."
+  }
+}
