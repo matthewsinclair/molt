@@ -141,12 +141,14 @@ _zsh_env() {
     assert_output_contains "1"
 }
 
-# A user repo whose instances declare [terminal] colours: gyges' ssh_bg_color
-# is $1, and this sleeve's bg_color is $2 when given.
+# A user repo whose instances declare [terminal] colours: jormungandr's
+# ssh_bg_color is $1, and this sleeve's bg_color is $2 when given. The remote
+# host is a name no sleeve has, so its instance is never this sleeve's own, as
+# gyges' was on gyges, where the second write replaced its ssh_bg_color.
 _zsh_instances() {
     local repo="$ZSH_ROOT/repo"
-    mkdir -p "$repo/instances/gyges" "$repo/instances/$(test_hostname)"
-    printf '[terminal]\nssh_bg_color = "%s"\n' "$1" > "$repo/instances/gyges/instance.toml"
+    mkdir -p "$repo/instances/jormungandr" "$repo/instances/$(test_hostname)"
+    printf '[terminal]\nssh_bg_color = "%s"\n' "$1" > "$repo/instances/jormungandr/instance.toml"
     if [[ -n "${2:-}" ]]; then
         printf '[terminal]\nbg_color = "%s"\n' "$2" > "$repo/instances/$(test_hostname)/instance.toml"
     else
@@ -165,7 +167,7 @@ _zsh_instances() {
 
     run zsh_install
     assert_success
-    grep -Fqx '      gyges) _iterm2_set_bg 1a1a2e ;;' "$colors"
+    grep -Fqx '      jormungandr) _iterm2_set_bg 1a1a2e ;;' "$colors"
     run zsh_check
     refute_output_contains "iterm2-ssh-colors.sh"
 
@@ -179,7 +181,7 @@ _zsh_instances() {
     [[ -z "$(ls -A "$ZSH_ROOT/tmp")" ]]
     run zsh_install
     assert_success
-    grep -Fqx '      gyges) _iterm2_set_bg 2b2b3f ;;' "$colors"
+    grep -Fqx '      jormungandr) _iterm2_set_bg 2b2b3f ;;' "$colors"
 
     _zsh_instances 2b2b3f 222222
     run zsh_check
@@ -207,7 +209,7 @@ _zsh_instances() {
         > "$ZSH_ROOT/repo/config/network/local-domains"
     local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
     _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
-    grep -Fqx '      gyges|gyges.hockenbury.internal|gyges.lan|gyges.local) _iterm2_set_bg 1a1a2e ;;' "$script"
+    grep -Fqx '      jormungandr|jormungandr.hockenbury.internal|jormungandr.lan|jormungandr.local) _iterm2_set_bg 1a1a2e ;;' "$script"
 }
 
 @test "the iTerm2 ssh wrapper matches bare host names when there is no local-domains file" {
@@ -215,5 +217,5 @@ _zsh_instances() {
     _zsh_instances 1a1a2e
     local script="$BATS_TEST_TMPDIR/iterm2-ssh-colors.sh"
     _zsh_generate_iterm2_ssh_colors "$script" >/dev/null
-    grep -Fqx '      gyges) _iterm2_set_bg 1a1a2e ;;' "$script"
+    grep -Fqx '      jormungandr) _iterm2_set_bg 1a1a2e ;;' "$script"
 }
