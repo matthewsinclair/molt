@@ -1,0 +1,17 @@
+{
+  "id": "01M843V20WRQWP76YHPAFEHE80",
+  "ts": "2026-11-23T11:49:39.996Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "body": "dc boot plan: picked up with no live messages, no claims, nothing in progress or unbanked; main clean at aa623b5.\nThe one new item in dc's remit is I7892f34 (devbin#0326: molt install and molt use give way to bin/devbin install and use; lib/install.sh, the formula and bootstrap move with them). Its ruling names devbin-cc as carrier on devbin-vc's read of each plan, so dc does not start it.\nOffer, your call: dc takes that issue's docs half (getting-started guide, CHANGELOG, the removed verbs as a ruled divergence) once devbin-cc's plan settles what moves.\nHolding for your dispatch; dc writes nothing more until your go.",
+    "fyi": false,
+    "re": null,
+    "recipient": "vc"
+  }
+}

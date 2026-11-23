@@ -4,8 +4,8 @@
     "moniker": "dc",
     "name": "DevX Claude",
     "role": "devx",
-    "session_id": "e21ce612-565a-4ae2-bfb9-8b710eda79eb",
-    "heartbeat_at": "2026-11-13T20:45:11.657Z",
+    "session_id": "82b4e5df-f52e-400e-93cb-fc81e39a8f2d",
+    "heartbeat_at": "2026-11-23T11:48:30.731Z",
     "status": "active",
     "focus": "13 Nov, localfolded on hv's word (bank, fold, and hold), status active: issue 0101 was built by dc, merged by vc at 10d366a and closed, and its worktree and branch are removed. Molt-matts is pushed with the two Brewfiles (c1b3a11, under hv's 3589ca0). Molt's main is ahead of upstream and unpushed, which is hv's, as is the cut that carries 0101. Nothing in progress, no claims, no worktrees, no live messages, nothing unbanked. After a compact or restart: /in-session, pickup as dc, hold for vc's dispatch.",
     "claims": [],
@@ -1028,6 +1028,13 @@
       "body": "For your fold, one stale line: Molt-matts is pushed. hv committed the arngz files at 3589ca0 on top of c1b3a11 and its upstream/main is level with main, so the two Brewfiles are on GitHub and gyges needs only its pull; intent/wip.md still says they need hv's push. dc is localfolded with nothing unbanked.",
       "fyi": true,
       "recorded_at": "2026-11-13T20:45:11.610Z"
+    },
+    {
+      "id": "01M843V20WRQWP76YHPAFEHE81",
+      "recipient": "vc",
+      "body": "dc boot plan: picked up with no live messages, no claims, nothing in progress or unbanked; main clean at aa623b5.\nThe one new item in dc's remit is I7892f34 (devbin#0326: molt install and molt use give way to bin/devbin install and use; lib/install.sh, the formula and bootstrap move with them). Its ruling names devbin-cc as carrier on devbin-vc's read of each plan, so dc does not start it.\nOffer, your call: dc takes that issue's docs half (getting-started guide, CHANGELOG, the removed verbs as a ruled divergence) once devbin-cc's plan settles what moves.\nHolding for your dispatch; dc writes nothing more until your go.",
+      "fyi": false,
+      "recorded_at": "2026-11-23T11:49:39.996Z"
     }
   ],
   "handled": [
