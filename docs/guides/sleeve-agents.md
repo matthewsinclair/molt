@@ -6,12 +6,12 @@ Without a home, an agent like this runs from `$HOME`. There it has no instructio
 
 ## Sleeve, project and estate agents
 
-|            | Sleeve agent                                               | Project agent                      | Estate agent                                                                                                                                          |
-| ---------- | ---------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Works on   | one machine                                                | one project                        | one Gtools estate                                                                                                                                     |
-| Runs in    | its home, `$MOLT_AGT_DIR/<hostname>-<role>/`               | the project's working tree         | the estate's content root, the directory Gtools registers as `GTOOLS_ESTATE` and deploys the estate's `.claude/` into, eg `~/Dropbox/Sinclair-Shared` |
-| Named      | `<hostname>-<role>`, eg `kovacs-sysadm`                    | `<project>-<suffix>`, eg `molt-vc` | `<estate>-estate`, eg `sinclair-estate`                                                                                                               |
-| Bounded by | its role contract and permission profile, rendered by Molt | the project and Intent             | the Gtools consulting contract and the estate's pinned `settings.json`, deployed by Gtools                                                            |
+|            | Sleeve agent                                               | Project agent                       | Estate agent                                                                                                                                          |
+| ---------- | ---------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Works on   | one machine                                                | one project                         | one Gtools estate                                                                                                                                     |
+| Runs in    | its home, `$MOLT_AGT_DIR/<hostname>-<role>/`               | the project's working tree          | the estate's content root, the directory Gtools registers as `GTOOLS_ESTATE` and deploys the estate's `.claude/` into, eg `~/Dropbox/Sinclair-Shared` |
+| Named      | `<hostname>-<role>`, eg `kovacs-sysadm`                    | `<project>-<moniker>`, eg `molt-vc` | `<estate>-estate`, eg `sinclair-estate`                                                                                                               |
+| Bounded by | its role contract and permission profile, rendered by Molt | the project and Intent              | the Gtools consulting contract and the estate's pinned `settings.json`, deployed by Gtools                                                            |
 
 This guide is about sleeve agents. A project agent is a session run inside an Intent project, which already gives it instructions, permissions and memory, and an estate agent is a session run in a Gtools estate, which Gtools provisions, so Molt manages neither.
 
@@ -27,18 +27,7 @@ Physical machines take their names from the Hyperion Cantos: rhadamanth, gyges, 
 
 ### Project agents
 
-A project agent is named `<project>-<suffix>`, eg `molt-vc` or `gtools-ic`. The suffixes below are the convention for Intent projects, named on 21 Oct 2026. Molt's whiteboard roster, [`intent/whiteboard/README.md`](../../intent/whiteboard/README.md), is the record, and this table repeats it:
-
-| Suffix | Name              |
-| ------ | ----------------- |
-| `sc`   | Supervisor Claude |
-| `vc`   | Validation Claude |
-| `cc`   | Control Claude    |
-| `ic`   | Interface Claude  |
-| `ac`   | Authoring Claude  |
-| `dc`   | DevX Claude       |
-
-Molt itself runs `vc`, `cc`, `dc` and `ac`. A suffix names a project session's job and a role names a sleeve agent's, so `dc`, DevX Claude, is a project agent, while `docs` is a sleeve role.
+A project agent is named `<project>-<moniker>`, eg `molt-vc` or `gtools-ic`, after the seat it holds on its project's whiteboard. The seats and their monikers are defined once, in Intent's terms document, which `intent wb profile terms` prints. A moniker names a project session's seat and a role names a sleeve agent's job, so `dc`, DevX Claude, is a project agent, while `docs` is a sleeve role.
 
 ### Estate agents
 
