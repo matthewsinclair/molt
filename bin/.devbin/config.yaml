@@ -39,16 +39,17 @@ commands:
   formula:
     enabled: true
 
-# Molt's tool, so the formula's @@INSTALL@@ publishes it into the keg with
-# bin/devbin install --prefix libexec --managed-by brew (devbin#0326, hv's
-# decision 11). The set is the one molt install publishes (lib/install.sh's
-# _molt_runtime_pathspecs), and the manifest is devbin's default,
-# .molt-install, which molt_version_line reads. Molt keeps its own publish and
-# switch until I7892f34 removes them, so bin/devbin install's opt publish and
-# bin/devbin use refuse here, naming these; the keg's publish is not refused.
+# Molt's tool. bin/devbin install publishes it, to install.prefix as the opt
+# tree and, from the formula's @@INSTALL@@, into the keg with --prefix libexec
+# --managed-by brew, and bin/devbin use switches ~/.local/bin/molt between the
+# trees (devbin#0326; issue I7892f34, which removed molt install and molt use).
+# The set is lib/install.sh's _molt_runtime_pathspecs, which Molt keeps to
+# mark a dev tree +dirty and to check a published tree, and the manifest is
+# devbin's default, .molt-install, which molt_version_line reads. The prefix is
+# rhadamanth's, the one sleeve that publishes an opt tree: devbin reads it from
+# here, expanding only ~, so it is one per project, not one per sleeve.
 install:
-  publish: bin/molt install
-  switch: bin/molt use
+  prefix: ~/Devel/opt/molt
   links:
     molt: bin/molt
   files:

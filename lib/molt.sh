@@ -1757,7 +1757,8 @@ molt_foreign_home_paths() {
 
 # For doctor's passing molt-on-PATH line: when the tree this doctor runs from
 # is not the one that serves molt, says so, in words (A3: a pass names no
-# path), and names molt use, the only step that switches the sleeve's tree.
+# path), and names bin/devbin use, run in the checkout, the only step that
+# switches the sleeve's tree.
 # A dev clone's doctor on a brew sleeve once advised a resleeve that would have
 # linked the sleeve to the clone (issue 0067). Nothing when they are one tree.
 _molt_doctor_other_tree_note() {
@@ -1772,12 +1773,12 @@ _molt_doctor_other_tree_note() {
   tree="$(molt_tree)"
   case "$tree" in
     dev|opt)
-      if own="$(_molt_use_root "$tree" 2>/dev/null)" && molt_same_file "$own" "$MOLT_ROOT"; then
-        echo "; this doctor runs from the $tree tree, which does not serve molt, and molt use $tree switches the sleeve to it"
+      if own="$(molt_tree_root "$tree" 2>/dev/null)" && molt_same_file "$own" "$MOLT_ROOT"; then
+        echo "; this doctor runs from the $tree tree, which does not serve molt, and bin/devbin use $tree in the checkout switches the sleeve to it"
       else
-        echo "; this doctor runs from a $tree tree that is not this sleeve's, so nothing switches the sleeve to it; molt use says which tree serves molt"
+        echo "; this doctor runs from a $tree tree that is not this sleeve's, so nothing switches the sleeve to it; bin/devbin use in the checkout says which tree serves molt"
       fi ;;
-    *) echo "; this doctor runs from the $tree tree, which does not serve molt; molt use says which tree does" ;;
+    *) echo "; this doctor runs from the $tree tree, which does not serve molt; bin/devbin use in the checkout says which tree does" ;;
   esac
 }
 
@@ -2043,7 +2044,7 @@ cmd_doctor() {
       not_passed=$((not_passed + 1)) ;;
   esac
 
-  # The switch molt use sets must be what PATH runs: the link when there is
+  # The switch bin/devbin use sets must be what PATH runs: the link when there is
   # one, and Homebrew's molt when there is none.
   checks=$((checks + 1))
   local shadow
@@ -2052,7 +2053,7 @@ cmd_doctor() {
     echo "Checking molt on PATH... ⚠ $shadow"
     not_passed=$((not_passed + 1))
   elif [[ -e "$(molt_switch_link)" || -L "$(molt_switch_link)" ]]; then
-    echo "Checking molt on PATH... ✓ molt use's link$(_molt_doctor_other_tree_note)"
+    echo "Checking molt on PATH... ✓ the switch link$(_molt_doctor_other_tree_note)"
   else
     echo "Checking molt on PATH... ✓ brew's; no link of molt's$(_molt_doctor_other_tree_note)"
   fi
@@ -2944,8 +2945,8 @@ _upgrade_finish() {
 # names the dev tree's commit when it is ahead of this install's.
 _upgrade_opt_framework() {
   local dev installed head
-  molt_info "Framework: the opt tree at $(molt_tilde "$MOLT_ROOT") is not pulled; upgrade it from the dev tree with molt install --force."
-  dev="$(_molt_use_root dev)" || return 0
+  molt_info "Framework: the opt tree at $(molt_tilde "$MOLT_ROOT") is not pulled; upgrade it from the dev tree with bin/devbin install --force."
+  dev="$(molt_tree_root dev)" || return 0
   installed="$(molt_tree_source_commit "$MOLT_ROOT")" || return 0
   head="$(git -C "$dev" rev-parse HEAD 2>/dev/null)" || return 0
   if [[ "$head" != "$installed" ]] \
@@ -3008,7 +3009,7 @@ _upgrade_brew_framework() {
 # is the formula's opt link, which follows the upgrade.
 _upgrade_framework_root() {
   if [[ "$(molt_tree)" == brew ]]; then
-    _molt_use_root brew
+    molt_tree_root brew
   else
     echo "$MOLT_ROOT"
   fi

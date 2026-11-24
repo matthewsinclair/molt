@@ -36,11 +36,12 @@ class Molt < Formula
   def caveats
     <<~EOS
       With no ~/.local/bin/molt, this install is the molt you run.
-      A maintainer with a dev checkout or an opt install switches with
-        molt use dev
-        molt use opt
+      A maintainer with a dev checkout or an opt install switches, in
+      the checkout, with
+        bin/devbin use dev
+        bin/devbin use opt
       and comes back to this one with
-        molt use brew
+        bin/devbin use brew
       which removes ~/.local/bin/molt. ~/.local/bin must come before
       #{HOMEBREW_PREFIX}/bin on PATH for the switch to take.
     EOS

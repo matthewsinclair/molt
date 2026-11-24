@@ -64,7 +64,7 @@ export PATH="$HOME/.local/bin:$PATH"
 "$MOLT_PRJ_DIR/Molt/bin/molt" use dev
 ```
 
-[Getting Started](docs/guides/getting-started.md) has the dev, opt and brew trees, and `molt use`, which switches between them.
+[Getting Started](docs/guides/getting-started.md) has the dev, opt and brew trees, and `bin/devbin use`, run in the checkout, which switches between them.
 
 ### Clone and resleeve
 
@@ -160,7 +160,7 @@ molt help                  # Show help
 
 `molt help` is the full list, with every flag.
 
-How `molt upgrade` updates the framework depends on the tree molt runs from. In the dev tree it pulls the checkout. The opt tree is never pulled: publish it again from the dev tree with `molt install --force`. In the brew tree it runs `brew update`, then `brew outdated`, then `brew upgrade` when the formula is outdated.
+How `molt upgrade` updates the framework depends on the tree molt runs from. In the dev tree it pulls the checkout. The opt tree is never pulled: publish it again from the dev tree with `bin/devbin install --force`. In the brew tree it runs `brew update`, then `brew outdated`, then `brew upgrade` when the formula is outdated.
 
 ## Configuration
 

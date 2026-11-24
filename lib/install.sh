@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-# install.sh — The trees Molt runs from, and the publish that makes one (ST0008).
+# install.sh — The trees Molt runs from, read (ST0008; issue I7892f34).
 #
 # A tree is a directory holding bin/molt, lib/, liberators/, templates/ and
-# VERSION. dev is the git checkout; opt is an install `molt install` published
-# from a clean dev tree to a prefix the sleeve declares; brew is the same
-# publish, run by the formula in its keg. bin/molt finds MOLT_ROOT from its own
+# VERSION. dev is the git checkout; opt is what bin/devbin install publishes
+# from a clean dev tree to install.prefix in bin/.devbin/config.yaml; brew is
+# the same publish, run by the formula in its keg (devbin#0326). Molt publishes
+# and switches nothing itself: bin/devbin install and bin/devbin use do, in the
+# checkout. What stays here reads a tree, its manifest and the switch link, on
+# a sleeve that has no bin/devbin. bin/molt finds MOLT_ROOT from its own
 # resolved path in every tree, so nothing here reads MOLT_ROOT from the
 # environment. Sourced by bin/molt after lib/molt.sh, whose helpers it uses.
 
-# The manifest a publish writes at the root of the tree it makes, in the form
+# The manifest devbin's publish writes at the root of the tree it makes, in the form
 # devbin's docs/dev-opt-brew.md T3 fixes for every tool: header lines of
 # `# key: value` (tool, version, source_commit, managed_by), then one line per
 # file in the form `shasum -a 256 -c` reads, sorted by LC_ALL=C sort, so a
@@ -19,18 +22,11 @@ MOLT_INSTALL_MANIFEST=".molt-install"
 MOLT_BREW_FORMULA="matthewsinclair/molt/molt"
 
 # The runtime set's pathspecs, one per line. What git names under these is the
-# runtime set and nothing else: no test/, intent/, docs/ or board.
+# runtime set and nothing else: no test/, intent/, docs/ or board. They are the
+# places bin/.devbin/config.yaml's install: block publishes, read here only to
+# mark a dev tree +dirty and to name a published file the manifest lacks.
 _molt_runtime_pathspecs() {
   printf '%s\n' bin/molt lib liberators templates VERSION
-}
-
-# The runtime set of the dev tree $1, one path per line relative to it, as git
-# names it. The one list of what a publish carries: molt install copies it and
-# the manifest it writes, which the doctor checks, records it.
-molt_runtime_set() {
-  local root="$1" specs=()
-  while IFS= read -r spec; do specs+=("$spec"); done < <(_molt_runtime_pathspecs)
-  git -C "$root" ls-files -- "${specs[@]}"
 }
 
 # Prints the runtime set's changes in the dev tree $1, as git status --porcelain
@@ -74,13 +70,6 @@ molt_install_form() {
   fi
 }
 
-# The managed_by line of the old-form manifest in the tree $1, or nothing. Its
-# one reader is the guard that lets molt install --force replace an old-form
-# opt install, the remedy T3 names (vc, 24 Oct).
-_molt_install_old_managed_by() {
-  awk '$1 == "managed_by:" { print $2; exit }' "$1/$MOLT_INSTALL_MANIFEST" 2>/dev/null
-}
-
 # True when the tree $1 lands in a Homebrew keg of molt, Cellar/molt/<ver>/libexec,
 # which makes it the brew tree whatever its manifest says (T3 as amended by
 # decision 58: an old-form or manifest-less keg still answers brew).
@@ -100,7 +89,7 @@ molt_install_form_fault() {
       if [[ "$(molt_tree "$root")" == brew ]]; then
         echo "$manifest is an old manifest, from before the dev/opt/brew contract; brew upgrade $MOLT_BREW_FORMULA writes a current one"
       else
-        echo "$manifest is an old manifest, from before the dev/opt/brew contract; republish with molt install --force"
+        echo "$manifest is an old manifest, from before the dev/opt/brew contract; republish with bin/devbin install --force in the dev tree"
       fi ;;
     none)
       [[ "$(molt_tree "$root")" != brew ]] \
@@ -196,7 +185,7 @@ molt_tree_commit_fault() {
 # unknown)`. It names no path: `command -v molt` says where the running copy
 # lives, and a check that fails about a path names that path itself. Molt is
 # a script tool, so nothing follows the parenthesis (issue 0063). molt
-# version, molt --version, the doctor and molt use print it.
+# version, molt --version and the doctor print it.
 molt_version_line() {
   local root="${1:-$MOLT_ROOT}" version
   version="$(cat "$root/VERSION" 2>/dev/null)" || version="unknown version"
@@ -239,243 +228,20 @@ molt_install_drift() {
   done < <(_molt_runtime_pathspecs)
 }
 
-# Writes the manifest for the files of the runtime set $3 (one per line), as
-# copied to the tree $1 from the dev tree $2, with managed_by $4.
-_molt_install_write_manifest() {
-  local dest="$1" src="$2" files="$3" managed_by="$4" commit version path sum body
-  commit="$(git -C "$src" rev-parse HEAD)" || return 1
-  version="$(cat "$src/VERSION")" || return 1
-  body="$(LC_ALL=C sort <<< "$files")" || return 1
-  {
-    echo "# tool: molt"
-    echo "# version: $version"
-    echo "# source_commit: $commit"
-    echo "# managed_by: $managed_by"
-    while IFS= read -r path; do
-      [[ -n "$path" ]] || continue
-      sum="$(molt_hash < "$dest/$path")" || return 1
-      printf '%s  %s\n' "$sum" "$path"
-    done <<< "$body"
-  } > "$dest/$MOLT_INSTALL_MANIFEST"
-}
+# --- the switch ---
 
-# Copies the runtime set $3 (one path per line) from the dev tree $1 into the
-# empty directory $2, keeping each file's mode.
-_molt_install_copy() {
-  local src="$1" dest="$2" files="$3" path
-  while IFS= read -r path; do
-    [[ -n "$path" ]] || continue
-    mkdir -p "$dest/$(dirname "$path")" || return 1
-    cp -p "$src/$path" "$dest/$path" || return 1
-  done <<< "$files"
-}
-
-# The opt tree's prefix, MOLT_INSTALL_PREFIX as this sleeve's vars.sh declares
-# it, without a trailing slash; nothing when it declares none or there is no
-# user repo. Fails, printing why instead, when vars.sh cannot be read.
-molt_install_prefix() {
-  local prefix status=0
-  prefix="$(molt_instance_var MOLT_INSTALL_PREFIX)" || status=$?
-  case "$status" in
-    0) echo "${prefix%/}" ;;
-    3) ;;
-    *) echo "MOLT_INSTALL_PREFIX could not be read: $prefix"; return 1 ;;
-  esac
-}
-
-# The names of the first few entries in the directory $1, one per line, dot
-# files included; nothing when it is empty.
-_molt_dir_entries() {
-  find "$1" -mindepth 1 -maxdepth 1 2>/dev/null | awk 'NR <= 5 { sub(/.*\//, ""); print }'
-}
-
-# Names why the prefix $1 cannot take a publish managed by $2 (molt or brew)
-# with force $3, and prints nothing when it can. A missing or empty directory is
-# fresh; one whose manifest says Molt manages it is replaced only with --force,
-# and one Homebrew manages only by Homebrew; anything else is refused, --force
-# or not, since a replace removes what was there.
-_molt_install_prefix_fault() {
-  local prefix="$1" managed_by="$2" force="$3" held
-  if [[ -e "$prefix" && ! -d "$prefix" ]]; then
-    echo "$(molt_tilde "$prefix") is not a directory"
-    return 0
-  fi
-  [[ -d "$prefix" ]] || return 0
-  if [[ -f "$prefix/$MOLT_INSTALL_MANIFEST" ]]; then
-    local tool=molt
-    case "$(molt_install_form "$prefix")" in
-      current)
-        held="$(molt_install_field "$prefix" managed_by)"
-        tool="$(molt_install_field "$prefix" tool)" ;;
-      *) held="$(_molt_install_old_managed_by "$prefix")" ;;
-    esac
-    if [[ "$tool" != molt ]]; then
-      echo "$(molt_tilde "$prefix/$MOLT_INSTALL_MANIFEST") says tool: ${tool:-nothing}, not molt, so $(molt_tilde "$prefix") is left as it is"
-      return 0
-    fi
-    case "$held" in
-      molt|brew)
-        if [[ "$held" == brew && "$managed_by" != brew ]] || _molt_in_keg "$prefix"; then
-          echo "$(molt_tilde "$prefix") is Homebrew's install of molt; upgrade it with brew upgrade $MOLT_BREW_FORMULA"
-        elif ! $force; then
-          echo "$(molt_tilde "$prefix") already holds an install of molt; pass --force to replace it"
-        fi ;;
-      "") echo "$(molt_tilde "$prefix/$MOLT_INSTALL_MANIFEST") names no managed_by, so $(molt_tilde "$prefix") is no install Molt can replace, and it is left as it is" ;;
-      *) echo "$(molt_tilde "$prefix/$MOLT_INSTALL_MANIFEST") says managed_by: $held, which is neither molt nor brew, so $(molt_tilde "$prefix") is left as it is" ;;
-    esac
-    return 0
-  fi
-  held="$(_molt_dir_entries "$prefix" | tr "\n" " ")"
-  [[ -z "$held" ]] || echo "$(molt_tilde "$prefix") holds files Molt did not write (${held% }), so it is left as it is"
-}
-
-# molt install [--prefix <dir>] [--force] [--managed-by molt|brew]: publishes
-# the runtime set of this dev tree, and a manifest, to the prefix. Refused from
-# opt or brew, from a dirty runtime set, with no prefix, and over a prefix Molt
-# did not write.
-cmd_install() {
-  local prefix="" force=false managed_by=molt
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --prefix)
-        [[ $# -ge 2 && -n "$2" ]] || { molt_error "--prefix needs a directory"; return 1; }
-        prefix="$2"; shift 2 ;;
-      --force) force=true; shift ;;
-      --managed-by)
-        case "${2:-}" in
-          molt|brew) managed_by="$2"; shift 2 ;;
-          *) molt_error "--managed-by takes molt or brew"; return 1 ;;
-        esac ;;
-      *) molt_error "Unknown option: $1"; return 1 ;;
-    esac
-  done
-
-  local tree
-  tree="$(molt_tree "$MOLT_ROOT")"
-  case "$tree" in
-    dev) ;;
-    brew)
-      molt_error "molt install runs in a dev tree, and this is Homebrew's install at $(molt_tilde "$MOLT_ROOT"); upgrade it with brew upgrade $MOLT_BREW_FORMULA"
-      return 1 ;;
-    *)
-      molt_error "molt install runs in a dev tree, and this is the $tree tree at $(molt_tilde "$MOLT_ROOT"); run it from the checkout"
-      return 1 ;;
-  esac
-
-  if [[ -z "$prefix" ]] && ! prefix="$(molt_install_prefix)"; then
-    molt_error "molt install: $prefix"
-    return 1
-  fi
-  if [[ -z "$prefix" ]]; then
-    molt_error "molt install needs a prefix: pass --prefix <dir>, or set MOLT_INSTALL_PREFIX in this sleeve's vars.sh"
-    return 1
-  fi
-  if [[ "$prefix" != /* ]]; then
-    molt_error "molt install: the prefix must be an absolute path, not $prefix"
-    return 1
-  fi
-  if [[ "$prefix" =~ ^/+$ ]]; then
-    molt_error "molt install: the prefix cannot be /"
-    return 1
-  fi
-  prefix="${prefix%/}"
-  # Compared where each lands on disk, so a prefix reached through a symlink
-  # into the dev tree is caught as well as one spelled inside it.
-  local landed_prefix landed_root
-  if ! landed_prefix="$(molt_disk_path -P "$prefix")" || ! landed_root="$(molt_disk_path -P "$MOLT_ROOT")"; then
-    molt_error "molt install: where $(molt_tilde "$prefix") lands on disk could not be read"
-    return 1
-  fi
-  case "${landed_prefix%/}/" in
-    "${landed_root%/}"/*)
-      molt_error "molt install: the prefix $(molt_tilde "$prefix") is inside the dev tree it would publish"
-      return 1 ;;
-  esac
-
-  local changes dirty_status=0
-  changes="$(molt_runtime_set_dirty "$MOLT_ROOT")" || dirty_status=$?
-  case "$dirty_status" in
-    0)
-      molt_error "molt install publishes only a clean runtime set, and $(molt_tilde "$MOLT_ROOT") has changes:"
-      printf '%s\n' "$changes" | sed 's/^/    /' >&2
-      return 1 ;;
-    1) ;;
-    *) molt_error "molt install: $changes"; return 1 ;;
-  esac
-
-  local fault
-  fault="$(_molt_install_prefix_fault "$prefix" "$managed_by" "$force")"
-  if [[ -n "$fault" ]]; then
-    molt_error "molt install: $fault"
-    return 1
-  fi
-
-  local files
-  if ! files="$(molt_runtime_set "$MOLT_ROOT")" || [[ -z "$files" ]]; then
-    molt_error "molt install: git names no runtime set in $(molt_tilde "$MOLT_ROOT")"
-    return 1
-  fi
-
-  # Staged beside the prefix, so the rename into place stays on one filesystem.
-  local parent stage old=""
-  parent="$(dirname "$prefix")"
-  if ! mkdir -p "$parent"; then
-    molt_error "molt install: $(molt_tilde "$parent") could not be made"
-    return 1
-  fi
-  if ! stage="$(mktemp -d "$parent/.molt-install.XXXXXX")"; then
-    molt_error "molt install: no staging directory could be made in $(molt_tilde "$parent")"
-    return 1
-  fi
-  # mktemp -d makes the stage 0700, and it becomes the prefix as it is.
-  if ! chmod 755 "$stage" \
-      || ! _molt_install_copy "$MOLT_ROOT" "$stage" "$files" \
-      || ! _molt_install_write_manifest "$stage" "$MOLT_ROOT" "$files" "$managed_by"; then
-    rm -rf "$stage"
-    molt_error "molt install: the runtime set could not be copied to $(molt_tilde "$stage"); $(molt_tilde "$prefix") is unchanged"
-    return 1
-  fi
-
-  # The old install is moved aside, and removed only once the new one is in.
-  if [[ -d "$prefix" ]]; then
-    if [[ -z "$(_molt_dir_entries "$prefix")" ]]; then
-      rmdir "$prefix" || { rm -rf "$stage"; molt_error "molt install: $(molt_tilde "$prefix") could not be replaced"; return 1; }
-    else
-      old="$stage.old"
-      if ! mv "$prefix" "$old"; then
-        rm -rf "$stage"
-        molt_error "molt install: $(molt_tilde "$prefix") could not be moved aside, so it is unchanged"
-        return 1
-      fi
-    fi
-  fi
-  if ! mv "$stage" "$prefix"; then
-    rm -rf "$stage"
-    if [[ -n "$old" ]] && ! mv "$old" "$prefix"; then
-      molt_error "molt install: the new install could not be moved to $(molt_tilde "$prefix"), nor the old one back; it is at $(molt_tilde "$old")"
-      return 1
-    fi
-    molt_error "molt install: the new install could not be moved to $(molt_tilde "$prefix")${old:+; the old one is back in place}"
-    return 1
-  fi
-  [[ -z "$old" ]] || rm -rf "$old"
-
-  molt_info "Installed: $(molt_version_line "$prefix")"
-}
-
-# --- molt use ---
-
-# The per-user link molt use sets, the whole of Molt's link set (T5): one
-# link, named here once. Every reader of the switch asks this.
+# The per-user link bin/devbin use sets, from install.links in
+# bin/.devbin/config.yaml, the whole of Molt's link set (T5): one link, named
+# here once. Every reader of the switch asks this.
 molt_switch_link() {
   echo "$MOLT_LOCAL_BIN/molt"
 }
 
-# The root this sleeve declares for the tree $1 (dev, opt or brew), whether or
-# not anything is there: the checkout under MOLT_PRJ_DIR, the prefix in
-# vars.sh, or the formula's opt link. Fails, printing why instead, when the
-# sleeve declares none.
-_molt_use_root() {
+# The root this sleeve declares for the tree $1 (dev or brew), whether or not
+# anything is there: the checkout under MOLT_PRJ_DIR, or the formula's opt link.
+# Fails, printing why instead, when the sleeve declares none. opt has no root
+# a sleeve declares: devbin reads it from the checkout's config.
+molt_tree_root() {
   local root
   case "$1" in
     dev)
@@ -484,13 +250,6 @@ _molt_use_root() {
         return 1
       fi
       echo "$MOLT_PRJ_DIR/Molt" ;;
-    opt)
-      root="$(molt_install_prefix)" || { echo "$root"; return 1; }
-      if [[ -z "$root" ]]; then
-        echo "this sleeve's vars.sh sets no MOLT_INSTALL_PREFIX, so it has no opt tree"
-        return 1
-      fi
-      echo "$root" ;;
     brew)
       if ! root="$(HOMEBREW_NO_AUTO_UPDATE=1 brew --prefix 2>/dev/null)" || [[ -z "$root" ]]; then
         echo "brew is not on PATH, so this sleeve has no brew tree"
@@ -500,18 +259,9 @@ _molt_use_root() {
   esac
 }
 
-# The step that makes the tree $1 (dev, opt or brew) at $2.
-_molt_use_make_step() {
-  case "$1" in
-    dev) echo "clone it with git clone https://github.com/matthewsinclair/molt.git $(molt_tilde "$2")" ;;
-    opt) echo "publish it with molt install from the dev tree" ;;
-    brew) echo "install it with brew install $MOLT_BREW_FORMULA" ;;
-  esac
-}
-
 # The root of the tree the switch link serves. Fails, printing why instead,
 # when there is no link, it is broken, or it leads to a bin/molt that is no
-# dev, opt or brew tree's. molt use and the local-bin liberator ask this.
+# dev, opt or brew tree's. The doctor and the local-bin liberator ask this.
 molt_served_tree() {
   local link target root
   link="$(molt_switch_link)"
@@ -535,7 +285,7 @@ molt_brew_on_path() {
   local first target root
   first="$(type -ap molt 2>/dev/null | head -n 1)" || first=""
   if [[ -z "$first" ]]; then
-    echo "there is no $(molt_tilde "$(molt_switch_link)") and no molt on PATH; install it with brew install $MOLT_BREW_FORMULA, or run molt use dev or opt"
+    echo "there is no $(molt_tilde "$(molt_switch_link)") and no molt on PATH; install it with brew install $MOLT_BREW_FORMULA, or run bin/devbin use dev or opt in the checkout"
     return 1
   fi
   target="$(_molt_realpath "$first")"
@@ -547,138 +297,13 @@ molt_brew_on_path() {
   echo "$root"
 }
 
-# molt use [dev|opt|brew]: with no argument, reports the tree that serves molt
-# and changes nothing; with dev or opt, points the switch link at that tree's
-# bin/molt, refusing a tree that is not there; with brew, removes the link, so
-# Homebrew's own bin/molt answers. No link means brew (T5). Each switch prints
-# the new version line. The link is the only record of the choice.
-#
-# It runs from any tree, brew included, unlike utilz use, which refuses inside
-# its install: it writes only the link, never into a tree, so it is how a
-# sleeve whose everyday molt is brew gets back to dev.
-cmd_use() {
-  local want="${1:-}" root tree link
-  link="$(molt_switch_link)"
-  if [[ $# -gt 1 ]]; then
-    molt_error "molt use takes one of dev, opt or brew"
-    return 1
-  fi
-  case "$want" in
-    "")
-      if [[ -e "$link" || -L "$link" ]]; then
-        if ! root="$(molt_served_tree)"; then
-          molt_error "molt use: $root"
-          return 1
-        fi
-        echo "$(molt_tilde "$link") serves $(molt_version_line "$root")"
-      else
-        if ! root="$(molt_brew_on_path)"; then
-          molt_error "molt use: $root"
-          return 1
-        fi
-        echo "There is no $(molt_tilde "$link"), so brew serves $(molt_version_line "$root")"
-      fi
-      _molt_use_shadow_fault
-      return ;;
-    dev|opt|brew) ;;
-    *) molt_error "molt use takes dev, opt or brew, not $want"; return 1 ;;
-  esac
-
-  if ! root="$(_molt_use_root "$want")"; then
-    molt_error "molt use $want: $root"
-    return 1
-  fi
-  # use brew removes nothing unless a Homebrew molt would answer once the link
-  # is gone, and the refusal names the link, the tree it serves, why and the
-  # remedy (A4). It used to remove the link first and only then find no molt.
-  if [[ "$want" == brew ]] && [[ -e "$link" || -L "$link" ]]; then
-    local fault served
-    fault="$(_molt_use_brew_fault "$root")"
-    if [[ -n "$fault" ]]; then
-      if served="$(molt_served_tree)"; then
-        served="it serves the $(molt_tree "$served") tree at $(molt_tilde "$served")"
-      fi
-      molt_error "molt use brew: $(molt_tilde "$link") is left in place ($served), as no Homebrew molt would answer once it is gone: $fault, or stay on dev or opt"
-      return 1
-    fi
-  fi
-  if [[ ! -x "$root/bin/molt" ]]; then
-    molt_error "molt use $want: there is no $want tree at $(molt_tilde "$root"); $(_molt_use_make_step "$want" "$root")"
-    return 1
-  fi
-  tree="$(molt_tree "$root")"
-  if [[ "$tree" != "$want" ]]; then
-    molt_error "molt use $want: $(molt_tilde "$root") is the $tree tree, not the $want tree"
-    return 1
-  fi
-  if [[ "$want" == brew ]]; then
-    _molt_use_remove_link || return 1
-  else
-    molt_link "$root/bin/molt" "$link" || return 1
-  fi
-  molt_version_line "$root"
-  _molt_use_shadow_fault
-}
-
-# Why no Homebrew molt would answer once the switch link is gone, or nothing
-# when one would (devbin's T5, amendment A4); $1 is the brew tree's root. What
-# PATH would run then is its first molt outside the link's directory, the
-# directories compared where they resolve, since rhadamanth's ~/bin is
-# ~/.local/bin; it must resolve into the brew tree, as molt_brew_on_path asks.
-_molt_use_brew_fault() {
-  local root="$1" candidate first="" target
-  if [[ ! -x "$root/bin/molt" ]]; then
-    echo "the formula is not installed; install it with brew install $MOLT_BREW_FORMULA"
-    return 0
-  fi
-  while IFS= read -r candidate; do
-    [[ -n "$candidate" ]] || continue
-    molt_same_file "$(dirname "$candidate")" "$MOLT_LOCAL_BIN" && continue
-    first="$candidate"
-    break
-  done <<< "$(type -ap molt 2>/dev/null)"
-  if [[ -z "$first" ]]; then
-    echo "its keg is not linked, so no molt would be left on PATH; link it with brew link ${MOLT_BREW_FORMULA##*/}"
-    return 0
-  fi
-  target="$(_molt_realpath "$first")"
-  if [[ "${target%/bin/molt}" == "$target" ]] || [[ "$(molt_tree "${target%/bin/molt}")" != brew ]]; then
-    echo "$(molt_tilde "$first") comes first on PATH, and it is not Homebrew's; move it aside"
-  fi
-}
-
-# Removes the switch link for molt use brew when it is a link into one of
-# Molt's trees, or a broken link to a bin/molt, and nothing else: a file, or a
-# link to anything else, is refused by name and left as it is (T5).
-_molt_use_remove_link() {
-  local link fault
-  link="$(molt_switch_link)"
-  [[ -e "$link" || -L "$link" ]] || return 0
-  if ! fault="$(molt_served_tree)"; then
-    if [[ ! -L "$link" || -e "$link" || "$(readlink "$link")" != */bin/molt ]]; then
-      molt_error "molt use brew: $fault; it is left as it is, so move it aside, then run molt use brew again"
-      return 1
-    fi
-  fi
-  rm "$link" || { molt_error "molt use brew: $(molt_tilde "$link") could not be removed"; return 1; }
-  molt_info "Removed $(molt_tilde "$link"), so brew serves molt"
-}
-
-# Fails, saying what shadows it, when the switch molt use reports or has just
-# set is not what PATH runs for molt.
-_molt_use_shadow_fault() {
-  local shadow
-  shadow="$(molt_path_shadow)"
-  [[ -z "$shadow" ]] || { molt_error "molt use: $shadow"; return 1; }
-}
-
 # Refuses, naming the dev tree to run it in, the verb $1 anywhere but a dev
 # tree: molt test and its lint have no test/ to run in opt or brew.
 molt_require_dev_tree() {
   local tree dev
   tree="$(molt_tree)"
   [[ "$tree" != dev ]] || return 0
-  if dev="$(_molt_use_root dev)"; then
+  if dev="$(molt_tree_root dev)"; then
     molt_error "$1 runs in a dev tree, and this is the $tree tree at $(molt_tilde "$MOLT_ROOT"); run it in $(molt_tilde "$dev")"
   else
     molt_error "$1 runs in a dev tree, and this is the $tree tree at $(molt_tilde "$MOLT_ROOT"); $dev"
@@ -688,12 +313,11 @@ molt_require_dev_tree() {
 
 # Names what runs for molt instead of the switch, and prints nothing when the
 # switch answers (T5). With a link, it must be the first molt on PATH: any other
-# molt ahead of it, a brew link included, takes molt use's choice away (on
+# molt ahead of it, a brew link included, takes bin/devbin use's choice away (on
 # rhadamanth a ~/.local/bin/molt from March once ran instead). With no link,
 # brew serves molt, so the first molt on PATH must resolve into the brew tree.
 # Directories are compared where they resolve, never as strings, since
-# rhadamanth's ~/bin is a link to ~/.local/bin. molt use and the doctor ask
-# this. Molt's link set is one link, so it cannot be split across trees.
+# rhadamanth's ~/bin is a link to ~/.local/bin. The doctor asks this. Molt's link set is one link, so it cannot be split across trees.
 molt_path_shadow() {
   local link first
   link="$(molt_switch_link)"
@@ -707,9 +331,9 @@ molt_path_shadow() {
     echo "no molt is on PATH, so $(molt_tilde "$link") does not run; put $(molt_tilde "$MOLT_LOCAL_BIN") on PATH"
   elif ! molt_same_file "$(dirname "$first")" "$MOLT_LOCAL_BIN"; then
     if [[ "$(molt_tree "$(dirname "$(dirname "$(_molt_realpath "$first")")")")" == brew ]]; then
-      echo "PATH runs Homebrew's $(molt_tilde "$first") ahead of $(molt_tilde "$link"); put $(molt_tilde "$MOLT_LOCAL_BIN") ahead of Homebrew's bin on PATH, or run molt use brew"
+      echo "PATH runs Homebrew's $(molt_tilde "$first") ahead of $(molt_tilde "$link"); put $(molt_tilde "$MOLT_LOCAL_BIN") ahead of Homebrew's bin on PATH, or run bin/devbin use brew in the checkout"
     else
-      echo "PATH runs $(molt_tilde "$first") ahead of $(molt_tilde "$link"), so molt use does not change what runs"
+      echo "PATH runs $(molt_tilde "$first") ahead of $(molt_tilde "$link"), so bin/devbin use does not change what runs"
     fi
   fi
 }

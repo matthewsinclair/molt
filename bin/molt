@@ -57,10 +57,6 @@ Commands:
                         Scaffold a new Molt-{user} config repo from the skeleton,
                         or with --from, from the template DIR, which must hold config/.
                         Prompts for anything not passed as a flag.
-  install [--prefix DIR] [--force] [--managed-by molt|brew]
-                        Publish this dev tree to DIR (default: MOLT_INSTALL_PREFIX
-                        in vars.sh) as the opt tree, with a manifest
-  use [dev|opt|brew]   Link ~/.local/bin/molt to dev or opt, or remove it for brew; with none, show what serves molt
   status      Show current sleeve state and liberator status
   list        List liberators with enabled/disabled/installed status
   agent list  List this sleeve's agents: name, role, enabled, state, home
@@ -133,8 +129,6 @@ case "${1:-help}" in
   resleeve) shift; cmd_resleeve "$@" ;;
   upgrade)  shift; cmd_upgrade "$@" ;;
   maintain) shift; cmd_maintain "$@" ;;
-  install)  shift; cmd_install "$@" ;;
-  use)      shift; cmd_use "$@" ;;
   new-user) shift; cmd_new_user "$@" ;;
   git)      shift; cmd_git "$@" ;;
   status)   cmd_status ;;
@@ -144,6 +138,13 @@ case "${1:-help}" in
   test)     shift; cmd_test "$@" ;;
   version|--version) molt_version_line ;;
   help)     cmd_help ;;
+  # Removed by hv's ruling on devbin#0326 (issue I7892f34): devbin publishes
+  # and switches every Homebrew'd tool, Molt included. Named, so a habit or an
+  # old doc meets the replacement, not a bare unknown command.
+  install|use)
+    molt_error "molt $1 is gone: run bin/devbin $1 in Molt's checkout, which publishes and switches molt (issue I7892f34)"
+    exit 1
+    ;;
   *)
     molt_error "Unknown command: $1"
     cmd_help

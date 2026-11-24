@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# publish-tree <dev> <prefix> [molt|brew] -- a test fixture: an opt or brew
+# tree at <prefix>, published from the dev tree <dev> as bin/devbin install
+# publishes Molt (devbin's lib/tool, tool_publish), so install.bats can check
+# what Molt reads from one without the publish Molt no longer has (issue
+# I7892f34).
+#
+# WRITTEN APART FROM BOTH SIDES. It copies what git names in the runtime set
+# and writes the manifest in T3's form, the four keys, then `line`, then one
+# `<sha256>  <path>` line per file in LC_ALL=C order, from the contract and not
+# from Molt's readers or devbin's writer. devbin runs on bash 5 alone, and the
+# suite runs under /bin/bash 3.2 too, so it cannot be devbin's own publish; a
+# real bin/devbin install is the change's proof, outside the suite.
+#
+# <prefix> must not exist yet, or be empty. managed_by is molt (opt) unless the
+# third argument says brew (a keg).
+set -euo pipefail
+
+dev="$1" prefix="$2" managed_by="${3:-molt}"
+[[ ! -e "$prefix" || -z "$(ls -A "$prefix")" ]] || { echo "publish-tree: $prefix is not empty" >&2; exit 1; }
+mkdir -p "$prefix"
+
+files="$(git -C "$dev" ls-files -- bin/molt lib liberators templates VERSION | LC_ALL=C sort)"
+while IFS= read -r f; do
+  mkdir -p "$prefix/$(dirname "$f")"
+  cp -p "$dev/$f" "$prefix/$f"
+done <<< "$files"
+
+sha256() {
+  if command -v shasum >/dev/null; then shasum -a 256 "$1"; else sha256sum "$1"; fi | awk '{print $1}'
+}
+
+commit="$(git -C "$dev" rev-parse HEAD)"
+version="$(cat "$dev/VERSION")"
+tree=opt
+[[ "$managed_by" != brew ]] || tree=brew
+{
+  printf '# tool: molt\n# version: %s\n# source_commit: %s\n# managed_by: %s\n' "$version" "$commit" "$managed_by"
+  printf '# line: molt %s (%s, %s)\n' "$version" "$tree" "${commit:0:12}"
+  while IFS= read -r f; do
+    printf '%s  %s\n' "$(sha256 "$prefix/$f")" "$f"
+  done <<< "$files"
+} > "$prefix/.molt-install"

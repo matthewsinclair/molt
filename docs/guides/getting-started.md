@@ -163,45 +163,48 @@ Molt reaches a machine from one of its trees, dev, opt or brew, which are dev, s
 
 ```
 $MOLT_PRJ_DIR/Molt                 dev    the git checkout: edited, committed, tested
-$MOLT_INSTALL_PREFIX               opt    published from the checkout, only from a CLEAN runtime set
+~/Devel/opt/molt                   opt    published from the checkout, only from a CLEAN runtime set
 $HOMEBREW_PREFIX/opt/molt/libexec  brew   the formula, published from a release tag
 ```
 
 The checkout is the bleeding edge. The opt install is a published copy of it, which keeps what works apart from what is mid-development. The brew formula is the one publish to prod: what users install. (`opt` names the tier; Homebrew's own `opt/` path, on the brew line, is a different thing.)
+
+**devbin publishes and switches every tree, and Molt does neither.** `bin/devbin install` and `bin/devbin use`, run in the checkout, are the one implementation every Homebrew'd tool shares (devbin#0326). Molt had its own, `molt install` and `molt use`, until a ruling that no tool keeps its own copy (issue I7892f34). Both verbs are gone: each now refuses, naming its `bin/devbin` replacement. Molt still reads every tree, so `molt version`, `molt doctor` and `molt upgrade` work on a sleeve that has no `bin/devbin`.
 
 ### The dev checkout
 
 ```bash
 git clone https://github.com/matthewsinclair/molt "$MOLT_PRJ_DIR/Molt"
 export PATH="$HOME/.local/bin:$PATH"
-"$MOLT_PRJ_DIR/Molt/bin/molt" use dev
+cd "$MOLT_PRJ_DIR/Molt"
+bin/devbin use dev
 ```
 
-The clone is the dev tree, exact-case `Molt`. `molt use dev` links `~/.local/bin/molt` to it (see the switch, below). Run the checkout's `molt` by path this once rather than putting its `bin/` on PATH, or `molt doctor` reports that it shadows the link.
+The clone is the dev tree, exact-case `Molt`. `bin/devbin use dev` links `~/.local/bin/molt` to it (see the switch, below). devbin needs bash 5, which `brew install bash` gives a Mac.
 
-### The switch: `molt use`
+### The switch: `bin/devbin use`
 
-`~/.local/bin/molt` is the switch, and `molt use` is the one verb that moves it:
+`~/.local/bin/molt` is the switch, and `bin/devbin use`, run in the checkout, is the one verb that moves it:
 
 ```bash
-molt use          # show which tree serves molt, and change nothing
-molt use dev      # link ~/.local/bin/molt to the checkout
-molt use opt      # link it to the opt install
-molt use brew     # remove it, so Homebrew's molt answers
+bin/devbin use          # show which tree serves molt, and change nothing
+bin/devbin use dev      # link ~/.local/bin/molt to the checkout
+bin/devbin use opt      # link it to the opt install
+bin/devbin use brew     # remove it, so Homebrew's molt answers
 ```
 
-**No link means brew.** A user who never runs `molt use` has no `~/.local/bin/molt`, and runs Homebrew's. For the switch to take, `~/.local/bin` must come before Homebrew's `bin` on PATH, ahead of the first one `brew shellenv` adds. When another `molt` runs instead, `molt use` with no argument fails and `molt doctor` marks the check not passed, each naming it. Resleeve never moves the switch. From a dev or opt tree it replaces a broken link, and makes a missing one unless Homebrew's `molt` is what PATH runs; from brew it makes nothing.
+**No link means brew.** A user who never switches has no `~/.local/bin/molt`, and runs Homebrew's. For the switch to take, `~/.local/bin` must come before Homebrew's `bin` on PATH, ahead of the first one `brew shellenv` adds. When another `molt` runs instead, `molt doctor` marks the check not passed, naming it. Resleeve never moves the switch: from a dev or opt tree with no link, the `local-bin` liberator names `bin/devbin use` rather than making one, unless Homebrew's `molt` is what PATH runs.
 
-### Publishing to opt: `molt install`
+### Publishing to opt: `bin/devbin install`
 
 ```bash
 cd "$MOLT_PRJ_DIR/Molt"
-bin/molt install            # publish to $MOLT_INSTALL_PREFIX; refuses a dirty runtime set
-bin/molt install --force    # replace the opt install with this commit
-bin/molt use opt
+bin/devbin install            # publish to install.prefix; refuses a dirty runtime set
+bin/devbin install --force    # replace the opt install with this commit
+bin/devbin use opt
 ```
 
-The prefix comes from `--prefix <dir>`, else `MOLT_INSTALL_PREFIX` in the sleeve's `vars.sh`; there is no default, and with neither, `molt install` refuses by name. It copies what git names under `bin/molt`, `lib/`, `liberators/`, `templates/` and `VERSION`, and writes a checksum manifest, `.molt-install`, that `molt doctor` checks the install against. An opt install is never pulled: `molt upgrade` there names `molt install --force` and the checkout's commit when it is ahead. `molt test` runs only in the checkout.
+The prefix is `install.prefix` in `bin/.devbin/config.yaml`, `~/Devel/opt/molt`, or `--prefix <dir>`. devbin copies the places the config's `install:` block names, `bin/molt`, `lib/`, `liberators/`, `templates/` and `VERSION`, and writes a checksum manifest, `.molt-install`, that `molt doctor` checks the install against. An opt install is never pulled: `molt upgrade` there names `bin/devbin install --force` and the checkout's commit when it is ahead. `molt test` runs only in the checkout.
 
 ### Bootstrap script
 

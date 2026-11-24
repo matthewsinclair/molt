@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.9] - unreleased
+
+### Removed
+
+- `molt install` and `molt use`, a ruled divergence from Molt's own earlier interface. devbin's `bin/devbin install` and `bin/devbin use`, run in Molt's checkout, are the one way every Homebrew'd tool is published and switched, and no tool keeps a copy (devbin#0326, issue I7892f34). Each removed verb now refuses, naming its replacement. `lib/install.sh` loses its publish, its prefix, its manifest writer and its switch. It keeps what a sleeve with no `bin/devbin` needs: the tree, its manifest, the version line, the switch link and the shadow check, so `molt version`, `molt doctor` and `molt upgrade` work as before in every tree. `MOLT_INSTALL_PREFIX` is no longer read: the opt prefix is `install.prefix` in `bin/.devbin/config.yaml`, `~/Devel/opt/molt`
+
+### Changed
+
+- The `local-bin` liberator makes no link. A missing or broken `~/.local/bin/molt` that Homebrew's `molt` does not stand in for is named, with the `bin/devbin use` that makes it, so the switch has one writer (devbin T5). `bin/bootstrap.sh` still links a fresh checkout itself, since a fresh Mac's `/bin/bash` 3.2 cannot run devbin
+- The doctor's remedies, `molt upgrade` in an opt tree and the formula's caveats name `bin/devbin install --force` and `bin/devbin use` in place of the removed verbs
+
 ## [1.4.8] - 2026-11-24
 
 Homebrew goes from 1.4.6 to 1.4.8: 1.4.7 was tagged and released, but its formula was never published, so 1.4.8 brings 1.4.7's changes to brew as well.

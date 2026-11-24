@@ -143,7 +143,7 @@ find_existing_repo() {
 echo ""
 info "Setting up molt in $MOLT_PRJ_DIR and your config repo in $MOLT_CFG_DIR"
 
-# Exact-case Molt, where molt use dev looks for the dev tree (issue 0049).
+# Exact-case Molt, the dev tree bin/devbin use dev links (issue 0049).
 molt_dir="$(find_existing_repo "Molt" "$MOLT_PRJ_DIR")" || true
 # A user repo cloned before MOLT_CFG_DIR existed lives in MOLT_PRJ_DIR; use it
 # where it is rather than cloning a second copy.
@@ -154,8 +154,11 @@ clone_or_pull "$MOLT_USER_REPO_FULL" "$user_dir"
 
 # --- Link molt into ~/.local/bin ---
 
-# The switch molt use sets (devbin docs/dev-opt-brew.md T5): a bootstrap is
-# a dev tree, so it links the checkout.
+# The switch bin/devbin use sets (devbin docs/dev-opt-brew.md T5): a bootstrap
+# is a dev tree, so it makes the same link bin/devbin use dev would. It links
+# by hand because a fresh Mac has only /bin/bash 3.2, which devbin refuses, and
+# this script must run there (vc, 24 Nov 2026; issue I7892f34). Every later
+# switch is bin/devbin use, in the checkout.
 echo ""
 info "Linking molt into ~/.local/bin"
 mkdir -p "$HOME/.local/bin"

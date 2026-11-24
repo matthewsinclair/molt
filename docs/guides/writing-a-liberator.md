@@ -32,12 +32,12 @@ The file is `liberators/<name>.sh`, and each function is named for it, hyphens i
 
 ### Which tree
 
-Molt runs from a tree: dev, the checkout; opt, a published copy that `molt install` makes; or brew, the formula. Only the dev tree's `liberators/` is yours to write:
+Molt runs from a tree: dev, the checkout; opt, a published copy that `bin/devbin install` makes in the checkout; or brew, the formula. Only the dev tree's `liberators/` is yours to write:
 
-- In opt and brew, `liberators/` is a published copy with a manifest. A file you add there is reported as not in the manifest, and the next `molt install --force` or `brew upgrade` replaces the directory.
+- In opt and brew, `liberators/` is a published copy with a manifest. A file you add there is reported as not in the manifest, and the next `bin/devbin install --force` or `brew upgrade` replaces the directory.
 - `molt test` runs in the dev tree only.
 
-So write and test a new liberator in the dev tree, commit it, and then publish it: `molt install --force` for an opt tree, or a new release for brew.
+So write and test a new liberator in the dev tree, commit it, and then publish it: `bin/devbin install --force` for an opt tree, or a new release for brew.
 
 ### The shell it runs in
 

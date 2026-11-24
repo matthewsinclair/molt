@@ -12,7 +12,7 @@
 | molt (core)           | `lib/molt.sh`                | Core helpers (logging, platform, linking, rendering, the manifest, Homebrew, GNOME settings) and most verbs: list, doctor, test, resleeve, upgrade, maintain, git |
 | molt (agent)          | `lib/agent.sh`               | Sleeve agents: the [[agent]] entries, each agent's home, `molt agent` (ST0006, ST0007)                                                                            |
 | molt (env)            | `lib/env.sh`                 | Molt's one env writer: the variables a sleeve's shells and GUI apps get (ST0008 WP05)                                                                             |
-| molt (install)        | `lib/install.sh`             | The trees Molt runs from (dev, opt, brew): `molt install`, which publishes one, `molt use`, which picks the one that serves molt, and the version line (ST0008)   |
+| molt (install)        | `lib/install.sh`             | The trees Molt runs from (dev, opt, brew), read: their manifests, the switch link and the version line. devbin publishes and switches them (I7892f34)             |
 | liberator (framework) | `lib/liberator.sh`           | Liberator loading and discovery, and running each one's check, install, upgrade and maintain                                                                      |
 | newuser               | `lib/newuser.sh`             | Scaffold a new `Molt-{user}` config repo from the template skeleton                                                                                               |
 | release               | `bin/.devbin/config.yaml`    | How Molt releases: devbin's release core and its formula, the gates, and the suite's two options (issue 0087)                                                     |
@@ -41,7 +41,7 @@
 | mise           | `liberators/mise.sh`           | mise runtime manager, off on every sleeve                                                       |
 | npm            | `liberators/npm.sh`            | ~/.npmrc, npm's cache under XDG (issue 0031)                                                    |
 | ssh            | `liberators/ssh.sh`            | SSH key detection or generation, config rendering + config.d fragments                          |
-| local-bin      | `liberators/local-bin.sh`      | `~/.local/bin` (MOLT_LOCAL_BIN), and the molt link `molt use` sets                              |
+| local-bin      | `liberators/local-bin.sh`      | `~/.local/bin` (MOLT_LOCAL_BIN), and the molt link `bin/devbin use` sets                        |
 | intent         | `liberators/intent.sh`         | Intent from Homebrew, what PATH and the pre-commit gate run                                     |
 | gtools         | `liberators/gtools.sh`         | Gtools from Homebrew, private tap over ssh (issue 0057)                                         |
 | pplr           | `liberators/pplr.sh`           | pplr from Homebrew, or the dev or opt tree `pplr use` chose (issue 0086)                        |

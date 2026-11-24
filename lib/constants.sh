@@ -79,7 +79,7 @@ MOLT_USER_REPO_SEARCH_PATHS+=(
 MOLT_UTILZ_HOME="${UTILZ_HOME:-${MOLT_PRJ_DIR:+${MOLT_PRJ_DIR}/Utilz}}"
 
 # --- Local bin ---
-# The directory of the per-user link that molt use sets (devbin docs/dev-opt-brew.md
+# The directory of the per-user link that bin/devbin use sets (devbin docs/dev-opt-brew.md
 # T5). It was $HOME/bin until that contract; on rhadamanth the two are one directory.
 MOLT_LOCAL_BIN="${MOLT_LOCAL_BIN:-$HOME/.local/bin}"
 
