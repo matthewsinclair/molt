@@ -26,7 +26,7 @@ myapp_verify() {
 }
 ```
 
-The framework discovers scripts in `liberators/` and loads them on demand by sourcing the file. `molt resleeve` calls `_check`, and `_install` only when the check fails; `molt doctor` reports each enabled liberator's `_check`. `molt resleeve --dry-run`, `molt status` and `molt list` call `_check` too.
+The framework discovers scripts in `liberators/` and loads them on demand by sourcing the file. `molt resleeve` calls `_check`, and `_install` only when the check fails; `molt doctor` reports each enabled liberator's `_check`. A check that passes can still warn with `molt_warn`: the liberator counts as installed, and doctor, resleeve and upgrade show the warning. `molt resleeve --dry-run`, `molt status` and `molt list` call `_check` too.
 
 The file is `liberators/<name>.sh`, and each function is named for it, hyphens included, as in `local-bin_check`. `molt doctor` finds a liberator's check by the text `<name>_check()` at the start of a line, so define it that way.
 

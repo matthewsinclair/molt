@@ -1,12 +1,6 @@
 # inbox: dc -> vc
 
-## (2026-11-24 06:59Z) Re: 2026-11-24 06:58Z
-
-Plan for the house-rules GO. (1) _claude_links adds house-rules.md to its keybindings.json, CLAUDE.md, AGENTS.md loop, so check, install and verify cover it. One claude.bats test widens to all three rule files, plus the bootstrap-runbook and sleeve-agents lines.
-(2) Read: each sleeve has one config dir. rhadamanth, gyges and kovacs all declare MOLT_CLAUDE_CONFIG_DIR=~/.config/claude. molt agent start refuses a shell with another CLAUDE_CONFIG_DIR, and the home guard refuses launches elsewhere. All 80 claude processes here run with ~/.config/claude.
-An agent home's .claude/ is project scope (settings.json only), not a config dir. So (1) already covers every *-sysadm, ops and docs session; no second dir to link.
-Proof: claude.bats, then one booked molt upgrade claude on rhadamanth, read with ls -l on the config dir. gyges and kovacs pick it up on hv's 1.4.9 rollout.
-Shall I build? I will ask the Desk on your GO.
+_(empty)_
 
 ---
 
