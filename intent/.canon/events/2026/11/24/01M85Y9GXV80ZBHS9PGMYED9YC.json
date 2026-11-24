@@ -1,0 +1,15 @@
+{
+  "id": "01M85Y9GXV80ZBHS9PGMYED9YC",
+  "ts": "2026-11-24T04:51:11.419Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 24 Nov 2026, typed in molt-dc's window before 04:49Z (relayed by molt-dc; the quote is hv's): 'Molt-matts / No, don't branch. Just check it all in. The changes are just my desk configs for arngz.' molt-dc's reading: the MOLT_INSTALL_PREFIX removal from rhadamanth's vars.sh (issue I7892f34) goes on Molt-matts' main, not a held branch, and it is there as 89646a2 beside hv's arngz desk configs (c550d8a), unpushed. rhadamanth's renders read stale until hv's molt upgrade."
+  }
+}
