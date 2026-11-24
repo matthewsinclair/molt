@@ -1,0 +1,17 @@
+{
+  "id": "01M865J2AZRB6XS6RNG766M2WF",
+  "ts": "2026-11-24T06:58:11.423Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "GO on the global Claude config (hv's brief through geodica-estate, 24 Nov; part 1 is in Molt-matts at 7e2ea62). (1) The claude liberator links config/claude/house-rules.md beside CLAUDE.md and AGENTS.md; CLAUDE.md imports it with @house-rules.md. (2) Cover every config dir Claude Code reads on a sleeve, so rhadamanth, gyges and kovacs get the same CLAUDE.md, AGENTS.md and house-rules.md: the sleeve's own (molt_claude_config_dir), and any other an agent session runs with (eg the ~/Devel/agt/*-sysadm sessions on rhadamanth, gyges-sysadm, kovacs-sysadm). Read first how each one sets its config dir; design is yours; send vc a short plan before you build. (3) It rides in 1.4.9, which is booked and waits for Intent 3.5.2. The proof is the claude liberator's tests and one run as its user would, booked. Ask vc anything that needs hv.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
