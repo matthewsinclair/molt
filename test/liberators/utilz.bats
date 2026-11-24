@@ -214,6 +214,19 @@ _utilz_use() {
     [ "$(grep -cxF "$warning" <<< "$output")" = 1 ]
 }
 
+@test "brew: doctor shows a dev link set's warning once, with utilz installed" {
+    # vc todo 61. Molt 1.4.12: doctor dropped what a check printed when it
+    # passed, so the warning that resleeve and upgrade show was lost there.
+    _utilz_sleeve 'source = "brew"'
+    _utilz_brew 9.9.9 utilz cleanz
+    _utilz_dev_first
+    local warning="Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    run cmd_doctor
+    assert_output_contains "Checking enabled liberators... ✓ all installed"
+    refute_output_contains "not installed: utilz"
+    [ "$(grep -cF "$warning" <<< "$output")" = 1 ]
+}
+
 @test "brew: a utilz use that fails, or reports shadowing, fails the check in its own words" {
     # Issue 0058.
     _utilz_sleeve 'source = "brew"'
