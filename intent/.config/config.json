@@ -7,7 +7,7 @@
   "formatters": [
     "markdown"
   ],
-  "intent_version": "3.5.1",
+  "intent_version": "3.5.3",
   "languages": [
     "shell"
   ],
