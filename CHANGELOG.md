@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `molt doctor` did not show a liberator's warning when its check passed, so the utilz warning for a dev or opt link set showed in `molt resleeve` and `molt upgrade` but not in doctor. Doctor now shows the warning lines of a check that passes, under the liberators line, and the liberator still counts as installed (hv's decision 18). A failing check shows what it showed before
+
 ## [1.4.12] - 2026-11-24
 
 ### Changed
