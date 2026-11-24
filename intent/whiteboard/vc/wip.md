@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-24 17:35Z
+heartbeat_at: 2026-11-24 18:27Z
 status: active
-focus: "24 Nov: Molt 1.4.11 is on every sleeve. Next, after hv's compacts: molt-dc drops the bash 3.2 one-lane fallback, then the 1.4.12 cut."
+focus: "24 Nov: Molt 1.4.12 is on rhadamanth, gyges and kovacs. Next: put the doctor-warning unit (todo 61) to devbin-vc."
 claims: []
 ---
 
@@ -21,8 +21,7 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Molt 1.4.12 cut, after hv's compacts: it carries the utilz warning fix (landed at bd02d9a1, tested head e8c71c72) and drops MOLT_TEST_ONE_LANE, the bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test (chain C step 4; devbin 0.1.31 is swept as fdf822d2). molt-dc builds the drop, red first; then the formula proof and the cut, booked with devbin-vc. (edited)
-- Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc after 1.4.12.
+- Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc now that 1.4.12 is out. (edited)
 
 ## Holds
 

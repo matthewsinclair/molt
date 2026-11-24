@@ -1,17 +1,16 @@
 ---
-verblock: "24 Nov 2026:v1.06: Matthew Sinclair - 1.4.11 on every sleeve; 1.4.12 next, after hv's compacts"
+verblock: "24 Nov 2026:v1.07: Matthew Sinclair - 1.4.12 on every sleeve"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- Nothing. Molt holds for hv's compacts.
+- Nothing. Molt 1.4.12 is on rhadamanth, gyges and kovacs.
 
 ## TODO
 
-- **1.4.12, after hv's compacts:** molt-dc drops `MOLT_TEST_ONE_LANE`, the bash 3.2 one-lane fallback in `tools/test-bash32` and `cmd_test`, red first (estate plan chain C step 4; devbin 0.1.31 is swept as fdf822d2). Then the formula proof and the cut, booked with devbin-vc. The cut also carries the utilz warning fix, landed at bd02d9a1.
-- **molt doctor loses utilz's warning on a pass** (`lib/molt.sh:2220`): a separate unit after 1.4.12, because the doctor loop is shared by every liberator. Put it to devbin-vc.
+- **molt doctor loses utilz's warning on a pass** (`lib/molt.sh:2220`): a separate unit, because the doctor loop is shared by every liberator. Put it to devbin-vc.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-24T17:35:03.143Z",
+    "heartbeat_at": "2026-11-24T18:27:21.680Z",
     "status": "active",
-    "focus": "24 Nov: Molt 1.4.11 is on every sleeve. Next, after hv's compacts: molt-dc drops the bash 3.2 one-lane fallback, then the 1.4.12 cut.",
+    "focus": "24 Nov: Molt 1.4.12 is on rhadamanth, gyges and kovacs. Next: put the doctor-warning unit (todo 61) to devbin-vc.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1598,7 +1598,8 @@
       "kind": "todo",
       "seq": 60,
       "text": "Molt 1.4.12 cut, after hv's compacts: it carries the utilz warning fix (landed at bd02d9a1, tested head e8c71c72) and drops MOLT_TEST_ONE_LANE, the bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test (chain C step 4; devbin 0.1.31 is swept as fdf822d2). molt-dc builds the drop, red first; then the formula proof and the cut, booked with devbin-vc.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T18:27:21.419Z",
       "recorded_at": "2026-11-24T14:57:19.312Z",
       "edited_at": "2026-11-24T16:53:55.987Z"
     },
@@ -1606,9 +1607,10 @@
       "node": "vc",
       "kind": "todo",
       "seq": 61,
-      "text": "Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc after 1.4.12.",
+      "text": "Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc now that 1.4.12 is out.",
       "state": "live",
-      "recorded_at": "2026-11-24T15:10:36.959Z"
+      "recorded_at": "2026-11-24T15:10:36.959Z",
+      "edited_at": "2026-11-24T18:27:21.564Z"
     }
   ],
   "sent": [
