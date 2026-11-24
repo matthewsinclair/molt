@@ -1533,6 +1533,14 @@
       "text": "Molt 1.4.9's cut: main carries O2, I7892f34's code half and 526e5bc's formula bash dependency; vc installs the rendered formula with brew, then cuts with --yes on rhadamanth (hv's decision 10), booked with devbin-vc, START and END to it.",
       "state": "live",
       "recorded_at": "2026-11-24T05:59:35.963Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 55,
+      "text": "When the claude liberator's house-rules.md links (molt-dc, in 1.4.9) land and roll out, tell geodica-estate, which checks each config dir on every sleeve.",
+      "state": "live",
+      "recorded_at": "2026-11-24T06:58:42.618Z"
     }
   ],
   "sent": [
