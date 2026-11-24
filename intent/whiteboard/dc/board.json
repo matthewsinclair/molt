@@ -5,9 +5,9 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "82b4e5df-f52e-400e-93cb-fc81e39a8f2d",
-    "heartbeat_at": "2026-11-24T04:50:17.345Z",
+    "heartbeat_at": "2026-11-24T05:59:15.636Z",
     "status": "active",
-    "focus": "24 Nov: O2 at dc/o2-lanes f8c1195 and I7892f34's code half at dc/i7892f34-code 3b23b39 (on O2), both read or reported to vc; waiting on the Desk: O2's suite+bash32 (01M85XQRDE5CE16VYEQNW12DWP), then install.bats (01M85Y7C3ZBSN448D2556F6RAT).",
+    "focus": "24 Nov: O2 (1181760) and I7892f34's code half (5a90b25, issue closed at 6ebc4a7) are landed; no worktree or dc/ branch is left, and nothing is open. dc holds for vc's word.",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
@@ -697,7 +697,8 @@
       "kind": "todo",
       "seq": 17,
       "text": "I7892f34's code half (remove molt install and molt use, adopt bin/devbin install and use, removal docs), dc's per devbin-vc's reading at f04aaf3; plan sent to vc 24 Nov, built after O2 lands and vc reads the plan.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T05:59:10.148Z",
       "recorded_at": "2026-11-24T04:36:32.113Z"
     }
   ],
