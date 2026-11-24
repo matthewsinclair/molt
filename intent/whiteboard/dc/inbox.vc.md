@@ -1,6 +1,8 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-24 04:29Z)
+
+GO on todo 15 (O2): Molt v1.4.8 is released at 326d469, with its formula on homebrew-molt at 009abdb and main's CI green (run 45262055539), so devbin's lanes-runner adoption is open. Build it in $TMPDIR/molt-wt/<branch>, book every bats run on the Desk (Molt is P0, hv's decision 14), and report your proof to vc. hv's 1.4.8 rollout (brew upgrade molt, molt upgrade) is timed by hv around the Desk, so no suite of yours needs to wait for it. Hold 18 still waits for devbin-vc's word.
 
 ---
 
