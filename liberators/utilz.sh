@@ -92,16 +92,18 @@ _utilz_checkout_faults() {
 # user's bin that `utilz use` points and reports. A dev or opt set is the user's
 # choice, so a brew sleeve warns of it with the verb that moves it back, and
 # never moves it itself or fails over it (hv's decision 18, 24 Nov 2026). The
-# warning goes to stderr, so the caller's capture does not take it for a
-# fault, under the label molt_report_faults gives a fault. Homebrew's utilz $1
-# is asked by path, so a link the switch set cannot answer for itself.
-# rhadamanth, 25 Oct 2026: a dev set left by the old checkout mode read as
-# "PATH runs ~/.local/bin/utilz" with no remedy.
-# Prints one fault per line. Status 1 when `utilz use` failed, 2 when it
-# passed and a dev or opt set was warned of; the caller skips the PATH check
-# on either.
+# warning goes to fd 4, which _utilz_report opens on its caller's stdout, so
+# the capture of the faults never takes it for one, and a run that drops a
+# check's stderr, as resleeve does, still shows it. It carries the label
+# molt_report_faults gives a fault. Homebrew's utilz $1 is asked by path, so a
+# link the switch set cannot answer for itself. rhadamanth, 25 Oct 2026: a
+# dev set left by the old checkout mode read as "PATH runs ~/.local/bin/utilz"
+# with no remedy.
+# Prints one fault per line. Status 2 when a dev or opt set was warned of, 1
+# when `utilz use` failed and no set was; the caller skips the PATH check on
+# either, and passes 2 on so that _utilz_report knows a warning was shown.
 _utilz_switch_faults() {
-  local utilz="$1" report rc=0 set line
+  local utilz="$1" report rc=0 set line warned=false
   report="$("$utilz" use 2>&1)" || rc=$?
   if [[ $rc -ne 0 && -z "$report" ]]; then
     echo "$utilz use failed (exit $rc), and said nothing"
@@ -114,10 +116,13 @@ _utilz_switch_faults() {
   # A set is reported as "  <tree> at <root> -- <n> link(s)", one per tree.
   while IFS= read -r set; do
     [[ -n "$set" ]] || continue
-    molt_warn "utilz (brew): utilz use has pointed its links at $set, not brew as this sleeve declares; 'utilz use brew' points them back" >&2
-    [[ $rc -ne 0 ]] || rc=2
+    molt_warn "utilz (brew): utilz use has pointed its links at $set, not brew as this sleeve declares; 'utilz use brew' points them back" >&4
+    warned=true
   done <<< "$(sed -n 's/^  \(.* at .*\) -- [0-9]* link(s)$/\1/p' <<< "$report")"
-  return "$rc"
+  if $warned; then
+    return 2
+  fi
+  [[ $rc -eq 0 ]] || return 1
 }
 
 # Homebrew's utilz installed, trusted and linked, then its switch, then PATH.
@@ -126,15 +131,20 @@ _utilz_switch_faults() {
 # only repeat the switch without its remedy. A warned-of set (status 2) and a
 # failed use (1) both skip every PATH check. rhadamanth, 1.4.10: the PATH
 # fault molt_brew_faults named ahead of the switch failed a dev set that
-# decision 18 had made a warning.
+# decision 18 had made a warning. Status 2 when the switch warned, else 0.
 _utilz_brew_faults() {
   molt_brew_link_faults "$MOLT_UTILZ_FORMULA" utilz || return 0
-  local prefix keg utilities missed
+  local prefix keg utilities missed switched=0
   if ! prefix="$(brew --prefix 2>/dev/null)"; then
     echo "brew --prefix failed, so no utility was checked"
     return 0
   fi
-  _utilz_switch_faults "$prefix/bin/utilz" || return 0
+  _utilz_switch_faults "$prefix/bin/utilz" || switched=$?
+  case "$switched" in
+    0) ;;
+    2) return 2 ;;
+    *) return 0 ;;
+  esac
   molt_path_runs_fault utilz "$prefix/bin/utilz" "Homebrew's $prefix/bin/utilz"
   keg="$prefix/opt/utilz/libexec/bin"
   utilities="$(_utilz_keg_utilities "$keg")"
@@ -149,7 +159,8 @@ _utilz_brew_faults() {
 }
 
 # Everything standing between this sleeve and its declared utilz running, one
-# fault per line. No output means nothing to report.
+# fault per line. No output means nothing to report. Status 2 when a warning
+# went to fd 4, else 0.
 _utilz_faults() {
   local source
   source="$(_utilz_source)"
@@ -160,10 +171,28 @@ _utilz_faults() {
   esac
 }
 
+# Reports _utilz_faults through the log $1 after the lead $2, as
+# molt_report_faults does; true when there are none. Its warnings go to this
+# shell's stdout on fd 4, outside the capture of the faults, so a warning is
+# never a fault and a caller that drops stderr still shows it (Molt 1.4.12:
+# resleeve showed a dev set only as "utilz: ✓ ok"). A warning shown once in
+# this shell is not shown again, as when install runs after its check.
+_utilz_report() {
+  local log="$1" lead="$2" source faults status=0
+  source="$(_utilz_source)"
+  if [[ -n "${_MOLT_UTILZ_WARNED:-}" ]]; then
+    faults="$(_utilz_faults 4>/dev/null)" || status=$?
+  else
+    { faults="$(_utilz_faults)" || status=$?; } 4>&1
+  fi
+  [[ $status -ne 2 ]] || _MOLT_UTILZ_WARNED=1
+  molt_report_faults "$log" "$lead" "utilz ($source)" "$faults"
+}
+
 utilz_check() {
   local source
   source="$(_utilz_source)"
-  molt_report_faults molt_info "" "utilz ($source)" "$(_utilz_faults)" || return 1
+  _utilz_report molt_info "" || return 1
   molt_info "utilz ($source): $(molt_cmd_version utilz) is what PATH runs"
 }
 
@@ -216,7 +245,7 @@ utilz_install() {
   # formula and its trust. It cannot reorder PATH, so it names whatever still
   # stands between this sleeve and its utilz running rather than report
   # complete over it, which would let resleeve say "Sleeve ready".
-  molt_report_faults molt_error "" "utilz ($source)" "$(_utilz_faults)" || return 1
+  _utilz_report molt_error "" || return 1
   molt_info "Liberator complete: utilz"
 }
 
@@ -250,6 +279,6 @@ utilz_upgrade() {
 utilz_verify() {
   local source
   source="$(_utilz_source)"
-  molt_report_faults molt_error "VERIFY FAIL: " "utilz ($source)" "$(_utilz_faults)" || return 1
+  _utilz_report molt_error "VERIFY FAIL: " || return 1
   molt_info "Verified: utilz ($source) is what PATH runs"
 }
