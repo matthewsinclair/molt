@@ -170,6 +170,14 @@
       "text": "hv, 24 Nov 2026, typed in molt-dc's window before 04:49Z (relayed by molt-dc; the quote is hv's): 'Molt-matts / No, don't branch. Just check it all in. The changes are just my desk configs for arngz.' molt-dc's reading: the MOLT_INSTALL_PREFIX removal from rhadamanth's vars.sh (issue I7892f34) goes on Molt-matts' main, not a held branch, and it is there as 89646a2 beside hv's arngz desk configs (c550d8a), unpushed. rhadamanth's renders read stale until hv's molt upgrade.",
       "state": "live",
       "recorded_at": "2026-11-24T04:51:11.419Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 16,
+      "text": "hv, 24 Nov 2026, in devbin-vc's window (relayed by devbin-vc, its decision 289; the wording is devbin-vc's): cut Molt 1.4.9 after Intent 3.5.2's cut, booked now on bats, cargo and heavy, with the rendered 1.4.9 formula installed with brew before the cut. devbin-vc grants it when Intent's cut ends.",
+      "state": "live",
+      "recorded_at": "2026-11-24T06:03:56.309Z"
     }
   ],
   "sent": [],

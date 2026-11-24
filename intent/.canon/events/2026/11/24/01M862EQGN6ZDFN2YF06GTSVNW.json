@@ -1,0 +1,15 @@
+{
+  "id": "01M862EQGN6ZDFN2YF06GTSVNW",
+  "ts": "2026-11-24T06:03:56.309Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 24 Nov 2026, in devbin-vc's window (relayed by devbin-vc, its decision 289; the wording is devbin-vc's): cut Molt 1.4.9 after Intent 3.5.2's cut, booked now on bats, cargo and heavy, with the rendered 1.4.9 formula installed with brew before the cut. devbin-vc grants it when Intent's cut ends."
+  }
+}
