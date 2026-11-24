@@ -20,10 +20,10 @@ class Molt < Formula
       revision: "@@REVISION@@"
   license "MIT"
 
-  # No depends_on bash here: render writes the bash build line itself
+  # The template holds no depends_on bash: render writes the bash build line
   # (devbin 0.1.30, issue I5e17433), and refuses a template that holds one.
-  # Molt runs on macOS's own bash 3.2 as well as bash 5; the build line is
-  # there because the install body runs bin/devbin, which needs bash 5.
+  # Molt runs on macOS's own bash 3.2 as well as bash 5; only the build needs
+  # bash 5, for bin/devbin.
 
   def install
     @@INSTALL@@
