@@ -1,0 +1,15 @@
+{
+  "id": "01M86EDMEMA1E0KE4KWMF87Q5P",
+  "ts": "2026-11-24T09:33:03.316Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 24 Nov 2026, live in molt-vc's window, choosing vc's option: 'Cut it now'. Molt 1.4.10 cuts now, carrying decision 18's utilz warning; vc brew-installs the rendered formula first, books with devbin-vc, and runs bin/devbin release v1.4.10 --yes on rhadamanth."
+  }
+}

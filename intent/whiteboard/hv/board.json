@@ -198,6 +198,14 @@
       "text": "hv, 24 Nov 2026, in devbin-vc's window at 09:27Z (relayed by devbin-vc; the quote is hv's choice): 'Keep dev; Molt warns'. rhadamanth stays on utilz dev while the arngz spike is live. Molt's utilz liberator reports a dev or opt link set on a brew sleeve as a notice with its remedy, status 0, not a failure; molt-dc builds it under vc with a localised red-then-green arm, and it rides Molt's next release.",
       "state": "live",
       "recorded_at": "2026-11-24T09:26:17.147Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 19,
+      "text": "hv, 24 Nov 2026, live in molt-vc's window, choosing vc's option: 'Cut it now'. Molt 1.4.10 cuts now, carrying decision 18's utilz warning; vc brew-installs the rendered formula first, books with devbin-vc, and runs bin/devbin release v1.4.10 --yes on rhadamanth.",
+      "state": "live",
+      "recorded_at": "2026-11-24T09:33:03.316Z"
     }
   ],
   "sent": [],
