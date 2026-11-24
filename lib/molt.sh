@@ -2583,7 +2583,15 @@ cmd_test() {
       molt_error "Found ${#test_files[@]} test file(s) but zero @test declarations. Refusing to report a pass."
       return 1
     fi
-    _test_lanes "$test_dir" "$test_dir/liberators"
+    if [[ -n "${MOLT_TEST_ONE_LANE:-}" ]]; then
+      # tools/test-bash32 asks for it: devbin's lanes runner needs bash 5 to
+      # start, and its recorder times each file with bash 5's EPOCHREALTIME, so
+      # a suite under /bin/bash 3.2 runs in one lane, through bats, as before.
+      molt_info "molt test: one lane under bats, as MOLT_TEST_ONE_LANE asks"
+      bats "${test_files[@]}"
+    else
+      _test_lanes "$test_dir" "$test_dir/liberators"
+    fi
   fi
 }
 
@@ -2593,10 +2601,12 @@ cmd_test() {
 # when the lanes did not run every test exactly once. It takes one directory
 # and reads only the .bats files at its top, so test/ and test/liberators/ are
 # two runs, and the suite fails when either does. DEVBIN_LIB is what
-# bin/devbin exports to the command it runs; molt test run by hand finds the
-# runner where the dev tree vendors it.
+# bin/devbin exports to the command it runs, and the runner refuses to start
+# without it; molt test run by hand exports the dev tree's, which vendors the
+# runner.
 _test_lanes() {
-  local lanes="${DEVBIN_LIB:-$MOLT_ROOT/bin/.devbin/lib}/bats-lanes"
+  export DEVBIN_LIB="${DEVBIN_LIB:-$MOLT_ROOT/bin/.devbin/lib}"
+  local lanes="$DEVBIN_LIB/bats-lanes"
   if [[ ! -x "$lanes" ]]; then
     molt_error "devbin's bats lanes runner is not at $lanes. TESTS DID NOT RUN."
     return 1
