@@ -100,3 +100,9 @@ MOLT_GIT_HOST_TIMEOUT="${MOLT_GIT_HOST_TIMEOUT:-20}"
 # --- Framework ---
 MOLT_VERSION="$(cat "${MOLT_ROOT}/VERSION" 2>/dev/null || echo "0.1.0")"
 MOLT_NAME="MOLT"
+
+# --- Log prefixes ---
+# The prefix molt_warn writes. molt_log writes it, and doctor reads a passing
+# check's warning lines by it (_molt_doctor_warn_lines). A plain assignment,
+# not readonly, because a test can source this file twice.
+MOLT_WARN_PREFIX="Zen [warning]:"

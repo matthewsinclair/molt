@@ -19,7 +19,7 @@ molt_log() {
   local prefix
   case "$level" in
     info)  prefix="Zen:" ;;
-    warn)  prefix="Zen [warning]:" ;;
+    warn)  prefix="$MOLT_WARN_PREFIX" ;;
     error) prefix="Zen [error]:" ;;
     debug) [[ "${MOLT_DEBUG:-0}" == "1" ]] || return 0; prefix="Zen [debug]:" ;;
     *)     prefix="Zen:" ;;
@@ -1983,7 +1983,7 @@ _molt_doctor_check_lines() {
 _molt_doctor_warn_lines() {
   local line indent="         "
   while IFS= read -r line; do
-    [[ "$line" == "Zen [warning]:"* ]] || continue
+    [[ "$line" == "$MOLT_WARN_PREFIX"* ]] || continue
     printf '%s%s\n' "$indent" "$line"
   done <<< "$1"
 }
