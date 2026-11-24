@@ -1976,6 +1976,18 @@ _molt_doctor_check_lines() {
   printf '%s%s\n' "$indent" "$last"
 }
 
+# The warning lines of the passing check output $1, indented under doctor's
+# verdict line: only the lines molt_warn wrote, as it wrote them, and none of a
+# pass's other output. A check that passes with a warning still passes, and
+# its warning shows, as resleeve and upgrade show it (hv's decision 18).
+_molt_doctor_warn_lines() {
+  local line indent="         "
+  while IFS= read -r line; do
+    [[ "$line" == "Zen [warning]:"* ]] || continue
+    printf '%s%s\n' "$indent" "$line"
+  done <<< "$1"
+}
+
 # A check that passes says what passed in words and names no path; only a check
 # that fails about a path names it (contract A3, issue 0066). `command -v molt`
 # says where the running copy lives.
@@ -2201,6 +2213,7 @@ cmd_doctor() {
     local pending_count=0
     local pending=""
     local failed_why=""
+    local passed_warn=""
     local why=""
     local check_status=0
     local verdict=""
@@ -2218,7 +2231,13 @@ cmd_doctor() {
       # place, and only a login clears what it found (issue 0078).
       check_status=0
       why="$(liberator_load "$lib" 2>&1 && liberator_check "$lib" 2>&1)" || check_status=$?
-      [[ $check_status -ne 0 ]] || continue
+      # A pass keeps its warnings, and only them, and stays a pass: a failure
+      # shows its lines below as before, so no warning shows twice.
+      if [[ $check_status -eq 0 ]]; then
+        shown="$(_molt_doctor_warn_lines "$why")"
+        [[ -z "$shown" ]] || passed_warn="${passed_warn}${shown}"$'\n'
+        continue
+      fi
       if [[ $check_status -eq $MOLT_CHECK_SESSION_PENDING ]]; then
         pending_count=$((pending_count + 1))
         pending="${pending:+$pending, }$lib"
@@ -2246,6 +2265,7 @@ cmd_doctor() {
       echo "Checking enabled liberators... ✓ none enabled"
     elif [[ "$not_installed_count" -eq 0 && "$pending_count" -eq 0 ]]; then
       echo "Checking enabled liberators... ✓ all installed"
+      [[ -z "$passed_warn" ]] || printf '%s' "$passed_warn"
     else
       if [[ "$not_installed_count" -gt 0 ]]; then
         verdict="$not_installed_count of $enabled_count not installed: ${not_installed}"
@@ -2255,6 +2275,7 @@ cmd_doctor() {
       fi
       echo "Checking enabled liberators... ⚠ $verdict"
       [[ -n "$failed_why" ]] && printf '%s' "$failed_why"
+      [[ -z "$passed_warn" ]] || printf '%s' "$passed_warn"
       if [[ "$not_installed_count" -gt 0 ]]; then
         echo "         Run \`molt resleeve\` to install, or \`molt list\` for status."
       fi
