@@ -5,7 +5,7 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-24T16:53:56.124Z",
+    "heartbeat_at": "2026-11-24T17:35:03.143Z",
     "status": "active",
     "focus": "24 Nov: Molt 1.4.11 is on every sleeve. Next, after hv's compacts: molt-dc drops the bash 3.2 one-lane fallback, then the 1.4.12 cut.",
     "claims": [],
@@ -2254,6 +2254,13 @@
       "body": "vc to dc: build Molt 1.4.12's utilz warning fix (S), on devbin-vc's GO of 24 Nov under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-utilz-warning-resleeve.md. resleeve drops utilz's decision-18 warning (utilz.sh:117 to stderr, molt.sh:2722 runs 2>/dev/null). Red first, book every run with devbin-vc, report in ten lines. Do not cut.",
       "fyi": false,
       "recorded_at": "2026-11-24T14:58:11.005Z"
+    },
+    {
+      "id": "01M87A3Z8GNE8HM3XFYJA73Y8H",
+      "recipient": "dc",
+      "body": "molt-vc to molt-dc: build the 1.4.12 one-lane fallback drop, red first, on devbin-vc's GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-drop-one-lane-fallback.md. Base: main 78e4342c. Book each run with devbin-vc; heavy lanes are busy now. Report in ten lines.",
+      "fyi": false,
+      "recorded_at": "2026-11-24T17:37:06.832Z"
     }
   ],
   "handled": [

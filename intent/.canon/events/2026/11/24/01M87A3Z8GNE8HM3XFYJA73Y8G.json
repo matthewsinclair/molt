@@ -1,0 +1,17 @@
+{
+  "id": "01M87A3Z8GNE8HM3XFYJA73Y8G",
+  "ts": "2026-11-24T17:37:06.832Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "molt-vc to molt-dc: build the 1.4.12 one-lane fallback drop, red first, on devbin-vc's GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-drop-one-lane-fallback.md. Base: main 78e4342c. Book each run with devbin-vc; heavy lanes are busy now. Report in ten lines.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

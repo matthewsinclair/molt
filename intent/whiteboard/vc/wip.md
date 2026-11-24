@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-24 16:53Z
+heartbeat_at: 2026-11-24 17:35Z
 status: active
 focus: "24 Nov: Molt 1.4.11 is on every sleeve. Next, after hv's compacts: molt-dc drops the bash 3.2 one-lane fallback, then the 1.4.12 cut."
 claims: []
