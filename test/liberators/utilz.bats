@@ -151,19 +151,31 @@ _utilz_use() {
     # Issue 0058. rhadamanth, 25 Oct 2026: a dev link set left by the old
     # checkout mode read as PATH running the wrong utilz, with no remedy named.
     # hv's decision 18, 24 Nov 2026: the set is the user's choice, so Molt
-    # warns and does not fail.
+    # warns and does not fail. On rhadamanth, 1.4.10, the dev link ran first on
+    # PATH, and Homebrew's check still failed over it, so the set's link is
+    # first on PATH here too, and no PATH fault may come from anywhere.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
     _utilz_use 0 "links: $HOME/.local/bin" "  dev at $UTILZ_HOME -- 2 link(s)"
+    mkdir -p "$HOME/.local/bin"
+    printf '#!/bin/bash\n[[ "$1" == --version ]] && echo "utilz 0.0.1 (dev)"\n' > "$HOME/.local/bin/utilz"
+    chmod +x "$HOME/.local/bin/utilz"
+    export PATH="$HOME/.local/bin:$PATH"
     run utilz_check
     assert_success
     assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    refute_output_contains "Zen [error]"
+    refute_output_contains "PATH runs $HOME/.local/bin/utilz"
     run utilz_verify
     assert_success
     assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME"
+    refute_output_contains "Zen [error]"
+    refute_output_contains "PATH runs $HOME/.local/bin/utilz"
     run utilz_install
     assert_success
     assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME"
+    refute_output_contains "Zen [error]"
+    refute_output_contains "PATH runs $HOME/.local/bin/utilz"
     run grep -v '^utilz use$' "$FAKE_LOG"
     assert_failure
 
