@@ -2583,8 +2583,29 @@ cmd_test() {
       molt_error "Found ${#test_files[@]} test file(s) but zero @test declarations. Refusing to report a pass."
       return 1
     fi
-    bats "${test_files[@]}"
+    _test_lanes "$test_dir" "$test_dir/liberators"
   fi
+}
+
+# Runs each directory of the suite through devbin's bats lanes runner, the
+# one devbin's own `test shell` runs (devbin#0339): the tests not tagged serial
+# side by side, then the serial ones alone, with one verdict that also fails
+# when the lanes did not run every test exactly once. It takes one directory
+# and reads only the .bats files at its top, so test/ and test/liberators/ are
+# two runs, and the suite fails when either does. DEVBIN_LIB is what
+# bin/devbin exports to the command it runs; molt test run by hand finds the
+# runner where the dev tree vendors it.
+_test_lanes() {
+  local lanes="${DEVBIN_LIB:-$MOLT_ROOT/bin/.devbin/lib}/bats-lanes"
+  if [[ ! -x "$lanes" ]]; then
+    molt_error "devbin's bats lanes runner is not at $lanes. TESTS DID NOT RUN."
+    return 1
+  fi
+  local dir failed=0
+  for dir in "$@"; do
+    "$lanes" "$dir" || failed=1
+  done
+  return "$failed"
 }
 
 _test_shellcheck() {

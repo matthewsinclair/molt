@@ -355,6 +355,9 @@ EOF
 # sleeve whose auth worked (issue 0069). ssh now bounds its own connect and
 # handshake, a longer bound covers each git host's whole exchange, and a bound
 # running out reads as the host not reached.
+# Serial: its stub answers 1 s into a 3 s bound, a margin a lane of tests
+# beside it can eat (devbin#0339).
+# bats test_tags=serial
 @test "molt doctor passes a git host that answers late, within its bound (issue 0069)" {
     _git_host_ssh "sleep 1; $_github_authenticated"
     _ssh_config "" "github.com git"
