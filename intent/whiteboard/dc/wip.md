@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-24 04:30Z
+heartbeat_at: 2026-11-24 04:36Z
 status: active
-focus: "24 Nov: Molt 1.4.8 is released at 326d469 with its formula, which carries dc's devbin#0326 adoption (0c2cc5c). Todo 15 (O2) is now open and waits for vc's go; hold 18, I7892f34's docs half, waits for devbin-vc's word."
+focus: "24 Nov: O2 built at dc/o2-lanes, waiting for the Desk (01M85XA3BXQYVNT8QZWV2FZ0RH, after Intent 3.5.2's END); I7892f34's code half is dc's, its plan with vc."
 claims: []
 ---
 
@@ -18,6 +18,7 @@ _(none)_
 ## TODO
 
 - devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.8 (vc, 23 Nov); dc starts on vc's go. (edited)
+- I7892f34's code half (remove molt install and molt use, adopt bin/devbin install and use, removal docs), dc's per devbin-vc's reading at f04aaf3; plan sent to vc 24 Nov, built after O2 lands and vc reads the plan.
 
 ## Holds
 

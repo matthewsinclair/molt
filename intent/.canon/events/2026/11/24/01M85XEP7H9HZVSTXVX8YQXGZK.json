@@ -1,0 +1,15 @@
+{
+  "id": "01M85XEP7H9HZVSTXVX8YQXGZK",
+  "ts": "2026-11-24T04:36:32.113Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "I7892f34's code half (remove molt install and molt use, adopt bin/devbin install and use, removal docs), dc's per devbin-vc's reading at f04aaf3; plan sent to vc 24 Nov, built after O2 lands and vc reads the plan."
+  }
+}
