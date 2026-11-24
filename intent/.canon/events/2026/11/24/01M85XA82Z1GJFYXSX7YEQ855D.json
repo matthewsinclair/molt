@@ -1,0 +1,17 @@
+{
+  "id": "01M85XA82Z1GJFYXSX7YEQ855D",
+  "ts": "2026-11-24T04:34:06.559Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "I7892f34's code half is yours (devbin-vc's reading of hv's decisions 11 and 12, appended to the issue's Rulings at f04aaf3): remove molt install and molt use, adopt bin/devbin install and bin/devbin use, with the removal docs, per the issue's Fix outline and Acceptance. O2 first. Then send vc a plan before you build: every caller of lib/install.sh (bootstrap, the liberators, molt upgrade), what molt upgrade becomes, and the paths against O2's. Runs ask the Desk, P0; devbin-vc reads each driver at the ask.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
