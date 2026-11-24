@@ -1525,6 +1525,14 @@
       "text": "Molt drops 526e5bc's on_macos depends_on \"bash\" => :build from packaging/homebrew/molt.rb: released when devbin 0.1.30's formula renderer emits that dependency itself (devbin-cc's issue, filed 24 Nov) and is swept into Molt.",
       "state": "live",
       "recorded_at": "2026-11-24T05:11:29.126Z"
+    },
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 21,
+      "text": "Molt 1.4.9's cut: main carries O2, I7892f34's code half and 526e5bc's formula bash dependency; vc installs the rendered formula with brew, then cuts with --yes on rhadamanth (hv's decision 10), booked with devbin-vc, START and END to it.",
+      "state": "live",
+      "recorded_at": "2026-11-24T05:59:35.963Z"
     }
   ],
   "sent": [

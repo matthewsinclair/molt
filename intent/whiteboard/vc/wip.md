@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Molt 1.4.9's cut: main carries O2, I7892f34's code half and 526e5bc's formula bash dependency; vc installs the rendered formula with brew, then cuts with --yes on rhadamanth (hv's decision 10), booked with devbin-vc, START and END to it.
 
 ## TODO
 

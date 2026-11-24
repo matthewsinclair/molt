@@ -2,8 +2,9 @@
 
 ## DOING
 
-- **1.4.8's rollout (hv's, when no suite runs):** v1.4.8 is released with its formula. hv runs `brew upgrade molt`, then `molt upgrade` on each sleeve (pigz from 0101); vc tells devbin-vc START and END, and agentic-engineering-vc once pigz is on, then archives hv's decision 2.
+- **Molt 1.4.9's cut:** main carries O2 (ca80af0, 1181760), I7892f34's code half (1f2168d, 5a90b25) and the formula's bash build dependency (526e5bc). Before the cut, install the rendered formula with brew through the tap clone. Book with devbin-vc (bats, heavy), and a seat cuts it with `--yes` on rhadamanth (hv's decision 10). START and END go to devbin-vc.
 
 ## TODO
 
-- **After a compact:** `/in-session` and its pickup as vc, put hv's inboxes in front of hv, then carry on with the DOING above. Then molt-dc's O2 on vc's go (`intent/wip.md`).
+- **After a compact:** `/in-session` and its pickup as vc, put hv's inboxes in front of hv, then carry on with the DOING above.
+- **Rollout (hv's, when no suite runs):** after 1.4.9's formula is on the tap, hv runs `brew update`, `brew upgrade molt`, then `molt upgrade` on each sleeve. vc tells devbin-vc, and agentic-engineering-vc once pigz is on, then archives hv's decision 2.

@@ -1,0 +1,15 @@
+{
+  "id": "01M8626S8VWZNX5VV11DJYMRC2",
+  "ts": "2026-11-24T05:59:35.963Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Molt 1.4.9's cut: main carries O2, I7892f34's code half and 526e5bc's formula bash dependency; vc installs the rendered formula with brew, then cuts with --yes on rhadamanth (hv's decision 10), booked with devbin-vc, START and END to it."
+  }
+}
