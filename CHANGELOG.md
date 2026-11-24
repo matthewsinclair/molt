@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.10] - unreleased
+
+### Changed
+
+- On a brew sleeve, a utilz link set that `utilz use` points at dev or opt is the user's choice: the utilz liberator warns of it, naming the set and `utilz use brew`, and its check, install and verify pass, so `molt upgrade` no longer reports utilz as failed (hv's decision 18). A `utilz use` that fails, and a missing or broken link, still fail
+
 ## [1.4.9] - 2026-11-24
 
 ### Removed

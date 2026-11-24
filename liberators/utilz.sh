@@ -90,11 +90,16 @@ _utilz_checkout_faults() {
 
 # Utilz's own switch (devbin's dev, opt, brew contract T5): the link set in the
 # user's bin that `utilz use` points and reports. A dev or opt set is the user's
-# choice, so a brew sleeve names it and the verb that moves it back, and never
-# moves it itself. Homebrew's utilz $1 is asked by path, so a link the switch
-# set cannot answer for itself. rhadamanth, 25 Oct 2026: a dev set left by the
-# old checkout mode read as "PATH runs ~/.local/bin/utilz" with no remedy.
-# Prints one fault per line; status 1 when the switch stands in the way.
+# choice, so a brew sleeve warns of it with the verb that moves it back, and
+# never moves it itself or fails over it (hv's decision 18, 24 Nov 2026). The
+# warning goes to stderr, so the caller's capture does not take it for a
+# fault, under the label molt_report_faults gives a fault. Homebrew's utilz $1
+# is asked by path, so a link the switch set cannot answer for itself.
+# rhadamanth, 25 Oct 2026: a dev set left by the old checkout mode read as
+# "PATH runs ~/.local/bin/utilz" with no remedy.
+# Prints one fault per line. Status 1 when `utilz use` failed, 2 when it
+# passed and a dev or opt set was warned of; the caller skips the PATH check
+# on either.
 _utilz_switch_faults() {
   local utilz="$1" report rc=0 set line
   report="$("$utilz" use 2>&1)" || rc=$?
@@ -109,8 +114,8 @@ _utilz_switch_faults() {
   # A set is reported as "  <tree> at <root> -- <n> link(s)", one per tree.
   while IFS= read -r set; do
     [[ -n "$set" ]] || continue
-    echo "utilz use has pointed its links at $set, not brew as this sleeve declares; 'utilz use brew' points them back"
-    rc=1
+    molt_warn "utilz (brew): utilz use has pointed its links at $set, not brew as this sleeve declares; 'utilz use brew' points them back" >&2
+    [[ $rc -ne 0 ]] || rc=2
   done <<< "$(sed -n 's/^  \(.* at .*\) -- [0-9]* link(s)$/\1/p' <<< "$report")"
   return "$rc"
 }
@@ -122,7 +127,8 @@ _utilz_brew_faults() {
     echo "brew --prefix failed, so no utility was checked"
     return 0
   fi
-  # With the switch set elsewhere, PATH would only repeat it, without the remedy.
+  # With the switch set elsewhere, PATH would only repeat it, without the
+  # remedy, so a warned-of set (status 2) skips it as a failed use (1) does.
   _utilz_switch_faults "$prefix/bin/utilz" || return 0
   keg="$prefix/opt/utilz/libexec/bin"
   utilities="$(_utilz_keg_utilities "$keg")"
