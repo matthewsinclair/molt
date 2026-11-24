@@ -2,7 +2,7 @@
 
 ## DOING
 
-- Nothing. Molt 1.4.10 is released (8efcdc2b, tag v1.4.10, tap b87f4a48). Molt holds for hv's word; hv's focus is elsewhere.
+- Nothing. Molt 1.4.11 is released (d95d63a7, tag v1.4.11, tap 019057ab). Molt holds for hv's word; hv's focus is elsewhere.
 
 ## TODO
 

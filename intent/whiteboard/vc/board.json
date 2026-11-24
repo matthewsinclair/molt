@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-24T10:41:51.460Z",
+    "heartbeat_at": "2026-11-24T11:41:46.557Z",
     "status": "active",
-    "focus": "24 Nov: Molt v1.4.10 is released at 8efcdc2b (tap b87f4a48); after hv's rollout, Molt holds for hv's word.",
+    "focus": "24 Nov: Molt v1.4.11 is released at d95d63a7 (tap 019057ab); next is hv's rollout, then Molt holds for hv's word.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1569,8 +1569,25 @@
       "kind": "todo",
       "seq": 57,
       "text": "Molt 1.4.10 rollout (hv's): brew update, brew upgrade molt, then molt upgrade on each sleeve; then vc tells devbin-vc. v1.4.10 is 8efcdc2b, tap b87f4a48.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T11:41:46.360Z",
       "recorded_at": "2026-11-24T10:41:50.968Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 58,
+      "text": "Molt 1.4.11 rollout (hv's): brew update, brew upgrade molt, then molt upgrade on each sleeve; then vc tells devbin-vc. v1.4.11 is d95d63a7, tap 019057ab; rhadamanth's utilz error becomes a warning.",
+      "state": "live",
+      "recorded_at": "2026-11-24T11:41:46.408Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 59,
+      "text": "Molt-matts: push hv's five writing rulings (3b9585f, 4662fa6, a424731) after geodica-estate's review, on hv's word.",
+      "state": "live",
+      "recorded_at": "2026-11-24T11:41:46.463Z"
     }
   ],
   "sent": [

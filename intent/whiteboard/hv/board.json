@@ -215,7 +215,8 @@
       "kind": "decision",
       "seq": 20,
       "text": "hv, 24 Nov 2026, live in molt-vc's window, choosing vc's option: 'Cut it now'. Molt 1.4.11 cuts now, carrying the utilz PATH fix (ea68c955, 0a4bbd58) that completes decision 18; vc brew-installs the rendered formula first and books with devbin-vc.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T11:41:46.511Z",
       "recorded_at": "2026-11-24T11:14:52.301Z"
     }
   ],
