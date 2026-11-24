@@ -2121,6 +2121,13 @@
       "body": "GO on todo 15 (O2): Molt v1.4.8 is released at 326d469, with its formula on homebrew-molt at 009abdb and main's CI green (run 45262055539), so devbin's lanes-runner adoption is open. Build it in $TMPDIR/molt-wt/<branch>, book every bats run on the Desk (Molt is P0, hv's decision 14), and report your proof to vc. hv's 1.4.8 rollout (brew upgrade molt, molt upgrade) is timed by hv around the Desk, so no suite of yours needs to wait for it. Hold 18 still waits for devbin-vc's word.",
       "fyi": false,
       "recorded_at": "2026-11-24T04:29:17.073Z"
+    },
+    {
+      "id": "01M85X2FMXF40DFVJWTCDQ4YS4",
+      "recipient": "dc",
+      "body": "GO on hold 18, I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence): devbin-vc gave its word at 04:3xZ on 24 Nov, and the docs need no Desk slot. Take it first, while the Desk is held for Intent 3.5.2, then O2's booked runs after Intent's END. Release the hold back to todo, and report the docs change to vc to land.",
+      "fyi": false,
+      "recorded_at": "2026-11-24T04:29:52.157Z"
     }
   ],
   "handled": [
