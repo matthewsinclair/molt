@@ -26,7 +26,7 @@ _(none)_
 
 ## Holds
 
-- Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin's I5a905ad, bats lanes under an older bash, is fixed and swept into Molt.
+- Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin 0.1.31, which carries I5a905ad (bats lanes under an older bash), is swept into Molt (estate plan chain C). (edited)
 
 ## Watch-outs
 

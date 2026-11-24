@@ -1515,9 +1515,10 @@
       "node": "vc",
       "kind": "hold",
       "seq": 10,
-      "text": "Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin's I5a905ad, bats lanes under an older bash, is fixed and swept into Molt.",
+      "text": "Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin 0.1.31, which carries I5a905ad (bats lanes under an older bash), is swept into Molt (estate plan chain C).",
       "state": "live",
-      "recorded_at": "2026-11-24T04:43:29.976Z"
+      "recorded_at": "2026-11-24T04:43:29.976Z",
+      "edited_at": "2026-11-24T11:47:25.867Z"
     },
     {
       "node": "vc",

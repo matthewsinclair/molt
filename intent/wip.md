@@ -12,7 +12,7 @@ verblock: "24 Nov 2026:v1.05: Matthew Sinclair - 1.4.11 released; Molt holds for
 
 - **1.4.11 rollout (hv's):** `brew update`, `brew upgrade molt`, then `molt upgrade` on each sleeve; then vc tells devbin-vc. rhadamanth's utilz error becomes a warning.
 - **Molt-matts:** push hv's five writing rulings (3b9585f, 4662fa6, a424731) after geodica-estate's review, on hv's word.
-- **MOLT_TEST_ONE_LANE:** drop it after devbin's I5a905ad (bats lanes under an older bash) is fixed and swept into Molt.
+- **MOLT_TEST_ONE_LANE:** drop it after devbin 0.1.31, which carries I5a905ad, is swept into Molt (estate plan chain C).
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).
