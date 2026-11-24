@@ -53,6 +53,16 @@ EOF
     _utilz_use 0 "links: $HOME/.local/bin" "  brew: no links, and $FAKE_PREFIX/bin/utilz (the Homebrew install) answers"
 }
 
+# A dev link set, as rhadamanth has it: Homebrew's `utilz use` reports the set,
+# and the set's utilz in ~/.local/bin runs first on PATH.
+_utilz_dev_first() {
+    _utilz_use 0 "links: $HOME/.local/bin" "  dev at $UTILZ_HOME -- 2 link(s)"
+    mkdir -p "$HOME/.local/bin"
+    printf '#!/bin/bash\n[[ "$1" == --version ]] && echo "utilz 0.0.1 (dev)"\n' > "$HOME/.local/bin/utilz"
+    chmod +x "$HOME/.local/bin/utilz"
+    export PATH="$HOME/.local/bin:$PATH"
+}
+
 # What Homebrew's `utilz use` says next: exit status $1, and each further
 # argument a line of its output.
 _utilz_use() {
@@ -156,11 +166,7 @@ _utilz_use() {
     # first on PATH here too, and no PATH fault may come from anywhere.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
-    _utilz_use 0 "links: $HOME/.local/bin" "  dev at $UTILZ_HOME -- 2 link(s)"
-    mkdir -p "$HOME/.local/bin"
-    printf '#!/bin/bash\n[[ "$1" == --version ]] && echo "utilz 0.0.1 (dev)"\n' > "$HOME/.local/bin/utilz"
-    chmod +x "$HOME/.local/bin/utilz"
-    export PATH="$HOME/.local/bin:$PATH"
+    _utilz_dev_first
     run utilz_check
     assert_success
     assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
@@ -183,6 +189,29 @@ _utilz_use() {
     run utilz_check
     assert_success
     assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at opt at /opt/utilz, not brew"
+}
+
+@test "brew: resleeve shows a dev link set's warning once, with utilz ok, and once when install runs after the check" {
+    # Molt 1.4.12. rhadamanth, 24 Nov 2026: molt upgrade on 1.4.11 printed
+    # "utilz: ✓ ok" and no warning, because resleeve drops a check's stderr.
+    _utilz_sleeve 'source = "brew"'
+    _utilz_brew 9.9.9 utilz cleanz
+    _utilz_dev_first
+    local warning="Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    run molt_resleeve false true
+    assert_success
+    assert_output_contains "utilz: ✓ ok"
+    refute_output_contains "Zen [error]"
+    [ "$(grep -cxF "$warning" <<< "$output")" = 1 ]
+
+    # A formula Homebrew does not trust fails the check, so install runs after
+    # it, and the two see the same set.
+    touch "$FAKE_PREFIX/.gate"
+    run molt_resleeve false true
+    assert_success
+    assert_output_contains "utilz: ✓ installed"
+    refute_output_contains "Zen [error]"
+    [ "$(grep -cxF "$warning" <<< "$output")" = 1 ]
 }
 
 @test "brew: a utilz use that fails, or reports shadowing, fails the check in its own words" {
