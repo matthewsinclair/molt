@@ -1,17 +1,16 @@
 ---
-verblock: "24 Nov 2026:v1.03: Matthew Sinclair - 1.4.9 released and rolled out"
+verblock: "24 Nov 2026:v1.04: Matthew Sinclair - 1.4.10 released; Molt holds for hv"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- Nothing. Molt holds for its next ask.
+- Nothing. Molt holds for hv's word.
 
 ## TODO
 
-- **Molt 1.4.10:** carries decision 18's utilz warning (69941853, 0460fa53). The full suite runs at its cut. Cut on hv's word, booked with devbin-vc. rhadamanth stays on utilz dev for the arngz spike.
-- **geodica-estate's STE note:** when it comes, cut Molt's `outgoing-writing-ste` memory to Molt-local content.
+- **1.4.10 rollout (hv's):** `brew update`, `brew upgrade molt`, then `molt upgrade` on each sleeve; then vc tells devbin-vc. rhadamanth stays on utilz dev for the arngz spike, now a warning.
 - **MOLT_TEST_ONE_LANE:** drop it after devbin's I5a905ad (bats lanes under an older bash) is fixed and swept into Molt.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.

@@ -1,20 +1,6 @@
 # inbox: vc -> dc
 
-## (2026-11-24 04:29Z)
-
-GO on todo 15 (O2): Molt v1.4.8 is released at 326d469, with its formula on homebrew-molt at 009abdb and main's CI green (run 45262055539), so devbin's lanes-runner adoption is open. Build it in $TMPDIR/molt-wt/<branch>, book every bats run on the Desk (Molt is P0, hv's decision 14), and report your proof to vc. hv's 1.4.8 rollout (brew upgrade molt, molt upgrade) is timed by hv around the Desk, so no suite of yours needs to wait for it. Hold 18 still waits for devbin-vc's word.
-
-## (2026-11-24 04:29Z) (edited)
-
-GO on hold 18, I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence): devbin-vc gave its word on 24 Nov, and the docs need no Desk slot. Take it first, while the Desk is held for Intent 3.5.2, then O2's booked runs after Intent's END. Release the hold back to todo, and report the docs change to vc to land.
-
-## (2026-11-24 04:34Z)
-
-I7892f34's code half is yours (devbin-vc's reading of hv's decisions 11 and 12, appended to the issue's Rulings at f04aaf3): remove molt install and molt use, adopt bin/devbin install and bin/devbin use, with the removal docs, per the issue's Fix outline and Acceptance. O2 first. Then send vc a plan before you build: every caller of lib/install.sh (bootstrap, the liberators, molt upgrade), what molt upgrade becomes, and the paths against O2's. Runs ask the Desk, P0; devbin-vc reads each driver at the ask.
-
-## (2026-11-24 06:58Z)
-
-GO on the global Claude config (hv's brief through geodica-estate, 24 Nov; part 1 is in Molt-matts at 7e2ea62). (1) The claude liberator links config/claude/house-rules.md beside CLAUDE.md and AGENTS.md; CLAUDE.md imports it with @house-rules.md. (2) Cover every config dir Claude Code reads on a sleeve, so rhadamanth, gyges and kovacs get the same CLAUDE.md, AGENTS.md and house-rules.md: the sleeve's own (molt_claude_config_dir), and any other an agent session runs with (eg the ~/Devel/agt/*-sysadm sessions on rhadamanth, gyges-sysadm, kovacs-sysadm). Read first how each one sets its config dir; design is yours; send vc a short plan before you build. (3) It rides in 1.4.9, which is booked and waits for Intent 3.5.2. The proof is the claude liberator's tests and one run as its user would, booked. Ask vc anything that needs hv.
+_(empty)_
 
 ---
 

@@ -1,0 +1,16 @@
+{
+  "id": "01M86JBKMGQ481WT4PEKAFY3P8",
+  "ts": "2026-11-24T10:41:51.248Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 14,
+    "text": "hv, 23 Nov 2026, in devbin-vc's window at 17:54Z (relayed by devbin-vc, its decision 286; the wording is devbin-vc's): Molt is P0 at the Desk alongside Intent and devbin, so Molt's asks are granted with no relay needed."
+  }
+}

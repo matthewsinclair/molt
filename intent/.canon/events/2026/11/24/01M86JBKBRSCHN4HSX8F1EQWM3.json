@@ -1,0 +1,15 @@
+{
+  "id": "01M86JBKBRSCHN4HSX8F1EQWM3",
+  "ts": "2026-11-24T10:41:50.969Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt 1.4.10 rollout (hv's): brew update, brew upgrade molt, then molt upgrade on each sleeve; then vc tells devbin-vc. v1.4.10 is 8efcdc2b, tap b87f4a48."
+  }
+}
