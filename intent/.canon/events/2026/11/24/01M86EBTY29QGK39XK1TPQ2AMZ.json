@@ -1,0 +1,15 @@
+{
+  "id": "01M86EBTY29QGK39XK1TPQ2AMZ",
+  "ts": "2026-11-24T09:32:04.418Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt 1.4.10: carries decision 18's utilz warning (69941853, 0460fa53); its cut runs the full suite (devbin-vc scoped the green to utilz.bats); cut on hv's word, booked with devbin-vc"
+  }
+}

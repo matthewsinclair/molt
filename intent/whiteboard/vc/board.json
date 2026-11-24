@@ -1551,8 +1551,17 @@
       "kind": "doing",
       "seq": 22,
       "text": "utilz switch notice (hv's decision 18): molt-dc builds _utilz_switch_faults' dev or opt set as a notice with status 0 on a brew sleeve; a failing utilz use stays a failure; vc lands it, then sends the unit to devbin-vc for Molt's next release",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T09:32:04.372Z",
       "recorded_at": "2026-11-24T09:26:17.230Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 56,
+      "text": "Molt 1.4.10: carries decision 18's utilz warning (69941853, 0460fa53); its cut runs the full suite (devbin-vc scoped the green to utilz.bats); cut on hv's word, booked with devbin-vc",
+      "state": "live",
+      "recorded_at": "2026-11-24T09:32:04.418Z"
     }
   ],
   "sent": [

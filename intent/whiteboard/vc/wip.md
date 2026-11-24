@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- utilz switch notice (hv's decision 18): molt-dc builds _utilz_switch_faults' dev or opt set as a notice with status 0 on a brew sleeve; a failing utilz use stays a failure; vc lands it, then sends the unit to devbin-vc for Molt's next release
+_(none)_
 
 ## TODO
 
@@ -21,6 +21,7 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
+- Molt 1.4.10: carries decision 18's utilz warning (69941853, 0460fa53); its cut runs the full suite (devbin-vc scoped the green to utilz.bats); cut on hv's word, booked with devbin-vc
 
 ## Holds
 
