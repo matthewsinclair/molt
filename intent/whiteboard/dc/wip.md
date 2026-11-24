@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-24 11:10Z
+heartbeat_at: 2026-11-24 15:10Z
 status: active
-focus: "24 Nov: decision 18's PATH fix landed as ea68c955 and 0a4bbd58 for 1.4.11; no worktree or dc/ branch is left, and nothing is open. dc holds for vc's word."
+focus: "24 Nov: the 1.4.12 utilz warning fix landed as 52886765, 02e04250 and bd02d9a1; no worktree or dc/ branch is left, and nothing is open. dc holds for 1.4.12, which waits for devbin 0.1.31."
 claims: []
 ---
 
