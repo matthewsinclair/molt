@@ -1,0 +1,15 @@
+{
+  "id": "01M85XVE9RFTBAQHZ91436BXYX",
+  "ts": "2026-11-24T04:43:29.976Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin's I5a905ad, bats lanes under an older bash, is fixed and swept into Molt."
+  }
+}

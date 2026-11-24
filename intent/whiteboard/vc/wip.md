@@ -25,7 +25,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin's I5a905ad, bats lanes under an older bash, is fixed and swept into Molt.
 
 ## Watch-outs
 

@@ -1509,6 +1509,14 @@
       "state": "live",
       "recorded_at": "2026-11-23T17:11:20.783Z",
       "edited_at": "2026-11-23T20:43:42.227Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 10,
+      "text": "Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin's I5a905ad, bats lanes under an older bash, is fixed and swept into Molt.",
+      "state": "live",
+      "recorded_at": "2026-11-24T04:43:29.976Z"
     }
   ],
   "sent": [
