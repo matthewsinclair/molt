@@ -1,0 +1,16 @@
+{
+  "id": "01M87FSPRTQ4ZCX2R7SW532T5Z",
+  "ts": "2026-11-24T19:16:21.914Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 24,
+    "text": "agentic-engineering's courseware quotes two Molt lines: resleeve's 'Sleeve ready. Welcome back.' (as a suffix, so the 'Zen:' prefix may change) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes. test/molt.bats covers both (doctor's whole output; the resleeve message as a substring). hv can overrule."
+  }
+}
