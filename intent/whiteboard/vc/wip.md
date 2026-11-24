@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt 1.4.9's cut: main carries O2, I7892f34's code half and 526e5bc's formula bash dependency; vc installs the rendered formula with brew, then cuts with --yes on rhadamanth (hv's decision 10), booked with devbin-vc, START and END to it.
+_(none)_
 
 ## TODO
 
@@ -21,8 +21,6 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- 1.4.8's rollout (hv's, when no suite runs; v1.4.8 is released at 326d469 with its formula, homebrew-molt 009abdb): brew upgrade molt, then molt upgrade on each sleeve, which installs pigz from rhadamanth's and gyges's Brewfiles (0101, hv's decision 2); devbin-vc gets START and END, and agentic-engineering-vc a word once pigz is on. (edited)
-- When the claude liberator's house-rules.md links (molt-dc, in 1.4.9) land and roll out, tell geodica-estate, which checks each config dir on every sleeve.
 
 ## Holds
 

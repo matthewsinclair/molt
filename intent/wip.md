@@ -1,17 +1,18 @@
 ---
-verblock: "24 Nov 2026:v1.02: Matthew Sinclair - O2 and I7892f34 landed; 1.4.9 next"
+verblock: "24 Nov 2026:v1.03: Matthew Sinclair - 1.4.9 released and rolled out"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- **Molt 1.4.9's cut:** O2, I7892f34's code half and the formula's bash build dependency are on main; install the rendered formula with brew, then cut on rhadamanth with --yes, booked with devbin-vc.
+- Nothing. Molt holds for its next ask.
 
 ## TODO
 
-- **Rollout (hv's, when no suite runs):** brew update, brew upgrade molt, then molt upgrade on each sleeve, which installs pigz (0101); vc tells devbin-vc, and agentic-engineering-vc once pigz is on.
-
+- **utilz on rhadamanth (hv's):** `utilz use` points the links at the dev copy, and the sleeve declares brew; `utilz use brew` when no Utilz session needs dev, then `molt upgrade`.
+- **geodica-estate's STE note:** when it comes, cut Molt's `outgoing-writing-ste` memory to Molt-local content.
+- **MOLT_TEST_ONE_LANE:** drop it after devbin's I5a905ad (bats lanes under an older bash) is fixed and swept into Molt.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).
