@@ -1,0 +1,15 @@
+{
+  "id": "01M871QQCZV2WG540984FQ47KZ",
+  "ts": "2026-11-24T15:10:36.959Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc after 1.4.12."
+  }
+}

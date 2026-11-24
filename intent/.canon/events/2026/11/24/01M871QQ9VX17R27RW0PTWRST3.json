@@ -1,0 +1,16 @@
+{
+  "id": "01M871QQ9VX17R27RW0PTWRST3",
+  "ts": "2026-11-24T15:10:36.859Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 60,
+    "text": "Molt 1.4.12 cut: the utilz warning fix is landed on main at bd02d9a1 (molt-dc, tested head e8c71c72; resleeve shows the decision-18 warning once). The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop."
+  }
+}

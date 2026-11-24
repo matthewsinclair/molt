@@ -21,7 +21,8 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Molt 1.4.12: resleeve drops utilz's decision-18 warning, because liberators/utilz.sh:117 writes it to stderr and lib/molt.sh:2722 runs each check with 2>/dev/null. Fix: drop the >&2, and add a bats case that runs the warning through resleeve. molt-dc builds it (S) on devbin-vc's GO of 24 Nov. The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop.
+- Molt 1.4.12 cut: the utilz warning fix is landed on main at bd02d9a1 (molt-dc, tested head e8c71c72; resleeve shows the decision-18 warning once). The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop. (edited)
+- Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc after 1.4.12.
 
 ## Holds
 

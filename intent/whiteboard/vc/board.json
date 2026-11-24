@@ -1596,9 +1596,18 @@
       "node": "vc",
       "kind": "todo",
       "seq": 60,
-      "text": "Molt 1.4.12: resleeve drops utilz's decision-18 warning, because liberators/utilz.sh:117 writes it to stderr and lib/molt.sh:2722 runs each check with 2>/dev/null. Fix: drop the >&2, and add a bats case that runs the warning through resleeve. molt-dc builds it (S) on devbin-vc's GO of 24 Nov. The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop.",
+      "text": "Molt 1.4.12 cut: the utilz warning fix is landed on main at bd02d9a1 (molt-dc, tested head e8c71c72; resleeve shows the decision-18 warning once). The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop.",
       "state": "live",
-      "recorded_at": "2026-11-24T14:57:19.312Z"
+      "recorded_at": "2026-11-24T14:57:19.312Z",
+      "edited_at": "2026-11-24T15:10:36.859Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 61,
+      "text": "Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc after 1.4.12.",
+      "state": "live",
+      "recorded_at": "2026-11-24T15:10:36.959Z"
     }
   ],
   "sent": [
