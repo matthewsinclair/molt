@@ -39,6 +39,7 @@ _(none)_
 - hv, 23 Nov 2026, in devbin-vc's window at 17:54Z (relayed by devbin-vc, its decision 286; the wording is devbin-vc's): Molt is P0 at the Desk alongside Intent and devbin, so Molt's asks are granted with no relay needed. 1.4.8's cut still waits for the devbin 0.1.29 sweep.
 - hv, 24 Nov 2026, typed in molt-dc's window before 04:49Z (relayed by molt-dc; the quote is hv's): 'Molt-matts / No, don't branch. Just check it all in. The changes are just my desk configs for arngz.' molt-dc's reading: the MOLT_INSTALL_PREFIX removal from rhadamanth's vars.sh (issue I7892f34) goes on Molt-matts' main, not a held branch, and it is there as 89646a2 beside hv's arngz desk configs (c550d8a), unpushed. rhadamanth's renders read stale until hv's molt upgrade.
 - hv, 24 Nov 2026, in devbin-vc's window (relayed by devbin-vc, its decision 289; the wording is devbin-vc's): cut Molt 1.4.9 after Intent 3.5.2's cut, booked now on bats, cargo and heavy, with the rendered 1.4.9 formula installed with brew before the cut. devbin-vc grants it when Intent's cut ends.
+- Molt 1.4.9 cuts now, ahead of Intent 3.5.2: replaces decision 16's order (hv to devbin-vc 08:52Z 24 Nov 'Molt 1.4.9 cuts now'; hv's approval of the cut in molt-vc's window 08:57Z)
 
 ---
 

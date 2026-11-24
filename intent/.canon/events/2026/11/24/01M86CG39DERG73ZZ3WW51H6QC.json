@@ -1,0 +1,15 @@
+{
+  "id": "01M86CG39DERG73ZZ3WW51H6QC",
+  "ts": "2026-11-24T08:59:26.893Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "Molt 1.4.9 cuts now, ahead of Intent 3.5.2: replaces decision 16's order (hv to devbin-vc 08:52Z 24 Nov 'Molt 1.4.9 cuts now'; hv's approval of the cut in molt-vc's window 08:57Z)"
+  }
+}

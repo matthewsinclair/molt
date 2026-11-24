@@ -178,6 +178,14 @@
       "text": "hv, 24 Nov 2026, in devbin-vc's window (relayed by devbin-vc, its decision 289; the wording is devbin-vc's): cut Molt 1.4.9 after Intent 3.5.2's cut, booked now on bats, cargo and heavy, with the rendered 1.4.9 formula installed with brew before the cut. devbin-vc grants it when Intent's cut ends.",
       "state": "live",
       "recorded_at": "2026-11-24T06:03:56.309Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 17,
+      "text": "Molt 1.4.9 cuts now, ahead of Intent 3.5.2: replaces decision 16's order (hv to devbin-vc 08:52Z 24 Nov 'Molt 1.4.9 cuts now'; hv's approval of the cut in molt-vc's window 08:57Z)",
+      "state": "live",
+      "recorded_at": "2026-11-24T08:59:26.893Z"
     }
   ],
   "sent": [],
