@@ -1,0 +1,17 @@
+{
+  "id": "01M8710YXXA5KYWYJ6AY4DZ100",
+  "ts": "2026-11-24T14:58:11.005Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "vc to dc: build Molt 1.4.12's utilz warning fix (S), on devbin-vc's GO of 24 Nov under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-utilz-warning-resleeve.md. resleeve drops utilz's decision-18 warning (utilz.sh:117 to stderr, molt.sh:2722 runs 2>/dev/null). Red first, book every run with devbin-vc, report in ten lines. Do not cut.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

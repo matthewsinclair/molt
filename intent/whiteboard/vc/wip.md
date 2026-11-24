@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-24 12:19Z
+heartbeat_at: 2026-11-24 14:57Z
 status: active
-focus: "24 Nov: Molt v1.4.11 is released at d95d63a7 (tap 019057ab); next is hv's rollout, then Molt holds for hv's word."
+focus: "24 Nov: Molt 1.4.11 is on rhadamanth, gyges and kovacs. Next: molt-dc builds the utilz warning fix for 1.4.12, which waits for devbin 0.1.31."
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- Molt 1.4.11 rollout (hv's): brew update, brew upgrade molt, then molt upgrade on each sleeve; then vc tells devbin-vc. v1.4.11 is d95d63a7, tap 019057ab; rhadamanth's utilz error becomes a warning.
+- Molt 1.4.12: resleeve drops utilz's decision-18 warning, because liberators/utilz.sh:117 writes it to stderr and lib/molt.sh:2722 runs each check with 2>/dev/null. Fix: drop the >&2, and add a bats case that runs the warning through resleeve. molt-dc builds it (S) on devbin-vc's GO of 24 Nov. The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop.
 
 ## Holds
 

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-24T12:19:41.800Z",
+    "heartbeat_at": "2026-11-24T14:57:19.359Z",
     "status": "active",
-    "focus": "24 Nov: Molt v1.4.11 is released at d95d63a7 (tap 019057ab); next is hv's rollout, then Molt holds for hv's word.",
+    "focus": "24 Nov: Molt 1.4.11 is on rhadamanth, gyges and kovacs. Next: molt-dc builds the utilz warning fix for 1.4.12, which waits for devbin 0.1.31.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1579,7 +1579,8 @@
       "kind": "todo",
       "seq": 58,
       "text": "Molt 1.4.11 rollout (hv's): brew update, brew upgrade molt, then molt upgrade on each sleeve; then vc tells devbin-vc. v1.4.11 is d95d63a7, tap 019057ab; rhadamanth's utilz error becomes a warning.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T14:57:19.256Z",
       "recorded_at": "2026-11-24T11:41:46.408Z"
     },
     {
@@ -1590,6 +1591,14 @@
       "state": "archived",
       "archived_at": "2026-11-24T12:17:35.214Z",
       "recorded_at": "2026-11-24T11:41:46.463Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 60,
+      "text": "Molt 1.4.12: resleeve drops utilz's decision-18 warning, because liberators/utilz.sh:117 writes it to stderr and lib/molt.sh:2722 runs each check with 2>/dev/null. Fix: drop the >&2, and add a bats case that runs the warning through resleeve. molt-dc builds it (S) on devbin-vc's GO of 24 Nov. The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop.",
+      "state": "live",
+      "recorded_at": "2026-11-24T14:57:19.312Z"
     }
   ],
   "sent": [
@@ -2228,6 +2237,13 @@
       "fyi": false,
       "recorded_at": "2026-11-24T06:58:11.423Z",
       "archived_at": "2026-11-24T10:41:51.390Z"
+    },
+    {
+      "id": "01M8710YXXA5KYWYJ6AY4DZ101",
+      "recipient": "dc",
+      "body": "vc to dc: build Molt 1.4.12's utilz warning fix (S), on devbin-vc's GO of 24 Nov under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-utilz-warning-resleeve.md. resleeve drops utilz's decision-18 warning (utilz.sh:117 to stderr, molt.sh:2722 runs 2>/dev/null). Red first, book every run with devbin-vc, report in ten lines. Do not cut.",
+      "fyi": false,
+      "recorded_at": "2026-11-24T14:58:11.005Z"
     }
   ],
   "handled": [

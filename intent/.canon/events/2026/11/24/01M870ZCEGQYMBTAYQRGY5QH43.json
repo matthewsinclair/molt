@@ -1,0 +1,15 @@
+{
+  "id": "01M870ZCEGQYMBTAYQRGY5QH43",
+  "ts": "2026-11-24T14:57:19.312Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt 1.4.12: resleeve drops utilz's decision-18 warning, because liberators/utilz.sh:117 writes it to stderr and lib/molt.sh:2722 runs each check with 2>/dev/null. Fix: drop the >&2, and add a bats case that runs the warning through resleeve. molt-dc builds it (S) on devbin-vc's GO of 24 Nov. The cut waits for devbin 0.1.31's sweep and carries hold 10's fallback drop."
+  }
+}
