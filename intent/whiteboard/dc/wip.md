@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-24 07:05Z
+heartbeat_at: 2026-11-24 09:32Z
 status: active
-focus: "24 Nov: house-rules.md is linked by the claude liberator, landed as 86fec72e for 1.4.9; no worktree or dc/ branch is left, and nothing is open. dc holds for vc's word."
+focus: "24 Nov: hv's decision 18, the utilz dev/opt warning, landed as 69941853 and 0460fa53 for 1.4.10; no worktree or dc/ branch is left, and nothing is open. dc holds for vc's word."
 claims: []
 ---
 
