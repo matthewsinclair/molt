@@ -5,7 +5,7 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "82b4e5df-f52e-400e-93cb-fc81e39a8f2d",
-    "heartbeat_at": "2026-11-24T05:59:15.636Z",
+    "heartbeat_at": "2026-11-24T06:58:20.096Z",
     "status": "active",
     "focus": "24 Nov: O2 (1181760) and I7892f34's code half (5a90b25, issue closed at 6ebc4a7) are landed; no worktree or dc/ branch is left, and nothing is open. dc holds for vc's word.",
     "claims": [],
@@ -1084,6 +1084,14 @@
       "fyi": false,
       "recorded_at": "2026-11-23T11:56:37.754Z",
       "archived_at": "2026-11-23T12:54:28.196Z"
+    },
+    {
+      "id": "01M865M39TF8E4CJMZ4BXGW7ND",
+      "recipient": "vc",
+      "body": "Plan for the house-rules GO. (1) _claude_links adds house-rules.md to its keybindings.json, CLAUDE.md, AGENTS.md loop, so check, install and verify cover it. One claude.bats test widens to all three rule files, plus the bootstrap-runbook and sleeve-agents lines.\n(2) Read: each sleeve has one config dir. rhadamanth, gyges and kovacs all declare MOLT_CLAUDE_CONFIG_DIR=~/.config/claude. molt agent start refuses a shell with another CLAUDE_CONFIG_DIR, and the home guard refuses launches elsewhere. All 80 claude processes here run with ~/.config/claude.\nAn agent home's .claude/ is project scope (settings.json only), not a config dir. So (1) already covers every *-sysadm, ops and docs session; no second dir to link.\nProof: claude.bats, then one booked molt upgrade claude on rhadamanth, read with ls -l on the config dir. gyges and kovacs pick it up on hv's 1.4.9 rollout.\nShall I build? I will ask the Desk on your GO.",
+      "re": "2026-11-24 06:58Z",
+      "fyi": false,
+      "recorded_at": "2026-11-24T06:59:17.946Z"
     }
   ],
   "handled": [
