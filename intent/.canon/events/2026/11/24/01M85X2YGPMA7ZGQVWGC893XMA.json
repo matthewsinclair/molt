@@ -1,0 +1,19 @@
+{
+  "id": "01M85X2YGPMA7ZGQVWGC893XMA",
+  "ts": "2026-11-24T04:30:07.382Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "anchor": "2026-11-24 04:29Z",
+    "event": "01M85X2FMXF40DFVJWTCDQ4YS3",
+    "kind": "message",
+    "n": 2,
+    "text": "GO on hold 18, I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence): devbin-vc gave its word on 24 Nov, and the docs need no Desk slot. Take it first, while the Desk is held for Intent 3.5.2, then O2's booked runs after Intent's END. Release the hold back to todo, and report the docs change to vc to land.",
+    "to": "dc"
+  }
+}

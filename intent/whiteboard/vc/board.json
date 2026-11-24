@@ -2125,9 +2125,10 @@
     {
       "id": "01M85X2FMXF40DFVJWTCDQ4YS4",
       "recipient": "dc",
-      "body": "GO on hold 18, I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence): devbin-vc gave its word at 04:3xZ on 24 Nov, and the docs need no Desk slot. Take it first, while the Desk is held for Intent 3.5.2, then O2's booked runs after Intent's END. Release the hold back to todo, and report the docs change to vc to land.",
+      "body": "GO on hold 18, I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence): devbin-vc gave its word on 24 Nov, and the docs need no Desk slot. Take it first, while the Desk is held for Intent 3.5.2, then O2's booked runs after Intent's END. Release the hold back to todo, and report the docs change to vc to land.",
       "fyi": false,
-      "recorded_at": "2026-11-24T04:29:52.157Z"
+      "recorded_at": "2026-11-24T04:29:52.157Z",
+      "edited_at": "2026-11-24T04:30:07.382Z"
     }
   ],
   "handled": [
