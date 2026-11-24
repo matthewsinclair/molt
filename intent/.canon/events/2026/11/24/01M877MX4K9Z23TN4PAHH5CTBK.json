@@ -1,0 +1,16 @@
+{
+  "id": "01M877MX4K9Z23TN4PAHH5CTBK",
+  "ts": "2026-11-24T16:53:55.987Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 60,
+    "text": "Molt 1.4.12 cut, after hv's compacts: it carries the utilz warning fix (landed at bd02d9a1, tested head e8c71c72) and drops MOLT_TEST_ONE_LANE, the bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test (chain C step 4; devbin 0.1.31 is swept as fdf822d2). molt-dc builds the drop, red first; then the formula proof and the cut, booked with devbin-vc."
+  }
+}
