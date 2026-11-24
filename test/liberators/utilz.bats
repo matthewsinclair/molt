@@ -147,28 +147,30 @@ _utilz_use() {
     [ "$(cat "$FAKE_LOG")" = "utilz use" ]
 }
 
-@test "brew: a dev or opt link set fails the check, naming its tree and 'utilz use brew', and install never moves it" {
+@test "brew: a dev or opt link set is warned of, naming its tree and 'utilz use brew', passes, and install never moves it" {
     # Issue 0058. rhadamanth, 25 Oct 2026: a dev link set left by the old
     # checkout mode read as PATH running the wrong utilz, with no remedy named.
+    # hv's decision 18, 24 Nov 2026: the set is the user's choice, so Molt
+    # warns and does not fail.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
     _utilz_use 0 "links: $HOME/.local/bin" "  dev at $UTILZ_HOME -- 2 link(s)"
     run utilz_check
-    assert_failure
-    assert_output_contains "utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    assert_success
+    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
     run utilz_verify
-    assert_failure
-    assert_output_contains "'utilz use brew' points them back"
+    assert_success
+    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME"
     run utilz_install
-    assert_failure
-    assert_output_contains "'utilz use brew' points them back"
+    assert_success
+    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME"
     run grep -v '^utilz use$' "$FAKE_LOG"
     assert_failure
 
     _utilz_use 0 "links: $HOME/.local/bin" "  opt at /opt/utilz -- 2 link(s)"
     run utilz_check
-    assert_failure
-    assert_output_contains "utilz use has pointed its links at opt at /opt/utilz, not brew"
+    assert_success
+    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at opt at /opt/utilz, not brew"
 }
 
 @test "brew: a utilz use that fails, or reports shadowing, fails the check in its own words" {
