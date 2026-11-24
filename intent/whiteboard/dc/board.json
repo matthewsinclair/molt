@@ -678,7 +678,8 @@
       "kind": "todo",
       "seq": 15,
       "text": "devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.8 (vc, 23 Nov); dc starts on vc's go.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T05:29:25.839Z",
       "recorded_at": "2026-11-23T12:54:28.276Z",
       "edited_at": "2026-11-23T17:15:06.882Z"
     },

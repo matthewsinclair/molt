@@ -17,7 +17,6 @@ _(none)_
 
 ## TODO
 
-- devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.8 (vc, 23 Nov); dc starts on vc's go. (edited)
 - I7892f34's code half (remove molt install and molt use, adopt bin/devbin install and use, removal docs), dc's per devbin-vc's reading at f04aaf3; plan sent to vc 24 Nov, built after O2 lands and vc reads the plan.
 
 ## Holds
