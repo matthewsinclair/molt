@@ -2,7 +2,7 @@
 
 ## DOING
 
-- **Molt 1.4.9's cut:** main carries O2 (ca80af0, 1181760), I7892f34's code half (1f2168d, 5a90b25) and the formula's bash build dependency (526e5bc). Before the cut, install the rendered formula with brew through the tap clone. Book with devbin-vc (bats, heavy), and a seat cuts it with `--yes` on rhadamanth (hv's decision 10). START and END go to devbin-vc.
+- **Molt 1.4.9's cut:** main carries O2 (ca80af0, 1181760) and I7892f34's code half (1f2168d, 5a90b25). The bash build line comes from devbin 0.1.30's render: 9dde0907 drops the template stopgap, and devbin-vc sweeps Molt to 0.1.30 before the cut. Before the cut, install the rendered formula with brew through the tap clone. Book with devbin-vc (bats, heavy), and a seat cuts it with `--yes` on rhadamanth (hv's decision 10). START and END go to devbin-vc.
 
 ## TODO
 

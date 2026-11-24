@@ -1523,7 +1523,8 @@
       "kind": "hold",
       "seq": 11,
       "text": "Molt drops 526e5bc's on_macos depends_on \"bash\" => :build from packaging/homebrew/molt.rb: released when devbin 0.1.30's formula renderer emits that dependency itself (devbin-cc's issue, filed 24 Nov) and is swept into Molt.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T08:39:18.182Z",
       "recorded_at": "2026-11-24T05:11:29.126Z"
     },
     {
