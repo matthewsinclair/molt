@@ -18,7 +18,6 @@ _(none)_
 ## TODO
 
 - devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.8 (vc, 23 Nov); dc starts on vc's go. (edited)
-- I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's GO on 24 Nov on devbin-vc's word; scope asked of vc, since molt install and molt use are still in the code.
 
 ## Holds
 

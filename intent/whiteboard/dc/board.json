@@ -687,7 +687,8 @@
       "kind": "todo",
       "seq": 16,
       "text": "I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's GO on 24 Nov on devbin-vc's word; scope asked of vc, since molt install and molt use are still in the code.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T04:32:39.817Z",
       "recorded_at": "2026-11-24T04:30:56.036Z"
     }
   ],
