@@ -59,7 +59,6 @@ The pre-commit gate is `.githooks/pre-commit`, which git runs through `core.hook
 - Never bypass `.githooks/pre-commit` with `--no-verify` on shared branches without an explicit justification in the commit message.
 - Never create steel thread or work package directories by hand: use `intent st new` and `intent wp new`.
 - Never edit `status:` fields in `info.md` frontmatter by hand: use `intent st start | done | cancel` and `intent wp start | done`.
-- Never wrap lines in Markdown files by hand.
 
 ## See also
 
