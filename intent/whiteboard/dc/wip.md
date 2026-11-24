@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-23 17:15Z
+heartbeat_at: 2026-11-24 04:29Z
 status: active
-focus: "23 Nov: the devbin#0326 formula adoption landed as 0c2cc5c (vc's replay of 30fe28e), its worktree and branch removed. 1.4.8 waits for devbin 0.1.29's sweep (hv's decision 12). Holding: todo 15 (O2) after 1.4.8 on vc's go; hold 18, I7892f34's docs half, on devbin-vc's word."
+focus: "24 Nov: Molt 1.4.8 is released at 326d469 with its formula, which carries dc's devbin#0326 adoption (0c2cc5c). Todo 15 (O2) is now open and waits for vc's go; hold 18, I7892f34's docs half, waits for devbin-vc's word."
 claims: []
 ---
 
