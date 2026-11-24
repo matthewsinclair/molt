@@ -35,8 +35,5 @@ case "$version" in
     ;;
 esac
 echo "test-bash32: $bash_path at $version, with /bin first on PATH"
-# devbin's bats lanes runner needs bash 5, so molt test runs this suite in one
-# lane, under bats, as it did before devbin#0339's adoption.
-export MOLT_TEST_ONE_LANE=1
 cd "$root"
 exec bin/molt test "$@"

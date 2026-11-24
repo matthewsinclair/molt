@@ -2596,15 +2596,7 @@ cmd_test() {
       molt_error "Found ${#test_files[@]} test file(s) but zero @test declarations. Refusing to report a pass."
       return 1
     fi
-    if [[ -n "${MOLT_TEST_ONE_LANE:-}" ]]; then
-      # tools/test-bash32 asks for it: devbin's lanes runner needs bash 5 to
-      # start, and its recorder times each file with bash 5's EPOCHREALTIME, so
-      # a suite under /bin/bash 3.2 runs in one lane, through bats, as before.
-      molt_info "molt test: one lane under bats, as MOLT_TEST_ONE_LANE asks"
-      bats "${test_files[@]}"
-    else
-      _test_lanes "$test_dir" "$test_dir/liberators"
-    fi
+    _test_lanes "$test_dir" "$test_dir/liberators"
   fi
 }
 
