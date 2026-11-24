@@ -1587,7 +1587,8 @@
       "kind": "todo",
       "seq": 59,
       "text": "Molt-matts: push hv's five writing rulings (3b9585f, 4662fa6, a424731) after geodica-estate's review, on hv's word.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T12:17:35.214Z",
       "recorded_at": "2026-11-24T11:41:46.463Z"
     }
   ],
