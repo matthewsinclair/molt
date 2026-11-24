@@ -6,5 +6,5 @@
 
 ## TODO
 
-- **After a compact:** `/in-session` and its pickup as vc, put hv's inboxes in front of hv, then carry on with `intent/wip.md`'s TODO.
+- **After a compact:** `/in-session` and its pickup as vc, put hv's inboxes in front of hv, then carry on with `intent/wip.md`'s TODO. The estate works from one plan, `~/Devel/scratch/estate-plan/PLAN.md`; devbin-vc is its only writer, so send changes to devbin-vc.
 - **Next cut:** brew-install the rendered formula from a scratch clone with a local annotated tag first (clear brew's `molttest--git` cache by its full path), book with devbin-vc naming the tip, and start the slot with `--named tip=<tip>`.

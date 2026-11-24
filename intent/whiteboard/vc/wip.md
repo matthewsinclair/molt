@@ -3,7 +3,7 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-24 11:41Z
+heartbeat_at: 2026-11-24 12:19Z
 status: active
 focus: "24 Nov: Molt v1.4.11 is released at d95d63a7 (tap 019057ab); next is hv's rollout, then Molt holds for hv's word."
 claims: []
