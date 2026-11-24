@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.12] - unreleased
+
+### Fixed
+
+- `molt resleeve` and `molt upgrade` did not show the utilz warning for a dev or opt link set, and showed only "utilz: ✓ ok", because they drop the stderr of a liberator's check. The utilz liberator now writes the warning to its caller's stdout, outside the capture of its faults, so the warning shows and is never a fault (hv's decision 18). It shows once in a run, also when install runs after the check
+
 ## [1.4.11] - 2026-11-24
 
 ### Fixed
