@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [1.4.12] - unreleased
 
+### Changed
+
+- `tools/test-bash32` runs the suite through devbin's bats lanes runner, as `molt test` does under bash 5. devbin 0.1.31 runs the lanes runner under macOS's /bin/bash 3.2 (issue I5a905ad), so `molt test` no longer has the one-lane fallback, and `MOLT_TEST_ONE_LANE` is gone
+
 ### Fixed
 
 - `molt resleeve` and `molt upgrade` did not show the utilz warning for a dev or opt link set, and showed only "utilz: ✓ ok", because they drop the stderr of a liberator's check. The utilz liberator now writes the warning to its caller's stdout, outside the capture of its faults, so the warning shows and is never a fault (hv's decision 18). It shows once in a run, also when install runs after the check
