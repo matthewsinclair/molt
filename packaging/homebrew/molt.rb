@@ -20,14 +20,10 @@ class Molt < Formula
       revision: "@@REVISION@@"
   license "MIT"
 
-  # Molt runs on macOS's own bash 3.2 as well as bash 5, and CI's macOS runner
-  # proves it on every release tag, so bash is a build dependency only: the
-  # install body runs bin/devbin, which refuses bash below 5, and Homebrew's
-  # build PATH puts a dependency's bin ahead of /bin. Without it 1.4.8's
-  # install stopped at "devbin: bash >= 5 is required" (24 Nov 2026).
-  on_macos do
-    depends_on "bash" => :build
-  end
+  # No depends_on bash here: render writes the bash build line itself
+  # (devbin 0.1.30, issue I5e17433), and refuses a template that holds one.
+  # Molt runs on macOS's own bash 3.2 as well as bash 5; the build line is
+  # there because the install body runs bin/devbin, which needs bash 5.
 
   def install
     @@INSTALL@@
