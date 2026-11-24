@@ -10,7 +10,7 @@ verblock: "24 Nov 2026:v1.03: Matthew Sinclair - 1.4.9 released and rolled out"
 
 ## TODO
 
-- **utilz on rhadamanth (hv's):** `utilz use` points the links at the dev copy, and the sleeve declares brew; `utilz use brew` when no Utilz session needs dev, then `molt upgrade`.
+- **utilz switch notice (hv's decision 18):** molt-dc makes a dev or opt utilz set on a brew sleeve a notice with status 0, not a failure; vc lands it for the next release. rhadamanth stays on utilz dev for the arngz spike.
 - **geodica-estate's STE note:** when it comes, cut Molt's `outgoing-writing-ste` memory to Molt-local content.
 - **MOLT_TEST_ONE_LANE:** drop it after devbin's I5a905ad (bats lanes under an older bash) is fixed and swept into Molt.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).

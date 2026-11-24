@@ -190,6 +190,14 @@
       "state": "archived",
       "archived_at": "2026-11-24T09:24:33.264Z",
       "recorded_at": "2026-11-24T08:59:26.893Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 18,
+      "text": "hv, 24 Nov 2026, in devbin-vc's window at 09:27Z (relayed by devbin-vc; the quote is hv's choice): 'Keep dev; Molt warns'. rhadamanth stays on utilz dev while the arngz spike is live. Molt's utilz liberator reports a dev or opt link set on a brew sleeve as a notice with its remedy, status 0, not a failure; molt-dc builds it under vc with a localised red-then-green arm, and it rides Molt's next release.",
+      "state": "live",
+      "recorded_at": "2026-11-24T09:26:17.147Z"
     }
   ],
   "sent": [],

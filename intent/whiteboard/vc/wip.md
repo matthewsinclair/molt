@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- utilz switch notice (hv's decision 18): molt-dc builds _utilz_switch_faults' dev or opt set as a notice with status 0 on a brew sleeve; a failing utilz use stays a failure; vc lands it, then sends the unit to devbin-vc for Molt's next release
 
 ## TODO
 

@@ -1,0 +1,15 @@
+{
+  "id": "01M86E17WEP61XXHE88WJGWS89",
+  "ts": "2026-11-24T09:26:17.230Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "utilz switch notice (hv's decision 18): molt-dc builds _utilz_switch_faults' dev or opt set as a notice with status 0 on a brew sleeve; a failing utilz use stays a failure; vc lands it, then sends the unit to devbin-vc for Molt's next release"
+  }
+}

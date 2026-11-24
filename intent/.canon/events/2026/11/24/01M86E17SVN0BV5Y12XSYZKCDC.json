@@ -1,0 +1,15 @@
+{
+  "id": "01M86E17SVN0BV5Y12XSYZKCDC",
+  "ts": "2026-11-24T09:26:17.147Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 24 Nov 2026, in devbin-vc's window at 09:27Z (relayed by devbin-vc; the quote is hv's choice): 'Keep dev; Molt warns'. rhadamanth stays on utilz dev while the arngz spike is live. Molt's utilz liberator reports a dev or opt link set on a brew sleeve as a notice with its remedy, status 0, not a failure; molt-dc builds it under vc with a localised red-then-green arm, and it rides Molt's next release."
+  }
+}
