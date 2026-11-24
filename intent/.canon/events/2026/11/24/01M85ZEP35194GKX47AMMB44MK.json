@@ -1,0 +1,15 @@
+{
+  "id": "01M85ZEP35194GKX47AMMB44MK",
+  "ts": "2026-11-24T05:11:29.126Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Molt drops 526e5bc's on_macos depends_on \"bash\" => :build from packaging/homebrew/molt.rb: released when devbin 0.1.30's formula renderer emits that dependency itself (devbin-cc's issue, filed 24 Nov) and is swept into Molt."
+  }
+}

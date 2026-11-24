@@ -26,6 +26,7 @@ _(none)_
 ## Holds
 
 - Molt drops MOLT_TEST_ONE_LANE (O2's bash 3.2 one-lane fallback in tools/test-bash32 and cmd_test): released when devbin's I5a905ad, bats lanes under an older bash, is fixed and swept into Molt.
+- Molt drops 526e5bc's on_macos depends_on "bash" => :build from packaging/homebrew/molt.rb: released when devbin 0.1.30's formula renderer emits that dependency itself (devbin-cc's issue, filed 24 Nov) and is swept into Molt.
 
 ## Watch-outs
 
