@@ -5,7 +5,7 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "82b4e5df-f52e-400e-93cb-fc81e39a8f2d",
-    "heartbeat_at": "2026-11-24T04:29:01.346Z",
+    "heartbeat_at": "2026-11-24T04:30:27.792Z",
     "status": "active",
     "focus": "24 Nov: Molt 1.4.8 is released at 326d469 with its formula, which carries dc's devbin#0326 adoption (0c2cc5c). Todo 15 (O2) is now open and waits for vc's go; hold 18, I7892f34's docs half, waits for devbin-vc's word.",
     "claims": [],
@@ -669,7 +669,8 @@
       "kind": "hold",
       "seq": 18,
       "text": "I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's yes on 23 Nov: released when devbin-cc's plan, as devbin-vc reads it, says what moves.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T04:30:55.934Z",
       "recorded_at": "2026-11-23T11:56:43.719Z"
     },
     {
@@ -680,6 +681,14 @@
       "state": "live",
       "recorded_at": "2026-11-23T12:54:28.276Z",
       "edited_at": "2026-11-23T17:15:06.882Z"
+    },
+    {
+      "node": "dc",
+      "kind": "todo",
+      "seq": 16,
+      "text": "I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's GO on 24 Nov on devbin-vc's word; scope asked of vc, since molt install and molt use are still in the code.",
+      "state": "live",
+      "recorded_at": "2026-11-24T04:30:56.036Z"
     }
   ],
   "sent": [
@@ -1311,6 +1320,16 @@
       "id": "01M84P7K0DFQFAESK4VWP065GQ",
       "sender": "vc",
       "handled_at": "2026-11-23T17:15:06.706Z"
+    },
+    {
+      "id": "01M85X1DCH1MDHN1CQWSNN6KJB",
+      "sender": "vc",
+      "handled_at": "2026-11-24T04:30:56.137Z"
+    },
+    {
+      "id": "01M85X2FMXF40DFVJWTCDQ4YS4",
+      "sender": "vc",
+      "handled_at": "2026-11-24T04:30:56.137Z"
     }
   ]
 }

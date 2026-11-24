@@ -1,0 +1,15 @@
+{
+  "id": "01M85X4E14WSVDEZ44Y7FMK8XJ",
+  "ts": "2026-11-24T04:30:56.036Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's GO on 24 Nov on devbin-vc's word; scope asked of vc, since molt install and molt use are still in the code."
+  }
+}

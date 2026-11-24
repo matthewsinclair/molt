@@ -3,7 +3,7 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-24 04:29Z
+heartbeat_at: 2026-11-24 04:30Z
 status: active
 focus: "24 Nov: Molt 1.4.8 is released at 326d469 with its formula, which carries dc's devbin#0326 adoption (0c2cc5c). Todo 15 (O2) is now open and waits for vc's go; hold 18, I7892f34's docs half, waits for devbin-vc's word."
 claims: []
@@ -18,10 +18,11 @@ _(none)_
 ## TODO
 
 - devbin's lanes-runner adoption (O2; devbin#0339 put the bats lanes runner in devbin's core at 0.1.23), open for dc after 1.4.8 (vc, 23 Nov); dc starts on vc's go. (edited)
+- I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's GO on 24 Nov on devbin-vc's word; scope asked of vc, since molt install and molt use are still in the code.
 
 ## Holds
 
-- I7892f34's docs half (the getting-started guide, CHANGELOG, the removed verbs as a ruled divergence), vc's yes on 23 Nov: released when devbin-cc's plan, as devbin-vc reads it, says what moves.
+_(none)_
 
 ## Watch-outs
 
