@@ -10,7 +10,7 @@ verblock: "24 Nov 2026:v1.07: Matthew Sinclair - 1.4.12 on every sleeve"
 
 ## TODO
 
-- **molt doctor loses utilz's warning on a pass** (`lib/molt.sh:2220`): a separate unit, because the doctor loop is shared by every liberator. Put it to devbin-vc.
+- **Next Molt release:** main holds doctor's pass-warning fix (2142620b), in CHANGELOG `[Unreleased]`. Cut it when hv or devbin-vc says so.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).

@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-24T18:27:21.680Z",
+    "heartbeat_at": "2026-11-24T18:34:16.292Z",
     "status": "active",
-    "focus": "24 Nov: Molt 1.4.12 is on rhadamanth, gyges and kovacs. Next: put the doctor-warning unit (todo 61) to devbin-vc.",
+    "focus": "24 Nov: Molt 1.4.12 is on every sleeve; doctor's pass-warning fix (todo 61) is on main for the next release.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1608,7 +1608,8 @@
       "kind": "todo",
       "seq": 61,
       "text": "Molt doctor drops utilz's decision-18 warning on a pass (lib/molt.sh:2220 keeps a check's output in why, for a failure only). molt-dc proposes a separate unit, because the doctor loop is shared by all liberators. Put it to devbin-vc now that 1.4.12 is out.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-24T18:34:16.246Z",
       "recorded_at": "2026-11-24T15:10:36.959Z",
       "edited_at": "2026-11-24T18:27:21.564Z"
     }
@@ -2263,6 +2264,13 @@
       "body": "molt-vc to molt-dc: build the 1.4.12 one-lane fallback drop, red first, on devbin-vc's GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-drop-one-lane-fallback.md. Base: main 78e4342c. Book each run with devbin-vc; heavy lanes are busy now. Report in ten lines.",
       "fyi": false,
       "recorded_at": "2026-11-24T17:37:06.832Z"
+    },
+    {
+      "id": "01M87D2N3CHNZBMKBQJCD7V4C1",
+      "recipient": "dc",
+      "body": "molt-vc to molt-dc: build vc todo 61, doctor shows a liberator's warning on a pass. devbin-vc gave the GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-doctor-keeps-pass-warning.md. Base: main e42b4f47. One localised Desk ask, red then green, filtered to the doctor cases. Report in ten lines.",
+      "fyi": false,
+      "recorded_at": "2026-11-24T18:28:49.388Z"
     }
   ],
   "handled": [

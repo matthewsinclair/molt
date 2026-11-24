@@ -1,0 +1,17 @@
+{
+  "id": "01M87D2N3CHNZBMKBQJCD7V4C0",
+  "ts": "2026-11-24T18:28:49.388Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "molt-vc to molt-dc: build vc todo 61, doctor shows a liberator's warning on a pass. devbin-vc gave the GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-doctor-keeps-pass-warning.md. Base: main e42b4f47. One localised Desk ask, red then green, filtered to the doctor cases. Report in ten lines.",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}
