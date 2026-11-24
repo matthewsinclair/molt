@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The `local-bin` liberator makes no link. A missing or broken `~/.local/bin/molt` that Homebrew's `molt` does not stand in for is named, with the `bin/devbin use` that makes it, so the switch has one writer (devbin T5). `bin/bootstrap.sh` still links a fresh checkout itself, since a fresh Mac's `/bin/bash` 3.2 cannot run devbin
 - The doctor's remedies, `molt upgrade` in an opt tree and the formula's caveats name `bin/devbin install --force` and `bin/devbin use` in place of the removed verbs
 - `molt test` runs `test/` and `test/liberators/` through devbin's bats lanes runner, the tests not tagged `serial` side by side and then the serial ones alone (devbin#0339). Under `tools/test-bash32` it runs in one lane under bats, as before, since the runner needs bash 5
+- The claude liberator links `config/claude/house-rules.md`, the writing rule `CLAUDE.md` imports, into the config dir beside `CLAUDE.md` and `AGENTS.md`, so every session on the sleeve, each sleeve agent included, reads it
 
 ## [1.4.8] - 2026-11-24
 

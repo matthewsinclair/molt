@@ -332,7 +332,7 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 
 ### Claude keybindings and instructions [agnostic]
 
-- `Molt-{user}/config/claude/keybindings.json`, `CLAUDE.md` and `AGENTS.md`, each linked into Claude Code's config dir (`~/.claude` until the sleeve moves its state)
+- `Molt-{user}/config/claude/keybindings.json`, `CLAUDE.md`, `AGENTS.md` and `house-rules.md`, each linked into Claude Code's config dir (`~/.claude` until the sleeve moves its state)
 
 ### Claude's state out of $HOME [agnostic]
 
@@ -368,6 +368,7 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 | claude/keybindings.json       | <config dir>/keybindings.json                     | linked   |
 | claude/CLAUDE.md              | <config dir>/CLAUDE.md                            | linked   |
 | claude/AGENTS.md              | <config dir>/AGENTS.md                            | linked   |
+| claude/house-rules.md         | <config dir>/house-rules.md                       | linked   |
 | claude/statusline.json        | <config dir>/settings.json, its `statusLine` key  | written  |
 | claude/attribution.json       | <config dir>/settings.json, its `attribution` key | written  |
 | ccstatusline/settings.json    | ~/.config/ccstatusline/settings.json              | linked   |

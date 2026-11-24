@@ -61,16 +61,16 @@ The agent home is both the agent's config and the directory it runs in. Claude C
 
 A session started in a home reads these layers of instructions, widest first:
 
-| Layer      | File                                                                          | Carries                                                                                                                                           |
-| ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User scope | `CLAUDE.md` and `AGENTS.md` in the config dir, linked from `config/claude/`   | the rules every session on every sleeve follows                                                                                                   |
-| Agent      | the home's `AGENTS.md`, first from `config/agents/AGENTS.md.tmpl`             | what every sleeve agent shares: who it is, its home and how to start in it, what it does when its first prompt is `start`, the files Molt renders |
-| Role       | the home's `AGENTS.md`, next from `config/agents/roles/<role>/AGENTS.md.tmpl` | the role's own text: what the role is for, what it may touch, what it must not                                                                    |
-| Host       | `instances/<hostname>/agents/<role>.md`, appended to the home's `AGENTS.md`   | facts true on this machine only: its stack layout, what is installed, its known issues                                                            |
+| Layer      | File                                                                                          | Carries                                                                                                                                           |
+| ---------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User scope | `CLAUDE.md`, `AGENTS.md` and `house-rules.md` in the config dir, linked from `config/claude/` | the rules every session on every sleeve follows                                                                                                   |
+| Agent      | the home's `AGENTS.md`, first from `config/agents/AGENTS.md.tmpl`                             | what every sleeve agent shares: who it is, its home and how to start in it, what it does when its first prompt is `start`, the files Molt renders |
+| Role       | the home's `AGENTS.md`, next from `config/agents/roles/<role>/AGENTS.md.tmpl`                 | the role's own text: what the role is for, what it may touch, what it must not                                                                    |
+| Host       | `instances/<hostname>/agents/<role>.md`, appended to the home's `AGENTS.md`                   | facts true on this machine only: its stack layout, what is installed, its known issues                                                            |
 
 The home's `CLAUDE.md` is a one-line `@AGENTS.md` stub. Put each instruction in exactly one layer: a rule that holds everywhere belongs in user scope, one that holds for every sleeve agent in the preamble, and the role contract repeats neither. The preamble is optional; without one, the role's template opens the file.
 
-When your config repo has `config/claude/CLAUDE.md` and `AGENTS.md`, Molt links them into the config dir on every sleeve that runs the claude liberator, moved or not (on a sleeve that has not moved, the config dir is still `~/.claude`), so the cross-session rules are the same everywhere; a regular file already at either path is backed up before the link replaces it. Project agents read these files too.
+When your config repo has `config/claude/CLAUDE.md`, `AGENTS.md` and `house-rules.md`, Molt links them into the config dir on every sleeve that runs the claude liberator, moved or not (on a sleeve that has not moved, the config dir is still `~/.claude`), so the cross-session rules are the same everywhere; a regular file already at any of these paths is backed up before the link replaces it. Project agents read these files too. Each sleeve has one config dir, so the sleeve agents, which `molt agent start` starts only from a shell with that config dir, read the same files.
 
 ## Declaring an agent
 

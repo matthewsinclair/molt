@@ -11,8 +11,11 @@
 _claude_links() {
   local user_repo="$1" dir name
   dir="$(molt_claude_config_dir)"
-  # Keybindings, and the user-scope rules every session on the sleeve reads.
-  for name in keybindings.json CLAUDE.md AGENTS.md; do
+  # Keybindings, and the user-scope rules every session on the sleeve reads:
+  # CLAUDE.md, the AGENTS.md it imports, and house-rules.md, the writing rule
+  # it imports. Each sleeve has one config dir, so every session there, an
+  # agent's too, reads these.
+  for name in keybindings.json CLAUDE.md AGENTS.md house-rules.md; do
     if [[ -f "$user_repo/config/claude/$name" ]]; then
       printf '%s\t%s\n' "$user_repo/config/claude/$name" "$dir/$name"
     fi

@@ -1248,20 +1248,23 @@ JSON
 
 # --- ST0006: the user-scope rules ---
 
-@test "CLAUDE.md and AGENTS.md are linked into the config dir, and a regular file there is backed up first" {
+@test "CLAUDE.md, AGENTS.md and house-rules.md are linked into the config dir, and a regular file there is backed up first" {
     # AT021 (ST0006 AC012).
     setup_claude
     echo "# rules" > "$TEST_USER_REPO/config/claude/CLAUDE.md"
     echo "# contract" > "$TEST_USER_REPO/config/claude/AGENTS.md"
+    echo "# house" > "$TEST_USER_REPO/config/claude/house-rules.md"
     echo "# hand-written" > "$HOME/.claude/CLAUDE.md"
     run claude_check
     assert_failure
     assert_output_contains "claude: ~/.claude/CLAUDE.md is not a symlink"
     assert_output_contains "claude: ~/.claude/AGENTS.md is missing"
+    assert_output_contains "claude: ~/.claude/house-rules.md is missing"
     run claude_install
     assert_success
     assert_symlink_exists "$HOME/.claude/CLAUDE.md" "$TEST_USER_REPO/config/claude/CLAUDE.md"
     assert_symlink_exists "$HOME/.claude/AGENTS.md" "$TEST_USER_REPO/config/claude/AGENTS.md"
+    assert_symlink_exists "$HOME/.claude/house-rules.md" "$TEST_USER_REPO/config/claude/house-rules.md"
     run cat "$HOME"/.claude/CLAUDE.md.molt-backup.*
     [ "$output" = "# hand-written" ]
     run claude_check
