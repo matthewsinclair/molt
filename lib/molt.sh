@@ -1160,10 +1160,23 @@ molt_brew_install_faults() {
 }
 
 # Everything standing between this machine and "Homebrew's $2 is what PATH
-# runs", for the formula $1 (tap/name), one fault per line. Fails, having named
-# the fault, when nothing past it can be checked: no Homebrew, the formula not
-# installed, or its command not linked. $3 is as for molt_brew_install_faults.
+# runs", for the formula $1 (tap/name), one fault per line: the install, trust
+# and link faults, then what PATH runs. Fails, having named the fault, when
+# nothing past it can be checked. $3 is as for molt_brew_install_faults.
 molt_brew_faults() {
+  local cmd="$2" prefix
+  molt_brew_link_faults "$@" || return 1
+  prefix="$(brew --prefix 2>/dev/null)"
+  molt_path_runs_fault "$cmd" "$prefix/bin/$cmd" "Homebrew's $prefix/bin/$cmd"
+}
+
+# The faults molt_brew_faults names before it asks what PATH runs: Homebrew's
+# $2 for the formula $1 (tap/name) installed, trusted and linked into its bin,
+# one fault per line. Fails, having named the fault, when nothing past it can
+# be checked: no Homebrew, the formula not installed, or its command not
+# linked. A caller that must judge PATH itself, as utilz does when its own
+# switch points elsewhere (hv's decision 18), asks this alone.
+molt_brew_link_faults() {
   local formula="$1" cmd="$2" tap_url="${3:-}" prefix
   molt_brew_install_faults "$formula" "$cmd" "$tap_url" || return 1
   prefix="$(brew --prefix 2>/dev/null)"
@@ -1178,7 +1191,6 @@ molt_brew_faults() {
     echo "installed but not linked into $prefix/bin"
     return 1
   fi
-  molt_path_runs_fault "$cmd" "$prefix/bin/$cmd" "Homebrew's $prefix/bin/$cmd"
 }
 
 # Installs the formula $1 (tap/name) by its full name, which Homebrew 7.0.10

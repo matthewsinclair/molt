@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.11] - unreleased
+
+### Fixed
+
+- On a brew sleeve whose utilz link set is dev or opt and runs first on PATH, `molt upgrade` still failed utilz with "PATH runs ~/.local/bin/utilz, not Homebrew's", because Homebrew's PATH check ran ahead of the switch check that 1.4.10 made a warning. The utilz liberator now asks `molt_brew_link_faults`, the install, trust and link half of `molt_brew_faults`, and judges PATH only after a clean switch, so a dev or opt set gets the warning alone (hv's decision 18). The gtools, cldr, intent and pplr liberators still ask `molt_brew_faults` whole
+
 ## [1.4.10] - 2026-11-24
 
 ### Changed

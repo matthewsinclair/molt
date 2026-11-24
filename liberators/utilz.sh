@@ -120,16 +120,22 @@ _utilz_switch_faults() {
   return "$rc"
 }
 
+# Homebrew's utilz installed, trusted and linked, then its switch, then PATH.
+# PATH is judged here, after the switch, never inside molt_brew_faults: with
+# the switch set elsewhere, PATH runs that set's links, so a PATH fault would
+# only repeat the switch without its remedy. A warned-of set (status 2) and a
+# failed use (1) both skip every PATH check. rhadamanth, 1.4.10: the PATH
+# fault molt_brew_faults named ahead of the switch failed a dev set that
+# decision 18 had made a warning.
 _utilz_brew_faults() {
-  molt_brew_faults "$MOLT_UTILZ_FORMULA" utilz || return 0
+  molt_brew_link_faults "$MOLT_UTILZ_FORMULA" utilz || return 0
   local prefix keg utilities missed
   if ! prefix="$(brew --prefix 2>/dev/null)"; then
     echo "brew --prefix failed, so no utility was checked"
     return 0
   fi
-  # With the switch set elsewhere, PATH would only repeat it, without the
-  # remedy, so a warned-of set (status 2) skips it as a failed use (1) does.
   _utilz_switch_faults "$prefix/bin/utilz" || return 0
+  molt_path_runs_fault utilz "$prefix/bin/utilz" "Homebrew's $prefix/bin/utilz"
   keg="$prefix/opt/utilz/libexec/bin"
   utilities="$(_utilz_keg_utilities "$keg")"
   if [[ -z "$utilities" ]]; then
