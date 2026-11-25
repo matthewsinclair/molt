@@ -181,3 +181,36 @@ _doom_config_repo() {
     refute_output_contains "pull skipped"
     [ "$(cat "$HOME/doom.calls")" = "doom sync" ]
 }
+
+# rhadamanth, 25 Nov (issue Ied61fb9): ~/.config/doom links into the user
+# config repo, which held uncommitted files. molt upgrade --no-pull ran this
+# hook, git refused its pull of that repo, and the upgrade failed. That pull is
+# molt upgrade's own, after its clean check, so the hook leaves the repo as it
+# is, and still syncs.
+@test "the editors upgrade hook does not pull the user config repo that the Doom config links into, and still syncs (issue Ied61fb9)" {
+    _fake_doom
+    _doom_synced_under "30.2"
+    local origin="$BATS_TEST_TMPDIR/stack-origin" stack="$BATS_TEST_TMPDIR/Molt-testuser" head
+    mkdir -p "$origin/config/doom"
+    echo ';; init' > "$origin/config/doom/init.el"
+    git -C "$origin" init -q
+    git -C "$origin" add -A
+    git -c user.name=test -c user.email=test@example.com -C "$origin" commit -qm init
+    git clone -q "$origin" "$stack"
+    # Upstream has moved on, and the user config repo holds an uncommitted
+    # change to the same file, so a pull of it fails.
+    echo ';; upstream' >> "$origin/config/doom/init.el"
+    git -c user.name=test -c user.email=test@example.com -C "$origin" commit -qam upstream
+    echo ';; uncommitted' >> "$stack/config/doom/init.el"
+    ln -s "$stack/config/doom" "$HOME/.config/doom"
+    load_liberator editors
+    MOLT_USER_REPO_SEARCH_PATHS=("$stack")
+    head="$(git -C "$stack" rev-parse HEAD)"
+    MOLT_EMACS_VERSION="30.2" run editors_upgrade
+    assert_success
+    assert_output_contains "Doom config pull skipped:"
+    assert_output_contains "is in the user config repo, which molt upgrade pulls itself"
+    refute_output_contains "pull failed"
+    [ "$(git -C "$stack" rev-parse HEAD)" = "$head" ]
+    [ "$(cat "$HOME/doom.calls")" = "doom sync" ]
+}
