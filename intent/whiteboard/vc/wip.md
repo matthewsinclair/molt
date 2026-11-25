@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-25 16:37Z
+heartbeat_at: 2026-11-25 16:56Z
 status: active
-focus: "After the compact: /in-session, pickup as vc, hv's inboxes to hv, then hold for devbin-vc's word. Then read v1.4.13's rollout reports, and on devbin-vc's word give molt-dc the go for ccstatusline with vc's brief."
+focus: "molt-dc builds the ccstatusline setting from vc's brief; vc reads its READY, passes on devbin-vc's GO for its proof run, then lands it. v1.4.13 is rolled out on rhadamanth, gyges and kovacs. Issue Ied61fb9 is Molt work, not tonight's."
 claims: []
 ---
 
@@ -21,8 +21,7 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- ccstatusline: after the compact, on devbin-vc's word, molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28). When it lands and rolls out, archive watch-out 25. (edited)
-- v1.4.13 rollout (released 16:35Z): devbin-vc sends each sysadm its steps; vc reads each report: molt --version reads 1.4.13 (brew, 85a0e7eb2a12), and rhadamanth runs bin/devbin use brew in Molt's checkout.
+- ccstatusline: molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28), on devbin-vc's GO (16:50Z by its clock), passed on by vc. Its proof run starts only on devbin-vc's GO, which vc passes on. When it lands and rolls out, archive watch-out 25. (edited)
 
 ## Holds
 
@@ -33,6 +32,7 @@ _(none)_
 - A sleeve armed for the config-dir move fails molt upgrade and resleeve while any claude process runs; arm and move in one sitting, Chrome quit. (edited)
 - agentic-engineering's courseware quotes two Molt lines: resleeve's 'Sleeve ready. Welcome back.' (as a suffix, so the 'Zen:' prefix may change) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes. test/molt.bats covers both (doctor's whole output; the resleeve message as a substring). hv can overrule. (edited)
 - ccstatusline's version is set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which runs first. To change the version, change both. No Molt config installs the global, so a sleeve without it uses npx (2acfbbe, hv decision 22).
+- rhadamanth's Molt-matts holds six uncommitted files of hv's: arngz captures for five desks and one VS Code line (terminal.integrated.enableImages). A plain molt upgrade on rhadamanth stops until hv commits or stashes them; --no-pull skips that check. devbin-vc took them to hv. Precedent: 721084f (24 Nov) committed such captures by path on devbin-vc's GO.
 
 ## Decisions
 

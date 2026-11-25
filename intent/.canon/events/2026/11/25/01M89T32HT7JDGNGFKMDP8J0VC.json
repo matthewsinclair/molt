@@ -1,0 +1,15 @@
+{
+  "id": "01M89T32HT7JDGNGFKMDP8J0VC",
+  "ts": "2026-11-25T16:54:43.514Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "rhadamanth's Molt-matts holds six uncommitted files of hv's: arngz captures for five desks and one VS Code line (terminal.integrated.enableImages). A plain molt upgrade on rhadamanth stops until hv commits or stashes them; --no-pull skips that check. devbin-vc took them to hv. Precedent: 721084f (24 Nov) committed such captures by path on devbin-vc's GO."
+  }
+}

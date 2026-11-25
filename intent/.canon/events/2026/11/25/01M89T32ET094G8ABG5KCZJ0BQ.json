@@ -1,0 +1,16 @@
+{
+  "id": "01M89T32ET094G8ABG5KCZJ0BQ",
+  "ts": "2026-11-25T16:54:43.418Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 62,
+    "text": "ccstatusline: molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28), on devbin-vc's GO (16:50Z by its clock), passed on by vc. Its proof run starts only on devbin-vc's GO, which vc passes on. When it lands and rolls out, archive watch-out 25."
+  }
+}

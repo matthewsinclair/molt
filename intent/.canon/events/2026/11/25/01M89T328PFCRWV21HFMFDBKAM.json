@@ -1,0 +1,16 @@
+{
+  "id": "01M89T328PFCRWV21HFMFDBKAM",
+  "ts": "2026-11-25T16:54:43.222Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 63,
+    "text": "v1.4.13 rollout (released 16:35Z): gyges and kovacs read molt 1.4.13 (brew, 85a0e7eb2a12), read and accepted by vc. rhadamanth: brew has 1.4.13; molt upgrade stopped on six uncommitted Molt-matts files of hv's, so rhadamanth-sysadm runs molt upgrade --no-pull on devbin-vc's word. After its report, vc runs bin/devbin use brew in Molt's checkout and reads molt --version."
+  }
+}
