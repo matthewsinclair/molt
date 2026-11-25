@@ -24,6 +24,12 @@ _claude_links() {
   if [[ -f "$user_repo/config/ccstatusline/settings.json" ]]; then
     printf '%s\t%s\n' "$user_repo/config/ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
   fi
+  # ccstatusline itself, as the user repo pins it. The status line runs it by
+  # name, and MOLT_LOCAL_BIN is first on PATH, as the env liberator requires.
+  # With no npm, nothing installs it, so there is nothing to link.
+  if [[ -n "$(_claude_ccstatusline_manifest "$user_repo")" ]] && command -v npm &>/dev/null; then
+    printf '%s\t%s\n' "$(_claude_ccstatusline_dir)/node_modules/.bin/ccstatusline" "$MOLT_LOCAL_BIN/ccstatusline"
+  fi
 }
 
 # --- The user settings.json ---
@@ -142,6 +148,101 @@ _claude_settings_merge() {
     return 1
   fi
   molt_info "claude: $label written into $shown"
+}
+
+# --- ccstatusline ---
+#
+# The user repo pins the ccstatusline the status line runs in
+# config/ccstatusline/package.json, npm's own manifest, with one exact version
+# (hv decision 24, 25 Nov 2026). claude_install copies the manifest into
+# Molt's own directory for it and runs npm install there when the copy is
+# missing or holds another version. _claude_links then links the program into
+# MOLT_LOCAL_BIN, so no other file names its path. check and verify read the
+# copy's package.json, and never run ccstatusline: with no input, it opens its
+# interactive setup. With no npm on PATH, nothing is installed or linked, and
+# the status line prints nothing.
+
+# The ccstatusline manifest the user repo $1 declares, as a file, when it
+# declares one.
+_claude_ccstatusline_manifest() {
+  if [[ -f "$1/config/ccstatusline/package.json" ]]; then
+    echo "$1/config/ccstatusline/package.json"
+  fi
+}
+
+# The directory molt installs ccstatusline into.
+_claude_ccstatusline_dir() {
+  echo "${XDG_DATA_HOME:-$HOME/.local/share}/molt/ccstatusline"
+}
+
+# The ccstatusline version installed in the directory $1, or nothing when it
+# holds none, or none that jq can read.
+_claude_ccstatusline_installed() {
+  local package="$1/node_modules/ccstatusline/package.json"
+  [[ -f "$package" ]] || return 0
+  jq -r '.version // empty | strings' "$package" 2>/dev/null
+}
+
+# Why the ccstatusline that the manifest $1 pins is not installed, or nothing
+# when it is. Fails, printing why instead, when the manifest pins no one exact
+# version, or when jq is not installed to read it.
+_claude_ccstatusline_fault() {
+  local manifest="$1" exact='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$' pin dir have
+  if ! command -v jq &>/dev/null; then
+    echo "ccstatusline cannot be checked: jq is not installed"
+    return 1
+  fi
+  pin="$(jq -r '.dependencies.ccstatusline // empty | strings' "$manifest" 2>/dev/null)"
+  if [[ ! "$pin" =~ $exact ]]; then
+    echo "$(molt_tilde "$manifest") does not pin ccstatusline to one exact version"
+    return 1
+  fi
+  dir="$(_claude_ccstatusline_dir)"
+  have="$(_claude_ccstatusline_installed "$dir")"
+  if [[ -z "$have" ]]; then
+    echo "ccstatusline $pin is not installed in $(molt_tilde "$dir")"
+  elif [[ "$have" != "$pin" ]]; then
+    echo "$(molt_tilde "$dir") holds ccstatusline $have, and $(molt_tilde "$manifest") pins $pin"
+  fi
+}
+
+# Reports, through $1 after the prefix $2, why the ccstatusline that the
+# manifest $3 pins is not installed. With no npm, it says so as information
+# and passes. Returns non-zero when it reported a fault.
+_claude_report_ccstatusline_fault() {
+  local log="$1" prefix="$2" manifest="$3" fault
+  if ! command -v npm &>/dev/null; then
+    molt_info "claude: npm is not installed, so ccstatusline is not installed and the status line stays empty"
+    return 0
+  fi
+  if ! fault="$(_claude_ccstatusline_fault "$manifest")" || [[ -n "$fault" ]]; then
+    "$log" "${prefix}$fault"
+    return 1
+  fi
+}
+
+# Installs the ccstatusline that the manifest $1 pins, with npm, when the copy
+# is missing or holds another version: the manifest goes into molt's directory
+# for it, and npm installs what it pins there. Does nothing with no npm on PATH.
+# A failed npm is named with the last line it printed.
+_claude_ccstatusline_install() {
+  local manifest="$1" dir fault out
+  command -v npm &>/dev/null || return 0
+  if ! fault="$(_claude_ccstatusline_fault "$manifest")"; then
+    molt_error "claude: $fault, so ccstatusline was not installed"
+    return 1
+  fi
+  [[ -n "$fault" ]] || return 0
+  dir="$(_claude_ccstatusline_dir)"
+  if ! mkdir -p "$dir" || ! cp "$manifest" "$dir/package.json"; then
+    molt_error "claude: could not copy $(molt_tilde "$manifest") into $(molt_tilde "$dir"), so ccstatusline was not installed"
+    return 1
+  fi
+  if ! out="$(npm install --prefix "$dir" --no-audit --no-fund 2>&1)"; then
+    molt_error "claude: npm could not install ccstatusline into $(molt_tilde "$dir"): $(printf '%s\n' "$out" | awk 'NF { last = $0 } END { print last }')"
+    return 1
+  fi
+  molt_info "claude: installed ccstatusline $(_claude_ccstatusline_installed "$dir") into $(molt_tilde "$dir")"
 }
 
 # --- The config dir ---
@@ -730,7 +831,11 @@ _claude_report_published_faults() {
 # $3 declares that are not in place in the config dir, and the home-launch hook
 # too when $4 is "yes". Returns non-zero when it reported any.
 _claude_report_config_faults() {
-  local log="$1" prefix="$2" user_repo="$3" guarded="$4" statusline attribution ok=0
+  local log="$1" prefix="$2" user_repo="$3" guarded="$4" manifest statusline attribution ok=0
+  manifest="$(_claude_ccstatusline_manifest "$user_repo")"
+  if [[ -n "$manifest" ]]; then
+    _claude_report_ccstatusline_fault "$log" "$prefix" "$manifest" || ok=1
+  fi
   molt_report_link_faults "$log" "$prefix" "$(_claude_links "$user_repo")" || ok=1
   statusline="$(_claude_statusline "$user_repo")"
   if [[ -n "$statusline" ]]; then
@@ -835,7 +940,7 @@ claude_check() {
 }
 
 claude_install() {
-  local user_repo dir links statusline attribution
+  local user_repo dir links manifest statusline attribution
   user_repo="$(molt_find_user_repo)" || return 1
 
   if ! dir="$(_claude_declared_dir)"; then
@@ -867,12 +972,17 @@ claude_install() {
   mkdir -p "$(molt_claude_config_dir)" || return 1
 
   links="$(_claude_links "$user_repo")"
+  manifest="$(_claude_ccstatusline_manifest "$user_repo")"
   statusline="$(_claude_statusline "$user_repo")"
   attribution="$(_claude_attribution "$user_repo")"
-  if [[ -z "$links" && -z "$statusline" && -z "$attribution" && -z "$dir" ]]; then
+  if [[ -z "$links" && -z "$manifest" && -z "$statusline" && -z "$attribution" && -z "$dir" ]]; then
     molt_warn "claude: nothing to manage -- $user_repo/config has no Claude Code config"
   fi
 
+  # Before the links: the link to ccstatusline needs the program in place.
+  if [[ -n "$manifest" ]]; then
+    _claude_ccstatusline_install "$manifest" || return 1
+  fi
   molt_link_all "$links" || return 1
   if [[ -n "$statusline" ]]; then
     _claude_settings_merge statusLine "$statusline" "$_CLAUDE_STATUSLINE_GET" "$_CLAUDE_STATUSLINE_SET" || return 1

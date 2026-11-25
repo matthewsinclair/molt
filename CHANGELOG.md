@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- The claude liberator installs the ccstatusline that the user repo pins in `config/ccstatusline/package.json`, npm's own manifest, with one exact version (hv's decision 24). `molt upgrade` copies the manifest into `~/.local/share/molt/ccstatusline`, or under `$XDG_DATA_HOME` when it is set, runs `npm install` there when the copy is missing or holds another version, and links `~/.local/bin/ccstatusline` to the program. `molt doctor` names a manifest with no exact version, a missing copy, a copy of another version with both versions, and a missing or wrong link, and never runs ccstatusline. With no npm on the sleeve, nothing is installed, and the check passes with an information line
+
 ## [1.4.13] - 2026-11-25
 
 ### Fixed
