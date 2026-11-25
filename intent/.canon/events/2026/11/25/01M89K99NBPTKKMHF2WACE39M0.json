@@ -1,0 +1,15 @@
+{
+  "id": "01M89K99NBPTKKMHF2WACE39M0",
+  "ts": "2026-11-25T14:55:47.371Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, live in molt-vc's window, read 14:55Z by date -u, and in molt-dc's window, read by 14:56Z by date -u (relayed by molt-dc), hv's words both times: 'devbin-vc is the pen and the desk. And we're working from the unified plan. Please sync in and follow instructions.' molt-vc takes its word from devbin-vc and the unified plan (~/Devel/scratch/estate-plan/PLAN.md), and Molt's seats take theirs from molt-vc."
+  }
+}

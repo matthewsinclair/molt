@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 72009d20-e1a3-4bd2-b054-d56565482fc2
-heartbeat_at: 2026-11-25 12:57Z
-status: paused
-focus: "After the reboot: /in-session and pickup as vc, hv's inboxes to hv, then hold for devbin-vc's word. devbin 0.1.33's sweep releases hold 12; at its push, confirm git log upstream/main..main (877a22a4 and the reboot folds) as unpushed work. Then the cut steps, each booked (hv decision 23)."
+session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
+heartbeat_at: 2026-11-25 15:05Z
+status: active
+focus: "hv decision 27 (15:05Z): hv approved the unified plan; devbin 0.1.33's sweep runs now. molt-vc commits nothing on Molt's main until devbin-vc says the sweep commit is in and pushed with the three board commits (hold 12). molt-dc drafts the ccstatusline brief read-only, kovacs's Homebrew-only route in it. Then Molt's cut steps on devbin-vc's word, each booked."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-_(none)_
+- Molt's next cut, released by devbin 0.1.33's sweep (01ffef79, pushed): the formula check, the dry run, the cut and the rollout, each its own READY to the Desk (devbin-vc), on devbin-vc's word.
 
 ## TODO
 
@@ -21,11 +21,11 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- After Molt's cut: vc specs one ccstatusline version setting in Molt that molt upgrade applies, and molt-dc builds it (S, hv decision 24). When it lands, archive watch-out 25.
+- After hv approves the unified plan: molt-dc drafts the ccstatusline brief read-only, and it says how kovacs gets the pinned ccstatusline under its Homebrew-only rule (kovacs-sysadm refused an npm global; hv decision 26). After Molt's cut: vc specs one ccstatusline version setting in Molt that molt upgrade applies, and molt-dc builds it (S, hv decision 24). When it lands, archive watch-out 25. (edited)
 
 ## Holds
 
-- Molt's cut waits until devbin 0.1.33 is swept into Molt: a 'devbin: swept to devbin 0.1.33' commit on main (hv decision 23). Then the formula check, dry run, cut and rollout go, each booked on the Desk.
+_(none)_
 
 ## Watch-outs
 

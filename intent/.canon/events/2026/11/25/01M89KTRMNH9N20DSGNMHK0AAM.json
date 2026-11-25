@@ -1,0 +1,15 @@
+{
+  "id": "01M89KTRMNH9N20DSGNMHK0AAM",
+  "ts": "2026-11-25T15:05:19.765Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 15:05Z by date -u; the wording is devbin-vc's): hv approved the unified plan as written. devbin 0.1.33's sweep starts now, and Molt commits nothing on main until devbin-vc says Molt's sweep commit is in and pushed with its three board commits. molt-dc drafts the ccstatusline brief read-only now. On kovacs: no npm global; kovacs waits for Molt's setting, so the brief says how kovacs gets it under its Homebrew-only rule."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "01M89KH2N9NY1A3M5XWYVC54Y6",
+  "ts": "2026-11-25T15:00:02.345Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 14:59Z by date -u; hv's words): 'Please sync with all VCs and let me know the plan. I will approve it when ready.' devbin 0.1.33's sweep, and Molt's cut steps after it, wait for hv's approval of the unified plan. molt-dc's read-only ccstatusline brief is in that plan; if approved, it says how kovacs gets the pinned ccstatusline under kovacs's Homebrew-only rule (kovacs-sysadm refused an npm global)."
+  }
+}

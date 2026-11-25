@@ -250,6 +250,31 @@
       "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 308, read by molt-vc at 12:31Z by date -u; the wording is devbin-vc's, with 'your' written as molt-vc's): the status line gets one ccstatusline version setting in Molt that molt upgrade applies (molt-vc's option b, S, molt-dc, after the cut). Watch-out 25 stands until it lands. kovacs' interim route is with hv now.",
       "state": "live",
       "recorded_at": "2026-11-25T12:31:13.704Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 25,
+      "text": "hv, 25 Nov 2026, live in molt-vc's window, read 14:55Z by date -u, and in molt-dc's window, read by 14:56Z by date -u (relayed by molt-dc), hv's words both times: 'devbin-vc is the pen and the desk. And we're working from the unified plan. Please sync in and follow instructions.' molt-vc takes its word from devbin-vc and the unified plan (~/Devel/scratch/estate-plan/PLAN.md), and Molt's seats take theirs from molt-vc.",
+      "state": "live",
+      "recorded_at": "2026-11-25T14:55:47.371Z",
+      "edited_at": "2026-11-25T14:56:53.834Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 26,
+      "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 14:59Z by date -u; hv's words): 'Please sync with all VCs and let me know the plan. I will approve it when ready.' devbin 0.1.33's sweep, and Molt's cut steps after it, wait for hv's approval of the unified plan. molt-dc's read-only ccstatusline brief is in that plan; if approved, it says how kovacs gets the pinned ccstatusline under kovacs's Homebrew-only rule (kovacs-sysadm refused an npm global).",
+      "state": "live",
+      "recorded_at": "2026-11-25T15:00:02.345Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 27,
+      "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 15:05Z by date -u; the wording is devbin-vc's): hv approved the unified plan as written. devbin 0.1.33's sweep starts now, and Molt commits nothing on main until devbin-vc says Molt's sweep commit is in and pushed with its three board commits. molt-dc drafts the ccstatusline brief read-only now. On kovacs: no npm global; kovacs waits for Molt's setting, so the brief says how kovacs gets it under its Homebrew-only rule.",
+      "state": "live",
+      "recorded_at": "2026-11-25T15:05:19.765Z"
     }
   ],
   "sent": [],

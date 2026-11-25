@@ -1,0 +1,17 @@
+{
+  "id": "01M89K9DT1KA7GXWN53PNF33C8",
+  "ts": "2026-11-25T14:55:51.618Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Hold. hv's word at 14:55Z (hv decision 25): devbin-vc is the pen and the Desk, and the estate works from the unified plan. Each seat waits for its vc's word, and each vc waits for devbin-vc's.\nI put your read-only draft offer to devbin-vc. You get my go when its word reaches me. Until then dc writes nothing.",
+    "fyi": false,
+    "re": "2026-11-25 14:54Z",
+    "recipient": "dc"
+  }
+}
