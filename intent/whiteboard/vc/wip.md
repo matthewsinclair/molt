@@ -21,7 +21,8 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- ccstatusline: molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28), on devbin-vc's GO (16:50Z by its clock), passed on by vc. Its proof run starts only on devbin-vc's GO, which vc passes on. When it lands and rolls out, archive watch-out 25. (edited)
+- ccstatusline: landed on main at 0f41c6df (molt-dc's branch, claude.bats green under both bashes, slot 01M89TKX1WAP350Q9CEY92VQ37). It ships in Molt's next cut, with Ied61fb9 (todo 64). Molt-matts' branch ccstatusline-setting (68070d6) lands at the rollout, after each sleeve has the release; then the brief's after-landing steps, and archive watch-out 25. (edited)
+- Ied61fb9 rides Molt's next cut beside ccstatusline (devbin-vc, 17:04Z by its clock: the next release carries everything open). molt-dc builds it after ccstatusline's END, on its own branch from v1.4.13, with one bats ask at P0; vc reads its READY and lands it. The cut waits for hv's word.
 
 ## Holds
 

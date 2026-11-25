@@ -1,0 +1,16 @@
+{
+  "id": "01M89TYX7Z4JWCHV4R9WY63KH0",
+  "ts": "2026-11-25T17:09:55.583Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 62,
+    "text": "ccstatusline: landed on main at 0f41c6df (molt-dc's branch, claude.bats green under both bashes, slot 01M89TKX1WAP350Q9CEY92VQ37). It ships in Molt's next cut, with Ied61fb9 (todo 64). Molt-matts' branch ccstatusline-setting (68070d6) lands at the rollout, after each sleeve has the release; then the brief's after-landing steps, and archive watch-out 25."
+  }
+}

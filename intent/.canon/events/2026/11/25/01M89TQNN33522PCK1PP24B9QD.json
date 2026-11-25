@@ -1,0 +1,15 @@
+{
+  "id": "01M89TQNN33522PCK1PP24B9QD",
+  "ts": "2026-11-25T17:05:58.435Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Ied61fb9 rides Molt's next cut beside ccstatusline (devbin-vc, 17:04Z by its clock: the next release carries everything open). molt-dc builds it after ccstatusline's END, on its own branch from v1.4.13, with one bats ask at P0; vc reads its READY and lands it. The cut waits for hv's word."
+  }
+}
