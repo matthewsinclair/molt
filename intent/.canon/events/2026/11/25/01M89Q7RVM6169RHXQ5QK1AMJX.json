@@ -1,0 +1,15 @@
+{
+  "id": "01M89Q7RVM6169RHXQ5QK1AMJX",
+  "ts": "2026-11-25T16:04:51.700Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, by AskUserQuestion in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 16:04Z by date -u; hv chose 'Add an exception', and the rest of the wording is devbin-vc's): kovacs's sysadm text in Molt-matts allows \"Molt-pinned per-user npm packages under ~/.local/share/molt\" (XS, the Molt team on hv's word). molt-dc builds the per-user ccstatusline route on every sleeve after the cut (S). vc's note: the exception goes in molt-dc's Molt-matts branch and lands with the route at the rollout."
+  }
+}

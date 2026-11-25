@@ -1,18 +1,16 @@
 ---
-verblock: "25 Nov 2026:v1.09: Matthew Sinclair - close-out for rhadamanth's reboot"
+verblock: "25 Nov 2026:v1.10: Matthew Sinclair - localfold for hv's compact"
 ---
 
 # Work In Progress
 
 ## DOING
 
-- Nothing.
+- **v1.4.13 rollout:** devbin-vc sends each sysadm its steps, and vc reads each report. `molt --version` reads `molt 1.4.13 (brew, 85a0e7eb2a12)` on every sleeve, and rhadamanth runs `bin/devbin use brew` in Molt's checkout.
 
 ## TODO
 
-- **Next Molt release:** main holds doctor's pass-warning fix (2142620b), in CHANGELOG `[Unreleased]`, and MOLT_WARN_PREFIX (bfb7fd12). It cuts after devbin 0.1.33 is swept into Molt (hv, 25 Nov): the formula check, dry run, cut and rollout, each booked on the Desk.
-- **After the cut, the status line:** molt-dc builds one ccstatusline version setting in Molt that `molt upgrade` applies (S; hv, 25 Nov). Until it lands, the version is set in two places: the npx pin in Molt-matts `config/claude/statusline.json` and rhadamanth's npm global.
-- **templates/env/retired/:** vc asks gyges-sysadm whether gyges runs the env liberator. cc deletes the directory in the first release after it does (cc hold 16).
+- **The status line's one version setting:** on devbin-vc's word, molt-dc builds it from vc's brief, `~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md` (S; hv decisions 24 and 28). Until it lands, the version is set in two places: the npx pin in Molt-matts `config/claude/statusline.json` and rhadamanth's npm global.
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).

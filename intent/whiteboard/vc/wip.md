@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-25 15:05Z
+heartbeat_at: 2026-11-25 16:37Z
 status: active
-focus: "hv decision 27 (15:05Z): hv approved the unified plan; devbin 0.1.33's sweep runs now. molt-vc commits nothing on Molt's main until devbin-vc says the sweep commit is in and pushed with the three board commits (hold 12). molt-dc drafts the ccstatusline brief read-only, kovacs's Homebrew-only route in it. Then Molt's cut steps on devbin-vc's word, each booked."
+focus: "After the compact: /in-session, pickup as vc, hv's inboxes to hv, then hold for devbin-vc's word. Then read v1.4.13's rollout reports, and on devbin-vc's word give molt-dc the go for ccstatusline with vc's brief."
 claims: []
 ---
 
@@ -13,7 +13,7 @@ claims: []
 
 ## DOING
 
-- Molt's next cut, released by devbin 0.1.33's sweep (01ffef79, pushed): the formula check, the dry run, the cut and the rollout, each its own READY to the Desk (devbin-vc), on devbin-vc's word.
+_(none)_
 
 ## TODO
 
@@ -21,7 +21,8 @@ claims: []
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- After hv approves the unified plan: molt-dc drafts the ccstatusline brief read-only, and it says how kovacs gets the pinned ccstatusline under its Homebrew-only rule (kovacs-sysadm refused an npm global; hv decision 26). After Molt's cut: vc specs one ccstatusline version setting in Molt that molt upgrade applies, and molt-dc builds it (S, hv decision 24). When it lands, archive watch-out 25. (edited)
+- ccstatusline: after the compact, on devbin-vc's word, molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28). When it lands and rolls out, archive watch-out 25. (edited)
+- v1.4.13 rollout (released 16:35Z): devbin-vc sends each sysadm its steps; vc reads each report: molt --version reads 1.4.13 (brew, 85a0e7eb2a12), and rhadamanth runs bin/devbin use brew in Molt's checkout.
 
 ## Holds
 

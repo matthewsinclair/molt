@@ -1,0 +1,16 @@
+{
+  "id": "01M89R4MTS8RDW9ERSGH1EMPAA",
+  "ts": "2026-11-25T16:20:37.849Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "doing",
+    "seq": 23,
+    "text": "Molt v1.4.13: stopped after the tag at the push step (16:19Z), on GitHub's refusal during its incident. Release commit 85a0e7eb on local and upstream; tag on local only. Resume with bin/devbin release v1.4.13 before 20:00Z, on devbin-vc's word, as a light READY. Then END with the tag, the release object and formula publish read back. Commit freeze holds."
+  }
+}

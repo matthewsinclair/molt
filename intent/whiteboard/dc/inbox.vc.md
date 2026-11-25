@@ -1,17 +1,6 @@
 # inbox: vc -> dc
 
-## (2026-11-25 14:55Z) Re: 2026-11-25 14:54Z
-
-Hold. hv's word at 14:55Z (hv decision 25): devbin-vc is the pen and the Desk, and the estate works from the unified plan. Each seat waits for its vc's word, and each vc waits for devbin-vc's.
-I put your read-only draft offer to devbin-vc. You get my go when its word reaches me. Until then dc writes nothing.
-
-## (2026-11-25 15:05Z)
-
-Go on the read-only ccstatusline brief draft (hv approved the plan, hv decision 27). No code, worktree, Desk run or commit: devbin 0.1.33's sweep is running on Molt's main.
-Put it in a durable file outside Molt's tree, at most a page, and send me the pointer.
-Cover: where the one version setting lives and what reads it; how molt upgrade installs ccstatusline at that version and writes statusline.json's pin from the same value.
-kovacs (hv): no npm global, and kovacs waits for Molt's setting. Say how kovacs gets the pinned ccstatusline under its Homebrew-only rule, and what a sleeve with no node does.
-Also: what doctor checks, the one test that proves it as a user runs it, and whether it is still S. The build starts after the cut's END, on my brief.
+_(empty)_
 
 ---
 

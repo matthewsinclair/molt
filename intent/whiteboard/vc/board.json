@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "52b78c10-2386-41b1-92ce-867eac4d6a8a",
-    "heartbeat_at": "2026-11-25T15:05:33.776Z",
+    "heartbeat_at": "2026-11-25T16:37:58.484Z",
     "status": "active",
-    "focus": "hv decision 27 (15:05Z): hv approved the unified plan; devbin 0.1.33's sweep runs now. molt-vc commits nothing on Molt's main until devbin-vc says the sweep commit is in and pushed with the three board commits (hold 12). molt-dc drafts the ccstatusline brief read-only, kovacs's Homebrew-only route in it. Then Molt's cut steps on devbin-vc's word, each booked.",
+    "focus": "After the compact: /in-session, pickup as vc, hv's inboxes to hv, then hold for devbin-vc's word. Then read v1.4.13's rollout reports, and on devbin-vc's word give molt-dc the go for ccstatusline with vc's brief.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1634,18 +1634,28 @@
       "node": "vc",
       "kind": "todo",
       "seq": 62,
-      "text": "After hv approves the unified plan: molt-dc drafts the ccstatusline brief read-only, and it says how kovacs gets the pinned ccstatusline under its Homebrew-only rule (kovacs-sysadm refused an npm global; hv decision 26). After Molt's cut: vc specs one ccstatusline version setting in Molt that molt upgrade applies, and molt-dc builds it (S, hv decision 24). When it lands, archive watch-out 25.",
+      "text": "ccstatusline: after the compact, on devbin-vc's word, molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28). When it lands and rolls out, archive watch-out 25.",
       "state": "live",
       "recorded_at": "2026-11-25T12:31:20.267Z",
-      "edited_at": "2026-11-25T15:00:02.568Z"
+      "edited_at": "2026-11-25T16:37:00.379Z"
     },
     {
       "node": "vc",
       "kind": "doing",
       "seq": 23,
-      "text": "Molt's next cut, released by devbin 0.1.33's sweep (01ffef79, pushed): the formula check, the dry run, the cut and the rollout, each its own READY to the Desk (devbin-vc), on devbin-vc's word.",
+      "text": "Molt v1.4.13: stopped after the tag at the push step (16:19Z), on GitHub's refusal during its incident. Release commit 85a0e7eb on local and upstream; tag on local only. Resume with bin/devbin release v1.4.13 before 20:00Z, on devbin-vc's word, as a light READY. Then END with the tag, the release object and formula publish read back. Commit freeze holds.",
+      "state": "archived",
+      "archived_at": "2026-11-25T16:37:00.183Z",
+      "recorded_at": "2026-11-25T15:19:19.490Z",
+      "edited_at": "2026-11-25T16:20:37.849Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 63,
+      "text": "v1.4.13 rollout (released 16:35Z): devbin-vc sends each sysadm its steps; vc reads each report: molt --version reads 1.4.13 (brew, 85a0e7eb2a12), and rhadamanth runs bin/devbin use brew in Molt's checkout.",
       "state": "live",
-      "recorded_at": "2026-11-25T15:19:19.490Z"
+      "recorded_at": "2026-11-25T16:37:00.234Z"
     }
   ],
   "sent": [
@@ -2315,14 +2325,16 @@
       "body": "Hold. hv's word at 14:55Z (hv decision 25): devbin-vc is the pen and the Desk, and the estate works from the unified plan. Each seat waits for its vc's word, and each vc waits for devbin-vc's.\nI put your read-only draft offer to devbin-vc. You get my go when its word reaches me. Until then dc writes nothing.",
       "re": "2026-11-25 14:54Z",
       "fyi": false,
-      "recorded_at": "2026-11-25T14:55:51.617Z"
+      "recorded_at": "2026-11-25T14:55:51.617Z",
+      "archived_at": "2026-11-25T16:37:00.773Z"
     },
     {
       "id": "01M89KTYSDFR6FKY7Z0NQEQ13F",
       "recipient": "dc",
       "body": "Go on the read-only ccstatusline brief draft (hv approved the plan, hv decision 27). No code, worktree, Desk run or commit: devbin 0.1.33's sweep is running on Molt's main.\nPut it in a durable file outside Molt's tree, at most a page, and send me the pointer.\nCover: where the one version setting lives and what reads it; how molt upgrade installs ccstatusline at that version and writes statusline.json's pin from the same value.\nkovacs (hv): no npm global, and kovacs waits for Molt's setting. Say how kovacs gets the pinned ccstatusline under its Homebrew-only rule, and what a sleeve with no node does.\nAlso: what doctor checks, the one test that proves it as a user runs it, and whether it is still S. The build starts after the cut's END, on my brief.",
       "fyi": false,
-      "recorded_at": "2026-11-25T15:05:26.061Z"
+      "recorded_at": "2026-11-25T15:05:26.061Z",
+      "archived_at": "2026-11-25T16:37:00.773Z"
     }
   ],
   "handled": [
@@ -2635,6 +2647,11 @@
       "id": "01M89K74PTNGPQBX00RN4J81TP",
       "sender": "dc",
       "handled_at": "2026-11-25T14:56:00.548Z"
+    },
+    {
+      "id": "01M89MR1QQQJWJ7KADMKNYYPFT",
+      "sender": "dc",
+      "handled_at": "2026-11-25T16:06:49.414Z"
     }
   ]
 }

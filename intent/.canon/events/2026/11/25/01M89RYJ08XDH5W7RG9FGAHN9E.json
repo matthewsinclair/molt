@@ -1,0 +1,15 @@
+{
+  "id": "01M89RYJ08XDH5W7RG9FGAHN9E",
+  "ts": "2026-11-25T16:34:46.920Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 16:34Z by date -u; hv's words): 'resume Molt'. Molt's v1.4.13 cut had stopped after its tag, at the push step, when GitHub refused the tag push during its incident. The resume (bin/devbin release v1.4.13) runs the tag push to upstream, the release object and formula publish once GitHub's Git Operations read operational (devbin-vc read operational from 16:26Z by date -u)."
+  }
+}

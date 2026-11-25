@@ -1,0 +1,15 @@
+{
+  "id": "01M89S2M6AVBCT2H0MC8HMDEMZ",
+  "ts": "2026-11-25T16:37:00.234Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "v1.4.13 rollout (released 16:35Z): devbin-vc sends each sysadm its steps; vc reads each report: molt --version reads 1.4.13 (brew, 85a0e7eb2a12), and rhadamanth runs bin/devbin use brew in Molt's checkout."
+  }
+}

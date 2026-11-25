@@ -1,0 +1,16 @@
+{
+  "id": "01M89S2MAVZ4V4TCJGDQ7VQC76",
+  "ts": "2026-11-25T16:37:00.379Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 62,
+    "text": "ccstatusline: after the compact, on devbin-vc's word, molt-dc builds from vc's brief, ~/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (S; hv decisions 24 and 28). When it lands and rolls out, archive watch-out 25."
+  }
+}
