@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 72009d20-e1a3-4bd2-b054-d56565482fc2
-heartbeat_at: 2026-11-25 12:31Z
-status: active
-focus: "Molt holds its cut until devbin 0.1.33 is swept into Molt (hv decision 23); then the formula check, dry run, cut and rollout, each booked. After the cut, molt-dc builds one ccstatusline version setting (hv decision 24)."
+heartbeat_at: 2026-11-25 12:57Z
+status: paused
+focus: "After the reboot: /in-session and pickup as vc, hv's inboxes to hv, then hold for devbin-vc's word. devbin 0.1.33's sweep releases hold 12; at its push, confirm git log upstream/main..main (877a22a4 and the reboot folds) as unpushed work. Then the cut steps, each booked (hv decision 23)."
 claims: []
 ---
 
