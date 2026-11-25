@@ -1,0 +1,15 @@
+{
+  "id": "01M89T32QYVY65031642S83X50",
+  "ts": "2026-11-25T16:54:43.710Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "ccstatusline version setting (hv decisions 24, 27 and 28, S). molt-vc's go read 16:54Z by date -u (devbin-vc's GO 16:50Z by its clock). dc builds the Molt branch from v1.4.13 (85a0e7eb) and the Molt-matts branch from 2acfbbe, each in a worktree under $TMPDIR/molt-wt. Proof: one P0 Desk ask for the claude.bats test under bash 5 and bash 3.2, run only on the GO molt-vc passes on."
+  }
+}

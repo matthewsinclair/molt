@@ -5,10 +5,12 @@
     "name": "DevX Claude",
     "role": "devx",
     "session_id": "87bd0cc3-b583-473c-9cf0-115a1f906cef",
-    "heartbeat_at": "2026-11-25T16:38:56.984Z",
+    "heartbeat_at": "2026-11-25T17:14:19.370Z",
     "status": "active",
-    "focus": "25 Nov: Molt v1.4.13 is released (tag 85a0e7eb). After the compact, on molt-vc's go, dc builds the ccstatusline setting from vc's brief at /Users/matts/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (hold 19). Draft v2 is its spec. hv decision 28 adds kovacs's exception to the Molt-matts branch.",
-    "claims": [],
+    "focus": "25 Nov: ccstatusline is landed on main at 0f41c6df, and its Molt-matts branch (68070d6) waits for the rollout (hold 20). Ied61fb9: fix e75e56e5 on branch ied61fb9-editors-stack-pull, red at base then green under both bashes (Desk 01M89V2KYD141GPQSHSXSZ2032), END sent. molt-vc lands it; then dc removes its two worktrees.",
+    "claims": [
+      "ISSUE:Ied61fb94bc1dbf77"
+    ],
     "recorded_at": "2026-10-21T04:44:48.144Z",
     "migrated_at": "2026-10-21T04:44:48.144Z"
   },
@@ -706,9 +708,36 @@
       "kind": "hold",
       "seq": 19,
       "text": "ccstatusline version setting (hv decisions 24, 27 and 28, S), from vc's brief at /Users/matts/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md. Released by molt-vc's go after the estate compact. Then dc builds it in a worktree.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-25T16:54:43.668Z",
       "recorded_at": "2026-11-25T15:21:22.820Z",
       "edited_at": "2026-11-25T16:38:50.065Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 40,
+      "text": "ccstatusline version setting (hv decisions 24, 27 and 28, S). molt-vc's go read 16:54Z by date -u (devbin-vc's GO 16:50Z by its clock). dc builds the Molt branch from v1.4.13 (85a0e7eb) and the Molt-matts branch from 2acfbbe, each in a worktree under $TMPDIR/molt-wt. Proof: one P0 Desk ask for the claude.bats test under bash 5 and bash 3.2, run only on the GO molt-vc passes on.",
+      "state": "archived",
+      "archived_at": "2026-11-25T17:12:30.696Z",
+      "recorded_at": "2026-11-25T16:54:43.710Z"
+    },
+    {
+      "node": "dc",
+      "kind": "doing",
+      "seq": 41,
+      "text": "Issue Ied61fb9 (XS, rides the next cut, devbin-vc): molt upgrade --no-pull still pulls the stack when the Doom config lives in it. On molt-vc's word in its GO for the ccstatusline slot (read by 17:05Z by date -u), dc builds the fix the issue names on its own branch from v1.4.13 (85a0e7eb), in a worktree under $TMPDIR/molt-wt, with one test in test/liberators/editors.bats. Proof: one P0 bats ask, READY to molt-vc, run only on the GO it passes on.",
+      "state": "live",
+      "recorded_at": "2026-11-25T17:08:59.107Z",
+      "edited_at": "2026-11-25T17:09:06.313Z"
+    },
+    {
+      "node": "dc",
+      "kind": "hold",
+      "seq": 20,
+      "text": "ccstatusline, Molt-matts side (hv decisions 24 and 28): branch ccstatusline-setting at 68070d6, from 2acfbbe, in the worktree $TMPDIR/molt-wt/Molt-matts-ccstatusline-setting. Molt's side landed on main at 0f41c6df. Released when the Molt release that carries 0f41c6df is on each sleeve and hv or devbin-vc gives the word to land the branch (vc's brief, rollout step 2). Until then dc keeps the branch and its worktree.",
+      "state": "live",
+      "recorded_at": "2026-11-25T17:12:30.742Z"
     }
   ],
   "sent": [

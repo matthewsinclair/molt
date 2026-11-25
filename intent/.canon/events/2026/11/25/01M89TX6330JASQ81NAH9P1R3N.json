@@ -1,0 +1,15 @@
+{
+  "id": "01M89TX6330JASQ81NAH9P1R3N",
+  "ts": "2026-11-25T17:08:59.107Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "doing",
+    "text": "Issue Ied61fb9 (XS, rides the next cut, devbin-vc): molt upgrade --no-pull still pulls the stack when the Doom config lives in it. On molt-vc's word in its GO for the ccstatusline slot (read by 17:05Z by date -u), dc builds the fix the issue names on its own branch from v1.4.13 (85a0e7eb), in a worktree under $TMPDIR/molt-wt, with one test in test/liberators/editors.bats. Proof: one P0 bats ask, READY to molt-vc, run only on the GO it passes on."
+  }
+}
