@@ -1674,8 +1674,17 @@
       "kind": "todo",
       "seq": 64,
       "text": "Ied61fb9 rides Molt's next cut beside ccstatusline (devbin-vc, 17:04Z by its clock: the next release carries everything open). molt-dc builds it after ccstatusline's END, on its own branch from v1.4.13, with one bats ask at P0; vc reads its READY and lands it. The cut waits for hv's word.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-25T17:15:27.318Z",
       "recorded_at": "2026-11-25T17:05:58.435Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 65,
+      "text": "Molt v1.4.14 cut: ccstatusline (0f41c6df) and Ied61fb9 (919aeec0) are landed. vc renames CHANGELOG's heading, runs the dry run on a light slot, and puts the cut to hv; the cut runs with --yes on bats and heavy. Rollout, the brief's order: brew upgrade molt on each sleeve; Molt-matts' ccstatusline-setting branch (68070d6) lands and is pushed on hv's or devbin-vc's word; molt upgrade on each sleeve; the status line shows (todo 62).",
+      "state": "live",
+      "recorded_at": "2026-11-25T17:15:27.365Z"
     }
   ],
   "sent": [

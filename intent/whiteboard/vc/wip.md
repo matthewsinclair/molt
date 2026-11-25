@@ -22,7 +22,7 @@ _(none)_
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - ccstatusline: landed on main at 0f41c6df (molt-dc's branch, claude.bats green under both bashes, slot 01M89TKX1WAP350Q9CEY92VQ37). It ships in Molt's next cut, with Ied61fb9 (todo 64). Molt-matts' branch ccstatusline-setting (68070d6) lands at the rollout, after each sleeve has the release; then the brief's after-landing steps, and archive watch-out 25. (edited)
-- Ied61fb9 rides Molt's next cut beside ccstatusline (devbin-vc, 17:04Z by its clock: the next release carries everything open). molt-dc builds it after ccstatusline's END, on its own branch from v1.4.13, with one bats ask at P0; vc reads its READY and lands it. The cut waits for hv's word.
+- Molt v1.4.14 cut: ccstatusline (0f41c6df) and Ied61fb9 (919aeec0) are landed. vc renames CHANGELOG's heading, runs the dry run on a light slot, and puts the cut to hv; the cut runs with --yes on bats and heavy. Rollout, the brief's order: brew upgrade molt on each sleeve; Molt-matts' ccstatusline-setting branch (68070d6) lands and is pushed on hv's or devbin-vc's word; molt upgrade on each sleeve; the status line shows (todo 62).
 
 ## Holds
 

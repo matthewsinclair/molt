@@ -1,9 +1,10 @@
 ---
 issue: Ied61fb9
 title: molt upgrade --no-pull still pulls the stack when the Doom config lives in it
-status: OPEN
+status: CLOSED
 severity: low
 created: 2026-11-25
+closed: 2026-11-25
 reporter: Matthew Sinclair
 ---
 
@@ -24,6 +25,8 @@ The editors hook pulls only a Doom config repo of its own. When the Doom config'
 Size: XS. Proof: one test in test/liberators/editors.bats.
 
 Not in tonight's path (devbin-vc, 2026-11-25 16:55Z by its clock).
+
+Resolution: Landed on main at 919aeec0 (molt-dc's branch ied61fb9-editors-stack-pull, e75e56e5), for Molt's next release. editors_upgrade skips its pull when the Doom config's repo is the user config repo, says why, and still syncs; molt upgrade pulls that repo after its clean check, and --no-pull skips it. Proof: Desk slot 01M89V2KYD141GPQSHSXSZ2032: the new editors.bats test fails at 85a0e7eb on the hook's pull and passes at e75e56e5 under bash 5 and bash 3.2.
 
 ---
 
