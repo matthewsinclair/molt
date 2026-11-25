@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
-# claude.bats — claude liberator (keybindings, rules, ccstatusline layout,
-# statusLine, attribution; and, on a sleeve that declares
+# claude.bats — claude liberator (keybindings, rules, ccstatusline layout, the
+# pinned ccstatusline, statusLine, attribution; and, on a sleeve that declares
 # MOLT_CLAUDE_CONFIG_DIR, the config dir, the one-time move, its publication
 # and the home guard: ST0006)
 
@@ -120,6 +120,58 @@ JSON
     run claude_verify
     assert_failure
     assert_output_contains "VERIFY FAIL: ~/.claude/settings.json has a different statusLine"
+}
+
+# hv decision 24 (25 Nov 2026): the user repo pins the ccstatusline the status
+# line runs, and molt upgrade installs that version and links it into
+# MOLT_LOCAL_BIN. The stub npm logs its arguments and installs what the copied
+# manifest pins, as npm lays it out.
+@test "molt upgrade installs the ccstatusline the user repo pins with npm, links it, and runs npm again only for a new pin" {
+    setup_claude
+    unset XDG_DATA_HOME
+    local pin=7.7.7 bumped=7.7.8 copy="$HOME/.local/share/molt/ccstatusline" call
+    local manifest="$TEST_USER_REPO/config/ccstatusline/package.json"
+    call="npm install --prefix $copy --no-audit --no-fund"
+    printf '{"private": true, "dependencies": {"ccstatusline": "%s"}}\n' "$pin" > "$manifest"
+    cat > "$BATS_TEST_TMPDIR/bin/npm" <<'FAKE'
+#!/bin/bash
+echo "npm $*" >> "$BATS_TEST_TMPDIR/npm.log"
+while [ $# -gt 0 ]; do
+  [ "$1" = --prefix ] && dir="$2"
+  shift
+done
+mkdir -p "$dir/node_modules/ccstatusline/dist" "$dir/node_modules/.bin"
+jq '{name: "ccstatusline", version: .dependencies.ccstatusline}' "$dir/package.json" > "$dir/node_modules/ccstatusline/package.json"
+printf '#!/bin/sh\n' > "$dir/node_modules/ccstatusline/dist/ccstatusline.js"
+chmod +x "$dir/node_modules/ccstatusline/dist/ccstatusline.js"
+ln -sf ../ccstatusline/dist/ccstatusline.js "$dir/node_modules/.bin/ccstatusline"
+FAKE
+    chmod +x "$BATS_TEST_TMPDIR/bin/npm"
+
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ccstatusline $pin is not installed in ~/.local/share/molt/ccstatusline"
+    assert_output_contains "claude: ~/.local/bin/ccstatusline is missing"
+    run claude_install
+    assert_success
+    [ "$(cat "$BATS_TEST_TMPDIR/npm.log")" = "$call" ]
+    assert_symlink_exists "$HOME/.local/bin/ccstatusline" "$copy/node_modules/.bin/ccstatusline"
+    run claude_check
+    assert_success
+    run claude_install
+    assert_success
+    [ "$(cat "$BATS_TEST_TMPDIR/npm.log")" = "$call" ]
+
+    # A new pin is installed over the old one.
+    printf '{"private": true, "dependencies": {"ccstatusline": "%s"}}\n' "$bumped" > "$manifest"
+    run claude_check
+    assert_failure
+    assert_output_contains "claude: ~/.local/share/molt/ccstatusline holds ccstatusline $pin, and $manifest pins $bumped"
+    run claude_install
+    assert_success
+    [ "$(cat "$BATS_TEST_TMPDIR/npm.log")" = "$(printf '%s\n%s' "$call" "$call")" ]
+    run claude_check
+    assert_success
 }
 
 # Issue 0040: attribution was hand-set per sleeve, and a sleeve without it

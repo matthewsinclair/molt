@@ -342,6 +342,7 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 
 - Layout: `Molt-{user}/config/ccstatusline/settings.json`, linked to `~/.config/ccstatusline/settings.json`. kovacs linked it by hand on 15 Oct 2026, before the liberator managed it, and the liberator adopts that link as it stands.
 - Command: `Molt-{user}/config/claude/statusline.json` is written into the `statusLine` key of `settings.json` in Claude Code's config dir (`~/.claude` until the sleeve moves its state). No other key is touched, and the file is never linked: it holds each sleeve's own permissions, hooks and plugins.
+- Program: `Molt-{user}/config/ccstatusline/package.json`, npm's own manifest, pins ccstatusline to one exact version. The liberator copies it into `~/.local/share/molt/ccstatusline` (under `$XDG_DATA_HOME` when that is set), runs `npm install` there when the copy is missing or holds another version, and links `~/.local/bin/ccstatusline` to the program. A command that runs `ccstatusline` by name then runs the pinned version. With no npm on the sleeve, nothing is installed, and the status line stays empty.
 
 ### Claude attribution [agnostic]
 
@@ -372,6 +373,7 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 | claude/statusline.json        | <config dir>/settings.json, its `statusLine` key  | written  |
 | claude/attribution.json       | <config dir>/settings.json, its `attribution` key | written  |
 | ccstatusline/settings.json    | ~/.config/ccstatusline/settings.json              | linked   |
+| ccstatusline/package.json     | ~/.local/share/molt/ccstatusline/package.json     | copied   |
 
 Instance-specific config lives in `Molt-{user}/instances/{hostname}/`.
 
