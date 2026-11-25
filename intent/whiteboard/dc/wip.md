@@ -2,9 +2,9 @@
 node: dc
 name: DevX Claude
 role: devx
-session_id: 6af38c4f-9f78-42dc-ba7e-1f9c94bb1493
-heartbeat_at: 2026-11-25 12:57Z
-status: paused
+session_id: 87bd0cc3-b583-473c-9cf0-115a1f906cef
+heartbeat_at: 2026-11-25 14:52Z
+status: active
 focus: "25 Nov close-out for rhadamanth's reboot (devbin-vc decision 309): nothing open, no worktree. After the reboot: /in-session, then hold for molt-vc's word. After Molt's cut, dc builds the ccstatusline version setting (hv decision 24) from vc's brief."
 claims: []
 ---

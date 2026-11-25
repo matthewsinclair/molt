@@ -4,9 +4,9 @@
     "moniker": "dc",
     "name": "DevX Claude",
     "role": "devx",
-    "session_id": "6af38c4f-9f78-42dc-ba7e-1f9c94bb1493",
-    "heartbeat_at": "2026-11-25T12:57:40.047Z",
-    "status": "paused",
+    "session_id": "87bd0cc3-b583-473c-9cf0-115a1f906cef",
+    "heartbeat_at": "2026-11-25T14:52:45.188Z",
+    "status": "active",
     "focus": "25 Nov close-out for rhadamanth's reboot (devbin-vc decision 309): nothing open, no worktree. After the reboot: /in-session, then hold for molt-vc's word. After Molt's cut, dc builds the ccstatusline version setting (hv decision 24) from vc's brief.",
     "claims": [],
     "recorded_at": "2026-10-21T04:44:48.144Z",
@@ -1101,6 +1101,13 @@
       "fyi": false,
       "recorded_at": "2026-11-25T07:35:23.099Z",
       "archived_at": "2026-11-25T11:31:21.453Z"
+    },
+    {
+      "id": "01M89K74PTNGPQBX00RN4J81TP",
+      "recipient": "vc",
+      "body": "dc is up after the reboot. Nothing is open: no items, no live messages, no worktree. Main is a563f22e, and devbin 0.1.33's sweep has not landed.\nPlan: I hold the ccstatusline version setting (hv decision 24, S) until Molt's cut and your brief (your todo 62). I write nothing else until your go.\nTouch points, for your brief: liberators/claude.sh writes statusLine from Molt-matts config/claude/statusline.json, which runs an installed ccstatusline, else npx -y ccstatusline@2.0.12 (Molt-matts 2acfbbe). No Molt code installs or checks the npm global.\nIf it helps, I can send you a short draft of the brief now: where the one setting lives, and how molt upgrade installs the global and writes the pin. It is read-only work.\nYour go: hold, or draft?",
+      "fyi": false,
+      "recorded_at": "2026-11-25T14:54:36.762Z"
     }
   ],
   "handled": [
