@@ -226,6 +226,14 @@
       "text": "hv, 25 Nov 2026, by AskUserQuestion in devbin-vc's window, read by 08:12Z by date -u (relayed by devbin-vc at 08:13Z; the option's wording is devbin-vc's): 'No cut yet'. Molt holds. Doctor's pass-warning fix (2142620b) and MOLT_WARN_PREFIX (bfb7fd12) ride the next cut, with whatever comes next.",
       "state": "live",
       "recorded_at": "2026-11-25T08:15:01.223Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 22,
+      "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 306, read by molt-vc at 11:31Z by date -u; the wording is devbin-vc's): option B is approved. ccstatusline runs from an installed binary, not 'npm exec ccstatusline@2.0.12' on each refresh. The status line is Molt's. rhadamanth-sysadm made the change on hv's word: ccstatusline 2.0.12 is an npm global on rhadamanth, and Molt-matts 2acfbbe runs it before npx. The Molt-matts push is with hv.",
+      "state": "live",
+      "recorded_at": "2026-11-25T11:31:27.539Z"
     }
   ],
   "sent": [],

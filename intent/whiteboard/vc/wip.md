@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 72009d20-e1a3-4bd2-b054-d56565482fc2
-heartbeat_at: 2026-11-25 09:25Z
+heartbeat_at: 2026-11-25 11:31Z
 status: active
-focus: "25 Nov fold: Molt holds on hv's 'No cut yet' (hv decision 21); after the compact, /in-session, then hold for devbin-vc's word."
+focus: "25 Nov fold 2: after the compact, /in-session, read Molt-matts 2acfbbe as the status line's owner (hv decision 22), then hold for devbin-vc's word; Molt holds the cut (hv decision 21)."
 claims: []
 ---
 

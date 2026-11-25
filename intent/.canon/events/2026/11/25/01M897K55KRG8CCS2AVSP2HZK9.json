@@ -1,0 +1,15 @@
+{
+  "id": "01M897K55KRG8CCS2AVSP2HZK9",
+  "ts": "2026-11-25T11:31:27.539Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 306, read by molt-vc at 11:31Z by date -u; the wording is devbin-vc's): option B is approved. ccstatusline runs from an installed binary, not 'npm exec ccstatusline@2.0.12' on each refresh. The status line is Molt's. rhadamanth-sysadm made the change on hv's word: ccstatusline 2.0.12 is an npm global on rhadamanth, and Molt-matts 2acfbbe runs it before npx. The Molt-matts push is with hv."
+  }
+}
