@@ -1617,9 +1617,11 @@
       "node": "vc",
       "kind": "watchout",
       "seq": 25,
-      "text": "ccstatusline's version is set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which runs first. To change the version, change both. No Molt config installs the global, so a sleeve without it uses npx (2acfbbe, hv decision 22).",
-      "state": "live",
-      "recorded_at": "2026-11-25T11:50:57.979Z"
+      "text": "ccstatusline's version was set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which ran first. Resolved by Molt v1.4.14 and Molt-matts 46c3aaf (25 Nov): Molt-matts config/ccstatusline/package.json is the one setting, molt upgrade installs it under ~/.local/share/molt/ccstatusline, and ~/.local/bin/ccstatusline runs ahead of the global on every sleeve.",
+      "state": "archived",
+      "archived_at": "2026-11-25T17:42:16.650Z",
+      "recorded_at": "2026-11-25T11:50:57.979Z",
+      "edited_at": "2026-11-25T17:42:16.533Z"
     },
     {
       "node": "vc",
@@ -1635,7 +1637,8 @@
       "kind": "todo",
       "seq": 62,
       "text": "ccstatusline: landed on main at 0f41c6df (molt-dc's branch, claude.bats green under both bashes, slot 01M89TKX1WAP350Q9CEY92VQ37). It ships in Molt's next cut, with Ied61fb9 (todo 64). Molt-matts' branch ccstatusline-setting (68070d6) lands at the rollout, after each sleeve has the release; then the brief's after-landing steps, and archive watch-out 25.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-25T17:42:16.339Z",
       "recorded_at": "2026-11-25T12:31:20.267Z",
       "edited_at": "2026-11-25T17:09:55.583Z"
     },
@@ -1683,8 +1686,17 @@
       "kind": "todo",
       "seq": 65,
       "text": "Molt v1.4.14 cut: ccstatusline (0f41c6df) and Ied61fb9 (919aeec0) are landed. vc renames CHANGELOG's heading, runs the dry run on a light slot, and puts the cut to hv; the cut runs with --yes on bats and heavy. Rollout, the brief's order: brew upgrade molt on each sleeve; Molt-matts' ccstatusline-setting branch (68070d6) lands and is pushed on hv's or devbin-vc's word; molt upgrade on each sleeve; the status line shows (todo 62).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-25T17:42:16.387Z",
       "recorded_at": "2026-11-25T17:15:27.365Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 66,
+      "text": "On hv's word only: rhadamanth-sysadm removes rhadamanth's npm global ccstatusline (npm uninstall -g ccstatusline). Since Molt v1.4.14 it is unused: ~/.local/bin/ccstatusline comes first on PATH.",
+      "state": "live",
+      "recorded_at": "2026-11-25T17:42:16.699Z"
     }
   ],
   "sent": [

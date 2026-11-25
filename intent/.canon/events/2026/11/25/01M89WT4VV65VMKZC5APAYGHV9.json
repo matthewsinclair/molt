@@ -1,0 +1,15 @@
+{
+  "id": "01M89WT4VV65VMKZC5APAYGHV9",
+  "ts": "2026-11-25T17:42:16.699Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "On hv's word only: rhadamanth-sysadm removes rhadamanth's npm global ccstatusline (npm uninstall -g ccstatusline). Since Molt v1.4.14 it is unused: ~/.local/bin/ccstatusline comes first on PATH."
+  }
+}
