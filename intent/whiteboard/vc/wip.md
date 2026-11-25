@@ -32,7 +32,6 @@ _(none)_
 - A sleeve armed for the config-dir move fails molt upgrade and resleeve while any claude process runs; arm and move in one sitting, Chrome quit. (edited)
 - agentic-engineering's courseware quotes two Molt lines: resleeve's 'Sleeve ready. Welcome back.' (as a suffix, so the 'Zen:' prefix may change) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes. test/molt.bats covers both (doctor's whole output; the resleeve message as a substring). hv can overrule. (edited)
 - ccstatusline's version is set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which runs first. To change the version, change both. No Molt config installs the global, so a sleeve without it uses npx (2acfbbe, hv decision 22).
-- rhadamanth's Molt-matts holds six uncommitted files of hv's: arngz captures for five desks and one VS Code line (terminal.integrated.enableImages). A plain molt upgrade on rhadamanth stops until hv commits or stashes them; --no-pull skips that check. devbin-vc took them to hv. Precedent: 721084f (24 Nov) committed such captures by path on devbin-vc's GO.
 
 ## Decisions
 

@@ -1663,9 +1663,11 @@
       "node": "vc",
       "kind": "watchout",
       "seq": 26,
-      "text": "rhadamanth's Molt-matts holds six uncommitted files of hv's: arngz captures for five desks and one VS Code line (terminal.integrated.enableImages). A plain molt upgrade on rhadamanth stops until hv commits or stashes them; --no-pull skips that check. devbin-vc took them to hv. Precedent: 721084f (24 Nov) committed such captures by path on devbin-vc's GO.",
-      "state": "live",
-      "recorded_at": "2026-11-25T16:54:43.514Z"
+      "text": "rhadamanth's Molt-matts held six uncommitted files of hv's (arngz captures for five desks, one VS Code line), so a plain molt upgrade stopped there. Resolved 25 Nov: hv chose option (a), relayed by devbin-vc; rhadamanth-sysadm committed them as Molt-matts bdcbc103 (not pushed; hv pushes), and a plain molt upgrade then ran rc 0. Issue Ied61fb9 stands.",
+      "state": "archived",
+      "archived_at": "2026-11-25T17:02:03.200Z",
+      "recorded_at": "2026-11-25T16:54:43.514Z",
+      "edited_at": "2026-11-25T17:02:03.084Z"
     }
   ],
   "sent": [

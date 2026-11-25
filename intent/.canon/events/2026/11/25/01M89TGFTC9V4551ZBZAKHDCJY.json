@@ -1,0 +1,16 @@
+{
+  "id": "01M89TGFTC9V4551ZBZAKHDCJY",
+  "ts": "2026-11-25T17:02:03.084Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 26,
+    "text": "rhadamanth's Molt-matts held six uncommitted files of hv's (arngz captures for five desks, one VS Code line), so a plain molt upgrade stopped there. Resolved 25 Nov: hv chose option (a), relayed by devbin-vc; rhadamanth-sysadm committed them as Molt-matts bdcbc103 (not pushed; hv pushes), and a plain molt upgrade then ran rc 0. Issue Ied61fb9 stands."
+  }
+}
