@@ -3,17 +3,17 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 87bd0cc3-b583-473c-9cf0-115a1f906cef
-heartbeat_at: 2026-11-25 17:14Z
+heartbeat_at: 2026-11-25 17:35Z
 status: active
-focus: "25 Nov: ccstatusline is landed on main at 0f41c6df, and its Molt-matts branch (68070d6) waits for the rollout (hold 20). Ied61fb9: fix e75e56e5 on branch ied61fb9-editors-stack-pull, red at base then green under both bashes (Desk 01M89V2KYD141GPQSHSXSZ2032), END sent. molt-vc lands it; then dc removes its two worktrees."
-claims: [ISSUE:Ied61fb94bc1dbf77]
+focus: "25 Nov: Molt v1.4.14 is released (tag v1.4.14 at 0abf8087), with the ccstatusline setting (0f41c6df) and the Ied61fb9 fix (919aeec0). Ied61fb9's two trees and its branch are removed. Hold 20: molt-vc lands and pushes the Molt-matts branch (68070d6) in the rollout, and then dc removes its worktree and branch."
+claims: []
 ---
 
 # DevX Claude (dc)
 
 ## DOING
 
-- Issue Ied61fb9 (XS, rides the next cut, devbin-vc): molt upgrade --no-pull still pulls the stack when the Doom config lives in it. On molt-vc's word in its GO for the ccstatusline slot (read by 17:05Z by date -u), dc builds the fix the issue names on its own branch from v1.4.13 (85a0e7eb), in a worktree under $TMPDIR/molt-wt, with one test in test/liberators/editors.bats. Proof: one P0 bats ask, READY to molt-vc, run only on the GO it passes on. (edited)
+_(none)_
 
 ## TODO
 
