@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 6af38c4f-9f78-42dc-ba7e-1f9c94bb1493
-heartbeat_at: 2026-11-25 11:31Z
-status: active
-focus: "25 Nov second localfold: nothing open, no worktree. Molt holds on hv's 'No cut yet' (decision 21). After the compact: /in-session, then hold for molt-vc's word."
+heartbeat_at: 2026-11-25 12:57Z
+status: paused
+focus: "25 Nov close-out for rhadamanth's reboot (devbin-vc decision 309): nothing open, no worktree. After the reboot: /in-session, then hold for molt-vc's word. After Molt's cut, dc builds the ccstatusline version setting (hv decision 24) from vc's brief."
 claims: []
 ---
 
