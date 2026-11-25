@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 87bd0cc3-b583-473c-9cf0-115a1f906cef
-heartbeat_at: 2026-11-25 14:52Z
+heartbeat_at: 2026-11-25 16:38Z
 status: active
-focus: "25 Nov close-out for rhadamanth's reboot (devbin-vc decision 309): nothing open, no worktree. After the reboot: /in-session, then hold for molt-vc's word. After Molt's cut, dc builds the ccstatusline version setting (hv decision 24) from vc's brief."
+focus: "25 Nov: Molt v1.4.13 is released (tag 85a0e7eb). After the compact, on molt-vc's go, dc builds the ccstatusline setting from vc's brief at /Users/matts/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md (hold 19). Draft v2 is its spec. hv decision 28 adds kovacs's exception to the Molt-matts branch."
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- ccstatusline version setting (hv decisions 24, 27 and 28, S), from vc's brief at /Users/matts/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md. Released by molt-vc's go after the estate compact. Then dc builds it in a worktree. (edited)
 
 ## Watch-outs
 

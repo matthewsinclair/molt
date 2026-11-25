@@ -1,0 +1,15 @@
+{
+  "id": "01M89MR544HQF94JNCS9N9KH65",
+  "ts": "2026-11-25T15:21:22.820Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "dc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "ccstatusline version setting (hv decisions 24, 27 and 28, S), from vc's brief at /Users/matts/Devel/scratch/molt-vc/20261125/ccstatusline-brief.md. Released by molt-vc's go after the estate compact. Then dc builds it in a worktree."
+  }
+}
