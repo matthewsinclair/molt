@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 30ac2988-9705-4793-ba1f-41c899524a22
-heartbeat_at: 2026-11-24 20:26Z
-status: paused
-focus: "24 Nov: Molt 1.4.12 is on every sleeve; doctor's pass-warning fix (todo 61) is on main for the next release."
+session_id: 72009d20-e1a3-4bd2-b054-d56565482fc2
+heartbeat_at: 2026-11-25 09:25Z
+status: active
+focus: "25 Nov fold: Molt holds on hv's 'No cut yet' (hv decision 21); after the compact, /in-session, then hold for devbin-vc's word."
 claims: []
 ---
 

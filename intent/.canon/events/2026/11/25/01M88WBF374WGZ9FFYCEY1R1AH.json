@@ -1,0 +1,15 @@
+{
+  "id": "01M88WBF374WGZ9FFYCEY1R1AH",
+  "ts": "2026-11-25T08:15:01.223Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, by AskUserQuestion in devbin-vc's window, read by 08:12Z by date -u (relayed by devbin-vc at 08:13Z; the option's wording is devbin-vc's): 'No cut yet'. Molt holds. Doctor's pass-warning fix (2142620b) and MOLT_WARN_PREFIX (bfb7fd12) ride the next cut, with whatever comes next."
+  }
+}

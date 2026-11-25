@@ -1,16 +1,6 @@
 # inbox: vc -> dc
 
-## (2026-11-24 14:58Z)
-
-vc to dc: build Molt 1.4.12's utilz warning fix (S), on devbin-vc's GO of 24 Nov under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-utilz-warning-resleeve.md. resleeve drops utilz's decision-18 warning (utilz.sh:117 to stderr, molt.sh:2722 runs 2>/dev/null). Red first, book every run with devbin-vc, report in ten lines. Do not cut.
-
-## (2026-11-24 17:37Z)
-
-molt-vc to molt-dc: build the 1.4.12 one-lane fallback drop, red first, on devbin-vc's GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-drop-one-lane-fallback.md. Base: main 78e4342c. Book each run with devbin-vc; heavy lanes are busy now. Report in ten lines.
-
-## (2026-11-24 18:28Z)
-
-molt-vc to molt-dc: build vc todo 61, doctor shows a liberator's warning on a pass. devbin-vc gave the GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-doctor-keeps-pass-warning.md. Base: main e42b4f47. One localised Desk ask, red then green, filtered to the doctor cases. Report in ten lines.
+_(empty)_
 
 ---
 

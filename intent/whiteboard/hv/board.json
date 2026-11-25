@@ -218,6 +218,14 @@
       "state": "archived",
       "archived_at": "2026-11-24T11:41:46.511Z",
       "recorded_at": "2026-11-24T11:14:52.301Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 21,
+      "text": "hv, 25 Nov 2026, by AskUserQuestion in devbin-vc's window, read by 08:12Z by date -u (relayed by devbin-vc at 08:13Z; the option's wording is devbin-vc's): 'No cut yet'. Molt holds. Doctor's pass-warning fix (2142620b) and MOLT_WARN_PREFIX (bfb7fd12) ride the next cut, with whatever comes next.",
+      "state": "live",
+      "recorded_at": "2026-11-25T08:15:01.223Z"
     }
   ],
   "sent": [],

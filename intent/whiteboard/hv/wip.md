@@ -36,6 +36,7 @@ _(none)_
 - hv, 23 Nov 2026, live in molt-vc's window, choosing among vc's options (the wording is vc's): the team profile stands for Molt. molt-vc asks hv in its own window, and tells devbin-vc, as the Desk, Molt's READY, START, END, CI read and rollout. Decision 49's 'everything through devbin-vc' (5 Nov) is withdrawn.
 - hv, 23 Nov 2026, live in molt-vc's window, hv's words, after 1.4.7's cut had needed hv at gyges's iTerm2 window over Screen Sharing three times: 'This is bloody outrageous. There is no reason that I should have to run this manually via screen sharing. None at all.' Then, choosing among vc's options (the wording is vc's): a seat runs Molt's cuts on hv's word. hv says cut; molt-vc runs bin/devbin release vX.Y.Z --yes on rhadamanth, where gh works, or has gyges-sysadm open the iTerm2 window on gyges itself, so the gh token stays in the keychain. START and END still go to devbin-vc. It replaces decision 35's 'hv runs every cut' for Molt.
 - hv, 23 Nov 2026, in devbin-vc's window at 17:54Z (relayed by devbin-vc, its decision 286; the wording is devbin-vc's): Molt is P0 at the Desk alongside Intent and devbin, so Molt's asks are granted with no relay needed. (edited)
+- hv, 25 Nov 2026, by AskUserQuestion in devbin-vc's window, read by 08:12Z by date -u (relayed by devbin-vc at 08:13Z; the option's wording is devbin-vc's): 'No cut yet'. Molt holds. Doctor's pass-warning fix (2142620b) and MOLT_WARN_PREFIX (bfb7fd12) ride the next cut, with whatever comes next.
 
 ---
 

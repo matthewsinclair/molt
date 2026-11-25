@@ -4,10 +4,10 @@
     "moniker": "vc",
     "name": "Validation Claude",
     "role": "validation",
-    "session_id": "30ac2988-9705-4793-ba1f-41c899524a22",
-    "heartbeat_at": "2026-11-24T20:26:09.602Z",
-    "status": "paused",
-    "focus": "24 Nov: Molt 1.4.12 is on every sleeve; doctor's pass-warning fix (todo 61) is on main for the next release.",
+    "session_id": "72009d20-e1a3-4bd2-b054-d56565482fc2",
+    "heartbeat_at": "2026-11-25T09:25:21.558Z",
+    "status": "active",
+    "focus": "25 Nov fold: Molt holds on hv's 'No cut yet' (hv decision 21); after the compact, /in-session, then hold for devbin-vc's word.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -2256,21 +2256,24 @@
       "recipient": "dc",
       "body": "vc to dc: build Molt 1.4.12's utilz warning fix (S), on devbin-vc's GO of 24 Nov under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-utilz-warning-resleeve.md. resleeve drops utilz's decision-18 warning (utilz.sh:117 to stderr, molt.sh:2722 runs 2>/dev/null). Red first, book every run with devbin-vc, report in ten lines. Do not cut.",
       "fyi": false,
-      "recorded_at": "2026-11-24T14:58:11.005Z"
+      "recorded_at": "2026-11-24T14:58:11.005Z",
+      "archived_at": "2026-11-25T09:25:12.567Z"
     },
     {
       "id": "01M87A3Z8GNE8HM3XFYJA73Y8H",
       "recipient": "dc",
       "body": "molt-vc to molt-dc: build the 1.4.12 one-lane fallback drop, red first, on devbin-vc's GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-drop-one-lane-fallback.md. Base: main 78e4342c. Book each run with devbin-vc; heavy lanes are busy now. Report in ten lines.",
       "fyi": false,
-      "recorded_at": "2026-11-24T17:37:06.832Z"
+      "recorded_at": "2026-11-24T17:37:06.832Z",
+      "archived_at": "2026-11-25T09:25:12.567Z"
     },
     {
       "id": "01M87D2N3CHNZBMKBQJCD7V4C1",
       "recipient": "dc",
       "body": "molt-vc to molt-dc: build vc todo 61, doctor shows a liberator's warning on a pass. devbin-vc gave the GO under hv's pre-approval. Spec: ~/Devel/scratch/molt/spec-doctor-keeps-pass-warning.md. Base: main e42b4f47. One localised Desk ask, red then green, filtered to the doctor cases. Report in ten lines.",
       "fyi": false,
-      "recorded_at": "2026-11-24T18:28:49.388Z"
+      "recorded_at": "2026-11-24T18:28:49.388Z",
+      "archived_at": "2026-11-25T09:25:12.567Z"
     }
   ],
   "handled": [
@@ -2573,6 +2576,11 @@
       "id": "01M865M39TF8E4CJMZ4BXGW7ND",
       "sender": "dc",
       "handled_at": "2026-11-24T06:59:34.270Z"
+    },
+    {
+      "id": "01M88T2WPVTZ8Z26NFS74EC8HJ",
+      "sender": "dc",
+      "handled_at": "2026-11-25T07:36:45.927Z"
     }
   ]
 }
