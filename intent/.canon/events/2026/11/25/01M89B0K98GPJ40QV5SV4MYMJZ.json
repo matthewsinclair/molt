@@ -1,0 +1,15 @@
+{
+  "id": "01M89B0K98GPJ40QV5SV4MYMJZ",
+  "ts": "2026-11-25T12:31:13.704Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 308, read by molt-vc at 12:31Z by date -u; the wording is devbin-vc's, with 'your' written as molt-vc's): the status line gets one ccstatusline version setting in Molt that molt upgrade applies (molt-vc's option b, S, molt-dc, after the cut). Watch-out 25 stands until it lands. kovacs' interim route is with hv now."
+  }
+}

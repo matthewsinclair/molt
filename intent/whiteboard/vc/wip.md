@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 72009d20-e1a3-4bd2-b054-d56565482fc2
-heartbeat_at: 2026-11-25 11:31Z
+heartbeat_at: 2026-11-25 12:31Z
 status: active
-focus: "25 Nov fold 2: after the compact, /in-session, read Molt-matts 2acfbbe as the status line's owner (hv decision 22), then hold for devbin-vc's word; Molt holds the cut (hv decision 21)."
+focus: "Molt holds its cut until devbin 0.1.33 is swept into Molt (hv decision 23); then the formula check, dry run, cut and rollout, each booked. After the cut, molt-dc builds one ccstatusline version setting (hv decision 24)."
 claims: []
 ---
 
@@ -21,15 +21,17 @@ _(none)_
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
+- After Molt's cut: vc specs one ccstatusline version setting in Molt that molt upgrade applies, and molt-dc builds it (S, hv decision 24). When it lands, archive watch-out 25.
 
 ## Holds
 
-_(none)_
+- Molt's cut waits until devbin 0.1.33 is swept into Molt: a 'devbin: swept to devbin 0.1.33' commit on main (hv decision 23). Then the formula check, dry run, cut and rollout go, each booked on the Desk.
 
 ## Watch-outs
 
 - A sleeve armed for the config-dir move fails molt upgrade and resleeve while any claude process runs; arm and move in one sitting, Chrome quit. (edited)
 - agentic-engineering's courseware quotes two Molt lines: resleeve's 'Sleeve ready. Welcome back.' (as a suffix, so the 'Zen:' prefix may change) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes. test/molt.bats covers both (doctor's whole output; the resleeve message as a substring). hv can overrule. (edited)
+- ccstatusline's version is set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which runs first. To change the version, change both. No Molt config installs the global, so a sleeve without it uses npx (2acfbbe, hv decision 22).
 
 ## Decisions
 

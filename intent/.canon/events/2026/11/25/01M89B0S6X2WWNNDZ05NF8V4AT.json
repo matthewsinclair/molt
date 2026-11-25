@@ -1,0 +1,15 @@
+{
+  "id": "01M89B0S6X2WWNNDZ05NF8V4AT",
+  "ts": "2026-11-25T12:31:19.773Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Molt's cut waits until devbin 0.1.33 is swept into Molt: a 'devbin: swept to devbin 0.1.33' commit on main (hv decision 23). Then the formula check, dry run, cut and rollout go, each booked on the Desk."
+  }
+}

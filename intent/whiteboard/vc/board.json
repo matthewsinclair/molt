@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "72009d20-e1a3-4bd2-b054-d56565482fc2",
-    "heartbeat_at": "2026-11-25T11:31:38.912Z",
+    "heartbeat_at": "2026-11-25T12:31:25.911Z",
     "status": "active",
-    "focus": "25 Nov fold 2: after the compact, /in-session, read Molt-matts 2acfbbe as the status line's owner (hv decision 22), then hold for devbin-vc's word; Molt holds the cut (hv decision 21).",
+    "focus": "Molt holds its cut until devbin 0.1.33 is swept into Molt (hv decision 23); then the formula check, dry run, cut and rollout, each booked. After the cut, molt-dc builds one ccstatusline version setting (hv decision 24).",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1612,6 +1612,30 @@
       "archived_at": "2026-11-24T18:34:16.246Z",
       "recorded_at": "2026-11-24T15:10:36.959Z",
       "edited_at": "2026-11-24T18:27:21.564Z"
+    },
+    {
+      "node": "vc",
+      "kind": "watchout",
+      "seq": 25,
+      "text": "ccstatusline's version is set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which runs first. To change the version, change both. No Molt config installs the global, so a sleeve without it uses npx (2acfbbe, hv decision 22).",
+      "state": "live",
+      "recorded_at": "2026-11-25T11:50:57.979Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 12,
+      "text": "Molt's cut waits until devbin 0.1.33 is swept into Molt: a 'devbin: swept to devbin 0.1.33' commit on main (hv decision 23). Then the formula check, dry run, cut and rollout go, each booked on the Desk.",
+      "state": "live",
+      "recorded_at": "2026-11-25T12:31:19.773Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 62,
+      "text": "After Molt's cut: vc specs one ccstatusline version setting in Molt that molt upgrade applies, and molt-dc builds it (S, hv decision 24). When it lands, archive watch-out 25.",
+      "state": "live",
+      "recorded_at": "2026-11-25T12:31:20.267Z"
     }
   ],
   "sent": [

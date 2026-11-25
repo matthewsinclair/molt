@@ -1,0 +1,15 @@
+{
+  "id": "01M898PW5V893FXM52TXRHK2Y4",
+  "ts": "2026-11-25T11:50:57.979Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "text": "ccstatusline's version is set in two places: the npx pin in Molt-matts config/claude/statusline.json and the npm global on rhadamanth, which runs first. To change the version, change both. No Molt config installs the global, so a sleeve without it uses npx (2acfbbe, hv decision 22)."
+  }
+}

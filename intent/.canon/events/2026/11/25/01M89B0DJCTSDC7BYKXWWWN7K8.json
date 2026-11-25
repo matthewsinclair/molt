@@ -1,0 +1,15 @@
+{
+  "id": "01M89B0DJCTSDC7BYKXWWWN7K8",
+  "ts": "2026-11-25T12:31:07.852Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 308, read by molt-vc at 12:31Z by date -u; the wording is devbin-vc's, with 'your' written as Molt's): Molt cuts after devbin 0.1.33 is swept into Molt. Molt's release steps go then (formula check, dry run, cut, rollout), each booked on the Desk. vc's note: until that sweep, decision 21's hold stands."
+  }
+}

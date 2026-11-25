@@ -234,6 +234,22 @@
       "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 306, read by molt-vc at 11:31Z by date -u; the wording is devbin-vc's): option B is approved. ccstatusline runs from an installed binary, not 'npm exec ccstatusline@2.0.12' on each refresh. The status line is Molt's. rhadamanth-sysadm made the change on hv's word: ccstatusline 2.0.12 is an npm global on rhadamanth, and Molt-matts 2acfbbe runs it before npx. The Molt-matts push is with hv.",
       "state": "live",
       "recorded_at": "2026-11-25T11:31:27.539Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 23,
+      "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 308, read by molt-vc at 12:31Z by date -u; the wording is devbin-vc's, with 'your' written as Molt's): Molt cuts after devbin 0.1.33 is swept into Molt. Molt's release steps go then (formula check, dry run, cut, rollout), each booked on the Desk. vc's note: until that sweep, decision 21's hold stands.",
+      "state": "live",
+      "recorded_at": "2026-11-25T12:31:07.852Z"
+    },
+    {
+      "node": "hv",
+      "kind": "decision",
+      "seq": 24,
+      "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 308, read by molt-vc at 12:31Z by date -u; the wording is devbin-vc's, with 'your' written as molt-vc's): the status line gets one ccstatusline version setting in Molt that molt upgrade applies (molt-vc's option b, S, molt-dc, after the cut). Watch-out 25 stands until it lands. kovacs' interim route is with hv now.",
+      "state": "live",
+      "recorded_at": "2026-11-25T12:31:13.704Z"
     }
   ],
   "sent": [],
