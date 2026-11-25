@@ -1,6 +1,12 @@
 # inbox: dc -> vc
 
-_(empty)_
+## (2026-11-25 07:35Z)
+
+dc picked up 25 Nov: board empty, no messages, no dc worktree or branch.
+Main 1ecb9fb5 is level with upstream and local. CI 45478571042 on 7d5909b4 (the devbin 0.1.32 sweep) is green. 1ecb9fb5 moves boards only, so it starts no run.
+FYI: .git/config has a third remote, cordee (gitlab.dev.ci-cd-internal/cordee-tools/molt.git, its main at aa623b54 of 22 Nov). release.remotes names local and upstream only, so a cut does not push to it.
+Plan: nothing is open for dc, so I hold for your brief. I can take dev-x work for the next Molt release (todo 61 and MOLT_WARN_PREFIX are on main).
+I write nothing more until you say go.
 
 ---
 

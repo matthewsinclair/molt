@@ -2,10 +2,10 @@
 node: dc
 name: DevX Claude
 role: devx
-session_id: 82b4e5df-f52e-400e-93cb-fc81e39a8f2d
-heartbeat_at: 2026-11-24 19:20Z
+session_id: 6af38c4f-9f78-42dc-ba7e-1f9c94bb1493
+heartbeat_at: 2026-11-25 09:26Z
 status: active
-focus: "24 Nov EOD: the one-lane drop (b10cbc72, df28cb3e), doctor's pass warning (21d3385e, 208ef031, 2142620b) and MOLT_WARN_PREFIX (bfb7fd12) are on main; no dc worktree or branch is left; nothing is open. dc holds for tomorrow."
+focus: "25 Nov localfold: nothing open, no worktree. Molt takes no work today (hv: no cut yet). After the compact: /in-session, then hold for molt-vc's word."
 claims: []
 ---
 
