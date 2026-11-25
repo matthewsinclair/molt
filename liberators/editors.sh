@@ -19,6 +19,17 @@ editors_repo() {
 }
 editors_repo_git_commands() { echo "pull status log diff fetch"; }
 
+# True when the Doom config repo $1 is the user config repo, as when
+# ~/.config/doom links into the user stack's config/doom. molt upgrade pulls
+# that repo itself, after its clean check (_upgrade_pull_repos), so the
+# upgrade hook does not pull it again (issue Ied61fb9).
+_editors_repo_is_user_repo() {
+  local top user_repo
+  top="$(git -C "$1" rev-parse --show-toplevel 2>/dev/null)" || return 1
+  user_repo="$(molt_find_user_repo 2>/dev/null)" || return 1
+  molt_same_file "$top" "$user_repo"
+}
+
 # --- Emacs.app linkage (macOS) ----------------------------------------------
 # Homebrew's opt/ prefix is version-stable: opt/emacs-plus@31 keeps following
 # the formula as it moves 31.1 -> 31.2 -> ..., so linking /Applications/Emacs.app
@@ -308,14 +319,19 @@ _editors_doom_sync() {
 
 editors_upgrade() {
   # Pull Doom Emacs config repo (reuse editors_repo for discovery). A pull that
-  # fails still syncs the config on disk, then fails the hook (issue 0015).
+  # fails still syncs the config on disk, then fails the hook (issue 0015). A
+  # Doom config in the user config repo is not pulled here: that pull is molt
+  # upgrade's own, after its clean check, and --no-pull skips it (issue
+  # Ied61fb9).
   local doom_repo pulled=0
-  if doom_repo="$(editors_repo)"; then
+  if ! doom_repo="$(editors_repo)"; then
+    molt_debug "No Doom config repo found — skipping"
+  elif _editors_repo_is_user_repo "$doom_repo"; then
+    molt_info "Doom config pull skipped: $(molt_tilde "$doom_repo") is in the user config repo, which molt upgrade pulls itself"
+  else
     molt_info "Pulling Doom config repo..."
     molt_git_pull "$doom_repo" "Doom config" || pulled=$?
     [[ $pulled -ne 0 ]] || molt_info "Doom config updated."
-  else
-    molt_debug "No Doom config repo found — skipping"
   fi
 
   # Sync Doom packages if doom binary exists

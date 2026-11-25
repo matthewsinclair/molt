@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `molt upgrade --no-pull` still pulled the user config repo when `~/.config/doom` linked into it, because the editors upgrade hook pulled the Doom config's repo, with no clean check. On rhadamanth that repo held uncommitted files, git refused the pull, and the upgrade failed (issue Ied61fb9). The hook no longer pulls a Doom config repo that is the user config repo: `molt upgrade` pulls that repo itself, after its clean check, and `--no-pull` skips it.
+
 ## [1.4.13] - 2026-11-25
 
 ### Fixed
