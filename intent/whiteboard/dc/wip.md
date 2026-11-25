@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 87bd0cc3-b583-473c-9cf0-115a1f906cef
-heartbeat_at: 2026-11-25 17:35Z
+heartbeat_at: 2026-11-25 17:40Z
 status: active
-focus: "25 Nov: Molt v1.4.14 is released (tag v1.4.14 at 0abf8087), with the ccstatusline setting (0f41c6df) and the Ied61fb9 fix (919aeec0). Ied61fb9's two trees and its branch are removed. Hold 20: molt-vc lands and pushes the Molt-matts branch (68070d6) in the rollout, and then dc removes its worktree and branch."
+focus: "25 Nov: Molt v1.4.14 is released (tag v1.4.14 at 0abf8087), with the ccstatusline setting and the Ied61fb9 fix. The Molt-matts ccstatusline branch is landed at 46c3aaf and pushed, and every dc worktree and branch is removed. The sysadms run molt upgrade, and molt-vc reads their reports. dc has nothing open and waits for molt-vc's word."
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- ccstatusline, Molt-matts side (hv decisions 24 and 28): branch ccstatusline-setting at 68070d6, from 2acfbbe, in the worktree $TMPDIR/molt-wt/Molt-matts-ccstatusline-setting. Molt's side landed on main at 0f41c6df. Released when the Molt release that carries 0f41c6df is on each sleeve and hv or devbin-vc gives the word to land the branch (vc's brief, rollout step 2). Until then dc keeps the branch and its worktree.
+_(none)_
 
 ## Watch-outs
 
