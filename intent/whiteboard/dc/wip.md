@@ -3,9 +3,9 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 87bd0cc3-b583-473c-9cf0-115a1f906cef
-heartbeat_at: 2026-11-25 17:40Z
+heartbeat_at: 2026-11-26 06:52Z
 status: active
-focus: "25 Nov: Molt v1.4.14 is released (tag v1.4.14 at 0abf8087), with the ccstatusline setting and the Ied61fb9 fix. The Molt-matts ccstatusline branch is landed at 46c3aaf and pushed, and every dc worktree and branch is removed. The sysadms run molt upgrade, and molt-vc reads their reports. dc has nothing open and waits for molt-vc's word."
+focus: "26 Nov: dc holds for molt-vc's word on the unified plan, after hv's localfold and compact. dc has nothing open: no items, claims, worktrees or branches."
 claims: []
 ---
 
