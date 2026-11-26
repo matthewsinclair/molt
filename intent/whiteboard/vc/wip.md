@@ -2,10 +2,10 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-26 12:40Z
+session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
+heartbeat_at: 2026-11-26 14:21Z
 status: active
-focus: "26 Nov, pack-up localfold: Molt main 2 board folds past upstream 072d9ee8, nothing in flight. Resume from home: hold for devbin-vc's word, then the rustup GO (route C, last) to rhadamanth-sysadm with hv's direct yes there. Waits on hv: one push word for the board folds."
+focus: "26 Nov, from home: Molt main 30dc0894 is pushed to upstream and local on hv's word in molt-vc's window, and CI run 45836976106 is green. Hold for devbin-vc's word. Last: the rustup GO (route C) to rhadamanth-sysadm, after Utilz 2.15.0 and each machine's batch. Nothing waits on hv."
 claims: []
 ---
 

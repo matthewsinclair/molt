@@ -251,7 +251,8 @@
       "kind": "decision",
       "seq": 24,
       "text": "hv, 25 Nov 2026, in devbin-vc's window (relayed by devbin-vc as its decision 308, read by molt-vc at 12:31Z by date -u; the wording is devbin-vc's, with 'your' written as molt-vc's): the status line gets one ccstatusline version setting in Molt that molt upgrade applies (molt-vc's option b, S, molt-dc, after the cut). Watch-out 25 stands until it lands. kovacs' interim route is with hv now.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-26T14:33:35.658Z",
       "recorded_at": "2026-11-25T12:31:13.704Z"
     },
     {
@@ -286,7 +287,8 @@
       "kind": "decision",
       "seq": 28,
       "text": "hv, 25 Nov 2026, by AskUserQuestion in devbin-vc's window (relayed by devbin-vc, read by molt-vc at 16:04Z by date -u; hv chose 'Add an exception', and the rest of the wording is devbin-vc's): kovacs's sysadm text in Molt-matts allows \"Molt-pinned per-user npm packages under ~/.local/share/molt\" (XS, the Molt team on hv's word). molt-dc builds the per-user ccstatusline route on every sleeve after the cut (S). vc's note: the exception goes in molt-dc's Molt-matts branch and lands with the route at the rollout.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-26T14:33:35.706Z",
       "recorded_at": "2026-11-25T16:04:51.700Z"
     },
     {
