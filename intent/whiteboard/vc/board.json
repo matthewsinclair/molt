@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "52b78c10-2386-41b1-92ce-867eac4d6a8a",
-    "heartbeat_at": "2026-11-25T16:56:55.738Z",
+    "heartbeat_at": "2026-11-26T05:25:58.870Z",
     "status": "active",
-    "focus": "molt-dc builds the ccstatusline setting from vc's brief; vc reads its READY, passes on devbin-vc's GO for its proof run, then lands it. v1.4.13 is rolled out on rhadamanth, gyges and kovacs. Issue Ied61fb9 is Molt work, not tonight's.",
+    "focus": "26 Nov: Molt holds. v1.4.14 is out on all three sleeves; nothing is open for a seat. Open on hv's word or hands: npm global (todo 66), Emacs restart (67), 0081, rustup, gyges Spotlight, farcaster and pihole. Molt's main is 3 commits (4 with today's bank) past upstream, for the next push.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1697,6 +1697,14 @@
       "text": "On hv's word only: rhadamanth-sysadm removes rhadamanth's npm global ccstatusline (npm uninstall -g ccstatusline). Since Molt v1.4.14 it is unused: ~/.local/bin/ccstatusline comes first on PATH.",
       "state": "live",
       "recorded_at": "2026-11-25T17:42:16.699Z"
+    },
+    {
+      "node": "vc",
+      "kind": "todo",
+      "seq": 67,
+      "text": "hv's hands: restart Emacs on rhadamanth, so the running Emacs loads the packages that molt upgrade's doom sync updated (25 Nov rollout).",
+      "state": "live",
+      "recorded_at": "2026-11-25T17:43:30.949Z"
     }
   ],
   "sent": [

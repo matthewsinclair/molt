@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-25 16:56Z
+heartbeat_at: 2026-11-26 05:25Z
 status: active
-focus: "molt-dc builds the ccstatusline setting from vc's brief; vc reads its READY, passes on devbin-vc's GO for its proof run, then lands it. v1.4.13 is rolled out on rhadamanth, gyges and kovacs. Issue Ied61fb9 is Molt work, not tonight's."
+focus: "26 Nov: Molt holds. v1.4.14 is out on all three sleeves; nothing is open for a seat. Open on hv's word or hands: npm global (todo 66), Emacs restart (67), 0081, rustup, gyges Spotlight, farcaster and pihole. Molt's main is 3 commits (4 with today's bank) past upstream, for the next push."
 claims: []
 ---
 
@@ -22,6 +22,7 @@ _(none)_
 - rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 - On hv's word only: rhadamanth-sysadm removes rhadamanth's npm global ccstatusline (npm uninstall -g ccstatusline). Since Molt v1.4.14 it is unused: ~/.local/bin/ccstatusline comes first on PATH.
+- hv's hands: restart Emacs on rhadamanth, so the running Emacs loads the packages that molt upgrade's doom sync updated (25 Nov rollout).
 
 ## Holds
 

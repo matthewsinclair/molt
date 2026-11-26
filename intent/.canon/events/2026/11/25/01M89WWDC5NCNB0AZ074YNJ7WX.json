@@ -1,0 +1,15 @@
+{
+  "id": "01M89WWDC5NCNB0AZ074YNJ7WX",
+  "ts": "2026-11-25T17:43:30.949Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "hv's hands: restart Emacs on rhadamanth, so the running Emacs loads the packages that molt upgrade's doom sync updated (25 Nov rollout)."
+  }
+}

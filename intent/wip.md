@@ -1,5 +1,5 @@
 ---
-verblock: "25 Nov 2026:v1.11: Matthew Sinclair - Molt v1.4.14 released and rolled out"
+verblock: "26 Nov 2026:v1.12: Matthew Sinclair - Day start: Molt holds with only hv's items open"
 ---
 
 # Work In Progress
@@ -11,6 +11,7 @@ _(none)_
 ## TODO
 
 - **rhadamanth's npm global ccstatusline, on hv's word only:** rhadamanth-sysadm removes it with `npm uninstall -g ccstatusline`. Since Molt v1.4.14 it is unused, because `~/.local/bin/ccstatusline` comes first on PATH.
+- **rhadamanth Emacs, hv's hands:** restart Emacs, so it loads the packages that the 25 Nov `doom sync` updated (vc todo 67).
 - **bl0001, before print:** ac fixes its advice to publish the login PATH for GUI launches (issue 0072).
 - **0081, hv's own check:** at hv's next Karabiner change, it shows as a Molt-matts diff with `~/.config/karabiner` still a link.
 - **rustup on rhadamanth and gyges:** on a quieter day, booked (hv, 1 Nov).
