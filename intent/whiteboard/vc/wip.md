@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-26 10:44Z
+heartbeat_at: 2026-11-26 12:40Z
 status: active
-focus: "26 Nov, cycle 5 localfold: Molt main 072d9ee8 pushed, CI green. Resume: hold for devbin-vc's word after the batch's last cut, then the rustup GO (route C) to rhadamanth-sysadm. hv's later items: 0081, gyges Spotlight, farcaster and pihole."
+focus: "26 Nov, pack-up localfold: Molt main 2 board folds past upstream 072d9ee8, nothing in flight. Resume from home: hold for devbin-vc's word, then the rustup GO (route C, last) to rhadamanth-sysadm with hv's direct yes there. Waits on hv: one push word for the board folds."
 claims: []
 ---
 
