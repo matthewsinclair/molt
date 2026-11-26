@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-26 06:52Z
+heartbeat_at: 2026-11-26 10:44Z
 status: active
-focus: "26 Nov, folded for the compact: Molt holds. Resume: devbin 0.1.34's sweep as one commit on molt-vc's word, then the docs push on hv's word. hv's items: npm global (todo 66), Emacs restart (67), 0081, rustup, gyges Spotlight, farcaster and pihole."
+focus: "26 Nov, cycle 5 localfold: Molt main 072d9ee8 pushed, CI green. Resume: hold for devbin-vc's word after the batch's last cut, then the rustup GO (route C) to rhadamanth-sysadm. hv's later items: 0081, gyges Spotlight, farcaster and pihole."
 claims: []
 ---
 
@@ -19,10 +19,8 @@ _(none)_
 
 - farcaster, pihole, when next reachable: resync the Molt and Molt-matts clones onto the purged histories (intent/ref/2026-10-20-history-purge-commit-maps.md), set core.hooksPath .githooks, run intent claude upgrade --apply, then molt upgrade with dev-tools on. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- rhadamanth and gyges: install rustup with its own installer and --no-modify-path on a quieter day, booked on the desk; it puts rustup at ~/.cargo/bin/rustup, which the 0079 rule tests, so its cargo then comes first (hv 1 Nov). (edited)
+- rhadamanth and gyges: install rustup with its own installer and --no-modify-path, today (hv 26 Nov), after the estate batch is built, tested and released, on one Desk slot from devbin-vc; rhadamanth-sysadm and gyges-sysadm run it and report which cargo and cargo --version (hv 1 Nov rule stands). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
-- On hv's word only: rhadamanth-sysadm removes rhadamanth's npm global ccstatusline (npm uninstall -g ccstatusline). Since Molt v1.4.14 it is unused: ~/.local/bin/ccstatusline comes first on PATH.
-- hv's hands: restart Emacs on rhadamanth, so the running Emacs loads the packages that molt upgrade's doom sync updated (25 Nov rollout).
 
 ## Holds
 

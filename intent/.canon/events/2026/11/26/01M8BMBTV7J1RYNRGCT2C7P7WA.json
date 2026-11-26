@@ -1,0 +1,16 @@
+{
+  "id": "01M8BMBTV7J1RYNRGCT2C7P7WA",
+  "ts": "2026-11-26T09:53:07.943Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 41,
+    "text": "rhadamanth and gyges: install rustup with its own installer and --no-modify-path, today (hv 26 Nov), after the estate batch is built, tested and released, on one Desk slot from devbin-vc; rhadamanth-sysadm and gyges-sysadm run it and report which cargo and cargo --version (hv 1 Nov rule stands)."
+  }
+}
