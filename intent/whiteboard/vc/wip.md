@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 52b78c10-2386-41b1-92ce-867eac4d6a8a
-heartbeat_at: 2026-11-26 05:25Z
+heartbeat_at: 2026-11-26 06:52Z
 status: active
-focus: "26 Nov: Molt holds. v1.4.14 is out on all three sleeves; nothing is open for a seat. Open on hv's word or hands: npm global (todo 66), Emacs restart (67), 0081, rustup, gyges Spotlight, farcaster and pihole. Molt's main is 3 commits (4 with today's bank) past upstream, for the next push."
+focus: "26 Nov, folded for the compact: Molt holds. Resume: devbin 0.1.34's sweep as one commit on molt-vc's word, then the docs push on hv's word. hv's items: npm global (todo 66), Emacs restart (67), 0081, rustup, gyges Spotlight, farcaster and pihole."
 claims: []
 ---
 
