@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "92f0f4eb-69ca-4586-979a-2c96c9924ae0",
-    "heartbeat_at": "2026-11-27T09:14:16.862Z",
+    "heartbeat_at": "2026-11-27T09:18:06.485Z",
     "status": "active",
-    "focus": "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. The push waits for devbin 0.1.35's sweep (hold 13).",
+    "focus": "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. molt-vc stays open for devbin-vc's word.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1720,7 +1720,8 @@
       "kind": "hold",
       "seq": 13,
       "text": "Molt's push to upstream and local waits until devbin 0.1.35's sweep commit is on Molt's main (hv's pre-approval of 27 Nov, relayed by devbin-vc).",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-27T09:18:06.434Z",
       "recorded_at": "2026-11-27T08:49:10.558Z"
     }
   ],

@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
-heartbeat_at: 2026-11-27 09:14Z
+heartbeat_at: 2026-11-27 09:18Z
 status: active
-focus: "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. The push waits for devbin 0.1.35's sweep (hold 13)."
+focus: "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. molt-vc stays open for devbin-vc's word."
 claims: []
 ---
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Molt's push to upstream and local waits until devbin 0.1.35's sweep commit is on Molt's main (hv's pre-approval of 27 Nov, relayed by devbin-vc).
+_(none)_
 
 ## Watch-outs
 

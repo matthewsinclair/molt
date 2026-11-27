@@ -10,5 +10,4 @@ _(none)_
 
 ## TODO
 
-- **STeb98aaf, not started:** the work that Molt's closed threads and issues left open, one work package each.
-- **Push:** Molt main to upstream and local once devbin 0.1.35's sweep commit lands (hv's pre-approval, 27 Nov). Never to cordee.
+- **STeb98aaf and ST0cce65f, not started:** the work that Molt's closed items left open, and the code defects that the close-out found.
