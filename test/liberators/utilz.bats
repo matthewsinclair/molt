@@ -37,38 +37,78 @@ _utilz_checkout() {
     export PATH="$HOME/bin:$PATH"
 }
 
-# Homebrew's utilz, by fake_brew_formula with its arguments, whose `use` answers
-# as Utilz's does with no link set. `use` prints use.out and exits with use.rc
-# from FAKE_PREFIX, and logs each call to FAKE_LOG; _utilz_use replaces both.
+# Homebrew's utilz, by fake_brew_formula with its arguments, as Utilz 2.15.0
+# answers: --version prints the brew tree's version line (devbin's dev, opt and
+# brew contract, T4), and `use`, which 2.15.0 retired, refuses in Utilz's own
+# words. Each call is logged to FAKE_LOG, so a test can show what Molt asked.
 _utilz_brew() {
     fake_brew_formula utilz "$@"
     cat > "$FAKE_KEG/bin/utilz" <<EOF
 #!/bin/bash
-[[ "\$1" == --version ]] && { echo "utilz:$1"; exit 0; }
-[[ "\$1" == use ]] || exit 1
 echo "utilz \$*" >> "\$FAKE_LOG"
-cat "\$FAKE_PREFIX/use.out"
-exit "\$(cat "\$FAKE_PREFIX/use.rc")"
+case "\$1" in
+  --version) echo "utilz $1 (brew, 9fad28695cf1)" ;;
+  use) echo "✗ utilz use is retired: run 'bin/devbin use' in a Utilz checkout" >&2; exit 2 ;;
+  *) exit 1 ;;
+esac
 EOF
-    _utilz_use 0 "links: $HOME/.local/bin" "  brew: no links, and $FAKE_PREFIX/bin/utilz (the Homebrew install) answers"
 }
 
-# A dev link set, as rhadamanth has it: Homebrew's `utilz use` reports the set,
-# and the set's utilz in ~/.local/bin runs first on PATH.
-_utilz_dev_first() {
-    _utilz_use 0 "links: $HOME/.local/bin" "  dev at $UTILZ_HOME -- 2 link(s)"
-    mkdir -p "$HOME/.local/bin"
-    printf '#!/bin/bash\n[[ "$1" == --version ]] && echo "utilz 0.0.1 (dev)"\n' > "$HOME/.local/bin/utilz"
-    chmod +x "$HOME/.local/bin/utilz"
+# A utilz in the tree at $1 whose --version prints the line $2, linked from
+# ~/.local/bin, which comes first on PATH: what `bin/devbin use dev|opt` in a
+# Utilz checkout leaves on rhadamanth. Each call is logged to FAKE_LOG. Run
+# again, it points the link at the new tree.
+_utilz_first() {
+    mkdir -p "$1/bin" "$HOME/.local/bin"
+    printf '#!/bin/bash\necho "utilz $*" >> "$FAKE_LOG"\n[[ "$1" == --version ]] && echo "%s"\n' "$2" > "$1/bin/utilz"
+    chmod +x "$1/bin/utilz"
+    ln -sf "$1/bin/utilz" "$HOME/.local/bin/utilz"
     export PATH="$HOME/.local/bin:$PATH"
 }
 
-# What Homebrew's `utilz use` says next: exit status $1, and each further
-# argument a line of its output.
-_utilz_use() {
-    echo "$1" > "$FAKE_PREFIX/use.rc"
-    shift
-    printf '%s\n' "$@" > "$FAKE_PREFIX/use.out"
+# The warning a brew sleeve gives when PATH runs the utilz that _utilz_first
+# made with the line $1, which names Utilz's tree $2.
+_utilz_warning() {
+    echo "Zen [warning]: utilz (brew): PATH runs $HOME/.local/bin/utilz ($1), Utilz's $2 tree, not brew as this sleeve declares; 'bin/devbin use brew' in the Utilz checkout switches it back"
+}
+
+# No line that hv pasted from gyges's molt upgrade on Molt 1.4.14 is in the
+# output, with this test's Homebrew prefix in place of /opt/homebrew.
+_utilz_refute_field_paste() {
+    refute_output_contains "$FAKE_PREFIX/bin/utilz use failed"
+    refute_output_contains "utilz use is retired"
+    refute_output_contains "Running liberator: utilz (install)"
+    refute_output_contains "Liberator failed: utilz"
+    refute_output_contains "liberators failed: utilz"
+    refute_output_contains "Zen [error]"
+}
+
+@test "brew: Utilz 2.15.0 from Homebrew, with ~/.local/bin first on PATH and empty, passes check, install and resleeve, and nothing asks the retired utilz use" {
+    # ST0cce65f/87d6, the field replay. gyges and kovacs, 27 Nov 2026: Molt
+    # 1.4.14 asked Homebrew's `utilz use`, which Utilz 2.15.0 retired, so molt
+    # upgrade said "1 of 21 liberators failed: utilz" and exited 1 before molt
+    # maintain ran. PATH is as Molt's zprofile sets it: ~/.local/bin first,
+    # with no utilz in it.
+    _utilz_sleeve 'source = "brew"'
+    _utilz_brew 2.15.0 utilz cleanz
+    mkdir -p "$HOME/.local/bin"
+    export PATH="$HOME/.local/bin:$PATH"
+    run utilz_check
+    assert_success
+    assert_output_contains "utilz (brew): utilz 2.15.0 (brew, 9fad28695cf1) is what PATH runs"
+    refute_output_contains "Zen [warning]"
+    _utilz_refute_field_paste
+    run utilz_install
+    assert_success
+    assert_output_contains "Liberator complete: utilz"
+    _utilz_refute_field_paste
+    run molt_resleeve false true
+    assert_success
+    assert_output_contains "utilz: ✓ ok"
+    _utilz_refute_field_paste
+    grep -qx "utilz --version" "$FAKE_LOG"
+    run grep -q "^utilz use" "$FAKE_LOG"
+    assert_failure
 }
 
 @test "utilz takes its source from molt.toml: none is checkout, and an unknown one is refused by name" {
@@ -98,7 +138,7 @@ _utilz_use() {
     _utilz_brew 9.9.9 utilz cleanz
     run utilz_check
     assert_success
-    assert_output_contains "utilz:9.9.9 is what PATH runs"
+    assert_output_contains "utilz 9.9.9 (brew, 9fad28695cf1) is what PATH runs"
 
     mkdir -p "$BATS_TEST_TMPDIR/shadow"
     printf '#!/bin/bash\n' > "$BATS_TEST_TMPDIR/shadow/cleanz"
@@ -147,57 +187,55 @@ _utilz_use() {
     assert_output_contains "found no utilities in $FAKE_PREFIX/opt/utilz/libexec/bin, so none was checked"
 }
 
-@test "brew: with no link set, Homebrew's utilz use is asked and the PATH check stands" {
-    # Issue 0058.
-    _utilz_sleeve 'source = "brew"'
-    _utilz_brew 9.9.9 utilz cleanz
-    run utilz_check
-    assert_success
-    assert_output_contains "utilz:9.9.9 is what PATH runs"
-    [ "$(cat "$FAKE_LOG")" = "utilz use" ]
-}
-
-@test "brew: a dev or opt link set is warned of, naming its tree and 'utilz use brew', passes, and install never moves it" {
+@test "brew: a dev or opt tree first on PATH is warned of, naming the tree and 'bin/devbin use brew', passes, and install never moves it" {
     # Issue 0058. rhadamanth, 25 Oct 2026: a dev link set left by the old
     # checkout mode read as PATH running the wrong utilz, with no remedy named.
-    # hv's decision 18, 24 Nov 2026: the set is the user's choice, so Molt
+    # hv's decision 18, 24 Nov 2026: the tree is the user's choice, so Molt
     # warns and does not fail. On rhadamanth, 1.4.10, the dev link ran first on
-    # PATH, and Homebrew's check still failed over it, so the set's link is
-    # first on PATH here too, and no PATH fault may come from anywhere.
+    # PATH, and Homebrew's check still failed over it, so the link is first on
+    # PATH here too, and no PATH fault may come from anywhere. ST0cce65f/87d6:
+    # the tree comes from the version line, and Molt asks no `utilz use`.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
-    _utilz_dev_first
+    local line="utilz 9.9.9 (dev, 1234567890ab)" warning
+    _utilz_first "$UTILZ_HOME" "$line"
+    warning="$(_utilz_warning "$line" dev)"
     run utilz_check
     assert_success
-    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    assert_output_contains "$warning"
     refute_output_contains "Zen [error]"
-    refute_output_contains "PATH runs $HOME/.local/bin/utilz"
+    refute_output_contains "not Homebrew's"
     run utilz_verify
     assert_success
-    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME"
+    assert_output_contains "$warning"
     refute_output_contains "Zen [error]"
-    refute_output_contains "PATH runs $HOME/.local/bin/utilz"
+    refute_output_contains "not Homebrew's"
     run utilz_install
     assert_success
-    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME"
+    assert_output_contains "$warning"
     refute_output_contains "Zen [error]"
-    refute_output_contains "PATH runs $HOME/.local/bin/utilz"
-    run grep -v '^utilz use$' "$FAKE_LOG"
+    refute_output_contains "not Homebrew's"
+    [ "$(readlink "$HOME/.local/bin/utilz")" = "$UTILZ_HOME/bin/utilz" ]
+    run grep -q "^utilz use" "$FAKE_LOG"
     assert_failure
 
-    _utilz_use 0 "links: $HOME/.local/bin" "  opt at /opt/utilz -- 2 link(s)"
+    line="utilz 9.9.9 (opt, 1234567890ab)"
+    _utilz_first "$BATS_TEST_TMPDIR/opt/utilz" "$line"
     run utilz_check
     assert_success
-    assert_output_contains "Zen [warning]: utilz (brew): utilz use has pointed its links at opt at /opt/utilz, not brew"
+    assert_output_contains "$(_utilz_warning "$line" opt)"
+    refute_output_contains "Zen [error]"
+    refute_output_contains "not Homebrew's"
 }
 
-@test "brew: resleeve shows a dev link set's warning once, with utilz ok, and once when install runs after the check" {
+@test "brew: resleeve shows a dev tree's warning once, with utilz ok, and once when install runs after the check" {
     # Molt 1.4.12. rhadamanth, 24 Nov 2026: molt upgrade on 1.4.11 printed
     # "utilz: ✓ ok" and no warning, because resleeve drops a check's stderr.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
-    _utilz_dev_first
-    local warning="Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    local line="utilz 9.9.9 (dev, 1234567890ab)" warning
+    _utilz_first "$UTILZ_HOME" "$line"
+    warning="$(_utilz_warning "$line" dev)"
     run molt_resleeve false true
     assert_success
     assert_output_contains "utilz: ✓ ok"
@@ -205,7 +243,7 @@ _utilz_use() {
     [ "$(grep -cxF "$warning" <<< "$output")" = 1 ]
 
     # A formula Homebrew does not trust fails the check, so install runs after
-    # it, and the two see the same set.
+    # it, and the two see the same tree.
     touch "$FAKE_PREFIX/.gate"
     run molt_resleeve false true
     assert_success
@@ -214,33 +252,37 @@ _utilz_use() {
     [ "$(grep -cxF "$warning" <<< "$output")" = 1 ]
 }
 
-@test "brew: doctor shows a dev link set's warning once, with utilz installed" {
+@test "brew: doctor shows a dev tree's warning once, with utilz installed" {
     # vc todo 61. Molt 1.4.12: doctor dropped what a check printed when it
     # passed, so the warning that resleeve and upgrade show was lost there.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
-    _utilz_dev_first
-    local warning="Zen [warning]: utilz (brew): utilz use has pointed its links at dev at $UTILZ_HOME, not brew as this sleeve declares; 'utilz use brew' points them back"
+    local line="utilz 9.9.9 (dev, 1234567890ab)" warning
+    _utilz_first "$UTILZ_HOME" "$line"
+    warning="$(_utilz_warning "$line" dev)"
     run cmd_doctor
     assert_output_contains "Checking enabled liberators... ✓ all installed"
     refute_output_contains "not installed: utilz"
     [ "$(grep -cF "$warning" <<< "$output")" = 1 ]
 }
 
-@test "brew: a utilz use that fails, or reports shadowing, fails the check in its own words" {
-    # Issue 0058.
+@test "brew: a version line that names no dev, opt or brew tree fails the check, and its one fault quotes the line" {
+    # ST0cce65f/87d6. The tree is read from the version line alone (devbin's
+    # contract, T4), so a line with no tree, or with T4's unknown, says nothing
+    # of the switch, and a PATH fault beside it would only repeat it.
     _utilz_sleeve 'source = "brew"'
     _utilz_brew 9.9.9 utilz cleanz
-    _utilz_use 1 "links: $HOME/.local/bin" "  brew: no links" "✗ cleanz in $HOME/.local/bin is shadowed: the first cleanz on PATH is /elsewhere/cleanz"
+    _utilz_first "$BATS_TEST_TMPDIR/elsewhere" "utilz 2.14.0"
     run utilz_check
     assert_failure
-    assert_output_contains "$FAKE_PREFIX/bin/utilz use failed (exit 1), and said:"
-    assert_output_contains "✗ cleanz in $HOME/.local/bin is shadowed: the first cleanz on PATH is /elsewhere/cleanz"
+    assert_output_contains "utilz (brew): PATH runs $HOME/.local/bin/utilz, whose version line names no dev, opt or brew tree: 'utilz 2.14.0'"
+    refute_output_contains "not Homebrew's"
 
-    _utilz_use 2
+    _utilz_first "$BATS_TEST_TMPDIR/elsewhere" "utilz 2.15.0 (unknown, unknown)"
     run utilz_check
     assert_failure
-    assert_output_contains "$FAKE_PREFIX/bin/utilz use failed (exit 2), and said nothing"
+    assert_output_contains "utilz (brew): PATH runs $HOME/.local/bin/utilz, whose version line names no dev, opt or brew tree: 'utilz 2.15.0 (unknown, unknown)'"
+    refute_output_contains "not Homebrew's"
 }
 
 @test "checkout: utilz_check passes when the checkout's utilz runs, and names Homebrew's when it runs instead" {

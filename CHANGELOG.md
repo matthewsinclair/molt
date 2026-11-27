@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.15] - unreleased
+
+### Fixed
+
+- On a sleeve whose utilz comes from Homebrew, `molt upgrade` and `molt doctor` failed the utilz liberator, because Molt asked Homebrew's `utilz use` for Utilz's switch, and Utilz 2.15.0 retired that verb. On gyges and kovacs, `molt upgrade` exited 1 and stopped before `molt maintain` (ST0cce65f/87d6). The liberator now reads the switch from the version line of the utilz that PATH runs, as devbin's dev, opt and brew contract says (T4), and runs no Utilz verb. A `brew` tree passes, and the PATH checks run as before. A `dev` or `opt` tree is still a warning and never a fault (hv's decision 18), and its remedy is now `bin/devbin use brew` in the Utilz checkout. A version line that names no dev, opt or brew tree is one fault that quotes the line.
+
 ## [1.4.14] - 2026-11-25
 
 ### Added
