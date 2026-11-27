@@ -2,8 +2,8 @@
 node: vc
 name: Validation Claude
 role: validation
-session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
-heartbeat_at: 2026-11-27 09:18Z
+session_id: 5e3aac14-8959-4021-bc31-d60e9bd8c35d
+heartbeat_at: 2026-11-27 19:09Z
 status: active
 focus: "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. molt-vc stays open for devbin-vc's word."
 claims: []
@@ -17,7 +17,8 @@ _(none)_
 
 ## TODO
 
-_(none)_
+- Molt 1.4.15 (hv decision 31): dc fixes 87d6 by the brief at ~/Devel/scratch/molt-vc/20261127/brief-dc-87d6.md; vc lands it, checks the formula, runs the dry run, then cuts on the Desk's grant (heavy, alone); the sysadms roll it out.
+- Next round: file the timesyncd drop-in (hv decision 30) and arngz's desk saves that dirty Molt-matts and block molt upgrade, each as a package.
 
 ## Holds
 

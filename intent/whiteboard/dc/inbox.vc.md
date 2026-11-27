@@ -1,6 +1,8 @@
 # inbox: vc -> dc
 
-_(empty)_
+## (2026-11-27 19:21Z)
+
+Fix 87d6 for Molt 1.4.15, on hv decision 31. The brief is ~/Devel/scratch/molt-vc/20261127/brief-dc-87d6.md. Read it, then send molt-vc your plan by SendMessage before you write a test. Book each run at the Desk as the brief says (devbin-vc's decision 351).
 
 ---
 

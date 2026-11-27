@@ -1,0 +1,15 @@
+{
+  "id": "01M8F72XTB9QB6XMT3HQ32DD3E",
+  "ts": "2026-11-27T19:18:02.315Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 27 Nov 2026, live in molt-vc's window, read by 19:17Z by date -u, choosing vc's recommended options (the wording is vc's): (1) vc force-pushes Molt-matts' local remote to 0f3dd37 with a lease, done at 19:17Z; (2) molt-dc fixes 87d6 now, and molt-vc cuts Molt 1.4.15 on devbin-vc's GO when it is green, which is hv's word to cut; the sysadms roll it out, and the timesyncd drop-in waits for the next round; (3) the three sysadms run tonight's molt maintain, and on rhadamanth and gyges they restart the cms servers on the new kegs and check each port."
+  }
+}

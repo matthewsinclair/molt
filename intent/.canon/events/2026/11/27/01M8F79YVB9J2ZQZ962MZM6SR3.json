@@ -1,0 +1,15 @@
+{
+  "id": "01M8F79YVB9J2ZQZ962MZM6SR3",
+  "ts": "2026-11-27T19:21:52.747Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Next round: file the timesyncd drop-in (hv decision 30) and arngz's desk saves that dirty Molt-matts and block molt upgrade, each as a package."
+  }
+}

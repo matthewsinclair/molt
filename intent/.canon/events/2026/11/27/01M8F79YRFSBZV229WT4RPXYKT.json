@@ -1,0 +1,17 @@
+{
+  "id": "01M8F79YRFSBZV229WT4RPXYKT",
+  "ts": "2026-11-27T19:21:52.655Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.ask",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "body": "Fix 87d6 for Molt 1.4.15, on hv decision 31. The brief is ~/Devel/scratch/molt-vc/20261127/brief-dc-87d6.md. Read it, then send molt-vc your plan by SendMessage before you write a test. Book each run at the Desk as the brief says (devbin-vc's decision 351).",
+    "fyi": false,
+    "re": null,
+    "recipient": "dc"
+  }
+}

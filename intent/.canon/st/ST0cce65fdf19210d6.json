@@ -4,7 +4,7 @@
   "origin": "01M8E4G0AJ0ZE70VRQZVX8PM5V",
   "title": "Code defects that the November doc sync found",
   "slug": "code-defects-that-the-november-doc-sync-found",
-  "status": "triage",
+  "status": "wip",
   "created": "2026-11-27",
   "objective": "Fix the code defects that the doc sync of 27 Nov 2026 found. The sync made each doc match the code as built, and changed no code. Each work package here is a place where the code, a code comment or the CI is wrong.",
   "context": "",

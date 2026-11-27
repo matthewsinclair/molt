@@ -1,0 +1,15 @@
+{
+  "id": "01M8F79YSXDE8Q17N07JF6KCQE",
+  "ts": "2026-11-27T19:21:52.701Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "text": "Molt 1.4.15 (hv decision 31): dc fixes 87d6 by the brief at ~/Devel/scratch/molt-vc/20261127/brief-dc-87d6.md; vc lands it, checks the formula, runs the dry run, then cuts on the Desk's grant (heavy, alone); the sysadms roll it out."
+  }
+}
