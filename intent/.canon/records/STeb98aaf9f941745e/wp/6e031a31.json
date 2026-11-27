@@ -1,0 +1,10 @@
+{
+  "id": "6e031a31",
+  "origin": "01M8FAD2R80E56A0685217EN3V",
+  "title": "kovacs: resync the clock after rhadamanth sleeps, with a timesyncd drop-in that each sleeve declares (hv decision 30)",
+  "scope": "M",
+  "status": "not-started",
+  "objective": "hv decision 30 (27 Nov 2026): when rhadamanth sleeps, Parallels pauses kovacs, and the guest sees no suspend. systemd-timesyncd then lags by the sleep time until its next poll, up to 34 min. Molt installs a systemd-timesyncd drop-in (eg /etc/systemd/timesyncd.conf.d/molt.conf with PollIntervalMaxSec=64) that a sleeve declares in Molt-matts. Molt 1.4.15 cannot install an /etc file that an instance declares, so this is a Molt change. When it ships, kovacs-sysadm adds the kovacs part to Molt-matts. It starts in the next Molt round.",
+  "body": "",
+  "preamble": ""
+}

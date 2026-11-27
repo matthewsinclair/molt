@@ -1,0 +1,15 @@
+{
+  "id": "01M8FAD2T2YAD4PBVQ9ZJ94JXS",
+  "ts": "2026-11-27T20:16:00.835Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "STeb98aaf9f941745e/3e6c6ed1"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "arngz's desk saves dirty Molt-matts, so molt upgrade refuses until hv commits them"
+  }
+}

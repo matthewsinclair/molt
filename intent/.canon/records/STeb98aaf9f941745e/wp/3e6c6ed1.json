@@ -1,0 +1,10 @@
+{
+  "id": "3e6c6ed1",
+  "origin": "01M8FAD2T2YAD4PBVQ9ZJ94JXS",
+  "title": "arngz's desk saves dirty Molt-matts, so molt upgrade refuses until hv commits them",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "arngz writes hv's desk saves into Molt-matts' config/arngz/desks/, and molt upgrade refuses a config repo with uncommitted changes. hv committed desk saves on 25 Nov, and twice on 27 Nov, before an upgrade could run. Decide where arngz's saves live, or how molt upgrade treats them, so that a desk save never blocks an upgrade. It starts in the next Molt round.",
+  "body": "",
+  "preamble": ""
+}

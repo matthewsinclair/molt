@@ -1,0 +1,15 @@
+{
+  "id": "01M8FAD2W1VA6V2SH4RQCJ0KVK",
+  "ts": "2026-11-27T20:16:00.898Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0cce65fdf19210d6/e1b5cecb"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "Checkout mode's install points a set back at dev after bin/devbin use opt, against devbin's T5"
+  }
+}

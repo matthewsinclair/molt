@@ -1,0 +1,10 @@
+{
+  "id": "e1b5cecb",
+  "origin": "01M8FAD2W1VA6V2SH4RQCJ0KVK",
+  "title": "Checkout mode's install points a set back at dev after bin/devbin use opt, against devbin's T5",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "molt-dc's finding during 87d6 (27 Nov 2026): on a sleeve whose utilz source is checkout, molt install links with molt_link, which removes a link that points somewhere else. So after bin/devbin use opt, molt install points the set back at dev. devbin's dev, opt and brew contract (T5) says that nothing else repoints. It starts in the next Molt round.",
+  "body": "",
+  "preamble": ""
+}

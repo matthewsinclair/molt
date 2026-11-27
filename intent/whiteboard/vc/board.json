@@ -5,9 +5,9 @@
     "name": "Validation Claude",
     "role": "validation",
     "session_id": "5e3aac14-8959-4021-bc31-d60e9bd8c35d",
-    "heartbeat_at": "2026-11-27T19:29:00.503Z",
+    "heartbeat_at": "2026-11-27T20:16:59.890Z",
     "status": "active",
-    "focus": "27 Nov evening: Molt 1.4.15 fixes 87d6 (hv decision 31). dc builds by the brief; vc lands, then cuts on the Desk's grant; the sysadms roll it out.",
+    "focus": "28 Nov: Molt 1.4.15 is released and on all three sleeves, and 87d6 is done. Molt's open work is in STeb98aaf and ST0cce65f.",
     "claims": [],
     "recorded_at": "2026-09-21T15:40:50.518Z",
     "authored_at": "2026-09-15T13:58Z",
@@ -1729,7 +1729,8 @@
       "kind": "todo",
       "seq": 68,
       "text": "Molt 1.4.15 (hv decision 31): dc fixes 87d6 by the brief at ~/Devel/scratch/molt-vc/20261127/brief-dc-87d6.md; vc lands it, checks the formula, runs the dry run, then cuts on the Desk's grant (heavy, alone); the sysadms roll it out.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-27T20:16:59.790Z",
       "recorded_at": "2026-11-27T19:21:52.701Z"
     },
     {
@@ -1737,7 +1738,8 @@
       "kind": "todo",
       "seq": 69,
       "text": "Next round: file each as a package: the timesyncd drop-in (hv decision 30); arngz's desk saves, which dirty Molt-matts and block molt upgrade; and dc's finding that checkout mode's install (molt_link) points a set back at dev after bin/devbin use opt, against devbin's T5.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-27T20:16:59.841Z",
       "recorded_at": "2026-11-27T19:21:52.747Z",
       "edited_at": "2026-11-27T19:35:39.838Z"
     }
