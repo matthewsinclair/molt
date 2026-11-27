@@ -14,9 +14,11 @@
 # kovacs, brew-only by hv's ruling, it said "repo not found" over a working
 # Homebrew install.
 #
-# brew upgrades a Homebrew install. Utilz's own upgrade and relink refuse inside
-# the keg, and Molt never calls them. It asks `utilz use` with no word, which
-# reports Utilz's switch and moves nothing (issue 0058).
+# brew upgrades a Homebrew install, and Molt runs none of Utilz's own verbs.
+# Utilz's switch is `bin/devbin use` in a Utilz checkout (devbin's dev, opt and
+# brew contract, T5). Molt reads where it rests from the version line of the
+# utilz that PATH runs (T4), and moves nothing. Molt 1.4.14 asked `utilz use`
+# instead, which Utilz 2.15.0 retired (ST0cce65f/87d6).
 
 MOLT_UTILZ_FORMULA="matthewsinclair/utilz/utilz"
 
@@ -88,50 +90,49 @@ _utilz_checkout_faults() {
   fi
 }
 
-# Utilz's own switch (devbin's dev, opt, brew contract T5): the link set in the
-# user's bin that `utilz use` points and reports. A dev or opt set is the user's
-# choice, so a brew sleeve warns of it with the verb that moves it back, and
-# never moves it itself or fails over it (hv's decision 18, 24 Nov 2026). The
-# warning goes to fd 4, which _utilz_report opens on its caller's stdout, so
-# the capture of the faults never takes it for one, and a run that drops a
-# check's stderr, as resleeve does, still shows it. It carries the label
-# molt_report_faults gives a fault. Homebrew's utilz $1 is asked by path, so a
-# link the switch set cannot answer for itself. rhadamanth, 25 Oct 2026: a
-# dev set left by the old checkout mode read as "PATH runs ~/.local/bin/utilz"
-# with no remedy.
-# Prints one fault per line. Status 2 when a dev or opt set was warned of, 1
-# when `utilz use` failed and no set was; the caller skips the PATH check on
-# either, and passes 2 on so that _utilz_report knows a warning was shown.
+# Utilz's switch (devbin's dev, opt and brew contract, T5), read from the
+# version line of the utilz that PATH runs, `utilz <version> (<tree>,
+# <sha12>[+dirty])` (T4): a tool's own command line carries that line and no
+# switch verb. gyges and kovacs, 27 Nov 2026: Molt 1.4.14 asked `utilz use`,
+# which Utilz 2.15.0 retired, so each brew sleeve failed its check, and molt
+# upgrade stopped before molt maintain. A dev or opt tree is the user's choice,
+# so a brew sleeve warns of it with the verb that moves it back, and never
+# moves it itself or fails over it (hv's decision 18, 24 Nov 2026). The warning
+# goes to fd 4, which _utilz_report opens on its caller's stdout, so the
+# capture of the faults never takes it for one, and a run that drops a check's
+# stderr, as resleeve does, still shows it. It carries the label
+# molt_report_faults gives a fault. rhadamanth, 25 Oct 2026: a dev set left by
+# the old checkout mode read as "PATH runs ~/.local/bin/utilz" with no remedy.
+# Prints one fault per line. Status 2 when a dev or opt tree was warned of, and
+# 1 when the line names no tree of the three; the caller skips the PATH checks
+# on either, and passes 2 on so that _utilz_report knows a warning was shown.
+# With no utilz on PATH there is no line to read: status 0, and the PATH check
+# names it.
 _utilz_switch_faults() {
-  local utilz="$1" report rc=0 set line warned=false
-  report="$("$utilz" use 2>&1)" || rc=$?
-  if [[ $rc -ne 0 && -z "$report" ]]; then
-    echo "$utilz use failed (exit $rc), and said nothing"
-  elif [[ $rc -ne 0 ]]; then
-    echo "$utilz use failed (exit $rc), and said:"
-    while IFS= read -r line; do
-      [[ -z "$line" ]] || echo "  $line"
-    done <<< "$report"
-  fi
-  # A set is reported as "  <tree> at <root> -- <n> link(s)", one per tree.
-  while IFS= read -r set; do
-    [[ -n "$set" ]] || continue
-    molt_warn "utilz (brew): utilz use has pointed its links at $set, not brew as this sleeve declares; 'utilz use brew' points them back" >&4
-    warned=true
-  done <<< "$(sed -n 's/^  \(.* at .*\) -- [0-9]* link(s)$/\1/p' <<< "$report")"
-  if $warned; then
-    return 2
-  fi
-  [[ $rc -eq 0 ]] || return 1
+  local on_path line tree
+  on_path="$(command -v utilz 2>/dev/null)" || return 0
+  line="$(molt_cmd_version "$on_path")"
+  tree="$(molt_version_tree "$line")" || tree=""
+  case "$tree" in
+    brew) ;;
+    dev | opt)
+      molt_warn "utilz (brew): PATH runs $on_path ($line), Utilz's $tree tree, not brew as this sleeve declares; 'bin/devbin use brew' in the Utilz checkout switches it back" >&4
+      return 2
+      ;;
+    *)
+      echo "PATH runs $on_path, whose version line names no dev, opt or brew tree: '$line'"
+      return 1
+      ;;
+  esac
 }
 
 # Homebrew's utilz installed, trusted and linked, then its switch, then PATH.
 # PATH is judged here, after the switch, never inside molt_brew_faults: with
-# the switch set elsewhere, PATH runs that set's links, so a PATH fault would
-# only repeat the switch without its remedy. A warned-of set (status 2) and a
-# failed use (1) both skip every PATH check. rhadamanth, 1.4.10: the PATH
-# fault molt_brew_faults named ahead of the switch failed a dev set that
-# decision 18 had made a warning. Status 2 when the switch warned, else 0.
+# the switch on dev or opt, PATH runs that tree's links, so a PATH fault would
+# only repeat the switch without its remedy. A warned-of tree (status 2) and a
+# line that names no tree (1) both skip every PATH check. rhadamanth, 1.4.10:
+# the PATH fault molt_brew_faults named ahead of the switch failed a dev set
+# that decision 18 had made a warning. Status 2 when the switch warned, else 0.
 _utilz_brew_faults() {
   molt_brew_link_faults "$MOLT_UTILZ_FORMULA" utilz || return 0
   local prefix keg utilities missed switched=0
@@ -139,7 +140,7 @@ _utilz_brew_faults() {
     echo "brew --prefix failed, so no utility was checked"
     return 0
   fi
-  _utilz_switch_faults "$prefix/bin/utilz" || switched=$?
+  _utilz_switch_faults || switched=$?
   case "$switched" in
     0) ;;
     2) return 2 ;;

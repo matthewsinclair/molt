@@ -1089,6 +1089,17 @@ molt_cmd_version() {
   echo "$v"
 }
 
+# The tree that the version line $1 names, read from the line as
+# molt_cmd_version prints it, `<tool> <version> (<tree>, <sha12>[+dirty])`: eg
+# brew for `utilz 2.15.0 (brew, 9fad28695cf1)`. Fails, printing nothing, when
+# the line names no tree, eg "version unknown", or a line from before devbin's
+# contract (T4).
+molt_version_tree() {
+  local inside="${1#*(}"
+  [[ "$inside" != "$1" && "$inside" == *", "*")"* ]] || return 1
+  echo "${inside%%, *}"
+}
+
 # Names what PATH runs for the command $1 when it is not $2, which $3 describes
 # (eg "Homebrew's /opt/homebrew/bin/intent"). No output when PATH runs $2.
 molt_path_runs_fault() {
