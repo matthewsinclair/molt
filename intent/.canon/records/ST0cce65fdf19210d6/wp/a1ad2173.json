@@ -1,0 +1,10 @@
+{
+  "id": "a1ad2173",
+  "origin": "01M8E4MN59A0N60408SVXN8TYQ",
+  "title": "molt resleeve hides a check's error lines, and can say installed over them",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "`molt resleeve` discards a liberator check's stderr (`lib/molt.sh:2735`), so a check's error lines never show there. An install that returns 0 then prints \"installed\" over them (eg `liberators/backup.sh:491-494`). Only `molt doctor` shows them. Make resleeve show a check's error lines.",
+  "body": "",
+  "preamble": ""
+}

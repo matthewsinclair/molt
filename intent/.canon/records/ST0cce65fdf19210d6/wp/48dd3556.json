@@ -1,0 +1,10 @@
+{
+  "id": "48dd3556",
+  "origin": "01M8E4MN996VE6TM4MZWSE7G8Q",
+  "title": "lib/constants.sh is not the one home for paths and defaults that the docs say it is",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "ARCHITECTURE.md, MODULES.md and DECISION_TREE.md say that `lib/constants.sh` holds every configurable path and default. Some live elsewhere, mostly test seams: `lib/liberator.sh:6`, `lib/molt.sh:1468`, `1484` and `1492`, `liberators/backup.sh:59-60`, `keys.sh:7`, `tiling.sh:17` and `editors.sh:409`. Move each into `lib/constants.sh`, or make those docs name test seams as the one exception.",
+  "body": "",
+  "preamble": ""
+}
