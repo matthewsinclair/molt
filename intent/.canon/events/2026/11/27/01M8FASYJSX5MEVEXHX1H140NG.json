@@ -1,0 +1,15 @@
+{
+  "id": "01M8FASYJSX5MEVEXHX1H140NG",
+  "ts": "2026-11-27T20:23:02.489Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 27 Nov 2026, live in molt-vc's window, read by 20:22Z by date -u, choosing among vc's options (the wording is vc's): push Molt's 4 commits past v1.4.15 (2a1ac0bf, 9fad2eef, d317bf9a, 560808ee). vc pushed f3dfbd63..560808ee to local and upstream at 20:22Z."
+  }
+}
