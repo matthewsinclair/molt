@@ -26,7 +26,7 @@ Molt is about the human developer's own setup: your shell, your tools and your c
 
 Molt would ensure Conflab is installed, configured, and running, the same way it ensures git is configured or tmux is ready. It would not replicate Conflab's commands, manage flabs, or interact with the Conflab API. It would just make sure your Conflab identity is part of your sleeve.
 
-Installing the CLI and daemon would make the liberator an exception to the rule that liberators never install packages, as the Homebrew installs of Intent, Gtools, cldr and Utilz and the `keys` liberator's keyd build are. If Conflab ships from a Homebrew tap, the liberator would use `molt_brew_install` and `molt_brew_faults` as they do.
+Installing the CLI and daemon would make the liberator an exception to the rule that liberators never install packages. [Writing a Liberator](../guides/writing-a-liberator.md#rules) gives that rule and its exceptions. If Conflab ships from a Homebrew tap, the tap exception covers it, and the liberator would use `molt_brew_install` and `molt_brew_faults`.
 
 ## The conflab liberator
 
@@ -70,7 +70,7 @@ Zen: conflabd running — agents online
 
 ## Optional: Conflab-aware events
 
-These are future possibilities, not requirements. Neither `molt needlecast` nor `molt backup` exists as a command today:
+Each of these is optional and not built, and Molt has no `molt needlecast` or `molt backup` command:
 
 - **Needlecast notifications**: when a `molt needlecast` completes, it would post a receipt to a designated ops flab so the team sees new sleeves come online.
 - **Backup receipts**: a `molt backup` would post a snapshot summary to a flab as an audit trail.

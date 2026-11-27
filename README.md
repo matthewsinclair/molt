@@ -31,21 +31,9 @@ The framework finds your personal repo by searching for `Molt-$(whoami)` (or `mo
 
 This separation means you can fork the framework independently from your config, and your config never contains framework code.
 
-To create a fresh personal repo, run `molt new-user <you>`. It scaffolds a `Molt-{user}` repo from a tokenised skeleton (git + ssh identity, a first instance, a minimal manifest), and prints the steps that follow: a first resleeve, then `git init` and push. No copy-and-find-replace.
+To create a personal repo, run `molt new-user <you>`. [Creating a New User Config Repo](docs/guides/new-user.md) describes what it makes.
 
 ## Quick start
-
-### Prerequisites
-
-Set `MOLT_PRJ_DIR` to the directory where your repos live. There is no default. Every machine chooses its own layout:
-
-```bash
-export MOLT_PRJ_DIR="$HOME/Projects"  # or wherever you keep repos
-```
-
-Your config repo is configuration, not a project, so it lives in `MOLT_CFG_DIR`: the `cfg/` directory beside `MOLT_PRJ_DIR` unless you set it yourself.
-
-### Install molt
 
 With [Homebrew](https://brew.sh), on macOS or Linux:
 
@@ -53,64 +41,7 @@ With [Homebrew](https://brew.sh), on macOS or Linux:
 brew install matthewsinclair/molt/molt
 ```
 
-The formula links `molt` into Homebrew's `bin`, so the `molt` on your PATH is it. To work on Molt itself, run it from a dev checkout instead:
-
-```bash
-# Framework: the dev tree, exact-case Molt
-git clone https://github.com/matthewsinclair/molt "$MOLT_PRJ_DIR/Molt"
-
-# Put ~/.local/bin first on PATH, then link molt there from the checkout, once
-export PATH="$HOME/.local/bin:$PATH"
-"$MOLT_PRJ_DIR/Molt/bin/molt" use dev
-```
-
-[Getting Started](docs/guides/getting-started.md) has the dev, opt and brew trees, and `bin/devbin use`, run in the checkout, which switches between them.
-
-### Clone and resleeve
-
-```bash
-# Your config (contains molt.toml + config/ directory)
-git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
-
-# Preview what would happen
-molt resleeve --dry-run
-
-# Bootstrap this machine
-molt resleeve
-```
-
-```
-MOLT v<version> — My Opinionated Local Terminal
-Needlecasting stack to new sleeve...
-Sleeve: <hostname> | Platform: linux
-
-Zen: Stack found: /home/you/cfg/Molt-you
-Zen: Loading liberators...
-Zen: Manifest: /home/you/cfg/Molt-you/instances/<hostname>/molt.toml
-
-  system: ✓ ok
-Zen: Running liberator: zsh (install)
-...
-  zsh: ✓ installed
-  git: ✓ ok
-  ...
-
-Zen: Sleeve ready. Welcome back.
-```
-
-"Welcome back" is the key line. You are not setting up a new machine. You are waking up in a new body with all your memories intact.
-
-### Bootstrap script
-
-For a fresh machine where nothing is set up yet, the bootstrap script sets up a dev checkout:
-
-```bash
-MOLT_PRJ_DIR=$HOME/Projects bash <(curl -fsSL https://raw.githubusercontent.com/matthewsinclair/molt/main/bin/bootstrap.sh)
-```
-
-The bootstrap script clones the framework into `$MOLT_PRJ_DIR/Molt` and your config repo into `$MOLT_CFG_DIR/Molt-$(whoami)`, links molt into `~/.local/bin`, shows a dry-run, and asks at the terminal before applying.
-
-It clones the framework from `MOLT_REPO` (default `matthewsinclair/molt`) and your config repo from `$MOLT_USER_GH/molt-$(whoami)`, where `MOLT_USER_GH` defaults to your login name. Set `MOLT_USER_GH` when your GitHub handle differs from it, eg `MOLT_USER_GH=flynn-sinclair`.
+[Getting Started](docs/guides/getting-started.md) describes the steps after the install. To work on Molt itself, use a dev checkout, as its [maintainer section](docs/guides/getting-started.md#for-the-maintainer-of-a-dev-checkout) describes.
 
 ## Concepts
 
@@ -142,8 +73,6 @@ molt maintain              # Run system maintenance (brew upgrade, doom upgrade,
 molt maintain --dry-run    # Preview maintenance actions
 molt maintain brew         # Maintain specific liberators only
 molt new-user <user>       # Scaffold a new Molt-{user} config repo (prompts for details)
-molt install               # Publish this dev tree as the opt tree (--prefix, --force)
-molt use [dev|opt|brew]    # Choose which tree serves molt; with none, show which does
 molt status                # Show sleeve state and liberator status
 molt list                  # List liberators with enabled/installed status
 molt agent list            # List this sleeve's agents: name, role, enabled, state, home
@@ -160,7 +89,7 @@ molt help                  # Show help
 
 `molt help` is the full list, with every flag.
 
-How `molt upgrade` updates the framework depends on the tree molt runs from. In the dev tree it pulls the checkout. The opt tree is never pulled: publish it again from the dev tree with `bin/devbin install --force`. In the brew tree it runs `brew update`, then `brew outdated`, then `brew upgrade` when the formula is outdated.
+[Keeping up to date](docs/guides/getting-started.md#keeping-up-to-date) says how `molt upgrade` updates Molt from brew. The [maintainer section](docs/guides/getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev and opt trees.
 
 ## Configuration
 
@@ -172,11 +101,9 @@ The only required setting. Tells molt where to find repos. Set it in your shell 
 export MOLT_PRJ_DIR="$HOME/Devel/prj"
 ```
 
-If unset, molt searches `MOLT_CFG_DIR` when that is set, then `~/Molt-{user}`, `~/molt-{user}` and `~/.molt-{user}` as fallbacks, but the primary lookup via `MOLT_PRJ_DIR` is the intended path.
-
 ### MOLT_CFG_DIR
 
-Where your config repo lives, kept apart from development projects. Defaults to the `cfg/` sibling of `MOLT_PRJ_DIR`, so `~/Devel/prj` gives `~/Devel/cfg`. molt searches it first and then `MOLT_PRJ_DIR`, so a machine whose config repo is still under `MOLT_PRJ_DIR` keeps working until you move it. After moving it, run `molt resleeve` from a shell that is already open: the dotfile symlinks still point at the old location until then.
+Where your config repo lives, kept apart from development projects. Defaults to the `cfg/` sibling of `MOLT_PRJ_DIR`, so `~/Devel/prj` gives `~/Devel/cfg`. If you move your config repo, run `molt resleeve` from a shell that is already open. Until then, the dotfile symlinks point at the old location.
 
 ### Other environment variables
 
@@ -191,25 +118,13 @@ Where your config repo lives, kept apart from development projects. Defaults to 
 
 ### MOLT_CLAUDE_CONFIG_DIR
 
-Declared per sleeve, in `instances/<host>/vars.sh`, to keep Claude Code's state out of `$HOME`:
-
-```bash
-export MOLT_CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/claude"
-```
-
-On a sleeve that declares it, the `claude` liberator moves `~/.claude` and `~/.claude.json` into that directory once, copying both beside it first. It refuses while any Claude Code runs, so run the move from a plain terminal with every session quit. Only once the state is there does it hand `CLAUDE_CONFIG_DIR` to the `env` liberator, which must be enabled after it in `molt.toml`. `env` writes `~/.config/molt/env.sh`, for your `~/.zshenv` to source, and the GUI environment (`~/Library/LaunchAgents/com.molt.env.plist` on macOS, `~/.config/environment.d/molt.conf` on Linux), which takes effect for apps launched after the next login. The same files carry each `<TOOL>_INSTALL_PREFIX` the sleeve declares, and the GUI file carries a login shell's PATH as well, which must start with `~/.local/bin` or it is refused and left out. On macOS each GUI app still runs with its own PATH, launchd's default unless the app sets one, so the PATH published there reaches none of them. Where ccusage is installed, `claude` also hands over `CLAUDE_SECURESTORAGE_CONFIG_DIR`, which `env.sh` sets at each shell start and the LaunchAgent at each login from what `ccusage dir` prints: in ccusage's shared mode, the active profile's directory, where Claude Code reads that profile's login. When `ccusage dir` fails or prints no existing directory, as while shared mode is off, both unset it. `environment.d` cannot run a command, so on Linux only shells get it. The `claude` liberator also installs a hook that refuses a Claude Code session launched in `$HOME`. A sleeve that declares nothing keeps `~/.claude`.
+Declare it in a sleeve's `instances/<host>/vars.sh` to move Claude Code's state out of `$HOME`. [Sleeve Agents](docs/guides/sleeve-agents.md#moving-claude-codes-state-out-of-home) describes the move and what it publishes. A sleeve that declares nothing keeps `~/.claude`.
 
 ## Liberators
 
-A liberator is a config module that frees you from one default. Each liberator implements a lifecycle of functions:
+A liberator is a config module that frees you from one default. Each liberator implements a lifecycle of functions, which [Writing a Liberator](docs/guides/writing-a-liberator.md) sets out.
 
-- `{name}_check`: Is this component already installed and configured?
-- `{name}_install`: Configure it (verify prerequisites, link config, set up).
-- `{name}_upgrade`: _(optional)_ Config sync hook. Fast, safe, runs during `molt upgrade`.
-- `{name}_maintain`: _(optional)_ System maintenance hook. Slow, runs during `molt maintain`.
-- `{name}_verify`: _(optional)_ A fuller check, for a liberator's own use. Molt does not run it: resleeve and doctor use `_check`.
-
-Liberators **never install packages**, except a liberator's own subject from a Homebrew tap (Intent, Gtools, cldr, pplr, and Utilz on a `source = "brew"` sleeve), the `brew` liberator, which installs what a sleeve's own `Brewfile` lists, the `keys` liberator, which builds keyd from source, and the `editors` liberator, which clones Doom Emacs and the LazyVim starter when they are missing. Otherwise they check for prerequisites and fail with a hint if something is missing. You install packages yourself, or list them in the sleeve's `Brewfile`; liberators handle configuration.
+Liberators **never install packages**, with these exceptions. A liberator installs its own subject from a Homebrew tap: Intent, Gtools, cldr, pplr, and Utilz on a `source = "brew"` sleeve. The `brew` liberator installs what a sleeve's own `Brewfile` lists. The `keys` liberator builds keyd from source. The `editors` liberator clones Doom Emacs and the LazyVim starter when they are missing. The `claude` liberator uses npm to install the ccstatusline version that `config/ccstatusline/package.json` pins. Otherwise, liberators check for prerequisites and fail with a hint if something is missing. You install packages yourself, or list them in the sleeve's `Brewfile`; liberators handle configuration.
 
 A sleeve's `Brewfile` is `instances/<host>/Brewfile` in your config repo, in Homebrew's own format, eg `brew "pigz"`. With one, the `brew` liberator's check fails while Homebrew lacks anything it lists, naming each, and `molt resleeve` installs what is missing with `brew bundle install`. The file is a minimum: nothing it leaves out is removed, and nothing it lists is upgraded except by `molt maintain`. A sleeve without one is unchanged.
 
@@ -220,7 +135,7 @@ The framework discovers liberator scripts in `liberators/`, loads them on demand
 | Liberator      | Concern                                                       | OS           |
 | -------------- | ------------------------------------------------------------- | ------------ |
 | system         | Verify sudo, the sudo or wheel group (linux) and brew (macos) | linux, macos |
-| local-bin      | `~/.local/bin` directory, molt CLI symlink                    | linux, macos |
+| local-bin      | `~/.local/bin` directory, a check of molt's link              | linux, macos |
 | zsh            | Shell, Starship, config links, ssh tab colours                | linux, macos |
 | git            | Git + git-lfs verification, gitconfig linking                 | linux, macos |
 | tmux           | Tmux verification, config linking                             | linux, macos |
@@ -279,16 +194,7 @@ Instance-specific manifests can override the repo-level one. MOLT checks `instan
 
 A liberator may also read keys of its own from its entry. `utilz` takes `source = "checkout"`, the default, or `source = "brew"`. `gtools` takes `source = "brew"`, the default, or `source = "switch"`, which holds its dev, opt and brew trees for `gtools use` to choose between.
 
-A sleeve declares its agents, the local agents that do machine work on it as you, in `[[agent]]` entries:
-
-```toml
-[[agent]]
-role = "sysadm"              # one of the roles under config/agents/roles/
-enabled = true               # the default
-harness = "claude"           # the default, and the only harness for now
-```
-
-An agent's name is derived, never written: `<hostname>-<role>`, eg `kovacs-sysadm`. The `agents` liberator renders its home at `$MOLT_AGT_DIR/<name>` from the role's `AGENTS.md.tmpl` and `settings.json.tmpl`. `AGENTS.md` opens with `config/agents/AGENTS.md.tmpl`, the preamble every agent shares, when the user repo has one, and ends with `instances/<host>/agents/<role>.md` when the sleeve has one. The home is the agent's working directory, and `molt agent start <role>` starts the agent there.
+A sleeve declares its agents, the local agents that do machine work on it as you, in `[[agent]]` entries, as [Sleeve Agents](docs/guides/sleeve-agents.md#declaring-an-agent) describes.
 
 ## Your config repo layout
 
@@ -340,28 +246,20 @@ Written for, but not yet run on any sleeve: Intel Macs, Fedora and RHEL, Arch, a
 ```
 Molt/
   bin/           # molt, the CLI entry point (thin coordinator); bootstrap.sh; devbin, the dev launcher
-  lib/           # the framework; constants.sh holds every configurable path and default
+  lib/           # the framework; constants.sh holds the framework's paths and defaults
   liberators/    # one script per liberator
   templates/     # what Molt renders or copies: the molt-user/ skeleton and molt.toml.example, the claude, agents and npm files, and the AppArmor profile
   test/          # bats suites (test_helper.bash is the shared harness, and its setup gives each test a HOME of its own), liberators/ for per-liberator suites, manual/ for probes run by hand
   tools/         # test-bash32, the suite under /bin/bash 3.2 as a release gate
   packaging/     # homebrew/, the formula template
   docs/          # guides/, notes/ and blog/
-  design/        # the logo and the original design brief
+  design/        # the logo
   intent/        # Intent's project files: steel threads, issues, and llm/, the docs for coding agents
 ```
 
 ## Dependencies
 
-MOLT is PATH-based, not package-manager-bound. It depends on standard POSIX tools plus:
-
-- **bash** 3.2 or later (framework scripts)
-- **awk** (manifest parsing)
-- **bats** (test suite; `molt doctor` checks for it where molt runs from a dev checkout, the one tree `molt test` runs in)
-- **envsubst**, from gettext (template rendering; `molt doctor` checks for it)
-- **timeout**, from coreutils. The bootstrap runs `timeout 5 ssh -n -T`, and clones over HTTPS without it. `molt doctor`'s git host check uses it where it is installed, to bound each host's whole exchange, and otherwise relies on ssh's own connect bound. Linux has it; on macOS run `brew install coreutils`.
-
-Liberators verify their own prerequisites and fail with install hints if anything is missing.
+[Getting Started](docs/guides/getting-started.md#prerequisites) lists what Molt needs on a sleeve.
 
 ## Documentation
 
@@ -370,11 +268,11 @@ Liberators verify their own prerequisites and fail with install hints if anythin
 - [Writing a Liberator](docs/guides/writing-a-liberator.md): how to create your own config modules
 - [Template System](docs/guides/templates.md): per-instance config rendering with `envsubst`
 - [Sleeve Agents](docs/guides/sleeve-agents.md): a home for each machine's local agent, and Claude Code's state moved out of `$HOME`
-- [Bootstrap Runbook](docs/guides/bootstrap-runbook.md): the record of bootstrapping kovacs by hand, which the liberators were built from
+- [Bootstrap Runbook](docs/guides/bootstrap-runbook.md): the steps you do by hand on a new sleeve
 
 ## Status
 
-In daily use on five sleeves: rhadamanth (macOS, M4), gyges (macOS), kovacs (Ubuntu ARM64), and farcaster and pihole (Raspberry Pi OS). Releases go out through Homebrew, as the [quick start](#quick-start) installs them, and [CHANGELOG.md](CHANGELOG.md) says what each one changed.
+Releases go out through Homebrew, as the [quick start](#quick-start) installs them, and [CHANGELOG.md](CHANGELOG.md) says what each one changed.
 
 ## License
 

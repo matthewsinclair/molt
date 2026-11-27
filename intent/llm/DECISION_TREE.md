@@ -11,7 +11,7 @@ Where new code goes in Molt. Ask [MODULES.md](MODULES.md) first: when a module a
 3. **A path or a default someone may change?** `lib/constants.sh`.
 4. **A helper more than one liberator needs (linking, rendering, platform, logging, Homebrew)?** `lib/molt.sh`, beside the helpers of its kind. Loading and running liberators is `lib/liberator.sh`.
 5. **A variable a sleeve's shells or GUI apps get?** A contributor the `env` liberator gathers, as `claude_env_pairs` and `molt_env_prefix_pairs` are. `lib/env.sh` writes it, and nothing else writes an env file.
-6. **Which tree runs (dev, opt or brew), or publishing one?** `lib/install.sh`.
+6. **Which tree runs (dev, opt or brew)?** `lib/install.sh`, which only reads the trees. devbin publishes and switches them, as the `install:` block in `bin/.devbin/config.yaml` declares.
 7. **Sleeve agents?** `lib/agent.sh`. Their roles come from the stack's `config/agents/roles/`.
 8. **A new verb?** Its logic goes in the lib that owns the concern, and `bin/molt` parses its arguments and calls it.
 9. **What a new user's stack starts from?** `templates/molt-user/`. The other files Molt renders from its own templates are under `templates/` too.

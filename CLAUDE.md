@@ -29,7 +29,7 @@ The cross-language principles, Highlander, PFIC, Thin Coordinator and No Silent 
 <!-- user:start -->
 <!-- Author: matts. Add project-specific Claude directives below this line. Preserved across regeneration. -->
 
-- Run the suite with `bin/molt test` from the dev checkout: ShellCheck, then bats over `test/` and `test/liberators/`. `AGENTS.md`'s `bats -r tests/` is Intent's default for a shell project and does not fit Molt, which has no `tests/`. `intent/llm/RULES.md` says when it must pass under both bashes.
+- Run the suite with `bin/devbin test all` from the dev checkout. Its `suite` option runs `bin/molt test` (ShellCheck, then bats over `test/` and `test/liberators/`), and its `bash32` option runs the same suite under macOS's `/bin/bash` 3.2. `intent/llm/RULES.md` says when it must pass under both bashes.
 
 <!-- user:end -->
 

@@ -1,6 +1,6 @@
 # Molt Usage Rules
 
-This file is the prescriptive DO / NEVER contract for working in Molt. Narrative, rationale and FAQs live in `AGENTS.md` and the project's technical docs. Each file has one job.
+This file is the prescriptive DO / NEVER contract for working in Molt. Narrative and rationale live in `AGENTS.md` and the project's docs. Each file has one job.
 
 `intent --version` names the Intent this project runs. `intent claude skills list` and `intent claude subagents list` show the Intent-provided surface.
 
@@ -23,30 +23,21 @@ Full list: `intent claude skills list`.
 
 - `critic-<lang>`: the rule-library critics. Molt's is `critic-shell`, and `critic-prose` reviews prose.
 - `socrates`: CTO review mode, for architectural and strategic dialog.
-- `diogenes`: an Elixir test architect.
 
 Full list: `intent claude subagents list`.
 
 ### Rule library
 
-The installed Intent tool serves the coding rules, and `intent claude rules show <id>` prints where each one lives. The `critic-<lang>` family and the pre-commit gate enforce them, with this project's settings in `.intent_critic.yml` at its root.
-
-```bash
-intent claude rules list
-intent claude rules show <id>
-intent claude rules validate
-```
+The installed Intent tool serves the coding rules: the Rule Library section of `AGENTS.md` lists the commands that read them.
 
 ## Session Hooks
 
 `.claude/settings.json` wires:
 
-- `SessionStart`: prints the project's context when a session starts, resumes or compacts.
+- `SessionStart`: prints the project's context when a session starts, resumes, clears or compacts.
 - `UserPromptSubmit` (strict): blocks the first prompt until `/in-session` runs in the conversation.
 - `Stop`: reminds to run `/in-finish` at wrap-up.
 - `PostToolUse`: after a Write or Edit, an advisory when the file is not registered in `intent/llm/MODULES.md`.
-
-`intent claude upgrade --apply` applies the hooks to this project. Never edit `.claude/settings.json`'s hook stanzas directly; re-apply the template instead.
 
 ## Critics and pre-commit
 
@@ -58,10 +49,9 @@ The pre-commit gate is `.githooks/pre-commit`, which git runs through `core.hook
 - Never edit `.claude/settings.json`'s hook stanzas by hand: re-apply them with `intent claude upgrade --apply`.
 - Never bypass `.githooks/pre-commit` with `--no-verify` on shared branches without an explicit justification in the commit message.
 - Never create steel thread or work package directories by hand: use `intent st new` and `intent wp new`.
-- Never edit `status:` fields in `info.md` frontmatter by hand: use `intent st start | done | cancel` and `intent wp start | done`.
+- Never hand-edit a thread's `info.md`, the thread index or `intent/todo.md`: they are views of Intent's store. Change state with Intent's verbs, eg `intent st done` and `intent wp start`.
 
 ## See also
 
-- `AGENTS.md`: project navigation, generated.
+- `AGENTS.md`: project navigation, generated, with Intent's own docs under Additional Resources.
 - `CLAUDE.md`: the Claude-specific overlay.
-- In Intent's source repository (github.com/matthewsinclair/intent), not this project or the installed tool: `intent/docs/working-with-llms.md`, the LLM workflow narrative; `intent/docs/rules.md`, the rule authoring guide; and `intent/docs/critics.md`, the critic contract.

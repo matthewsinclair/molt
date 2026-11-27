@@ -1,44 +1,30 @@
-# Bootstrap Runbook: Phase 1 Manual Resleeve
+# Bootstrap Runbook: Manual Steps
 
-This documents every step taken to bootstrap kovacs (Ubuntu 24.04 ARM64 at the time, Parallels on rhadamanth) from a bare VM to a fully opinionated dev environment, by hand, before the liberators existed. It is the record the liberators were built from, not a specification of what they do now.
+This runbook lists the steps that you do by hand on a new sleeve, before and after `molt resleeve`. It also says what each liberator does itself. Most steps are for Linux, as on kovacs, an Ubuntu ARM64 VM under Parallels on rhadamanth.
 
 Steps are grouped by **liberator** (config module). Each step is tagged:
 
 - **[agnostic]**: platform-independent, works on any sleeve
 - **[linux]**: Linux-specific (apt, systemd, Wayland, etc.)
-- **[instance]**: machine-specific (kovacs only)
+- **[instance]**: specific to one machine
 
 ## What this covers, and what it does not
 
-**It covers some of the framework's liberators, not all: the lists below name which.**
-
-Stating the gap rather than implying completeness is deliberate: a runbook that silently covers half the system is indistinguishable from one that covers all of it, and the reader has no way to tell which they are holding. The same principle the framework's own checks are held to.
-
 Documented here: `system`, `zsh`, `git`, `tmux`, `editors`, `alacritty`, `keys`, `desktop`, `dev-tools`, `mise`, `ssh`, `intent`, `claude`.
 
-**NOT documented here**: these arrived after the Phase 1 resleeve and their steps have never been captured: `agents`, `arngz`, `backup`, `brew`, `cldr`, `env`, `gnome-terminal`, `gtools`, `hammerspoon`, `herdr`, `iterm2`, `karabiner`, `local-bin`, `menuz`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
+**Not documented here**: `agents`, `arngz`, `backup`, `brew`, `cldr`, `env`, `gnome-terminal`, `gtools`, `hammerspoon`, `herdr`, `iterm2`, `karabiner`, `local-bin`, `menuz`, `npm`, `pplr`, `terminal-app`, `tiling`, `utilz`, `vscode`, `web`. Read the liberator source for those; each has a `_check` that states its own preconditions.
 
-This is a record of what was done BY HAND on kovacs. It is not the install procedure: that is `molt resleeve`. The liberators automate the configuration recorded here, but mostly not the packages. Of those documented here, `system`, `zsh`, `git`, `tmux`, `alacritty`, `dev-tools` and `mise` check for theirs and name the install when one is missing, and `editors` does the same for Emacs and Neovim. `editors` clones Doom Emacs and LazyVim itself, `keys` builds keyd from source, and `intent` installs Intent from Homebrew. The `brew` liberator installs packages too, the ones a sleeve lists in its `Brewfile`, `instances/<host>/Brewfile`; kovacs has none. Where this record and a liberator disagree, the liberator is authoritative and this document is stale.
+`molt resleeve` is the install procedure. Most liberators set up configuration only, and install no package. Of those documented here, `system`, `zsh`, `git`, `tmux`, `alacritty`, `dev-tools` and `mise` check for their packages and name the install when one is missing. `editors` does the same for Emacs and Neovim. `editors` clones Doom Emacs and LazyVim itself, `keys` builds keyd from source, `intent` installs Intent from Homebrew, and `claude` installs ccstatusline with npm. The `brew` liberator installs packages too, the ones a sleeve lists in its `Brewfile`, `instances/<host>/Brewfile`. Where this runbook and a liberator disagree, the liberator is correct.
 
 ## Molt itself
 
-A sleeve gets Molt from Homebrew, on macOS and on Linux alike, then resleeves from it. Resleeve needs `MOLT_PRJ_DIR` set and the sleeve's config repo cloned first, as [Getting Started](getting-started.md) sets out:
-
-```bash
-export MOLT_PRJ_DIR="$HOME/Devel/prj"
-git clone https://github.com/you/molt-you "$(dirname "$MOLT_PRJ_DIR")/cfg/Molt-you"
-brew install matthewsinclair/molt/molt
-molt resleeve --dry-run
-molt resleeve
-```
-
-`molt version` names the install, as `molt <version> (brew, <commit>)`, and `molt upgrade` moves it to the next release with `brew upgrade`.
+[Getting Started](getting-started.md) gives the steps that install Molt from Homebrew and resleeve a sleeve.
 
 ### For the maintainer of a dev checkout
 
 **This is for whoever works on Molt itself.** A sleeve installed from brew needs none of it.
 
-kovacs was bootstrapped in Phase 1 from a dev checkout of Molt. `bin/bootstrap.sh`, which came after Phase 1, sets one up at `$MOLT_PRJ_DIR/Molt` and links `~/.local/bin/molt` to it. A dev checkout stays a supported install. Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers the dev, opt and brew trees, `bin/devbin use` and `bin/devbin install`. kovacs itself has since moved to brew only (ST0008): on 4 Nov 2026 the only `molt` on its PATH was Homebrew's, 1.4.2, with no `~/bin/molt` or `~/.local/bin/molt` left. `~/bin` and `~/.local/bin` are different directories there.
+Getting Started's [maintainer section](getting-started.md#for-the-maintainer-of-a-dev-checkout) covers `bin/bootstrap.sh`, which sets up a dev checkout on a new machine, and the dev, opt and brew trees.
 
 ---
 
@@ -55,42 +41,25 @@ sudo usermod -aG sudo {user}
 
 - **Why**: Parallels creates a `parallels` user. We want a named user that matches identity across all sleeves.
 - **Gotcha**: Copy SSH keys and Claude credentials from the previous user before switching over.
+- **Liberator**: `system` checks for sudo and, on Linux, that the user is in the sudo or wheel group. It installs nothing.
 
 ### Install base packages [linux]
 
 ```bash
 sudo apt update && sudo apt install -y \
   build-essential cmake git git-lfs curl wget unzip \
-  zsh htop jq tree bat ripgrep fd-find fzf \
-  wl-clipboard emacs-nox
+  zsh tmux htop jq tree bat ripgrep fd-find fzf \
+  wl-clipboard emacs-nox neovim
 ```
 
 - **Why**: Baseline tools needed by everything else.
 - **Gotcha**: `bat` is `batcat` on Ubuntu, and `fd-find`'s binary is `fdfind`. The zshrc aliases neither.
 
-### Install mise [linux]
-
-```bash
-curl https://mise.run | sh
-```
-
-- **Why**: Manages language runtimes (Ruby, Node, Python, etc.) without polluting system packages. Replaces asdf.
-- **Gotcha**: Activation line goes in zshrc: `eval "$(~/.local/bin/mise activate zsh)"`
-- **Liberator**: `mise`, off on every sleeve since 3 Nov 2026 (issue 0082). It checks that mise is on PATH and installs nothing.
-
 ---
 
 ## zsh
 
-Shell configuration and prompt.
-
-### Set default shell [agnostic]
-
-```bash
-chsh -s $(which zsh)
-```
-
-- **Now**: the `zsh` liberator runs this `chsh` itself when zsh is not the login shell.
+Shell configuration and prompt. The `zsh` liberator runs `chsh -s` itself when zsh is not the login shell.
 
 ### Install Starship prompt [agnostic]
 
@@ -106,15 +75,14 @@ curl -sS https://starship.rs/install.sh | sh
 
 - Config: `Molt-{user}/config/zsh/zshrc`
 - Symlink: `~/.zshrc`
-- **Design**: Thin coordinator. Sets env vars, history options and aliases (one-liners only), and activates tools. At the time it also loaded the functions through `fpath` and built PATH; now `zshenv` autoloads the functions and `zprofile` builds PATH.
+- **Design**: Thin coordinator. Sets env vars, history options and aliases (one-liners only), and activates tools. `zshenv` autoloads the functions, and `zprofile` builds PATH.
 - Functions live in `config/zsh/functions/`, one per file.
 - **Highlander**: All git shortcuts live here as shell aliases (not in gitconfig).
 
 ### Write zshenv and zprofile [agnostic]
 
-- `~/.zshenv` → `config/zsh/zshenv`: minimal, intentionally near-empty at the time
-- `~/.zprofile` → `config/zsh/zprofile`: at the time an empty placeholder to prevent system defaults
-- **Now**: `zshenv` sources `~/.config/molt/env.sh`, which the `env` liberator writes, and `zprofile` builds the login PATH with `~/.local/bin` first, which the `env` liberator requires before it publishes that PATH for GUI apps.
+- `~/.zshenv` links to `config/zsh/zshenv`, which sources `~/.config/molt/env.sh`, the file the `env` liberator writes.
+- `~/.zprofile` links to `config/zsh/zprofile`, which builds the login PATH with `~/.local/bin` first. The `env` liberator requires that before it publishes the PATH for GUI apps.
 
 ---
 
@@ -128,12 +96,6 @@ Version control configuration.
 - Symlink: `~/.gitconfig`
 - Contents: identity, defaults and the git-lfs filter; read the file itself for the rest.
 - **Highlander**: No `[alias]` section: all git shortcuts are shell aliases in zshrc.
-
-### Install git-lfs [linux]
-
-```bash
-git lfs install
-```
 
 ---
 
@@ -155,8 +117,9 @@ Doom Emacs and LazyVim (Neovim).
 
 ### Install Doom Emacs [agnostic]
 
+The `editors` liberator clones Doom Emacs into `~/.config/emacs` when it is missing. It does not run `doom install`, so run it yourself after the first resleeve:
+
 ```bash
-git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 ~/.config/emacs/bin/doom install
 ```
 
@@ -177,18 +140,15 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 
 ### Install LazyVim [agnostic]
 
-```bash
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-```
+The `editors` liberator clones the LazyVim starter into `~/.config/nvim` when that directory is missing, and removes its `.git`.
 
-- **Note**: Stock LazyVim, no customizations tracked in Molt-{user} yet.
+- **Note**: Molt links no Neovim config, so LazyVim stays stock.
 
 ---
 
 ## alacritty
 
-Terminal emulator setup. **There is no `terminal` liberator any more.** ST0001's WP-09 split it per emulator, so this section is `alacritty` and its siblings are `gnome-terminal`, `iterm2` and `terminal-app`, none of which are documented here.
+Terminal emulator setup.
 
 ### Install Alacritty [linux]
 
@@ -201,11 +161,11 @@ sudo apt install -y alacritty
 - Template: `Molt-{user}/config/alacritty/alacritty.toml.tmpl`
 - Rendered to: `~/.config/alacritty/alacritty.toml`
 
-**This is rendered, not symlinked.** The font comes from the instance's `vars.sh` (`MOLT_FONT_FAMILY`, `MOLT_FONT_SIZE`) so the declared value is the effective one. It was previously declared in both places and had already diverged. kovacs runs **MesloLGS Nerd Font at 11.0**, chosen in Molt-matts `25713b0` and declared in kovacs's `vars.sh` since `1adb536`.
+Molt renders this file from the template. The font comes from the instance's `vars.sh` (`MOLT_FONT_FAMILY`, `MOLT_FONT_SIZE`), the one place that declares it.
 
 Other settings: copy-on-select, Super+C/V/X clipboard bindings for Parallels, Shift-Enter kitty-protocol encoding.
 
-`molt doctor`'s `Checking declared font...` asserts the declared font is one fontconfig can resolve; nothing installs fonts, so a fresh sleeve gets the config naming the font and none of the font. A sleeve whose terminal Windows draws, as under WSL, declares `MOLT_TERMINAL_DRAWN_BY="windows"` in its `vars.sh`, and the check then passes without asking fontconfig, since the font is the Windows side's to install.
+`molt doctor`'s `Checking declared font...` checks that fontconfig can resolve the declared font. Nothing installs fonts, so install the declared font yourself.
 
 ---
 
@@ -215,23 +175,14 @@ Keyboard remapping (keyd).
 
 ### Build and install keyd [linux]
 
-```bash
-git clone https://github.com/rvaiya/keyd
-cd keyd
-make && sudo make install
-sudo systemctl enable keyd && sudo systemctl start keyd
-```
-
 - **Why**: evdev-level key remapping, compositor-agnostic, survives Wayland.
-- **Now**: the `keys` liberator does this itself when keyd is missing: it clones and builds keyd, installs it through `sudo`, and enables and starts the service.
+- **Liberator**: `keys` does this itself when keyd is missing: it clones and builds keyd, installs it through `sudo`, and enables and starts the service.
 
 ### Write keyd config [instance]
 
-- Config: `Molt-{user}/instances/kovacs/keyd/default.conf`
+- Config: `Molt-{user}/instances/{hostname}/keyd/default.conf`
 - Install target: `/etc/keyd/default.conf`. The liberator copies it there through sudo and runs `sudo keyd reload`.
-- At the time it mapped leftmeta (Cmd) to a custom layer for CUA-style shortcuts (c/v/x).
-- **Status** at the time: config ready, but Cmd key passthrough from Parallels was PARKED, as Parallels was not sending leftmeta to the VM.
-- **Now**: since Molt-matts `a355f32` (10 Mar 2026) the Parallels profile passes Cmd as Super, Alacritty binds Super+C/V/X itself, and `default.conf` maps nothing. The `keys` liberator is disabled on kovacs.
+- On kovacs, Parallels passes Cmd as Super, and Alacritty binds Super+C/V/X itself. So kovacs's `default.conf` maps nothing, and its `keys` liberator is disabled.
 
 ---
 
@@ -241,16 +192,8 @@ GNOME desktop settings.
 
 ### Strip GNOME Super bindings [linux]
 
-```bash
-# Disable Activities overlay on Super press
-gsettings set org.gnome.mutter overlay-key ''
-# Disable all Super-based shortcuts
-gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']"
-# ... (additional gsettings for switch-windows, panel-main-menu, etc.)
-```
-
-- **Why**: Super key belongs to keyd/Cmd mapping, not GNOME.
-- **Now**: the liberator sets each key `instances/<host>/desktop/gsettings` declares, through the gsettings that reaches dconf, and reads each one back. It sets the dock's favourites from `instances/<host>/desktop/favorite-apps`.
+- Declare the keys in `instances/<host>/desktop/gsettings`, one `<schema> <key> <value>` per line, eg `org.gnome.mutter overlay-key ''`.
+- **Liberator**: `desktop` sets each key through the gsettings that reaches dconf, and reads each one back. It sets the dock's favourites from `instances/<host>/desktop/favorite-apps`.
 
 ### GTK config [linux]
 
@@ -264,20 +207,11 @@ gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Alt>Tab']
 
 CLI tools. The liberator checks for jq, tree, rg, fzf and curl, and installs none.
 
+The `mise` liberator is off on every sleeve. It checks that mise is on PATH, and installs nothing.
+
 ### CLI tools [linux]
 
 Already covered in the base packages under `system`: bat, ripgrep, fd-find, fzf, jq, tree, htop.
-
-### mise runtimes [agnostic]
-
-```bash
-mise use --global node@lts
-mise use --global python@3
-# etc.
-```
-
-- Configured per-project or globally via `~/.config/mise/config.toml`
-- **Liberator**: `mise`, off on every sleeve since 3 Nov 2026 (issue 0082).
 
 ---
 
@@ -292,7 +226,7 @@ ssh-keygen -t ed25519 -C "you@example.com"
 ```
 
 - Keys are per-instance secrets, NOT kept in Molt-{user}.
-- **Now**: when it finds no private key in `~/.ssh` (it looks for `id_*`, `personalid` and `personal_id`), the liberator generates `~/.ssh/id_ed25519` itself, with no passphrase, and says to add its public key to GitHub, naming `cat ~/.ssh/id_ed25519.pub`.
+- **Liberator**: `ssh` generates `~/.ssh/id_ed25519` itself, with no passphrase, when it finds no private key in `~/.ssh` (it looks for `id_*`, `personalid` and `personal_id`). It then says to add the public key to GitHub, and names `cat ~/.ssh/id_ed25519.pub`.
 
 ### Write SSH config [agnostic]
 
@@ -307,14 +241,7 @@ ssh-keygen -t ed25519 -C "you@example.com"
 
 Intent project management integration.
 
-**The `intent` liberator has changed since this record.** It installs Intent from Homebrew (`brew install matthewsinclair/intent/intent`) and checks which Intent PATH runs and which install the pre-commit gate points at. There is no checkout and no link of Molt's own. The steps below are what was done by hand at the time.
-
-### Initialize Intent in repos [agnostic]
-
-```bash
-cd ~/Devel/prj/Molt && intent init
-cd ~/Devel/cfg/Molt-{user} && intent init
-```
+The `intent` liberator installs Intent from Homebrew (`brew install matthewsinclair/intent/intent`). It checks which Intent PATH runs and which install the pre-commit gate points at, and runs `intent bootstrap` when the gate has no install.
 
 ### Install Claude skills [agnostic]
 
@@ -328,19 +255,15 @@ intent claude skills install --all
 
 ## claude
 
-Claude Code configuration. What the liberator does now, the config-dir move above all, is in [Sleeve Agents](sleeve-agents.md).
+Claude Code configuration. [Sleeve Agents](sleeve-agents.md) describes how the liberator moves Claude Code's state out of `$HOME`.
 
 ### Claude keybindings and instructions [agnostic]
 
 - `Molt-{user}/config/claude/keybindings.json`, `CLAUDE.md`, `AGENTS.md` and `house-rules.md`, each linked into Claude Code's config dir (`~/.claude` until the sleeve moves its state)
 
-### Claude's state out of $HOME [agnostic]
-
-- A sleeve that declares `MOLT_CLAUDE_CONFIG_DIR` in its `vars.sh` has its state moved there once, with every Claude Code quit. The liberator repoints the paths into `~/.claude` that the moved `settings.json` names, installs a guard and a hook that refuse a session launched in `$HOME`, at the agents root or below an agent home, or one that did not get `CLAUDE_CONFIG_DIR`, and hands `CLAUDE_CONFIG_DIR` to the `env` liberator, which runs after it and publishes it.
-
 ### Claude status line [agnostic]
 
-- Layout: `Molt-{user}/config/ccstatusline/settings.json`, linked to `~/.config/ccstatusline/settings.json`. kovacs linked it by hand on 15 Oct 2026, before the liberator managed it, and the liberator adopts that link as it stands.
+- Layout: `Molt-{user}/config/ccstatusline/settings.json`, linked to `~/.config/ccstatusline/settings.json`.
 - Command: `Molt-{user}/config/claude/statusline.json` is written into the `statusLine` key of `settings.json` in Claude Code's config dir (`~/.claude` until the sleeve moves its state). No other key is touched, and the file is never linked: it holds each sleeve's own permissions, hooks and plugins.
 - Program: `Molt-{user}/config/ccstatusline/package.json`, npm's own manifest, pins ccstatusline to one exact version. The liberator copies it into `~/.local/share/molt/ccstatusline` (under `$XDG_DATA_HOME` when that is set), runs `npm install` there when the copy is missing or holds another version, and links `~/.local/bin/ccstatusline` to the program. A command that runs `ccstatusline` by name then runs the pinned version. With no npm on the sleeve, nothing is installed, and the status line stays empty.
 
@@ -376,15 +299,3 @@ Claude Code configuration. What the liberator does now, the config-dir move abov
 | ccstatusline/package.json     | ~/.local/share/molt/ccstatusline/package.json     | copied   |
 
 Instance-specific config lives in `Molt-{user}/instances/{hostname}/`.
-
----
-
-## Audit Notes (from WP-06)
-
-Key findings from the Highlander/Thin Coordinator audit:
-
-- **H1 (Fixed)**: Git aliases were in two places, unified to zshrc only
-- **T1 (Fixed)**: zshrc functions extracted to `config/zsh/functions/`
-- **T2 (Fixed)**: Doom config.el inline logic extracted to custom/\*.el modules
-- **M1 (Fixed)**: keyd config captured in `instances/kovacs/keyd/`
-- **H3 (Fixed, then regressed, then fixed again)**: the font was unified to JetBrainsMono Nerd Font here in March. It did not stay unified: Molt-matts `25713b0` switched kovacs's `alacritty.toml` to MesloLGS while `vars.sh` still said JetBrainsMono, and the two sat diverged until 2026-09-08. The durable fix was not to re-unify the values but to remove the second place they could disagree: the config is now rendered from `vars.sh`. Copies of one fact drift; the fix is one copy, not matching copies.

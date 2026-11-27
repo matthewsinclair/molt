@@ -4,7 +4,7 @@
 
 ### tests.yml: the test workflow
 
-Runs on a push to `main` or to a release candidate (`candidate/**`, which devbin's release core pushes before it tags), a pull request to `main`, and on demand (`gh workflow run tests.yml --ref main`). No tag starts a run: a cut tags only once the candidate's run is green (issue 0089). A push that changes only `intent/whiteboard/` and `intent/.canon/` starts no run, and a newer run for the same event and ref cancels an older one.
+Runs on a push to `main` or to a release candidate (`candidate/**`, which devbin's release core pushes before it tags), a pull request to `main`, and on demand (`gh workflow run tests.yml --ref main`). No tag starts a run: a cut tags only once the candidate's run is green. A push that changes only files under `intent/whiteboard/` or `intent/.canon/` starts no run, and a newer run for the same event and ref cancels an older one.
 
 | Job          | Runner        | Runs                        | What it does                                                                                         |
 | ------------ | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -25,9 +25,7 @@ Runs when a pull request is opened, synchronised or reopened. Every job only pri
 
 ## Badge
 
-```markdown
-[![Molt Tests](https://github.com/matthewsinclair/molt/actions/workflows/tests.yml/badge.svg)](https://github.com/matthewsinclair/molt/actions/workflows/tests.yml)
-```
+[README.md](../../README.md) carries the status badge for `tests.yml`.
 
 ## Running Tests Locally
 

@@ -4,10 +4,6 @@ MOLT keeps the [framework and your config apart](../../README.md#framework-and-c
 
 You only do this once per person. After the repo exists, day-to-day setup is covered by [Getting Started](getting-started.md).
 
-## Why a generator
-
-A personal config repo carries a small amount of identity: your user name, full name, email, GitHub handle and the first machine's hostname, threaded through several files (`gitconfig`, the ssh config, `vars.sh`, the manifest, the README). Cloning someone else's repo and find-replacing those by hand is error-prone and leaks the original owner's details. `molt new-user` does it deterministically from a tokenised skeleton.
-
 ## Usage
 
 ```bash
@@ -27,12 +23,6 @@ A flag given with no value after it is refused, naming it, and nothing is writte
 
 Molt finds a config repo only by your login name, as `Molt-$(whoami)`, so `<user>` is your login name on the machines it will run on.
 
-## Scaffolding from another template
-
-`--from <template>` scaffolds from a directory of your own, such as a course's template, in place of Molt's skeleton. It goes through the same code: the same `__MOLT_*__` tokens are substituted in its file contents and its path names, so there is one scaffolder to keep. No `.git` is copied from it, at any depth, so a template that is a git checkout brings neither its history nor its objects into the new repo. Each file keeps its mode, so a script stays executable, and a file that is not text, such as an image or a font, arrives byte for byte.
-
-`molt new-user` refuses a `--from` that is not a directory, and one that holds no `config/`, since Molt finds a stack only by its `config/`. Each refusal names the path and why, and writes nothing.
-
 Example, fully specified:
 
 ```bash
@@ -42,6 +32,12 @@ molt new-user flynn \
   --github flynn-sinclair \
   --hostname jormungandr
 ```
+
+## Scaffolding from another template
+
+`--from <template>` scaffolds from a directory of your own, such as a course's template, in place of Molt's skeleton. It goes through the same code: the same `__MOLT_*__` tokens are substituted in its file contents and its path names, so there is one scaffolder to keep. No `.git` is copied from it, at any depth, so a template that is a git checkout brings neither its history nor its objects into the new repo. Each file keeps its mode, so a script stays executable, and a file that is not text, such as an image or a font, arrives byte for byte.
+
+`molt new-user` refuses a `--from` that is not a directory, and one that holds no `config/`, since Molt finds a stack only by its `config/`. Each refusal names the path and why, and writes nothing.
 
 ## The identity surface
 

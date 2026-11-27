@@ -4,21 +4,21 @@
 
 ## Framework
 
-| Module                | File                         | Concern                                                                                                                                                           |
-| --------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| molt (CLI)            | `bin/molt`                   | Main entry point, arg parsing, command dispatch                                                                                                                   |
-| bootstrap             | `bin/bootstrap.sh`           | A fresh machine's dev checkout: clones the framework and the user repo, links `~/.local/bin/molt`, runs a dry-run resleeve, asks before the real one              |
-| molt (constants)      | `lib/constants.sh`           | All configurable paths and defaults (single source of truth)                                                                                                      |
-| molt (core)           | `lib/molt.sh`                | Core helpers (logging, platform, linking, rendering, the manifest, Homebrew, GNOME settings) and most verbs: list, doctor, test, resleeve, upgrade, maintain, git |
-| molt (agent)          | `lib/agent.sh`               | Sleeve agents: the [[agent]] entries, each agent's home, `molt agent` (ST0006, ST0007)                                                                            |
-| molt (env)            | `lib/env.sh`                 | Molt's one env writer: the variables a sleeve's shells and GUI apps get (ST0008 WP05)                                                                             |
-| molt (install)        | `lib/install.sh`             | The trees Molt runs from (dev, opt, brew), read: their manifests, the switch link and the version line. devbin publishes and switches them (I7892f34)             |
-| liberator (framework) | `lib/liberator.sh`           | Liberator loading and discovery, and running each one's check, install, upgrade and maintain                                                                      |
-| newuser               | `lib/newuser.sh`             | Scaffold a new `Molt-{user}` config repo from the template skeleton                                                                                               |
-| release               | `bin/.devbin/config.yaml`    | How Molt releases: devbin's release core and its formula, the gates, and the suite's two options (issue 0087)                                                     |
-| bash 3.2 gate         | `tools/test-bash32`          | The suite with `/bin` first, under macOS's `/bin/bash` 3.2, as `test all`'s `bash32` option (issue 0087)                                                          |
-| formula template      | `packaging/homebrew/molt.rb` | Molt's Homebrew formula as a template, which devbin's built-in formula renders and publishes                                                                      |
-| devbin (vendored)     | `bin/devbin`, `bin/.devbin/` | devbin's dev launcher, vendored: devbin owns it                                                                                                                   |
+| Module                | File                         | Concern                                                                                                                                                                                                         |
+| --------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| molt (CLI)            | `bin/molt`                   | Main entry point, arg parsing, command dispatch                                                                                                                                                                 |
+| bootstrap             | `bin/bootstrap.sh`           | A fresh machine's dev checkout: clones the framework and the user repo, links `~/.local/bin/molt`, runs a dry-run resleeve, asks before the real one                                                            |
+| molt (constants)      | `lib/constants.sh`           | All configurable paths and defaults (single source of truth)                                                                                                                                                    |
+| molt (core)           | `lib/molt.sh`                | Core helpers (logging, platform, linking, instance vars, rendering, the manifest, Homebrew, GNOME settings, Claude Code, root-owned files) and most verbs: list, doctor, test, resleeve, upgrade, maintain, git |
+| molt (agent)          | `lib/agent.sh`               | Sleeve agents: the [[agent]] entries, each agent's home, the managed floor and the sandbox profile, `molt agent`                                                                                                |
+| molt (env)            | `lib/env.sh`                 | Molt's one env writer: the variables a sleeve's shells and GUI apps get                                                                                                                                         |
+| molt (install)        | `lib/install.sh`             | The trees Molt runs from (dev, opt, brew), read: their manifests, the switch link and the version line. devbin publishes and switches them                                                                      |
+| liberator (framework) | `lib/liberator.sh`           | Liberator loading and discovery, and running each one's check, install, upgrade and maintain                                                                                                                    |
+| newuser               | `lib/newuser.sh`             | Scaffold a new `Molt-{user}` config repo from the template skeleton, or from the template `--from` names                                                                                                        |
+| devbin config         | `bin/.devbin/config.yaml`    | How devbin publishes and switches molt (its `install:` block), and how Molt releases: devbin's release core and its formula, the gates, and the `test all` options                                              |
+| bash 3.2 gate         | `tools/test-bash32`          | The suite with `/bin` first, under macOS's `/bin/bash` 3.2, as `test all`'s `bash32` option                                                                                                                     |
+| formula template      | `packaging/homebrew/molt.rb` | Molt's Homebrew formula as a template, which devbin's built-in formula renders and publishes                                                                                                                    |
+| devbin (vendored)     | `bin/devbin`, `bin/.devbin/` | devbin's dev launcher, vendored: devbin owns it                                                                                                                                                                 |
 
 ## Liberators
 
@@ -29,28 +29,28 @@
 | git            | `liberators/git.sh`            | Git + git-lfs verification, gitconfig linking                                                   |
 | tmux           | `liberators/tmux.sh`           | Tmux verification, config linking                                                               |
 | editors        | `liberators/editors.sh`        | Doom Emacs + LazyVim installation, config linking                                               |
-| alacritty      | `liberators/alacritty.sh`      | Alacritty config linking (linux, macos)                                                         |
+| alacritty      | `liberators/alacritty.sh`      | Alacritty config, linked or rendered (linux, macos)                                             |
 | gnome-terminal | `liberators/gnome-terminal.sh` | GNOME Terminal dconf profile management (linux)                                                 |
 | iterm2         | `liberators/iterm2.sh`         | iTerm2 dynamic profile linking (macos)                                                          |
 | terminal-app   | `liberators/terminal-app.sh`   | Terminal.app profile import and default setting (macos)                                         |
 | keys           | `liberators/keys.sh`           | keyd build from source, config from instance (Linux)                                            |
-| desktop        | `liberators/desktop.sh`        | GNOME settings, GTK config (Linux)                                                              |
+| desktop        | `liberators/desktop.sh`        | GNOME settings, GTK config, dock favourites (Linux)                                             |
 | tiling         | `liberators/tiling.sh`         | Tactile GNOME extension grid tiling (Linux)                                                     |
 | vscode         | `liberators/vscode.sh`         | VS Code settings linking, CLI setup, dock pin                                                   |
 | dev-tools      | `liberators/dev-tools.sh`      | CLI tools (jq, tree, rg, fzf, curl)                                                             |
 | mise           | `liberators/mise.sh`           | mise runtime manager, off on every sleeve                                                       |
-| npm            | `liberators/npm.sh`            | ~/.npmrc, npm's cache under XDG (issue 0031)                                                    |
+| npm            | `liberators/npm.sh`            | ~/.npmrc, npm's cache under XDG                                                                 |
 | ssh            | `liberators/ssh.sh`            | SSH key detection or generation, config rendering + config.d fragments                          |
 | local-bin      | `liberators/local-bin.sh`      | `~/.local/bin` (MOLT_LOCAL_BIN), and the molt link `bin/devbin use` sets                        |
 | intent         | `liberators/intent.sh`         | Intent from Homebrew, what PATH and the pre-commit gate run                                     |
-| gtools         | `liberators/gtools.sh`         | Gtools from Homebrew, private tap over ssh (issue 0057)                                         |
-| pplr           | `liberators/pplr.sh`           | pplr from Homebrew, or the dev or opt tree `pplr use` chose (issue 0086)                        |
+| gtools         | `liberators/gtools.sh`         | Gtools from Homebrew, private tap over ssh                                                      |
+| pplr           | `liberators/pplr.sh`           | pplr from Homebrew, or the dev or opt tree `pplr use` chose                                     |
 | utilz          | `liberators/utilz.sh`          | Utilz from a checkout (linked into `~/.local/bin`, with bats-core) or from Homebrew, per sleeve |
 | web            | `liberators/web.sh`            | Web scraper for LLMs, from `$MOLT_OPT_DIR/web`, its binary linked into `~/.local/bin`           |
-| brew           | `liberators/brew.sh`           | Homebrew maintenance, and installing what the sleeve's Brewfile lists (issue 0101)              |
-| claude         | `liberators/claude.sh`         | Claude Code config, its state out of $HOME (ST0006)                                             |
-| env            | `liberators/env.sh`            | Sleeve variables for shells and GUI apps (ST0008 WP05)                                          |
-| agents         | `liberators/agents.sh`         | A home for each sleeve agent, from its role (ST0006)                                            |
+| brew           | `liberators/brew.sh`           | Homebrew maintenance, and installing what the sleeve's Brewfile lists                           |
+| claude         | `liberators/claude.sh`         | Claude Code config and status line, its state out of $HOME, and the home guard                  |
+| env            | `liberators/env.sh`            | Sleeve variables for shells and GUI apps                                                        |
+| agents         | `liberators/agents.sh`         | A home for each sleeve agent, from its role                                                     |
 | backup         | `liberators/backup.sh`         | Checks the SuperDuper NAS backup; observes only (macos)                                         |
 | herdr          | `liberators/herdr.sh`          | Herdr keys.json and hrdrcfg directory linking (macos)                                           |
 | arngz          | `liberators/arngz.sh`          | arngz desks directory linking (macos)                                                           |
@@ -74,8 +74,8 @@
 | ------------------ | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | molt.toml          | `templates/molt.toml.example`                   | Stack manifest example                                                                                                                  |
 | molt-user skeleton | `templates/molt-user/`                          | Skeleton tree for new `Molt-{user}` config repos (tokenised), which `molt new-user` copies                                              |
-| agent CLAUDE.md    | `templates/agents/CLAUDE.md.tmpl`               | Each agent home's `CLAUDE.md`, which imports its `AGENTS.md` (ST0006)                                                                   |
-| AppArmor profile   | `templates/apparmor/bwrap-userns-restrict.tmpl` | Molt's copy of Ubuntu's bwrap profile, for a Linux sleeve with an ops or docs agent (issue 0032)                                        |
+| agent CLAUDE.md    | `templates/agents/CLAUDE.md.tmpl`               | Each agent home's `CLAUDE.md`, which imports its `AGENTS.md`                                                                            |
+| AppArmor profile   | `templates/apparmor/bwrap-userns-restrict.tmpl` | Molt's copy of Ubuntu's bwrap profile, for a Linux sleeve with an ops or docs agent                                                     |
 | home guard         | `templates/claude/claude-home-guard.sh.tmpl`    | The hook that refuses a Claude Code session launched in `$HOME`, or under the agents root outside a home, rendered to `~/.config/molt/` |
 | home guard hook    | `templates/claude/home-guard-hook.json`         | The settings entry that runs the home guard, in the user settings and each agent home's                                                 |
 | npmrc              | `templates/npm/npmrc.tmpl`                      | `~/.npmrc`, npm's cache under XDG (npm liberator)                                                                                       |
@@ -94,7 +94,6 @@
 | bootstrap-runbook     | `docs/guides/bootstrap-runbook.md`                     | Phase 1 manual resleeve of kovacs: the record the liberators were built from, not a specification |
 | tn0001                | `docs/notes/tn0001-molt-and-conflab.md`                | Design note: a `conflab` liberator, proposed and not built                                        |
 | bl0001                | `docs/blog/bl0001-so-you-want-to-run-a-local-agent.md` | Working notes for a blog piece on running a local agent                                           |
-| design brief          | `design/molt-brief.md`                                 | The original design brief                                                                         |
 | architecture          | `intent/llm/ARCHITECTURE.md`                           | How Molt is built, and how one run moves through it                                               |
 | decision tree         | `intent/llm/DECISION_TREE.md`                          | Where new code goes                                                                               |
 | rules                 | `intent/llm/RULES.md`                                  | Molt's own must and never rules                                                                   |

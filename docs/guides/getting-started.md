@@ -126,32 +126,11 @@ The typical update sequence is:
 molt doctor
 ```
 
-Runs its diagnostic checks, among them: the tree Molt runs from (in a dev checkout, that `lib/`, `liberators/` and `test/` are there; from opt or brew, each file against the install's manifest), the manifest (that there is one, and that its `user_repo`, where it declares one, still names the real directory), liberator health, external dependencies (`envsubst`, and `bats` in a dev checkout), SSH key presence, the git hosts the stack's ssh config names (each entry in molt's region of `~/.ssh/config` that sets `User git`, dialled as `git@<name>` and passed on GitHub's or GitLab's own reply naming the user; with none to dial it passes and says why), config hygiene (no other-user absolute home paths baked into your config), that the stack itself is on local storage rather than a network or guest mount, that each managed repo's `core.ignorecase` matches what its disk does with case, and the font the sleeve declares, which passes without fontconfig where its `vars.sh` sets `MOLT_TERMINAL_DRAWN_BY="windows"`, as Windows draws the terminal under WSL. It closes with `All checks passed.` and exits 0, or with how many of the checks that ran did not pass and exits 1.
+Runs Molt's health checks and prints a line for each, with any details under it. It ends with `All checks passed.` and exits 0, or with how many checks did not pass, and exits 1.
 
 ## Your config repo
 
-Your personal repo (`Molt-{user}`) has this layout:
-
-```
-Molt-you/
-  config/
-    zsh/zshrc               # -> ~/.zshrc
-    zsh/zshenv              # -> ~/.zshenv
-    zsh/zprofile            # -> ~/.zprofile
-    git/gitconfig           # -> ~/.gitconfig
-    doom/                   # -> ~/.config/doom
-    alacritty/alacritty.toml
-    starship/starship.toml
-    ssh/config.tmpl         # rendered with per-instance vars
-    vscode/settings.json
-  instances/
-    mymachine/
-      instance.toml         # this machine's [terminal] colours, for the zsh liberator
-      molt.toml             # what to install on this machine
-      vars.sh               # template variables for this machine
-      ssh/config.d/         # SSH config fragments appended after render
-      Brewfile              # optional: packages this machine needs, which the brew liberator installs
-```
+The [README](../../README.md#your-config-repo-layout) shows the layout of your `Molt-{user}` repo.
 
 Each machine gets its own directory under `instances/` with a manifest and optional overrides. See [Template System](templates.md) for how `.tmpl` files work.
 
@@ -163,13 +142,13 @@ Molt reaches a machine from one of its trees, dev, opt or brew, which are dev, s
 
 ```
 $MOLT_PRJ_DIR/Molt                 dev    the git checkout: edited, committed, tested
-~/Devel/opt/molt                   opt    published from the checkout, only from a CLEAN runtime set
+~/Devel/opt/molt                   opt    published from the checkout, only from a CLEAN tree
 $HOMEBREW_PREFIX/opt/molt/libexec  brew   the formula, published from a release tag
 ```
 
 The checkout is the bleeding edge. The opt install is a published copy of it, which keeps what works apart from what is mid-development. The brew formula is the one publish to prod: what users install. (`opt` names the tier; Homebrew's own `opt/` path, on the brew line, is a different thing.)
 
-**devbin publishes and switches every tree, and Molt does neither.** `bin/devbin install` and `bin/devbin use`, run in the checkout, are the one implementation every Homebrew'd tool shares (devbin#0326). Molt had its own, `molt install` and `molt use`, until a ruling that no tool keeps its own copy (issue I7892f34). Both verbs are gone: each now refuses, naming its `bin/devbin` replacement. Molt still reads every tree, so `molt version`, `molt doctor` and `molt upgrade` work on a sleeve that has no `bin/devbin`.
+**devbin publishes and switches every tree, and Molt does neither.** `bin/devbin install` and `bin/devbin use`, run in the checkout, are the one implementation every Homebrew'd tool shares. `molt install` and `molt use` refuse, and name the `bin/devbin` verb to run. Molt still reads every tree, so `molt version`, `molt doctor` and `molt upgrade` work on a sleeve that has no `bin/devbin`.
 
 ### The dev checkout
 
@@ -199,7 +178,7 @@ bin/devbin use brew     # remove it, so Homebrew's molt answers
 
 ```bash
 cd "$MOLT_PRJ_DIR/Molt"
-bin/devbin install            # publish to install.prefix; refuses a dirty runtime set
+bin/devbin install            # publish to install.prefix; refuses a dirty tree
 bin/devbin install --force    # replace the opt install with this commit
 bin/devbin use opt
 ```
