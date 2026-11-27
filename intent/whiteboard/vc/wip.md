@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
-heartbeat_at: 2026-11-27 05:00Z
+heartbeat_at: 2026-11-27 05:12Z
 status: active
-focus: "27 Nov: Molt holds with nothing in flight. Main's fold commits through 00a3057d are on upstream and local, pushed on hv's word, and CI is green. Last: the rustup GO (route C) to rhadamanth-sysadm, on devbin-vc's word after Utilz 2.15.0's rollout batches."
+focus: "27 Nov: Molt holds with nothing to start. When devbin 0.1.35's sweep commit lands, vc asks hv for one push word for it and vc's record commits. Last: the rustup GO (route C) to rhadamanth-sysadm, on devbin-vc's word after Intent 3.5.6 is published and each machine's batch."
 claims: []
 ---
 
@@ -19,7 +19,7 @@ _(none)_
 
 - farcaster, pihole, when next reachable: resync the Molt and Molt-matts clones onto the purged histories (intent/ref/2026-10-20-history-purge-commit-maps.md), set core.hooksPath .githooks, run intent claude upgrade --apply, then molt upgrade with dev-tools on. (edited)
 - gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- rhadamanth and gyges: install rustup with its own installer and --no-modify-path, today (hv 26 Nov), after the estate batch is built, tested and released, on one Desk slot from devbin-vc; rhadamanth-sysadm and gyges-sysadm run it and report which cargo and cargo --version (hv 1 Nov rule stands). (edited)
+- rhadamanth and gyges: install rustup by route C (brew install rustup, then rustup-init -y --no-modify-path; keep brew rust), last, after Intent 3.5.6 is published and each machine's batch (devbin-vc, 27 Nov). molt-vc passes devbin-vc's GO to rhadamanth-sysadm, which holds hv's yes of 26 Nov; gyges-sysadm takes its GO from devbin-vc. Each reports which -a cargo and cargo --version in a fresh login shell (hv 1 Nov rule stands). (edited)
 - 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
 
 ## Holds

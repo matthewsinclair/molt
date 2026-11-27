@@ -1,0 +1,16 @@
+{
+  "id": "01M8DPQGAJT0XM4EG8E89C8P9C",
+  "ts": "2026-11-27T05:12:56.402Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 41,
+    "text": "rhadamanth and gyges: install rustup by route C (brew install rustup, then rustup-init -y --no-modify-path; keep brew rust), last, after Intent 3.5.6 is published and each machine's batch (devbin-vc, 27 Nov). molt-vc passes devbin-vc's GO to rhadamanth-sysadm, which holds hv's yes of 26 Nov; gyges-sysadm takes its GO from devbin-vc. Each reports which -a cargo and cargo --version in a fresh login shell (hv 1 Nov rule stands)."
+  }
+}
