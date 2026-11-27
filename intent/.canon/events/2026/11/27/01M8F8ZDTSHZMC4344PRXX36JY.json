@@ -1,0 +1,15 @@
+{
+  "id": "01M8F8ZDTSHZMC4344PRXX36JY",
+  "ts": "2026-11-27T19:51:04.793Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.decide",
+  "subject": {
+    "type": "node",
+    "id": "hv"
+  },
+  "payload": {
+    "kind": "decision",
+    "text": "hv, 27 Nov 2026, live in molt-vc's window, read by 19:50Z by date -u, choosing among vc's options (the wording is vc's): keep hv's arngz test save of homere.yaml. vc committed it in Molt-matts as 8666d2b, with dc's zshrc comment fix 1853a02, and pushed both to local and upstream."
+  }
+}
