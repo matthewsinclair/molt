@@ -3,7 +3,7 @@
   "origin": "01M8E4NSFW9EGPBTX2Z5NBQYX2",
   "title": "utilz liberator still asks the retired utilz use, so doctor fails",
   "scope": "S",
-  "status": "wip",
+  "status": "done",
   "objective": "Utilz retired `utilz use`, which now says \"utilz use is retired: run 'bin/devbin use' in a Utilz checkout\". Molt's utilz liberator still asks `utilz use` which tree serves utilz (`liberators/utilz.sh`, its check), so the check fails, and `molt doctor` reads 16 of 17 on kovacs (kovacs-sysadm, 27 Nov). Read the tree from `utilz --version`, whose line names it (devbin contract T4), and change the hints that name `utilz use brew` to `bin/devbin use`.",
   "body": "",
   "preamble": ""
