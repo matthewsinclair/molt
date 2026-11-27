@@ -84,6 +84,7 @@ _utilz_refute_field_paste() {
 }
 
 @test "brew: Utilz 2.15.0 from Homebrew, with ~/.local/bin first on PATH and empty, passes check, install and resleeve, and nothing asks the retired utilz use" {
+    # AT-87d66d23.1 (ST0cce65f AC-87d66d23.1).
     # ST0cce65f/87d6, the field replay. gyges and kovacs, 27 Nov 2026: Molt
     # 1.4.14 asked Homebrew's `utilz use`, which Utilz 2.15.0 retired, so molt
     # upgrade said "1 of 21 liberators failed: utilz" and exited 1 before molt

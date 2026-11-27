@@ -1,0 +1,10 @@
+{
+  "id": "AT-87d66d23.1",
+  "kind": "test",
+  "file": "test/liberators/utilz.bats:87",
+  "covers": [
+    "AC-87d66d23.1"
+  ],
+  "status": "green",
+  "note": "Red at b92f574a, the tests before the fix: the Desk's ask 01M8F8DSQ4E7QW9FD3M9GZW9SQ ran bin/devbin test suite utilz, and this test failed on the retired utilz use. Green at 91aee612, the fix: the Desk's ask 01M8F8MXM8ETRK719RMQC30J51 ran test suite utilz and test bash32 utilz, and this test passed in both. Landed at 4c7b55b5, released in v1.4.15."
+}
