@@ -3,8 +3,8 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 9e8971dd-3513-46bc-87e5-1ef97b3d6830
-heartbeat_at: 2026-11-27 08:47Z
-status: active
+heartbeat_at: 2026-11-27 08:48Z
+status: paused
 focus: "27 Nov, week close-out on hv's word: dc holds for molt-vc's word. dc has no items, claims, worktrees or branches."
 claims: []
 ---
