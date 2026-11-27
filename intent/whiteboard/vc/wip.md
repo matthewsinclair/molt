@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
-heartbeat_at: 2026-11-27 05:12Z
+heartbeat_at: 2026-11-27 07:57Z
 status: active
-focus: "27 Nov: Molt holds with nothing to start. When devbin 0.1.35's sweep commit lands, vc asks hv for one push word for it and vc's record commits. Last: the rustup GO (route C) to rhadamanth-sysadm, on devbin-vc's word after Intent 3.5.6 is published and each machine's batch."
+focus: "27 Nov cycle 8 fold: Molt is folded, with nothing in flight. After the compact, hold for devbin-vc's word. When devbin 0.1.35's sweep commit lands in Molt, ask hv for one push word for it and vc's record commits. Last: the rustup GO (route C) to rhadamanth-sysadm, after Intent 3.5.6 is published and each machine's batch."
 claims: []
 ---
 
