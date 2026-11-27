@@ -3,8 +3,8 @@ node: dc
 name: DevX Claude
 role: devx
 session_id: 97b5c474-f5a3-440a-a9d6-a47b536c5f1f
-heartbeat_at: 2026-11-27 20:16Z
-status: active
+heartbeat_at: 2026-11-27 20:17Z
+status: paused
 focus: "27 Nov: ST0cce65f/87d6 is done, and Molt 1.4.15 carries it (v1.4.15 at f3dfbd63). dc holds for molt-vc's word on the rollout, then folds and releases its seat."
 claims: []
 ---
