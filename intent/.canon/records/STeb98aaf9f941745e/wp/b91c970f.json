@@ -1,0 +1,10 @@
+{
+  "id": "b91c970f",
+  "origin": "01M8E4FGX03X62XZR8PA8H8HN3",
+  "title": "Remove the backups that the config-dir move left, on hv's word",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "Remove the backups that the config-dir move left. rhadamanth holds `~/.config/claude.molt-backup.20261023095216` and Molt's backups in `~/.config/claude`, and kovacs holds three named backups. Read gyges first.\n\nStart: on hv's word. kovacs goes through kovacs-sysadm.\n\nSource: ST0006 WP04.",
+  "body": "",
+  "preamble": ""
+}

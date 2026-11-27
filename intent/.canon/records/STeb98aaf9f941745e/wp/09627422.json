@@ -1,0 +1,10 @@
+{
+  "id": "09627422",
+  "origin": "01M8E4FH1WK591Q3KEA2D4VW8D",
+  "title": "Proofs that closed issues still owe, each one hv may drop",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "Proofs that closed issues still owe. hv may drop any of them under decision 51 (one layer of proof):\n- 0036: hv runs `test/manual/sandbox-creds.sh` by hand, with Claude Code from its new path.\n- 0101: the first real `brew bundle install`, at the next resleeve of a sleeve that lacks a package its Brewfile lists.\n- 0079: read jormungandr after Flynn's next `molt upgrade`, which brings Molt-flynn's PATH, env.sh and mise changes.\n\nSource: issues 0036, 0079 and 0101.",
+  "body": "",
+  "preamble": ""
+}

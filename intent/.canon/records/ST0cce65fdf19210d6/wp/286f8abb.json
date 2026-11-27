@@ -1,0 +1,10 @@
+{
+  "id": "286f8abb",
+  "origin": "01M8E4GA2XZ18BM4JH1HZARTRN",
+  "title": "Dock pins: editors and alacritty break on an empty dock",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "The `editors` and `alacritty` dock pins write `@as [, '<app>.desktop']` on an empty dock, and gsettings refuses it. `vscode` handles the empty list (`@as []`). Give both the same case. `editors` also ignores a failed `molt_gsettings set` and still says it added Emacs: make it name the failure (`editors.sh:263-265`, `alacritty.sh:106`).",
+  "body": "",
+  "preamble": ""
+}

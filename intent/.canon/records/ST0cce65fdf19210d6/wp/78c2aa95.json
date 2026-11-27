@@ -1,0 +1,10 @@
+{
+  "id": "78c2aa95",
+  "origin": "01M8E4G9GWFX112NSRH9JJ3CT7",
+  "title": "Add the MIT LICENSE file, and fix npm.sh's stale npx comment",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "Add the MIT LICENSE file that README and the Homebrew formula (`license \"MIT\"`) name: the repo root has none. Also fix the comment at the top of `liberators/npm.sh`, which says the status line runs npx at every refresh. That stopped in 1.4.14.",
+  "body": "",
+  "preamble": ""
+}

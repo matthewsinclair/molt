@@ -1,0 +1,15 @@
+{
+  "id": "01M8E4FGEKAXX9SY2MBQZPS6QY",
+  "ts": "2026-11-27T09:13:14.452Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "STeb98aaf9f941745e/064cf9d7"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "bl0001: re-read the check bullets against Claude Code's docs before print"
+  }
+}

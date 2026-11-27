@@ -1,0 +1,15 @@
+{
+  "id": "01M8E4G9GWFX112NSRH9JJ3CT7",
+  "ts": "2026-11-27T09:13:40.125Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0cce65fdf19210d6/78c2aa95"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "Add the MIT LICENSE file, and fix npm.sh's stale npx comment"
+  }
+}

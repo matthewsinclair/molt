@@ -1,0 +1,10 @@
+{
+  "id": "f9423278",
+  "origin": "01M8E4FH6YYKQH25H63HJRSK8F",
+  "title": "AppArmor: refresh the kept distro profile after an apparmor update",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "Molt keeps Ubuntu's AppArmor profile for bwrap in `/var/lib/molt/apparmor`, and never refreshes that copy after an apparmor package update. Refresh it when the package changes. Also fix the comment in `templates/apparmor/bwrap-userns-restrict.tmpl`, which says the copy is kept beside the profile.\n\nSource: wip.md's carried list of October; the doc sync of 27 Nov.",
+  "body": "",
+  "preamble": ""
+}

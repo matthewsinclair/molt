@@ -1,0 +1,16 @@
+{
+  "id": "01M8E33DEG2D53KZDHMGPE1JQK",
+  "ts": "2026-11-27T08:49:09.584Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 40,
+    "text": "hv 30 Oct: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it does not, with no sudo in any probe."
+  }
+}

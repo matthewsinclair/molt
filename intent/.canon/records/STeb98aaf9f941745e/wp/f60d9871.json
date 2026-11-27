@@ -1,0 +1,10 @@
+{
+  "id": "f60d9871",
+  "origin": "01M8E4FHAQ3RQ7ZZ0N5M8XQ9TX",
+  "title": "jormungandr: move its config repos into ~/Devel/cfg (parked by hv)",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "Move jormungandr's config repos into `~/Devel/cfg`. hv parked this.\n\nStart: on hv's word, with Flynn.\n\nSource: wip.md of October.",
+  "body": "",
+  "preamble": ""
+}

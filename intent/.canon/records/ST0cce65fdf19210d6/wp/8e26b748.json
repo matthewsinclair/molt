@@ -1,0 +1,10 @@
+{
+  "id": "8e26b748",
+  "origin": "01M8E4G9XK7FTXZDCRJ3VJG25N",
+  "title": "Eight liberators check links with molt_link_healthy, which passes a wrong target",
+  "scope": "M",
+  "status": "not-started",
+  "objective": "`alacritty` (its static form), `desktop`, `editors`, `iterm2`, `tmux`, `vscode`, `web` and `zsh` check their links with `molt_link_healthy`, which passes a link to the wrong file (eg `tmux.sh:15`, `zsh.sh:200`, `alacritty.sh:27`). Move each to `molt_report_link_faults`, as rule 5 of `docs/guides/writing-a-liberator.md` says, with a test for a link to the wrong file.",
+  "body": "",
+  "preamble": ""
+}

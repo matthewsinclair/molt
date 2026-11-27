@@ -1,0 +1,10 @@
+{
+  "id": "cce50bc5",
+  "origin": "01M8E32BCN2J40WHEVG5T22KWY",
+  "title": "rhadamanth and gyges: install rustup by route C",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "Install rustup on rhadamanth and on gyges by route C: `brew install rustup`, then `rustup-init -y --no-modify-path`. Keep brew `rust`.\n\nStart: on devbin-vc's GO, after Intent 3.5.6 is published and each machine's batch is done. molt-vc passes the GO to rhadamanth-sysadm, which holds route C's steps and hv's yes of 26 Nov. gyges-sysadm takes its GO from devbin-vc.\n\nProof: on each machine, `which -a cargo` and `cargo --version` in a fresh login shell.\n\nSource: issue 0079's owed proof; vc's board, todo 41.",
+  "body": "",
+  "preamble": ""
+}

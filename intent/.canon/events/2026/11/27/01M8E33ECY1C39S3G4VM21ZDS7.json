@@ -1,0 +1,15 @@
+{
+  "id": "01M8E33ECY1C39S3G4VM21ZDS7",
+  "ts": "2026-11-27T08:49:10.558Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.add",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "hold",
+    "text": "Molt's push to upstream and local waits until devbin 0.1.35's sweep commit is on Molt's main (hv's pre-approval of 27 Nov, relayed by devbin-vc)."
+  }
+}

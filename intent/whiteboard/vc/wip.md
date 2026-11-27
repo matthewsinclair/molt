@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
-heartbeat_at: 2026-11-27 07:57Z
+heartbeat_at: 2026-11-27 09:14Z
 status: active
-focus: "27 Nov cycle 8 fold: Molt is folded, with nothing in flight. After the compact, hold for devbin-vc's word. When devbin 0.1.35's sweep commit lands in Molt, ask hv for one push word for it and vc's record commits. Last: the rustup GO (route C) to rhadamanth-sysadm, after Intent 3.5.6 is published and each machine's batch."
+focus: "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. The push waits for devbin 0.1.35's sweep (hold 13)."
 claims: []
 ---
 
@@ -17,28 +17,24 @@ _(none)_
 
 ## TODO
 
-- farcaster, pihole, when next reachable: resync the Molt and Molt-matts clones onto the purged histories (intent/ref/2026-10-20-history-purge-commit-maps.md), set core.hooksPath .githooks, run intent claude upgrade --apply, then molt upgrade with dev-tools on. (edited)
-- gyges: exclude ~/Devel from Spotlight by hand when hv is next there. (edited)
-- rhadamanth and gyges: install rustup by route C (brew install rustup, then rustup-init -y --no-modify-path; keep brew rust), last, after Intent 3.5.6 is published and each machine's batch (devbin-vc, 27 Nov). molt-vc passes devbin-vc's GO to rhadamanth-sysadm, which holds hv's yes of 26 Nov; gyges-sysadm takes its GO from devbin-vc. Each reports which -a cargo and cargo --version in a fresh login shell (hv 1 Nov rule stands). (edited)
-- 0081: when hv next changes a Karabiner setting on rhadamanth, check it shows as a Molt-matts diff with ~/.config/karabiner still a link, and record it on 0081 (hv's own check; Caps Lock as Control on both keyboards is confirmed, 3 Nov). (edited)
+_(none)_
 
 ## Holds
 
-_(none)_
+- Molt's push to upstream and local waits until devbin 0.1.35's sweep commit is on Molt's main (hv's pre-approval of 27 Nov, relayed by devbin-vc).
 
 ## Watch-outs
 
-- A sleeve armed for the config-dir move fails molt upgrade and resleeve while any claude process runs; arm and move in one sitting, Chrome quit. (edited)
-- agentic-engineering's courseware quotes two Molt lines: resleeve's 'Sleeve ready. Welcome back.' (as a suffix, so the 'Zen:' prefix may change) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes. test/molt.bats covers both (doctor's whole output; the resleeve message as a substring). hv can overrule. (edited)
+- agentic-engineering's courseware quotes resleeve's 'Sleeve ready. Welcome back.' (as a suffix) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes; test/molt.bats covers both. (edited)
 
 ## Decisions
 
 - hv 28 Oct: every security finding is filed as an issue; fixed now only if a showstopper P0. (edited)
-- hv 29 Oct (folds 31-33): hv runs every full suite, push, cut, tag and deploy; a Claude may run a small targeted proof of its own fix, booked on the estate desk. Laksa and Conflab are held for code. For Molt's cuts (their gates, tag and pushes), hv's decision 10 of 23 Nov replaces it: a seat runs them on hv's word. (edited)
-- hv 30 Oct: the 26 Oct rule stands: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it isn't, with sudo kept out of any probe (kovacs-sysadm had cited an earlier full bar).
-- hv 1 Nov (molt-vc's TUI): path_add and path_prepend stay copied in each Molt-* stack, so each stack stays self-contained at shell startup; Molt does not ship them. (edited)
-- hv 3 Nov (in molt-dc's session, relayed): 'We don't Karabiner or these others on gyges.' gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. rhadamanth's Karabiner hand checks are hv's own. (edited)
-- hv 5 Nov, for the whole fleet (relayed by pipeliner-sc: first-hand to sc at 12:02Z, confirmed at 13:11Z): one layer of proof. A thing is proved by running it once as its user would. The commit gate's critic is the only critic. No suite that tests a suite, no planted fault beyond a guard's own one red case where it already exists, no check of a check, no hardening against setups nobody here has, no replay of a replay. A verdict is a read and at most one run. hv, on seeing checks stacked on checks: stop, it is wasting days.
+- hv 29 Oct: hv runs every full suite, push, cut, tag and deploy; a Claude may run a small booked proof of its own fix. For Molt's cuts, hv decision 10 (23 Nov) replaces it: a seat runs them on hv's word. (edited)
+- hv 30 Oct: reach kovacs through kovacs-sysadm while it runs; ssh is fine when it does not, with no sudo in any probe. (edited)
+- hv 1 Nov: path_add and path_prepend stay copied in each Molt-* stack, so each stack is self-contained at shell start; Molt does not ship them. (edited)
+- hv 3 Nov: gyges gets no karabiner, arngz, hammerspoon, herdr or menuz, and nothing more is enabled there. (edited)
+- hv 5 Nov, fleet-wide: one layer of proof. Prove a thing by running it once as its user would. The gate's critic is the only critic. No check of a check, no suite that tests a suite, no planted fault beyond a guard's own red case, and no hardening against setups nobody here has. A verdict is a read and at most one run. (edited)
 
 ---
 

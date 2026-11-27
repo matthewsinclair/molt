@@ -1,0 +1,10 @@
+{
+  "id": "ccdb4cac",
+  "origin": "01M8E4FGM06HYEB58NX6QHR4KR",
+  "title": "macOS: hv decides whether Molt stops publishing PATH to launchd, then the code follows",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "On macOS, `lib/env.sh` still writes PATH into the env LaunchAgent, and doctor's env check still fails a PATH-only mismatch. No GUI app gets that PATH, because each app runs with its own. hv decides whether Molt stops publishing PATH to launchd on macOS. Then make `lib/env.sh`, doctor's env check and their tests match.\n\nStart: on hv's decision.\n\nSource: issue 0072, its open question.",
+  "body": "",
+  "preamble": ""
+}

@@ -1,0 +1,14 @@
+{
+  "id": "01M8E31R3DNDQH1BMMC7HCED39",
+  "ts": "2026-11-27T08:48:14.958Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "st.new",
+  "subject": {
+    "type": "thread",
+    "id": "STeb98aaf9f941745e"
+  },
+  "payload": {
+    "title": "Unfinished work from Molt's closed threads and issues"
+  }
+}

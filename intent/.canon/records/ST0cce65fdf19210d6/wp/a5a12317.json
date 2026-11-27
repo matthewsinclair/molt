@@ -1,0 +1,10 @@
+{
+  "id": "a5a12317",
+  "origin": "01M8E4G9SE23SQ366S1AYENNAG",
+  "title": "pr-checks.yml: the doc check never warns, and the commit-message check always warns",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "In `.github/workflows/pr-checks.yml`, the check-documentation job checks out at the default depth, so `origin/main` is missing, its `git diff` fails inside the `if`, and the job never warns. Give it `fetch-depth: 0`, as the commit-message job has. The commit-message job also reads GitHub's own merge commit, whose subject is longer than 72 characters, so it warns on every pull request: skip that commit.",
+  "body": "",
+  "preamble": ""
+}

@@ -1,0 +1,10 @@
+{
+  "id": "4b1b11f3",
+  "origin": "01M8E4FGR7YM78R38DA4WHVVJ8",
+  "title": "kovacs: delete the stale GLib keyfile, on hv's go",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "Delete kovacs's stale GLib keyfile, through kovacs-sysadm. Read first whether it is still there.\n\nStart: on hv's go.\n\nSource: issue 0047; vc's board, todo 25.",
+  "body": "",
+  "preamble": ""
+}

@@ -1,0 +1,10 @@
+{
+  "id": "064cf9d7",
+  "origin": "01M8E4FGEKAXX9SY2MBQZPS6QY",
+  "title": "bl0001: re-read the check bullets against Claude Code's docs before print",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "Before hv sends bl0001 to print, re-read each of its `check:` bullets against Claude Code's docs, and fix any that no longer hold. The brief's GUI PATH advice already matches the code.\n\nStart: when hv says bl0001 goes to print. Owner: ac, or the seat hv names.\n\nSource: ac's board, its hold on bl0001; issue 0084.",
+  "body": "",
+  "preamble": ""
+}

@@ -1,0 +1,10 @@
+{
+  "id": "34e58256",
+  "origin": "01M8E4G9NMZC8T2QSEMBYVBTBD",
+  "title": "Claude Code: settle whether project settings load from the launch directory's parents",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "Settle from Claude Code's docs whether a session loads project settings from the launch directory's parents, or from the launch directory's `.claude/` only. `docs/guides/sleeve-agents.md` and bl0001 say the launch directory only, and the home guard's reason to refuse a launch below a home rests on that. If parents count, fix the guard's reason and both docs. Either way, tell gtools-vc, whose estate text says to start in the content root or below it.",
+  "body": "",
+  "preamble": ""
+}

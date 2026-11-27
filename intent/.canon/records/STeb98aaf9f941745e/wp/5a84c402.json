@@ -1,0 +1,10 @@
+{
+  "id": "5a84c402",
+  "origin": "01M8E4FHFDR6QZ7PHQASSNZKYP",
+  "title": "kovacs: GTK4 apps get no Super+C and Super+V",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "On kovacs, GTK4 apps, eg Nautilus, get no Super+C and Super+V, because Molt's `gtk.css` covers GTK3 only. Make GTK4 apps take the same keys.\n\nSource: ST0001's tasks.",
+  "body": "",
+  "preamble": ""
+}

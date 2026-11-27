@@ -1,0 +1,13 @@
+{
+  "schema": "intent/thread@4.0",
+  "id": "STeb98aaf9f941745e",
+  "origin": "01M8E31R3DNDQH1BMMC7HCED39",
+  "title": "Unfinished work from Molt's closed threads and issues",
+  "slug": "unfinished-work-from-molt-s-closed-threads-and-i",
+  "status": "triage",
+  "created": "2026-11-27",
+  "objective": "Finish the parts of Molt's work that its closed threads and issues left open. Each work package names its source and the condition that lets it start.",
+  "context": "hv closed out the week's work on 27 Nov 2026. Every thread, work package and issue in Molt was closed, and the unfinished parts moved here, one work package each.",
+  "body": "",
+  "preamble": ""
+}

@@ -1,0 +1,14 @@
+{
+  "id": "01M8E4G0AJ0ZE70VRQZVX8PM5V",
+  "ts": "2026-11-27T09:13:30.707Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "st.new",
+  "subject": {
+    "type": "thread",
+    "id": "ST0cce65fdf19210d6"
+  },
+  "payload": {
+    "title": "Code defects that the November doc sync found"
+  }
+}

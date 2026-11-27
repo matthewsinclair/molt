@@ -1,0 +1,16 @@
+{
+  "id": "01M8E33E2HAXBDA6W1ZZZP3KY8",
+  "ts": "2026-11-27T08:49:10.225Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "decision",
+    "seq": 51,
+    "text": "hv 5 Nov, fleet-wide: one layer of proof. Prove a thing by running it once as its user would. The gate's critic is the only critic. No check of a check, no suite that tests a suite, no planted fault beyond a guard's own red case, and no hardening against setups nobody here has. A verdict is a read and at most one run."
+  }
+}

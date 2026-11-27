@@ -1,0 +1,15 @@
+{
+  "id": "01M8E4G9SE23SQ366S1AYENNAG",
+  "ts": "2026-11-27T09:13:40.399Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0cce65fdf19210d6/a5a12317"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "pr-checks.yml: the doc check never warns, and the commit-message check always warns"
+  }
+}

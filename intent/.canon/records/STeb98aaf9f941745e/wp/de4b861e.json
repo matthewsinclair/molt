@@ -1,0 +1,10 @@
+{
+  "id": "de4b861e",
+  "origin": "01M8E32B4AQWKZY6BWV3PHEGYN",
+  "title": "farcaster and pihole: resync onto the purged histories, then upgrade",
+  "scope": "S",
+  "status": "not-started",
+  "objective": "When farcaster and pihole are next reachable, on each: resync the Molt and Molt-matts clones onto the purged histories (`intent/ref/2026-10-20-history-purge-commit-maps.md`), set `core.hooksPath .githooks`, run `intent claude upgrade --apply`, then run `molt upgrade` with dev-tools on.\n\nWatch-out: a sleeve armed for the config-dir move fails `molt upgrade` and `molt resleeve` while any claude process runs. Arm and move in one sitting, with Chrome quit.\n\nSource: vc's board, todo 6 and watch-out 19.",
+  "body": "",
+  "preamble": ""
+}

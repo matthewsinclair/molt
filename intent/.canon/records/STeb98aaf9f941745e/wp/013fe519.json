@@ -1,0 +1,10 @@
+{
+  "id": "013fe519",
+  "origin": "01M8E32B82WH6E9XC654AH6FGE",
+  "title": "gyges: exclude ~/Devel from Spotlight",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "hv excludes `~/Devel` from Spotlight on gyges, by hand, when hv is next at gyges.\n\nSource: vc's board, todo 30.",
+  "body": "",
+  "preamble": ""
+}

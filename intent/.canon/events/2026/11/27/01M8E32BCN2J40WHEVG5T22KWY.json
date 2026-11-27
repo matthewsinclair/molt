@@ -1,0 +1,15 @@
+{
+  "id": "01M8E32BCN2J40WHEVG5T22KWY",
+  "ts": "2026-11-27T08:48:34.711Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "STeb98aaf9f941745e/cce50bc5"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "rhadamanth and gyges: install rustup by route C"
+  }
+}

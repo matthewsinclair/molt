@@ -1,0 +1,15 @@
+{
+  "id": "01M8E4G9XK7FTXZDCRJ3VJG25N",
+  "ts": "2026-11-27T09:13:40.532Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wp.new",
+  "subject": {
+    "type": "wp",
+    "id": "ST0cce65fdf19210d6/8e26b748"
+  },
+  "payload": {
+    "scope": "S",
+    "title": "Eight liberators check links with molt_link_healthy, which passes a wrong target"
+  }
+}

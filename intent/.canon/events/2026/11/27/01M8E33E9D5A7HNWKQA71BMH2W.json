@@ -1,0 +1,16 @@
+{
+  "id": "01M8E33E9D5A7HNWKQA71BMH2W",
+  "ts": "2026-11-27T08:49:10.445Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "watchout",
+    "seq": 24,
+    "text": "agentic-engineering's courseware quotes resleeve's 'Sleeve ready. Welcome back.' (as a suffix) and doctor's last line 'All checks passed.'. Tell agentic-engineering-vc before either changes; test/molt.bats covers both."
+  }
+}

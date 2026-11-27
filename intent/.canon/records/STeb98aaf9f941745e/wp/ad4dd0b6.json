@@ -1,0 +1,10 @@
+{
+  "id": "ad4dd0b6",
+  "origin": "01M8E32BGKXWG7AK5XNSKMGKXW",
+  "title": "Karabiner: check that hv's next change shows as a Molt-matts diff",
+  "scope": "XS",
+  "status": "not-started",
+  "objective": "When hv next changes a Karabiner setting on rhadamanth, check that the change shows as a Molt-matts diff, with `~/.config/karabiner` still a link. This is hv's own check.\n\nSource: issue 0081; vc's board, todo 43.",
+  "body": "",
+  "preamble": ""
+}
