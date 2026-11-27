@@ -313,7 +313,8 @@
       "kind": "decision",
       "seq": 31,
       "text": "hv, 27 Nov 2026, live in molt-vc's window, read by 19:17Z by date -u, choosing vc's recommended options (the wording is vc's): (1) vc force-pushes Molt-matts' local remote to 0f3dd37 with a lease, done at 19:17Z; (2) molt-dc fixes 87d6 now, and molt-vc cuts Molt 1.4.15 on devbin-vc's GO when it is green, which is hv's word to cut; the sysadms roll it out, and the timesyncd drop-in waits for the next round; (3) the three sysadms run tonight's molt maintain, and on rhadamanth and gyges they restart the cms servers on the new kegs and check each port.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-27T20:34:42.706Z",
       "recorded_at": "2026-11-27T19:18:02.315Z"
     },
     {
@@ -321,7 +322,8 @@
       "kind": "decision",
       "seq": 32,
       "text": "hv, 27 Nov 2026, live in molt-vc's window, read by 19:50Z by date -u, choosing among vc's options (the wording is vc's): keep hv's arngz test save of homere.yaml. vc committed it in Molt-matts as 8666d2b, with dc's zshrc comment fix 1853a02, and pushed both to local and upstream.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-27T20:34:42.758Z",
       "recorded_at": "2026-11-27T19:51:04.793Z"
     },
     {
@@ -329,7 +331,8 @@
       "kind": "decision",
       "seq": 33,
       "text": "hv, 27 Nov 2026, live in molt-vc's window, read by 20:22Z by date -u, choosing among vc's options (the wording is vc's): push Molt's 4 commits past v1.4.15 (2a1ac0bf, 9fad2eef, d317bf9a, 560808ee). vc pushed f3dfbd63..560808ee to local and upstream at 20:22Z.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-11-27T20:34:42.805Z",
       "recorded_at": "2026-11-27T20:23:02.489Z"
     }
   ],
