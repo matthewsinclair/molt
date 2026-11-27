@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 92f0f4eb-69ca-4586-979a-2c96c9924ae0
-heartbeat_at: 2026-11-26 18:15Z
+heartbeat_at: 2026-11-27 05:00Z
 status: active
-focus: "26 Nov cycle 7 fold: Molt main is folded and clean, local only, with its fold commits since upstream 30dc0894. After the compact, hold for devbin-vc's word to go on. Then ask hv, in molt-vc's window, for the push word. Last: the rustup GO (route C) to rhadamanth-sysadm on devbin-vc's word, after Utilz 2.15.0 and each machine's batch."
+focus: "27 Nov: Molt holds with nothing in flight. Main's fold commits through 00a3057d are on upstream and local, pushed on hv's word, and CI is green. Last: the rustup GO (route C) to rhadamanth-sysadm, on devbin-vc's word after Utilz 2.15.0's rollout batches."
 claims: []
 ---
 
