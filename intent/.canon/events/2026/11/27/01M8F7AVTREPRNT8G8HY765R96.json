@@ -1,0 +1,40 @@
+{
+  "id": "01M8F7AVTREPRNT8G8HY765R96",
+  "ts": "2026-11-27T19:22:22.424Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "disk.dehydrate",
+  "subject": {
+    "type": "paths",
+    "id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1"
+  },
+  "payload": {
+    "id": "ST0cce65fdf19210d6",
+    "pruned": [
+      "intent/st/ST0cce65fdf19210d6/WP/286f8abb",
+      "intent/st/ST0cce65fdf19210d6/WP/34e58256",
+      "intent/st/ST0cce65fdf19210d6/WP/48dd3556",
+      "intent/st/ST0cce65fdf19210d6/WP/78c2aa95",
+      "intent/st/ST0cce65fdf19210d6/WP/87d66d23",
+      "intent/st/ST0cce65fdf19210d6/WP/8e26b748",
+      "intent/st/ST0cce65fdf19210d6/WP/a1ad2173",
+      "intent/st/ST0cce65fdf19210d6/WP/a5a12317",
+      "intent/st/ST0cce65fdf19210d6/WP",
+      "intent/st/ST0cce65fdf19210d6"
+    ],
+    "removed": [
+      "intent/st/ST0cce65fdf19210d6/WP/286f8abb/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/34e58256/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/48dd3556/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/78c2aa95/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/87d66d23/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/8e26b748/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/a1ad2173/info.md",
+      "intent/st/ST0cce65fdf19210d6/WP/a5a12317/info.md",
+      "intent/st/ST0cce65fdf19210d6/acceptance.md",
+      "intent/st/ST0cce65fdf19210d6/info.md"
+    ],
+    "sigil": "STEELTHREAD",
+    "unlisted": true
+  }
+}

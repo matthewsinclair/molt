@@ -3,9 +3,9 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 5e3aac14-8959-4021-bc31-d60e9bd8c35d
-heartbeat_at: 2026-11-27 19:09Z
+heartbeat_at: 2026-11-27 19:29Z
 status: active
-focus: "27 Nov close-out: Molt's unfinished work is in STeb98aaf and ST0cce65f, both not started. molt-vc stays open for devbin-vc's word."
+focus: "27 Nov evening: Molt 1.4.15 fixes 87d6 (hv decision 31). dc builds by the brief; vc lands, then cuts on the Desk's grant; the sysadms roll it out."
 claims: []
 ---
 
@@ -18,7 +18,7 @@ _(none)_
 ## TODO
 
 - Molt 1.4.15 (hv decision 31): dc fixes 87d6 by the brief at ~/Devel/scratch/molt-vc/20261127/brief-dc-87d6.md; vc lands it, checks the formula, runs the dry run, then cuts on the Desk's grant (heavy, alone); the sysadms roll it out.
-- Next round: file the timesyncd drop-in (hv decision 30) and arngz's desk saves that dirty Molt-matts and block molt upgrade, each as a package.
+- Next round: file each as a package: the timesyncd drop-in (hv decision 30); arngz's desk saves, which dirty Molt-matts and block molt upgrade; and dc's finding that checkout mode's install (molt_link) points a set back at dev after bin/devbin use opt, against devbin's T5. (edited)
 
 ## Holds
 

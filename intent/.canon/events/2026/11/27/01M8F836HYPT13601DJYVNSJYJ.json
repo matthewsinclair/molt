@@ -1,0 +1,16 @@
+{
+  "id": "01M8F836HYPT13601DJYVNSJYJ",
+  "ts": "2026-11-27T19:35:39.838Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "811231da-dd5d-4cc0-98e4-a4f2e6b805f1",
+  "op": "wb.edit",
+  "subject": {
+    "type": "node",
+    "id": "vc"
+  },
+  "payload": {
+    "kind": "todo",
+    "seq": 69,
+    "text": "Next round: file each as a package: the timesyncd drop-in (hv decision 30); arngz's desk saves, which dirty Molt-matts and block molt upgrade; and dc's finding that checkout mode's install (molt_link) points a set back at dev after bin/devbin use opt, against devbin's T5."
+  }
+}
