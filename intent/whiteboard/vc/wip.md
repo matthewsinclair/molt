@@ -3,8 +3,8 @@ node: vc
 name: Validation Claude
 role: validation
 session_id: 5e3aac14-8959-4021-bc31-d60e9bd8c35d
-heartbeat_at: 2026-11-27 20:34Z
-status: active
+heartbeat_at: 2026-11-27 20:44Z
+status: paused
 focus: "28 Nov: Molt 1.4.15 is released and on all three sleeves, and 87d6 is done. Molt's open work is in STeb98aaf and ST0cce65f."
 claims: []
 ---
